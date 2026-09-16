@@ -6,7 +6,7 @@
 **Current implementation stage:** **Stage 1 — Base `edge` Platform — IN PROGRESS / NOT ACCEPTED**  
 **Primary GitHub repository:** `Eugene-SN/Cloud-Infrastructure`
 
-Stage 0 is complete. The clean provider rebuild and several Stage 1 foundation subsets are accepted, but Stage 1 as a whole is not yet accepted. Continue work in branch `01`; do not transition to a later branch until final Stage 1 deployment/non-regression acceptance.
+Stage 0 is complete. The rebuilt host substrate, Docker, nginx/ACME, TLS, Xray/Hysteria2, certificate synchronization, Authelia foundation/public ingress, and minimal host firewall are now accepted. Stage 1 still requires the remaining base-platform scope and final integrated acceptance before branch transition.
 
 Canonical implementation workflow and stage sequence: `IMPLEMENTATION_PHASES.md`.
 
@@ -41,7 +41,7 @@ The sensitive archive remains outside GitHub and is the authoritative selective-
 - OpenSSH socket activation via `ssh.socket` accepted;
 - QEMU guest agent active;
 - journald persistent-use ceiling `SystemMaxUse=500M`;
-- provider cloud-init schema/deprecation warnings remain accepted/non-blocking because effective networking, swap and SSH are correct.
+- provider cloud-init warnings remain accepted/non-blocking because effective networking, swap and SSH are correct.
 
 Accepted records include `EDGE_FRESH_OS_SUBSTRATE_ACCEPTANCE=PASS` and `EDGE_MINIMAL_BASE_BOOTSTRAP_ACCEPTANCE=PASS`.
 
@@ -51,8 +51,7 @@ Accepted records include `EDGE_FRESH_OS_SUBSTRATE_ACCEPTANCE=PASS` and `EDGE_MIN
 
 Accepted runtime:
 
-- Docker Engine `29.8.1` from the official Ubuntu resolute repository;
-- Docker CLI `29.8.1`;
+- Docker Engine/CLI `29.8.1`;
 - containerd `2.3.5`;
 - runc `1.5.1`;
 - Buildx `0.37.1`;
@@ -60,172 +59,161 @@ Accepted runtime:
 - storage driver `overlayfs`;
 - cgroup v2 / systemd driver;
 - Docker root `/var/lib/docker`;
-- `/etc/docker/daemon.json` contains `{"live-restore": true}`;
-- Docker and containerd active/enabled;
-- hello-world and Compose config tests passed;
-- temporary Docker test artifacts removed.
+- `/etc/docker/daemon.json`: `{"live-restore": true}`;
+- Docker/containerd active and enabled.
 
 Docker + Compose are the primary runtime for suitable application services. Host-native services remain allowed where materially simpler/better suited.
 
-### nginx / HTTP / ACME foundation
+### nginx / HTTP / ACME
 
 `EDGE_STAGE1_NGINX_ACME_FOUNDATION_ACCEPTANCE=PASS`.
 
 Accepted runtime:
 
 - nginx `1.28.3-2ubuntu1.11`;
-- public listeners TCP/80 IPv4/IPv6;
-- loopback fallback listener `127.0.0.1:8080 proxy_protocol`;
+- public TCP/80 IPv4/IPv6;
+- loopback fallback `127.0.0.1:8080 proxy_protocol`;
 - ACME webroot `/var/www/letsencrypt`;
 - public webroot `/var/www/escloud.us/public`;
-- `/health` endpoint returns `ok`;
-- Proxy Protocol fallback path validated;
-- current `index.html` is only a temporary neutral placeholder, not an accepted final decoy page.
+- `/health` returns `ok`;
+- Proxy Protocol fallback validated;
+- current `index.html` remains only a temporary neutral placeholder and is not yet the accepted final decoy/public page.
 
-### TLS / Certbot
+### TLS / Certbot / certificate sync
 
-`EDGE_STAGE1_TLS_CERTIFICATE_ACCEPTANCE=PASS`.
+`EDGE_STAGE1_TLS_CERTIFICATE_ACCEPTANCE=PASS`.  
+`EDGE_STAGE1_CERT_SYNC_LIFECYCLE_ACCEPTANCE=PASS`.
 
-Accepted certificate:
+Accepted certificate/lifecycle:
 
 - certificate name `escloud.us`;
 - Certbot `4.0.0`;
-- authenticator `webroot`;
-- ECDSA P-256 / `secp256r1`;
-- certificate `/etc/letsencrypt/live/escloud.us/fullchain.pem`;
-- private key `/etc/letsencrypt/live/escloud.us/privkey.pem`;
-- validity observed at acceptance: 2026-09-16 19:27:04 UTC through 2026-12-15 19:27:03 UTC;
+- ECDSA P-256;
+- active lineage `/etc/letsencrypt/live/escloud.us`;
+- SANs: `escloud.us`, `app.escloud.us`, `auth.escloud.us`, `chat.escloud.us`, `cloud.escloud.us`, `code.escloud.us`, `docs.escloud.us`, `go.escloud.us`, `mail.escloud.us`, `sync.escloud.us`;
 - Certbot timer active/enabled;
-- renewal dry-run PASS.
+- deploy hook `/etc/letsencrypt/renewal-hooks/deploy/20-vpn-cert-sync`;
+- sync script `/opt/vpn-stack/scripts/xray-cert-sync.sh`;
+- certificate/key copies to Xray/Hysteria2 verified;
+- `certbot renew --cert-name escloud.us --dry-run --run-deploy-hooks` PASS;
+- post-hook Xray TLS/fallback and Hysteria authenticated proxy path PASS.
 
-Accepted SAN set (10):
-
-- `escloud.us`;
-- `app.escloud.us`;
-- `auth.escloud.us`;
-- `chat.escloud.us`;
-- `cloud.escloud.us`;
-- `code.escloud.us`;
-- `docs.escloud.us`;
-- `go.escloud.us`;
-- `mail.escloud.us`;
-- `sync.escloud.us`.
-
-### Xray runtime / VPN state
+### Xray / Hysteria2 / preserved VPN state
 
 `EDGE_STAGE1_VPN_RUNTIME_FOUNDATION_ACCEPTANCE=PASS`.  
 `EDGE_STAGE1_VPN_STATE_RENDER_ACCEPTANCE=PASS`.  
 `EDGE_STAGE1_VPN_PUBLIC_ACCEPTANCE=PASS`.
 
-Accepted Xray runtime:
+Xray:
 
-- stable release resolved at deployment: `26.3.27`;
-- binary `/usr/local/bin/xray`;
-- release asset SHA256 verified: `23cd9af937744d97776ee35ecad4972cf4b2109d1e0fe6be9930467608f7c8ae`;
-- systemd unit `/etc/systemd/system/xray.service`;
-- service active and enabled;
-- public listener TCP/443;
-- preserved VLESS client count: 2;
+- version `26.3.27`;
+- active/enabled;
+- public TCP/443;
+- VLESS/TLS;
 - tag `vless-tls-edge`;
 - TLS SNI `escloud.us`, ALPN `http/1.1`;
 - fallback `127.0.0.1:8080`, Proxy Protocol `xver=1`;
-- HTTPS through Xray → nginx fallback PASS;
-- TLS verification PASS;
-- `NRestarts=0` at public acceptance.
+- preserved client count 2;
+- functional HTTPS fallback PASS.
 
-### Hysteria2 runtime / VPN state
+Hysteria2:
 
-Accepted Hysteria2 runtime:
-
-- stable release resolved at deployment: `2.12.3`;
-- binary `/usr/local/bin/hysteria`;
-- release asset SHA256 verified: `8c7a68a906998b747a0db87586e364f995fbfddb95693ae6e2fdb68a6e920d3e`;
-- systemd unit `/etc/systemd/system/hysteria-server.service`;
-- service active and enabled;
-- public listener UDP/443;
-- preserved auth user count from CSV state: 2;
+- version `2.12.3`;
+- active/enabled;
+- public UDP/443;
 - `sniGuard: strict`;
-- auth `userpass`;
-- file masquerade rooted at `/var/www/escloud.us/public`;
-- real local Hysteria client handshake using preserved primary credential PASS;
-- HTTPS through the Hysteria tunnel returned HTTP 200;
-- `NRestarts=0` at public acceptance.
+- `userpass` auth;
+- file masquerade `/var/www/escloud.us/public`;
+- preserved auth user count 2;
+- authenticated client handshake and HTTPS proxy test PASS.
 
-### Preserved VPN state / tooling
+Preserved VPN state is current under `/opt/vpn-stack`; credentials were not regenerated. Node identity was intentionally adapted to `NODE_CODE=edge`, `NODE_DISPLAY=Edge` while preserving `DOMAIN=escloud.us` and port contracts.
 
-Credential-bearing VPN state was selectively restored from the verified sensitive migration archive without regenerating credentials.
+### Authelia foundation / public ingress
 
-Current production state:
+`EDGE_STAGE1_AUTHELIA_STATE_RESTORE_ACCEPTANCE=PASS`.  
+`EDGE_STAGE1_AUTHELIA_LOCAL_RUNTIME_ACCEPTANCE=PASS`.  
+`EDGE_STAGE1_AUTHELIA_PUBLIC_INGRESS_ACCEPTANCE=PASS`.
 
-- `/opt/vpn-stack/state/services.env`;
-- `/opt/vpn-stack/state/xray/users.csv`;
-- `/opt/vpn-stack/state/hysteria2/users.csv`;
-- `/opt/vpn-stack/conf/xray_primary_uuid.txt`;
-- `/opt/vpn-stack/conf/hysteria2_primary.txt`;
-- `/opt/vpn-stack/state/web-domains.txt`;
-- `/opt/vpn-stack/scripts/vpnctl`.
+Accepted runtime:
 
-Only node identity metadata was intentionally adapted:
+- Authelia `4.39.27` from current stable `docker.io/authelia/authelia:latest` channel at deployment time;
+- resolved image digest at restore time `sha256:40005803cd4e2eaeea4418517e9e9c7f515b55b31071a02829341ca2e50ca7c0`;
+- runtime definition `/opt/authelia/compose.yaml`;
+- persistent state `/srv/authelia`;
+- container `authelia`, restart `unless-stopped`;
+- loopback publish `127.0.0.1:19091 -> 9091/tcp` only;
+- Docker health healthy;
+- preserved file/Argon2 user database and three existing secrets retained;
+- SQLite integrity PASS;
+- first current-version start migrated SQLite schema 28 -> 29 successfully; schema 29 is now the accepted live state;
+- explicit container restart acceptance PASS.
 
-- `DOMAIN=escloud.us` preserved;
-- `NODE_CODE=edge`;
-- `NODE_DISPLAY=Edge`;
-- `XRAY_PORT=443` preserved;
-- `HY2_PORT=443` preserved.
+Public ingress:
 
-Xray UUID/password continuity and Hysteria2 credential continuity were verified against preserved CSV state and functionally verified after service start.
+- `auth.escloud.us` HTTP/80 redirects to HTTPS;
+- HTTPS path: client -> Xray TCP/443 -> nginx `127.0.0.1:8080 proxy_protocol` -> Authelia `127.0.0.1:19091`;
+- root and `/api/health` through public HTTPS PASS;
+- TLS verification PASS;
+- no direct public TCP/19091 exposure;
+- unrelated future application vhosts remain intentionally undeployed.
 
-### Certificate synchronization lifecycle
+### Firewall / public exposure
 
-`EDGE_STAGE1_CERT_SYNC_LIFECYCLE_ACCEPTANCE=PASS`.
+`EDGE_STAGE1_FIREWALL_ACCEPTANCE=PASS`.
 
-Accepted lifecycle:
+Accepted UFW policy:
 
-- sync script `/opt/vpn-stack/scripts/xray-cert-sync.sh`;
-- Certbot deploy hook `/etc/letsencrypt/renewal-hooks/deploy/20-vpn-cert-sync`;
-- renewed active certificate/key are copied into `/etc/xray/tls` and `/etc/hysteria/tls` with accepted ownership/modes;
-- Xray and Hysteria2 are restarted after successful sync;
-- service refresh errors are not suppressed;
-- direct hook execution PASS;
-- `certbot renew --cert-name escloud.us --dry-run --run-deploy-hooks` PASS;
-- deploy hook execution during Certbot dry-run proven by service PID changes;
-- active production certificate remained unchanged by staging dry-run;
-- post-hook Xray TLS/fallback PASS;
-- post-hook Hysteria handshake/proxy PASS;
-- Certbot timer remains active/enabled.
+- UFW active and enabled;
+- logging low;
+- default incoming deny;
+- default outgoing allow;
+- default routed deny;
+- IPv6 enabled;
+- allowed host ingress for both IPv4 and IPv6:
+  - `22/tcp` SSH;
+  - `80/tcp` nginx/ACME;
+  - `443/tcp` Xray;
+  - `443/udp` Hysteria2.
 
-### Current listener contract
+Docker firewall interaction:
 
-Accepted public/service listeners now include:
+- Docker-generated rules remain enabled;
+- FORWARD policy remains DROP;
+- `DOCKER-USER` remains present and contains no custom rules;
+- application containers should remain loopback-published by default and use the accepted nginx/Xray ingress path;
+- current Authelia publication remains loopback-only.
+
+Post-enable non-regression passed for active SSH session, SSH listener/socket, HTTP, public IPv4 HTTP/HTTPS, Xray fallback, Hysteria2 listener, Authelia HTTPS/runtime, Docker/nginx/Xray/Hysteria2 service state, and failed systemd units = 0.
+
+## Current listener contract
+
+Expected Stage 1 public listeners:
 
 - SSH TCP/22;
 - nginx TCP/80;
 - Xray TCP/443;
-- Hysteria2 UDP/443;
-- nginx loopback `127.0.0.1:8080` with Proxy Protocol.
+- Hysteria2 UDP/443.
+
+Expected loopback listeners:
+
+- nginx `127.0.0.1:8080` Proxy Protocol fallback;
+- Authelia `127.0.0.1:19091`.
 
 There is intentionally no direct nginx TCP/443 listener because Xray owns TCP/443 and ordinary HTTPS reaches nginx through the Xray fallback path.
 
-## Firewall current state
-
-UFW is installed but currently **inactive** on the rebuilt host.
-
-Legacy evidence proves the old VPS used UFW with default deny incoming and explicit SSH/HTTP/HTTPS/VPN/mail allowances. Whether/how to re-enable a minimal UFW policy on the new Docker-capable host remains a Stage 1 engineering decision because Docker published ports have special firewall semantics.
-
-Do not add mail ports during Stage 1 unless required by an actually deployed Stage 1 service; mail belongs to a later stage.
-
 ## Stage 1 remaining work
 
-Stage 1 is still **IN PROGRESS / NOT ACCEPTED**. Remaining work includes:
+Stage 1 is still **IN PROGRESS / NOT ACCEPTED**. Remaining bounded scope:
 
 - decide/restore or explicitly replace the plausible public/decoy page; current page is temporary only;
-- deploy/accept the Authelia common web-auth foundation using the preserved accepted scenario;
-- decide and implement the minimal firewall/public exposure policy;
 - finish any still-needed normalized persistent-directory/ownership conventions;
-- define/implement the initial private Cloud Infrastructure page boundary required by Stage 1;
-- take/verify the basic backup of the rebuilt base state required by Stage 1;
-- verify the intended extension points for later WebUI/API/webhook/storage/Home/PAI/monitoring work;
-- perform final Stage 1 composition and non-regression acceptance.
+- define/implement the minimal initial private Cloud Infrastructure page boundary required for Stage 1, without pulling future application deployment into this stage;
+- create and verify the basic backup/checkpoint of the rebuilt base state required by Stage 1;
+- verify/document extension points for later WebUI/API/webhook/storage/Home/PAI/monitoring work;
+- perform final Stage 1 composition/non-regression acceptance and persist the result.
+
+Authelia and firewall are no longer pending Stage 1 items.
 
 ## Accepted-first implementation rule
 
@@ -238,8 +226,6 @@ For the remainder of the stage:
 5. verify/accept the remaining stage composition;
 6. persist accepted state;
 7. transition branches only after full Stage 1 acceptance.
-
-Do not require re-selection of already accepted products from scratch.
 
 ## Accepted global product/direction anchors
 
@@ -272,7 +258,7 @@ Current canonical branch:
 
 Status:
 
-**IN PROGRESS — public ingress/VPN/TLS foundation accepted; remaining Stage 1 platform components and final composition acceptance still pending.**
+**IN PROGRESS — host/public-edge foundation, Authelia, and firewall accepted; bounded remaining Stage 1 base-platform scope still pending.**
 
 Do not transition to another branch until Stage 1 is fully deployed, verified and accepted.
 
