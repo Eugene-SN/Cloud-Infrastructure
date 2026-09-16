@@ -2,55 +2,171 @@
 
 ## Status
 
-**Architecture status:** INCREMENTAL / STAGE-SCOPED DESIGN IN PROGRESS.
+**Stage 1 architecture:** COMPLETE / ACCEPTED.  
+**Full multi-stage target architecture:** intentionally incremental; future-stage unresolved choices remain open until their stage begins.
 
-There is currently **no accepted full target Architecture Contract** for all Cloud Infrastructure stages.
-
-The project has an accepted substrate, a preliminary global functional scaffold, several explicitly accepted product anchors, and unresolved service/product choices that must be decided only when their implementation stage begins.
-
-This file records only current accepted architecture facts/invariants and the design process. It must not be used to preselect products for future stages.
-
-## Current canonical checkpoint
-
-Current implementation work remains in:
+Completed work branch:
 
 `01 — Edge Clean Rebuild & Base Platform Deployment`
 
-Stage 1 is **IN PROGRESS**.
+Next work branch:
 
-Completed/accepted subset:
+`02 — Edge Core Applications`
 
-- clean Ubuntu substrate;
-- node identity `edge` / `edge.escloud.us`;
-- provider networking in its current working form;
-- key-only SSH with accepted `ssh.socket` activation;
-- minimal architecture-independent host bootstrap;
-- persistent journald-use ceiling `500M`.
-
-Not yet complete:
-
-- the Stage 1 requirements review;
-- the complete Stage 1 service/product composition;
-- the Stage 1 scoped architecture/deployment contract;
-- the remaining Base Platform deployment and acceptance.
+`EDGE_STAGE1_FINAL_INTEGRATED_ACCEPTANCE=PASS` on 2026-09-17.
 
 ## Accepted architectural invariants
 
 Unless superseded by a later ACCEPTED decision:
 
 1. `edge` is the external 24/7 Cloud Infrastructure node and complements Home Infrastructure and Personal Agents Infrastructure rather than duplicating them without a concrete requirement.
-2. `edge` must become independently useful before Home/PAI connectivity becomes a dependency.
-3. Home/PAI integration remains a late implementation stage.
-4. The historical `nl-core-vds` deployment is migration/reference context, not the target architecture.
-5. Fresh runtime/configuration outranks historical reference when factual state differs.
-6. The canonical Obsidian filesystem vault remains on `ai-node` at `/srv/ai-data/knowledge/obsidian` unless a later ACCEPTED decision changes it.
+2. `edge` must remain independently useful without Home/PAI connectivity.
+3. Home/PAI integration is a later-stage layer, not a Stage 1 foundation dependency.
+4. The historical `nl-core-vds` deployment is migration/reference context, not current target authority.
+5. Fresh verified runtime/configuration outranks historical reference when factual state differs.
+6. The canonical Obsidian vault remains on `ai-node` at `/srv/ai-data/knowledge/obsidian` unless a later ACCEPTED decision changes it.
 7. VPN/DPI-bypass functionality and any future private infrastructure backbone are separate concerns.
-8. Single-operator simplicity is preferred over enterprise-style complexity without a demonstrated need.
-9. Unresolved service/product choices are selected stage-by-stage, not globally precommitted in advance.
+8. Single-operator simplicity is preferred over enterprise-style complexity without demonstrated need.
+9. Unresolved future products/mechanisms are selected stage-by-stage rather than precommitted globally.
+
+## Accepted Stage 1 platform architecture
+
+### Host/runtime placement
+
+- Ubuntu host provides SSH, nginx, Xray, Hysteria2, Certbot, UFW and systemd-native lifecycle where host-native placement is materially simpler.
+- Docker + Compose are the default runtime for suitable application services.
+- Authelia is containerized.
+- Host-native Xray/Hysteria2/nginx remain accepted because they directly own/shared public ingress and preserve a simple proven operating model.
+
+### Persistent layout
+
+Accepted path convention:
+
+- `/opt/<service>` — runtime definitions/scripts;
+- `/srv/<service>` — persistent application state;
+- `/etc/<service>` — host-native configuration;
+- `/var/www/<site>` — static web roots.
+
+Stage 1 concrete examples:
+
+- `/opt/vpn-stack`;
+- `/opt/authelia`;
+- `/srv/authelia`;
+- `/etc/xray`;
+- `/etc/hysteria`;
+- `/etc/nginx`;
+- `/etc/letsencrypt`;
+- `/var/www/escloud.us/public`;
+- `/var/www/letsencrypt`.
+
+The preserved `/opt/vpn-stack` operational layout is accepted and is not cosmetically migrated merely to conform to a new naming convention.
+
+### Public ingress
+
+Public listener contract:
+
+- TCP/22 — SSH;
+- TCP/80 — nginx;
+- TCP/443 — Xray;
+- UDP/443 — Hysteria2.
+
+Ingress relationships:
+
+- ordinary HTTP -> nginx TCP/80;
+- ordinary HTTPS -> Xray TCP/443 TLS fallback -> nginx `127.0.0.1:8080` using Proxy Protocol;
+- VLESS clients -> Xray TCP/443;
+- Hysteria2 clients -> UDP/443;
+- future application HTTP backends should normally bind loopback and be published through nginx rather than directly exposing Docker ports.
+
+nginx intentionally has no direct public TCP/443 listener because Xray owns TCP/443.
+
+### TLS lifecycle
+
+- Certbot/ACME webroot remains the accepted certificate mechanism;
+- ACME webroot is `/var/www/letsencrypt`;
+- certificate lineage is `/etc/letsencrypt/live/escloud.us`;
+- certificate renewal uses the Certbot timer;
+- deploy hook `/etc/letsencrypt/renewal-hooks/deploy/20-vpn-cert-sync` invokes `/opt/vpn-stack/scripts/xray-cert-sync.sh`;
+- Xray/Hysteria2 certificate consumers are synchronized from the accepted lineage.
+
+### Public masking/masquerade surface
+
+Accepted static page:
+
+- `/var/www/escloud.us/public/index.html`;
+- title `ES Cloud — Private Workspace`;
+- SHA256 `73ff3e57afa08c4f007f72902c1f2d3c8cf4e53920eabd10a86e32630106318e`.
+
+The page is both the normal public web facade and the Hysteria2 file masquerade root. Its login/password dialog is visual-only and does not transmit or persist entered values.
+
+### Private authentication boundary
+
+Authelia architecture:
+
+- Compose definition `/opt/authelia/compose.yaml`;
+- state `/srv/authelia`;
+- loopback backend `127.0.0.1:19091`;
+- public auth path: Xray TCP/443 -> nginx loopback fallback -> Authelia;
+- direct public TCP/19091 is not part of the accepted exposure contract.
+
+A separate temporary private Cloud portal was deliberately not introduced in Stage 1. The accepted Stage 1 requirement is the functioning private auth/ingress boundary; the full dedicated Cloud Infrastructure portal is deferred to Stage 2.
+
+### Firewall
+
+Accepted host firewall model:
+
+- UFW active/enabled;
+- default deny incoming;
+- default allow outgoing;
+- default deny routed;
+- IPv6 enabled;
+- public allows only TCP/22, TCP/80, TCP/443 and UDP/443 for Stage 1;
+- Docker firewall integration remains enabled;
+- application containers are loopback-published by default.
+
+No additional enterprise network/auth layer is part of Stage 1.
+
+### VPN operations
+
+Accepted operational scripts:
+
+- `/opt/vpn-stack/scripts/maintctl`;
+- `/opt/vpn-stack/scripts/vpnctl`.
+
+Accepted convenience entrypoints:
+
+- `/root/maintctl`;
+- `/usr/local/bin/maintctl`;
+- `/usr/local/bin/vpnctl`.
+
+The restored `maintctl` differs from its preserved source only by the two accepted current certificate-sync paths.
+
+### Stage 1 recovery
+
+Local base-state recovery checkpoint:
+
+- `/srv/backups/edge-stage1/edge-stage1-base-20260916T234611Z.tar.gz`;
+- SHA256 `37486e763ddac4c5ef3a92a35c3dad49787d75ffd8b97499073c79af617cc566`.
+
+This checkpoint is deliberately same-VPS and is not complete disaster recovery. Future Backrest/Restic/off-site topology remains later-stage work. Stage 0 provider backup and external migration archive remain separate recovery layers.
+
+## Extension boundaries for later stages
+
+Stage 1 reserves, but does not preselect the implementation of, later capabilities:
+
+- future public/private WebUI services: loopback backend -> nginx;
+- machine APIs/webhooks: define per consumer when Stage 2+ requires them;
+- working storage: `/srv/<service or domain>` once selected;
+- monitoring: later-stage concern;
+- Home/PAI connectivity: later-stage concern;
+- full private Cloud portal/status UI: Stage 2;
+- Backrest/off-site DR: Stage 2+;
+- file/sync/Obsidian mechanisms: Stage 4;
+- cross-site connectivity: Stage 6.
 
 ## Accepted global product anchors
 
-The following product choices are already accepted and should not be replaced merely to reopen comparison work unless a concrete incompatibility or changed requirement appears:
+Do not replace without a concrete incompatibility or changed requirement:
 
 - Xray;
 - Hysteria2;
@@ -64,91 +180,20 @@ The following product choices are already accepted and should not be replaced me
 
 Additional accepted directions:
 
-- Backrest using Restic as the future backup-management direction;
-- a dedicated Cloud Infrastructure portal replacing Homepage;
+- Backrest using Restic for backup management;
+- dedicated Cloud Infrastructure portal replacing Homepage;
 - maintenance page + Semaphore replacing the legacy custom Maintenance Center.
-
-These are product/direction anchors only. They do **not** constitute a complete runtime topology, domain map, storage layout, authentication map or deployment contract.
-
-## Global functional scaffold boundary
-
-`FUNCTIONAL_SCAFFOLD_DRAFT.md` describes the broad capability set the final `edge` may need.
-
-It deliberately leaves many products/mechanisms unresolved, including examples such as:
-
-- file/storage access implementation;
-- synchronization technology and Syncthing role;
-- exact Obsidian synchronization mechanism;
-- monitoring/notification implementation;
-- Hermes role;
-- messaging/bot frontend;
-- private/site-to-site connectivity mechanism;
-- selected off-site DR topology;
-- other adjacent products not explicitly accepted in `DECISIONS.md`.
-
-Do not convert scaffold candidates into architecture facts until the corresponding stage performs requirements review, product selection and explicit acceptance.
-
-## Stage-scoped architecture model
-
-Each implementation stage produces only the architecture needed for that stage.
-
-Required sequence inside a stage:
-
-1. review stage requirements;
-2. select unresolved services/products/mechanisms;
-3. accept the stage composition;
-4. define a stage-scoped architecture/deployment contract;
-5. deploy;
-6. verify and accept;
-7. persist the resulting accepted architecture here and in the decision/state documents.
-
-Later stages may extend the architecture without invalidating already accepted earlier-stage contracts unless an explicit superseding decision is made.
-
-## Stage 1 architecture work still required
-
-Before remaining Base Platform deployment, branch `01` must resolve only the Stage 1 questions that are actually needed, including as applicable:
-
-- target firewall policy/implementation;
-- whether/where Docker + Compose is required for Stage 1;
-- normalized persistent-directory/ownership conventions;
-- nginx ingress model;
-- TLS/ACME and certificate-consumer mechanics;
-- Xray/Hysteria2 restoration/adaptation details;
-- public decoy page implementation;
-- Authelia deployment/integration details;
-- initial private Cloud page implementation;
-- base-state backup implementation;
-- extension boundaries reserved for later APIs/webhooks/storage/monitoring/Home-PAI integration.
-
-Some products here are already globally accepted; the open work is their Stage 1 implementation contract, not replacement research.
-
-## Explicitly withdrawn premature proposal
-
-The previous current-tree `ARCHITECTURE.md` proposal attempted to predefine future-stage details such as specific file/sync products, private-backbone preference, domain map, runtime placement and service topology before those stages had performed their required requirements/product-selection work.
-
-That proposal is **withdrawn from current authority**. Git history preserves it for reference, but none of its unaccepted future-stage selections should be treated as current decisions.
-
-Examples of choices that are **not accepted merely because they appeared in that proposal** include:
-
-- SFTPGo as the final file layer;
-- Self-hosted LiveSync + CouchDB as the final Obsidian sync mechanism;
-- Syncthing as a selected general sync service;
-- NetBird as the selected private backbone;
-- the proposed complete domain map;
-- the proposed complete Compose-project/runtime topology;
-- the proposed future-stage authentication/port/path map.
-
-Those topics return to unresolved status unless independently supported by an explicit ACCEPTED decision in `DECISIONS.md`.
 
 ## Architecture authority
 
-For any implementation step, authority order is:
+For implementation work, authority order remains:
 
 1. current user instruction;
-2. latest applicable ACCEPTED decision;
-3. `CURRENT_STATE.md` for confirmed current stage/runtime state;
-4. this file for already accepted architecture/invariants;
-5. `FUNCTIONAL_SCAFFOLD_DRAFT.md` for high-level capability intent;
-6. `migration-reference/` and historical baseline for legacy implementation evidence only.
+2. latest applicable ACCEPTED decision/acceptance record;
+3. `CURRENT_STATE.md` for confirmed current runtime;
+4. this file for accepted architecture/invariants;
+5. stage-specific planning documents;
+6. `FUNCTIONAL_SCAFFOLD_DRAFT.md` for capability intent;
+7. `migration-reference/` and historical baseline for legacy evidence only.
 
-Do not deploy from a proposal simply because it is detailed.
+Detailed future-stage proposals are not accepted merely because they once appeared in Git history.
