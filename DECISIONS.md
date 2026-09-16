@@ -389,3 +389,50 @@ The engineering-context tree should include, where useful:
 
 - the unresolved `in-place migration versus clean Ubuntu reinstall` status;
 - the prior rule that no runtime mutation whatsoever could occur before a complete Architecture Contract, but only for the now-completed clean substrate reset and explicitly scoped base-bootstrap work.
+
+---
+
+## 2026-09-16T21:44:20+03:00 — Implementation chronology and branch/stage distinction
+
+**Status:** ACCEPTED
+
+**Context:** The previously written `IMPLEMENTATION_PHASES_DRAFT.md` contained the intended Stage 0→7 deployment sequence but remained marked `PROPOSED / discussion draft`. Meanwhile the clean substrate and minimal host bootstrap had already been accepted in runtime/current-state documentation. Work-branch numbers (`00/01/02/03`) were therefore vulnerable to being confused with implementation-stage numbers (`Stage 0/1/2/3`), which caused incorrect sequencing guidance.
+
+**Decision:**
+
+- `IMPLEMENTATION_PHASES.md` is now the canonical accepted deployment chronology.
+- Work-branch numbers and implementation-stage numbers are independent and must never be treated as equivalent.
+- Work-branch chronology is:
+  - `00 — Cloud Infrastructure Architecture Discovery & Target Design`;
+  - `01 — Edge Clean Rebuild & Base Platform Deployment`;
+  - `02 — Edge Functional Composition & Deferred Capabilities`;
+  - `03 — Edge Architecture Contract & Topology`, only after branch 02 is closed.
+- Implementation chronology is:
+  - **Stage 0 — Preservation / migration decision:** COMPLETE;
+  - **Stage 1 — Base `edge` Platform:** PARTIAL;
+  - **Stage 2 — Core Applications:** after Stage 1 acceptance;
+  - **Stage 3 — Monitoring + Human Interaction**;
+  - **Stage 4 — Files / Sync / Obsidian**;
+  - **Stage 5 — Information + Cloud AI**;
+  - **Stage 6 — Home / PAI Integration**;
+  - **Stage 7 — Optional**.
+- Branch `01` completed the clean Ubuntu substrate and architecture-independent minimal host bootstrap only. It did **not** complete implementation Stage 1.
+- The already accepted minimal-bootstrap state (`EDGE_MINIMAL_BASE_BOOTSTRAP_ACCEPTANCE=PASS`) is part of the completed subset of Stage 1.
+- Remaining Stage 1 items include the target firewall contract, Docker/Compose runtime, normalized persistent layout, nginx, HTTPS/TLS, Xray, Hysteria2, public decoy page, Authelia, initial private Cloud page and base-backup implementation.
+- Those remaining Stage 1 items are architecture-dependent and must wait until functional/service composition is closed and the Architecture Contract is accepted.
+- Current gating order is: finish branch 02 → complete branch 03 Architecture Contract → finish remaining Stage 1 → accept Stage 1 → proceed to Stage 2 and then Stages 3–7.
+- Home/PAI connectivity remains deliberately late and is not a foundation dependency for standalone `edge`.
+
+**Constraints:**
+
+- Do not infer implementation-stage progress from a work-branch number.
+- Do not jump from the clean substrate directly to Stage 2 applications.
+- Do not open branch 03 while branch 02 remains materially incomplete.
+- Architecture-dependent Stage 1 deployment remains gated by the accepted Architecture Contract.
+
+**Supersedes:**
+
+- the `PROPOSED / discussion draft` status of `IMPLEMENTATION_PHASES_DRAFT.md`;
+- any interpretation that branch `01` completed implementation Stage 1;
+- any interpretation that work branch `02` corresponds to implementation Stage 2;
+- any sequencing guidance that moves to branch `03` before branch `02` is closed.
