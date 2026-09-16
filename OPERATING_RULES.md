@@ -27,69 +27,92 @@ Cloud Infrastructure should complement Home Infrastructure and PAI rather than d
 - Do not reinterpret it as current runtime state after the 2026-09-16 rebuild.
 - Do not treat the historical deployment as the target architecture.
 
-## Work branches versus implementation stages
+## Functional scaffold versus selected implementation
 
-Project/chat work-branch numbers and implementation-stage numbers are independent and must never be conflated.
+`FUNCTIONAL_SCAFFOLD_DRAFT.md` is a **global capability scaffold**, not a complete product list and not a final Architecture Contract.
 
-Work-branch chronology:
+It answers primarily **what useful functions `edge` should provide**, while many **how / with which service** decisions intentionally remain unresolved.
 
-- `00 — Cloud Infrastructure Architecture Discovery & Target Design` — discovery, target composition, preservation planning and initial architecture work;
-- `01 — Edge Clean Rebuild & Base Platform Deployment` — provider clean rebuild, fresh-substrate acceptance and architecture-independent minimal host bootstrap;
-- `02 — Edge Functional Composition & Deferred Capabilities` — complete unresolved functional/service choices and deferred-capability decisions;
-- `03 — Edge Architecture Contract & Topology` — begins only after branch 02 is closed and defines the final Architecture Contract/topology.
+Rules:
 
-A work-branch number does not indicate that the same-numbered implementation stage is active or complete. In particular, branch `01` did **not** complete implementation Stage 1; it completed only the clean substrate and minimal architecture-independent bootstrap portion of that stage.
+- Do not infer a product choice merely because a capability exists in the scaffold.
+- Preserve explicitly accepted global product choices from `DECISIONS.md` unless a concrete incompatibility or changed requirement appears.
+- Select unresolved services/products only when their implementation stage begins and their actual consumers/constraints are known.
+- Do not preselect Stage 4/5/6 services merely to make the global architecture look complete.
 
-Canonical deployment-stage chronology is `IMPLEMENTATION_PHASES.md`.
+## Implementation stages and work branches
 
-## Current work stage
+After the initial discovery/preservation work, implementation stages and work branches are stage-aligned.
 
-Stage 0 preservation is complete and the provider-level clean Ubuntu rebuild has been accepted.
+Canonical sequence:
 
-Current state:
+- `00 — Cloud Infrastructure Architecture Discovery & Target Design` — Stage 0 discovery/preservation/migration preparation — COMPLETE;
+- `01 — Edge Clean Rebuild & Base Platform Deployment` — Stage 1 Base `edge` Platform — **CURRENT / IN PROGRESS**;
+- `02 — Edge Core Applications` — Stage 2 — future, only after Stage 1 acceptance;
+- `03 — Edge Monitoring & Human Interaction` — Stage 3 — future;
+- `04 — Edge Files, Sync & Obsidian` — Stage 4 — future;
+- `05 — Edge Information & Cloud AI` — Stage 5 — future;
+- `06 — Edge Home & PAI Integration` — Stage 6 — future;
+- `07 — Edge Optional Capabilities` — Stage 7 — future.
 
-1. Recovery archive + provider backup: accepted.
-2. GitHub `migration-reference/`: accepted engineering context.
-3. Clean Ubuntu substrate for `edge`: accepted (`EDGE_FRESH_OS_SUBSTRATE_ACCEPTANCE=PASS`).
-4. Architecture-independent minimal host bootstrap: accepted (`EDGE_MINIMAL_BASE_BOOTSTRAP_ACCEPTANCE=PASS`).
-5. Implementation Stage 1 is **PARTIAL**, not complete.
-6. Functional/service composition and deferred-capability decisions must be completed before the Architecture Contract.
-7. Architecture-dependent target-service deployment has not started.
+The prematurely opened `02 — Edge Functional Composition & Deferred Capabilities` is not the canonical continuation point. Its useful discussion may inform later decisions, but it does not close unfinished Stage 1 work.
 
-The clean substrate reset is now historical/current state, not an open migration option.
+## Mandatory lifecycle for every implementation stage
 
-## Canonical implementation sequence
+Every new implementation-stage branch starts with analysis/design, not installation.
 
-Unless superseded by a later explicit ACCEPTED decision:
+Before stage-dependent runtime mutation, perform in order:
 
-- **Stage 0 — Preservation / migration decision:** COMPLETE.
-- **Stage 1 — Base `edge` Platform:** PARTIAL; substrate/minimal bootstrap complete, service foundation pending.
-- **Stage 2 — Core Applications:** pending Stage 1 acceptance.
-- **Stage 3 — Monitoring + Human Interaction:** pending.
-- **Stage 4 — Files / Sync / Obsidian:** pending.
-- **Stage 5 — Information + Cloud AI:** pending.
-- **Stage 6 — Home / PAI Integration:** pending and deliberately late.
-- **Stage 7 — Optional:** pending and deliberately last.
+1. **REQUIREMENTS REVIEW** — read current state, accepted decisions and the relevant portion of the global functional scaffold; define the exact requirements for this stage.
+2. **SERVICE / PRODUCT SELECTION** — research/discuss unresolved implementation alternatives for this stage. Do not re-open accepted products without a concrete reason.
+3. **STAGE COMPOSITION ACCEPTANCE** — explicitly record what is included/excluded and the selected products/mechanisms.
+4. **STAGE ARCHITECTURE / DEPLOYMENT CONTRACT** — define only the topology, runtime placement, paths, ingress/auth/storage relationships, dependencies and recovery path required for this stage.
+5. **IMPLEMENTATION** — perform the runtime changes.
+6. **VERIFY** — verify properties, not merely command return codes.
+7. **ACCEPTANCE** — explicitly mark the stage complete only after the full stage scope passes.
+8. **PERSISTENCE** — write accepted decisions and current state to the primary repository and read back critical writes.
+9. **BRANCH TRANSITION** — only after acceptance may ChatGPT propose the next branch name and starter prompt.
 
-Current gating order is:
+A completed subtask is **not** permission to leave the current branch if the stage/branch title still contains unfinished scope.
 
-1. finish work branch `02 — Edge Functional Composition & Deferred Capabilities`;
-2. then open/finish `03 — Edge Architecture Contract & Topology`;
-3. use the accepted Architecture Contract to finish remaining implementation Stage 1 components;
-4. accept implementation Stage 1;
-5. proceed to Stage 2, then Stages 3–7.
+## Current work checkpoint
 
-Do not jump directly from the clean substrate/minimal bootstrap to Stage 2 applications merely because the active work branch is numbered `02`.
+Current canonical branch:
+
+`01 — Edge Clean Rebuild & Base Platform Deployment`
+
+Current facts:
+
+1. Stage 0 preservation/recovery is complete.
+2. Provider-level clean Ubuntu rebuild is complete and accepted.
+3. GitHub `migration-reference/` is accepted engineering context.
+4. Architecture-independent minimal host bootstrap is accepted.
+5. **Base Platform Deployment is not complete.**
+6. Stage 1 requirements/service-selection work must continue in branch `01` before additional architecture-dependent deployment.
+7. No later implementation branch is active.
+
+`EDGE_FRESH_OS_SUBSTRATE_ACCEPTANCE=PASS` and `EDGE_MINIMAL_BASE_BOOTSTRAP_ACCEPTANCE=PASS` are subset acceptances inside Stage 1; they are not Stage 1 acceptance.
+
+## Stage 1 transition gate
+
+Do not leave branch `01` until all required Base Platform work is completed, including stage-specific design/selection, deployment, verification and acceptance.
+
+Only after explicit Stage 1 acceptance should ChatGPT propose:
+
+`02 — Edge Core Applications`
+
+The Stage 2 branch must again begin with requirements analysis and service/product selection before deployment.
 
 ## Runtime mutation gate
 
-The earlier absolute prohibition on runtime mutation before a complete Architecture Contract is superseded only as follows:
+The clean rebuild and minimal substrate bootstrap are accepted historical/current state.
 
-- the clean substrate rebuild and the minimum work required to validate/bootstrap that substrate are accepted;
-- further host-level base bootstrap may be performed only when explicitly scoped, verified and not dependent on unresolved target-service architecture;
-- restoration/deployment of target services, ingress topology, private backbone, application storage layout and other architecture-dependent components remains gated by later accepted decisions.
+For further Stage 1 work:
 
-Do not infer authorization to restore legacy services merely because their products are already accepted for the future composition.
+- architecture-independent checks/maintenance may be performed when explicitly scoped;
+- architecture-dependent changes must wait until the relevant Stage 1 requirements, service/product choices and Stage 1 deployment contract are accepted;
+- do not restore legacy services merely because their product names are globally accepted;
+- do not deploy future-stage services early.
 
 ## Current substrate contract
 
@@ -104,9 +127,10 @@ Accepted live substrate facts include:
 - IPv6 `2a0c:b847:ffff:283::a/64`, gateway `2a0c:b847:ffff::1`;
 - SSH public-key access works; root password authentication is disabled;
 - OpenSSH is socket-activated through `ssh.socket`;
-- post-reboot system state `running`, failed units 0, current-boot error journal empty.
+- persistent journald-use ceiling is `500M`;
+- provider-generated working Netplan/cloud-init networking remains authoritative unless a later concrete change requires otherwise.
 
-The provider-generated netplan/cloud-init material is working runtime state. Do not replace it byte-for-byte with historical `migration-reference/` networking configuration. Fresh runtime/configuration has priority over historical reference.
+Fresh runtime/configuration has priority over historical reference.
 
 ## Recovery model
 
@@ -119,7 +143,7 @@ Two independent recovery planes remain valid:
 
 ## Source-of-truth and persistence rules
 
-For project intent, use the latest applicable `ACCEPTED` decisions and the accepted canonical documents referenced by them. For factual runtime state, priority is:
+For project intent, use the latest applicable `ACCEPTED` decisions and canonical current documents. For factual runtime state, priority is:
 
 1. fresh runtime audit;
 2. actual live configuration;
@@ -136,6 +160,13 @@ Before modifying project files:
 4. read back critical writes.
 
 Store structured state and decisions, not chat transcripts.
+
+When returning to an earlier checkpoint after premature planning or branch transition:
+
+- restore the earlier checkpoint as current state;
+- remove or replace premature current-tree architecture/task/handoff artifacts that no longer apply;
+- keep Git history intact unless the user explicitly requests history rewriting;
+- mark superseded decisions clearly so they cannot be mistaken for current authority.
 
 ## Decision semantics
 
@@ -159,7 +190,7 @@ Latest applicable `ACCEPTED` decision has priority. `SUPERSEDED`, `REJECTED`, an
 
 - Single-operator personal infrastructure; avoid enterprise complexity without a demonstrated use case.
 - Prefer simple upstream-supported mechanisms and minimum custom code.
-- VPN/proxy services used for DPI bypass are a separate function from any future private infrastructure backbone.
+- VPN/proxy services used for DPI bypass are separate from any future private infrastructure backbone.
 - Any private backbone must be tested on the real Russia ↔ external-VPS path before acceptance; do not assume WireGuard-based connectivity will be reliable under DPI.
 - Home/PAI connectivity is a late integration layer and must not become a foundation requirement for an otherwise standalone-useful `edge`.
 - Do not carry legacy service configuration forward blindly; use `migration-reference/` to understand prior logic and the external archive only where exact state/credentials are actually required.
