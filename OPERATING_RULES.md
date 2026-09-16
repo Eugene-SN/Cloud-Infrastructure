@@ -27,6 +27,21 @@ Cloud Infrastructure should complement Home Infrastructure and PAI rather than d
 - Do not reinterpret it as current runtime state after the 2026-09-16 rebuild.
 - Do not treat the historical deployment as the target architecture.
 
+## Work branches versus implementation stages
+
+Project/chat work-branch numbers and implementation-stage numbers are independent and must never be conflated.
+
+Work-branch chronology:
+
+- `00 — Cloud Infrastructure Architecture Discovery & Target Design` — discovery, target composition, preservation planning and initial architecture work;
+- `01 — Edge Clean Rebuild & Base Platform Deployment` — provider clean rebuild, fresh-substrate acceptance and architecture-independent minimal host bootstrap;
+- `02 — Edge Functional Composition & Deferred Capabilities` — complete unresolved functional/service choices and deferred-capability decisions;
+- `03 — Edge Architecture Contract & Topology` — begins only after branch 02 is closed and defines the final Architecture Contract/topology.
+
+A work-branch number does not indicate that the same-numbered implementation stage is active or complete. In particular, branch `01` did **not** complete implementation Stage 1; it completed only the clean substrate and minimal architecture-independent bootstrap portion of that stage.
+
+Canonical deployment-stage chronology is `IMPLEMENTATION_PHASES.md`.
+
 ## Current work stage
 
 Stage 0 preservation is complete and the provider-level clean Ubuntu rebuild has been accepted.
@@ -36,10 +51,35 @@ Current state:
 1. Recovery archive + provider backup: accepted.
 2. GitHub `migration-reference/`: accepted engineering context.
 3. Clean Ubuntu substrate for `edge`: accepted (`EDGE_FRESH_OS_SUBSTRATE_ACCEPTANCE=PASS`).
-4. Target-service composition and architecture decisions remain in progress.
-5. Target-service deployment has not started.
+4. Architecture-independent minimal host bootstrap: accepted (`EDGE_MINIMAL_BASE_BOOTSTRAP_ACCEPTANCE=PASS`).
+5. Implementation Stage 1 is **PARTIAL**, not complete.
+6. Functional/service composition and deferred-capability decisions must be completed before the Architecture Contract.
+7. Architecture-dependent target-service deployment has not started.
 
 The clean substrate reset is now historical/current state, not an open migration option.
+
+## Canonical implementation sequence
+
+Unless superseded by a later explicit ACCEPTED decision:
+
+- **Stage 0 — Preservation / migration decision:** COMPLETE.
+- **Stage 1 — Base `edge` Platform:** PARTIAL; substrate/minimal bootstrap complete, service foundation pending.
+- **Stage 2 — Core Applications:** pending Stage 1 acceptance.
+- **Stage 3 — Monitoring + Human Interaction:** pending.
+- **Stage 4 — Files / Sync / Obsidian:** pending.
+- **Stage 5 — Information + Cloud AI:** pending.
+- **Stage 6 — Home / PAI Integration:** pending and deliberately late.
+- **Stage 7 — Optional:** pending and deliberately last.
+
+Current gating order is:
+
+1. finish work branch `02 — Edge Functional Composition & Deferred Capabilities`;
+2. then open/finish `03 — Edge Architecture Contract & Topology`;
+3. use the accepted Architecture Contract to finish remaining implementation Stage 1 components;
+4. accept implementation Stage 1;
+5. proceed to Stage 2, then Stages 3–7.
+
+Do not jump directly from the clean substrate/minimal bootstrap to Stage 2 applications merely because the active work branch is numbered `02`.
 
 ## Runtime mutation gate
 
@@ -79,7 +119,7 @@ Two independent recovery planes remain valid:
 
 ## Source-of-truth and persistence rules
 
-For project intent, use the latest applicable `ACCEPTED` decisions. For factual runtime state, priority is:
+For project intent, use the latest applicable `ACCEPTED` decisions and the accepted canonical documents referenced by them. For factual runtime state, priority is:
 
 1. fresh runtime audit;
 2. actual live configuration;
@@ -121,4 +161,5 @@ Latest applicable `ACCEPTED` decision has priority. `SUPERSEDED`, `REJECTED`, an
 - Prefer simple upstream-supported mechanisms and minimum custom code.
 - VPN/proxy services used for DPI bypass are a separate function from any future private infrastructure backbone.
 - Any private backbone must be tested on the real Russia ↔ external-VPS path before acceptance; do not assume WireGuard-based connectivity will be reliable under DPI.
+- Home/PAI connectivity is a late integration layer and must not become a foundation requirement for an otherwise standalone-useful `edge`.
 - Do not carry legacy service configuration forward blindly; use `migration-reference/` to understand prior logic and the external archive only where exact state/credentials are actually required.
