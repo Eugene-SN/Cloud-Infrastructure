@@ -1,0 +1,24 @@
+network:
+  version: 2
+  ethernets:
+    ens3:
+      match:
+        macaddress: "00:17:ad:e1:d8:50"
+      addresses:
+      - "45.92.156.17/24"
+      - "2a0c:b847:ffff:283::a/64"
+      nameservers:
+        addresses:
+        - 8.8.8.8
+        - 8.8.4.4
+        - 2001:4860:4860::8888
+        - 2001:4860:4860::8844
+      gateway4: 45.92.156.1
+      gateway6: 2a0c:b847:ffff::1
+      routes:
+      - scope: "link"
+        to: "45.92.156.1"
+        via: "0.0.0.0"
+      - scope: "link"
+        to: "2a0c:b847:ffff::1"
+        via: "::0"

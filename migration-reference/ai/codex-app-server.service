@@ -1,0 +1,29 @@
+[Unit]
+Description=Server Codex App Server Remote Control
+Documentation=man:systemd.service(5)
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=300
+StartLimitBurst=5
+
+[Service]
+Type=simple
+User=core
+Group=core
+WorkingDirectory=/home/core
+Environment=HOME=/home/core
+Environment=USER=core
+Environment=LOGNAME=core
+Environment=PATH=/home/core/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ExecStartPre=/usr/bin/install -d -o core -g core -m 700 /home/core/.codex/app-server-control
+ExecStartPre=/bin/sh -lc 'if ! pgrep -u core -f "codex.*app-server.*remote-control" >/dev/null 2>&1; then rm -f "/home/core/.codex/app-server-control/app-server-startup.lock"; fi'
+ExecStart=/home/core/.local/bin/codex app-server --remote-control --listen unix://
+Restart=always
+RestartSec=5
+TimeoutStartSec=60
+TimeoutStopSec=20
+KillMode=control-group
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

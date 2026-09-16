@@ -1,0 +1,15 @@
+# Docker containers
+NAME=bulwark | IMAGE=ghcr.io/bulwarkmail/webmail | STATUS=Up 3 hours | PORTS=127.0.0.1:18084->3000/tcp
+NAME=stalwart | IMAGE=stalwartlabs/stalwart | STATUS=Up 3 hours (healthy) | PORTS=110/tcp, 143/tcp, 0.0.0.0:25->25/tcp, 443/tcp, 0.0.0.0:465->465/tcp, 587/tcp, 995/tcp, 0.0.0.0:993->993/tcp, 4190/tcp, 127.0.0.1:18083->8080/tcp
+NAME=n8n | IMAGE=docker.n8n.io/n8nio/n8n:2.37.10 | STATUS=Up 3 hours (healthy) | PORTS=127.0.0.1:15678->5678/tcp
+NAME=filestash | IMAGE=machines/filestash | STATUS=Up 32 hours (healthy) | PORTS=127.0.0.1:18334->8334/tcp
+NAME=authelia | IMAGE=authelia/authelia:4.39.22 | STATUS=Up 3 hours (healthy) | PORTS=127.0.0.1:19091->9091/tcp
+NAME=homepage | IMAGE=ghcr.io/gethomepage/homepage:v2.2.0 | STATUS=Up 32 hours (healthy) | PORTS=127.0.0.1:13000->3000/tcp
+NAME=monitoring | IMAGE=nginx:1.31.5-alpine | STATUS=Up 32 hours (healthy) | PORTS=127.0.0.1:18081->80/tcp
+NAME=docker-proxy | IMAGE=tecnativa/docker-socket-proxy:v0.5.0 | STATUS=Up 32 hours (healthy) | PORTS=2375/tcp
+NAME=syncthing | IMAGE=syncthing/syncthing:2.1.3 | STATUS=Up 32 hours (healthy) | PORTS=21027/udp, 22000/udp, 22000/tcp, 127.0.0.1:18384->8384/tcp
+
+# Compose projects
+NAME                STATUS              CONFIG FILES
+core-stack          running(7)          /srv/ai-workspace/apps/core-stack/docker-compose.yml
+mail-stack          running(2)          /srv/ai-workspace/apps/mail-stack/docker-compose.yml

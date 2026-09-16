@@ -1,0 +1,32 @@
+[Unit]
+Description=Server Codex Runner API
+After=network-online.target docker.service
+Wants=network-online.target
+Requires=docker.service
+
+[Service]
+Type=simple
+User=core
+Group=core
+WorkingDirectory=/srv/ai-workspace
+Environment=HOME=/home/core
+Environment=PATH=/home/core/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ExecStart=/usr/local/libexec/codex-runner-api
+Restart=on-failure
+RestartSec=5s
+TimeoutStopSec=20s
+UMask=0027
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/srv/ai-workspace/tasks
+ReadWritePaths=/home/core/.codex
+ReadOnlyPaths=/srv/ai-workspace/workspaces/manual
+ReadOnlyPaths=/etc/codex-runner/token
+RestrictAddressFamilies=AF_UNIX AF_INET
+LockPersonality=true
+MemoryDenyWriteExecute=true
+
+[Install]
+WantedBy=multi-user.target

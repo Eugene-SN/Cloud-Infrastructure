@@ -1,0 +1,73 @@
+name: mail-stack
+
+services:
+  stalwart:
+    image: stalwartlabs/stalwart@sha256:93c574e52249c1ebf90061da2c4c0756a7b72abfcc1fec34506a03c2e38b5977
+    container_name: stalwart
+    hostname: mail.escloud.us
+    restart: unless-stopped
+    environment:
+      TZ: Europe/Minsk
+      STALWART_PUBLIC_URL: https://mail.escloud.us
+      STALWART_HOSTNAME: mail.escloud.us
+    ports:
+      - "127.0.0.1:18083:8080"
+      - "0.0.0.0:993:993"
+      - "0.0.0.0:465:465"
+      - "0.0.0.0:25:25"
+    volumes:
+      - /srv/ai-workspace/data/mail/stalwart/etc:/etc/stalwart
+      - /srv/ai-workspace/data/mail/stalwart/lib:/var/lib/stalwart
+      - /srv/ai-workspace/data/mail/stalwart/certs:/etc/stalwart-certs:ro
+    networks:
+      - mail
+    cpus: "0.75"
+    mem_limit: 1g
+    pids_limit: 192
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+
+  bulwark:
+    image: ghcr.io/bulwarkmail/webmail@sha256:0e8d1339277033b6569a76c6f8192396e6edd66fd917d64d9ed505e8b81dac6d
+    container_name: bulwark
+    hostname: mail.escloud.us
+    restart: unless-stopped
+    environment:
+      TZ: Europe/Minsk
+      HOSTNAME: "0.0.0.0"
+      PORT: "3000"
+      APP_NAME: "AI Workspace Mail"
+      APP_SHORT_NAME: "Mail"
+      JMAP_SERVER_URL: https://mail.escloud.us
+      SESSION_SECRET_FILE: /app/data/settings/session_secret
+    ports:
+      - "127.0.0.1:18084:3000"
+    volumes:
+      - /srv/ai-workspace/data/mail/bulwark/settings:/app/data/settings
+      - /srv/ai-workspace/data/mail/bulwark/admin:/app/data/admin
+      - /srv/ai-workspace/data/mail/bulwark/admin-state:/app/data/admin-state
+      - /srv/ai-workspace/data/mail/bulwark/telemetry:/app/data/telemetry
+    depends_on:
+      - stalwart
+    networks:
+      - mail
+    cpus: "0.50"
+    mem_limit: 768m
+    pids_limit: 192
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+
+networks:
+  mail:
+    name: mail-network
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.22.0.0/16
+          gateway: 172.22.0.1

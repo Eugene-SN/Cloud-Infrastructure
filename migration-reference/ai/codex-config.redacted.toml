@@ -1,0 +1,24 @@
+personality = "pragmatic"
+model = "gpt-5.6-sol"
+model_reasoning_effort = "xhigh"
+approval_policy = "on-request"
+approvals_reviewer = "user"
+sandbox_mode = "workspace-write"
+
+[features]
+memories = false
+
+[memories]
+generate_memories = false
+use_memories = false
+
+[mcp_servers.cloudcli-browser]
+command = "/usr/bin/node"
+args = [
+  "/home/core/.local/lib/node_modules/@cloudcli-ai/cloudcli/dist-server/server/modules/browser-use/browser-use-mcp.js"
+]
+env_vars = [ ]
+
+  [mcp_servers.cloudcli-browser.env]
+  CLOUDCLI_BROWSER_USE_MCP_TOKEN = "<REDACTED_MCP_TOKEN>"
+  CLOUDCLI_BROWSER_USE_API_URL = "http://127.0.0.1:18140/api/browser-use-mcp"

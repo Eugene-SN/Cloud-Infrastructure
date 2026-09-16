@@ -1,0 +1,18 @@
+listen: :443
+
+tls:
+  cert: /etc/hysteria/tls/fullchain.pem
+  key: /etc/hysteria/tls/privkey.pem
+  sniGuard: strict
+
+auth:
+  type: userpass
+  userpass:
+    hy2-nl-core: <REDACTED_HY2_PASSWORD>
+    hy2-nl-core-gateway: <REDACTED_HY2_PASSWORD>
+
+masquerade:
+  type: file
+  file:
+    dir: /var/www/escloud.us/public
+    rewriteLocation: true

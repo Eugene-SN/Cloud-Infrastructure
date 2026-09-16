@@ -1,0 +1,23 @@
+[stalwart-submission-scan]
+enabled = true
+filter = stalwart-submissions-scan
+logpath = /var/lib/docker/containers/*/*-json.log
+backend = auto
+logtimezone = UTC
+action = docker-user[name=stalwart-submission-scan, port="465", protocol=tcp]
+maxretry = 4
+findtime = 15m
+bantime = 6h
+ignoreip = 127.0.0.1/8 ::1 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16 45.92.156.17
+
+[stalwart-smtp-abuse]
+enabled = true
+filter = stalwart-smtp-abuse
+logpath = /var/lib/docker/containers/*/*-json.log
+backend = auto
+logtimezone = UTC
+action = docker-user[name=stalwart-smtp-abuse, port="25,465", protocol=tcp]
+maxretry = 6
+findtime = 1h
+bantime = 12h
+ignoreip = 127.0.0.1/8 ::1 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16 45.92.156.17

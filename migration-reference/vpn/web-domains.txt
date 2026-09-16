@@ -1,0 +1,8 @@
+escloud.us
+app.escloud.us
+auth.escloud.us
+cloud.escloud.us
+docs.escloud.us
+go.escloud.us
+mail.escloud.us
+sync.escloud.us

@@ -1,0 +1,219 @@
+name: core-stack
+services:
+  filestash:
+    image: machines/filestash@sha256:0b8fc005e52e6202c626ff5e155d8c2a313c83fd2130861b19fc96cdc41b55ad
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - >-
+          curl -fsS http://127.0.0.1:8334/ >/dev/null
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    container_name: filestash
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:18334:8334"
+    environment:
+      APPLICATION_URL: "cloud.escloud.us"
+    volumes:
+      - /srv/ai-workspace/data/filestash/state:/app/data/state
+      - /srv/cloud:/mnt/cloud
+    networks:
+      - internal
+      - egress
+  monitoring:
+    image: nginx:1.31.5-alpine@sha256:72ba65eb42c10344912a84ff42408db7d34f2feb642204570ab8fc5ffd29f1d3
+    container_name: monitoring
+    restart: unless-stopped
+    networks:
+    - internal
+    - egress
+    ports:
+    - ${MONITORING_BIND}:80
+    environment:
+      TZ: ${TZ}
+    volumes:
+    - ./state/health-html/index.html:/usr/share/nginx/html/index.html:ro
+    - /var/lib/maintenance-center/state:/usr/share/nginx/html/monitoring:ro
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - wget -qO- http://127.0.0.1/ | grep -q 'AI Workspace health OK'
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    logging:
+      driver: local
+      options:
+        max-size: 10m
+        max-file: '3'
+  authelia:
+    image: authelia/authelia:4.39.22@sha256:936134132eaf01bfa2faf85055afbc1e0cc1cc5ca4547e9c06408fd0dd784646
+    container_name: authelia
+    restart: unless-stopped
+    networks:
+    - internal
+    - egress
+    ports:
+    - ${AUTHELIA_PORT}:9091
+    environment:
+      TZ: ${TZ}
+      X_AUTHELIA_CONFIG_FILTERS: template
+    volumes:
+    - /srv/ai-workspace/data/authelia/config:/config
+    - /srv/ai-workspace/data/authelia/secrets:/secrets:ro
+    - /srv/ai-workspace/data/authelia/db:/data
+    - /srv/ai-workspace/data/authelia/logs:/logs
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - wget -qO- http://127.0.0.1:9091/api/health >/dev/null 2>&1 || exit 1
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    logging:
+      driver: local
+      options:
+        max-size: 10m
+        max-file: '3'
+  n8n:
+    image: docker.n8n.io/n8nio/n8n:2.37.10@sha256:307d6065be25619aa24cfc63a7c2f04ca56d084a08c05c8e9f189a89f353b1ec
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - >-
+          wget -qO- http://127.0.0.1:5678/healthz/readiness | grep -q '"status":"ok"'
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+    container_name: n8n
+    restart: unless-stopped
+    networks:
+      internal: null
+      egress: null
+      runner:
+        ipv4_address: 172.21.0.2
+    extra_hosts:
+    - runner-host:172.21.0.1
+    ports:
+    - 127.0.0.1:15678:5678
+    environment:
+      TZ: ${TZ}
+      GENERIC_TIMEZONE: ${TZ}
+      N8N_HOST: go.escloud.us
+      N8N_PORT: '5678'
+      N8N_PROTOCOL: https
+      WEBHOOK_URL: https://go.escloud.us/
+      N8N_EDITOR_BASE_URL: https://go.escloud.us/
+      N8N_SECURE_COOKIE: 'true'
+      N8N_DIAGNOSTICS_ENABLED: 'false'
+      N8N_PERSONALIZATION_ENABLED: 'false'
+      N8N_HIRING_BANNER_ENABLED: 'false'
+    volumes:
+    - /srv/ai-workspace/data/n8n:/home/node/.n8n
+    - /etc/codex-runner/token:/run/secrets/codex_runner_token:ro
+  syncthing:
+    image: syncthing/syncthing:2.1.3@sha256:8c8ff37ab6aa8be23b700648a90fa9412e214852e9fd6ea8477c8334792daec0
+    container_name: syncthing
+    restart: unless-stopped
+    networks:
+    - internal
+    - egress
+    ports:
+    - 127.0.0.1:18384:8384
+    environment:
+      TZ: ${TZ}
+      PUID: '1000'
+      PGID: '1000'
+    volumes:
+    - /srv/ai-workspace/data/syncthing:/var/syncthing
+  docker-socket-proxy:
+    image: tecnativa/docker-socket-proxy:v0.5.0@sha256:1f5038b54f06c3e18422902cf00ba21803d1c97805aae032e5e6673d532d3459
+    container_name: docker-proxy
+    restart: unless-stopped
+    networks:
+    - monitoring
+    environment:
+      CONTAINERS: '1'
+      SERVICES: '1'
+      TASKS: '1'
+      INFO: '1'
+      NETWORKS: '1'
+      VERSION: '1'
+      EVENTS: '1'
+      PING: '1'
+      POST: '0'
+      AUTH: '0'
+      BUILD: '0'
+      COMMIT: '0'
+      CONFIGS: '0'
+      DISTRIBUTION: '0'
+      EXEC: '0'
+      IMAGES: '0'
+      NODES: '0'
+      PLUGINS: '0'
+      SECRETS: '0'
+      SESSION: '0'
+      SWARM: '0'
+      SYSTEM: '0'
+      VOLUMES: '0'
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock:ro
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - wget -qO- http://127.0.0.1:2375/_ping 2>/dev/null | grep -qx OK
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    logging:
+      driver: local
+      options:
+        max-size: 10m
+        max-file: '3'
+  homepage:
+    image: ghcr.io/gethomepage/homepage:v2.2.0@sha256:753eeb0cc22ab7baad39ed47cbd1aae14e193dd1b264e965f193a9ea1d1e1bdd
+    container_name: homepage
+    restart: unless-stopped
+    networks:
+    - internal
+    - egress
+    - monitoring
+    ports:
+    - 127.0.0.1:13000:3000
+    environment:
+      TZ: ${TZ}
+      HOMEPAGE_ALLOWED_HOSTS: app.escloud.us,127.0.0.1:13000,localhost:13000
+    volumes:
+    - /srv/ai-workspace/data/homepage/config:/app/config
+    logging:
+      driver: local
+      options:
+        max-size: 10m
+        max-file: '3'
+networks:
+  internal:
+    name: core-internal
+    driver: bridge
+    internal: true
+  egress:
+    name: core-egress
+    driver: bridge
+  monitoring:
+    name: core-monitoring
+    driver: bridge
+    internal: true
+  runner:
+    name: automation-runner
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+      - subnet: 172.21.0.0/24
+        gateway: 172.21.0.1

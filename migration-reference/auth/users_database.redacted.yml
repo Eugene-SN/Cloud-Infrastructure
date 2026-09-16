@@ -1,0 +1,9 @@
+users:
+  core:
+    disabled: false
+    displayname: "Core Admin"
+    password: "<REDACTED_ARGON2_PASSWORD_HASH>"
+    email: core@escloud.us
+    groups:
+      - admins
+      - aiw
