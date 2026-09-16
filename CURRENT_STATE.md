@@ -44,6 +44,38 @@ The baseline is not the desired-state architecture.
 
 For complete facts, use the baseline file rather than this summary.
 
+## Stage 0 preservation / recovery state
+
+**Status:** PASS / complete.
+
+Confirmed preservation layers:
+
+- provider-level full VPS backup completed successfully;
+- external credential-bearing migration archive downloaded and independently verified;
+- archive SHA256: `0203e5845f57bc1d04b384cef2b26a45fbff855c341e1edf1193034c34de9fdf`;
+- server-side post-copy application acceptance passed for Stalwart/Bulwark, n8n, Authelia, Xray, Hysteria2, nginx, CloudCLI and Codex-related services;
+- `STAGE0_PRESERVATION_ACCEPTANCE=PASS`.
+
+The sensitive archive is recovery material and remains outside GitHub.
+
+## Migration engineering reference
+
+A sanitized directly-readable engineering reference is accepted at:
+
+`migration-reference/`
+
+Purpose:
+
+- preserve expensive-to-reconstruct legacy implementation logic for fresh-deployment analysis;
+- make `maintctl`, `vpnctl`, Xray/Hysteria structure, mail/nginx/Authelia/AI service definitions and selected host/runtime context directly readable from GitHub;
+- keep actual credential-bearing state in the separate recovery plane.
+
+The reference contains 37 files including its checksum manifest. `maintctl` and `vpnctl` are preserved verbatim; source credential values in Xray, Hysteria2, Authelia and Codex reference configuration are explicitly redacted.
+
+Canonical acceptance record:
+
+`MIGRATION_REFERENCE_ACCEPTANCE_2026-09-16.md`
+
 ## Accepted target-service direction
 
 Accepted without further alternative search unless a concrete incompatibility emerges:
