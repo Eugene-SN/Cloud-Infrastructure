@@ -303,3 +303,24 @@ Do not keep Syncthing merely because task execution may use files.
 **Constraints:** These capabilities do not by themselves authorize new dedicated services. Reuse n8n, mail and existing interfaces where sufficient; do not infer a message broker, separate inbox application or approval platform.
 
 **Supersedes:** the previous scaffold only insofar as these four capabilities were implicit or absent.
+
+---
+
+## 2026-09-16T16:56:26+03:00 — Migration preservation archive may include credentials
+
+**Status:** ACCEPTED
+
+**Context:** Stage 0 preservation is intended to support a possible clean Ubuntu rebuild while retaining expensive-to-reconstruct service state.
+
+**Decision:** The manually downloaded migration-preservation archive may and should include the complete configuration and persistent state of services selected for the future `edge`, including credentials, authentication state, application secrets, private keys, TLS material and other sensitive files required for faithful restoration or migration.
+
+Initial high-priority preservation audit focuses on Stalwart + Bulwark and Xray + Hysteria2, including the complete current `maintctl` script for later adaptation/optimization. The preservation scope may also include nginx, n8n, Authelia, CloudCLI, Codex CLI and other accepted services once their exact current paths and dependencies are audited.
+
+**Constraints:**
+
+- Sensitive archive contents are for local/manual transfer and recovery only.
+- Do not commit credentials, private keys, application secrets or credential-bearing archives to GitHub.
+- Do not print secret values into routine audit output when path/metadata verification is sufficient.
+- Verify archive integrity before any destructive rebuild.
+
+**Supersedes:** any narrower interpretation that the migration archive should omit credentials or secret state.
