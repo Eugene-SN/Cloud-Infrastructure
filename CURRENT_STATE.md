@@ -2,11 +2,11 @@
 
 ## Snapshot status
 
-**Project stage:** clean `edge` substrate accepted; target-service composition / architecture work continues before service deployment.
+**Project stage:** clean `edge` substrate and minimal host-level base bootstrap accepted; target-service composition / architecture work continues before service deployment.
 
 **Primary GitHub repository:** `Eugene-SN/Cloud-Infrastructure`
 
-**Runtime mutation status:** provider-level clean rebuild completed and accepted. No target application/service stack has been restored or deployed yet.
+**Runtime mutation status:** provider-level clean rebuild and minimal architecture-independent host bootstrap completed and accepted. No target application/service stack has been restored or deployed yet.
 
 ## Historical baseline
 
@@ -101,6 +101,32 @@ GreenCloud NoCloud seed completed with `errors: []`, but schema validation repor
 
 These are non-blocking provider-template issues. Effective runtime state for SSH key installation, swap and IPv4/IPv6 networking is correct. Do not mutate working configuration merely to silence these warnings unless a later accepted configuration-normalization step requires it.
 
+## Minimal base bootstrap acceptance — 2026-09-16
+
+**Status:** PASS.
+
+`EDGE_MINIMAL_BASE_BOOTSTRAP_ACCEPTANCE=PASS`.
+
+Architecture-independent host bootstrap was intentionally kept minimal. Accepted changes and verified state:
+
+- package metadata refreshed successfully;
+- `dpkg --audit` clean;
+- no APT holds;
+- Ubuntu phased updates were not forced; six phased updates remained deferred at acceptance;
+- `unzip 6.0-29ubuntu1` installed as the only additional base utility;
+- journald persistent-use ceiling configured via `/etc/systemd/journald.conf.d/90-edge-retention.conf` with `SystemMaxUse=500M`;
+- journald active and healthy;
+- timezone intentionally retained as `Europe/Moscow`; NTP synchronized;
+- working provider-generated Netplan left unchanged;
+- SSH configuration left unchanged; key-only root access and `ssh.socket` remain accepted;
+- QEMU guest agent present and active;
+- cloud-init provider warnings left unchanged as previously classified non-blocking;
+- `/tmp` is tmpfs with mode `1777`;
+- system state `running`, failed units 0, current-boot error journal empty after bootstrap;
+- IPv4/IPv6 and SSH non-regression gates passed.
+
+Not installed merely for convenience: `zip`, `tree`, `socat`, `pip3`. Install such tools only when a concrete consumer requires them. `pollinate` was not autoremove-cleaned solely because APT marked it unused.
+
 ## Accepted target-service direction
 
 Accepted without further replacement search unless a concrete incompatibility emerges:
@@ -143,4 +169,6 @@ Canonical Obsidian vault remains on `ai-node` at `/srv/ai-data/knowledge/obsidia
 
 `EDGE_FRESH_OS_SUBSTRATE_ACCEPTANCE=PASS`.
 
-The clean Ubuntu substrate is accepted. This acceptance authorizes subsequent explicitly scoped base-bootstrap work, but does **not** implicitly authorize restoration or deployment of target services. Service deployment remains gated by the applicable accepted architecture/implementation decisions.
+`EDGE_MINIMAL_BASE_BOOTSTRAP_ACCEPTANCE=PASS`.
+
+The clean Ubuntu substrate and minimal architecture-independent host bootstrap are accepted. Further target-service restoration/deployment remains gated by the applicable accepted service-composition, architecture and implementation decisions.
