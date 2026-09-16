@@ -215,3 +215,72 @@ Do not keep Syncthing merely because task execution may use files.
 7. After candidate services are evaluated, assemble and approve the complete service composition; only then design topology, inter-service relationships and deployment architecture.
 
 **Supersedes:** the implied sequencing that `Storage / Files / Obsidian Sync` should be the immediate next research block.
+
+---
+
+## 2026-09-16T16:04:00+03:00 — First-pass capability catalog screening
+
+**Status:** ACCEPTED
+
+**Context:** A broad catalog of 75 common private-VPS use cases was reviewed against the existing Home Infrastructure and Personal Agents Infrastructure. The purpose was to eliminate obvious duplication before deeper research.
+
+**Decision:**
+
+### Accepted or already accepted for the preliminary `edge` capability scaffold
+
+- DPI-resistant foreign Internet egress through the accepted Xray/Hysteria2 stack.
+- Public web ingress/reverse proxy through nginx.
+- Mail through Stalwart + Bulwark.
+- Unified web authentication through Authelia.
+- Dedicated private Cloud Infrastructure portal/status page, replacing Homepage; a public decoy/masquerade page for the VPN public edge is also of interest.
+- Maintenance through the accepted maintenance-page + Semaphore direction.
+- Backup management through the accepted Backrest direction.
+- VPS working-file access from MacBook/iPhone/`ai-node` plus web file browsing/editing.
+- Continuous selected-file synchronization; implementation remains unresolved.
+- Obsidian synchronization/mirror role; implementation remains unresolved while canonical vault stays on `ai-node`.
+- n8n as the common automation plane; do not add a separate generic cron/job automation plane merely because a task is simple.
+- CloudCLI plus Codex CLI and Antigravity CLI as the accepted cloud-AI workspace/subscription execution core.
+- Long-running cloud coding-agent workflows.
+- Website-change monitoring/automation in n8n.
+- Internet document-ingestion/orchestration toward Home/PAI processing.
+
+### Explicitly excluded from the current `edge` functional scope
+
+- Treating Ubuntu/SSH toolbox itself as a user-facing capability; Ubuntu is the hosting substrate.
+- VPS as a replacement for the existing Home/PVE/ai-node/MikroTik infrastructure plane.
+- Authoritative DNS and personal recursive/filtering DNS on `edge`; Home Infrastructure is preferred.
+- Full personal cloud-drive suite on `edge`; evaluate that class of functionality for Home/PAI instead.
+- Calendar/contacts DAV on `edge`.
+- Git hosting/mirroring, CI/CD runner, artifact/package registry, generic sandbox/test environment, public staging environment, standalone database hosting without a consumer.
+- Separate generic scheduled-script/job runner outside n8n.
+- General SaaS/cloud credential gateway as a standalone capability.
+- Headless browser and remote interactive browser as standalone edge services at this stage.
+- Central MCP gateway and multi-provider AI API gateway/router at this stage.
+- CGNAT bridge, geographical synthetic-monitoring point, TURN/STUN, MQTT/IoT broker, game/media/download/photo hosting, and general learning/lab use.
+- VoIP/PBX and realtime communication servers for now; reconsider only if a future use case appears.
+
+### Deferred for explicit evaluation before inclusion or rejection
+
+- Central TLS/certificate handling as a distinct capability versus an implementation property of ingress.
+- Public/machine API access for deployed services and the cross-device access model.
+- Internet webhook reception.
+- External uptime monitoring, dead-man/heartbeat monitoring and notifications.
+- Public decoy/masquerade page plus private operational/status portal composition.
+- Off-site backup target role relative to Home Backrest/PBS.
+- Whether a separate VPS bootstrap/DR store adds value beyond GitHub/Home backup.
+- Full external log/metrics collection; currently suspected to be unnecessary complexity.
+- Password/2FA vault and adjacent personal information-management services.
+- RSS/feed aggregation integrated with n8n/AI.
+- General continuous web/data collection beyond concrete feed/change-monitoring use cases.
+- Small web utilities such as paste/snippet/temporary-note/URL-shortening services.
+- Hermes/personal AI-agent runtime role on `edge` and its relationship to CloudCLI, subscription CLIs and local vLLM.
+- Bots as an interaction/notification channel.
+- Supervised/autonomous web-research workflows.
+- `edge ↔ Home/PAI` task handoff and document-ingestion integration.
+- Public gateway from `edge` to Home services; evaluate separately from existing Home outbound proxy routing.
+- Private/site-to-site `edge ↔ Home` connectivity mechanism.
+- Limited late-stage failover/secondary-endpoint role after the primary infrastructure is complete.
+
+**Constraints:** Do not infer a product choice from an accepted capability unless the product has already been explicitly accepted elsewhere in this log. Continue capability-level discussion before topology/product research.
+
+**Supersedes:** the unfiltered 75-item capability catalog as a working scope.
