@@ -6,6 +6,24 @@
 
 This document is not yet the final Cloud Infrastructure Architecture Contract. Service composition is being determined before topology and implementation details.
 
+## Current discovery method
+
+The immediate task is to build a complete **preliminary functional capability scaffold** for `edge` before doing detailed domain-by-domain product research.
+
+The scaffold is intentionally technology-neutral where a product has not already been accepted. It should answer **what useful capabilities Cloud Infrastructure should provide** before deciding **which service implements each capability**.
+
+Working sequence:
+
+1. inventory already accepted `edge` functions and products;
+2. discover additional high-value functions that materially benefit from an external 24/7 VPS and complement Home Infrastructure / PAI;
+3. represent unresolved needs as functional capability slots without prematurely selecting software;
+4. remove redundant functions that merely duplicate Home/PAI without a clear cloud advantage;
+5. only after the functional scaffold is complete, research and compare implementation candidates for unresolved domains;
+6. assemble and approve the complete service composition;
+7. only then design topology, inter-service relationships, runtime/storage layout and migration/rebuild architecture.
+
+Detailed `Storage / Files / Obsidian Sync` research is therefore deferred until the complete preliminary functional scaffold exists. Existing requirements in those domains remain valid but do not define the current research sequence.
+
 ## System model
 
 Cloud Infrastructure is one layer of a three-part personal infrastructure:
@@ -94,9 +112,9 @@ Authelia is intended as the common web authentication entry point for services e
 - Legacy custom Maintenance Center will not be carried forward.
 - Target direction: maintenance page + Semaphore, following the currently accepted Home/PVE operational model.
 
-## Open functional decisions
+## Known capability domains pending later implementation research
 
-The following are intentionally unresolved until requirements and alternatives are evaluated:
+These domains are part of the functional scaffold, but detailed product selection is intentionally deferred until the overall capability set is complete.
 
 ### File/storage layer
 
