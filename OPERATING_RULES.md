@@ -5,74 +5,101 @@
 - **Project name:** Cloud Infrastructure
 - **Primary repository:** `Eugene-SN/Cloud-Infrastructure`
 - **GitHub workflow:** ON
-- **Target primary VPS node:** `edge`
-- `edge` is a logical, location-agnostic name. Do not encode the current country, provider, or datacenter into target-state node naming.
+- **Primary VPS node:** `edge`
+- **Current FQDN:** `edge.escloud.us`
+- `edge` is a logical, location-agnostic node name. Do not encode provider/datacenter/country into target-state naming.
 
 ## Project scope
 
-Cloud Infrastructure is the cloud/public-facing layer of one personal infrastructure composed of three cooperating projects:
+Cloud Infrastructure is the public/cloud-facing layer of one personal infrastructure composed of:
 
-- **Home Infrastructure** — home general-purpose compute/service plane centered on Proxmox VE and home-network services.
-- **Personal Agents Infrastructure (PAI)** — local AI/agent/data-processing plane centered on `ai-node`.
-- **Cloud Infrastructure** — public/cloud layer using the strengths of an external 24/7 VPS: public routability, foreign location, external IP, Internet-facing services, cloud AI integrations, external coordination and off-site roles.
+- **Home Infrastructure** — general-purpose home compute/service plane centered on Proxmox VE and home-network services;
+- **Personal Agents Infrastructure (PAI)** — local AI/agent/data-processing plane centered on `ai-node`;
+- **Cloud Infrastructure** — external 24/7 VPS layer for public routability, foreign location, Internet-facing services, cloud AI integrations, external coordination and off-site roles.
 
-Cloud Infrastructure must complement Home Infrastructure and PAI rather than copy them without a concrete reason.
+Cloud Infrastructure should complement Home Infrastructure and PAI rather than duplicate them without a concrete requirement.
 
 ## Historical baseline invariant
 
-`NL_CORE_VDS_Current_State_Baseline_2026-09-14.md` is the canonical historical/as-is snapshot of the legacy VPS as of 2026-09-14.
+`NL_CORE_VDS_Current_State_Baseline_2026-09-14.md` remains the canonical historical/as-is snapshot of the pre-reinstall legacy VPS.
 
-- Keep its historical/current names such as `nl-core-vds` and legacy service/path terminology.
-- Do not retroactively rename or rewrite it to match the new taxonomy.
-- Do not treat its deployed architecture as the target architecture.
-- Do not infer future necessity from current service activity, inactivity, installation, or lack of use.
-- Apply `Cloud Infrastructure` and `edge` naming only to target-state, planning, architecture, deployment and migration materials.
+- Keep historical names such as `nl-core-vds` and legacy paths unchanged in that artifact.
+- Do not reinterpret it as current runtime state after the 2026-09-16 rebuild.
+- Do not treat the historical deployment as the target architecture.
 
 ## Current work stage
 
-The project is in **service/function discovery and target-composition analysis**.
+Stage 0 preservation is complete and the provider-level clean Ubuntu rebuild has been accepted.
 
-Current ordering is mandatory unless explicitly changed by a later ACCEPTED decision:
+Current state:
 
-1. Evaluate existing legacy VPS services and decide what is worth carrying forward.
-2. Identify missing high-value Cloud Infrastructure functions/services.
-3. Agree the complete functional/service composition of `edge`.
-4. Only then design service relationships, network topology, ingress, storage layout, runtime/container topology and deployment architecture.
-5. Produce and accept a Cloud Infrastructure Architecture Contract.
-6. Produce a migration/rebuild plan.
-7. Only then mutate runtime infrastructure.
+1. Recovery archive + provider backup: accepted.
+2. GitHub `migration-reference/`: accepted engineering context.
+3. Clean Ubuntu substrate for `edge`: accepted (`EDGE_FRESH_OS_SUBSTRATE_ACCEPTANCE=PASS`).
+4. Target-service composition and architecture decisions remain in progress.
+5. Target-service deployment has not started.
 
-Do not design the future topology around the current legacy deployment before the service composition is settled.
+The clean substrate reset is now historical/current state, not an open migration option.
 
 ## Runtime mutation gate
 
-Until the Architecture Contract and implementation/migration stage are explicitly accepted, do not:
+The earlier absolute prohibition on runtime mutation before a complete Architecture Contract is superseded only as follows:
 
-- install or remove VPS services;
-- update packages or containers;
-- change networking, firewall, DNS or routing;
-- rename the host;
-- install a private-backbone solution;
-- modify the current deployment merely because research finds a newer approach.
+- the clean substrate rebuild and the minimum work required to validate/bootstrap that substrate are accepted;
+- further host-level base bootstrap may be performed only when explicitly scoped, verified and not dependent on unresolved target-service architecture;
+- restoration/deployment of target services, ingress topology, private backbone, application storage layout and other architecture-dependent components remains gated by later accepted decisions.
 
-GitHub project-context maintenance is allowed and is separate from runtime mutation.
+Do not infer authorization to restore legacy services merely because their products are already accepted for the future composition.
+
+## Current substrate contract
+
+Accepted live substrate facts include:
+
+- Ubuntu 26.04.1 LTS, `x86_64`, KVM;
+- hostname/FQDN `edge.escloud.us`, short hostname `edge`;
+- kernel `7.0.0-31-generic` at substrate acceptance;
+- 2 vCPU, ~15 GiB RAM, 4 GiB swap;
+- root filesystem ~155 GiB class;
+- IPv4 `45.92.156.17/24`, gateway `45.92.156.1`;
+- IPv6 `2a0c:b847:ffff:283::a/64`, gateway `2a0c:b847:ffff::1`;
+- SSH public-key access works; root password authentication is disabled;
+- OpenSSH is socket-activated through `ssh.socket`;
+- post-reboot system state `running`, failed units 0, current-boot error journal empty.
+
+The provider-generated netplan/cloud-init material is working runtime state. Do not replace it byte-for-byte with historical `migration-reference/` networking configuration. Fresh runtime/configuration has priority over historical reference.
+
+## Recovery model
+
+Two independent recovery planes remain valid:
+
+1. **Whole-VPS rollback:** confirmed provider-level backup.
+2. **Selective recovery/migration:** external sensitive archive with SHA256 `0203e5845f57bc1d04b384cef2b26a45fbff855c341e1edf1193034c34de9fdf`.
+
+`migration-reference/` is engineering context only and must not be used as an authoritative restore bundle.
 
 ## Source-of-truth and persistence rules
 
-For project context, use the latest applicable ACCEPTED decisions as the controlling intent. Current factual runtime state must still be verified from runtime/configuration when implementation depends on it.
+For project intent, use the latest applicable `ACCEPTED` decisions. For factual runtime state, priority is:
+
+1. fresh runtime audit;
+2. actual live configuration;
+3. current repository state;
+4. historical docs/reference.
+
+A discrepancy between these is drift and must be resolved explicitly rather than guessed.
 
 Before modifying project files:
 
-1. read the current repository state;
-2. avoid duplicate documents and duplicate facts;
-3. update the existing canonical document for that topic;
+1. read current repository state;
+2. avoid duplicate documents/facts;
+3. update the canonical existing document for that topic;
 4. read back critical writes.
 
-Store structured project context, not chat transcripts. Preserve decision chronology in `DECISIONS.md`.
+Store structured state and decisions, not chat transcripts.
 
 ## Decision semantics
 
-Decision statuses are:
+Decision statuses:
 
 - `PROPOSED`
 - `ACCEPTED`
@@ -80,18 +107,18 @@ Decision statuses are:
 - `REJECTED`
 - `DEPRECATED`
 
-The latest applicable `ACCEPTED` decision has priority. A `SUPERSEDED`, `REJECTED` or `DEPRECATED` decision is historical only.
+Latest applicable `ACCEPTED` decision has priority. `SUPERSEDED`, `REJECTED`, and `DEPRECATED` entries are historical only.
 
 ## Git and secrets
 
-- Do not commit credentials or secrets to a public repository.
-- Persistent configuration/design/runbooks may be stored in Git when secret material is excluded.
-- The repository is shared persistent context for future Cloud Infrastructure branches and tools.
+- Do not commit credentials or secrets to GitHub.
+- Persistent non-secret configuration/design/runbooks may be stored in Git.
+- Sensitive recovery state remains outside GitHub.
 
 ## Project-specific design constraints
 
 - Single-operator personal infrastructure; avoid enterprise complexity without a demonstrated use case.
 - Prefer simple upstream-supported mechanisms and minimum custom code.
 - VPN/proxy services used for DPI bypass are a separate function from any future private infrastructure backbone.
-- A private backbone, if required, must be tested in the real Russia ↔ external-VPS path before being accepted; do not assume WireGuard-based connectivity will be reliable under DPI.
-- Reinstallation/rebuild of the legacy VPS remains an allowed future migration outcome; do not optimize prematurely for in-place migration.
+- Any private backbone must be tested on the real Russia ↔ external-VPS path before acceptance; do not assume WireGuard-based connectivity will be reliable under DPI.
+- Do not carry legacy service configuration forward blindly; use `migration-reference/` to understand prior logic and the external archive only where exact state/credentials are actually required.
