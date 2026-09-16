@@ -120,16 +120,18 @@ Filestash remains an implementation candidate, not an accepted final choice. Alt
 
 ## 2026-09-16T13:27:00+03:00 — Syncthing role remains under review
 
-**Status:** PROPOSED
+**Status:** ACCEPTED
 
 **Context:** Syncthing was originally planned for Obsidian, scripts and working-directory synchronization and as a way to move file-based tasks toward cloud CLI execution.
 
-**Decision:** Do not keep Syncthing merely because task execution may use files. Evaluate separately:
+**Decision:** Do not accept or reject Syncthing yet. Evaluate separately:
 
 - general working-file/script synchronization;
 - `edge ↔ ai-node` directory synchronization;
 - Obsidian synchronization;
 - cloud-AI task transport/execution interfaces.
+
+Do not keep Syncthing merely because task execution may use files.
 
 **Supersedes:** assumption that n8n-to-subscription CLI automation necessarily requires Syncthing/file-drop transport.
 
