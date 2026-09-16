@@ -462,3 +462,32 @@ This sequencing was later found to conflict with the intended project workflow a
 - the current-authority status of the premature full-target `ARCHITECTURE.md` proposal;
 - any guidance to continue in `02 — Edge Functional Composition & Deferred Capabilities` before Stage 1 acceptance;
 - any workflow that requires selecting all final server products before proceeding stage-by-stage.
+
+---
+
+## 2026-09-16T22:33:00+03:00 — Accepted-first deployment order and legacy implementation continuity
+
+**Status:** ACCEPTED
+
+**Context:** Stage 1 already has a substantial set of accepted carry-forward services and a preserved working legacy implementation. Requiring a fresh product-selection cycle before deploying those known components would discard useful migration evidence and force unnecessary clean-sheet decisions.
+
+**Decision:**
+
+1. Within every implementation stage, separate **known/accepted baseline** from **genuinely unresolved choices**.
+2. Deploy and verify already accepted, dependency-ready components first; do not block them on unrelated unresolved research.
+3. For accepted carry-forward services, the preserved legacy VPS implementation is the default engineering starting point. Re-read `migration-reference/`, the historical baseline and, where credentials/state are required, the sensitive recovery archive. Propose explicit retain / simplify / optimize / change deltas instead of asking the user to design the service again from zero.
+4. Docker Engine + Docker Compose are accepted as the primary runtime for suitable application services on `edge`, because containerization is preferred for deployment cleanliness, lifecycle control, maintenance and updates.
+5. Host-native deployment remains allowed where it is materially simpler or better suited to the service. Such exceptions must be justified against the container default; they are not automatic.
+6. For Stage 1 specifically, nginx, Xray, Hysteria2, Authelia and the associated `escloud.us` ingress/TLS operating scenario must first be reconstructed from the preserved deployment before redesign is proposed.
+7. The preserved TLS baseline is Certbot/ACME webroot with a shared `escloud.us` SAN certificate set, renewal through Certbot, and certificate synchronization/deploy-hook logic for Xray and Hysteria2. Treat this as the carry-forward baseline unless a concrete improvement is accepted.
+8. Derive the base host package set from the accepted functional/runtime structure and actual consumer dependencies now; do not postpone obvious foundation packages until later product research.
+9. Historical service versions are evidence, not target pins. Use the current supported stable release/update path at deployment time unless compatibility requires otherwise.
+10. The legacy firewall state must be determined from evidence, not recollection. The preserved audit shows UFW was active; whether to retain it on the Docker-based target is a separate Stage 1 engineering decision based on real benefit and Docker firewall semantics.
+
+**Constraints:**
+
+- Do not redeploy legacy services that were explicitly rejected or made unresolved by later decisions merely because they existed before.
+- Do not redesign accepted working behavior without a concrete operational, compatibility or maintainability reason.
+- Do not let known/accepted deployment cross into unresolved future-stage capabilities.
+
+**Supersedes:** only the sequencing portions of the 2026-09-16T22:13:31+03:00 entry that required all unresolved Stage 1 selection/composition work to precede architecture-dependent deployment. Stage boundaries and the prohibition on opening the next branch before full Stage 1 acceptance remain in force.
