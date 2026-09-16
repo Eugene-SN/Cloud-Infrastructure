@@ -217,4 +217,30 @@ By default install current stable versions fresh rather than restoring executabl
 
 Do not archive the live Stalwart RocksDB, n8n SQLite+WAL, Authelia SQLite, CloudCLI DB or Codex SQLite state as an uncontrolled live filesystem copy. For the migration archive, temporarily quiesce relevant services, copy state, restore services, verify health, then compress the staged copy.
 
+## Migration archive creation
+
+A consistency-preserving archive was created on `nl-core-vds` after temporarily quiescing Stalwart/Bulwark, n8n, Authelia, CloudCLI and Codex app-server/runner state. Xray, Hysteria2, nginx and SSH remained available during preservation.
+
+Server-side archive result:
+
+- archive: `/tmp/edge-migration-preservation-20260916T141048Z.tar.gz`
+- checksum file: `/tmp/edge-migration-preservation-20260916T141048Z.tar.gz.sha256`
+- archive size: `233857366` bytes
+- archive SHA256: `0203e5845f57bc1d04b384cef2b26a45fbff855c341e1edf1193034c34de9fdf`
+- archive mode: `0600`
+- internal staged-file SHA256 manifest created;
+- gzip integrity test: PASS;
+- tar listing/readability test: PASS;
+- post-copy service resume gate: PASS;
+- Xray/Hysteria2/nginx remained active.
+
+The archive contains credentials/private keys and is sensitive recovery material. It must remain outside GitHub.
+
+Outstanding before destructive rebuild acceptance:
+
+1. download archive and `.sha256` to an external trusted device;
+2. independently verify downloaded archive SHA256 equals `0203e5845f57bc1d04b384cef2b26a45fbff855c341e1edf1193034c34de9fdf`;
+3. complete a post-preservation application-health check after service restart;
+4. confirm provider-level VPS backup completed successfully.
+
 No migration/rebuild decision is implied by this audit alone.
