@@ -260,9 +260,17 @@ Post-archive recovery verification confirmed:
 
 The earlier UDP/443 failure in `EDGE_POST_ARCHIVE_ACCEPTANCE_V1` was a diagnostic-block defect: it inspected the wrong `ss` field for the UDP local endpoint. No runtime failure was present; the corrected recovery check confirmed Hysteria2 UDP/443 ownership.
 
-Outstanding before destructive rebuild acceptance:
+## 2026-09-16T17:11:00+03:00 — External preservation gates
 
-1. download archive and `.sha256` to an external trusted device and independently verify the downloaded archive SHA256 equals `0203e5845f57bc1d04b384cef2b26a45fbff855c341e1edf1193034c34de9fdf`;
-2. confirm provider-level VPS backup completed successfully.
+**Status:** PASS
 
-No migration/rebuild decision is implied by this audit alone.
+User confirmed both remaining external recovery gates:
+
+- the migration archive and checksum were downloaded to an external trusted device and the downloaded archive SHA256 was independently verified against `0203e5845f57bc1d04b384cef2b26a45fbff855c341e1edf1193034c34de9fdf`;
+- the provider-level VPS backup completed successfully.
+
+Therefore the Stage 0 preservation/recovery prerequisite is fully satisfied.
+
+`STAGE0_PRESERVATION_ACCEPTANCE=PASS`.
+
+No migration/rebuild method is implied by this acceptance alone.
