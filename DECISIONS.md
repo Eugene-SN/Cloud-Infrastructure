@@ -357,3 +357,35 @@ The engineering-context tree should include, where useful:
 - The GitHub engineering reference is for architecture/migration work and is not itself the authoritative recovery backup.
 
 **Supersedes:** any idea of using the complete credential-bearing archive as the primary GitHub project context.
+
+---
+
+## 2026-09-16T20:34:11+03:00 — Clean `edge` rebuild and substrate acceptance
+
+**Status:** ACCEPTED
+
+**Context:** Stage 0 preservation and both recovery planes were already accepted. The user selected and executed a GreenCloud provider rebuild of the existing VPS with Ubuntu 26.04, hostname `edge.escloud.us`, 4 GiB swap and the existing Termius ED25519 SSH key. The rebuilt host then underwent read-only first-boot audits, GRUB root-cause analysis, a controlled reboot and post-reboot acceptance.
+
+**Decision:**
+
+- The migration method for the legacy VPS is a **clean provider-level Ubuntu rebuild**, not an in-place migration.
+- The rebuilt VPS is now the live Cloud Infrastructure node **`edge`**.
+- `EDGE_FRESH_OS_SUBSTRATE_ACCEPTANCE=PASS`.
+- Accepted substrate state includes Ubuntu 26.04.1 LTS, kernel `7.0.0-31-generic`, KVM/x86_64, 2 vCPU, ~15 GiB RAM, 4 GiB swap, ~155 GiB root filesystem class, IPv4 `45.92.156.17/24`, IPv6 `2a0c:b847:ffff:283::a/64`, working DNS/NTP and SSH key access.
+- OpenSSH socket activation through `ssh.socket` is accepted; do not enable `ssh.service` merely to match the previous service model.
+- Root SSH access remains key-only in effective configuration (`PermitRootLogin prohibit-password`; password and keyboard-interactive authentication disabled).
+- The first-boot `grub-initrd-fallback.service` failure is classified as a transient provider-provisioning race while `grub2-common` was upgraded from `2.14-2ubuntu2` to `2.14-2ubuntu2.1` during the same boot. After controlled reboot both GRUB units returned `success`, system state was `running`, failed units were 0 and no current-boot errors remained.
+- GreenCloud cloud-init schema/deprecation warnings are non-blocking because effective SSH, swap and network state are correct; do not rewrite working provider-generated configuration solely to silence them.
+- Historical `NL_CORE_VDS_Current_State_Baseline_2026-09-14.md` remains unchanged as the pre-reinstall historical snapshot and no longer describes current runtime state.
+
+**Constraints:**
+
+- This acceptance authorizes the clean substrate and explicitly scoped base-bootstrap work only.
+- It does not implicitly authorize target-service restoration/deployment or architecture-dependent networking/storage/ingress changes.
+- `migration-reference/` remains engineering context, not a restore bundle.
+- Provider backup remains the whole-VPS rollback path; the external sensitive migration archive remains the selective recovery source.
+
+**Supersedes:**
+
+- the unresolved `in-place migration versus clean Ubuntu reinstall` status;
+- the prior rule that no runtime mutation whatsoever could occur before a complete Architecture Contract, but only for the now-completed clean substrate reset and explicitly scoped base-bootstrap work.
