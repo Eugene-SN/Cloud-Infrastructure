@@ -120,36 +120,69 @@ Not installed merely for convenience: `zip`, `tree`, `socat`, `pip3`.
 
 Only the clean-rebuild/substrate portion of branch `01` is complete. **Base Platform Deployment remains unfinished.**
 
-Before additional Stage 1 runtime deployment, the project must continue in the same branch and perform the mandatory stage design cycle:
+### Current implementation rule
 
-1. review exact Stage 1 functional requirements against the global scaffold;
-2. identify already accepted Stage 1 products versus unresolved implementation choices;
-3. research/discuss unresolved services/mechanisms for Stage 1 only;
-4. accept the Stage 1 service/product composition;
-5. define the Stage 1 scoped architecture/deployment contract and recovery path;
-6. deploy the remaining Base Platform components;
-7. verify and explicitly accept Stage 1;
-8. persist accepted state to GitHub;
-9. only then open the next branch.
+Stage work now follows an **accepted-first** order:
+
+1. classify the current stage into already accepted/known implementation versus genuinely unresolved choices;
+2. reconstruct accepted carry-forward components from the preserved legacy implementation;
+3. deploy and verify dependency-ready accepted components first;
+4. discuss/select only genuinely unresolved mechanisms or concrete optimizations;
+5. complete the remaining stage-scoped deployment/verification;
+6. accept the whole stage before any branch transition.
+
+Do not require the user to select already accepted services again from scratch. `migration-reference/`, the historical baseline and the sensitive recovery archive are the implementation starting point for accepted carry-forward services.
+
+### Stage 1 accepted runtime/implementation anchors
+
+- **Docker Engine + Docker Compose** are accepted as the primary runtime for suitable application services; containerization is preferred for clean deployment, lifecycle control, maintenance and updates.
+- Host-native services remain allowed where they are materially simpler/better suited; such exceptions require a concrete rationale.
+- **nginx**, **Xray**, **Hysteria2** and **Authelia** remain accepted products.
+- Their legacy configuration/scenarios are carry-forward implementation references, not something to recreate from zero.
+- The preserved TLS baseline is Certbot/ACME webroot with the `escloud.us` SAN certificate set and deploy-hook/certificate synchronization to Xray/Hysteria2.
+- Historical versions are not pins; deployment uses the current supported stable release/update path unless compatibility requires otherwise.
+
+### Legacy Stage 1 foundation reconstructed from preservation data
+
+The old working public-edge contract included:
+
+- nginx host-side public TCP/80 and loopback `127.0.0.1:8080 proxy_protocol`;
+- Xray public TCP/443 with VLESS/TLS and fallback to nginx `127.0.0.1:8080`;
+- Hysteria2 public UDP/443 with strict SNI and file-based masquerade rooted at `/var/www/escloud.us/public`;
+- Certbot webroot at `/var/www/letsencrypt` with a shared ECDSA certificate named `escloud.us` covering the required `escloud.us` web names;
+- Certbot renewal plus certificate-copy/deploy-hook logic for Xray and Hysteria2;
+- Authelia on a loopback-published container endpoint with file/Argon2 authentication, SQLite storage, one-factor policies and `auth.escloud.us` session domain behavior;
+- VPN user/state tooling under `/opt/vpn-stack` (`vpnctl`) and maintenance logic worth selectively adapting from `maintctl`.
+
+The exact credentials and private TLS/state material remain in the sensitive recovery archive and are restored selectively where continuity is required.
+
+### Firewall evidence
+
+Contrary to the recollection that the legacy VPS had no firewall, the preserved runtime audit shows **UFW was active** with:
+
+- default deny incoming;
+- allow outgoing;
+- deny routed;
+- explicit IPv4/IPv6 rules for SSH, TCP/80, TCP/443, UDP/443 and mail ports;
+- one internal Docker-bridge rule for n8n → Codex runner.
+
+Whether to retain UFW on the new Docker host remains a Stage 1 engineering decision because Docker-published ports have special firewall semantics. Do not assume the legacy firewall was absent.
 
 ### Stage 1 functional scope still to finish
 
-The Stage 1 capability set currently includes, subject to the stage-specific design/selection process where details remain unresolved:
-
-- target networking/firewall/SSH baseline beyond the already accepted provider networking/SSH state where changes are actually required;
-- Docker + Compose where required by the selected Stage 1 implementation;
+- Docker + Compose installation/acceptance;
+- consumer-driven base package completion;
 - normalized persistent-directory and ownership conventions;
 - nginx ingress foundation;
-- HTTPS/TLS/certificate mechanics;
+- HTTPS/TLS/certificate lifecycle;
 - Xray;
 - Hysteria2;
 - plausible public/decoy page;
 - Authelia common web-auth foundation;
-- initial private Cloud Infrastructure page;
+- firewall decision/minimal policy;
+- initial private Cloud Infrastructure page decision/implementation boundary;
 - basic backup of the new base state;
 - extension points for later public/private WebUI, machine APIs, webhooks, working storage, Home/PAI connectivity and monitoring.
-
-Products already explicitly accepted globally — including nginx, Xray, Hysteria2 and Authelia — are not reopened for replacement research without a concrete incompatibility. Their Stage 1 deployment/integration design still remains to be discussed and accepted.
 
 ## Global functional scaffold status
 
@@ -157,9 +190,7 @@ Products already explicitly accepted globally — including nginx, Xray, Hysteri
 
 It defines high-level required or potentially valuable functions across the final `edge`, but it **does not select every service/program** and is **not** a final architecture or final service inventory.
 
-Unresolved products/services are intentionally chosen at the beginning of the implementation stage where they are needed.
-
-This prevents premature selection of Stage 4/5/6 products before their real consumers and constraints exist.
+Unresolved products/services are intentionally chosen in the implementation stage where they are needed. Already accepted products are deployed first where their dependencies and implementation are known.
 
 ## Accepted global product/direction anchors
 
@@ -207,7 +238,7 @@ Canonical Obsidian vault remains on `ai-node` at:
 
 There is **no accepted full target Architecture Contract** and no accepted preselection of all future-stage services.
 
-`ARCHITECTURE.md` records only accepted architecture state/invariants and the current stage-design model. Stage-specific architecture is added only after that stage's requirements and service composition are accepted.
+`ARCHITECTURE.md` records only accepted architecture state/invariants and stage-scoped decisions. Known accepted implementation can proceed from preserved evidence without waiting for unrelated unresolved future-stage choices.
 
 Any previous proposal that preselected future unresolved products or topology before their stage review is not current authority.
 
@@ -225,6 +256,4 @@ Do not transition to another branch until Stage 1 is fully deployed, verified an
 
 After Stage 1 acceptance, the next branch should be:
 
-`02 — Edge Core Applications`
-
-and must begin with Stage 2 requirements analysis and service/product composition before Stage 2 deployment.
+`02 — Edge Core Applications`.
