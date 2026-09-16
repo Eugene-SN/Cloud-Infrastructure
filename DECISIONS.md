@@ -195,3 +195,23 @@ Do not keep Syncthing merely because task execution may use files.
 **Constraints:** Runtime infrastructure is not modified by this repository initialization. Do not commit credentials/secrets.
 
 **Supersedes:** GitHub workflow OFF/unlinked state for this project.
+
+---
+
+## 2026-09-16T15:00:00+03:00 — Functional capability scaffold before domain solution research
+
+**Status:** ACCEPTED
+
+**Context:** The next proposed step was a detailed `Storage / Files / Obsidian Sync` research block. That is premature while the complete preliminary functional scope of `edge` is still unknown.
+
+**Decision:**
+
+1. First build a comprehensive **preliminary functional capability scaffold** for Cloud Infrastructure / `edge`.
+2. The scaffold describes required or potentially valuable functions/capabilities, not necessarily a selected product for every function.
+3. Already accepted products may anchor the functions they already satisfy, but unresolved functions remain technology-neutral capability slots.
+4. Identify overlaps with Home Infrastructure and Personal Agents Infrastructure and keep only functions for which Cloud Infrastructure provides material value.
+5. Only after the functional scaffold is complete, perform focused research on implementation alternatives for unresolved domains.
+6. `Storage / Files / Obsidian Sync` is explicitly deferred to that later implementation-selection stage; the previously accepted requirements for those domains remain valid.
+7. After candidate services are evaluated, assemble and approve the complete service composition; only then design topology, inter-service relationships and deployment architecture.
+
+**Supersedes:** the implied sequencing that `Storage / Files / Obsidian Sync` should be the immediate next research block.
