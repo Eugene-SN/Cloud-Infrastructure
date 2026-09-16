@@ -2,36 +2,24 @@
 
 **Status:** ACCEPTED
 
-This document is the canonical implementation-stage chronology for Cloud Infrastructure / `edge`.
+This document is the canonical stage chronology for Cloud Infrastructure / `edge`.
 
 ## Core workflow rule
 
-The global functional scaffold defines **what capabilities the server should eventually provide**, but it is not a complete service/product inventory and it is not a final architecture.
+Each implementation stage has its own work branch and follows the accepted-first lifecycle:
 
-Each implementation stage is handled in its own work branch. Work inside a stage is split into two classes before further deployment:
+1. requirements/baseline review;
+2. legacy implementation reconstruction where relevant;
+3. deployment of known/accepted dependency-ready components;
+4. research/selection only for genuinely unresolved mechanisms or concrete incompatibilities;
+5. remaining stage-composition acceptance;
+6. stage-scoped architecture/deployment contract;
+7. remaining deployment;
+8. verify/accept;
+9. persist accepted current state/decisions/architecture;
+10. branch transition only after complete stage acceptance.
 
-1. **KNOWN / ACCEPTED BASELINE** — functions, products and operating scenarios already explicitly accepted or already proven in the preserved legacy deployment.
-2. **UNRESOLVED SCOPE** — functions for which the product, mechanism, topology or useful inclusion is genuinely not yet decided.
-
-The project must implement these classes in this order whenever dependencies permit:
-
-1. **REQUIREMENTS / BASELINE REVIEW** — read accepted decisions, current state, the global scaffold and preserved migration material; classify stage items as already known/accepted versus genuinely unresolved.
-2. **LEGACY IMPLEMENTATION RECONSTRUCTION** — for accepted carry-forward services, inspect `migration-reference/`, the sensitive recovery archive where needed, and the historical baseline. The previous working configuration/scenario is the default implementation reference, not a blank-sheet design exercise.
-3. **KNOWN / ACCEPTED DEPLOYMENT** — after a narrowly scoped compatibility/recovery check, deploy and verify already accepted components that do not depend on unresolved choices. Do not delay known work merely to finish unrelated product research.
-4. **UNRESOLVED SERVICE / PRODUCT SELECTION** — discuss and compare alternatives only for requirements that remain genuinely unresolved or where a concrete incompatibility/changed requirement justifies replacing an accepted implementation.
-5. **REMAINING STAGE COMPOSITION ACCEPTANCE** — explicitly decide the unresolved in-scope/out-of-scope items and selected mechanisms.
-6. **STAGE-SCOPED ARCHITECTURE / DEPLOYMENT CONTRACT** — define only the topology, paths, ingress/auth/storage relationships and recovery path still needed for the remaining work. Already deployed accepted baseline becomes an input, not something to redesign without cause.
-7. **REMAINING DEPLOYMENT** — implement the unresolved/selected remainder.
-8. **VERIFY / ACCEPT** — verify the complete stage properties and record factual state.
-9. **PERSIST** — update `DECISIONS.md`, `CURRENT_STATE.md`, `ARCHITECTURE.md` and other canonical docs as needed.
-10. **BRANCH TRANSITION** — only after the current stage is fully accepted may ChatGPT propose the next work branch and its starter prompt.
-
-Additional rules:
-
-- Do **not** open a new work branch merely because one subtask inside the current stage is complete.
-- Do **not** make the user choose again from scratch when a product/scenario has already been accepted and preserved. Start from the old working implementation, then propose concrete retain / simplify / optimize / change options.
-- Historical versions are evidence, not pins. At deployment/update time use the current supported stable release/channel unless a concrete compatibility reason requires otherwise.
-- Containerized deployment through Docker + Compose is the default for suitable application services because it provides the preferred cleanliness, lifecycle control and update path. Host-native deployment remains appropriate where it is materially simpler or better suited to the service; such exceptions should be justified rather than assumed.
+Do not reopen accepted products without a concrete reason. Historical versions are evidence, not automatic pins. Docker + Compose are the default runtime for suitable application services; host-native remains valid where materially simpler.
 
 ---
 
@@ -41,28 +29,19 @@ Additional rules:
 
 `00 — Cloud Infrastructure Architecture Discovery & Target Design`
 
-### Purpose
+### Status
 
-- audit the legacy VPS;
-- establish the cross-project Cloud Infrastructure role;
-- build the preliminary global functional scaffold;
-- screen obvious duplicate/unwanted capabilities;
-- preserve expensive-to-reconstruct state;
-- choose the migration method and prepare recovery paths.
+**COMPLETE / ACCEPTED.**
 
-### Accepted outcome
+Accepted outcome:
 
-**COMPLETE / PASS.**
-
-- historical legacy baseline created and retained;
+- historical legacy VPS baseline retained unchanged;
 - preliminary functional scaffold created;
-- provider-level full VPS backup completed;
-- credential-bearing migration archive downloaded and independently verified;
+- provider full-VPS backup completed;
+- sensitive migration-preservation archive created, externally copied and verified;
 - sanitized `migration-reference/` accepted in GitHub;
 - clean provider-level Ubuntu rebuild selected;
 - recovery paths verified.
-
-The global scaffold remains intentionally incomplete at product-selection level. Unresolved products/services are selected later, stage by stage.
 
 ---
 
@@ -72,106 +51,57 @@ The global scaffold remains intentionally incomplete at product-selection level.
 
 `01 — Edge Clean Rebuild & Base Platform Deployment`
 
-### Goal
+### Status
 
-Create the smallest stable standalone platform on which all later Cloud Infrastructure capabilities can be added without redesigning the host.
+**COMPLETE / ACCEPTED.**
 
-### Functional scope
+Final acceptance:
 
-The Stage 1 capability scope currently includes:
+`EDGE_STAGE1_FINAL_INTEGRATED_ACCEPTANCE=PASS`
 
-- clean supported Ubuntu substrate;
-- hostname `edge`;
-- networking/firewall/SSH baseline;
-- Docker + Compose container/runtime foundation;
-- normalized persistent-directory and ownership conventions;
-- public HTTP/HTTPS ingress foundation;
-- TLS/certificate handling;
-- Xray;
-- Hysteria2;
-- plausible public/decoy page;
-- Authelia common web-auth foundation;
-- initial private Cloud Infrastructure page;
-- basic backup of the new base state;
-- clean extension points for later public WebUI, private WebUI, machine APIs, webhooks, working storage, Home/PAI connectivity and monitoring.
+Accepted Stage 1 composition:
 
-`edge` must remain autonomously useful without Home/PAI connectivity.
-
-### Current progress
-
-**IN PROGRESS / NOT ACCEPTED.**
-
-Completed and accepted inside Stage 1:
-
-- provider clean Ubuntu rebuild;
-- hostname `edge` / `edge.escloud.us`;
-- fresh-substrate acceptance;
-- provider networking in its current working form;
-- key-only SSH access through accepted `ssh.socket` activation;
-- minimal architecture-independent host bootstrap;
+- clean Ubuntu 26.04.1 LTS `edge` substrate;
+- provider networking retained in its verified working form;
+- key-only root SSH through `ssh.socket`;
 - journald 500 MiB persistent-use ceiling;
-- basic host health/non-regression acceptance.
+- Docker Engine + Compose foundation;
+- normalized `/opt`, `/srv`, `/etc`, `/var/www` path convention;
+- nginx public HTTP and loopback HTTPS-fallback foundation;
+- Certbot/ACME shared `escloud.us` TLS lifecycle;
+- Xray public TCP/443 VLESS/TLS endpoint;
+- Hysteria2 public UDP/443 endpoint and file masquerade;
+- accepted `ES Cloud — Private Workspace` public masking page;
+- Authelia common web-auth foundation at loopback backend `127.0.0.1:19091`;
+- UFW public-exposure contract;
+- restored `maintctl` and `vpnctl` operational entrypoints;
+- documented extension-point contract;
+- verified same-VPS Stage 1 base-state recovery checkpoint.
 
-**Important:** this completed only the **Edge Clean Rebuild** and minimal substrate/bootstrap portion of work branch `01`. It did **not** complete **Base Platform Deployment**.
+The full private Cloud Infrastructure portal is intentionally deferred to Stage 2 rather than deploying a temporary Stage 1 implementation. Stage 1 accepts the working Authelia/private-ingress boundary as sufficient foundation.
 
-### Accepted legacy foundation to reconstruct first
+Stage 1 local checkpoint:
 
-Before asking the user to choose new implementations, reconstruct and evaluate the preserved working Stage 1 baseline:
+- `/srv/backups/edge-stage1/edge-stage1-base-20260916T234611Z.tar.gz`;
+- SHA256 `37486e763ddac4c5ef3a92a35c3dad49787d75ffd8b97499073c79af617cc566`.
 
-- **Docker Engine + Compose** as the primary application-service runtime;
-- **nginx** as the accepted ingress/reverse-proxy anchor;
-- **Xray** as the public TCP/443 VLESS/TLS endpoint with HTTP fallback semantics preserved unless deliberately changed;
-- **Hysteria2** as the public UDP/443 endpoint with its masquerade behavior preserved unless deliberately changed;
-- **Authelia** as the common web-auth foundation;
-- the existing **`escloud.us` TLS lifecycle**: Certbot/ACME webroot, SAN certificate coverage for the required `escloud.us` names, renewal timer, and deploy-hook/certificate-copy mechanism feeding Xray/Hysteria2;
-- existing public decoy/fallback behavior and nginx `127.0.0.1:8080 proxy_protocol` relationship;
-- preserved VPN user/state-management logic (`vpnctl`) and useful maintenance logic from `maintctl`, adapting naming from the legacy node to `edge` rather than recreating behavior blindly.
-
-The exact old credentials/private TLS material remain in the sensitive recovery plane, not GitHub. Restore selectively where continuity is desired.
-
-### Required next activity in branch 01
-
-Proceed in this order:
-
-#### A. Known / accepted foundation
-
-1. reconstruct the legacy Stage 1 implementation and dependencies from the preserved references;
-2. derive the minimum required host package set from the actual consumers;
-3. verify current upstream/Ubuntu compatibility and current stable release path;
-4. decide only the runtime-placement exceptions that materially affect deployment (for example whether Xray/Hysteria2 remain host-native or move to containers while preserving the same external contract);
-5. deploy and verify the accepted foundation components that do not depend on unresolved Stage 1 choices.
-
-#### B. Unresolved Stage 1 choices
-
-Only after/alongside the known baseline where dependencies require it, discuss the genuinely unresolved items, including:
-
-- whether UFW remains useful on the new Docker host and the exact minimal firewall policy;
-- normalized persistent-directory and ownership conventions for the new `edge` naming/model;
-- whether the initial private Cloud page should be a minimal Stage 1 surface or deferred to the fuller Stage 2 portal implementation;
-- exact Stage 1 basic-backup mechanism before the later full Backrest topology;
-- any concrete optimization to the legacy TLS, ingress, VPN or auth implementation that has a demonstrated operational benefit.
-
-Evidence from the preserved legacy host shows UFW was in fact active with default-deny incoming and explicit public-port rules. Therefore firewall treatment must be based on that evidence plus Docker/UFW interaction, not on an assumption that the old host had no firewall.
-
-### Stage 1 package/runtime principle
-
-Install packages because a selected Stage 1 component requires them, not as a generic toolbox. Reuse packages already present in the clean Ubuntu image. The expected additional foundation set is therefore small and consumer-driven; Docker packages come from Docker's supported stable Ubuntu repository, while ordinary host components should prefer Ubuntu's supported packages unless an upstream installation path is materially preferable.
-
-Stage 1 is complete only after all required Base Platform components are deployed, verified and explicitly accepted.
+This local checkpoint is not off-host DR and does not replace the later Backrest/Restic direction.
 
 ---
 
 ## Stage 2 — Core Applications
 
-### Future work branch
+### Next work branch
 
 `02 — Edge Core Applications`
 
-Create this branch **only after Stage 1 / branch 01 is fully accepted**.
+### Status
 
-Use the same accepted-first workflow: deploy/reconstruct already accepted carry-forward products first where their implementation is known and independent, then research only the genuinely unresolved Stage 2 items.
+**NEXT / NOT STARTED.**
 
-The current functional scaffold suggests this stage may include:
+Use the accepted-first workflow. Reconstruct/deploy already accepted carry-forward products first where their implementation is known and independent; compare alternatives only for genuinely unresolved adjacent mechanisms.
+
+Current Stage 2 scope/candidates:
 
 - Stalwart;
 - Bulwark;
@@ -182,126 +112,65 @@ The current functional scaffold suggests this stage may include:
 - Backrest;
 - Semaphore;
 - maintenance page;
-- full private Cloud page/portal.
+- full private Cloud Infrastructure portal.
 
-Several of these products are already accepted globally. Their preserved legacy configuration is the first implementation reference where applicable; unresolved adjacent products/mechanisms are discussed separately rather than forcing a clean-sheet redesign.
+Several are already accepted product anchors. Their preserved legacy configuration is the default engineering reference where applicable, but current stable releases/update paths should be used unless compatibility requires otherwise.
 
-### Intended production checkpoint
-
-At the end of accepted Stage 2, `edge` should provide a practically complete standalone core:
-
-- VPN/DPI-bypass connectivity;
-- mail;
-- web services;
-- common authentication;
-- automation;
-- subscription cloud AI;
-- backup management;
-- maintenance;
-- portal/status surfaces.
+Intended Stage 2 production checkpoint: a practically complete standalone `edge` core providing VPN/DPI-bypass connectivity, mail, web services, common authentication, automation, subscription cloud AI, backup management, maintenance, and private portal/status surfaces.
 
 ---
 
-## Stage 3 — Monitoring + Human Interaction
+## Stage 3 — Monitoring & Human Interaction
 
 ### Future work branch
 
 `03 — Edge Monitoring & Human Interaction`
 
-Create only after Stage 2 acceptance. Reuse any already accepted/implemented mechanisms first, then select only unresolved monitoring and interaction components.
+**NOT STARTED.**
 
-Current functional candidates include:
-
-- external uptime monitoring;
-- Home/PVE/PAI heartbeats;
-- dead-man monitoring;
-- backup/job checks;
-- notifications;
-- portal status integration;
-- Universal Capture Inbox;
-- human-in-the-loop approval workflows;
-- inbound mail/attachment → n8n automation;
-- outbound system mail;
-- optional Telegram/messaging frontend if it materially improves mobile operation.
-
-Do not preselect a heavy observability stack without a demonstrated need.
+Candidate scope includes external uptime/dead-man monitoring, job/backup checks, notifications, portal status integration, Universal Capture Inbox, human-in-the-loop approvals, mail-triggered automation and optional messaging frontend. Avoid heavy observability without demonstrated need.
 
 ---
 
-## Stage 4 — Files / Sync / Obsidian
+## Stage 4 — Files, Sync & Obsidian
 
 ### Future work branch
 
 `04 — Edge Files, Sync & Obsidian`
 
-Create only after Stage 3 acceptance. Begin from accepted requirements and any preserved useful implementation evidence, but research the products that remain unresolved.
+**NOT STARTED.**
 
-Current unresolved scope includes:
+Unresolved scope includes VPS working storage, MacBook/iPhone/iPad/`ai-node` access, web file browsing/editing, selected-directory synchronization, Filestash vs alternatives, Syncthing role, and free/self-hosted Obsidian synchronization.
 
-- VPS working storage;
-- MacBook/iPhone/iPad access;
-- `ai-node` access;
-- web file browsing/editing;
-- network file/access protocol selection;
-- Filestash vs alternatives;
-- selected-directory synchronization;
-- Syncthing vs alternatives;
-- free/self-hosted Obsidian synchronization;
-- explicit source-of-truth, conflict and versioning model.
-
-Canonical Obsidian remains on `ai-node` at `/srv/ai-data/knowledge/obsidian` unless a later ACCEPTED decision changes that.
-
-No file/sync product that remains unresolved in current decisions is implicitly accepted by this phase description.
+Canonical Obsidian remains on `ai-node` at `/srv/ai-data/knowledge/obsidian` unless superseded by a later ACCEPTED decision.
 
 ---
 
-## Stage 5 — Information + Cloud AI
+## Stage 5 — Information & Cloud AI
 
 ### Future work branch
 
 `05 — Edge Information & Cloud AI`
 
-Create only after Stage 4 acceptance. Deploy already accepted cloud-AI anchors using their accepted/preserved operating model where applicable; research only unresolved extensions.
+**NOT STARTED.**
 
-Current functional candidates include:
-
-- RSS/feed intake;
-- vendor monitoring;
-- firmware/release monitoring;
-- document watchers/change detection;
-- structured Internet ingestion;
-- bounded AI research;
-- long-running coding/agent workflows;
-- Hermes only if later research accepts it;
-- Capture Inbox → agent workflows;
-- approval gates for selected agent actions.
+Candidate scope includes feed/vendor/release monitoring, document watchers, structured Internet ingestion, bounded AI research, long-running coding/agent workflows, Hermes only if later accepted, Capture Inbox agent workflows and approval gates.
 
 Do not duplicate compute-heavy PAI OCR/ASR/translation/local inference on `edge` without a concrete reason.
 
 ---
 
-## Stage 6 — Home / PAI Integration
+## Stage 6 — Home & PAI Integration
 
 ### Future work branch
 
 `06 — Edge Home & PAI Integration`
 
-Create only after Stage 5 acceptance. Begin with analysis of the actual cross-site flows accumulated by earlier stages, then select the simplest adequate connectivity/orchestration mechanisms.
+**NOT STARTED.**
 
-Current functional scope includes:
+Select connectivity only after real cross-site flows are known. Scope may include private/cross-site connectivity, Russia↔external-VPS testing, task handoff, durable retry/store-and-forward, local vLLM access, document-pipeline orchestration, result/file exchange, selected off-site backup copies and Home heartbeat/status integration.
 
-- private/cross-site connectivity selection;
-- real Russia ↔ external-VPS testing for NetBird/WireGuard if considered;
-- authenticated HTTPS over the Home public IP where simpler/adequate;
-- task handoff;
-- durable retry/store-and-forward;
-- local vLLM access for selected flows;
-- OCR/translation/OEM-document pipeline orchestration;
-- file/result exchange;
-- selected off-site Home/PAI backup copies if accepted;
-- Home heartbeat/status integration.
-
-**Invariant:** Home connectivity is not a foundation requirement for `edge`; it is a late integration layer over independently working infrastructures.
+Home/PAI connectivity is not an `edge` foundation requirement.
 
 ---
 
@@ -311,31 +180,20 @@ Current functional scope includes:
 
 `07 — Edge Optional Capabilities`
 
-Create only after the primary system has reached production acceptance. Deploy only capabilities with demonstrated value; unresolved optional products are selected only when their need is established.
+**NOT STARTED.**
 
-Candidates may include:
-
-- password/2FA vault;
-- additional messaging/control UI;
-- limited secondary/failover behavior;
-- other explicitly accepted late capabilities.
-
-Optional services must not block or complicate the core deployment.
+Deploy only capabilities with demonstrated value after the primary system reaches production acceptance. Candidates may include password/2FA vault, additional messaging/control UI, limited secondary/failover behavior and other explicitly accepted late capabilities.
 
 ---
 
 ## Current canonical checkpoint
 
-The project is currently at:
+Stage 0: **COMPLETE / ACCEPTED**.  
+Stage 1: **COMPLETE / ACCEPTED**.  
+Stage 2: **NEXT / NOT STARTED**.
 
-**Stage 1 / work branch `01 — Edge Clean Rebuild & Base Platform Deployment` — IN PROGRESS.**
+The next canonical branch is:
 
-`Edge Clean Rebuild` is complete. `Base Platform Deployment` is not complete.
+`02 — Edge Core Applications`
 
-The prematurely opened work branch `02 — Edge Functional Composition & Deferred Capabilities` is **not** the canonical continuation point and must not be used to skip unfinished Stage 1 work.
-
-The next work must occur in branch `01` and starts with reconstruction of the known/accepted Stage 1 legacy foundation, dependency/package analysis, and deployment of components whose behavior is already decided. Genuine unresolved Stage 1 choices are discussed separately when they become blocking or after the known baseline is in place.
-
-Only after complete Stage 1 acceptance should the project open:
-
-`02 — Edge Core Applications`.
+The earlier prematurely opened `02 — Edge Functional Composition & Deferred Capabilities` remains non-canonical historical context and must not be reused as the Stage 2 branch.
