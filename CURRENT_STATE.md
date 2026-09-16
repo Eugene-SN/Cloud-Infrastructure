@@ -2,47 +2,38 @@
 
 ## Snapshot status
 
-**Project stage:** clean `edge` substrate and minimal host-level base bootstrap accepted; functional/service composition and architecture work continue before architecture-dependent service deployment.
-
+**Current canonical work branch:** `01 — Edge Clean Rebuild & Base Platform Deployment`  
+**Current implementation stage:** **Stage 1 — Base `edge` Platform — IN PROGRESS / NOT ACCEPTED**  
 **Primary GitHub repository:** `Eugene-SN/Cloud-Infrastructure`
 
-**Runtime mutation status:** provider-level clean rebuild and minimal architecture-independent host bootstrap completed and accepted. No target application/service stack has been restored or deployed yet.
+The clean provider rebuild is complete and accepted, but **Base Platform Deployment is not complete**. The project must continue Stage 1 work in branch `01` rather than proceed to a later branch.
 
-**Canonical implementation-stage chronology:** `IMPLEMENTATION_PHASES.md`.
+The previously opened `02 — Edge Functional Composition & Deferred Capabilities` was premature and is not the canonical continuation point.
 
-Work-branch numbering (`00/01/02/03`) is independent from implementation Stage numbering (`Stage 0…7`) and must not be used as a proxy for deployment progress.
+Canonical implementation workflow and stage sequence: `IMPLEMENTATION_PHASES.md`.
 
-## Historical baseline
+## What is actually complete
 
-The canonical as-is source for the pre-reinstall legacy VPS remains:
+### Stage 0 — discovery / preservation / migration preparation
 
-`NL_CORE_VDS_Current_State_Baseline_2026-09-14.md`
+**Status:** COMPLETE / PASS.
 
-Baseline SHA256 imported for project initialization:
+Confirmed:
 
-`5bb56c10723c2f6e950d9d4a28bbd76989870da6e01d221429417cf806139368`
-
-The baseline records the historical host as `nl-core-vds`. Historical names and paths in that artifact remain unchanged. It is not the desired-state architecture and no longer describes the live OS after the 2026-09-16 rebuild.
-
-## Stage 0 preservation / recovery state
-
-**Status:** PASS / complete.
-
-Confirmed preservation layers:
-
+- legacy VPS audit and historical baseline completed;
+- preliminary global functional scaffold created;
 - provider-level full VPS backup completed successfully;
 - external credential-bearing migration archive downloaded and independently verified;
 - archive SHA256: `0203e5845f57bc1d04b384cef2b26a45fbff855c341e1edf1193034c34de9fdf`;
-- server-side post-copy application acceptance passed;
 - sanitized GitHub `migration-reference/` accepted;
-- clean provider-level Ubuntu rebuild selected and completed;
-- `STAGE0_PRESERVATION_ACCEPTANCE=PASS`.
+- clean provider-level Ubuntu rebuild selected;
+- recovery paths verified.
 
 The sensitive archive remains outside GitHub and is the authoritative portable selective-recovery source. The provider backup remains the whole-VPS rollback path.
 
-## Migration engineering reference
+### Migration engineering reference
 
-The sanitized engineering reference remains accepted at:
+The sanitized engineering reference is accepted at:
 
 `migration-reference/`
 
@@ -50,13 +41,15 @@ Canonical acceptance record:
 
 `MIGRATION_REFERENCE_ACCEPTANCE_2026-09-16.md`
 
-The reference is for understanding/adapting legacy implementation logic only. It is not an authoritative restore bundle.
+It is engineering context only, not an authoritative restore bundle.
 
-## Clean `edge` substrate acceptance — 2026-09-16
+## Stage 1 current state
+
+### Completed subphase: Edge Clean Rebuild
 
 **Status:** PASS.
 
-The existing GreenCloud KVM VPS was rebuilt from the provider panel as a clean Ubuntu instance and is now the live logical node `edge`.
+The GreenCloud KVM VPS was rebuilt from the provider panel as a clean Ubuntu instance and is now the live logical node `edge`.
 
 Accepted runtime facts after controlled reboot:
 
@@ -65,7 +58,7 @@ Accepted runtime facts after controlled reboot:
 - OS: Ubuntu 26.04.1 LTS;
 - architecture: `x86_64`;
 - virtualization: KVM;
-- kernel: `7.0.0-31-generic`;
+- kernel: `7.0.0-31-generic` at substrate acceptance;
 - vCPU: 2;
 - RAM: ~15 GiB;
 - swap: 4 GiB `/swap.img`;
@@ -74,169 +67,164 @@ Accepted runtime facts after controlled reboot:
 - IPv6: `2a0c:b847:ffff:283::a/64`, default gateway `2a0c:b847:ffff::1`;
 - DNS resolution: PASS;
 - NTP synchronization: PASS;
-- SSH key authentication: PASS using the selected Termius ED25519 key;
+- SSH key authentication: PASS;
 - effective SSH auth: root key login allowed, password and keyboard-interactive authentication disabled;
-- OpenSSH is socket-activated through `ssh.socket`;
-- system state after reboot: `running`;
+- OpenSSH socket activation through `ssh.socket` accepted;
+- post-reboot system state: `running`;
 - failed systemd units: 0;
-- current-boot error journal: empty;
-- reboot-required state: absent.
+- current-boot error journal: empty at substrate acceptance.
 
-### GRUB first-boot anomaly
+`EDGE_FRESH_OS_SUBSTRATE_ACCEPTANCE=PASS`.
 
-The initial provider provisioning boot briefly produced `grub-initrd-fallback.service` failure with `invalid environment block` while GreenCloud provisioning was upgrading `grub2-common` from `2.14-2ubuntu2` to `2.14-2ubuntu2.1` in the same boot.
+### First-boot GRUB anomaly
 
-Root-cause evidence showed:
+The initial provider provisioning boot briefly produced `grub-initrd-fallback.service` failure with `invalid environment block` while GreenCloud provisioning upgraded `grub2-common` from `2.14-2ubuntu2` to `2.14-2ubuntu2.1` in the same boot.
 
-- package upgrade occurred during first-boot provider provisioning;
-- current `grub2-common` is `2.14-2ubuntu2.1`;
-- current unit ordering references `grub2-common.service` correctly;
-- `/boot/grub/grubenv` is valid;
-- after controlled reboot, `grub2-common.service` and `grub-initrd-fallback.service` both completed with `result=success`;
-- no `invalid environment block` appeared in the accepted boot.
-
-Therefore this was accepted as a transient first-boot provisioning race, not an active boot defect.
+After controlled reboot both relevant GRUB units completed successfully and no current-boot error remained. This is accepted as a transient provider-provisioning race, not an active defect.
 
 ### Provider cloud-init warnings
 
-GreenCloud NoCloud seed completed with `errors: []`, but schema validation reports provider-template warnings/deprecations:
+GreenCloud NoCloud seed completed with `errors: []`, but provider-template schema/deprecation warnings remain for:
 
-- deprecated `users.0.ssh-authorized-keys` key;
-- swap size encoded as a floating-point value in provider user-data;
+- deprecated `users.0.ssh-authorized-keys`;
+- swap size encoded as a floating-point value;
 - deprecated netplan `gateway4` / `gateway6` syntax.
 
-These are non-blocking provider-template issues. Effective runtime state for SSH key installation, swap and IPv4/IPv6 networking is correct. Do not mutate working configuration merely to silence these warnings unless a later accepted configuration-normalization step requires it.
+These warnings are non-blocking because effective SSH, swap and IPv4/IPv6 networking are correct. Do not mutate working provider-generated configuration merely to silence them.
 
-## Minimal base bootstrap acceptance — 2026-09-16
+### Completed subphase: minimal architecture-independent bootstrap
 
 **Status:** PASS.
 
 `EDGE_MINIMAL_BASE_BOOTSTRAP_ACCEPTANCE=PASS`.
 
-Architecture-independent host bootstrap was intentionally kept minimal. Accepted changes and verified state:
+Accepted changes/state:
 
 - package metadata refreshed successfully;
 - `dpkg --audit` clean;
 - no APT holds;
-- Ubuntu phased updates were not forced; six phased updates remained deferred at acceptance;
+- Ubuntu phased updates were not forced;
 - `unzip 6.0-29ubuntu1` installed as the only additional base utility;
-- journald persistent-use ceiling configured via `/etc/systemd/journald.conf.d/90-edge-retention.conf` with `SystemMaxUse=500M`;
+- journald persistent-use ceiling configured as `SystemMaxUse=500M`;
 - journald active and healthy;
-- timezone intentionally retained as `Europe/Moscow`; NTP synchronized;
-- working provider-generated Netplan left unchanged;
+- timezone retained as `Europe/Moscow`; NTP synchronized;
+- working provider Netplan left unchanged;
 - SSH configuration left unchanged; key-only root access and `ssh.socket` remain accepted;
 - QEMU guest agent present and active;
-- cloud-init provider warnings left unchanged as previously classified non-blocking;
 - `/tmp` is tmpfs with mode `1777`;
-- system state `running`, failed units 0, current-boot error journal empty after bootstrap;
 - IPv4/IPv6 and SSH non-regression gates passed.
 
-Not installed merely for convenience: `zip`, `tree`, `socat`, `pip3`. Install such tools only when a concrete consumer requires them. `pollinate` was not autoremove-cleaned solely because APT marked it unused.
+Not installed merely for convenience: `zip`, `tree`, `socat`, `pip3`.
 
-## Canonical implementation progress
+## Stage 1 is NOT complete
 
-The accepted deployment order is recorded in `IMPLEMENTATION_PHASES.md`:
+Only the clean-rebuild/substrate portion of branch `01` is complete. **Base Platform Deployment remains unfinished.**
 
-- **Stage 0 — Preservation / migration decision:** COMPLETE.
-- **Stage 1 — Base `edge` Platform:** PARTIAL.
-- **Stage 2 — Core Applications:** NOT STARTED.
-- **Stage 3 — Monitoring + Human Interaction:** NOT STARTED.
-- **Stage 4 — Files / Sync / Obsidian:** NOT STARTED.
-- **Stage 5 — Information + Cloud AI:** NOT STARTED.
-- **Stage 6 — Home / PAI Integration:** NOT STARTED.
-- **Stage 7 — Optional:** NOT STARTED.
+Before additional Stage 1 runtime deployment, the project must continue in the same branch and perform the mandatory stage design cycle:
 
-### Stage 1 completed subset
+1. review exact Stage 1 functional requirements against the global scaffold;
+2. identify already accepted Stage 1 products versus unresolved implementation choices;
+3. research/discuss unresolved services/mechanisms for Stage 1 only;
+4. accept the Stage 1 service/product composition;
+5. define the Stage 1 scoped architecture/deployment contract and recovery path;
+6. deploy the remaining Base Platform components;
+7. verify and explicitly accept Stage 1;
+8. persist accepted state to GitHub;
+9. only then open the next branch.
 
-Already complete/accepted:
+### Stage 1 functional scope still to finish
 
-- Ubuntu clean substrate;
-- hostname `edge`;
-- provider networking in its current working form;
-- SSH key access;
-- minimal architecture-independent host bootstrap.
+The Stage 1 capability set currently includes, subject to the stage-specific design/selection process where details remain unresolved:
 
-### Stage 1 remaining subset
-
-Not yet deployed/accepted:
-
-- target firewall contract;
-- Docker + Compose target runtime;
-- normalized persistent-directory layout;
-- nginx;
-- HTTPS/TLS target model;
+- target networking/firewall/SSH baseline beyond the already accepted provider networking/SSH state where changes are actually required;
+- Docker + Compose where required by the selected Stage 1 implementation;
+- normalized persistent-directory and ownership conventions;
+- nginx ingress foundation;
+- HTTPS/TLS/certificate mechanics;
 - Xray;
 - Hysteria2;
-- public decoy page;
+- plausible public/decoy page;
+- Authelia common web-auth foundation;
+- initial private Cloud Infrastructure page;
+- basic backup of the new base state;
+- extension points for later public/private WebUI, machine APIs, webhooks, working storage, Home/PAI connectivity and monitoring.
+
+Products already explicitly accepted globally — including nginx, Xray, Hysteria2 and Authelia — are not reopened for replacement research without a concrete incompatibility. Their Stage 1 deployment/integration design still remains to be discussed and accepted.
+
+## Global functional scaffold status
+
+`FUNCTIONAL_SCAFFOLD_DRAFT.md` is the current preliminary global capability scaffold.
+
+It defines high-level required or potentially valuable functions across the final `edge`, but it **does not select every service/program** and is **not** a final architecture or final service inventory.
+
+Unresolved products/services are intentionally chosen at the beginning of the implementation stage where they are needed.
+
+This prevents premature selection of Stage 4/5/6 products before their real consumers and constraints exist.
+
+## Accepted global product/direction anchors
+
+Accepted without replacement research unless a concrete incompatibility or changed requirement appears:
+
+- Xray;
+- Hysteria2;
+- nginx;
+- n8n;
+- CloudCLI;
+- Stalwart;
+- Bulwark;
 - Authelia;
-- initial private Cloud page;
-- base backup implementation for the new state.
+- Codex CLI;
+- Antigravity CLI.
 
-These remaining Stage 1 items are architecture-dependent and remain gated by closure of functional composition and the accepted Architecture Contract.
-
-## Work-branch chronology / current gate
-
-Work branches are coordination units, not deployment stages:
-
-- `00 — Cloud Infrastructure Architecture Discovery & Target Design`;
-- `01 — Edge Clean Rebuild & Base Platform Deployment` — clean substrate + minimal bootstrap completed;
-- `02 — Edge Functional Composition & Deferred Capabilities` — must be completed before branch 03;
-- `03 — Edge Architecture Contract & Topology` — next only after branch 02 closure.
-
-Current gating order:
-
-1. finish branch 02 functional/service decisions;
-2. then complete branch 03 Architecture Contract;
-3. then finish the remaining implementation Stage 1 foundation;
-4. accept Stage 1;
-5. only then proceed to Stage 2 Core Applications.
-
-Do not interpret branch `02` as implementation Stage 2.
-
-## Accepted target-service direction
-
-Accepted without further replacement search unless a concrete incompatibility emerges:
-
-- Xray
-- Hysteria2
-- nginx
-- n8n
-- CloudCLI
-- Stalwart
-- Bulwark
-- Authelia
-- Codex CLI
-- Antigravity CLI
-
-Additional accepted directions remain:
+Additional accepted directions:
 
 - Backrest using Restic for future backup management;
 - dedicated Cloud Infrastructure portal replacing Homepage;
 - maintenance page + Semaphore replacing the legacy custom Maintenance Center.
 
-## Open service / architecture decisions
+These global anchors do not mean that all integration/runtime details are already designed.
 
-Still unresolved and not authorized for deployment merely because the clean OS exists:
+## Important unresolved future product choices
+
+Examples still intentionally unresolved until their corresponding stage include:
 
 - final file/storage access implementation;
-- synchronization model and Obsidian role;
-- final ingress/domain composition;
-- private/site-to-site connectivity;
-- runtime/container topology;
-- final storage layout;
-- monitoring/notification scope;
+- Filestash vs alternatives;
+- synchronization model and Syncthing role;
+- exact `edge` role in Obsidian synchronization;
+- monitoring/notification implementation;
+- Hermes role;
+- bots/messaging frontend;
+- private/site-to-site connectivity mechanism;
 - off-site DR topology;
-- Codex persistent-service topology / custom runner decisions;
-- remaining deferred capability decisions recorded in `DECISIONS.md`.
+- any adjacent implementation products not already explicitly accepted.
 
-Canonical Obsidian vault remains on `ai-node` at `/srv/ai-data/knowledge/obsidian`.
+Canonical Obsidian vault remains on `ai-node` at:
 
-## Current deployment boundary
+`/srv/ai-data/knowledge/obsidian`
 
-`EDGE_FRESH_OS_SUBSTRATE_ACCEPTANCE=PASS`.
+## Architecture state
 
-`EDGE_MINIMAL_BASE_BOOTSTRAP_ACCEPTANCE=PASS`.
+There is **no accepted full target Architecture Contract** and no accepted preselection of all future-stage services.
 
-Implementation Stage 1 is **PARTIAL**, not complete.
+`ARCHITECTURE.md` records only accepted architecture state/invariants and the current stage-design model. Stage-specific architecture is added only after that stage's requirements and service composition are accepted.
 
-The clean Ubuntu substrate and minimal architecture-independent host bootstrap are accepted. Further architecture-dependent Stage 1 service deployment remains gated by closure of functional composition and acceptance of the Architecture Contract.
+Any previous proposal that preselected future unresolved products or topology before their stage review is not current authority.
+
+## Current branch / transition rule
+
+Current canonical branch:
+
+`01 — Edge Clean Rebuild & Base Platform Deployment`
+
+Status:
+
+**IN PROGRESS — clean rebuild complete; Base Platform Deployment incomplete.**
+
+Do not transition to another branch until Stage 1 is fully deployed, verified and accepted.
+
+After Stage 1 acceptance, the next branch should be:
+
+`02 — Edge Core Applications`
+
+and must begin with Stage 2 requirements analysis and service/product composition before Stage 2 deployment.
