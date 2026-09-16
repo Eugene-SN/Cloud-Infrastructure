@@ -2,47 +2,23 @@
 
 ## Snapshot status
 
-**Project stage:** service/function discovery and target-composition analysis.
+**Project stage:** clean `edge` substrate accepted; target-service composition / architecture work continues before service deployment.
 
 **Primary GitHub repository:** `Eugene-SN/Cloud-Infrastructure`
 
-**Runtime mutation status:** none performed by this project initialization.
+**Runtime mutation status:** provider-level clean rebuild completed and accepted. No target application/service stack has been restored or deployed yet.
 
-## Legacy VPS baseline
+## Historical baseline
 
-The canonical as-is source for the existing VPS is:
+The canonical as-is source for the pre-reinstall legacy VPS remains:
 
 `NL_CORE_VDS_Current_State_Baseline_2026-09-14.md`
 
-Baseline SHA256 of the source imported for project initialization:
+Baseline SHA256 imported for project initialization:
 
 `5bb56c10723c2f6e950d9d4a28bbd76989870da6e01d221429417cf806139368`
 
-The baseline records the legacy host as `nl-core-vds`. That name and all legacy names in the baseline remain historical facts and must not be retroactively normalized to `edge`.
-
-The baseline is not the desired-state architecture.
-
-## Legacy host summary from the 2026-09-14 baseline
-
-- Host: `nl-core-vds`
-- Ubuntu 26.04.1 LTS at baseline
-- KVM VPS
-- 2 vCPU
-- ~16 GiB RAM
-- ~155 GiB root storage
-- public IPv4 `45.92.156.17`
-- IPv6 present
-- TCP/443: Xray
-- UDP/443: Hysteria2
-- nginx behind Xray fallback
-- Docker Compose projects: `core-stack`, `mail-stack`
-- NetBird absent from the VPS at baseline
-- Restic repository located on the same VPS/root filesystem
-- Git deployment state did not exactly reproduce production
-- known mail Fail2Ban stale-log-path defect
-- old browser stack removed
-
-For complete facts, use the baseline file rather than this summary.
+The baseline records the historical host as `nl-core-vds`. Historical names and paths in that artifact remain unchanged. It is not the desired-state architecture and no longer describes the live OS after the 2026-09-16 rebuild.
 
 ## Stage 0 preservation / recovery state
 
@@ -53,32 +29,81 @@ Confirmed preservation layers:
 - provider-level full VPS backup completed successfully;
 - external credential-bearing migration archive downloaded and independently verified;
 - archive SHA256: `0203e5845f57bc1d04b384cef2b26a45fbff855c341e1edf1193034c34de9fdf`;
-- server-side post-copy application acceptance passed for Stalwart/Bulwark, n8n, Authelia, Xray, Hysteria2, nginx, CloudCLI and Codex-related services;
+- server-side post-copy application acceptance passed;
 - `STAGE0_PRESERVATION_ACCEPTANCE=PASS`.
 
-The sensitive archive is recovery material and remains outside GitHub.
+The sensitive archive remains outside GitHub and is the authoritative portable selective-recovery source. The provider backup remains the whole-VPS rollback path.
 
 ## Migration engineering reference
 
-A sanitized directly-readable engineering reference is accepted at:
+The sanitized engineering reference remains accepted at:
 
 `migration-reference/`
-
-Purpose:
-
-- preserve expensive-to-reconstruct legacy implementation logic for fresh-deployment analysis;
-- make `maintctl`, `vpnctl`, Xray/Hysteria structure, mail/nginx/Authelia/AI service definitions and selected host/runtime context directly readable from GitHub;
-- keep actual credential-bearing state in the separate recovery plane.
-
-The reference contains 37 files including its checksum manifest. `maintctl` and `vpnctl` are preserved verbatim; source credential values in Xray, Hysteria2, Authelia and Codex reference configuration are explicitly redacted.
 
 Canonical acceptance record:
 
 `MIGRATION_REFERENCE_ACCEPTANCE_2026-09-16.md`
 
+The reference is for understanding/adapting legacy implementation logic only. It is not an authoritative restore bundle.
+
+## Clean `edge` substrate acceptance — 2026-09-16
+
+**Status:** PASS.
+
+The existing GreenCloud KVM VPS was rebuilt from the provider panel as a clean Ubuntu instance and is now the live logical node `edge`.
+
+Accepted runtime facts after controlled reboot:
+
+- hostname/FQDN: `edge.escloud.us`;
+- short hostname: `edge`;
+- OS: Ubuntu 26.04.1 LTS;
+- architecture: `x86_64`;
+- virtualization: KVM;
+- kernel: `7.0.0-31-generic`;
+- vCPU: 2;
+- RAM: ~15 GiB;
+- swap: 4 GiB `/swap.img`;
+- root filesystem: ext4 on `/dev/vda1`, ~155 GiB filesystem class;
+- IPv4: `45.92.156.17/24`, default gateway `45.92.156.1`;
+- IPv6: `2a0c:b847:ffff:283::a/64`, default gateway `2a0c:b847:ffff::1`;
+- DNS resolution: PASS;
+- NTP synchronization: PASS;
+- SSH key authentication: PASS using the selected Termius ED25519 key;
+- effective SSH auth: root key login allowed, password and keyboard-interactive authentication disabled;
+- OpenSSH is socket-activated through `ssh.socket`;
+- system state after reboot: `running`;
+- failed systemd units: 0;
+- current-boot error journal: empty;
+- reboot-required state: absent.
+
+### GRUB first-boot anomaly
+
+The initial provider provisioning boot briefly produced `grub-initrd-fallback.service` failure with `invalid environment block` while GreenCloud provisioning was upgrading `grub2-common` from `2.14-2ubuntu2` to `2.14-2ubuntu2.1` in the same boot.
+
+Root-cause evidence showed:
+
+- package upgrade occurred during first-boot provider provisioning;
+- current `grub2-common` is `2.14-2ubuntu2.1`;
+- current unit ordering references `grub2-common.service` correctly;
+- `/boot/grub/grubenv` is valid;
+- after controlled reboot, `grub2-common.service` and `grub-initrd-fallback.service` both completed with `result=success`;
+- no `invalid environment block` appeared in the accepted boot.
+
+Therefore this was accepted as a transient first-boot provisioning race, not an active boot defect.
+
+### Provider cloud-init warnings
+
+GreenCloud NoCloud seed completed with `errors: []`, but schema validation reports provider-template warnings/deprecations:
+
+- deprecated `users.0.ssh-authorized-keys` key;
+- swap size encoded as a floating-point value in provider user-data;
+- deprecated netplan `gateway4` / `gateway6` syntax.
+
+These are non-blocking provider-template issues. Effective runtime state for SSH key installation, swap and IPv4/IPv6 networking is correct. Do not mutate working configuration merely to silence these warnings unless a later accepted configuration-normalization step requires it.
+
 ## Accepted target-service direction
 
-Accepted without further alternative search unless a concrete incompatibility emerges:
+Accepted without further replacement search unless a concrete incompatibility emerges:
 
 - Xray
 - Hysteria2
@@ -91,55 +116,31 @@ Accepted without further alternative search unless a concrete incompatibility em
 - Codex CLI
 - Antigravity CLI
 
-Notes:
+Additional accepted directions remain:
 
-- Xray/Hysteria2 serve the user-facing foreign-VPS/DPI-bypass use case and are not the architectural wrapper around all `edge` services.
-- Authelia is the intended common web-authentication entry point under `escloud.us`; native per-app auth may be disabled only where explicitly supported and operationally correct.
-- Codex CLI + Antigravity CLI are the accepted core for subscription-based cloud model usage.
+- Backrest using Restic for future backup management;
+- dedicated Cloud Infrastructure portal replacing Homepage;
+- maintenance page + Semaphore replacing the legacy custom Maintenance Center.
 
-## Accepted replacement directions
+## Open service / architecture decisions
 
-- Future backup operations: clean Backrest deployment using Restic rather than carrying forward the current local-only Restic arrangement as the final design.
-- Homepage: replace with a dedicated Cloud Infrastructure page analogous in purpose to `home.lan`, including monitoring/status and useful integrations.
-- Legacy custom Maintenance Center: replace with a maintenance page + Semaphore model analogous to the accepted Home/PVE approach.
+Still unresolved and not authorized for deployment merely because the clean OS exists:
 
-## Open service decisions
-
-Still under analysis:
-
-- Filestash or alternative file/storage access layer.
-- Syncthing or alternative synchronization model.
-- Role of `edge` in Obsidian access/synchronization.
-- Codex App Server as a persistent service.
-- custom Codex runner.
-- Cockpit.
-- Fail2Ban scope.
-- legacy monitoring nginx/exporters.
-- Docker socket proxy.
-- dedicated speedtest subsystem.
-- any additional new Cloud Infrastructure services not yet selected.
-
-## Obsidian / knowledge state
-
-Canonical Obsidian vault remains on `ai-node`:
-
-`/srv/ai-data/knowledge/obsidian`
-
-`edge` is not currently a canonical knowledge source. Its possible role as sync endpoint, peer/mirror, remote workspace or gateway remains under analysis.
-
-Requirement: find a robust free/self-hosted synchronization approach for MacBook, iPhone/iPad and `ai-node` without paid Obsidian Sync.
-
-## Architecture state
-
-No final decisions have yet been made for:
-
-- private backbone;
-- service-to-service topology;
-- final domains/ingress layout;
+- final file/storage access implementation;
+- synchronization model and Obsidian role;
+- final ingress/domain composition;
+- private/site-to-site connectivity;
 - runtime/container topology;
 - final storage layout;
-- final monitoring stack;
-- off-site DR destination/topology;
-- in-place migration versus clean Ubuntu reinstall.
+- monitoring/notification scope;
+- off-site DR topology;
+- Codex persistent-service topology / custom runner decisions;
+- remaining deferred capability decisions recorded in `DECISIONS.md`.
 
-A clean reinstall of the VPS remains an allowed future outcome after the final service composition and Architecture Contract are agreed.
+Canonical Obsidian vault remains on `ai-node` at `/srv/ai-data/knowledge/obsidian`.
+
+## Current deployment boundary
+
+`EDGE_FRESH_OS_SUBSTRATE_ACCEPTANCE=PASS`.
+
+The clean Ubuntu substrate is accepted. This acceptance authorizes subsequent explicitly scoped base-bootstrap work, but does **not** implicitly authorize restoration or deployment of target services. Service deployment remains gated by the applicable accepted architecture/implementation decisions.
