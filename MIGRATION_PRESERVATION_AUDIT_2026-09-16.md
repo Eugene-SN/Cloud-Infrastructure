@@ -236,11 +236,33 @@ Server-side archive result:
 
 The archive contains credentials/private keys and is sensitive recovery material. It must remain outside GitHub.
 
+## 2026-09-16T17:11:00+03:00 — Server-side preservation acceptance
+
+**Status:** PASS
+
+Post-archive recovery verification confirmed:
+
+- archive SHA256 matched the expected value;
+- gzip and tar readability passed;
+- all key preservation objects were present in the archive;
+- Stalwart container running and healthy;
+- Bulwark container running;
+- n8n container running and healthy, `/healthz` returned `{"status":"ok"}`;
+- Authelia container running and healthy;
+- Xray, Hysteria2, nginx, CloudCLI, Codex app-server and Codex runner services active;
+- TCP listeners for SMTP/HTTP/HTTPS/IMAPS and application backends present;
+- Hysteria2 confirmed as the process owning UDP/443 (`MainPID=1179` at verification time);
+- nginx configuration test passed and public stub returned HTTP 200;
+- Stalwart SMTP returned `220 mail.escloud.us Stalwart ESMTP at your service`;
+- Stalwart HTTP backend returned 302 and Bulwark HTTP backend returned 307.
+
+`SERVER_SIDE_PRESERVATION_ACCEPTANCE=PASS`.
+
+The earlier UDP/443 failure in `EDGE_POST_ARCHIVE_ACCEPTANCE_V1` was a diagnostic-block defect: it inspected the wrong `ss` field for the UDP local endpoint. No runtime failure was present; the corrected recovery check confirmed Hysteria2 UDP/443 ownership.
+
 Outstanding before destructive rebuild acceptance:
 
-1. download archive and `.sha256` to an external trusted device;
-2. independently verify downloaded archive SHA256 equals `0203e5845f57bc1d04b384cef2b26a45fbff855c341e1edf1193034c34de9fdf`;
-3. complete a post-preservation application-health check after service restart;
-4. confirm provider-level VPS backup completed successfully.
+1. download archive and `.sha256` to an external trusted device and independently verify the downloaded archive SHA256 equals `0203e5845f57bc1d04b384cef2b26a45fbff855c341e1edf1193034c34de9fdf`;
+2. confirm provider-level VPS backup completed successfully.
 
 No migration/rebuild decision is implied by this audit alone.
