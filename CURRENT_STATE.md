@@ -6,191 +6,240 @@
 **Current implementation stage:** **Stage 1 — Base `edge` Platform — IN PROGRESS / NOT ACCEPTED**  
 **Primary GitHub repository:** `Eugene-SN/Cloud-Infrastructure`
 
-The clean provider rebuild is complete and accepted, but **Base Platform Deployment is not complete**. The project must continue Stage 1 work in branch `01` rather than proceed to a later branch.
-
-The previously opened `02 — Edge Functional Composition & Deferred Capabilities` was premature and is not the canonical continuation point.
+Stage 0 is complete. The clean provider rebuild and several Stage 1 foundation subsets are accepted, but Stage 1 as a whole is not yet accepted. Continue work in branch `01`; do not transition to a later branch until final Stage 1 deployment/non-regression acceptance.
 
 Canonical implementation workflow and stage sequence: `IMPLEMENTATION_PHASES.md`.
 
-## What is actually complete
+## Stage 0 — complete / accepted
 
-### Stage 0 — discovery / preservation / migration preparation
-
-**Status:** COMPLETE / PASS.
-
-Confirmed:
-
-- legacy VPS audit and historical baseline completed;
-- preliminary global functional scaffold created;
-- provider-level full VPS backup completed successfully;
-- external credential-bearing migration archive downloaded and independently verified;
+- legacy VPS audit and historical baseline complete;
+- provider full-VPS backup complete;
+- external sensitive migration archive verified;
 - archive SHA256: `0203e5845f57bc1d04b384cef2b26a45fbff855c341e1edf1193034c34de9fdf`;
-- sanitized GitHub `migration-reference/` accepted;
-- clean provider-level Ubuntu rebuild selected;
+- sanitized `migration-reference/` accepted;
+- clean provider-level rebuild selected and completed;
 - recovery paths verified.
 
-The sensitive archive remains outside GitHub and is the authoritative portable selective-recovery source. The provider backup remains the whole-VPS rollback path.
+The sensitive archive remains outside GitHub and is the authoritative selective-recovery source for credential/private state. The provider backup remains the whole-VPS rollback path. Historical baseline artifacts remain unchanged.
 
-### Migration engineering reference
+## Stage 1 — accepted current runtime state
 
-The sanitized engineering reference is accepted at:
+### Base OS / host
 
-`migration-reference/`
-
-Canonical acceptance record:
-
-`MIGRATION_REFERENCE_ACCEPTANCE_2026-09-16.md`
-
-It is engineering context only, not an authoritative restore bundle.
-
-## Stage 1 current state
-
-### Completed subphase: Edge Clean Rebuild
-
-**Status:** PASS.
-
-The GreenCloud KVM VPS was rebuilt from the provider panel as a clean Ubuntu instance and is now the live logical node `edge`.
-
-Accepted runtime facts after controlled reboot:
-
+- logical node: `edge`;
 - hostname/FQDN: `edge.escloud.us`;
-- short hostname: `edge`;
-- OS: Ubuntu 26.04.1 LTS;
-- architecture: `x86_64`;
-- virtualization: KVM;
-- kernel: `7.0.0-31-generic` at substrate acceptance;
-- vCPU: 2;
-- RAM: ~15 GiB;
-- swap: 4 GiB `/swap.img`;
-- root filesystem: ext4 on `/dev/vda1`, ~155 GiB filesystem class;
-- IPv4: `45.92.156.17/24`, default gateway `45.92.156.1`;
-- IPv6: `2a0c:b847:ffff:283::a/64`, default gateway `2a0c:b847:ffff::1`;
-- DNS resolution: PASS;
-- NTP synchronization: PASS;
-- SSH key authentication: PASS;
-- effective SSH auth: root key login allowed, password and keyboard-interactive authentication disabled;
-- OpenSSH socket activation through `ssh.socket` accepted;
-- post-reboot system state: `running`;
-- failed systemd units: 0;
-- current-boot error journal: empty at substrate acceptance.
+- Ubuntu 26.04.1 LTS;
+- kernel accepted at substrate stage: `7.0.0-31-generic`;
+- x86_64 KVM VPS;
+- 2 vCPU, ~15 GiB RAM;
+- 4 GiB swap at `/swap.img`;
+- root ext4 on `/dev/vda1`, ~155 GiB filesystem class;
+- IPv4 `45.92.156.17/24`, gateway `45.92.156.1`;
+- IPv6 `2a0c:b847:ffff:283::a/64`, gateway `2a0c:b847:ffff::1`;
+- timezone intentionally retained as `Europe/Moscow`;
+- SSH key-only root access accepted; password and keyboard-interactive auth disabled;
+- OpenSSH socket activation via `ssh.socket` accepted;
+- QEMU guest agent active;
+- journald persistent-use ceiling `SystemMaxUse=500M`;
+- provider cloud-init schema/deprecation warnings remain accepted/non-blocking because effective networking, swap and SSH are correct.
 
-`EDGE_FRESH_OS_SUBSTRATE_ACCEPTANCE=PASS`.
+Accepted records include `EDGE_FRESH_OS_SUBSTRATE_ACCEPTANCE=PASS` and `EDGE_MINIMAL_BASE_BOOTSTRAP_ACCEPTANCE=PASS`.
 
-### First-boot GRUB anomaly
+### Docker foundation
 
-The initial provider provisioning boot briefly produced `grub-initrd-fallback.service` failure with `invalid environment block` while GreenCloud provisioning upgraded `grub2-common` from `2.14-2ubuntu2` to `2.14-2ubuntu2.1` in the same boot.
+`EDGE_STAGE1_DOCKER_FOUNDATION_ACCEPTANCE=PASS`.
 
-After controlled reboot both relevant GRUB units completed successfully and no current-boot error remained. This is accepted as a transient provider-provisioning race, not an active defect.
+Accepted runtime:
 
-### Provider cloud-init warnings
+- Docker Engine `29.8.1` from the official Ubuntu resolute repository;
+- Docker CLI `29.8.1`;
+- containerd `2.3.5`;
+- runc `1.5.1`;
+- Buildx `0.37.1`;
+- Docker Compose `5.5.1`;
+- storage driver `overlayfs`;
+- cgroup v2 / systemd driver;
+- Docker root `/var/lib/docker`;
+- `/etc/docker/daemon.json` contains `{"live-restore": true}`;
+- Docker and containerd active/enabled;
+- hello-world and Compose config tests passed;
+- temporary Docker test artifacts removed.
 
-GreenCloud NoCloud seed completed with `errors: []`, but provider-template schema/deprecation warnings remain for:
+Docker + Compose are the primary runtime for suitable application services. Host-native services remain allowed where materially simpler/better suited.
 
-- deprecated `users.0.ssh-authorized-keys`;
-- swap size encoded as a floating-point value;
-- deprecated netplan `gateway4` / `gateway6` syntax.
+### nginx / HTTP / ACME foundation
 
-These warnings are non-blocking because effective SSH, swap and IPv4/IPv6 networking are correct. Do not mutate working provider-generated configuration merely to silence them.
+`EDGE_STAGE1_NGINX_ACME_FOUNDATION_ACCEPTANCE=PASS`.
 
-### Completed subphase: minimal architecture-independent bootstrap
+Accepted runtime:
 
-**Status:** PASS.
+- nginx `1.28.3-2ubuntu1.11`;
+- public listeners TCP/80 IPv4/IPv6;
+- loopback fallback listener `127.0.0.1:8080 proxy_protocol`;
+- ACME webroot `/var/www/letsencrypt`;
+- public webroot `/var/www/escloud.us/public`;
+- `/health` endpoint returns `ok`;
+- Proxy Protocol fallback path validated;
+- current `index.html` is only a temporary neutral placeholder, not an accepted final decoy page.
 
-`EDGE_MINIMAL_BASE_BOOTSTRAP_ACCEPTANCE=PASS`.
+### TLS / Certbot
 
-Accepted changes/state:
+`EDGE_STAGE1_TLS_CERTIFICATE_ACCEPTANCE=PASS`.
 
-- package metadata refreshed successfully;
-- `dpkg --audit` clean;
-- no APT holds;
-- Ubuntu phased updates were not forced;
-- `unzip 6.0-29ubuntu1` installed as the only additional base utility;
-- journald persistent-use ceiling configured as `SystemMaxUse=500M`;
-- journald active and healthy;
-- timezone retained as `Europe/Moscow`; NTP synchronized;
-- working provider Netplan left unchanged;
-- SSH configuration left unchanged; key-only root access and `ssh.socket` remain accepted;
-- QEMU guest agent present and active;
-- `/tmp` is tmpfs with mode `1777`;
-- IPv4/IPv6 and SSH non-regression gates passed.
+Accepted certificate:
 
-Not installed merely for convenience: `zip`, `tree`, `socat`, `pip3`.
+- certificate name `escloud.us`;
+- Certbot `4.0.0`;
+- authenticator `webroot`;
+- ECDSA P-256 / `secp256r1`;
+- certificate `/etc/letsencrypt/live/escloud.us/fullchain.pem`;
+- private key `/etc/letsencrypt/live/escloud.us/privkey.pem`;
+- validity observed at acceptance: 2026-09-16 19:27:04 UTC through 2026-12-15 19:27:03 UTC;
+- Certbot timer active/enabled;
+- renewal dry-run PASS.
 
-## Stage 1 is NOT complete
+Accepted SAN set (10):
 
-Only the clean-rebuild/substrate portion of branch `01` is complete. **Base Platform Deployment remains unfinished.**
+- `escloud.us`;
+- `app.escloud.us`;
+- `auth.escloud.us`;
+- `chat.escloud.us`;
+- `cloud.escloud.us`;
+- `code.escloud.us`;
+- `docs.escloud.us`;
+- `go.escloud.us`;
+- `mail.escloud.us`;
+- `sync.escloud.us`.
 
-### Current implementation rule
+### Xray runtime / VPN state
 
-Stage work now follows an **accepted-first** order:
+`EDGE_STAGE1_VPN_RUNTIME_FOUNDATION_ACCEPTANCE=PASS`.  
+`EDGE_STAGE1_VPN_STATE_RENDER_ACCEPTANCE=PASS`.  
+`EDGE_STAGE1_VPN_PUBLIC_ACCEPTANCE=PASS`.
 
-1. classify the current stage into already accepted/known implementation versus genuinely unresolved choices;
-2. reconstruct accepted carry-forward components from the preserved legacy implementation;
-3. deploy and verify dependency-ready accepted components first;
-4. discuss/select only genuinely unresolved mechanisms or concrete optimizations;
-5. complete the remaining stage-scoped deployment/verification;
-6. accept the whole stage before any branch transition.
+Accepted Xray runtime:
 
-Do not require the user to select already accepted services again from scratch. `migration-reference/`, the historical baseline and the sensitive recovery archive are the implementation starting point for accepted carry-forward services.
+- stable release resolved at deployment: `26.3.27`;
+- binary `/usr/local/bin/xray`;
+- release asset SHA256 verified: `23cd9af937744d97776ee35ecad4972cf4b2109d1e0fe6be9930467608f7c8ae`;
+- systemd unit `/etc/systemd/system/xray.service`;
+- service active and enabled;
+- public listener TCP/443;
+- preserved VLESS client count: 2;
+- tag `vless-tls-edge`;
+- TLS SNI `escloud.us`, ALPN `http/1.1`;
+- fallback `127.0.0.1:8080`, Proxy Protocol `xver=1`;
+- HTTPS through Xray → nginx fallback PASS;
+- TLS verification PASS;
+- `NRestarts=0` at public acceptance.
 
-### Stage 1 accepted runtime/implementation anchors
+### Hysteria2 runtime / VPN state
 
-- **Docker Engine + Docker Compose** are accepted as the primary runtime for suitable application services; containerization is preferred for clean deployment, lifecycle control, maintenance and updates.
-- Host-native services remain allowed where they are materially simpler/better suited; such exceptions require a concrete rationale.
-- **nginx**, **Xray**, **Hysteria2** and **Authelia** remain accepted products.
-- Their legacy configuration/scenarios are carry-forward implementation references, not something to recreate from zero.
-- The preserved TLS baseline is Certbot/ACME webroot with the `escloud.us` SAN certificate set and deploy-hook/certificate synchronization to Xray/Hysteria2.
-- Historical versions are not pins; deployment uses the current supported stable release/update path unless compatibility requires otherwise.
+Accepted Hysteria2 runtime:
 
-### Legacy Stage 1 foundation reconstructed from preservation data
+- stable release resolved at deployment: `2.12.3`;
+- binary `/usr/local/bin/hysteria`;
+- release asset SHA256 verified: `8c7a68a906998b747a0db87586e364f995fbfddb95693ae6e2fdb68a6e920d3e`;
+- systemd unit `/etc/systemd/system/hysteria-server.service`;
+- service active and enabled;
+- public listener UDP/443;
+- preserved auth user count from CSV state: 2;
+- `sniGuard: strict`;
+- auth `userpass`;
+- file masquerade rooted at `/var/www/escloud.us/public`;
+- real local Hysteria client handshake using preserved primary credential PASS;
+- HTTPS through the Hysteria tunnel returned HTTP 200;
+- `NRestarts=0` at public acceptance.
 
-The old working public-edge contract included:
+### Preserved VPN state / tooling
 
-- nginx host-side public TCP/80 and loopback `127.0.0.1:8080 proxy_protocol`;
-- Xray public TCP/443 with VLESS/TLS and fallback to nginx `127.0.0.1:8080`;
-- Hysteria2 public UDP/443 with strict SNI and file-based masquerade rooted at `/var/www/escloud.us/public`;
-- Certbot webroot at `/var/www/letsencrypt` with a shared ECDSA certificate named `escloud.us` covering the required `escloud.us` web names;
-- Certbot renewal plus certificate-copy/deploy-hook logic for Xray and Hysteria2;
-- Authelia on a loopback-published container endpoint with file/Argon2 authentication, SQLite storage, one-factor policies and `auth.escloud.us` session domain behavior;
-- VPN user/state tooling under `/opt/vpn-stack` (`vpnctl`) and maintenance logic worth selectively adapting from `maintctl`.
+Credential-bearing VPN state was selectively restored from the verified sensitive migration archive without regenerating credentials.
 
-The exact credentials and private TLS/state material remain in the sensitive recovery archive and are restored selectively where continuity is required.
+Current production state:
 
-### Firewall evidence
+- `/opt/vpn-stack/state/services.env`;
+- `/opt/vpn-stack/state/xray/users.csv`;
+- `/opt/vpn-stack/state/hysteria2/users.csv`;
+- `/opt/vpn-stack/conf/xray_primary_uuid.txt`;
+- `/opt/vpn-stack/conf/hysteria2_primary.txt`;
+- `/opt/vpn-stack/state/web-domains.txt`;
+- `/opt/vpn-stack/scripts/vpnctl`.
 
-Contrary to the recollection that the legacy VPS had no firewall, the preserved runtime audit shows **UFW was active** with:
+Only node identity metadata was intentionally adapted:
 
-- default deny incoming;
-- allow outgoing;
-- deny routed;
-- explicit IPv4/IPv6 rules for SSH, TCP/80, TCP/443, UDP/443 and mail ports;
-- one internal Docker-bridge rule for n8n → Codex runner.
+- `DOMAIN=escloud.us` preserved;
+- `NODE_CODE=edge`;
+- `NODE_DISPLAY=Edge`;
+- `XRAY_PORT=443` preserved;
+- `HY2_PORT=443` preserved.
 
-Whether to retain UFW on the new Docker host remains a Stage 1 engineering decision because Docker-published ports have special firewall semantics. Do not assume the legacy firewall was absent.
+Xray UUID/password continuity and Hysteria2 credential continuity were verified against preserved CSV state and functionally verified after service start.
 
-### Stage 1 functional scope still to finish
+### Certificate synchronization lifecycle
 
-- Docker + Compose installation/acceptance;
-- consumer-driven base package completion;
-- normalized persistent-directory and ownership conventions;
-- nginx ingress foundation;
-- HTTPS/TLS/certificate lifecycle;
-- Xray;
-- Hysteria2;
-- plausible public/decoy page;
-- Authelia common web-auth foundation;
-- firewall decision/minimal policy;
-- initial private Cloud Infrastructure page decision/implementation boundary;
-- basic backup of the new base state;
-- extension points for later public/private WebUI, machine APIs, webhooks, working storage, Home/PAI connectivity and monitoring.
+`EDGE_STAGE1_CERT_SYNC_LIFECYCLE_ACCEPTANCE=PASS`.
 
-## Global functional scaffold status
+Accepted lifecycle:
 
-`FUNCTIONAL_SCAFFOLD_DRAFT.md` is the current preliminary global capability scaffold.
+- sync script `/opt/vpn-stack/scripts/xray-cert-sync.sh`;
+- Certbot deploy hook `/etc/letsencrypt/renewal-hooks/deploy/20-vpn-cert-sync`;
+- renewed active certificate/key are copied into `/etc/xray/tls` and `/etc/hysteria/tls` with accepted ownership/modes;
+- Xray and Hysteria2 are restarted after successful sync;
+- service refresh errors are not suppressed;
+- direct hook execution PASS;
+- `certbot renew --cert-name escloud.us --dry-run --run-deploy-hooks` PASS;
+- deploy hook execution during Certbot dry-run proven by service PID changes;
+- active production certificate remained unchanged by staging dry-run;
+- post-hook Xray TLS/fallback PASS;
+- post-hook Hysteria handshake/proxy PASS;
+- Certbot timer remains active/enabled.
 
-It defines high-level required or potentially valuable functions across the final `edge`, but it **does not select every service/program** and is **not** a final architecture or final service inventory.
+### Current listener contract
 
-Unresolved products/services are intentionally chosen in the implementation stage where they are needed. Already accepted products are deployed first where their dependencies and implementation are known.
+Accepted public/service listeners now include:
+
+- SSH TCP/22;
+- nginx TCP/80;
+- Xray TCP/443;
+- Hysteria2 UDP/443;
+- nginx loopback `127.0.0.1:8080` with Proxy Protocol.
+
+There is intentionally no direct nginx TCP/443 listener because Xray owns TCP/443 and ordinary HTTPS reaches nginx through the Xray fallback path.
+
+## Firewall current state
+
+UFW is installed but currently **inactive** on the rebuilt host.
+
+Legacy evidence proves the old VPS used UFW with default deny incoming and explicit SSH/HTTP/HTTPS/VPN/mail allowances. Whether/how to re-enable a minimal UFW policy on the new Docker-capable host remains a Stage 1 engineering decision because Docker published ports have special firewall semantics.
+
+Do not add mail ports during Stage 1 unless required by an actually deployed Stage 1 service; mail belongs to a later stage.
+
+## Stage 1 remaining work
+
+Stage 1 is still **IN PROGRESS / NOT ACCEPTED**. Remaining work includes:
+
+- decide/restore or explicitly replace the plausible public/decoy page; current page is temporary only;
+- deploy/accept the Authelia common web-auth foundation using the preserved accepted scenario;
+- decide and implement the minimal firewall/public exposure policy;
+- finish any still-needed normalized persistent-directory/ownership conventions;
+- define/implement the initial private Cloud Infrastructure page boundary required by Stage 1;
+- take/verify the basic backup of the rebuilt base state required by Stage 1;
+- verify the intended extension points for later WebUI/API/webhook/storage/Home/PAI/monitoring work;
+- perform final Stage 1 composition and non-regression acceptance.
+
+## Accepted-first implementation rule
+
+For the remainder of the stage:
+
+1. classify known/accepted implementation versus genuinely unresolved scope;
+2. reconstruct accepted carry-forward components from preservation data;
+3. deploy dependency-ready accepted components first;
+4. research/select only genuinely unresolved mechanisms or actual incompatibilities;
+5. verify/accept the remaining stage composition;
+6. persist accepted state;
+7. transition branches only after full Stage 1 acceptance.
+
+Do not require re-selection of already accepted products from scratch.
 
 ## Accepted global product/direction anchors
 
@@ -213,34 +262,7 @@ Additional accepted directions:
 - dedicated Cloud Infrastructure portal replacing Homepage;
 - maintenance page + Semaphore replacing the legacy custom Maintenance Center.
 
-These global anchors do not mean that all integration/runtime details are already designed.
-
-## Important unresolved future product choices
-
-Examples still intentionally unresolved until their corresponding stage include:
-
-- final file/storage access implementation;
-- Filestash vs alternatives;
-- synchronization model and Syncthing role;
-- exact `edge` role in Obsidian synchronization;
-- monitoring/notification implementation;
-- Hermes role;
-- bots/messaging frontend;
-- private/site-to-site connectivity mechanism;
-- off-site DR topology;
-- any adjacent implementation products not already explicitly accepted.
-
-Canonical Obsidian vault remains on `ai-node` at:
-
-`/srv/ai-data/knowledge/obsidian`
-
-## Architecture state
-
-There is **no accepted full target Architecture Contract** and no accepted preselection of all future-stage services.
-
-`ARCHITECTURE.md` records only accepted architecture state/invariants and stage-scoped decisions. Known accepted implementation can proceed from preserved evidence without waiting for unrelated unresolved future-stage choices.
-
-Any previous proposal that preselected future unresolved products or topology before their stage review is not current authority.
+Canonical Obsidian vault remains on `ai-node` at `/srv/ai-data/knowledge/obsidian`; `edge` is not automatically a new canonical source of truth.
 
 ## Current branch / transition rule
 
@@ -250,10 +272,8 @@ Current canonical branch:
 
 Status:
 
-**IN PROGRESS — clean rebuild complete; Base Platform Deployment incomplete.**
+**IN PROGRESS — public ingress/VPN/TLS foundation accepted; remaining Stage 1 platform components and final composition acceptance still pending.**
 
 Do not transition to another branch until Stage 1 is fully deployed, verified and accepted.
 
-After Stage 1 acceptance, the next branch should be:
-
-`02 — Edge Core Applications`.
+After Stage 1 acceptance, the next branch should be `02 — Edge Core Applications`.
