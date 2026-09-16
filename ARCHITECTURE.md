@@ -71,7 +71,7 @@ No repartitioning, LVM layer, separate Docker disk, or filesystem redesign is re
 
 ## 3. Runtime placement contract
 
-The runtime uses a deliberately mixed **host-native + Docker Compose** model. Containerization is used where it reduces application lifecycle complexity; host-native execution is used where the service owns the public L4 edge, integrates directly with the OS/network, or requires a persistent user HOME/session environment.
+The runtime uses a deliberately mixed **host-native + Docker Compose** model. Containerization is used where it reduces application lifecycle complexity; host-native execution is used where the service owns the public L4 edge, integrates directly with the OS/network, requires a persistent user HOME/session environment, or must operate directly on host backup sources.
 
 ### 3.1 Host-native systemd-managed components
 
@@ -85,8 +85,11 @@ The runtime uses a deliberately mixed **host-native + Docker Compose** model. Co
 | CloudCLI | host under dedicated Unix user `core` | Loopback-only WebUI/service where applicable; working directory under the shared workspace. |
 | Codex CLI / app-server | host under `core` | Subscription/auth state remains in the `core` HOME; persistent app-server only where required by CloudCLI/workflows. |
 | Antigravity CLI | host under `core` | Same user/workspace model; persistent daemon only if the actual product integration requires one. |
+| Backrest + Restic | host | Backrest is the backup orchestrator for host/application data. Host-native placement avoids mounting broad host paths/control into a container and allows direct service-aware backup hooks. |
 
 Do not containerize the subscription CLI layer merely for uniformity: its useful state is user-session/auth/workspace state and it needs direct access to the host workspace.
+
+Backrest is also intentionally host-native: it is a host backup function, not an application tenant.
 
 ### 3.2 Docker Compose application stacks
 
@@ -98,7 +101,7 @@ Use several small Compose projects separated by lifecycle/function rather than o
 | `edge-automation` | n8n |
 | `edge-mail` | Stalwart, Bulwark |
 | `edge-data` | SFTPGo, CouchDB for Self-hosted LiveSync, Syncthing |
-| `edge-ops` | Backrest, Semaphore, Uptime Kuma |
+| `edge-ops` | Semaphore, Uptime Kuma |
 
 The Cloud portal and maintenance page are lightweight static assets served directly by host nginx; they do not require a dedicated portal container.
 
@@ -431,6 +434,7 @@ Principles:
 - `/etc/edge/secrets` is excluded from Git and included in encrypted backup;
 - `/srv/edge/state` is service state and is never casually synchronized between hosts;
 - `/srv/edge/workspace` is the intentional cross-service working-data surface;
+- Backrest may use `/srv/edge/state/backrest` for its own state while the process itself remains host-native;
 - subscription CLI state remains in `/home/core` where the tools expect a real HOME; only verified necessary auth/config subtrees are included in backup;
 - caches, downloaded package layers and reproducible temporary data are excluded from backup;
 - temporary/test artifacts use `/tmp` unless they intentionally become persistent project state.
@@ -441,7 +445,7 @@ Principles:
 
 ### 10.1 Backup roles
 
-Backrest is the `edge` backup management plane and Restic is the backup engine.
+Backrest is the host-native `edge` backup management plane and Restic is the backup engine.
 
 The final DR topology has three distinct sources of recovery truth:
 
@@ -463,7 +467,9 @@ At minimum include:
 - selected `/home/core` auth/config state required to restore subscription tooling;
 - `/srv/edge/workspace` according to explicit inclusion/retention rules.
 
-Use service-aware quiesce/export/snapshot hooks where a live database cannot be backed up consistently as ordinary files. A successful Restic command alone is not restore acceptance.
+Because Backrest runs on the host, service-aware quiesce/export/snapshot hooks can operate directly against local services without granting a backup container Docker/host-control access.
+
+Use service-aware hooks where a live database cannot be backed up consistently as ordinary files. A successful Restic command alone is not restore acceptance.
 
 ### 10.3 Restore order
 
@@ -566,7 +572,7 @@ Every stage follows relevant inspection → mutation → verification. A later s
 
 ### Stage 5 — Backup foundation
 
-- deploy Backrest;
+- deploy host-native Backrest + Restic;
 - establish the remote Home Infrastructure Restic repository over the accepted transport;
 - back up the current base/ingress/auth state;
 - perform a bounded restore/read-back test before adding major stateful services.
