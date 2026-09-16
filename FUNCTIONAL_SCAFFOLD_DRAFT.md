@@ -1,16 +1,30 @@
 # Cloud Infrastructure — Preliminary Functional Scaffold
 
-**Status:** working draft / capability composition accepted for further discussion
+**Status:** working draft / global capability scaffold accepted as input for stage-by-stage design
 
-This document is intentionally **not** the final Architecture Contract and does not define network topology, container layout, domains, storage paths, private-backbone technology or migration method.
+This document is intentionally **not** the final Architecture Contract and does not define the complete service/product inventory, network topology, container layout, domains, storage paths, private-backbone technology or final deployment architecture.
 
-Its purpose is to capture the current functional directions for `edge` after screening common private-VPS use cases against the already developed Home Infrastructure and Personal Agents Infrastructure.
+Its purpose is to capture the broad functional directions for `edge` after screening common private-VPS use cases against the already developed Home Infrastructure and Personal Agents Infrastructure.
 
 ## Design rule
 
 Cloud Infrastructure should complement Home Infrastructure and PAI by exploiting capabilities that materially benefit from an external 24/7 VPS: foreign Internet location, stable public reachability, external failure domain, continuous Internet observation, public event reception and subscription/cloud-agent execution.
 
 Do not duplicate Home/PAI capabilities merely because they can also run on a VPS.
+
+## Stage-selection rule
+
+This scaffold defines primarily **what capabilities are wanted**, not **which final program implements every capability**.
+
+Unresolved products/services are intentionally selected later, at the beginning of the implementation stage where they are actually needed:
+
+1. review that stage's functional requirements from this scaffold;
+2. research/discuss unresolved candidate services/mechanisms for that stage;
+3. explicitly accept the stage composition;
+4. define the stage-scoped architecture/deployment contract;
+5. only then deploy.
+
+Products already explicitly ACCEPTED in `DECISIONS.md` are anchors and should not be re-opened for replacement search without a concrete incompatibility or changed requirement. Their deployment/integration details may still remain unresolved until their implementation stage.
 
 ---
 
@@ -120,13 +134,15 @@ Candidate scope:
 
 Do not assume full duplicate observability. Centralized heavy log/metric replication to `edge` is currently considered unnecessary unless a later concrete requirement proves otherwise.
 
+The concrete monitoring/notification products are intentionally selected during Stage 3, not by this scaffold.
+
 ---
 
 ## 4. Backup operations and off-site recovery role
 
 ### Accepted base
 
-- future clean `edge` deployment uses Backrest as the backup management/orchestration layer;
+- future clean `edge` deployment uses Backrest as the backup management/orchestration direction;
 - Restic remains acceptable as an underlying backup engine.
 
 ### Functional intent
@@ -141,7 +157,8 @@ Do not assume full duplicate observability. Centralized heavy log/metric replica
 - repository destinations;
 - Home ↔ Cloud backup division;
 - what Home/PAI data actually deserves off-site replication;
-- whether external object storage should complement or replace VPS-local backup storage.
+- whether external object storage should complement or replace VPS-local backup storage;
+- the exact Stage 1 basic-backup mechanism versus later full backup-management implementation.
 
 A separate dedicated bootstrap/DR subsystem is not currently justified; GitHub plus verified backup should cover rebuild context unless later evidence shows a gap.
 
@@ -161,12 +178,13 @@ A separate dedicated bootstrap/DR subsystem is not currently justified; GitHub p
 ### Still unresolved
 
 - Filestash or alternative file layer;
-- network filesystem protocol;
+- network filesystem/access protocol;
 - Syncthing or alternative synchronization mechanism;
 - exact role of `edge` in Obsidian synchronization;
+- concrete Obsidian synchronization product/mechanism;
 - conflict/versioning semantics.
 
-Detailed product research is deferred until the complete functional scaffold is accepted.
+These choices belong to Stage 4 requirements/product-selection work. SFTPGo, Self-hosted LiveSync/CouchDB, Syncthing or any other proposal is not accepted merely because it appeared in a prior architecture draft.
 
 ---
 
@@ -192,6 +210,8 @@ High-value example:
 
 This capability absorbs the useful parts of generic continuous web/data collection; a separate data-scraping platform is not assumed.
 
+Concrete implementation additions beyond already accepted anchors are selected in Stage 5.
+
 ---
 
 ## 7. Cloud AI workspace and long-running agents
@@ -213,7 +233,7 @@ This capability absorbs the useful parts of generic continuous web/data collecti
 
 ### Candidate extension
 
-Hermes is a strong candidate for a persistent personal-agent/supervisor role on `edge`, coordinating cloud subscription tools and, later, selected Home/PAI capabilities. Hermes placement and responsibilities are not yet accepted as final architecture.
+Hermes remains a candidate for a persistent personal-agent/supervisor role on `edge`, coordinating cloud subscription tools and, later, selected Home/PAI capabilities. Hermes placement and responsibilities are not accepted and must be evaluated in the relevant stage.
 
 ---
 
@@ -232,7 +252,7 @@ Examples:
 - periodically research narrowly defined topics;
 - pause for user approval before an expensive, disruptive or consequential follow-up action where appropriate.
 
-Likely orchestration can involve n8n plus the accepted Cloud AI stack/Hermes candidate.
+Likely orchestration can involve n8n plus accepted Cloud AI anchors and any later accepted agent extension.
 
 Do not assume an endlessly autonomous agent that decides its own research agenda.
 
@@ -268,7 +288,7 @@ This requirement does **not** imply a dedicated message broker. The simplest imp
 
 ### Boundary
 
-The private transport is **not yet selected**. NetBird/WireGuard, authenticated HTTPS over the existing home public IP, another tunnel, or another simple mechanism must be compared only after the required flows are known.
+The private transport is **not selected**. NetBird/WireGuard, authenticated HTTPS over the existing home public IP, another tunnel or another simple mechanism must be compared in Stage 6 only after the required flows are known.
 
 Existing Home Mihomo policy routing already covers Home-side foreign egress and should not be duplicated as a new Cloud capability.
 
@@ -276,7 +296,7 @@ Existing Home Mihomo policy routing already covers Home-side foreign egress and 
 
 ## 10. Optional / later capabilities
 
-These remain candidates but are not part of the core scaffold yet:
+These remain candidates but are not part of the core accepted product set:
 
 ### Password / 2FA vault
 
@@ -284,7 +304,7 @@ Potential future cross-platform/self-hosted credential service. Keep low priorit
 
 ### Messaging/bot interface
 
-Telegram or another messaging surface may become a convenient frontend to n8n/Hermes for commands, notifications, approvals and status. Treat it as an interface, not a separate orchestration platform.
+Telegram or another messaging surface may become a convenient frontend to n8n/a later agent runtime for commands, notifications, approvals and status. Treat it as an interface, not a separate orchestration platform.
 
 ### Limited failover/secondary endpoint
 
@@ -316,6 +336,16 @@ The following functions are intentionally not part of the current Cloud capabili
 
 ---
 
-## Next discovery rule
+## Current usage rule
 
-This scaffold is a starting point for sequential discussion, not a final architecture. Each block can still be refined, merged, split, deferred or rejected. Only after the functional composition is mature should the project start detailed product selection for unresolved domains, followed by topology and deployment architecture.
+This scaffold is the **global requirements map** used as input to implementation stages.
+
+It must not be converted into one giant pre-deployment product-selection exercise.
+
+Current project work remains in Stage 1 / branch:
+
+`01 — Edge Clean Rebuild & Base Platform Deployment`
+
+The next activity is to take only the Stage 1-relevant requirements from this scaffold, discuss/select unresolved Stage 1 implementation choices, accept the Stage 1 composition/contract, and finish Base Platform deployment.
+
+Only after Stage 1 acceptance does the project open `02 — Edge Core Applications`, which begins its own requirements/product-selection cycle.
