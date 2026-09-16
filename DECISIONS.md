@@ -284,3 +284,22 @@ Do not keep Syncthing merely because task execution may use files.
 **Constraints:** Do not infer a product choice from an accepted capability unless the product has already been explicitly accepted elsewhere in this log. Continue capability-level discussion before topology/product research.
 
 **Supersedes:** the unfiltered 75-item capability catalog as a working scope.
+
+---
+
+## 2026-09-16T16:10:00+03:00 — Four capability gaps added to the scaffold
+
+**Status:** ACCEPTED
+
+**Context:** A gap-analysis of the consolidated functional scaffold found four useful capabilities that did not require new top-level blocks but should be explicit requirements.
+
+**Decision:** Add the following capabilities:
+
+1. **Universal Capture Inbox** — low-friction submission of URLs, text, files, PDFs, images or commands from user devices into `edge` automation/knowledge workflows.
+2. **Human-in-the-loop approvals** — selected n8n/agent workflows must be able to pause for explicit approve/reject/choice/confirmation using existing notification/WebUI/messaging surfaces.
+3. **Mail as automation transport** — the accepted Stalwart + Bulwark stack may also provide inbound mail/attachment triggers and outbound system mail for n8n workflows.
+4. **Durable store-and-forward between `edge` and Home/PAI** — cross-site tasks/events must survive temporary destination unavailability and support persisted state, retry/resume, observable outcome and safe re-delivery where required.
+
+**Constraints:** These capabilities do not by themselves authorize new dedicated services. Reuse n8n, mail and existing interfaces where sufficient; do not infer a message broker, separate inbox application or approval platform.
+
+**Supersedes:** the previous scaffold only insofar as these four capabilities were implicit or absent.
