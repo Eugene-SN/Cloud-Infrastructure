@@ -44,7 +44,7 @@ Do not duplicate Home/PAI capabilities merely because they can also run on a VPS
 
 ---
 
-## 2. Always-on automation and Internet event ingress
+## 2. Always-on automation, Internet event ingress and user interaction
 
 ### Accepted base
 
@@ -60,6 +60,43 @@ Do not duplicate Home/PAI capabilities merely because they can also run on a VPS
 - mail/event-driven automation;
 - orchestration of Cloud, Home and PAI workflows;
 - notifications and result delivery.
+
+### Universal Capture Inbox
+
+Provide one or more simple user-facing entry points that allow the user to submit material from any device into automation/knowledge workflows, for example:
+
+- URL;
+- text/note;
+- file or PDF;
+- image;
+- message/command.
+
+The functional goal is a low-friction `device → edge → n8n → target workflow` path. This does not imply a dedicated new service; implementation can reuse existing web, mail, messaging or file interfaces.
+
+### Human-in-the-loop approvals
+
+Automation and agent workflows should be able to pause for an explicit human decision where appropriate, for example:
+
+- approve/reject a proposed action;
+- choose between alternatives;
+- confirm a potentially disruptive task;
+- approve processing of a newly detected document/release;
+- acknowledge or retry a failed operation.
+
+Approvals should reuse existing notification/WebUI/messaging surfaces rather than create a separate orchestration platform.
+
+### Mail as automation transport
+
+The accepted Stalwart + Bulwark mail stack may also be used as a machine/user automation interface, for example:
+
+- dedicated inbound addresses feeding n8n workflows;
+- attachment/document ingestion;
+- rule-driven classification and processing;
+- outbound system notifications via the existing mail stack.
+
+Mail remains both a user service and a useful event/transport channel.
+
+### Boundary
 
 Do not add a second generic cron/job automation stack merely because a particular task is simple; use n8n unless a concrete technical reason requires another execution mechanism.
 
@@ -146,7 +183,8 @@ Candidate inputs:
 - firmware/software release pages;
 - support portals;
 - selected websites;
-- email/webhooks/API events.
+- email/webhooks/API events;
+- user-submitted material from the Universal Capture Inbox.
 
 High-value example:
 
@@ -170,7 +208,8 @@ This capability absorbs the useful parts of generic continuous web/data collecti
 - access from user devices without tying work to one laptop;
 - long-running coding/agent tasks;
 - use of subscription-based cloud tooling rather than forcing all workloads through paid token APIs;
-- controlled access to repositories and working files.
+- controlled access to repositories and working files;
+- ability to request human approval before selected agent actions when a workflow requires it.
 
 ### Candidate extension
 
@@ -190,7 +229,8 @@ Examples:
 - summarize vendor documentation changes;
 - collect current community reports about a detected firmware/software release;
 - prepare a structured research report for Obsidian or notification;
-- periodically research narrowly defined topics.
+- periodically research narrowly defined topics;
+- pause for user approval before an expensive, disruptive or consequential follow-up action where appropriate.
 
 Likely orchestration can involve n8n plus the accepted Cloud AI stack/Hermes candidate.
 
@@ -198,7 +238,7 @@ Do not assume an endlessly autonomous agent that decides its own research agenda
 
 ---
 
-## 9. Cloud ↔ Home/PAI orchestration
+## 9. Cloud ↔ Home/PAI orchestration and durable handoff
 
 ### Functional intent
 
@@ -211,6 +251,20 @@ Candidate flows:
 - cloud agents use local vLLM when appropriate;
 - `edge` receives job status/results and publishes notifications;
 - working files/results move between cloud-agent workspaces and local PAI pipelines.
+
+### Durable store-and-forward requirement
+
+Cross-site workflows must not require `edge` and Home/PAI to be online simultaneously.
+
+The functional contract should allow:
+
+1. `edge` to accept/persist a task or event;
+2. temporary Home/PAI unavailability without losing that task;
+3. retry/resume when the destination becomes available;
+4. observable success/failure state;
+5. idempotent or otherwise safe re-delivery where the workflow requires it.
+
+This requirement does **not** imply a dedicated message broker. The simplest implementation that satisfies durability and retry semantics should be preferred.
 
 ### Boundary
 
@@ -230,7 +284,7 @@ Potential future cross-platform/self-hosted credential service. Keep low priorit
 
 ### Messaging/bot interface
 
-Telegram or another messaging surface may become a convenient frontend to n8n/Hermes for commands, notifications and status. Treat it as an interface, not a separate orchestration platform.
+Telegram or another messaging surface may become a convenient frontend to n8n/Hermes for commands, notifications, approvals and status. Treat it as an interface, not a separate orchestration platform.
 
 ### Limited failover/secondary endpoint
 
