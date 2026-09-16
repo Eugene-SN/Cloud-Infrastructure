@@ -2,11 +2,15 @@
 
 ## Snapshot status
 
-**Project stage:** clean `edge` substrate and minimal host-level base bootstrap accepted; target-service composition / architecture work continues before service deployment.
+**Project stage:** clean `edge` substrate and minimal host-level base bootstrap accepted; functional/service composition and architecture work continue before architecture-dependent service deployment.
 
 **Primary GitHub repository:** `Eugene-SN/Cloud-Infrastructure`
 
 **Runtime mutation status:** provider-level clean rebuild and minimal architecture-independent host bootstrap completed and accepted. No target application/service stack has been restored or deployed yet.
+
+**Canonical implementation-stage chronology:** `IMPLEMENTATION_PHASES.md`.
+
+Work-branch numbering (`00/01/02/03`) is independent from implementation Stage numbering (`Stage 0…7`) and must not be used as a proxy for deployment progress.
 
 ## Historical baseline
 
@@ -30,6 +34,8 @@ Confirmed preservation layers:
 - external credential-bearing migration archive downloaded and independently verified;
 - archive SHA256: `0203e5845f57bc1d04b384cef2b26a45fbff855c341e1edf1193034c34de9fdf`;
 - server-side post-copy application acceptance passed;
+- sanitized GitHub `migration-reference/` accepted;
+- clean provider-level Ubuntu rebuild selected and completed;
 - `STAGE0_PRESERVATION_ACCEPTANCE=PASS`.
 
 The sensitive archive remains outside GitHub and is the authoritative portable selective-recovery source. The provider backup remains the whole-VPS rollback path.
@@ -127,6 +133,66 @@ Architecture-independent host bootstrap was intentionally kept minimal. Accepted
 
 Not installed merely for convenience: `zip`, `tree`, `socat`, `pip3`. Install such tools only when a concrete consumer requires them. `pollinate` was not autoremove-cleaned solely because APT marked it unused.
 
+## Canonical implementation progress
+
+The accepted deployment order is recorded in `IMPLEMENTATION_PHASES.md`:
+
+- **Stage 0 — Preservation / migration decision:** COMPLETE.
+- **Stage 1 — Base `edge` Platform:** PARTIAL.
+- **Stage 2 — Core Applications:** NOT STARTED.
+- **Stage 3 — Monitoring + Human Interaction:** NOT STARTED.
+- **Stage 4 — Files / Sync / Obsidian:** NOT STARTED.
+- **Stage 5 — Information + Cloud AI:** NOT STARTED.
+- **Stage 6 — Home / PAI Integration:** NOT STARTED.
+- **Stage 7 — Optional:** NOT STARTED.
+
+### Stage 1 completed subset
+
+Already complete/accepted:
+
+- Ubuntu clean substrate;
+- hostname `edge`;
+- provider networking in its current working form;
+- SSH key access;
+- minimal architecture-independent host bootstrap.
+
+### Stage 1 remaining subset
+
+Not yet deployed/accepted:
+
+- target firewall contract;
+- Docker + Compose target runtime;
+- normalized persistent-directory layout;
+- nginx;
+- HTTPS/TLS target model;
+- Xray;
+- Hysteria2;
+- public decoy page;
+- Authelia;
+- initial private Cloud page;
+- base backup implementation for the new state.
+
+These remaining Stage 1 items are architecture-dependent and remain gated by closure of functional composition and the accepted Architecture Contract.
+
+## Work-branch chronology / current gate
+
+Work branches are coordination units, not deployment stages:
+
+- `00 — Cloud Infrastructure Architecture Discovery & Target Design`;
+- `01 — Edge Clean Rebuild & Base Platform Deployment` — clean substrate + minimal bootstrap completed;
+- `02 — Edge Functional Composition & Deferred Capabilities` — must be completed before branch 03;
+- `03 — Edge Architecture Contract & Topology` — next only after branch 02 closure.
+
+Current gating order:
+
+1. finish branch 02 functional/service decisions;
+2. then complete branch 03 Architecture Contract;
+3. then finish the remaining implementation Stage 1 foundation;
+4. accept Stage 1;
+5. only then proceed to Stage 2 Core Applications.
+
+Do not interpret branch `02` as implementation Stage 2.
+
 ## Accepted target-service direction
 
 Accepted without further replacement search unless a concrete incompatibility emerges:
@@ -171,4 +237,6 @@ Canonical Obsidian vault remains on `ai-node` at `/srv/ai-data/knowledge/obsidia
 
 `EDGE_MINIMAL_BASE_BOOTSTRAP_ACCEPTANCE=PASS`.
 
-The clean Ubuntu substrate and minimal architecture-independent host bootstrap are accepted. Further target-service restoration/deployment remains gated by the applicable accepted service-composition, architecture and implementation decisions.
+Implementation Stage 1 is **PARTIAL**, not complete.
+
+The clean Ubuntu substrate and minimal architecture-independent host bootstrap are accepted. Further architecture-dependent Stage 1 service deployment remains gated by closure of functional composition and acceptance of the Architecture Contract.
