@@ -394,45 +394,71 @@ The engineering-context tree should include, where useful:
 
 ## 2026-09-16T21:44:20+03:00 — Implementation chronology and branch/stage distinction
 
+**Status:** SUPERSEDED
+
+**Context:** This entry attempted to resolve sequencing drift by separating work-branch numbering from implementation-stage numbering and directing work through a separate functional-composition branch followed by a separate Architecture Contract branch.
+
+**Historical decision:**
+
+- branch `01` was treated as complete after clean substrate/minimal bootstrap even though its title still included unfinished Base Platform Deployment;
+- branch `02 — Edge Functional Composition & Deferred Capabilities` was made the next work branch;
+- branch `03 — Edge Architecture Contract & Topology` was planned before returning to finish Stage 1.
+
+This sequencing was later found to conflict with the intended project workflow and is no longer current authority.
+
+**Superseded by:** `2026-09-16T22:13:31+03:00 — Stage-aligned branch lifecycle and rollback to unfinished Stage 1`.
+
+---
+
+## 2026-09-16T22:13:31+03:00 — Stage-aligned branch lifecycle and rollback to unfinished Stage 1
+
 **Status:** ACCEPTED
 
-**Context:** The previously written `IMPLEMENTATION_PHASES_DRAFT.md` contained the intended Stage 0→7 deployment sequence but remained marked `PROPOSED / discussion draft`. Meanwhile the clean substrate and minimal host bootstrap had already been accepted in runtime/current-state documentation. Work-branch numbers (`00/01/02/03`) were therefore vulnerable to being confused with implementation-stage numbers (`Stage 0/1/2/3`), which caused incorrect sequencing guidance.
+**Context:** The branch `01 — Edge Clean Rebuild & Base Platform Deployment` completed only the clean rebuild/substrate portion and a minimal architecture-independent bootstrap. The Base Platform Deployment part of that branch was not completed. Moving to a new branch at that point created false chronology. In addition, the project currently has a broad functional scaffold but has not selected every service/program for the final server. A premature proposed Architecture Contract also preselected future-stage products and topology before the corresponding stage-specific requirements discussions had occurred.
 
 **Decision:**
 
-- `IMPLEMENTATION_PHASES.md` is now the canonical accepted deployment chronology.
-- Work-branch numbers and implementation-stage numbers are independent and must never be treated as equivalent.
-- Work-branch chronology is:
-  - `00 — Cloud Infrastructure Architecture Discovery & Target Design`;
-  - `01 — Edge Clean Rebuild & Base Platform Deployment`;
-  - `02 — Edge Functional Composition & Deferred Capabilities`;
-  - `03 — Edge Architecture Contract & Topology`, only after branch 02 is closed.
-- Implementation chronology is:
-  - **Stage 0 — Preservation / migration decision:** COMPLETE;
-  - **Stage 1 — Base `edge` Platform:** PARTIAL;
-  - **Stage 2 — Core Applications:** after Stage 1 acceptance;
-  - **Stage 3 — Monitoring + Human Interaction**;
-  - **Stage 4 — Files / Sync / Obsidian**;
-  - **Stage 5 — Information + Cloud AI**;
-  - **Stage 6 — Home / PAI Integration**;
-  - **Stage 7 — Optional**.
-- Branch `01` completed the clean Ubuntu substrate and architecture-independent minimal host bootstrap only. It did **not** complete implementation Stage 1.
-- The already accepted minimal-bootstrap state (`EDGE_MINIMAL_BASE_BOOTSTRAP_ACCEPTANCE=PASS`) is part of the completed subset of Stage 1.
-- Remaining Stage 1 items include the target firewall contract, Docker/Compose runtime, normalized persistent layout, nginx, HTTPS/TLS, Xray, Hysteria2, public decoy page, Authelia, initial private Cloud page and base-backup implementation.
-- Those remaining Stage 1 items are architecture-dependent and must wait until functional/service composition is closed and the Architecture Contract is accepted.
-- Current gating order is: finish branch 02 → complete branch 03 Architecture Contract → finish remaining Stage 1 → accept Stage 1 → proceed to Stage 2 and then Stages 3–7.
-- Home/PAI connectivity remains deliberately late and is not a foundation dependency for standalone `edge`.
+1. Restore the canonical current checkpoint to **`01 — Edge Clean Rebuild & Base Platform Deployment`**.
+2. Stage 1 / branch 01 remains **IN PROGRESS / NOT ACCEPTED** until the complete Base Platform scope is designed, deployed, verified and explicitly accepted.
+3. `EDGE_FRESH_OS_SUBSTRATE_ACCEPTANCE=PASS` and `EDGE_MINIMAL_BASE_BOOTSTRAP_ACCEPTANCE=PASS` are subset acceptances inside Stage 1; neither is Stage 1 acceptance.
+4. The prematurely opened `02 — Edge Functional Composition & Deferred Capabilities` is not the canonical continuation point and must not be used to skip unfinished Stage 1 work.
+5. From Stage 1 onward, each implementation stage has its own work branch:
+   - `01 — Edge Clean Rebuild & Base Platform Deployment`;
+   - `02 — Edge Core Applications`;
+   - `03 — Edge Monitoring & Human Interaction`;
+   - `04 — Edge Files, Sync & Obsidian`;
+   - `05 — Edge Information & Cloud AI`;
+   - `06 — Edge Home & PAI Integration`;
+   - `07 — Edge Optional Capabilities`.
+6. Every stage branch must begin with **stage-specific functional-requirements review and service/product/mechanism discussion** before architecture-dependent deployment.
+7. Mandatory lifecycle for each implementation stage is:
+   - requirements review;
+   - unresolved service/product selection;
+   - explicit stage-composition acceptance;
+   - stage-scoped architecture/deployment contract and recovery path;
+   - deployment;
+   - verification;
+   - explicit stage acceptance;
+   - GitHub persistence/read-back;
+   - only then branch transition.
+8. The global `FUNCTIONAL_SCAFFOLD_DRAFT.md` is a capability scaffold, not a complete service/product inventory and not a final architecture. It intentionally leaves unresolved products for the stage where they are actually needed.
+9. Already accepted global products (including Xray, Hysteria2, nginx, n8n, CloudCLI, Stalwart + Bulwark, Authelia, Codex CLI and Antigravity CLI) are not re-opened for replacement research without a concrete incompatibility or changed requirement, but their stage-specific deployment/integration details still require discussion and acceptance.
+10. The previous detailed proposed `ARCHITECTURE.md` is withdrawn as current authority because it prematurely selected future-stage products/topology. In particular, SFTPGo, Self-hosted LiveSync/CouchDB, Syncthing, NetBird, the proposed complete domain map and proposed future-stage runtime topology are not accepted merely because they appeared in that proposal.
+11. `ARCHITECTURE.md` now accumulates only accepted architecture facts/invariants and stage-scoped decisions after the corresponding stage composition is accepted.
+12. ChatGPT must not suggest a new branch while the current branch/stage contains unfinished scope. When a stage is fully accepted, it should proactively propose the next stage-aligned branch name and a concise starter prompt.
+
+**Current Stage 1 next step:** continue in branch `01` with Stage 1 requirements review and service/product selection for the unfinished Base Platform scope, then define its scoped deployment contract and complete deployment/acceptance.
 
 **Constraints:**
 
-- Do not infer implementation-stage progress from a work-branch number.
-- Do not jump from the clean substrate directly to Stage 2 applications.
-- Do not open branch 03 while branch 02 remains materially incomplete.
-- Architecture-dependent Stage 1 deployment remains gated by the accepted Architecture Contract.
+- Do not preselect unresolved future-stage products to make a complete-looking architecture.
+- Do not deploy Stage 2+ services before Stage 1 acceptance.
+- Do not treat a branch title as complete when only one subtask inside it has been accepted.
+- Historical Git commits are not rewritten; superseded/premature proposals remain available in history but are removed or replaced as current-tree authority.
 
 **Supersedes:**
 
-- the `PROPOSED / discussion draft` status of `IMPLEMENTATION_PHASES_DRAFT.md`;
-- any interpretation that branch `01` completed implementation Stage 1;
-- any interpretation that work branch `02` corresponds to implementation Stage 2;
-- any sequencing guidance that moves to branch `03` before branch `02` is closed.
+- `2026-09-16T21:44:20+03:00 — Implementation chronology and branch/stage distinction`;
+- the current-authority status of the premature full-target `ARCHITECTURE.md` proposal;
+- any guidance to continue in `02 — Edge Functional Composition & Deferred Capabilities` before Stage 1 acceptance;
+- any workflow that requires selecting all final server products before proceeding stage-by-stage.
