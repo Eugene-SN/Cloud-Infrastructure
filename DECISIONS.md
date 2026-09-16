@@ -19,7 +19,7 @@ Decision entries are chronological. The latest applicable `ACCEPTED` decision ha
 - New taxonomy applies only to target-state, planning, architecture, deployment and migration materials.
 - The legacy VPS is an initial resource/state to evaluate, not an architecture template.
 
-**Constraints:** Do not infer future service necessity from legacy activity or mere installation.
+**Constraints:** Do not infer future service necessity from current runtime activity.
 
 **Supersedes:** none.
 
@@ -324,3 +324,36 @@ Initial high-priority preservation audit focuses on Stalwart + Bulwark and Xray 
 - Verify archive integrity before any destructive rebuild.
 
 **Supersedes:** any narrower interpretation that the migration archive should omit credentials or secret state.
+
+---
+
+## 2026-09-16T19:44:00+03:00 — Two-plane migration preservation model
+
+**Status:** ACCEPTED
+
+**Context:** A complete credential-bearing migration archive is useful for disaster recovery, but is a poor working format for engineering review and should not be committed into Git history. The project also needs durable, directly readable migration context available to ChatGPT through the private GitHub repository during the fresh deployment.
+
+**Decision:** Use two distinct preservation planes:
+
+1. **Recovery plane** — the complete sensitive migration archive stays outside GitHub as authoritative recovery material. It may contain credentials, private keys, TLS material, application databases and auth state. The provider-level full VPS backup is an independent second recovery path.
+2. **Engineering-context plane** — create a structured `migration-reference/` tree in `Eugene-SN/Cloud-Infrastructure` containing useful text/configuration/script/runtime-reference artifacts needed to understand and adapt the legacy implementation during fresh deployment.
+
+The engineering-context tree should include, where useful:
+
+- `maintctl` and `vpnctl` source scripts;
+- Xray/Hysteria configuration structure and systemd units;
+- nginx routing configuration;
+- mail Compose/configuration structure and DNS/runtime notes;
+- n8n/Authelia Compose/runtime structure;
+- CloudCLI/Codex service definitions and non-secret runtime/reference configuration;
+- firewall/network/systemd/package/runtime metadata needed for reconstruction.
+
+**Constraints:**
+
+- Do not commit private keys, SSH private keys, TLS private keys, application auth databases, OAuth/session tokens, raw credential files, mail databases, n8n credential databases, Authelia secret files or other credential-bearing state into GitHub.
+- Do not place the complete migration archive in GitHub, Git LFS or release assets as normal project context.
+- Before committing candidate text files, perform a secret-content audit and either verify that the file is safe verbatim or create a clearly marked redacted copy.
+- Preserve original filenames/paths in manifests so the legacy implementation can be reconstructed accurately.
+- The GitHub engineering reference is for architecture/migration work and is not itself the authoritative recovery backup.
+
+**Supersedes:** any idea of using the complete credential-bearing archive as the primary GitHub project context.
