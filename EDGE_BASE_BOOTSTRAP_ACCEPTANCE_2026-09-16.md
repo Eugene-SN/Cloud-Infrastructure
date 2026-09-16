@@ -59,4 +59,20 @@ After mutation:
 
 ## Deployment boundary
 
-This completes the clean-host bootstrap stage. It does not authorize target-service deployment. The project returns to unresolved functional/service-composition work and, only after that is accepted, topology / Architecture Contract design.
+This accepts only the **minimal architecture-independent bootstrap subset** inside Stage 1 / branch:
+
+`01 — Edge Clean Rebuild & Base Platform Deployment`
+
+It does **not** complete Base Platform Deployment and it does **not** complete Stage 1.
+
+Canonical chronology clarification (superseding any earlier interpretation of this acceptance as a branch-transition point):
+
+- remain in branch `01`;
+- perform Stage 1 requirements review;
+- discuss/select unresolved Stage 1 services/mechanisms;
+- accept the Stage 1 composition and scoped deployment contract;
+- deploy/verify the remaining Base Platform scope;
+- explicitly accept Stage 1;
+- only then open `02 — Edge Core Applications`.
+
+See `DECISIONS.md`, `IMPLEMENTATION_PHASES.md` and `CURRENT_STATE.md` for the current authoritative workflow.
