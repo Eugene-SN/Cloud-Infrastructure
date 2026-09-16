@@ -8,18 +8,30 @@ This document is the canonical implementation-stage chronology for Cloud Infrast
 
 The global functional scaffold defines **what capabilities the server should eventually provide**, but it is not a complete service/product inventory and it is not a final architecture.
 
-Each implementation stage is handled in its own work branch. At the beginning of every stage branch, before architecture-dependent deployment, the project must perform a stage-scoped design cycle:
+Each implementation stage is handled in its own work branch. Work inside a stage is split into two classes before further deployment:
 
-1. **REQUIREMENTS REVIEW** — read the accepted global scaffold/current state and determine the exact functional requirements that belong to this stage.
-2. **SERVICE / PRODUCT SELECTION** — review candidate services and implementation mechanisms for unresolved requirements in this stage. Already accepted products are reused without replacement research unless a concrete incompatibility or changed requirement appears.
-3. **STAGE COMPOSITION ACCEPTANCE** — explicitly decide what is in scope, what is out of scope, and which products/mechanisms are selected for this stage.
-4. **STAGE ARCHITECTURE / DEPLOYMENT CONTRACT** — define only the topology, runtime placement, paths, ingress/auth/storage relationships and recovery path needed to implement this stage.
-5. **DEPLOYMENT** — mutate runtime only after the stage composition/contract is accepted.
-6. **VERIFY / ACCEPT** — verify the required properties and record the resulting factual state.
-7. **PERSIST** — update `DECISIONS.md`, `CURRENT_STATE.md`, `ARCHITECTURE.md` and other canonical docs as needed.
-8. **BRANCH TRANSITION** — only after the current stage is fully accepted may ChatGPT propose the next work branch and its starter prompt.
+1. **KNOWN / ACCEPTED BASELINE** — functions, products and operating scenarios already explicitly accepted or already proven in the preserved legacy deployment.
+2. **UNRESOLVED SCOPE** — functions for which the product, mechanism, topology or useful inclusion is genuinely not yet decided.
 
-Do **not** open a new work branch merely because one subtask inside the current stage is complete.
+The project must implement these classes in this order whenever dependencies permit:
+
+1. **REQUIREMENTS / BASELINE REVIEW** — read accepted decisions, current state, the global scaffold and preserved migration material; classify stage items as already known/accepted versus genuinely unresolved.
+2. **LEGACY IMPLEMENTATION RECONSTRUCTION** — for accepted carry-forward services, inspect `migration-reference/`, the sensitive recovery archive where needed, and the historical baseline. The previous working configuration/scenario is the default implementation reference, not a blank-sheet design exercise.
+3. **KNOWN / ACCEPTED DEPLOYMENT** — after a narrowly scoped compatibility/recovery check, deploy and verify already accepted components that do not depend on unresolved choices. Do not delay known work merely to finish unrelated product research.
+4. **UNRESOLVED SERVICE / PRODUCT SELECTION** — discuss and compare alternatives only for requirements that remain genuinely unresolved or where a concrete incompatibility/changed requirement justifies replacing an accepted implementation.
+5. **REMAINING STAGE COMPOSITION ACCEPTANCE** — explicitly decide the unresolved in-scope/out-of-scope items and selected mechanisms.
+6. **STAGE-SCOPED ARCHITECTURE / DEPLOYMENT CONTRACT** — define only the topology, paths, ingress/auth/storage relationships and recovery path still needed for the remaining work. Already deployed accepted baseline becomes an input, not something to redesign without cause.
+7. **REMAINING DEPLOYMENT** — implement the unresolved/selected remainder.
+8. **VERIFY / ACCEPT** — verify the complete stage properties and record factual state.
+9. **PERSIST** — update `DECISIONS.md`, `CURRENT_STATE.md`, `ARCHITECTURE.md` and other canonical docs as needed.
+10. **BRANCH TRANSITION** — only after the current stage is fully accepted may ChatGPT propose the next work branch and its starter prompt.
+
+Additional rules:
+
+- Do **not** open a new work branch merely because one subtask inside the current stage is complete.
+- Do **not** make the user choose again from scratch when a product/scenario has already been accepted and preserved. Start from the old working implementation, then propose concrete retain / simplify / optimize / change options.
+- Historical versions are evidence, not pins. At deployment/update time use the current supported stable release/channel unless a concrete compatibility reason requires otherwise.
+- Containerized deployment through Docker + Compose is the default for suitable application services because it provides the preferred cleanliness, lifecycle control and update path. Host-native deployment remains appropriate where it is materially simpler or better suited to the service; such exceptions should be justified rather than assumed.
 
 ---
 
@@ -71,7 +83,7 @@ The Stage 1 capability scope currently includes:
 - clean supported Ubuntu substrate;
 - hostname `edge`;
 - networking/firewall/SSH baseline;
-- container/runtime foundation where required;
+- Docker + Compose container/runtime foundation;
 - normalized persistent-directory and ownership conventions;
 - public HTTP/HTTPS ingress foundation;
 - TLS/certificate handling;
@@ -102,31 +114,48 @@ Completed and accepted inside Stage 1:
 
 **Important:** this completed only the **Edge Clean Rebuild** and minimal substrate/bootstrap portion of work branch `01`. It did **not** complete **Base Platform Deployment**.
 
+### Accepted legacy foundation to reconstruct first
+
+Before asking the user to choose new implementations, reconstruct and evaluate the preserved working Stage 1 baseline:
+
+- **Docker Engine + Compose** as the primary application-service runtime;
+- **nginx** as the accepted ingress/reverse-proxy anchor;
+- **Xray** as the public TCP/443 VLESS/TLS endpoint with HTTP fallback semantics preserved unless deliberately changed;
+- **Hysteria2** as the public UDP/443 endpoint with its masquerade behavior preserved unless deliberately changed;
+- **Authelia** as the common web-auth foundation;
+- the existing **`escloud.us` TLS lifecycle**: Certbot/ACME webroot, SAN certificate coverage for the required `escloud.us` names, renewal timer, and deploy-hook/certificate-copy mechanism feeding Xray/Hysteria2;
+- existing public decoy/fallback behavior and nginx `127.0.0.1:8080 proxy_protocol` relationship;
+- preserved VPN user/state-management logic (`vpnctl`) and useful maintenance logic from `maintctl`, adapting naming from the legacy node to `edge` rather than recreating behavior blindly.
+
+The exact old credentials/private TLS material remain in the sensitive recovery plane, not GitHub. Restore selectively where continuity is desired.
+
 ### Required next activity in branch 01
 
-Before further Stage 1 deployment, continue in the same branch and perform the Stage 1 design cycle:
+Proceed in this order:
 
-- review the exact Stage 1 functional requirements;
-- identify which Stage 1 implementation choices are already accepted and which remain unresolved;
-- research/discuss unresolved services/mechanisms only for Stage 1;
-- explicitly accept the Stage 1 service/product composition;
-- define the Stage 1 scoped architecture/deployment contract;
-- then deploy and verify the remaining Stage 1 foundation.
+#### A. Known / accepted foundation
 
-Examples of still-unresolved or not-yet-finalized Stage 1 implementation details include, as applicable:
+1. reconstruct the legacy Stage 1 implementation and dependencies from the preserved references;
+2. derive the minimum required host package set from the actual consumers;
+3. verify current upstream/Ubuntu compatibility and current stable release path;
+4. decide only the runtime-placement exceptions that materially affect deployment (for example whether Xray/Hysteria2 remain host-native or move to containers while preserving the same external contract);
+5. deploy and verify the accepted foundation components that do not depend on unresolved Stage 1 choices.
 
-- target firewall implementation/policy;
-- Docker/Compose usage and target runtime layout;
-- normalized target persistent directories and ownership;
-- nginx deployment details and ingress relationships;
-- TLS/ACME mechanics and certificate distribution;
-- Xray/Hysteria2 target configuration/restoration/adaptation;
-- public decoy implementation;
-- Authelia deployment/integration details;
-- implementation of the initial private Cloud page;
-- implementation of the initial base-state backup.
+#### B. Unresolved Stage 1 choices
 
-Some products in this list are already accepted globally (for example nginx, Xray, Hysteria2 and Authelia); their **replacement selection** need not be reopened without a concrete reason, but their Stage 1 implementation contract still must be discussed and accepted before deployment.
+Only after/alongside the known baseline where dependencies require it, discuss the genuinely unresolved items, including:
+
+- whether UFW remains useful on the new Docker host and the exact minimal firewall policy;
+- normalized persistent-directory and ownership conventions for the new `edge` naming/model;
+- whether the initial private Cloud page should be a minimal Stage 1 surface or deferred to the fuller Stage 2 portal implementation;
+- exact Stage 1 basic-backup mechanism before the later full Backrest topology;
+- any concrete optimization to the legacy TLS, ingress, VPN or auth implementation that has a demonstrated operational benefit.
+
+Evidence from the preserved legacy host shows UFW was in fact active with default-deny incoming and explicit public-port rules. Therefore firewall treatment must be based on that evidence plus Docker/UFW interaction, not on an assumption that the old host had no firewall.
+
+### Stage 1 package/runtime principle
+
+Install packages because a selected Stage 1 component requires them, not as a generic toolbox. Reuse packages already present in the clean Ubuntu image. The expected additional foundation set is therefore small and consumer-driven; Docker packages come from Docker's supported stable Ubuntu repository, while ordinary host components should prefer Ubuntu's supported packages unless an upstream installation path is materially preferable.
 
 Stage 1 is complete only after all required Base Platform components are deployed, verified and explicitly accepted.
 
@@ -140,7 +169,9 @@ Stage 1 is complete only after all required Base Platform components are deploye
 
 Create this branch **only after Stage 1 / branch 01 is fully accepted**.
 
-At the beginning of the branch, run the same stage design cycle before deployment. The current functional scaffold suggests this stage may include:
+Use the same accepted-first workflow: deploy/reconstruct already accepted carry-forward products first where their implementation is known and independent, then research only the genuinely unresolved Stage 2 items.
+
+The current functional scaffold suggests this stage may include:
 
 - Stalwart;
 - Bulwark;
@@ -153,7 +184,7 @@ At the beginning of the branch, run the same stage design cycle before deploymen
 - maintenance page;
 - full private Cloud page/portal.
 
-Several of these products are already accepted globally, but the complete Stage 2 composition, integration details, runtime placement and any unresolved adjacent products/mechanisms must still be reviewed in Stage 2 before deployment.
+Several of these products are already accepted globally. Their preserved legacy configuration is the first implementation reference where applicable; unresolved adjacent products/mechanisms are discussed separately rather than forcing a clean-sheet redesign.
 
 ### Intended production checkpoint
 
@@ -177,7 +208,7 @@ At the end of accepted Stage 2, `edge` should provide a practically complete sta
 
 `03 — Edge Monitoring & Human Interaction`
 
-Create only after Stage 2 acceptance. Begin with stage-specific requirements analysis and service/product selection.
+Create only after Stage 2 acceptance. Reuse any already accepted/implemented mechanisms first, then select only unresolved monitoring and interaction components.
 
 Current functional candidates include:
 
@@ -203,7 +234,7 @@ Do not preselect a heavy observability stack without a demonstrated need.
 
 `04 — Edge Files, Sync & Obsidian`
 
-Create only after Stage 3 acceptance. Begin with stage-specific requirements analysis and product research.
+Create only after Stage 3 acceptance. Begin from accepted requirements and any preserved useful implementation evidence, but research the products that remain unresolved.
 
 Current unresolved scope includes:
 
@@ -230,7 +261,7 @@ No file/sync product that remains unresolved in current decisions is implicitly 
 
 `05 — Edge Information & Cloud AI`
 
-Create only after Stage 4 acceptance. Begin with stage-specific requirements analysis and product/service selection.
+Create only after Stage 4 acceptance. Deploy already accepted cloud-AI anchors using their accepted/preserved operating model where applicable; research only unresolved extensions.
 
 Current functional candidates include:
 
@@ -280,7 +311,7 @@ Current functional scope includes:
 
 `07 — Edge Optional Capabilities`
 
-Create only after the primary system has reached production acceptance. Begin with requirements review; deploy only capabilities with demonstrated value.
+Create only after the primary system has reached production acceptance. Deploy only capabilities with demonstrated value; unresolved optional products are selected only when their need is established.
 
 Candidates may include:
 
@@ -303,8 +334,8 @@ The project is currently at:
 
 The prematurely opened work branch `02 — Edge Functional Composition & Deferred Capabilities` is **not** the canonical continuation point and must not be used to skip unfinished Stage 1 work.
 
-The next work must occur in branch `01`: Stage 1 requirements review → Stage 1 service/product selection → Stage 1 scoped architecture/deployment contract → remaining Base Platform deployment → verification → Stage 1 acceptance.
+The next work must occur in branch `01` and starts with reconstruction of the known/accepted Stage 1 legacy foundation, dependency/package analysis, and deployment of components whose behavior is already decided. Genuine unresolved Stage 1 choices are discussed separately when they become blocking or after the known baseline is in place.
 
-Only after that acceptance should the project open:
+Only after complete Stage 1 acceptance should the project open:
 
 `02 — Edge Core Applications`.
