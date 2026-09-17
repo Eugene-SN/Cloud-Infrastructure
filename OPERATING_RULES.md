@@ -186,6 +186,15 @@ Latest applicable `ACCEPTED` decision has priority. `SUPERSEDED`, `REJECTED`, an
 - Persistent non-secret configuration/design/runbooks may be stored in Git.
 - Sensitive recovery state remains outside GitHub.
 
+## Service account and ownership default
+
+- Use the shared host service account **`core`** by default for Cloud Infrastructure application services, persistent service data and host-native service execution.
+- Do not create one Unix account per service merely for isolation.
+- Create or use a service-specific Unix account only when the application or its upstream-supported runtime explicitly requires that account identity or when using `core` would break the supported runtime contract.
+- For containers, keep the image's required internal user/UID/GID when necessary; do not rename or remap an upstream container user merely to make it `core`.
+- Host-side ownership of bind-mounted data should use `core` where compatible. If a container requires a specific numeric UID/GID for a bind mount, preserve that requirement rather than forcing `core` ownership; document the exception.
+- Do not assume the numeric UID/GID of `core`; verify it from fresh runtime state before applying ownership changes.
+
 ## Project-specific design constraints
 
 - Single-operator personal infrastructure; avoid enterprise complexity without a demonstrated use case.
