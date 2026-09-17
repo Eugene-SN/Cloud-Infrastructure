@@ -13,9 +13,36 @@ Current work branch: `02.5 — Remaining Functional Scope Reconciliation & Resea
 
 Primary repository: `Eugene-SN/Cloud-Infrastructure`.
 
-The accepted Stage 2 production set is Authelia, n8n, CloudCLI, Codex CLI, Antigravity CLI, Stalwart and Bulwark. Backrest, Semaphore, the maintenance/update page and the full private `app.escloud.us` portal were explicitly removed from Stage 2 scope and deferred to late infrastructure lifecycle work after the functional service composition stabilizes.
+The accepted Stage 2 production set is Authelia, n8n, CloudCLI, Codex CLI, Antigravity CLI, Stalwart and Bulwark.
 
-Stage 02.5 has now accepted a dependency-aware roadmap direction: remaining standalone full services first; then the `edge ↔ ai-node ↔ PVE/Home` connectivity foundation; then cross-site data/knowledge services; then remaining infrastructure services; then Backrest; then Semaphore plus the dedicated `update.escloud.us` maintenance/update page; then infrastructure-wide monitoring/heartbeats/alerts; then the final `app.escloud.us` portal; then final integrated infrastructure acceptance. User-specific n8n/agent workflows are a post-infrastructure application layer rather than blockers for infrastructure completion.
+Stage 02.5 has selected **Hermes Agent** as the only `Remaining Standalone Core Service`. The future Stage 3 is `03 — Edge Hermes Agent Runtime`; Hermes is not yet installed because Stage 02.5 remains research-only and must finish all required research/deliverables before any new production branch opens.
+
+Accepted Hermes direction:
+
+- persistent cloud-side agent runtime on `edge`;
+- runs in parallel with n8n, not as a replacement;
+- preferred host-native placement under `core`;
+- Docker is not preferred because direct reuse of the existing host-native Codex/Antigravity executors and their user/runtime context would otherwise require unnecessary bridging;
+- Stage 3 verifies `n8n -> Hermes -> Codex/AGY -> Hermes -> n8n` as an infrastructure path;
+- Hermes access to local vLLM on `ai-node` is deferred until cross-site connectivity is accepted;
+- user-specific n8n/Hermes workflows remain post-infrastructure work.
+
+## Accepted remaining roadmap direction
+
+Planned dependency order after Stage 02.5:
+
+1. **Stage 3 — Edge Hermes Agent Runtime**;
+2. **Stage 4 — Edge Cross-site Connectivity Foundation**;
+3. **Stage 5 — Edge Cross-site Data & Knowledge Services**;
+4. **Stage 6 — Edge Remaining Infrastructure Services** only if Stage 02.5 selects another full service; remove/renumber if empty;
+5. **Stage 7 — Edge Backrest & Recovery**;
+6. **Stage 8 — Edge Maintenance & Update** with Semaphore and a dedicated Codex substage for `update.escloud.us`;
+7. **Stage 9 — Edge Monitoring, Heartbeats & Alerts** against the substantially complete infrastructure;
+8. **Stage 10 — Edge Cloud Portal** with a dedicated Codex substage for `app.escloud.us`;
+9. **Stage 11 — Edge Final Integrated Infrastructure Acceptance** and cleanup;
+10. post-infrastructure **Automation & User Workflows** as a continuous workstream rather than an infrastructure-completion stage.
+
+Backrest-before-Semaphore remains mandatory. Production monitoring remains late so it is built once against the final inventory. `update.escloud.us` and `app.escloud.us` remain separate UI responsibilities.
 
 ## Host / foundation
 
@@ -157,21 +184,10 @@ The V1 and V2 acceptance interruptions were diagnostic-script defects only (root
 - temporary Vandelay migration directory removed;
 - authoritative migration-preservation archive `/tmp/edge-migration-preservation-20260916T141048Z.tar.gz`, SHA256 `0203e5845f57bc1d04b384cef2b26a45fbff855c341e1edf1193034c34de9fdf`, intentionally retained beyond Stage 2 because later functional stages may still need legacy configuration/reference material; do not restore legacy credentials from it.
 
-## Accepted remaining lifecycle direction
-
-The current dependency skeleton after Stage 02.5 reconciliation is:
-
-1. remaining standalone core services;
-2. cross-site connectivity foundation;
-3. cross-site data/knowledge services such as file access, sync and Obsidian;
-4. remaining infrastructure services;
-5. Backrest + verified restore;
-6. Semaphore + dedicated `update.escloud.us` maintenance/update page, with a separate Codex implementation substage;
-7. infrastructure-wide monitoring, Home/PAI heartbeats and alerts;
-8. final `app.escloud.us` portal/dashboard built in a separate Codex substage on top of accepted monitoring/status sources;
-9. final integrated infrastructure acceptance and cleanup;
-10. post-infrastructure user automation/workflow development.
-
-Exact post-Stage-02.5 stage numbering remains intentionally unset until the remaining service/product research matrix is accepted.
-
 Canonical Obsidian vault remains on `ai-node` at `/srv/ai-data/knowledge/obsidian`.
+
+## Current next research block
+
+**Cross-site Connectivity Foundation — базовая связь `edge ↔ ai-node ↔ PVE/Home`.**
+
+Stage 02.5 must research and accept the required flows and transport before Stage 3 deployment is opened; Stage 3 itself remains the first planned post-02.5 production branch.
