@@ -8,7 +8,7 @@
 
 Stage 0 and Stage 1 are **COMPLETE / ACCEPTED**. `EDGE_STAGE1_FINAL_INTEGRATED_ACCEPTANCE=PASS` on 2026-09-17.
 
-Current Stage 2 accepted application state includes clean-reinitialized Authelia, n8n and CloudCLI plus fresh authorization for Codex CLI and Antigravity CLI.
+Current Stage 2 accepted application state includes clean-reinitialized Authelia, n8n and CloudCLI plus fresh authorization for Codex CLI and Antigravity CLI. Codex now uses the official standalone runtime with the managed app-server Remote Control backend accepted server-side.
 
 ## Stage 2 rebuild / credential policy
 
@@ -163,23 +163,34 @@ Identity variables remain `N8N_HOST=n8n.escloud.us`, `N8N_PROTOCOL=https`, `WEBH
 - clean state at post-onboarding acceptance: users `1`, projects `0`, sessions `0`, `user_credentials` `0`;
 - no legacy CloudCLI auth DB/config/workspace/session state restored.
 
-## Cloud AI CLI tooling — fresh authorization accepted
+## Cloud AI CLI tooling — fresh authorization and Codex Remote Control accepted
 
 `STAGE2_CODEX_FRESH_CHATGPT_AUTH=PASS`  
-`STAGE2_ANTIGRAVITY_FRESH_GOOGLE_AUTH=PASS`  
-`STAGE2_CODEX_AUTH_NON_REGRESSION=PASS`
+`STAGE2_CODEX_CLEAN_STANDALONE_REINSTALL=PASS`  
+`STAGE2_CODEX_SINGLE_INSTALL=PASS`  
+`STAGE2_CODEX_MANAGED_DAEMON=PASS`  
+`STAGE2_CODEX_REMOTE_CONTROL_ENABLED=PASS`  
+`STAGE2_CODEX_REMOTE_CONTROL_SERVER_ACCEPTANCE=PASS`  
+`STAGE2_CODEX_STANDALONE_RUNTIME_ACCEPTANCE=PASS`  
+`STAGE2_ANTIGRAVITY_FRESH_GOOGLE_AUTH=PASS`
 
 - Node `22.22.1`;
 - npm `9.2.0`;
-- Codex CLI `0.154.0` installed under `/home/core/.local`;
-- Codex fresh ChatGPT device authorization completed successfully; `codex login status` reports `Logged in using ChatGPT`;
+- Codex CLI `0.154.0` now uses the official standalone installation layout; the earlier npm `@openai/codex` runtime was removed;
+- launcher `/home/core/.local/bin/codex` -> `/home/core/.codex/packages/standalone/current/bin/codex`;
+- fresh ChatGPT device authorization was preserved across the reinstall; `codex login status` reports `Logged in using ChatGPT`;
 - Codex auth object `/home/core/.codex/auth.json`, `core:core`, mode `0600`; no legacy Codex auth/config was restored;
+- managed app-server backend is `pid`, auto-update enabled, Remote Control enabled;
+- managed app-server path `/home/core/.codex/packages/standalone/current/bin/codex`, CLI/app-server version `0.154.0`;
+- managed processes: `codex app-server --remote-control --listen unix://` and `codex app-server daemon pid-update-loop`;
+- local control socket `/home/core/.codex/app-server-control/app-server-control.sock`, `core:core`, mode `0600`;
+- no Codex/app-server public network listener is exposed;
+- Remote Control manual pairing was configured by the user on iPhone, MacBook and iPad; server-side Remote Control acceptance is PASS, while a client-originated end-to-end remote task has not yet been separately recorded as accepted evidence;
 - Antigravity CLI `1.2.5` at `/home/core/.local/bin/agy`;
 - Antigravity fresh Google OAuth completed successfully under the `core` account;
 - Antigravity OAuth state is stored under `/home/core/.gemini/antigravity-cli`; credential contents are not persisted in project documentation;
 - authenticated headless probe returned exactly `ANTIGRAVITY_AUTH_OK` with RC `0`;
-- Codex authorization remained valid after Antigravity authorization;
-- custom legacy `codex-app-server` and `codex-runner` remain absent unless later demonstrated necessary.
+- legacy custom `codex-app-server` and `codex-runner` remain absent; the official managed daemon replaces the need for the legacy custom app-server service.
 
 ## Firewall
 
