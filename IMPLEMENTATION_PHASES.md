@@ -1,6 +1,6 @@
 # Cloud Infrastructure — Accepted Implementation Phases
 
-**Status:** Stage 0–2 COMPLETE / ACCEPTED; Stage 02.5 ACTIVE / RESEARCH-ONLY. Stage 3 composition is selected, but no post-Stage-2 production branch opens until Stage 02.5 is fully accepted.
+**Status:** Stage 0–2 COMPLETE / ACCEPTED; Stage 02.5 ACTIVE / RESEARCH-ONLY. No post-Stage-2 production branch opens until Stage 02.5 is fully accepted.
 
 This document is the canonical stage chronology for Cloud Infrastructure / `edge`.
 
@@ -10,7 +10,7 @@ Each implementation stage has its own work branch and follows the accepted-first
 
 1. requirements/baseline review;
 2. legacy implementation reconstruction where relevant;
-3. research/selection only for genuinely unresolved mechanisms or concrete incompatibilities;
+3. research only for genuinely unresolved mechanisms or concrete incompatibilities;
 4. explicit stage-composition acceptance;
 5. stage-scoped architecture/deployment contract and recovery path;
 6. deployment;
@@ -18,26 +18,22 @@ Each implementation stage has its own work branch and follows the accepted-first
 8. persistence/read-back in GitHub;
 9. branch transition only after complete stage acceptance.
 
-Do not reopen accepted products without a concrete incompatibility or changed requirement. Historical versions are evidence, not automatic pins. Docker + Compose remain the default for suitable application services; host-native placement is preferred where containerization materially complicates the supported operating model or integration with existing host-native executors.
+Do not reopen accepted products without a concrete incompatibility or changed requirement. Docker + Compose remain the default for suitable application services; host-native placement is preferred where containerization materially complicates the supported operating model or integration with existing host-native executors.
 
-## Roadmap construction rule after Stage 2
+## Dependency order after Stage 2
 
-Post-Stage-2 work is ordered by dependency direction rather than by historical thematic categories.
+The accepted post-Stage-2 sequence is dependency-driven:
 
-The governing sequence is:
-
-1. deploy Hermes as the one selected remaining standalone core service;
-2. establish `edge ↔ ai-node ↔ PVE/Home` connectivity before services that depend on it;
-3. deploy cross-site data/knowledge services such as files, selected-directory synchronization and Obsidian only after connectivity is accepted;
-4. complete any other selected infrastructure services whose dependencies are now satisfied;
+1. establish the cross-site private connectivity foundation first;
+2. deploy Hermes only after that foundation exists so Hermes can be accepted with Codex, Antigravity and local vLLM in one coherent stage;
+3. deploy connectivity-dependent data/knowledge services;
+4. complete any other selected infrastructure services whose dependencies are satisfied;
 5. deploy Backrest + Restic and prove restore against the substantially complete service inventory;
 6. deploy Semaphore and the maintenance/update workflow, then build `update.escloud.us` as a separate Codex substage against the real backend contract;
 7. deploy infrastructure-wide monitoring, Home/PAI heartbeats and alerts after the monitored inventory and lifecycle services substantially exist;
 8. build `app.escloud.us` as a separate Codex substage on top of the final service inventory and accepted monitoring/status sources;
 9. perform final server-wide integrated acceptance and cleanup;
 10. only after infrastructure acceptance, develop ongoing user-specific n8n/agent workflows as a separate continuously evolving workstream.
-
-This prevents repeated rework of connectivity-dependent services, backup policy, update tooling, monitoring and portal composition.
 
 ---
 
@@ -87,7 +83,7 @@ Final acceptance:
 
 `EDGE_STAGE2_FINAL_INTEGRATED_ACCEPTANCE=PASS`
 
-Accepted Stage 2 production set:
+Accepted production set:
 
 - Authelia clean reinitialization;
 - n8n;
@@ -114,67 +110,50 @@ Backrest, Semaphore, maintenance/update UI and `app.escloud.us` were deliberatel
 
 ### Purpose
 
-Stage 02.5 reconciles the complete remaining capability inventory, selects unresolved products/mechanisms, fixes dependency order and produces the final remaining roadmap before any new production branch opens.
+Stage 02.5 reconciles the remaining capability inventory, selects unresolved products/mechanisms, fixes dependency order and produces the final remaining roadmap before any new production branch opens.
 
-### Research outcome classes
-
-Each unresolved capability ends Stage 02.5 as one of:
-
-- `SELECTED`;
-- `REUSE EXISTING`;
-- `DEFERRED`;
-- `REJECTED`;
-- `RESEARCH STILL REQUIRED` only where evidence is genuinely insufficient.
-
-### Current accepted research result — Remaining Standalone Core Services
+### Accepted research result — Hermes
 
 **Hermes Agent — SELECTED.**
 
-Hermes is the only selected full service in this block. Its role is a persistent cloud-side agent runtime on `edge`, distinct from both n8n and the manual Cloud AI workspace.
-
 Role separation:
 
-- **n8n** — deterministic automation/orchestration: schedules, webhooks, mail/API triggers, data routing and workflow state;
-- **Hermes** — agentic reasoning, tool use, supervisory/delegation logic and long-running autonomous agent execution;
-- **CloudCLI / Codex CLI / Antigravity CLI** — manual cloud-AI workspace and specialized executors available directly to the user; Codex/Antigravity can also be delegated to by Hermes;
-- **OpenClaw in Home/PAI** — local personal agent role;
-- **vLLM on `ai-node`** — local inference backend, connected to Hermes only after cross-site connectivity exists.
+- **n8n** — deterministic automation/orchestration;
+- **Hermes** — persistent agentic reasoning, tools, supervision and delegation;
+- **CloudCLI** — manual web/remote Cloud AI workspace;
+- **Codex CLI / Antigravity CLI** — specialized executors usable manually and delegatable by Hermes;
+- **OpenClaw** — Home/PAI local personal-agent role;
+- **vLLM on `ai-node`** — local inference backend to be consumed by Hermes after Stage 3 connectivity exists.
 
-Stage 3 should use a **host-native Hermes deployment under `core`** unless a concrete Stage 3 compatibility finding requires otherwise. Docker is not the preferred design because Hermes must directly reuse the existing host-native Codex/Antigravity executors and their working user context; containerizing Hermes would add avoidable binary/auth/runtime bridging.
+Preferred Hermes placement is host-native under `core` unless a concrete Stage 4 compatibility finding requires otherwise.
 
-Stage 3 must establish the infrastructure integration contract for this future flow without prematurely implementing user-specific workflows:
+### Accepted research result — Cross-site Connectivity Foundation
 
-```text
-Internet / schedule / mail / webhook
-                |
-               n8n
-                |
-        deterministic steps
-                |
-                v
-             Hermes
-        agentic reasoning
-          +-----+-----+
-          |     |     |
-          v     v     v
-        Codex   AGY   vLLM
-          |             ^
-          v             |
-       result     enabled after Stage 4
-          |
-          v
-         n8n
-          |
-notification / storage / next step
-```
+**Existing self-hosted NetBird — SELECTED / REUSE EXISTING.**
 
-During Stage 3 the Codex and Antigravity branches can be implemented and verified locally on `edge`; the vLLM branch is explicitly deferred until Stage 4 connectivity is accepted. User-specific n8n/Hermes automations remain post-infrastructure work.
+The accepted architecture is documented in `STAGE_02_5_CONNECTIVITY_SELECTION_ACCEPTANCE_2026-09-17.md`.
+
+Key contract:
+
+- reuse Home CT300 self-hosted NetBird control/relay/routing architecture;
+- NetBird account overlay is `100.105.0.0/16`;
+- CT300 remains the routing peer for Home LAN `192.168.1.0/24`;
+- `edge` becomes an ordinary host-native NetBird service peer;
+- `edge` receives Home LAN reachability but **not** the existing Home Internet resource `0.0.0.0/0`;
+- `edge` keeps its VPS-provider default Internet route;
+- Home/PAI clientless hosts reach `edge` through gateway-level routing of `100.105.0.0/16` via CT300 `192.168.1.90`;
+- route semantics must work through both VM100 and MikroTik so VRRP ownership does not change private reachability;
+- reuse the existing NetBird-managed Site-to-VPN masquerade behavior before considering any manual duplicate NAT;
+- reuse the existing `.lan` split-DNS (`192.168.1.1:53` for match domain `lan`) on `edge`; general Internet DNS remains VPS-local;
+- add `edge.lan` through the existing Home DNS mechanism after enrollment/routing acceptance;
+- direct WireGuard and Tailscale are rejected as duplicate parallel backbones; AmneziaWG remains contingency only if real NetBird transport acceptance fails.
+
+Fresh Home audit also established that CT300's own traffic uses MikroTik `192.168.1.1`, while NetBird Internet-exit traffic is policy-routed through VRRP VIP `192.168.1.254`. This preserves the existing User Devices Internet-via-Home behavior without assigning that capability to `edge`.
 
 ### Remaining Stage 02.5 research
 
 Stage 02.5 still must research and disposition:
 
-- cross-site connectivity and real flows;
 - working-file access and web file management;
 - MacBook/iPhone/iPad/`ai-node` access;
 - selected-directory synchronization;
@@ -191,47 +170,55 @@ No Stage 3 production branch becomes authoritative until the complete Stage 02.5
 
 # Planned post-Stage-02.5 deployment roadmap
 
-The dependency order below is accepted. Stage 3 composition is selected now; later stage composition remains subject to the relevant Stage 02.5 research decisions. If the conditional Stage 6 slot is empty at Stage 02.5 closure, it should be removed rather than creating an empty deployment branch, with later stage numbering normalized before Stage 3 opens.
-
-## Stage 3 — Edge Hermes Agent Runtime
+## Stage 3 — Edge Cross-site Connectivity Foundation
 
 ### Planned work branch
 
-`03 — Edge Hermes Agent Runtime`
+`03 — Edge Cross-site Connectivity Foundation`
 
 ### Scope
 
-Only Hermes and its infrastructure-level integration with already accepted local `edge` executors.
+Deploy and accept the selected bidirectional NetBird private fabric before any connectivity-dependent application stage.
+
+Planned requirements:
+
+- host-native NetBird peer on `edge`;
+- dedicated Cloud Infrastructure service-peer grouping/policy;
+- `edge -> Home/PAI` through existing `Home LAN 192.168.1.0/24` resource;
+- no `0.0.0.0/0` Home Internet resource for `edge`;
+- preserve direct provider Internet/default route on `edge`;
+- Home/PAI -> `edge` through `100.105.0.0/16` gateway-level routing via CT300;
+- corresponding narrow VM100 forwarding allowance and MikroTik/VM100 route persistence;
+- reuse/verify NetBird-managed Site-to-VPN masquerade rather than add duplicate NAT by assumption;
+- reuse `.lan` split-DNS and add `edge.lan` through the existing Home DNS mechanism;
+- verify private reachability to `ai-node`, PVE and selected Home targets;
+- verify direct/relay behavior on the real path;
+- verify reboot persistence and non-regression of public `edge` services;
+- perform controlled VRRP failover acceptance when the stage recovery plan permits it.
+
+Stage 3 establishes transport/routing/private naming only. It does not own the vLLM service bind/provider configuration; that consumer-specific work belongs to Stage 4 Hermes.
+
+## Stage 4 — Edge Hermes Agent Runtime
+
+### Planned work branch
+
+`04 — Edge Hermes Agent Runtime`
+
+### Scope
+
+Deploy Hermes after Stage 3 connectivity is accepted so Hermes can be completed in one stage rather than leaving the local-vLLM branch deferred.
 
 Planned requirements:
 
 - host-native runtime under `core` by default;
-- persistent upstream-supported service lifecycle;
-- persistent Hermes state/configuration using the accepted host layout conventions where compatible with upstream;
+- persistent upstream-supported service lifecycle/state;
 - no new public WebUI/port/domain by assumption;
 - direct Hermes access to Codex and Antigravity executors without routing through CloudCLI;
-- a stable machine interface by which n8n can invoke Hermes and receive task result/status;
-- verify the `n8n -> Hermes -> Codex/AGY -> Hermes -> n8n` infrastructure path with a minimal non-user-specific acceptance flow;
-- reserve the `vLLM on ai-node` provider/inference branch in architecture, but do not implement it before Stage 4 connectivity;
-- no Capture Inbox, vendor watchers, bounded research jobs or other user-specific automations in Stage 3.
-
-## Stage 4 — Edge Cross-site Connectivity Foundation
-
-### Planned work branch
-
-`04 — Edge Cross-site Connectivity Foundation`
-
-### Scope
-
-Define real flows first, then select/deploy the minimum required transport/reachability among:
-
-- `edge`;
-- `ai-node`;
-- PVE/Home Infrastructure.
-
-Candidate mechanisms such as NetBird, direct WireGuard, authenticated HTTPS or another simple transport remain unselected until compared against actual flows and real operating conditions. This stage also enables the deferred Hermes -> local vLLM relationship after connectivity acceptance.
-
-Connectivity is transport/reachability/endpoints. Durable application-level task queues/retry semantics remain a later workflow concern.
+- stable machine interface by which n8n can invoke Hermes and receive task result/status;
+- minimal non-user-specific acceptance of `n8n -> Hermes -> Codex/AGY -> Hermes -> n8n`;
+- inspect the current `ai-node` vLLM bind/exposure state and make only the minimum change needed to expose the selected OpenAI-compatible endpoint through the accepted private fabric;
+- verify `Hermes -> vLLM` inference through the Stage 3 private path;
+- no Capture Inbox, vendor watchers, bounded research jobs or other user-specific automations in Stage 4.
 
 ## Stage 5 — Edge Cross-site Data & Knowledge Services
 
@@ -241,7 +228,7 @@ Connectivity is transport/reachability/endpoints. Durable application-level task
 
 ### Scope
 
-After Stage 4 acceptance, deploy the selected connectivity-dependent data services:
+After Stage 3 connectivity and Stage 4 Hermes are accepted, deploy selected connectivity-dependent data services:
 
 - VPS working-file access and web file management;
 - MacBook/iPhone/iPad/`ai-node` access;
@@ -256,7 +243,9 @@ Canonical Obsidian remains `ai-node:/srv/ai-data/knowledge/obsidian`.
 
 **CONDITIONAL.**
 
-Use this stage only if the remaining Stage 02.5 research selects another full infrastructure service whose dependencies are satisfied after Stage 5 and which does not belong to backup/update/monitoring/portal layers. Do not create an empty branch merely to preserve numbering.
+Use only if remaining Stage 02.5 research selects another full infrastructure service whose dependencies are satisfied after Stage 5 and which does not belong to backup/update/monitoring/portal layers. Do not create an empty branch merely to preserve numbering.
+
+If this slot is empty at Stage 02.5 closure, remove it and normalize later numbering before Stage 3 opens.
 
 ## Stage 7 — Edge Backrest & Recovery
 
@@ -264,15 +253,7 @@ Use this stage only if the remaining Stage 02.5 research selects another full in
 
 `07 — Edge Backrest & Recovery`
 
-### Scope
-
-Deploy/configure the already accepted Backrest + Restic direction against the substantially complete server. Define:
-
-- backup scope and exclusions;
-- repository/off-site topology;
-- retention and schedules;
-- recovery procedures;
-- verified restore acceptance.
+Deploy/configure Backrest + Restic against the substantially complete server. Define backup scope/exclusions, repository/off-site topology, retention/schedules, recovery procedures and verified restore acceptance.
 
 A usable restore path is mandatory before Stage 8 update testing.
 
@@ -282,15 +263,13 @@ A usable restore path is mandatory before Stage 8 update testing.
 
 `08 — Edge Maintenance & Update`
 
-### Scope
-
 Deploy Semaphore and the maintenance/update workflow after Backrest acceptance. Audit/adapt the existing PVE/Home updater; do not copy PVE-specific implementation blindly.
 
 Dedicated Codex substage:
 
 **Stage 8C — Codex: build `update.escloud.us`**
 
-This substage begins only after the real Semaphore/update backend, status model and control contract are known. `update.escloud.us` remains separate from `app.escloud.us`.
+This begins only after the real Semaphore/update backend, status model and control contract are known. `update.escloud.us` remains separate from `app.escloud.us`.
 
 ## Stage 9 — Edge Monitoring, Heartbeats & Alerts
 
@@ -298,18 +277,7 @@ This substage begins only after the real Semaphore/update backend, status model 
 
 `09 — Edge Monitoring, Heartbeats & Alerts`
 
-### Scope
-
-Deploy production monitoring against the substantially complete infrastructure, including as selected:
-
-- `edge` service availability;
-- important external availability checks;
-- cross-site connectivity health;
-- selected Home/PVE/`ai-node` heartbeats;
-- file/sync health where useful;
-- Backrest job/backup health;
-- Semaphore/update health/state;
-- alert delivery.
+Deploy production monitoring against the substantially complete infrastructure, including as selected external availability, cross-site connectivity health, selected Home/PVE/`ai-node` heartbeats, file/sync health, Backrest health, Semaphore/update state and alert delivery.
 
 Avoid a heavyweight metrics/logging platform unless research proves concrete value.
 
@@ -318,8 +286,6 @@ Avoid a heavyweight metrics/logging platform unless research proves concrete val
 ### Planned work branch
 
 `10 — Edge Cloud Portal`
-
-### Scope
 
 Build `app.escloud.us` only after Stage 9 monitoring/status sources and the final service inventory are accepted.
 
@@ -335,17 +301,7 @@ The portal is navigation plus concise infrastructure/status presentation. It doe
 
 `11 — Edge Final Integrated Infrastructure Acceptance`
 
-### Scope
-
-Perform final server-wide acceptance only after:
-
-- all selected infrastructure services are accepted;
-- cross-site connectivity and data/knowledge integration are accepted;
-- Backrest backup/restore is accepted;
-- Semaphore/update and `update.escloud.us` are accepted;
-- monitoring/heartbeats/alerts are accepted;
-- `app.escloud.us` is accepted;
-- final cleanup is complete.
+Perform final server-wide acceptance only after all selected infrastructure services, cross-site connectivity/data integration, Backrest restore, Semaphore/update, monitoring/alerts, `app.escloud.us` and final cleanup are accepted.
 
 Stage 11 closes the finite Cloud Infrastructure build.
 
@@ -355,34 +311,15 @@ Stage 11 closes the finite Cloud Infrastructure build.
 
 This is deliberately **not** an infrastructure-completion stage. It begins only after Stage 11 and evolves continuously.
 
-Examples:
-
-- n8n workflows;
-- Hermes/agent workflows;
-- Universal Capture Inbox — submission of URLs/text/files/images/commands into workflows;
-- human-in-the-loop approvals;
-- mail-triggered automation;
-- continuous vendor/document intake and change detection;
-- bounded AI research jobs;
-- durable application-level store-and-forward/retry for real cross-site tasks;
-- messaging/bot commands;
-- user-specific orchestration among n8n, Hermes, Codex, Antigravity, local vLLM and other accepted endpoints.
-
-Infrastructure stages should provide stable primitives for these workflows without attempting to prebuild the workflows themselves.
+Examples include n8n workflows, Hermes/agent workflows, Universal Capture Inbox, human approvals, mail-triggered automation, continuous vendor/document intake, bounded AI research, durable application-level store-and-forward/retry, messaging/bot commands and user-specific orchestration among n8n, Hermes, Codex, Antigravity and local vLLM/PAI.
 
 ---
 
-## Historical Stage 3–7 disposition
+## Historical stage disposition
 
-The previous thematic groupings:
+The earlier plan placing Hermes in Stage 3 and connectivity in Stage 4 is historical only and is superseded by the accepted 2026-09-17 connectivity decision.
 
-- `03 — Edge Monitoring & Human Interaction`;
-- `04 — Edge Files, Sync & Obsidian`;
-- `05 — Edge Information & Cloud AI`;
-- `06 — Edge Home & PAI Integration`;
-- `07 — Edge Optional Capabilities`;
-
-are historical planning context only and are not authoritative future deployment stages.
+The still older thematic Stage 3–7 plan is also historical only.
 
 ---
 
@@ -397,4 +334,4 @@ Current branch:
 
 `02.5 — Remaining Functional Scope Reconciliation & Research`
 
-Current next research block: **Cross-site Connectivity Foundation**. Hermes selection for Stage 3 is accepted, but Stage 3 does not begin until all Stage 02.5 deliverables are accepted.
+Cross-site Connectivity Foundation research is **COMPLETE / SELECTED**. The next Stage 02.5 research block is **Cross-site Data & Knowledge Services**. No Stage 3 production branch opens until all Stage 02.5 deliverables are accepted.
