@@ -8,7 +8,7 @@
 
 Stage 0 and Stage 1 are **COMPLETE / ACCEPTED**. `EDGE_STAGE1_FINAL_INTEGRATED_ACCEPTANCE=PASS` on 2026-09-17.
 
-Current Stage 2 accepted application state includes clean-reinitialized Authelia, n8n and CloudCLI plus fresh authorization for Codex CLI and Antigravity CLI. Codex now uses the official standalone runtime with the managed app-server Remote Control backend accepted server-side.
+Current Stage 2 accepted application state includes clean-reinitialized Authelia, n8n and CloudCLI plus fresh authorization for Codex CLI and Antigravity CLI. Codex uses the official standalone runtime with managed Remote Control accepted server-side. Antigravity Remote Control is registered and running as the `core` user service with instance name `edge`.
 
 ## Stage 2 rebuild / credential policy
 
@@ -46,7 +46,7 @@ Current accepted rebuild rule:
 - `/etc/<service>` host-native configuration;
 - `/var/www/<site>` static roots.
 
-Shared service account `core`: UID/GID `1000:1000`, home `/home/core` mode `0750`, password locked, no sudo/docker group.
+Shared service account `core`: UID/GID `1000:1000`, home `/home/core` mode `0750`, password locked, no sudo/docker group. `loginctl` linger is enabled for `core` because Antigravity Remote Control is a persistent systemd user service; `user@1000.service` and `/run/user/1000/bus` are active/present at acceptance.
 
 ## Stage 1 ingress / VPN foundation
 
@@ -163,7 +163,7 @@ Identity variables remain `N8N_HOST=n8n.escloud.us`, `N8N_PROTOCOL=https`, `WEBH
 - clean state at post-onboarding acceptance: users `1`, projects `0`, sessions `0`, `user_credentials` `0`;
 - no legacy CloudCLI auth DB/config/workspace/session state restored.
 
-## Cloud AI CLI tooling — fresh authorization and Codex Remote Control accepted
+## Cloud AI CLI tooling — fresh authorization and Remote Control accepted
 
 `STAGE2_CODEX_FRESH_CHATGPT_AUTH=PASS`  
 `STAGE2_CODEX_CLEAN_STANDALONE_REINSTALL=PASS`  
@@ -172,25 +172,35 @@ Identity variables remain `N8N_HOST=n8n.escloud.us`, `N8N_PROTOCOL=https`, `WEBH
 `STAGE2_CODEX_REMOTE_CONTROL_ENABLED=PASS`  
 `STAGE2_CODEX_REMOTE_CONTROL_SERVER_ACCEPTANCE=PASS`  
 `STAGE2_CODEX_STANDALONE_RUNTIME_ACCEPTANCE=PASS`  
-`STAGE2_ANTIGRAVITY_FRESH_GOOGLE_AUTH=PASS`
+`STAGE2_ANTIGRAVITY_FRESH_GOOGLE_AUTH=PASS`  
+`STAGE2_ANTIGRAVITY_USER_MANAGER_RECOVERY=PASS`  
+`STAGE2_ANTIGRAVITY_REMOTE_CONTROL_REGISTERED=PASS`  
+`STAGE2_ANTIGRAVITY_REMOTE_CONTROL_RUNNING=PASS`  
+`STAGE2_ANTIGRAVITY_HEADLESS_LINGER=PASS`
 
 - Node `22.22.1`;
 - npm `9.2.0`;
-- Codex CLI `0.154.0` now uses the official standalone installation layout; the earlier npm `@openai/codex` runtime was removed;
+- Codex CLI `0.154.0` uses the official standalone installation layout; earlier npm `@openai/codex` runtime removed;
 - launcher `/home/core/.local/bin/codex` -> `/home/core/.codex/packages/standalone/current/bin/codex`;
-- fresh ChatGPT device authorization was preserved across the reinstall; `codex login status` reports `Logged in using ChatGPT`;
-- Codex auth object `/home/core/.codex/auth.json`, `core:core`, mode `0600`; no legacy Codex auth/config was restored;
-- managed app-server backend is `pid`, auto-update enabled, Remote Control enabled;
-- managed app-server path `/home/core/.codex/packages/standalone/current/bin/codex`, CLI/app-server version `0.154.0`;
+- fresh ChatGPT device authorization preserved across reinstall; `codex login status` reports `Logged in using ChatGPT`;
+- Codex auth object `/home/core/.codex/auth.json`, `core:core`, mode `0600`; no legacy Codex auth/config restored;
+- Codex managed app-server backend `pid`, auto-update enabled, Remote Control enabled;
+- managed path `/home/core/.codex/packages/standalone/current/bin/codex`, CLI/app-server version `0.154.0`;
 - managed processes: `codex app-server --remote-control --listen unix://` and `codex app-server daemon pid-update-loop`;
 - local control socket `/home/core/.codex/app-server-control/app-server-control.sock`, `core:core`, mode `0600`;
-- no Codex/app-server public network listener is exposed;
-- Remote Control manual pairing was configured by the user on iPhone, MacBook and iPad; server-side Remote Control acceptance is PASS, while a client-originated end-to-end remote task has not yet been separately recorded as accepted evidence;
+- no Codex/app-server public network listener exposed;
+- Codex Remote Control manual pairing configured by the user on iPhone, MacBook and iPad; server-side acceptance PASS, while a client-originated end-to-end remote task has not yet been separately recorded as accepted evidence;
 - Antigravity CLI `1.2.5` at `/home/core/.local/bin/agy`;
-- Antigravity fresh Google OAuth completed successfully under the `core` account;
-- Antigravity OAuth state is stored under `/home/core/.gemini/antigravity-cli`; credential contents are not persisted in project documentation;
-- authenticated headless probe returned exactly `ANTIGRAVITY_AUTH_OK` with RC `0`;
-- legacy custom `codex-app-server` and `codex-runner` remain absent; the official managed daemon replaces the need for the legacy custom app-server service.
+- Antigravity fresh Google OAuth completed successfully under `core`;
+- Antigravity OAuth state stored under `/home/core/.gemini/antigravity-cli`; credential contents not persisted in project documentation;
+- Antigravity Remote Control instance name `edge`;
+- `/home/core/.config/systemd/user/antigravity-cli-daemon.service` is enabled and active/running;
+- active daemon command `/home/core/.local/bin/agy remote-control serve`;
+- `core` linger enabled so the user service persists on the headless VPS; `user@1000.service` active and user bus present;
+- `agy remote-control status` reports daemon `active` and instance name `edge`;
+- authenticated Antigravity probe returned `ANTIGRAVITY_REMOTE_AUTH_OK`, RC `0` after Remote Control activation;
+- Codex authorization and managed daemon remained healthy after Antigravity Remote Control activation;
+- legacy custom `codex-app-server` and `codex-runner` remain absent; official Codex managed daemon replaces the legacy custom app-server service.
 
 ## Firewall
 
