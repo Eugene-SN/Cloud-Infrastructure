@@ -5,15 +5,20 @@
 **Stage 0 — COMPLETE / ACCEPTED**  
 **Stage 1 — COMPLETE / ACCEPTED**  
 **Stage 2 — Edge Core Applications — COMPLETE / ACCEPTED**  
-**Stage 02.5 — Remaining Functional Scope Reconciliation & Research — ACTIVE / RESEARCH-ONLY**
+**Stage 02.5 — Remaining Functional Scope Reconciliation & Research — COMPLETE / ACCEPTED**
 
-`EDGE_STAGE2_FINAL_INTEGRATED_ACCEPTANCE=PASS` on 2026-09-17.
-
-Current work branch: `02.5 — Remaining Functional Scope Reconciliation & Research`.
+`EDGE_STAGE2_FINAL_INTEGRATED_ACCEPTANCE=PASS` on 2026-09-17.  
+`CLOUD_STAGE_02_5_FINAL_SCOPE_ACCEPTANCE=PASS` on 2026-09-18.
 
 Primary repository: `Eugene-SN/Cloud-Infrastructure`.
 
-The accepted Stage 2 production set is Authelia, n8n, CloudCLI, Codex CLI, Antigravity CLI, Stalwart and Bulwark.
+Next production branch:
+
+`03 — Edge Cross-site Connectivity Foundation`
+
+Stage 02.5 final acceptance record:
+
+`STAGE_02_5_FINAL_SCOPE_ACCEPTANCE_2026-09-18.md`
 
 ## Stage 02.5 accepted research state
 
@@ -24,9 +29,8 @@ The accepted Stage 2 production set is Authelia, n8n, CloudCLI, Codex CLI, Antig
 Accepted direction:
 
 - persistent cloud-side agent runtime on `edge`;
-- runs in parallel with n8n, not as a replacement;
+- runs in parallel with n8n rather than replacing it;
 - preferred host-native placement under `core`;
-- Docker is not preferred because direct reuse of existing host-native Codex/Antigravity executors and user/runtime context would otherwise require unnecessary bridging;
 - Hermes invokes Codex/Antigravity directly rather than through CloudCLI;
 - user-specific n8n/Hermes workflows remain post-infrastructure work.
 
@@ -38,52 +42,52 @@ Detailed acceptance record:
 
 `STAGE_02_5_CONNECTIVITY_SELECTION_ACCEPTANCE_2026-09-17.md`
 
-Fresh read-only Home audit established:
-
-- Home LAN `192.168.1.0/24`;
-- CT300 `remote-access` `192.168.1.90/24`;
-- existing NetBird routing peer `100.105.97.126/16`;
-- NetBird account IPv4 overlay `100.105.0.0/16`;
-- current NetBird `Networks` model is in use; legacy routes are empty;
-- Home resources are `Home LAN 192.168.1.0/24` and `Internet 0.0.0.0/0`;
-- `Routing Peers` contains only `netbird-router`;
-- `User Devices` contains interactive user devices and currently owns both Home-LAN and Home-Internet policies;
-- current split DNS sends only `lan` to `192.168.1.1:53` and does not replace general peer DNS;
-- CT300's own default gateway is MikroTik `192.168.1.1`;
-- NetBird traffic arriving from `wt0` uses policy table `6300`, whose default is VRRP VIP `192.168.1.254`;
-- NetBird relay `rels://netbird.encores.ru:443` and STUN UDP 3478 were available at audit time.
-
 Accepted target:
 
 - `edge` becomes an ordinary host-native NetBird service peer;
-- `edge` receives Home LAN access but **not** the Home Internet resource `0.0.0.0/0`;
+- Home CT300 remains the Home routing/control-plane foundation;
+- `edge` receives Home LAN access but not the Home Internet `0.0.0.0/0` resource;
 - `edge` keeps direct VPS-provider Internet/default routing;
-- Home/PAI clientless hosts reach `edge` through gateway-level routing `100.105.0.0/16 via 192.168.1.90` on both VM100 and MikroTik;
-- VM100 gets only the narrow forwarding allowance needed for LAN → NetBird-account traffic;
-- existing NetBird-managed Site-to-VPN masquerade is reused/tested before any manual NAT is considered;
-- existing `.lan` split DNS is reused on `edge`, and `edge.lan` is added through the existing Home DNS mechanism after enrollment/routing acceptance;
-- direct WireGuard and Tailscale are rejected as duplicate backbones; AmneziaWG is contingency only if real NetBird acceptance fails.
+- Home/PAI clientless hosts reach `edge` through gateway-level routing of `100.105.0.0/16` via CT300 `192.168.1.90`;
+- VM100 and MikroTik both participate in route persistence so VRRP ownership does not change private reachability;
+- existing `.lan` split DNS is reused on `edge` and `edge.lan` is added through the existing Home DNS mechanism after Stage 3 enrollment/routing acceptance;
+- direct WireGuard/Tailscale are rejected as duplicate private backbones; AmneziaWG is contingency only if real Stage 3 transport acceptance fails.
 
-No runtime networking/DNS/firewall mutation has been performed by Stage 02.5 research.
+No Stage 02.5 runtime networking/DNS/firewall mutation was performed.
 
-## Accepted remaining roadmap direction
+### Data / knowledge project boundary
 
-Planned dependency order after Stage 02.5:
+The previous future-architecture constraint that `ai-node:/srv/ai-data/knowledge/obsidian` must permanently remain canonical is superseded.
+
+**Current factual runtime remains unchanged until Home Infrastructure completes its migration.** The existing vault on `ai-node` remains the current source at this checkpoint.
+
+Accepted future ownership boundary:
+
+- **Home Infrastructure** owns the PVE 24/7 canonical knowledge foundation, PVE-side synchronization service, Home consumers and Home-side backup integration;
+- **Personal Agents Infrastructure** owns the `ai-node` active RW synchronized replica and local n8n/OpenClaw/vLLM/OCR/RAG consumers/producers after Home cutover;
+- **Cloud Infrastructure** owns only the `edge` active RW synchronized replica and n8n/Hermes/cloud-AI integration.
+
+Cloud Stage 5 is therefore an integration stage. It must begin with a fresh expanded read-only Home/PAI/Cloud audit and must reuse the Home-accepted server-side synchronization mechanism by default.
+
+If PVE canonical migration has not reached explicit Home acceptance when Stage 5 begins, Stage 5 stops before mutation and reconciles the dependency instead of creating a parallel canonical/sync architecture.
+
+MacBook/iPhone/iPad Obsidian synchronization is completely outside Cloud Infrastructure scope and is assigned to a later separate Home Infrastructure user-integration branch.
+
+## Final remaining roadmap
 
 1. **Stage 3 — Edge Cross-site Connectivity Foundation**;
 2. **Stage 4 — Edge Hermes Agent Runtime**;
-3. **Stage 5 — Edge Cross-site Data & Knowledge Services**;
-4. **Stage 6 — Edge Remaining Infrastructure Services** only if Stage 02.5 selects another full service; remove/renumber if empty;
-5. **Stage 7 — Edge Backrest & Recovery**;
-6. **Stage 8 — Edge Maintenance & Update** with Semaphore and a dedicated Codex substage for `update.escloud.us`;
-7. **Stage 9 — Edge Monitoring, Heartbeats & Alerts** against the substantially complete infrastructure;
-8. **Stage 10 — Edge Cloud Portal** with a dedicated Codex substage for `app.escloud.us`;
-9. **Stage 11 — Edge Final Integrated Infrastructure Acceptance** and cleanup;
-10. post-infrastructure **Automation & User Workflows** as a continuous workstream rather than an infrastructure-completion stage.
+3. **Stage 5 — Edge Knowledge Replication & Data Integration**;
+4. **Stage 6 — Edge Backrest & Recovery**;
+5. **Stage 7 — Edge Maintenance & Update**, including separate Codex `update.escloud.us` substage;
+6. **Stage 8 — Edge Monitoring, Heartbeats & Alerts**;
+7. **Stage 9 — Edge Cloud Portal**, including separate Codex `app.escloud.us` substage;
+8. **Stage 10 — Edge Final Integrated Infrastructure Acceptance**;
+9. post-infrastructure **Automation & User Workflows** as a continuous workstream.
 
-Reason for Stage 3/4 swap: connectivity is now an accepted prerequisite, so Hermes can be deployed and accepted once with both cloud executors and the local-vLLM path instead of deliberately leaving `Hermes -> vLLM` incomplete.
+The old conditional `Remaining Infrastructure Services` stage is removed because Stage 02.5 selected no additional standalone infrastructure product requiring that slot.
 
-Backrest-before-Semaphore remains mandatory. Production monitoring remains late so it is built once against the final inventory. `update.escloud.us` and `app.escloud.us` remain separate UI responsibilities.
+Backrest-before-Semaphore remains mandatory. Monitoring remains late-stage so it is built once against the substantially complete inventory. `update.escloud.us` and `app.escloud.us` remain separate UI responsibilities.
 
 ## Host / foundation
 
@@ -101,18 +105,15 @@ Backrest-before-Semaphore remains mandatory. Production monitoring remains late 
 - intentional public TCP listeners: 22, 80, 443, 25, 465, 993; UDP 443;
 - application WebUI backends remain loopback-only unless explicitly accepted otherwise.
 
-Shared service account `core`: UID/GID `1000:1000`, password locked, no sudo/docker group. `core` linger is enabled for Antigravity Remote Control; `user@1000.service` and `/run/user/1000/bus` are accepted runtime dependencies.
+Shared service account `core`: UID/GID `1000:1000`, password locked, no sudo/docker group. `core` linger is enabled for Antigravity Remote Control.
 
 ## Authentication / ingress
 
 ### Authelia
 
 - version `4.39.27`;
-- compose `/opt/authelia/compose.yaml`, SHA256 `265dc881294e4b14bf9da5b529570ff6a2f234de2a3e335681d34d3deb447e96`;
-- state `/srv/authelia`;
 - backend `127.0.0.1:19091 -> 9091`;
-- fresh operator `eugene`, fresh JWT/session/storage-encryption secrets;
-- no legacy password/session/TOTP/WebAuthn/auth state reused;
+- fresh operator/auth state;
 - public `auth.escloud.us` accepted.
 
 Protected private web namespace includes `n8n`, `code`, future `app`, `backup`, `ops`, `update`, `docs`, `cloud`, `sync`, `chat`. `mail.escloud.us` intentionally uses native mail-stack authentication.
@@ -121,111 +122,60 @@ Protected private web namespace includes `n8n`, `code`, future `app`, `backup`, 
 
 Shared Certbot lineage: `/etc/letsencrypt/live/escloud.us`.
 
-Current SAN set includes `escloud.us`, `app`, `auth`, `backup`, `chat`, `cloud`, `code`, `docs`, `mail`, `n8n`, `ops`, `sync.escloud.us`. `update.escloud.us` has been added in Cloudflare for the future dedicated maintenance/update page; certificate/ingress activation is deferred until its deployment stage.
-
-Certbot deploy hook synchronizes/reloads Xray, Hysteria2 and Stalwart. Accepted mail TLS fingerprint:
-
-`3D:5A:77:15:78:4C:53:74:4B:D7:C2:6C:86:96:5B:10:DB:F9:7B:32:45:9A:F0:CD:B9:BD:39:A1:8B:9B:9B:F8`
+Current SAN set includes `escloud.us`, `app`, `auth`, `backup`, `chat`, `cloud`, `code`, `docs`, `mail`, `n8n`, `ops`, `sync.escloud.us`. `update.escloud.us` has been created in DNS for the future maintenance/update page; certificate/ingress activation remains deferred to Stage 7.
 
 ## Stage 2 applications
 
 ### n8n
 
-- `2.39.7`;
-- image digest `sha256:54323be085a6086acd87f612a25752d6582d3a0c0b07cc93c2b40a9356c3203b`;
-- compose SHA256 `42009eb90d1411b168f4ff9fd072108021a8e9b2467f5c59a01bcf4dcc5ad5bf`;
+- version `2.39.7`;
 - backend `127.0.0.1:15678` only;
 - public `https://n8n.escloud.us/` through Authelia;
-- clean state: one new owner; workflows/credentials/executions/webhooks all zero at acceptance;
-- no legacy auth/credential/project state restored.
+- fresh application state at Stage 2 acceptance.
 
 ### CloudCLI
 
-- `1.37.3` under `/home/core/.local`;
-- systemd unit SHA256 `8bf303e000b3de0f5a761fc0a466139a75e72fd6ec5d07b08ab7cb82f95382af`;
+- version `1.37.3` under `/home/core/.local`;
 - backend `127.0.0.1:18140` only;
 - public `https://code.escloud.us/` through Authelia;
-- one new local user; projects/sessions/user_credentials zero at acceptance;
-- no legacy CloudCLI auth/session state restored.
+- fresh local application/auth state at acceptance.
 
 ### Codex CLI
 
-- `0.154.0` official standalone runtime;
-- launcher `/home/core/.local/bin/codex` -> `/home/core/.codex/packages/standalone/current/bin/codex`;
+- version `0.154.0` official standalone runtime;
 - fresh ChatGPT authorization;
-- managed Remote Control enabled through Unix control socket only;
-- no public Codex network listener;
-- legacy custom `codex-app-server` / `codex-runner` absent.
+- Remote Control through Unix control socket only;
+- no public Codex network listener.
 
 ### Antigravity CLI
 
-- `1.2.5`;
+- version `1.2.5`;
 - fresh Google OAuth;
 - Remote Control instance `edge`;
-- user service `/home/core/.config/systemd/user/antigravity-cli-daemon.service` active/enabled with `NRestarts=0` at final Stage 2 acceptance;
-- user confirmed `edge` Online in the Antigravity UI.
+- persistent user service accepted.
 
 ## Mail — production accepted
 
-### Runtime
-
-- Stalwart `0.16.22`, digest `sha256:388dcb75a70727c5b551249a6d34b1f1321294852489e4fa3a4e6be698b7c4f0`;
-- Bulwark `1.9.2`, digest `sha256:0e8d1339277033b6569a76c6f8192396e6edd66fd917d64d9ed505e8b81dac6d`;
-- compose `/opt/mail-stack/compose.yaml`, SHA256 `7de766ed23fd7c30f63870f25af648f018d3295685fb58e40b88eaa578d2d4de`;
-- nginx vhost SHA256 `601ff1feffcef8729901b1e00ab98001934db03a1315b55233965ba5d75f079c`;
+- Stalwart `0.16.22`;
+- Bulwark `1.9.2`;
 - loopback web backends: Stalwart `127.0.0.1:18083`, Bulwark `127.0.0.1:18084`;
-- public mail protocols: IPv4 TCP/25 SMTP, TCP/465 SMTPS submission, TCP/993 IMAPS;
-- 587/995/4190 intentionally unpublished.
-
-### Data / auth
-
-- `es@escloud.us` retained useful mailbox/account data with a new password;
-- 6 mailboxes and 14 messages migrated plus useful address-book/calendar/identity state;
-- malformed legacy contact reconstructed with a new valid UID;
-- legacy `admin@escloud.us` contained no useful message data and was not migrated;
-- new Stalwart user/admin credentials, new Bulwark session/admin state, new DKIM key material;
-- no legacy authentication/session/private-key state reused.
-
-### DNS / E2E
-
-- MX `10 mail.escloud.us.`;
-- A `45.92.156.17`, no mail AAAA;
-- PTR `45.92.156.17 -> mail.escloud.us`;
-- SPF `v=spf1 ip4:45.92.156.17 -all`;
-- DMARC `v=DMARC1; p=none; adkim=s; aspf=s`;
-- active DKIM selectors `v1-rsa-20260917` and `v1-ed25519-20260917`;
-- legacy selector `v1-rsa-20260713` retired;
-- Gmail outbound delivery: SPF PASS, RSA DKIM PASS, DMARC PASS;
-- Gmail inbound reply: delivery PASS and Stalwart SPF/DKIM/DMARC PASS;
-- bidirectional mail E2E acceptance PASS.
+- public mail protocols: TCP/25 SMTP, TCP/465 SMTPS submission, TCP/993 IMAPS;
+- `es@escloud.us` useful mailbox/account/address-book/calendar/identity state migrated with fresh credentials;
+- fresh Stalwart/Bulwark auth/session/DKIM material;
+- MX/PTR/SPF/DKIM/DMARC accepted;
+- Gmail outbound and inbound bidirectional E2E verification passed.
 
 ## Stage 2 final integrated acceptance
 
-Final recovery run proved:
-
-- foundation services active;
-- Authelia/n8n/Stalwart/Bulwark containers running with zero restarts;
-- CloudCLI active with zero restarts;
-- Antigravity user service active/enabled with zero restarts;
-- all application WebUI backends bound only to loopback;
-- intentional public listener/UFW contract correct;
-- public routes for `auth`, `n8n`, `code`, `mail` correct;
-- local readiness/health checks correct;
-- SMTP/TLS/DNS/DKIM identity non-regressed;
-- accepted config hashes unchanged;
-- no production mutation performed by acceptance runs.
+Final recovery run proved foundation services, Stage 2 applications, mail, public ingress/listeners, loopback backend contract, UFW, readiness/health, TLS/DNS/DKIM identity and accepted config non-regression.
 
 `EDGE_STAGE2_FINAL_INTEGRATED_ACCEPTANCE=PASS`
 
-## Recovery / temporary state
+## Recovery / preserved state
 
 - Stage 1 recovery archive: `/srv/backups/edge-stage1/edge-stage1-base-20260916T234611Z.tar.gz`, SHA256 `37486e763ddac4c5ef3a92a35c3dad49787d75ffd8b97499073c79af617cc566`;
-- authoritative migration-preservation archive `/tmp/edge-migration-preservation-20260916T141048Z.tar.gz`, SHA256 `0203e5845f57bc1d04b384cef2b26a45fbff855c341e1edf1193034c34de9fdf`, intentionally retained beyond Stage 2 for later legacy-reference work; do not restore legacy credentials from it.
+- migration-preservation archive: `/tmp/edge-migration-preservation-20260916T141048Z.tar.gz`, SHA256 `0203e5845f57bc1d04b384cef2b26a45fbff855c341e1edf1193034c34de9fdf`, retained outside GitHub for legacy-reference/recovery use; do not indiscriminately restore legacy credentials.
 
-Canonical Obsidian vault remains on `ai-node` at `/srv/ai-data/knowledge/obsidian`.
+## Current next step
 
-## Current next research block
-
-**Cross-site Data & Knowledge Services** — working files, file-access layer, selected-directory synchronization and free/self-hosted Obsidian synchronization/edge role.
-
-Cross-site Connectivity Foundation research is complete and selected, but Stage 3 deployment still waits for full Stage 02.5 closure.
+Stage 02.5 is closed. The next production task is **Stage 3 — Edge Cross-site Connectivity Foundation**.
