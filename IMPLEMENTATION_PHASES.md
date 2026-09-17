@@ -1,6 +1,6 @@
 # Cloud Infrastructure — Accepted Implementation Phases
 
-**Status:** ACCEPTED
+**Status:** ACCEPTED chronology with later-stage scope subject to stage-entry review.
 
 This document is the canonical stage chronology for Cloud Infrastructure / `edge`.
 
@@ -12,11 +12,11 @@ Each implementation stage has its own work branch and follows the accepted-first
 2. legacy implementation reconstruction where relevant;
 3. deployment of known/accepted dependency-ready components;
 4. research/selection only for genuinely unresolved mechanisms or concrete incompatibilities;
-5. remaining stage-composition acceptance;
+5. stage-composition acceptance;
 6. stage-scoped architecture/deployment contract;
-7. remaining deployment;
-8. verify/accept;
-9. persist accepted current state/decisions/architecture;
+7. deployment;
+8. verification/acceptance;
+9. persistence/read-back in GitHub;
 10. branch transition only after complete stage acceptance.
 
 Do not reopen accepted products without a concrete reason. Historical versions are evidence, not automatic pins. Docker + Compose are the default runtime for suitable application services; host-native remains valid where materially simpler.
@@ -33,15 +33,7 @@ Do not reopen accepted products without a concrete reason. Historical versions a
 
 **COMPLETE / ACCEPTED.**
 
-Accepted outcome:
-
-- historical legacy VPS baseline retained unchanged;
-- preliminary functional scaffold created;
-- provider full-VPS backup completed;
-- sensitive migration-preservation archive created, externally copied and verified;
-- sanitized `migration-reference/` accepted in GitHub;
-- clean provider-level Ubuntu rebuild selected;
-- recovery paths verified.
+Accepted outcome includes the historical legacy baseline, provider backup, sensitive migration-preservation archive, sanitized `migration-reference/`, clean-rebuild decision and verified recovery paths.
 
 ---
 
@@ -59,84 +51,88 @@ Final acceptance:
 
 `EDGE_STAGE1_FINAL_INTEGRATED_ACCEPTANCE=PASS`
 
-Accepted Stage 1 composition:
-
-- clean Ubuntu 26.04.1 LTS `edge` substrate;
-- provider networking retained in its verified working form;
-- key-only root SSH through `ssh.socket`;
-- journald 500 MiB persistent-use ceiling;
-- Docker Engine + Compose foundation;
-- normalized `/opt`, `/srv`, `/etc`, `/var/www` path convention;
-- nginx public HTTP and loopback HTTPS-fallback foundation;
-- Certbot/ACME shared `escloud.us` TLS lifecycle;
-- Xray public TCP/443 VLESS/TLS endpoint;
-- Hysteria2 public UDP/443 endpoint and file masquerade;
-- accepted `ES Cloud — Private Workspace` public masking page;
-- Authelia common web-auth foundation at loopback backend `127.0.0.1:19091`;
-- UFW public-exposure contract;
-- restored `maintctl` and `vpnctl` operational entrypoints;
-- documented extension-point contract;
-- verified same-VPS Stage 1 base-state recovery checkpoint.
-
-The full private Cloud Infrastructure portal is intentionally deferred to Stage 2 rather than deploying a temporary Stage 1 implementation. Stage 1 accepts the working Authelia/private-ingress boundary as sufficient foundation.
-
-Stage 1 local checkpoint:
-
-- `/srv/backups/edge-stage1/edge-stage1-base-20260916T234611Z.tar.gz`;
-- SHA256 `37486e763ddac4c5ef3a92a35c3dad49787d75ffd8b97499073c79af617cc566`.
-
-This local checkpoint is not off-host DR and does not replace the later Backrest/Restic direction.
+Accepted composition includes Ubuntu substrate, SSH, journald policy, Docker/Compose, nginx, Certbot/TLS lifecycle, Xray, Hysteria2, public masking page, Authelia ingress/auth foundation, UFW, `maintctl`/`vpnctl`, extension-point contract and the Stage 1 recovery checkpoint.
 
 ---
 
 ## Stage 2 — Core Applications
 
-### Next work branch
+### Work branch
 
 `02 — Edge Core Applications`
 
 ### Status
 
-**NEXT / NOT STARTED.**
+**COMPLETE / ACCEPTED.**
 
-Use the accepted-first workflow. Reconstruct/deploy already accepted carry-forward products first where their implementation is known and independent; compare alternatives only for genuinely unresolved adjacent mechanisms.
+Final acceptance:
 
-Current Stage 2 scope/candidates:
+`EDGE_STAGE2_FINAL_INTEGRATED_ACCEPTANCE=PASS`
 
-- Stalwart;
-- Bulwark;
+Accepted Stage 2 production set:
+
+- Authelia clean reinitialization;
 - n8n;
 - CloudCLI;
 - Codex CLI;
 - Antigravity CLI;
-- Backrest;
-- Semaphore;
-- maintenance page;
-- full private Cloud Infrastructure portal.
+- Stalwart;
+- Bulwark;
+- accepted mail migration, DNS/DKIM/TLS/public-protocol contract and external bidirectional E2E verification.
 
-Several are already accepted product anchors. Their preserved legacy configuration is the default engineering reference where applicable, but current stable releases/update paths should be used unless compatibility requires otherwise.
+Backrest, Semaphore, the maintenance page and the full private `app.escloud.us` portal were explicitly removed from Stage 2 completion scope after their dependency on a substantially complete final service inventory was recognized.
 
-Intended Stage 2 production checkpoint: a practically complete standalone `edge` core providing VPN/DPI-bypass connectivity, mail, web services, common authentication, automation, subscription cloud AI, backup management, maintenance, and private portal/status surfaces.
+They are deferred to late-stage Operations & Lifecycle work in this accepted dependency order:
+
+1. near-final `app.escloud.us` portal after the service inventory stabilizes;
+2. Backrest backup/restore policy and acceptance;
+3. Semaphore + maintenance page developed/tested together using the PVE/Home updater as an engineering reference adapted for `edge`;
+4. final server-wide acceptance and cleanup.
 
 ---
 
 ## Stage 3 — Monitoring & Human Interaction
 
-### Future work branch
+### Historical/planned work branch
 
 `03 — Edge Monitoring & Human Interaction`
 
-**NOT STARTED.**
+### Status
 
-Candidate scope includes external uptime/dead-man monitoring, job/backup checks, notifications, portal status integration, Universal Capture Inbox, human-in-the-loop approvals, mail-triggered automation and optional messaging frontend. Avoid heavy observability without demonstrated need.
+**NOT STARTED — SCOPE MUST BE REVALIDATED BEFORE BRANCH OPENING.**
+
+The original candidate scope was:
+
+- external uptime/availability monitoring;
+- dead-man/heartbeat monitoring from Home/PVE/PAI;
+- selected job/backup-health checks;
+- notifications/alert delivery;
+- portal status integration;
+- Universal Capture Inbox;
+- human-in-the-loop approvals;
+- mail-triggered automation;
+- optional messaging frontend.
+
+After the accepted late-stage portal/Backrest/Semaphore deferral, this list no longer maps cleanly to one deployment stage:
+
+- portal status integration belongs with the late portal work;
+- backup-health integration depends on late Backrest deployment;
+- Universal Capture Inbox / approvals / mail-triggered automation overlap Stage 5 Information & Cloud AI workflows and existing n8n/mail capabilities;
+- external monitoring, heartbeats and alert delivery remain the clearest independent Stage 3 capability group.
+
+Therefore do **not** open the historical Stage 3 branch automatically. First perform a short post-Stage-2 scope-reconciliation/research checkpoint and decide whether Stage 3 should remain one stage, be narrowed to external monitoring/notifications, or have human-interaction workflow work moved to the stage where its concrete consumers exist.
+
+Avoid heavy observability without demonstrated need.
 
 ---
 
 ## Stage 4 — Files, Sync & Obsidian
 
-### Future work branch
+### Planned work branch
 
 `04 — Edge Files, Sync & Obsidian`
+
+### Status
 
 **NOT STARTED.**
 
@@ -148,9 +144,11 @@ Canonical Obsidian remains on `ai-node` at `/srv/ai-data/knowledge/obsidian` unl
 
 ## Stage 5 — Information & Cloud AI
 
-### Future work branch
+### Planned work branch
 
 `05 — Edge Information & Cloud AI`
+
+### Status
 
 **NOT STARTED.**
 
@@ -162,9 +160,11 @@ Do not duplicate compute-heavy PAI OCR/ASR/translation/local inference on `edge`
 
 ## Stage 6 — Home & PAI Integration
 
-### Future work branch
+### Planned work branch
 
 `06 — Edge Home & PAI Integration`
+
+### Status
 
 **NOT STARTED.**
 
@@ -176,9 +176,11 @@ Home/PAI connectivity is not an `edge` foundation requirement.
 
 ## Stage 7 — Optional Capabilities
 
-### Future work branch
+### Planned work branch
 
 `07 — Edge Optional Capabilities`
+
+### Status
 
 **NOT STARTED.**
 
@@ -186,14 +188,25 @@ Deploy only capabilities with demonstrated value after the primary system reache
 
 ---
 
+## Late-stage Operations & Lifecycle
+
+Exact stage number/name remains intentionally unset until the intervening functional stages are reconciled.
+
+Accepted dependency order:
+
+1. `app.escloud.us` private portal/status home after the service inventory is substantially complete;
+2. Backrest + Restic repository/retention/restore acceptance;
+3. Semaphore + maintenance page together, using working Backrest pre-update backups during update testing;
+4. final server-wide integrated acceptance and cleanup.
+
+Portal scope is determined from the actual final service inventory. Baseline intent is unified navigation plus simple useful status/monitoring, potentially including a collapsed-by-default Home Infrastructure summary if it is useful and simple. Do not precommit a heavy monitoring stack.
+
+---
+
 ## Current canonical checkpoint
 
 Stage 0: **COMPLETE / ACCEPTED**.  
 Stage 1: **COMPLETE / ACCEPTED**.  
-Stage 2: **NEXT / NOT STARTED**.
+Stage 2: **COMPLETE / ACCEPTED**.  
 
-The next canonical branch is:
-
-`02 — Edge Core Applications`
-
-The earlier prematurely opened `02 — Edge Functional Composition & Deferred Capabilities` remains non-canonical historical context and must not be reused as the Stage 2 branch.
+**Next action:** short post-Stage-2 scope reconciliation/research before creating the next implementation branch. The historical `03 — Edge Monitoring & Human Interaction` title is not automatically authoritative for the remaining capability grouping after accepted late-stage deferrals.
