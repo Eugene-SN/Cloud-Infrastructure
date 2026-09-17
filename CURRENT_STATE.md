@@ -8,7 +8,7 @@
 
 Stage 0 and Stage 1 are **COMPLETE / ACCEPTED**. `EDGE_STAGE1_FINAL_INTEGRATED_ACCEPTANCE=PASS` on 2026-09-17.
 
-Current Stage 2 accepted application state includes clean-reinitialized Authelia, n8n and CloudCLI. Codex CLI and Antigravity CLI are installed but still require fresh user authorization.
+Current Stage 2 accepted application state includes clean-reinitialized Authelia, n8n and CloudCLI plus fresh authorization for Codex CLI and Antigravity CLI.
 
 ## Stage 2 rebuild / credential policy
 
@@ -163,14 +163,23 @@ Identity variables remain `N8N_HOST=n8n.escloud.us`, `N8N_PROTOCOL=https`, `WEBH
 - clean state at post-onboarding acceptance: users `1`, projects `0`, sessions `0`, `user_credentials` `0`;
 - no legacy CloudCLI auth DB/config/workspace/session state restored.
 
-## Cloud AI CLI tooling installed / authorization pending
+## Cloud AI CLI tooling — fresh authorization accepted
+
+`STAGE2_CODEX_FRESH_CHATGPT_AUTH=PASS`  
+`STAGE2_ANTIGRAVITY_FRESH_GOOGLE_AUTH=PASS`  
+`STAGE2_CODEX_AUTH_NON_REGRESSION=PASS`
 
 - Node `22.22.1`;
 - npm `9.2.0`;
-- Codex CLI `0.154.0` installed under `/home/core/.local`, fresh authorization still pending;
-- Antigravity CLI `1.2.5` at `/home/core/.local/bin/agy`, fresh authorization still pending;
-- no legacy Codex auth/config or Antigravity auth state restored;
-- custom legacy `codex-app-server` and `codex-runner` are absent unless later demonstrated necessary.
+- Codex CLI `0.154.0` installed under `/home/core/.local`;
+- Codex fresh ChatGPT device authorization completed successfully; `codex login status` reports `Logged in using ChatGPT`;
+- Codex auth object `/home/core/.codex/auth.json`, `core:core`, mode `0600`; no legacy Codex auth/config was restored;
+- Antigravity CLI `1.2.5` at `/home/core/.local/bin/agy`;
+- Antigravity fresh Google OAuth completed successfully under the `core` account;
+- Antigravity OAuth state is stored under `/home/core/.gemini/antigravity-cli`; credential contents are not persisted in project documentation;
+- authenticated headless probe returned exactly `ANTIGRAVITY_AUTH_OK` with RC `0`;
+- Codex authorization remained valid after Antigravity authorization;
+- custom legacy `codex-app-server` and `codex-runner` remain absent unless later demonstrated necessary.
 
 ## Firewall
 
@@ -191,6 +200,6 @@ Stage 0: **COMPLETE / ACCEPTED**.
 Stage 1: **COMPLETE / ACCEPTED**.  
 Stage 2: **IN PROGRESS**.
 
-Pending Stage 2 work includes fresh Codex CLI authorization, fresh Antigravity CLI authorization, Stalwart + Bulwark mail migration with new credentials, Backrest, Semaphore, maintenance page, and full private Cloud Infrastructure portal.
+Pending Stage 2 work includes Stalwart + Bulwark mail migration with new credentials, Backrest, Semaphore, maintenance page, and full private Cloud Infrastructure portal.
 
 Canonical Obsidian vault remains on `ai-node` at `/srv/ai-data/knowledge/obsidian`.
