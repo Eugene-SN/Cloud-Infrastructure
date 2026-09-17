@@ -43,9 +43,9 @@ This inventory distinguishes live accepted runtime from future accepted/planned 
 | n8n | LIVE / ACCEPTED | `2.39.7`; clean state; one new owner; `127.0.0.1:15678`; public `https://n8n.escloud.us/`; Authelia protected |
 | CloudCLI | LIVE / ACCEPTED | `1.37.3`; systemd `cloudcli.service`; one new local user; `127.0.0.1:18140`; public `https://code.escloud.us/`; Authelia protected |
 | Codex CLI | LIVE / ACCEPTED | `0.154.0`; official standalone runtime; fresh ChatGPT auth; managed app-server Remote Control enabled and server-side accepted |
-| Antigravity CLI | LIVE / ACCEPTED | `1.2.5`; fresh Google OAuth; instance `edge`; `antigravity-cli-daemon.service` enabled/running under `core`; headless Remote Control registered/running |
-| Stalwart | TARGET-ACCEPTED / pending Stage 2 | mail server; preserve useful mail account/data/settings but recreate credentials |
-| Bulwark | TARGET-ACCEPTED / pending Stage 2 | webmail frontend; fresh credentials/integration pending |
+| Antigravity CLI | LIVE / ACCEPTED | `1.2.5`; fresh Google OAuth; instance `edge`; `antigravity-cli-daemon.service` enabled/running under `core`; headless Remote Control registered/running; user confirmed `edge` Online in UI |
+| Stalwart | TARGET-ACCEPTED / source migration prepared | clean production deployment pending; legacy useful state captured without credential reuse |
+| Bulwark | TARGET-ACCEPTED / pending Stage 2 | webmail frontend; fresh session/auth state required |
 | Backrest | TARGET-ACCEPTED / pending Stage 2 | `backup.escloud.us` allocated; clean deployment/credentials |
 | Semaphore | TARGET-ACCEPTED / pending Stage 2 | `ops.escloud.us` allocated; clean deployment/credentials |
 | Cloud Infrastructure portal | TARGET-ACCEPTED / pending Stage 2 | `app.escloud.us`; replaces legacy Homepage |
@@ -102,8 +102,24 @@ This inventory distinguishes live accepted runtime from future accepted/planned 
 - `core` linger enabled; `user@1000.service` active; `/run/user/1000/bus` present;
 - `agy remote-control status` reports `Daemon status: active` and instance name `edge`;
 - authenticated Antigravity post-activation probe returned `ANTIGRAVITY_REMOTE_AUTH_OK`, RC `0`;
+- user confirmed `edge` appears Online in Antigravity Remote Control Instances;
 - Codex login and managed daemon remained healthy after Antigravity Remote Control activation;
 - legacy custom `codex-app-server` and `codex-runner` are absent; official Codex managed daemon supersedes their function.
+
+### Mail migration source inventory
+
+- migration-preservation archive `/tmp/edge-migration-preservation-20260916T141048Z.tar.gz`, SHA256 `0203e5845f57bc1d04b384cef2b26a45fbff855c341e1edf1193034c34de9fdf`; retain until final mail migration acceptance;
+- legacy Stalwart `0.16.21`, image digest `sha256:93c574e52249c1ebf90061da2c4c0756a7b72abfcc1fec34506a03c2e38b5977`;
+- preserved source storage RocksDB, ~111 MB;
+- source domain `escloud.us`, manual DNS and manual TLS management;
+- source accounts: `es@escloud.us` (`Eugene S`, User) and legacy `admin@escloud.us` (System Administrator); no source credentials will be reused;
+- source DKIM selector `v1-rsa-20260713`, RSA/SHA256; legacy private key is excluded from target credential/key material;
+- Vandelay `1.0.10` temporary migration archive `/tmp/stalwart-vandelay-capture/es.sqlite`, SHA256 `45e4d80e421921440a936f0fdb24f7a8121adcbf7252b77b90812ca243823f42`, SQLite integrity `ok`;
+- captured account source is JMAP account `c` / `es@escloud.us` using a temporary recovery administrator, not the legacy user password;
+- Vandelay captured 6 mailboxes, 14 emails, 14 blobs (~405.2 KB), 2 address books, 1 calendar, 1 identity and 1 participant identity; zero Sieve scripts, file nodes and calendar events;
+- one source ContactCard (`id=b`, address book `c`) is malformed: missing UID, but contains meaningful name and email fields; it was not imported into the Vandelay archive;
+- migration constraint: reconstruct that contact separately with a new valid UID during target migration; do not mutate the preserved source;
+- temporary migration/recovery containers and networks are removed after audits; current production applications remain non-regressed.
 
 ## Domain inventory
 
@@ -169,10 +185,11 @@ Current shared SANs: `escloud.us`, `app`, `auth`, `backup`, `chat`, `cloud`, `co
 
 - canonical legacy baseline: `NL_CORE_VDS_Current_State_Baseline_2026-09-14.md`;
 - Stage 1 recovery archive: `/srv/backups/edge-stage1/edge-stage1-base-20260916T234611Z.tar.gz`, SHA256 `37486e763ddac4c5ef3a92a35c3dad49787d75ffd8b97499073c79af617cc566`;
-- external migration-preservation archive remains required during Stage 2 primarily for mail data/settings reconstruction; do not restore application credentials from it.
+- external migration-preservation archive remains required during Stage 2 primarily for mail data/settings reconstruction; do not restore application credentials from it;
+- temporary Vandelay archive `/tmp/stalwart-vandelay-capture/es.sqlite` is retained only until mail migration acceptance, then must be removed.
 
 ## Current stage boundary
 
 Stage 0 — COMPLETE / ACCEPTED.  
 Stage 1 — COMPLETE / ACCEPTED.  
-Stage 2 — IN PROGRESS; Authelia, n8n, CloudCLI, Codex CLI and Antigravity CLI accepted; remaining Stage 2 components pending.
+Stage 2 — IN PROGRESS; Authelia, n8n, CloudCLI, Codex CLI and Antigravity CLI accepted; mail migration source prepared; remaining Stage 2 components pending.
