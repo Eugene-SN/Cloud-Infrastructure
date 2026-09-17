@@ -15,24 +15,63 @@ Primary repository: `Eugene-SN/Cloud-Infrastructure`.
 
 The accepted Stage 2 production set is Authelia, n8n, CloudCLI, Codex CLI, Antigravity CLI, Stalwart and Bulwark.
 
-Stage 02.5 has selected **Hermes Agent** as the only `Remaining Standalone Core Service`. The future Stage 3 is `03 — Edge Hermes Agent Runtime`; Hermes is not yet installed because Stage 02.5 remains research-only and must finish all required research/deliverables before any new production branch opens.
+## Stage 02.5 accepted research state
 
-Accepted Hermes direction:
+### Hermes
+
+**Hermes Agent — SELECTED.**
+
+Accepted direction:
 
 - persistent cloud-side agent runtime on `edge`;
 - runs in parallel with n8n, not as a replacement;
 - preferred host-native placement under `core`;
-- Docker is not preferred because direct reuse of the existing host-native Codex/Antigravity executors and their user/runtime context would otherwise require unnecessary bridging;
-- Stage 3 verifies `n8n -> Hermes -> Codex/AGY -> Hermes -> n8n` as an infrastructure path;
-- Hermes access to local vLLM on `ai-node` is deferred until cross-site connectivity is accepted;
+- Docker is not preferred because direct reuse of existing host-native Codex/Antigravity executors and user/runtime context would otherwise require unnecessary bridging;
+- Hermes invokes Codex/Antigravity directly rather than through CloudCLI;
 - user-specific n8n/Hermes workflows remain post-infrastructure work.
+
+### Cross-site Connectivity Foundation
+
+**Existing self-hosted NetBird — SELECTED / REUSE EXISTING.**
+
+Detailed acceptance record:
+
+`STAGE_02_5_CONNECTIVITY_SELECTION_ACCEPTANCE_2026-09-17.md`
+
+Fresh read-only Home audit established:
+
+- Home LAN `192.168.1.0/24`;
+- CT300 `remote-access` `192.168.1.90/24`;
+- existing NetBird routing peer `100.105.97.126/16`;
+- NetBird account IPv4 overlay `100.105.0.0/16`;
+- current NetBird `Networks` model is in use; legacy routes are empty;
+- Home resources are `Home LAN 192.168.1.0/24` and `Internet 0.0.0.0/0`;
+- `Routing Peers` contains only `netbird-router`;
+- `User Devices` contains interactive user devices and currently owns both Home-LAN and Home-Internet policies;
+- current split DNS sends only `lan` to `192.168.1.1:53` and does not replace general peer DNS;
+- CT300's own default gateway is MikroTik `192.168.1.1`;
+- NetBird traffic arriving from `wt0` uses policy table `6300`, whose default is VRRP VIP `192.168.1.254`;
+- NetBird relay `rels://netbird.encores.ru:443` and STUN UDP 3478 were available at audit time.
+
+Accepted target:
+
+- `edge` becomes an ordinary host-native NetBird service peer;
+- `edge` receives Home LAN access but **not** the Home Internet resource `0.0.0.0/0`;
+- `edge` keeps direct VPS-provider Internet/default routing;
+- Home/PAI clientless hosts reach `edge` through gateway-level routing `100.105.0.0/16 via 192.168.1.90` on both VM100 and MikroTik;
+- VM100 gets only the narrow forwarding allowance needed for LAN → NetBird-account traffic;
+- existing NetBird-managed Site-to-VPN masquerade is reused/tested before any manual NAT is considered;
+- existing `.lan` split DNS is reused on `edge`, and `edge.lan` is added through the existing Home DNS mechanism after enrollment/routing acceptance;
+- direct WireGuard and Tailscale are rejected as duplicate backbones; AmneziaWG is contingency only if real NetBird acceptance fails.
+
+No runtime networking/DNS/firewall mutation has been performed by Stage 02.5 research.
 
 ## Accepted remaining roadmap direction
 
 Planned dependency order after Stage 02.5:
 
-1. **Stage 3 — Edge Hermes Agent Runtime**;
-2. **Stage 4 — Edge Cross-site Connectivity Foundation**;
+1. **Stage 3 — Edge Cross-site Connectivity Foundation**;
+2. **Stage 4 — Edge Hermes Agent Runtime**;
 3. **Stage 5 — Edge Cross-site Data & Knowledge Services**;
 4. **Stage 6 — Edge Remaining Infrastructure Services** only if Stage 02.5 selects another full service; remove/renumber if empty;
 5. **Stage 7 — Edge Backrest & Recovery**;
@@ -41,6 +80,8 @@ Planned dependency order after Stage 02.5:
 8. **Stage 10 — Edge Cloud Portal** with a dedicated Codex substage for `app.escloud.us`;
 9. **Stage 11 — Edge Final Integrated Infrastructure Acceptance** and cleanup;
 10. post-infrastructure **Automation & User Workflows** as a continuous workstream rather than an infrastructure-completion stage.
+
+Reason for Stage 3/4 swap: connectivity is now an accepted prerequisite, so Hermes can be deployed and accepted once with both cloud executors and the local-vLLM path instead of deliberately leaving `Hermes -> vLLM` incomplete.
 
 Backrest-before-Semaphore remains mandatory. Production monitoring remains late so it is built once against the final inventory. `update.escloud.us` and `app.escloud.us` remain separate UI responsibilities.
 
@@ -176,18 +217,15 @@ Final recovery run proved:
 
 `EDGE_STAGE2_FINAL_INTEGRATED_ACCEPTANCE=PASS`
 
-The V1 and V2 acceptance interruptions were diagnostic-script defects only (root-to-user systemd bus context and an unanchored public-listener regex). They did not mutate or regress production state.
-
 ## Recovery / temporary state
 
 - Stage 1 recovery archive: `/srv/backups/edge-stage1/edge-stage1-base-20260916T234611Z.tar.gz`, SHA256 `37486e763ddac4c5ef3a92a35c3dad49787d75ffd8b97499073c79af617cc566`;
-- temporary Vandelay migration directory removed;
-- authoritative migration-preservation archive `/tmp/edge-migration-preservation-20260916T141048Z.tar.gz`, SHA256 `0203e5845f57bc1d04b384cef2b26a45fbff855c341e1edf1193034c34de9fdf`, intentionally retained beyond Stage 2 because later functional stages may still need legacy configuration/reference material; do not restore legacy credentials from it.
+- authoritative migration-preservation archive `/tmp/edge-migration-preservation-20260916T141048Z.tar.gz`, SHA256 `0203e5845f57bc1d04b384cef2b26a45fbff855c341e1edf1193034c34de9fdf`, intentionally retained beyond Stage 2 for later legacy-reference work; do not restore legacy credentials from it.
 
 Canonical Obsidian vault remains on `ai-node` at `/srv/ai-data/knowledge/obsidian`.
 
 ## Current next research block
 
-**Cross-site Connectivity Foundation — базовая связь `edge ↔ ai-node ↔ PVE/Home`.**
+**Cross-site Data & Knowledge Services** — working files, file-access layer, selected-directory synchronization and free/self-hosted Obsidian synchronization/edge role.
 
-Stage 02.5 must research and accept the required flows and transport before Stage 3 deployment is opened; Stage 3 itself remains the first planned post-02.5 production branch.
+Cross-site Connectivity Foundation research is complete and selected, but Stage 3 deployment still waits for full Stage 02.5 closure.
