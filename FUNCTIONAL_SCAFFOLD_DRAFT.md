@@ -1,37 +1,28 @@
-# Cloud Infrastructure — Preliminary Functional Scaffold
+# Cloud Infrastructure — Functional Scaffold
 
-**Status:** global capability scaffold retained as requirements input; post-Stage-2 sequencing is governed by the accepted Stage 02.5 dependency-aware roadmap.
+**Status:** capability scaffold normalized after Stage 02.5 final acceptance.
 
-This document describes broad functional directions for `edge`. It does not by itself define every final product, network topology, container layout, domain, storage path or deployment architecture.
-
-Its purpose is to preserve functional requirements while Stage 02.5 normalizes which requirements are infrastructure services, which depend on cross-site connectivity, and which are later user/workflow capabilities.
+This document preserves functional requirements for `edge`. It is not an independent chronology source; implementation order is defined by `IMPLEMENTATION_PHASES.md`.
 
 ## Design rule
 
-Cloud Infrastructure should complement Home Infrastructure and PAI by exploiting capabilities that materially benefit from an external 24/7 VPS: foreign Internet location, stable public reachability, external failure domain, continuous Internet observation, public event reception and subscription/cloud-agent execution.
+Cloud Infrastructure should complement Home Infrastructure and Personal Agents Infrastructure by using capabilities that materially benefit from an external 24/7 VPS: foreign Internet location, stable public reachability, external failure domain, continuous Internet observation, public event reception and cloud/subscription-agent execution.
 
 Do not duplicate Home/PAI capabilities merely because they can also run on a VPS.
 
-## Current sequencing rule
-
-The historical thematic Stage 3–7 grouping is no longer authoritative.
-
-Current planned post-Stage-02.5 sequence:
+## Final sequencing
 
 1. Stage 3 — Cross-site Connectivity Foundation;
 2. Stage 4 — Hermes Agent Runtime;
-3. Stage 5 — Cross-site Data & Knowledge Services;
-4. Stage 6 — conditional Remaining Infrastructure Services only if further research selects any;
-5. Stage 7 — Backrest & Recovery;
-6. Stage 8 — Semaphore + maintenance/update workflow + separate Codex `update.escloud.us` substage;
-7. Stage 9 — infrastructure-wide Monitoring, Heartbeats & Alerts;
-8. Stage 10 — final `app.escloud.us` Cloud Portal + separate Codex implementation substage;
-9. Stage 11 — Final Integrated Infrastructure Acceptance;
-10. post-infrastructure Automation & User Workflows as a continuous workstream.
+3. Stage 5 — Knowledge Replication & Data Integration;
+4. Stage 6 — Backrest & Recovery;
+5. Stage 7 — Maintenance & Update;
+6. Stage 8 — Monitoring, Heartbeats & Alerts;
+7. Stage 9 — Cloud Portal;
+8. Stage 10 — Final Integrated Infrastructure Acceptance;
+9. post-infrastructure Automation & User Workflows.
 
-If Stage 6 is empty at Stage 02.5 closure, remove it and normalize later numbering rather than creating an empty deployment branch.
-
-Products already explicitly ACCEPTED in `DECISIONS.md` are anchors and should not be re-opened without a concrete incompatibility or changed requirement.
+Apple-device/Obsidian integration is not part of the Cloud sequence; it belongs to Home Infrastructure as a later user-integration project.
 
 ---
 
@@ -47,18 +38,15 @@ Products already explicitly ACCEPTED in `DECISIONS.md` are anchors and should no
 
 ### Functional intent
 
-- DPI-resistant foreign Internet egress for the user;
+- DPI-resistant foreign Internet egress;
 - public HTTP/HTTPS ingress for services that require it;
-- managed HTTPS/TLS as part of ingress;
-- convenient access from MacBook, iPhone, iPad, Windows and other authorized devices;
-- separate human WebUI, native protocol and machine/API access where appropriate;
-- unified web login through Authelia where application semantics support it;
-- public plausible/decoy page for the VPN-facing endpoint;
+- managed TLS;
+- human WebUI, native protocol and machine/API access where appropriate;
+- Authelia web login where application semantics support it;
+- public plausible/decoy page;
 - private Cloud Infrastructure portal/status page replacing legacy Homepage.
 
-### Current state
-
-Base ingress/TLS/auth/decoy implementation is already deployed and accepted in Stage 1/2. Future work is service-specific ingress only when a selected service requires it.
+Base ingress/TLS/auth/decoy implementation is already deployed and accepted in Stage 1/2.
 
 ---
 
@@ -66,58 +54,52 @@ Base ingress/TLS/auth/decoy implementation is already deployed and accepted in S
 
 ### Accepted base
 
-- n8n is the common deterministic automation/orchestration plane.
+- n8n is the deterministic automation/orchestration plane.
 
 ### Functional intent
 
 - public webhooks;
-- scheduled automation;
-- Internet/SaaS event handling;
+- schedules;
+- Internet/SaaS events;
 - RSS/feed triggers;
-- website-change workflows;
-- mail/event-driven automation;
-- orchestration of Cloud, Home and PAI workflows;
-- notifications and result delivery.
+- website/document-change workflows;
+- mail/event automation;
+- orchestration across Cloud, Home and PAI;
+- notifications and results.
 
-### Universal Capture Inbox — универсальный приём материалов
+### Later user/workflow capabilities
 
-Provide low-friction user-facing entry points for URLs, text/notes, files/PDFs, images and commands into automation/knowledge workflows.
+- Universal Capture Inbox;
+- human-in-the-loop approvals;
+- mail as automation transport;
+- durable application-level store-and-forward/retry;
+- messaging/bot commands.
 
-### Human-in-the-loop approvals — ручное подтверждение действий
+These do not delay finite infrastructure completion unless a concrete dedicated infrastructure dependency later appears.
 
-Selected n8n/agent workflows should be able to pause for explicit approve/reject/choice/confirmation through existing user interaction surfaces.
-
-### Mail as automation transport — почта как транспорт автоматизаций
-
-The accepted Stalwart + Bulwark stack may provide inbound mail/attachment triggers and outbound system notifications for n8n workflows.
-
-### Placement
-
-These are primarily **post-infrastructure user/workflow capabilities**. They do not delay infrastructure completion unless one later proves to require a dedicated infrastructure service.
-
-Do not add another generic scheduler/job stack beside n8n without a concrete requirement.
+Do not add another generic scheduler beside n8n without a concrete requirement.
 
 ---
 
 ## 3. External monitoring, heartbeats and notifications
 
-### Functional intent
+### Disposition
 
-Use the independent external failure domain of `edge` to detect failures that cannot be reliably observed from inside Home Infrastructure.
+**DEFERRED TO STAGE 8.**
 
-Candidate scope:
+Research/final selection occurs against the substantially complete real infrastructure rather than during Stage 02.5.
+
+Functional scope may include:
 
 - external availability checks;
 - dead-man/heartbeat monitoring from Home/PVE/PAI;
-- selected backup/job-health signals;
+- cross-site connectivity health;
+- knowledge-sync health;
+- backup/job-health signals;
 - important alert delivery;
-- status presentation on the private Cloud portal.
+- status presentation on the Cloud portal.
 
-### Placement
-
-Research implementation during Stage 02.5, but deploy production monitoring in Stage 9 after the main service inventory, cross-site connectivity, Backrest and update subsystem substantially exist.
-
-Do not assume full duplicate observability or centralized heavy log/metric replication unless a concrete requirement proves value.
+Do not assume Prometheus/Grafana/Netdata-class complexity without concrete need. `ntfy` remains a possible alert/push mechanism if Stage 8 proves push useful; Gotify is not preferred.
 
 ---
 
@@ -125,81 +107,91 @@ Do not assume full duplicate observability or centralized heavy log/metric repli
 
 ### Accepted base
 
-- Backrest is the accepted future backup management/orchestration direction;
-- Restic remains acceptable as the underlying backup engine.
-
-### Functional intent
-
-- protect `edge` application/configuration state;
-- maintain verified restore capability;
-- evaluate geographically independent copies of selected Home/PAI data;
-- avoid treating same-VPS storage as complete disaster recovery.
+- Backrest is the accepted backup management/orchestration direction;
+- Restic is the accepted underlying engine family.
 
 ### Placement
 
-Stage 7 after the primary infrastructure service inventory is substantially complete. Backrest restore acceptance must precede Stage 8 Semaphore/update testing.
+**Stage 6 — Edge Backrest & Recovery.**
 
-### Still unresolved
+Functional intent:
 
-- repository destinations;
-- Home ↔ Cloud backup division;
-- what Home/PAI data warrants off-site replication;
-- whether external object storage should complement VPS-local storage;
-- retention and restore policy.
+- protect `edge` application/configuration state;
+- maintain verified restore capability;
+- decide repository/off-site topology against the final service/data inventory;
+- avoid treating same-VPS storage as complete disaster recovery.
+
+Exact repositories, retention and schedules are Stage 6 implementation details, not Stage 02.5 blockers.
 
 ---
 
-## 5. Working storage, file access, synchronization and Obsidian
+## 5. Knowledge replication and working data
 
-### Accepted functional requirements
+### Cross-project ownership
 
-- selected VPS working storage accessible from MacBook, iPhone/iPad and `ai-node`;
-- web file browsing/upload/download/editing;
-- same working data usable by n8n and cloud AI agents where useful;
-- continuous synchronization of selected working directories where justified;
-- free/self-hosted Obsidian synchronization without paid Obsidian Sync;
-- canonical Obsidian vault remains on `ai-node` at `/srv/ai-data/knowledge/obsidian`.
+The knowledge platform is not owned end-to-end by Cloud Infrastructure.
 
-### Dependency placement
+**Home Infrastructure** owns the future PVE 24/7 canonical knowledge foundation and server-side synchronization authority.
 
-Deploy in Stage 5 after Stage 3 private connectivity is deployed and accepted.
+**Personal Agents Infrastructure** owns the `ai-node` active RW replica and local AI producers/consumers after Home cutover.
 
-### Still unresolved
+**Cloud Infrastructure** owns the `edge` active RW replica and Cloud-side n8n/Hermes/cloud-AI integration.
 
-- Filestash or alternative file layer;
-- network filesystem/access protocol;
-- Syncthing or alternative synchronization mechanism;
-- exact role of `edge` in Obsidian synchronization;
-- concrete Obsidian synchronization product/mechanism;
-- conflict/versioning semantics.
+Until Home migration reaches explicit acceptance, the existing `ai-node:/srv/ai-data/knowledge/obsidian` remains factual current runtime state.
 
-SFTPGo, Self-hosted LiveSync/CouchDB, Syncthing or another proposal is not accepted merely because it appeared in an earlier draft.
+### Stage 5 placement
+
+**Stage 5 — Edge Knowledge Replication & Data Integration.**
+
+Stage 5 begins with an expanded read-only cross-project audit before any mutation.
+
+The audit must establish:
+
+- actual accepted PVE canonical path/filesystem/backing storage;
+- capacity/filesystem health;
+- ownership/permissions/export semantics;
+- Home-selected sync mechanism/version/runtime/peer model;
+- conflict/versioning and accepted outage/reconnect behavior;
+- actual PVE ↔ `ai-node` synchronization health;
+- CT206 relevance if retained;
+- CT208/Backrest canonical-knowledge protection and restore status;
+- `ai-node` replica path, sync health and producer/consumer permissions;
+- Stage 3 NetBird route/DNS non-regression;
+- Stage 4 Hermes/vLLM non-regression;
+- `edge` storage/path and actual RW/RO consumers.
+
+If Home PVE canonical migration is not accepted when Stage 5 begins, Stage 5 stops before mutation and reconciles the dependency.
+
+### Implementation principle
+
+- reuse the Home-accepted server-side synchronization mechanism by default;
+- do not create a second primary synchronization engine for the same knowledge tree without concrete incompatibility and explicit superseding acceptance;
+- `edge` should work from a local persistent replica rather than requiring every write to traverse a remote filesystem;
+- verify bidirectional propagation, conflict behavior, peer outage/reconciliation and reboot persistence;
+- expose only minimum local paths needed by n8n/Hermes/tools;
+- working-file/web-file software such as Filestash or SFTPGo is **not preselected** and should be added only if Stage 5 audit proves a real Cloud-side requirement.
+
+### Explicitly removed from Cloud scope
+
+MacBook/iPhone/iPad Obsidian synchronization and product research for Self-hosted LiveSync/CouchDB, Remotely Save/WebDAV, iOS Syncthing clients or similar user-device mechanisms.
+
+That entire problem is deferred to a separate late Home Infrastructure user-integration branch.
 
 ---
 
 ## 6. Continuous information intake and change detection
 
-### Functional intent
+### Disposition
 
-Use the 24/7 foreign Internet presence of `edge` to continuously observe external information sources and initiate workflows when useful changes occur.
+**POST-INFRASTRUCTURE WORKFLOW CAPABILITY.**
 
-Candidate inputs:
+Use the 24/7 foreign Internet presence of `edge` to monitor vendor documentation, releases, websites, feeds, email/webhooks/APIs and user-submitted material.
 
-- RSS/Atom feeds;
-- vendor documentation pages;
-- firmware/software release pages;
-- support portals;
-- selected websites;
-- email/webhooks/API events;
-- user-submitted material.
+Preferred first implementation is n8n + Hermes + existing protocols/tools. A dedicated change-detection/feed product is installed only if a real workflow proves n8n insufficient.
 
-High-value example:
+Example:
 
-`edge` detects a new OEM document → n8n acquires/queues it → Hermes and/or PAI processing is invoked as appropriate → PAI performs local OCR/translation/knowledge work where required → result is stored in canonical knowledge and a notification is sent.
-
-### Placement
-
-Actual vendor/document watchers, content rules and workflow logic belong to the post-infrastructure automation/workflow layer. A dedicated change-detection/feed product is installed only if a concrete later requirement proves n8n/ordinary protocols insufficient.
+`edge` detects a new OEM document → n8n queues it → Hermes and/or PAI processing is invoked → local/cloud AI is selected as appropriate → result is written to the `edge` knowledge replica → server-side sync propagates it to PVE canonical knowledge.
 
 ---
 
@@ -211,81 +203,48 @@ Actual vendor/document watchers, content rules and workflow logic belong to the 
 - Codex CLI
 - Antigravity CLI
 - Hermes Agent
+- n8n
+- OpenClaw in Home/PAI
+- vLLM on `ai-node`
 
-### Accepted role separation
+### Role separation
 
-**CloudCLI — ручной Cloud AI workspace.** Provides the user's remote/manual cloud-AI working surface on `edge`.
+**CloudCLI** — manual Cloud AI workspace.  
+**Codex CLI** — specialized OpenAI coding/agent executor.  
+**Antigravity CLI / `agy`** — specialized Google cloud-agent/coding executor.  
+**Hermes** — persistent cloud-side agentic reasoning/tool/supervision layer.  
+**n8n** — deterministic workflow orchestrator.  
+**OpenClaw** — Home/PAI local agent.  
+**vLLM** — local inference backend available to Hermes after private connectivity and minimal exposure are accepted.
 
-**Codex CLI — специализированный OpenAI coding/agent executor.** Used directly by the user and delegatable by Hermes.
-
-**Antigravity CLI / `agy` — специализированный Google cloud-agent/coding executor.** Used directly by the user and delegatable by Hermes.
-
-**Hermes Agent — постоянный облачный агент на `edge`.** Performs agentic reasoning, tool use, supervisory logic and delegation in parallel with n8n.
-
-**n8n — deterministic workflow orchestrator.** Handles triggers, schedules, APIs, data routing and explicit workflow state rather than replacing Hermes reasoning.
-
-**OpenClaw in Home/PAI — локальный персональный агент.** Remains the Home/PAI-side agent centered on local resources and local inference.
-
-**vLLM on `ai-node` — локальный inference backend.** Hermes uses it after Stage 3 private connectivity is accepted.
-
-### Stage 4 placement
-
-Hermes is the sole selected Remaining Standalone Core Service, but deployment is intentionally Stage 4 so the complete Hermes acceptance can include local vLLM from the start.
-
-Preferred deployment is host-native under `core`. Docker is not preferred because Hermes must directly reuse the existing host-native Codex and Antigravity executors and their user/runtime context; containerizing it would add avoidable bridging.
-
-Target infrastructure flow:
-
-```text
-Internet / schedule / mail / webhook
-                |
-               n8n
-                |
-                v
-             Hermes
-        agentic reasoning
-          +-----+-----+
-          |     |     |
-          v     v     v
-        Codex   AGY   vLLM
-          |            ^
-          v            |
-       result      ai-node over
-          |         Stage 3 fabric
-          v
-         n8n
-```
-
-Stage 4 verifies both the cloud-executor path and actual `Hermes -> vLLM` inference. Actual user-specific agent tasks remain post-infrastructure workflows.
+Stage 4 verifies both cloud-executor and real `Hermes -> vLLM` paths. User-specific agent tasks remain post-infrastructure workflows.
 
 ---
 
 ## 8. Bounded AI web research and intelligence jobs
 
-### Functional intent
+### Disposition
 
-Run scheduled or event-triggered narrow research tasks rather than an unconstrained autonomous crawler.
+**POST-INFRASTRUCTURE WORKFLOW CAPABILITY.**
 
 Examples:
 
-- analyze release changes after a monitored project updates;
-- summarize vendor documentation changes;
-- collect current community reports about a detected firmware/software release;
-- prepare a structured research report for Obsidian or notification;
+- analyze release changes;
+- summarize vendor documentation updates;
+- collect bounded community reports;
+- prepare structured research reports for knowledge;
 - periodically research narrowly defined topics;
-- pause for user approval before selected consequential follow-up actions.
+- request human approval before consequential follow-up.
 
-### Placement
-
-Post-infrastructure workflows using n8n + Hermes + Codex/Antigravity + PAI/local vLLM as appropriate. Do not install a separate metasearch/research service unless a concrete workflow later proves it necessary.
+No standalone SearXNG/Karakeep/research stack is selected by assumption.
 
 ---
 
 ## 9. Cloud ↔ Home/PAI private connectivity and durable handoff
 
-### Accepted infrastructure foundation
+### Accepted foundation
 
-Existing self-hosted Home NetBird is **SELECTED / REUSE EXISTING** as the Stage 3 bidirectional routed private fabric.
+Existing self-hosted Home NetBird is **SELECTED / REUSE EXISTING**.
 
 Detailed acceptance:
 
@@ -293,56 +252,44 @@ Detailed acceptance:
 
 Accepted architecture:
 
-- CT300 `remote-access` remains the Home NetBird routing peer at `192.168.1.90`;
-- NetBird account IPv4 overlay is `100.105.0.0/16`;
-- Home LAN is `192.168.1.0/24`;
-- `edge` becomes an ordinary host-native NetBird service peer;
-- `edge` gets Home LAN reachability but does **not** get the existing Home `0.0.0.0/0` Internet resource;
-- `edge` therefore keeps direct provider-local Internet egress;
-- Home/PAI clientless hosts reach `edge` through gateway-level `100.105.0.0/16 via 192.168.1.90` routing on both VM100 and MikroTik;
-- reuse/verify existing NetBird-managed Site-to-VPN masquerade instead of adding duplicate NAT by assumption;
-- reuse existing `.lan` split DNS: `192.168.1.1:53` only for match domain `lan`;
-- add `edge.lan` through the existing Home DNS mechanism after Stage 3 enrollment/routing acceptance;
-- direct WireGuard and Tailscale are rejected as duplicate parallel backbones;
-- AmneziaWG is contingency only if real NetBird deployment acceptance demonstrates an unresolved transport/DPI failure.
+- CT300 remains Home routing peer at `192.168.1.90`;
+- NetBird account overlay `100.105.0.0/16`;
+- Home LAN `192.168.1.0/24`;
+- `edge` becomes ordinary host-native service peer;
+- `edge` gets Home LAN reachability but not Home `0.0.0.0/0` Internet exit;
+- Home/PAI clientless hosts reach `edge` through gateway-level routing via CT300;
+- reuse `.lan` split DNS;
+- reuse existing NetBird-managed masquerade before considering duplicate NAT;
+- direct WireGuard/Tailscale rejected as duplicate backbones;
+- AmneziaWG contingency only if real Stage 3 acceptance proves NetBird transport failure.
 
-Fresh audit also established that the current remote-user Home Internet Exit is intentionally separate: CT300's own default gateway is MikroTik `192.168.1.1`, while NetBird traffic arriving through `wt0` uses a policy table whose default is VRRP VIP `192.168.1.254`, normally reaching VM100/Mihomo.
+### Durable application-level handoff
 
-### Application-level durable store-and-forward — гарантированная отложенная доставка задач
-
-Cross-site workflows should later survive temporary destination unavailability through persisted state, retry/resume, observable outcomes and safe re-delivery where required.
-
-This requirement does not imply a dedicated message broker. It is a post-infrastructure workflow concern to implement when real cross-site jobs exist.
-
-Connectivity foundation and application-level task durability are separate layers.
+Persisted retry/resume and safe re-delivery belong to real post-infrastructure workflows. This requirement does not imply a dedicated broker.
 
 ---
 
-## 10. Late lifecycle, monitoring and presentation
+## 10. Lifecycle, monitoring and presentation
 
-### Stage 7 — Backrest & Recovery
+### Stage 6 — Backrest & Recovery
 
-Deploy after the main service inventory is substantially complete. Verify restore before update testing.
+Deploy after main service/data integration and verify restore before update testing.
 
-### Stage 8 — Semaphore + `update.escloud.us`
+### Stage 7 — Semaphore + `update.escloud.us`
 
-Semaphore is the accepted operational execution product. The dedicated maintenance/update page lives at `update.escloud.us`, not inside `app.escloud.us`.
+Semaphore is accepted for operational execution. `update.escloud.us` is a separate maintenance/update UI implemented after the real backend contract exists.
 
-`update.escloud.us` is built in a separate Codex substage only after the real update backend contract is known.
+### Stage 8 — Monitoring, Heartbeats & Alerts
 
-### Stage 9 — Monitoring, Heartbeats & Alerts
+Research/finalize and deploy against the stable inventory.
 
-Deploy after the service inventory, cross-site connectivity, Backrest and update subsystem exist so production monitoring covers the finished infrastructure in one coherent stage.
+### Stage 9 — `app.escloud.us`
 
-### Stage 10 — `app.escloud.us`
+Navigation plus concise infrastructure/status presentation after monitoring/status sources exist. Detailed maintenance controls remain on `update.escloud.us`.
 
-Build after monitoring/status sources and final service inventory are known. The page provides navigation and concise status/summary information, while detailed update controls remain on `update.escloud.us`.
+### Stage 10 — Final integrated infrastructure acceptance
 
-`app.escloud.us` is built in a separate Codex substage.
-
-### Stage 11 — Final integrated infrastructure acceptance
-
-Infrastructure is complete only after all selected services, cross-site integration, backup/restore, update/maintenance, monitoring, portal and cleanup are accepted.
+Finite Cloud infrastructure closes only after selected services, cross-site integration, restore, update/maintenance, monitoring, portal and cleanup are accepted.
 
 ---
 
@@ -350,35 +297,40 @@ Infrastructure is complete only after all selected services, cross-site integrat
 
 ### Password / 2FA vault
 
-Potential future cross-platform/self-hosted credential service. Low priority while the existing Apple/iCloud Passwords workflow remains satisfactory.
+**DEFERRED / OPTIONAL.** Existing Apple/iCloud Passwords workflow remains sufficient absent a changed requirement. 2FAuth is rejected as a separate requirement.
 
 ### Messaging/bot interface
 
-Telegram or another messaging surface may become a frontend for commands, notifications, approvals and status. Treat it as an interface to workflows, not another orchestration platform.
+**DEFERRED TO USER WORKFLOWS.** Treat it as an interface to workflows, not another orchestration platform.
 
-### Limited failover/secondary endpoint
+### Limited failover / secondary endpoint
 
-Consider only after the primary Home/PAI/Cloud architecture is complete. Do not design a duplicate cloud copy of Home Infrastructure.
+**DEFERRED.** Consider only after the primary architecture is complete and a concrete failure requirement exists.
+
+### Generic server-control UI
+
+**REJECTED.** Do not add Portainer/Cockpit-class duplicate control planes without a concrete need.
 
 ---
 
-## Explicitly outside the current `edge` scope
+## Explicitly outside current `edge` scope
 
-- authoritative/recursive home DNS replacement;
-- full personal cloud drive as the main household storage platform;
+- Apple-device/Obsidian synchronization;
+- authoritative/recursive Home DNS replacement;
+- full household cloud drive platform;
 - calendar/contact DAV platform;
 - Git hosting/mirroring;
-- CI/CD and package/artifact registries;
-- generic test/sandbox/staging infrastructure;
-- standalone database service without a consumer;
-- separate generic job scheduler beside n8n;
-- standalone headless/interactive browser service;
+- CI/CD/package/artifact registries;
+- generic sandbox/staging infrastructure;
+- standalone database without a consumer;
+- separate generic scheduler beside n8n;
+- standalone browser service;
 - central MCP gateway;
-- multi-provider AI API router while subscription tools are primary;
+- generic multi-provider AI API router;
 - CGNAT bridge;
-- TURN/STUN;
+- standalone TURN/STUN;
 - MQTT/IoT broker;
-- VoIP/realtime communication stack;
+- VoIP/realtime communications;
 - game/media/download/photo hosting;
 - generic lab/learning use.
 
@@ -386,15 +338,12 @@ Consider only after the primary Home/PAI/Cloud architecture is complete. Do not 
 
 ## Current usage rule
 
-This scaffold is a **requirements map**, not an independent chronology source.
+This scaffold is a requirements map, not an independent chronology source.
 
-Current project work:
+Stage 02.5 is **COMPLETE / ACCEPTED**.
 
-`02.5 — Remaining Functional Scope Reconciliation & Research`
+`CLOUD_STAGE_02_5_FINAL_SCOPE_ACCEPTANCE=PASS`
 
-Completed research blocks:
+Next production stage:
 
-- Hermes Agent selection;
-- Cross-site Connectivity Foundation selection.
-
-Immediate next research block: **Cross-site Data & Knowledge Services — working files, web file access, selected-directory synchronization and free/self-hosted Obsidian synchronization/edge role**.
+`03 — Edge Cross-site Connectivity Foundation`
