@@ -2,209 +2,208 @@
 
 ## Canonical checkpoint
 
-**Current implementation stage:** Stage 1 — Base `edge` Platform — **COMPLETE / ACCEPTED**  
-**Completed work branch:** `01 — Edge Clean Rebuild & Base Platform Deployment`  
-**Next work branch:** `02 — Edge Core Applications`  
+**Current implementation stage:** Stage 2 — Edge Core Applications — **IN PROGRESS**  
+**Current work branch:** `02 — Edge Core Applications`  
 **Primary GitHub repository:** `Eugene-SN/Cloud-Infrastructure`
 
-`EDGE_STAGE1_FINAL_INTEGRATED_ACCEPTANCE=PASS` on 2026-09-17. Stage 1 production non-regression passed and no remaining Stage 1 runtime blocker is known.
+Stage 0 and Stage 1 are **COMPLETE / ACCEPTED**. `EDGE_STAGE1_FINAL_INTEGRATED_ACCEPTANCE=PASS` on 2026-09-17. Stage 2 has begun; n8n is the first fully restored and integrated Stage 2 application component.
 
 ## Host
 
-- logical node: `edge`;
-- FQDN: `edge.escloud.us`;
-- Ubuntu 26.04.1 LTS;
-- kernel `7.0.0-31-generic`;
+- logical node `edge`, FQDN `edge.escloud.us`;
+- Ubuntu 26.04.1 LTS, kernel `7.0.0-31-generic`;
 - KVM x86_64, 2 vCPU, ~15 GiB RAM;
-- root ext4 filesystem class ~155 GiB;
-- swap `/swap.img` 4 GiB;
-- IPv4 `45.92.156.17/24`, gateway `45.92.156.1`;
-- IPv6 `2a0c:b847:ffff:283::a/64`, gateway `2a0c:b847:ffff::1`;
-- timezone intentionally retained as `Europe/Moscow`;
-- root SSH key-only access through accepted `ssh.socket` activation;
+- IPv4 `45.92.156.17/24`; IPv6 `2a0c:b847:ffff:283::a/64`;
+- timezone `Europe/Moscow`;
+- root SSH key-only through `ssh.socket`;
+- 4 GiB swap;
 - QEMU guest agent active;
-- journald `SystemMaxUse=500M`;
-- system state `running`, failed units `0` at final Stage 1 acceptance.
+- journald `SystemMaxUse=500M`.
+
+`edge.escloud.us` public DNS is accepted as:
+
+- A `45.92.156.17`;
+- AAAA `2a0c:b847:ffff:283::a`.
 
 ## Runtime foundation
 
-### Docker
-
 - Docker Engine `29.8.1`;
 - Docker Compose `5.5.1`;
-- containerd active/enabled;
-- Docker root `/var/lib/docker`;
-- `/etc/docker/daemon.json` uses `live-restore: true`;
-- Docker + Compose are the default runtime for suitable application services; host-native remains valid where materially simpler.
+- containerd active;
+- Docker `live-restore: true`;
+- `/opt/<service>` runtime definitions/scripts;
+- `/srv/<service>` persistent state;
+- `/etc/<service>` host-native configuration;
+- `/var/www/<site>` static roots.
 
-### Persistent layout contract
+Shared host service account:
 
-Accepted convention:
+- user/group `core`;
+- UID/GID `1000:1000`;
+- home `/home/core`, mode `0750`;
+- password locked;
+- no sudo and no Docker group membership;
+- default owner for compatible application persistent state; preserve upstream container UID/GID when required.
 
-- `/opt/<service>` — runtime definitions/scripts;
-- `/srv/<service>` — persistent application state;
-- `/etc/<service>` — host-native configuration;
-- `/var/www/<site>` — static web roots.
-
-Current Stage 1 paths conform to this model, including `/opt/vpn-stack`, `/opt/authelia`, `/srv/authelia`, `/etc/xray`, `/etc/hysteria`, `/etc/nginx`, `/etc/letsencrypt`, `/var/www/escloud.us/public`, and `/var/www/letsencrypt`.
-
-## Public ingress and VPN edge
+## Stage 1 ingress / VPN foundation
 
 ### nginx
 
 - nginx `1.28.3-2ubuntu1.11`;
 - public TCP/80 IPv4/IPv6;
-- loopback fallback `127.0.0.1:8080` with Proxy Protocol;
+- loopback TLS fallback `127.0.0.1:8080 proxy_protocol`;
 - ACME webroot `/var/www/letsencrypt`;
-- public webroot `/var/www/escloud.us/public`;
-- `/health` returns `ok`.
+- public masking root `/var/www/escloud.us/public`.
 
-### Xray
+### Xray / Hysteria2
 
-- version `26.3.27`;
-- host-native, active/enabled;
-- owns public TCP/443;
-- VLESS/TLS;
-- fallback to nginx `127.0.0.1:8080` with `xver=1`;
-- preserved client count: 2.
+- Xray `26.3.27`, host-native, owns public TCP/443 and falls back to nginx `127.0.0.1:8080` with `xver=1`;
+- Hysteria2 `2.12.3`, host-native, owns public UDP/443, strict SNI guard, userpass auth;
+- accepted public listeners remain TCP/22, TCP/80, TCP/443 and UDP/443 only.
 
-### Hysteria2
+### Authelia
 
-- version `2.12.3`;
-- host-native, active/enabled;
-- owns public UDP/443;
-- `sniGuard: strict`;
-- `userpass` authentication;
-- masquerade root `/var/www/escloud.us/public`;
-- preserved user count: 2.
+- Authelia `4.39.27`;
+- `/opt/authelia/compose.yaml`, persistent `/srv/authelia`;
+- container `authelia`, `restart: unless-stopped`;
+- loopback `127.0.0.1:19091 -> 9091/tcp`;
+- current accepted state `running/healthy`;
+- `auth.escloud.us` ingress is Xray -> nginx -> Authelia.
 
-### Public listener contract
-
-Only these wildcard/public listeners are accepted at Stage 1:
-
-- TCP/22 — SSH;
-- TCP/80 — nginx;
-- TCP/443 — Xray;
-- UDP/443 — Hysteria2.
-
-Expected loopback listeners include nginx `127.0.0.1:8080` and Authelia `127.0.0.1:19091`.
+Current protected namespace rules include `app`, `n8n`, `backup`, `ops`, `docs`, `cloud`, `sync`, `code`, and `chat.escloud.us`; legacy `go.escloud.us` rule has been removed.
 
 ## TLS / certificate lifecycle
 
-- certificate name `escloud.us`;
-- Certbot `4.0.0`;
-- ECDSA P-256;
-- active lineage `/etc/letsencrypt/live/escloud.us`;
-- SANs cover `escloud.us`, `app`, `auth`, `chat`, `cloud`, `code`, `docs`, `go`, `mail`, and `sync.escloud.us`;
+Certificate name: `escloud.us`; Certbot `4.0.0`; active lineage `/etc/letsencrypt/live/escloud.us`.
+
+Accepted current SAN set:
+
+- `escloud.us`;
+- `app.escloud.us`;
+- `auth.escloud.us`;
+- `backup.escloud.us`;
+- `chat.escloud.us`;
+- `cloud.escloud.us`;
+- `code.escloud.us`;
+- `docs.escloud.us`;
+- `mail.escloud.us`;
+- `n8n.escloud.us`;
+- `ops.escloud.us`;
+- `sync.escloud.us`.
+
+`go.escloud.us` is no longer part of the certificate target.
+
 - Certbot timer active/enabled;
 - deploy hook `/etc/letsencrypt/renewal-hooks/deploy/20-vpn-cert-sync`;
-- sync script `/opt/vpn-stack/scripts/xray-cert-sync.sh`;
-- certificate copies for Xray/Hysteria2 verified;
-- final Stage 1 certificate validity gate PASS.
+- Xray/Hysteria certificate fingerprints matched the live lineage after namespace normalization;
+- manual certificate domain source `/opt/vpn-stack/state/web-domains.txt`, SHA256 `cab0467df32ef5cbed2af58f0ac91624962632de84af8faf86286788ca4a7eb9`;
+- `/opt/vpn-stack/scripts/maintctl` SHA256 `0e7b2b2f6b1a3b3d6563157520d15060e3c29ce64c94e147035a3beddced3257`;
+- `maintctl` primary domain file and fallback domain set match the accepted certificate SAN set; `maintctl web-check` passed for every accepted hostname.
 
-## Public masking page
+## Domain namespace
 
-`EDGE_STAGE1_PUBLIC_MASKING_PAGE_ACCEPTANCE=PASS`.
+Canonical allocation is documented in `DOMAIN_NAMESPACE.md`.
 
-Accepted page:
+Active/current Stage 2 names:
 
-- `/var/www/escloud.us/public/index.html`;
-- title `ES Cloud — Private Workspace`;
-- size `22014` bytes;
-- SHA256 `73ff3e57afa08c4f007f72902c1f2d3c8cf4e53920eabd10a86e32630106318e`;
-- self-contained static implementation;
-- all apparent navigation opens a local visual login/password dialog;
-- entered values are not transmitted, stored or logged by page JavaScript.
+- `escloud.us` — public masking page;
+- `edge.escloud.us` — VPS infrastructure identity;
+- `auth.escloud.us` — Authelia;
+- `app.escloud.us` — future private Cloud Infrastructure portal;
+- `n8n.escloud.us` — n8n;
+- `code.escloud.us` — CloudCLI;
+- `mail.escloud.us` — Stalwart + Bulwark;
+- `backup.escloud.us` — Backrest;
+- `ops.escloud.us` — Semaphore.
 
-The historical `escloud.us — Private File Exchange` page is no longer required for current Stage 1 recovery. The earlier 1376-byte temporary replacement remains rejected/superseded.
+Reserved names:
 
-## Authelia / private-auth boundary
+- `docs.escloud.us` — future technical documentation library;
+- `chat.escloud.us` — future service reserve;
+- `cloud.escloud.us` — Stage 4 file-access layer;
+- `sync.escloud.us` — Stage 4 synchronization layer.
 
-- Authelia `4.39.27`;
-- Compose definition `/opt/authelia/compose.yaml`;
-- persistent state `/srv/authelia`;
-- container `authelia`, restart `unless-stopped`;
-- loopback publish `127.0.0.1:19091 -> 9091/tcp`;
-- current state `running/healthy` at acceptance;
-- preserved user database/secrets retained;
-- SQLite schema 29 accepted;
-- `auth.escloud.us` HTTP redirects to HTTPS;
-- HTTPS path is Xray TCP/443 -> nginx loopback fallback -> Authelia loopback backend;
-- no direct public TCP/19091 exposure.
+Legacy `go.escloud.us` is retired from target configuration after accepted migration to `n8n.escloud.us`; its Cloudflare DNS record may be removed.
 
-Stage 1 accepts this as the private authentication/ingress boundary. A full private Cloud Infrastructure portal is intentionally **deferred to Stage 2** rather than deploying a temporary portal that would immediately be replaced.
+## n8n — Stage 2 accepted production state
+
+`STAGE2_N8N_LOCAL_RESTORE_DEPLOYMENT=PASS`  
+`STAGE2_N8N_PUBLIC_IDENTITY_MIGRATION=PASS`  
+`STAGE2_N8N_INGRESS_DEPLOYMENT=PASS`  
+`STAGE2_N8N_COMPONENT_ACCEPTANCE=PASS`  
+`STAGE1_PRODUCTION_NON_REGRESSION=PASS`
+
+Runtime:
+
+- n8n `2.39.7`;
+- OCI image `docker.n8n.io/n8nio/n8n:stable`;
+- deployed image ID / repo digest `sha256:54323be085a6086acd87f612a25752d6582d3a0c0b07cc93c2b40a9356c3203b`;
+- container `n8n`;
+- restart policy `unless-stopped`;
+- backend publish `127.0.0.1:15678 -> 5678/tcp` only;
+- local readiness `/healthz/readiness` returned HTTP 200;
+- public canonical URL `https://n8n.escloud.us/`;
+- public HTTP redirects to HTTPS;
+- HTTPS path is Xray TCP/443 -> nginx `127.0.0.1:8080` -> Authelia auth request -> n8n loopback backend;
+- unauthenticated HTTPS request redirects to `https://auth.escloud.us/?rd=https://n8n.escloud.us/`;
+- served TLS certificate contains `n8n.escloud.us`;
+- no public TCP/15678 listener.
+
+Paths and ownership:
+
+- compose `/opt/n8n/compose.yaml`, root-owned mode `0644`, SHA256 `42009eb90d1411b168f4ff9fd072108021a8e9b2467f5c59a01bcf4dcc5ad5bf`;
+- persistent state `/srv/n8n`, owned `core:core` / UID:GID `1000:1000`, directory mode `0750`;
+- database `/srv/n8n/database.sqlite`, `core:core`, mode `0640`;
+- n8n config `/srv/n8n/config`, `core:core`, mode `0600`, SHA256 `a3dbdaaed5a50616b46f55bc8cd02bef592f5ba14f26f3198c0e816769f12431`;
+- nginx vhost `/etc/nginx/sites-available/n8n-escloud-us.conf`, enabled through `sites-enabled`, SHA256 `0c9e944233fa6243cb24f10d42157457d741f401bb555c62bb744382a03ed7ae`.
+
+Preserved/restored application state after migration:
+
+- SQLite quick/integrity checks `ok`;
+- workflows `2`;
+- credentials `1`;
+- executions `0`;
+- webhooks `0`;
+- projects `1`;
+- active workflows `0`;
+- schema migrations `254`;
+- latest migration `CreateAgentWorkflowDependencyTable1788522448804`;
+- preserved credential decryptability gate PASS without exposing secret content.
+
+n8n current identity variables:
+
+- `N8N_HOST=n8n.escloud.us`;
+- `N8N_PROTOCOL=https`;
+- `WEBHOOK_URL=https://n8n.escloud.us/`;
+- `N8N_EDITOR_BASE_URL=https://n8n.escloud.us/`.
+
+The old `go.escloud.us` identity is no longer present in n8n runtime/compose, Authelia target policy, or certificate SANs.
 
 ## Firewall
 
-`EDGE_STAGE1_FIREWALL_ACCEPTANCE=PASS`.
+UFW remains accepted from Stage 1:
 
-- UFW active/enabled;
-- logging low;
-- default incoming deny;
-- default outgoing allow;
-- default routed deny;
-- IPv6 enabled;
-- allowed inbound: TCP/22, TCP/80, TCP/443, UDP/443 for IPv4 and IPv6;
-- Docker-generated firewall rules remain enabled;
-- application containers should remain loopback-published by default and use nginx/Xray ingress unless a later accepted design requires otherwise.
+- active/enabled;
+- default incoming deny, outgoing allow, routed deny;
+- inbound TCP/22, TCP/80, TCP/443, UDP/443 for IPv4/IPv6;
+- Docker firewall rules enabled;
+- application containers remain loopback-published by default.
 
-## VPN management carry-forward
+## Recovery checkpoints
 
-Accepted scripts:
+Stage 1 local recovery archive remains:
 
-- `/opt/vpn-stack/scripts/maintctl` SHA256 `00f2bbe70f5adbb981e7a49b455ce40ae4c34980ce0b6fbb3d92eeb8dcca9f5d`;
-- `/opt/vpn-stack/scripts/vpnctl` SHA256 `39363af55c71140cdd8fe7946fbcc228a958ad834e21b3ede9833cb0ec13b5b3`.
+- `/srv/backups/edge-stage1/edge-stage1-base-20260916T234611Z.tar.gz`;
+- SHA256 `37486e763ddac4c5ef3a92a35c3dad49787d75ffd8b97499073c79af617cc566`.
 
-Accepted entrypoints:
+The external credential-bearing migration-preservation archive remains required during Stage 2 because other accepted services still need restoration/migration. Do not delete it after n8n alone.
 
-- `/root/maintctl -> /opt/vpn-stack/scripts/maintctl`;
-- `/usr/local/bin/maintctl -> /opt/vpn-stack/scripts/maintctl`;
-- `/usr/local/bin/vpnctl -> /opt/vpn-stack/scripts/vpnctl`.
-
-`maintctl` was preserved with exactly two accepted Stage 1 certificate-path adaptations. `maintctl help`, `maintctl dashboard`, and `vpnctl help` passed.
-
-## Stage 1 recovery checkpoint
-
-`EDGE_STAGE1_BASE_STATE_CHECKPOINT_ACCEPTANCE=PASS`.
-
-Local same-VPS checkpoint:
-
-- archive `/srv/backups/edge-stage1/edge-stage1-base-20260916T234611Z.tar.gz`;
-- SHA256 `37486e763ddac4c5ef3a92a35c3dad49787d75ffd8b97499073c79af617cc566`;
-- inventory and checksum files adjacent to the archive;
-- archive integrity/readability PASS;
-- critical archived file identities match live accepted state;
-- Authelia was quiesced for consistent persistent-state capture and returned healthy.
-
-This is a local base-state recovery checkpoint, not off-host DR. Future Backrest/Restic and off-site topology remain later-stage work.
-
-Stage 0 provider full-VPS backup and external migration-preservation archive remain separate historical/recovery layers.
-
-## Extension-point contract
-
-Accepted Stage 1 extension points:
-
-- public HTTP: nginx TCP/80;
-- public HTTPS: Xray TCP/443 -> nginx `127.0.0.1:8080`;
-- Hysteria2: UDP/443;
-- private auth backend: Authelia `127.0.0.1:19091`;
-- future application ingress: loopback backend -> nginx;
-- runtime definitions: `/opt/<service>`;
-- persistent state: `/srv/<service>`;
-- host-native configuration: `/etc/<service>`;
-- static roots: `/var/www/<site>`;
-- Home/PAI connectivity is not a Stage 1 foundation dependency.
-
-## Stage status and next branch
+## Current stage boundary
 
 Stage 0: **COMPLETE / ACCEPTED**.  
 Stage 1: **COMPLETE / ACCEPTED**.  
-Final gate: `EDGE_STAGE1_FINAL_INTEGRATED_ACCEPTANCE=PASS`.
+Stage 2: **IN PROGRESS**.
 
-Next canonical work branch:
+Accepted Stage 2 products still pending deployment/integration include Stalwart + Bulwark, CloudCLI, Codex CLI, Antigravity CLI, Backrest, Semaphore, maintenance page, and the full private Cloud Infrastructure portal.
 
-`02 — Edge Core Applications`
-
-Stage 2 must follow the accepted-first workflow: reconstruct/deploy already accepted carry-forward applications where their implementation is known, and research only genuinely unresolved adjacent mechanisms. Current Stage 2 candidates include Stalwart, Bulwark, n8n, CloudCLI, Codex CLI, Antigravity CLI, Backrest, Semaphore, maintenance page, and the full private Cloud Infrastructure portal.
-
-Canonical Obsidian remains on `ai-node` at `/srv/ai-data/knowledge/obsidian`; no Stage 1 acceptance changes that invariant.
+Canonical Obsidian vault remains on `ai-node` at `/srv/ai-data/knowledge/obsidian`.
