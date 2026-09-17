@@ -9,7 +9,7 @@ Completed work branch:
 
 `01 — Edge Clean Rebuild & Base Platform Deployment`
 
-Next work branch:
+Current work branch:
 
 `02 — Edge Core Applications`
 
@@ -28,6 +28,7 @@ Unless superseded by a later ACCEPTED decision:
 7. VPN/DPI-bypass functionality and any future private infrastructure backbone are separate concerns.
 8. Single-operator simplicity is preferred over enterprise-style complexity without demonstrated need.
 9. Unresolved future products/mechanisms are selected stage-by-stage rather than precommitted globally.
+10. Presentation, backup and maintenance tooling that depends on the final service inventory should be deployed late rather than repeatedly reworked while the server composition is still changing.
 
 ## Accepted Stage 1 platform architecture
 
@@ -109,7 +110,7 @@ Authelia architecture:
 - public auth path: Xray TCP/443 -> nginx loopback fallback -> Authelia;
 - direct public TCP/19091 is not part of the accepted exposure contract.
 
-A separate temporary private Cloud portal was deliberately not introduced in Stage 1. The accepted Stage 1 requirement is the functioning private auth/ingress boundary; the full dedicated Cloud Infrastructure portal is deferred to Stage 2.
+A separate temporary private Cloud portal was deliberately not introduced in Stage 1. The accepted requirement is the functioning private auth/ingress boundary; the dedicated Cloud Infrastructure portal is intentionally deferred until the final service inventory and integrations are substantially stable.
 
 ### Firewall
 
@@ -150,17 +151,31 @@ Local base-state recovery checkpoint:
 
 This checkpoint is deliberately same-VPS and is not complete disaster recovery. Future Backrest/Restic/off-site topology remains later-stage work. Stage 0 provider backup and external migration archive remain separate recovery layers.
 
+## Late-stage portal and operations lifecycle
+
+The following sequencing is ACCEPTED because these components depend on a stable server-wide service inventory and operational contract:
+
+1. Complete the functional service deployment and integration stages first.
+2. Deploy `app.escloud.us` only near the end, once the complete service structure is known, so it can be built once as the private Cloud Infrastructure home/overview rather than repeatedly reworked.
+3. Portal scope is intentionally determined at that late stage from the actual final server structure. Baseline intent is a unified service entry point plus simple useful status/monitoring. The existing `home.lan` implementation is a reference point, not a template that must be copied verbatim. A compact Home Infrastructure monitoring summary may be mirrored into a separate collapsed-by-default portal section if it proves useful and simple.
+4. Do not turn the portal into another operational control plane or monitoring stack by default. Prefer simple read-only integrations and existing health/status sources; decide any richer monitoring only when portal implementation begins.
+5. Deploy and configure **Backrest before Semaphore testing**. Backup repositories, policies, exclusions, retention and restore acceptance are defined against the substantially complete server state so pre-update backups can be used during maintenance/update testing.
+6. Deploy **Semaphore and the maintenance page together** as one operational workstream. The maintenance page should integrate with Semaphore for visible procedure state/control while update workflows are being tested.
+7. The existing PVE/Home update tool and maintenance workflow are the accepted engineering reference for the `edge` maintenance implementation. Reuse proven concepts and behavior after audit, but adapt/optimize them for `edge`; do not blindly clone PVE-specific assumptions or implementation.
+8. Final integrated acceptance follows Backrest restore acceptance, Semaphore/update-procedure acceptance, maintenance-page integration acceptance and late-stage cleanup.
+
 ## Extension boundaries for later stages
 
 Stage 1 reserves, but does not preselect the implementation of, later capabilities:
 
 - future public/private WebUI services: loopback backend -> nginx;
-- machine APIs/webhooks: define per consumer when Stage 2+ requires them;
+- machine APIs/webhooks: define per consumer when required;
 - working storage: `/srv/<service or domain>` once selected;
-- monitoring: later-stage concern;
+- monitoring: evaluate from concrete needs; avoid a full metrics stack without demonstrated value;
 - Home/PAI connectivity: later-stage concern;
-- full private Cloud portal/status UI: Stage 2;
-- Backrest/off-site DR: Stage 2+;
+- full private Cloud portal/status UI: late-stage, after the service inventory is substantially complete;
+- Backrest/off-site DR: final operations/lifecycle work, before Semaphore/update testing;
+- Semaphore + maintenance page: final operations/lifecycle work after Backrest is usable;
 - file/sync/Obsidian mechanisms: Stage 4;
 - cross-site connectivity: Stage 6.
 
@@ -180,9 +195,9 @@ Do not replace without a concrete incompatibility or changed requirement:
 
 Additional accepted directions:
 
-- Backrest using Restic for backup management;
-- dedicated Cloud Infrastructure portal replacing Homepage;
-- maintenance page + Semaphore replacing the legacy custom Maintenance Center.
+- Backrest using Restic for backup management, deployed late after the functional server composition stabilizes;
+- dedicated `app.escloud.us` Cloud Infrastructure portal replacing Homepage, deployed near the end with final scope defined from the actual service inventory;
+- Semaphore + maintenance page replacing the legacy custom Maintenance Center, deployed after Backrest and developed/tested together using the PVE/Home update workflow as the engineering reference.
 
 ## Architecture authority
 
