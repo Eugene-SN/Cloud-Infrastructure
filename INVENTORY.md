@@ -41,7 +41,7 @@ This inventory distinguishes live accepted runtime from future accepted/planned 
 | Authelia | LIVE / ACCEPTED | `4.39.27`; container `authelia`; `127.0.0.1:19091`; fresh operator account/secrets/storage; public `auth.escloud.us` |
 | n8n | LIVE / ACCEPTED | `2.39.7`; clean state; one new owner; `127.0.0.1:15678`; public `https://n8n.escloud.us/`; Authelia protected |
 | CloudCLI | LIVE / ACCEPTED | `1.37.3`; systemd `cloudcli.service`; one new local user; `127.0.0.1:18140`; public `https://code.escloud.us/`; Authelia protected |
-| Codex CLI | LIVE / ACCEPTED | `0.154.0`; clean install under `/home/core/.local`; fresh ChatGPT device authorization accepted |
+| Codex CLI | LIVE / ACCEPTED | `0.154.0`; official standalone runtime; fresh ChatGPT auth; managed app-server Remote Control enabled and server-side accepted |
 | Antigravity CLI | LIVE / ACCEPTED | `1.2.5`; `/home/core/.local/bin/agy`; fresh Google OAuth accepted; authenticated headless probe PASS |
 | Stalwart | TARGET-ACCEPTED / pending Stage 2 | mail server; preserve useful mail account/data/settings but recreate credentials |
 | Bulwark | TARGET-ACCEPTED / pending Stage 2 | webmail frontend; fresh credentials/integration pending |
@@ -84,13 +84,19 @@ This inventory distinguishes live accepted runtime from future accepted/planned 
 ### Cloud AI CLI accepted identities
 
 - Node `22.22.1`, npm `9.2.0`;
-- Codex CLI `0.154.0`, `/home/core/.local`; fresh ChatGPT device authorization accepted;
-- Codex auth object `/home/core/.codex/auth.json`, `core:core`, mode `0600`; no legacy Codex auth/config restored;
+- Codex CLI `0.154.0` uses the official standalone install, not npm `@openai/codex`;
+- launcher `/home/core/.local/bin/codex` -> `/home/core/.codex/packages/standalone/current/bin/codex`;
+- fresh ChatGPT device authorization accepted and preserved across reinstall; auth object `/home/core/.codex/auth.json`, `core:core`, mode `0600`;
+- managed app-server backend `pid`, auto-update enabled, Remote Control enabled;
+- app-server/control runtime version `0.154.0` matches CLI;
+- control socket `/home/core/.codex/app-server-control/app-server-control.sock`, `core:core`, mode `0600`;
+- active managed processes: app-server with `--remote-control --listen unix://` and daemon `pid-update-loop`;
+- no public Codex/app-server network listener;
+- user configured Remote Control pairing on iPhone, MacBook and iPad; server-side acceptance PASS; client-originated end-to-end remote task acceptance not separately recorded yet;
 - Antigravity CLI `1.2.5`, `/home/core/.local/bin/agy`; fresh Google OAuth accepted;
 - Antigravity state root `/home/core/.gemini/antigravity-cli`; OAuth credential contents are not documented;
 - authenticated Antigravity headless probe returned `ANTIGRAVITY_AUTH_OK`, RC `0`;
-- Codex login status remained valid after Antigravity authorization;
-- legacy custom `codex-app-server` and `codex-runner` remain absent unless later demonstrated necessary.
+- legacy custom `codex-app-server` and `codex-runner` are absent; official managed daemon supersedes their function.
 
 ## Domain inventory
 
@@ -131,7 +137,7 @@ Current shared SANs: `escloud.us`, `app`, `auth`, `backup`, `chat`, `cloud`, `co
 | Backrest | TARGET-ACCEPTED | Stage 2 clean deployment pending |
 | Homepage | DO-NOT-CARRY-AS-IS | replaced by dedicated Cloud Infrastructure portal |
 | custom Maintenance Center | DO-NOT-CARRY-AS-IS | replaced by maintenance page + Semaphore |
-| Semaphore | TARGET-ACCEPTED | Stage 2 clean deployment pending |
+| Semaphore | TARGET-ACCEPTED | Stage 2 deployment pending |
 
 ## File/storage/synchronization — Stage 4 unresolved
 
