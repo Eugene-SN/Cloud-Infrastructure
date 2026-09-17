@@ -8,7 +8,7 @@
 
 Stage 0 and Stage 1 are **COMPLETE / ACCEPTED**. `EDGE_STAGE1_FINAL_INTEGRATED_ACCEPTANCE=PASS` on 2026-09-17.
 
-Current Stage 2 accepted application state includes clean-reinitialized Authelia, n8n and CloudCLI plus fresh authorization for Codex CLI and Antigravity CLI. Codex uses the official standalone runtime with managed Remote Control accepted server-side. Antigravity Remote Control is registered and running as the `core` user service with instance name `edge`.
+Current Stage 2 accepted application state includes clean-reinitialized Authelia, n8n and CloudCLI plus fresh authorization for Codex CLI and Antigravity CLI. Codex uses the official standalone runtime with managed Remote Control accepted server-side. Antigravity Remote Control is registered and running as the `core` user service with instance name `edge`; the user confirmed that `edge` is visible Online in the Antigravity Remote Control UI.
 
 ## Stage 2 rebuild / credential policy
 
@@ -176,7 +176,8 @@ Identity variables remain `N8N_HOST=n8n.escloud.us`, `N8N_PROTOCOL=https`, `WEBH
 `STAGE2_ANTIGRAVITY_USER_MANAGER_RECOVERY=PASS`  
 `STAGE2_ANTIGRAVITY_REMOTE_CONTROL_REGISTERED=PASS`  
 `STAGE2_ANTIGRAVITY_REMOTE_CONTROL_RUNNING=PASS`  
-`STAGE2_ANTIGRAVITY_HEADLESS_LINGER=PASS`
+`STAGE2_ANTIGRAVITY_HEADLESS_LINGER=PASS`  
+`STAGE2_ANTIGRAVITY_REMOTE_CONTROL_UI_ONLINE=PASS`
 
 - Node `22.22.1`;
 - npm `9.2.0`;
@@ -198,9 +199,30 @@ Identity variables remain `N8N_HOST=n8n.escloud.us`, `N8N_PROTOCOL=https`, `WEBH
 - active daemon command `/home/core/.local/bin/agy remote-control serve`;
 - `core` linger enabled so the user service persists on the headless VPS; `user@1000.service` active and user bus present;
 - `agy remote-control status` reports daemon `active` and instance name `edge`;
+- user confirmed `edge` is visible Online in the Antigravity Remote Control Instances UI;
 - authenticated Antigravity probe returned `ANTIGRAVITY_REMOTE_AUTH_OK`, RC `0` after Remote Control activation;
 - Codex authorization and managed daemon remained healthy after Antigravity Remote Control activation;
 - legacy custom `codex-app-server` and `codex-runner` remain absent; official Codex managed daemon replaces the legacy custom app-server service.
+
+## Stage 2 mail migration source checkpoint
+
+Mail production deployment is still pending. Read-only/recovery analysis of the preserved legacy state established the following source contract:
+
+- migration-preservation archive `/tmp/edge-migration-preservation-20260916T141048Z.tar.gz`, SHA256 `0203e5845f57bc1d04b384cef2b26a45fbff855c341e1edf1193034c34de9fdf` remains unchanged and must be retained until mail migration acceptance;
+- legacy Stalwart source version is `0.16.21`, image digest `sha256:93c574e52249c1ebf90061da2c4c0756a7b72abfcc1fec34506a03c2e38b5977`;
+- source storage is RocksDB under the preserved Stalwart state, ~111 MB;
+- logical source domain: `escloud.us`, manual DNS management and manual TLS certificate management;
+- source accounts: `es@escloud.us` (`Eugene S`, normal user) and `admin@escloud.us` (legacy system administrator); legacy authentication credentials are not migration inputs;
+- source DKIM object: RSA/SHA256 selector `v1-rsa-20260713`; the legacy private key is not carried forward;
+- source account `es@escloud.us` was captured through Vandelay `1.0.10` using a temporary recovery administrator, without using the user's legacy password;
+- retained temporary Vandelay migration archive `/tmp/stalwart-vandelay-capture/es.sqlite`, current SHA256 `45e4d80e421921440a936f0fdb24f7a8121adcbf7252b77b90812ca243823f42`, SQLite integrity `ok`;
+- captured useful user data: 6 mailboxes, 14 emails, 14 blobs (~405.2 KB), 2 address books, 1 calendar, 1 identity, 1 participant identity; no Sieve scripts, file nodes or calendar events were present;
+- one legacy `ContactCard` object (`id=b`, address book `c`) is malformed because it has no required UID; it contains meaningful `name` and `email` data and therefore must not be silently discarded;
+- the malformed ContactCard was not written into the Vandelay archive; legacy source and preserved archive were not modified;
+- migration plan constraint: reconstruct the malformed contact separately with a new valid UID during target migration, while keeping the source immutable;
+- all temporary recovery containers/networks used for source inspection were removed after each audit; production services remained non-regressed.
+
+No production Stalwart or Bulwark runtime exists yet on the clean `edge` build; production mail listeners and UFW mail rules remain absent until the deployment step.
 
 ## Firewall
 
