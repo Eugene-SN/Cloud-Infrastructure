@@ -18,8 +18,8 @@ The historical thematic Stage 3–7 grouping is no longer authoritative.
 
 Current planned post-Stage-02.5 sequence:
 
-1. Stage 3 — Hermes Agent Runtime;
-2. Stage 4 — Cross-site Connectivity Foundation;
+1. Stage 3 — Cross-site Connectivity Foundation;
+2. Stage 4 — Hermes Agent Runtime;
 3. Stage 5 — Cross-site Data & Knowledge Services;
 4. Stage 6 — conditional Remaining Infrastructure Services only if further research selects any;
 5. Stage 7 — Backrest & Recovery;
@@ -29,7 +29,7 @@ Current planned post-Stage-02.5 sequence:
 9. Stage 11 — Final Integrated Infrastructure Acceptance;
 10. post-infrastructure Automation & User Workflows as a continuous workstream.
 
-If Stage 6 is empty at Stage 02.5 closure, it should be removed and later numbering normalized rather than creating an empty deployment branch.
+If Stage 6 is empty at Stage 02.5 closure, remove it and normalize later numbering rather than creating an empty deployment branch.
 
 Products already explicitly ACCEPTED in `DECISIONS.md` are anchors and should not be re-opened without a concrete incompatibility or changed requirement.
 
@@ -162,7 +162,7 @@ Stage 7 after the primary infrastructure service inventory is substantially comp
 
 ### Dependency placement
 
-Deploy only after Stage 4 `edge ↔ ai-node ↔ PVE/Home` connectivity is selected, deployed and accepted.
+Deploy in Stage 5 after Stage 3 private connectivity is deployed and accepted.
 
 ### Still unresolved
 
@@ -226,11 +226,11 @@ Actual vendor/document watchers, content rules and workflow logic belong to the 
 
 **OpenClaw in Home/PAI — локальный персональный агент.** Remains the Home/PAI-side agent centered on local resources and local inference.
 
-**vLLM on `ai-node` — локальный inference backend.** Hermes may use it after Stage 4 connectivity is accepted.
+**vLLM on `ai-node` — локальный inference backend.** Hermes uses it after Stage 3 private connectivity is accepted.
 
-### Stage 3 placement
+### Stage 4 placement
 
-Hermes is the sole selected Remaining Standalone Core Service and therefore the only product in Stage 3.
+Hermes is the sole selected Remaining Standalone Core Service, but deployment is intentionally Stage 4 so the complete Hermes acceptance can include local vLLM from the start.
 
 Preferred deployment is host-native under `core`. Docker is not preferred because Hermes must directly reuse the existing host-native Codex and Antigravity executors and their user/runtime context; containerizing it would add avoidable bridging.
 
@@ -241,8 +241,6 @@ Internet / schedule / mail / webhook
                 |
                n8n
                 |
-        deterministic steps
-                |
                 v
              Hermes
         agentic reasoning
@@ -250,17 +248,15 @@ Internet / schedule / mail / webhook
           |     |     |
           v     v     v
         Codex   AGY   vLLM
-          |             ^
-          v             |
-       result     after Stage 4
-          |
+          |            ^
+          v            |
+       result      ai-node over
+          |         Stage 3 fabric
           v
          n8n
-          |
-notification / storage / next step
 ```
 
-Stage 3 verifies the local `n8n -> Hermes -> Codex/AGY -> Hermes -> n8n` infrastructure path. The local-vLLM branch waits for Stage 4 connectivity. Actual user-specific agent tasks remain post-infrastructure workflows.
+Stage 4 verifies both the cloud-executor path and actual `Hermes -> vLLM` inference. Actual user-specific agent tasks remain post-infrastructure workflows.
 
 ---
 
@@ -285,13 +281,32 @@ Post-infrastructure workflows using n8n + Hermes + Codex/Antigravity + PAI/local
 
 ---
 
-## 9. Cloud ↔ Home/PAI orchestration and durable handoff
+## 9. Cloud ↔ Home/PAI private connectivity and durable handoff
 
-### Infrastructure prerequisite: connectivity
+### Accepted infrastructure foundation
 
-Stage 4 must establish required connectivity among `edge`, `ai-node` and PVE/Home from actual flows.
+Existing self-hosted Home NetBird is **SELECTED / REUSE EXISTING** as the Stage 3 bidirectional routed private fabric.
 
-Private transport is not preselected. NetBird/WireGuard, authenticated HTTPS, another tunnel or another simple mechanism must be compared against real flows and operating conditions.
+Detailed acceptance:
+
+`STAGE_02_5_CONNECTIVITY_SELECTION_ACCEPTANCE_2026-09-17.md`
+
+Accepted architecture:
+
+- CT300 `remote-access` remains the Home NetBird routing peer at `192.168.1.90`;
+- NetBird account IPv4 overlay is `100.105.0.0/16`;
+- Home LAN is `192.168.1.0/24`;
+- `edge` becomes an ordinary host-native NetBird service peer;
+- `edge` gets Home LAN reachability but does **not** get the existing Home `0.0.0.0/0` Internet resource;
+- `edge` therefore keeps direct provider-local Internet egress;
+- Home/PAI clientless hosts reach `edge` through gateway-level `100.105.0.0/16 via 192.168.1.90` routing on both VM100 and MikroTik;
+- reuse/verify existing NetBird-managed Site-to-VPN masquerade instead of adding duplicate NAT by assumption;
+- reuse existing `.lan` split DNS: `192.168.1.1:53` only for match domain `lan`;
+- add `edge.lan` through the existing Home DNS mechanism after Stage 3 enrollment/routing acceptance;
+- direct WireGuard and Tailscale are rejected as duplicate parallel backbones;
+- AmneziaWG is contingency only if real NetBird deployment acceptance demonstrates an unresolved transport/DPI failure.
+
+Fresh audit also established that the current remote-user Home Internet Exit is intentionally separate: CT300's own default gateway is MikroTik `192.168.1.1`, while NetBird traffic arriving through `wt0` uses a policy table whose default is VRRP VIP `192.168.1.254`, normally reaching VM100/Mihomo.
 
 ### Application-level durable store-and-forward — гарантированная отложенная доставка задач
 
@@ -301,27 +316,25 @@ This requirement does not imply a dedicated message broker. It is a post-infrast
 
 Connectivity foundation and application-level task durability are separate layers.
 
-Existing Home Mihomo policy routing already covers Home-side foreign egress and should not be duplicated as a new Cloud capability.
-
 ---
 
 ## 10. Late lifecycle, monitoring and presentation
 
-### Stage 7 — Backrest & Recovery — резервное копирование и восстановление
+### Stage 7 — Backrest & Recovery
 
 Deploy after the main service inventory is substantially complete. Verify restore before update testing.
 
-### Stage 8 — Semaphore + `update.escloud.us` — обслуживание и обновления
+### Stage 8 — Semaphore + `update.escloud.us`
 
 Semaphore is the accepted operational execution product. The dedicated maintenance/update page lives at `update.escloud.us`, not inside `app.escloud.us`.
 
 `update.escloud.us` is built in a separate Codex substage only after the real update backend contract is known.
 
-### Stage 9 — Monitoring, Heartbeats & Alerts — мониторинг, heartbeat и оповещения
+### Stage 9 — Monitoring, Heartbeats & Alerts
 
 Deploy after the service inventory, cross-site connectivity, Backrest and update subsystem exist so production monitoring covers the finished infrastructure in one coherent stage.
 
-### Stage 10 — `app.escloud.us` — основной портал Cloud Infrastructure
+### Stage 10 — `app.escloud.us`
 
 Build after monitoring/status sources and final service inventory are known. The page provides navigation and concise status/summary information, while detailed update controls remain on `update.escloud.us`.
 
@@ -335,15 +348,15 @@ Infrastructure is complete only after all selected services, cross-site integrat
 
 ## 11. Optional / later capabilities
 
-### Password / 2FA vault — хранилище паролей и 2FA
+### Password / 2FA vault
 
 Potential future cross-platform/self-hosted credential service. Low priority while the existing Apple/iCloud Passwords workflow remains satisfactory.
 
-### Messaging/bot interface — интерфейс команд и уведомлений через мессенджер
+### Messaging/bot interface
 
 Telegram or another messaging surface may become a frontend for commands, notifications, approvals and status. Treat it as an interface to workflows, not another orchestration platform.
 
-### Limited failover/secondary endpoint — ограниченный резервный endpoint
+### Limited failover/secondary endpoint
 
 Consider only after the primary Home/PAI/Cloud architecture is complete. Do not design a duplicate cloud copy of Home Infrastructure.
 
@@ -379,4 +392,9 @@ Current project work:
 
 `02.5 — Remaining Functional Scope Reconciliation & Research`
 
-`Remaining Standalone Core Services` research is complete with **Hermes Agent selected**. The immediate next research block is **Cross-site Connectivity Foundation — определить реальные потоки и механизм базовой связи `edge ↔ ai-node ↔ PVE/Home`**.
+Completed research blocks:
+
+- Hermes Agent selection;
+- Cross-site Connectivity Foundation selection.
+
+Immediate next research block: **Cross-site Data & Knowledge Services — working files, web file access, selected-directory synchronization and free/self-hosted Obsidian synchronization/edge role**.
