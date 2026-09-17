@@ -2,16 +2,16 @@
 
 ## Semantics
 
-Fresh runtime verification outranks this file. This inventory records accepted live components, deferred targets, and unresolved later-stage choices.
+Fresh runtime verification outranks this file. This inventory records accepted live components, selected/deferred targets, and unresolved later-stage choices.
 
 ## Nodes
 
 | Node | Role | State |
 |---|---|---|
-| `edge` / `edge.escloud.us` | Cloud Infrastructure VPS | LIVE; Stage 0/1/2 accepted |
+| `edge` / `edge.escloud.us` | Cloud Infrastructure VPS | LIVE; Stage 0/1/2 accepted; Stage 02.5 research active |
 | `nl-core-vds` | historical legacy VPS identity | HISTORICAL ONLY |
-| `ai-node` | PAI compute/data/knowledge node | external dependency/context |
-| PVE / Home Infrastructure | home infrastructure plane | external dependency/context |
+| `ai-node` | PAI compute/data/knowledge node | external dependency/context; future cross-site peer |
+| PVE / Home Infrastructure | home infrastructure plane | external dependency/context; future cross-site peer |
 
 ## Live `edge` substrate
 
@@ -75,55 +75,94 @@ Fresh runtime verification outranks this file. This inventory records accepted l
 - `n8n.escloud.us` — live n8n;
 - `code.escloud.us` — live CloudCLI;
 - `mail.escloud.us` — live Stalwart + Bulwark;
-- `app.escloud.us` — deferred late-stage private Cloud Infrastructure portal;
-- `backup.escloud.us` — deferred late-stage Backrest;
-- `ops.escloud.us` — deferred late-stage Semaphore/maintenance;
+- `backup.escloud.us` — future Backrest management UI;
+- `ops.escloud.us` — future Semaphore operational execution UI;
+- `update.escloud.us` — future dedicated custom maintenance/update page; Cloudflare record already created by the user; implementation deferred to a dedicated Codex substage after Semaphore/update backend contract exists;
+- `app.escloud.us` — future final private Cloud Infrastructure portal/dashboard; dedicated Codex substage after monitoring/status sources exist;
 - `docs.escloud.us` — reserved;
 - `chat.escloud.us` — reserved;
-- `cloud.escloud.us` — later file-access layer;
-- `sync.escloud.us` — later synchronization layer;
+- `cloud.escloud.us` — future file-access layer; implementation unresolved;
+- `sync.escloud.us` — future synchronization layer; implementation unresolved;
 - `go.escloud.us` — retired.
 
-## Deferred late-stage Operations & Lifecycle
+## Stage 02.5 — active research inventory
 
-These are **not pending Stage 2 work**.
+### Remaining Standalone Core Services
 
-| Component | Status | Accepted sequencing |
-|---|---|---|
-| `app.escloud.us` portal | DEFERRED / ACCEPTED DIRECTION | near the end after service inventory stabilizes; unified launcher + simple useful status/monitoring; optional collapsed Home summary |
-| Backrest / Restic | DEFERRED / ACCEPTED DIRECTION | after functional server composition is substantially complete; define real backup/retention/restore policy |
-| Semaphore | DEFERRED / ACCEPTED DIRECTION | after Backrest is usable; update/maintenance automation |
-| maintenance page | DEFERRED / ACCEPTED DIRECTION | developed/tested together with Semaphore; PVE/Home updater is the reference, adapted for `edge` |
+Status: **RESEARCH NEXT**.
 
-## Later unresolved domains
+Goal: identify any additional full services that provide durable infrastructure value on `edge` and can be deployed/accepted independently before cross-site connectivity and late lifecycle layers.
 
-### Files / sync / Obsidian
+Do not include user-specific n8n workflows or agent tasks merely because they execute on `edge`.
 
-- Filestash — UNDER REVIEW;
+### Cross-site Connectivity Foundation
+
+Status: **UNRESOLVED / RESEARCH REQUIRED**.
+
+- real `edge ↔ ai-node ↔ PVE/Home` flows must be defined first;
+- NetBird is candidate only;
+- direct WireGuard is candidate only;
+- authenticated HTTPS/public mechanisms remain valid candidates where simpler;
+- final transport/topology must be driven by actual required flows and real connectivity conditions.
+
+### Cross-site Data & Knowledge Services
+
+Status: **UNRESOLVED / DEPENDS ON CONNECTIVITY**.
+
+- VPS working storage and web file management;
+- MacBook/iPhone/iPad/`ai-node` file access;
+- Filestash — candidate only;
 - SFTPGo — candidate only;
-- Syncthing — UNDER REVIEW by use case;
-- Self-hosted LiveSync/CouchDB — candidate only;
+- Syncthing — under review by use case;
+- selected-directory synchronization — unresolved;
+- Self-hosted LiveSync/CouchDB — candidate only for Obsidian;
+- other current free/self-hosted Obsidian mechanisms must be researched;
 - canonical Obsidian vault remains `/srv/ai-data/knowledge/obsidian` on `ai-node`;
 - `edge` role for Obsidian remains to be selected.
 
-### Home / PAI connectivity
+## Accepted late lifecycle targets
 
-- NetBird — candidate only, not preaccepted for `edge`;
-- direct WireGuard/private-link alternatives — unresolved;
-- authenticated HTTPS/public mechanisms — compare where simpler;
-- final cross-site topology must be driven by actual required flows.
+| Capability/component | Current status | Dependency placement |
+|---|---|---|
+| Backrest + Restic | PRODUCT DIRECTION ACCEPTED / DEPLOYMENT DEFERRED | after main infrastructure service inventory stabilizes; before Semaphore/update testing |
+| Semaphore | PRODUCT ACCEPTED / DEPLOYMENT DEFERRED | after Backrest restore path is usable |
+| `update.escloud.us` | CAPABILITY ACCEPTED / IMPLEMENTATION DEFERRED | dedicated Codex substage coupled to accepted Semaphore/update backend contract |
+| Infrastructure-wide monitoring | REQUIRED / PRODUCT UNRESOLVED | after services, connectivity, Backrest and update subsystem substantially exist |
+| Home/PVE/`ai-node` heartbeat monitoring | REQUIRED / PRODUCT UNRESOLVED | part of late monitoring after cross-site connectivity exists |
+| `app.escloud.us` | CAPABILITY ACCEPTED / IMPLEMENTATION DEFERRED | after monitoring/status sources and final service inventory are known; dedicated Codex substage |
+| Final integrated infrastructure acceptance | REQUIRED | after all above and final cleanup |
+
+## Post-infrastructure application/workflow layer
+
+These remain valid capabilities but are **not infrastructure-completion blockers** and are implemented after the service framework is accepted unless Stage 02.5 research finds that one requires a dedicated infrastructure service:
+
+- Universal Capture Inbox — low-friction submission of URLs/text/files/images/commands into workflows;
+- human-in-the-loop approvals — explicit approve/reject/choice gates in workflows;
+- mail-triggered automation;
+- continuous information intake/change detection workflows;
+- bounded AI research jobs;
+- durable application-level store-and-forward/retry for actual cross-site tasks;
+- optional messaging/bot command frontend;
+- orchestration among n8n, CloudCLI, Codex CLI, Antigravity CLI and PAI;
+- Hermes only if it proves a concrete gap not already covered by the accepted stack.
+
+## Optional capabilities still requiring disposition
+
+- password/2FA vault;
+- limited failover/secondary-endpoint role;
+- additional messaging/control frontend only if it adds value beyond the chosen workflow interaction surfaces.
 
 ## Recovery artifacts
 
 - historical baseline: `NL_CORE_VDS_Current_State_Baseline_2026-09-14.md`;
 - Stage 1 recovery archive `/srv/backups/edge-stage1/edge-stage1-base-20260916T234611Z.tar.gz`, SHA256 `37486e763ddac4c5ef3a92a35c3dad49787d75ffd8b97499073c79af617cc566`;
-- authoritative migration-preservation archive `/tmp/edge-migration-preservation-20260916T141048Z.tar.gz`, SHA256 `0203e5845f57bc1d04b384cef2b26a45fbff855c341e1edf1193034c34de9fdf`, retained for later legacy-reference work;
-- temporary Vandelay capture/extracted binaries removed after mail acceptance.
+- authoritative migration-preservation archive `/tmp/edge-migration-preservation-20260916T141048Z.tar.gz`, SHA256 `0203e5845f57bc1d04b384cef2b26a45fbff855c341e1edf1193034c34de9fdf`, retained for later legacy-reference work.
 
 ## Stage boundary
 
 Stage 0 — COMPLETE / ACCEPTED.  
 Stage 1 — COMPLETE / ACCEPTED.  
 Stage 2 — COMPLETE / ACCEPTED.  
+Stage 02.5 — ACTIVE / RESEARCH-ONLY.
 
-Next-stage scope must be reviewed before branch transition; do not infer that the historical title `03 — Edge Monitoring & Human Interaction` still maps cleanly to the remaining capabilities after the accepted late-stage portal/operations deferral.
+The old historical Stage 3–7 grouping is no longer authoritative. Exact replacement stage numbering will be accepted only after Stage 02.5 completes the research matrix and normalized service/product inventory.
