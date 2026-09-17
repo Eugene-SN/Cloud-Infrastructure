@@ -577,3 +577,55 @@ This sequencing was later found to conflict with the intended project workflow a
 - any interpretation that `app.escloud.us` should contain detailed maintenance/update controls;
 - any ordering that deploys files/sync/Obsidian before the required cross-site connectivity foundation;
 - any interpretation that user-specific n8n/agent workflows are blockers for final infrastructure acceptance.
+
+---
+
+## 2026-09-17T21:52:00+03:00 — Hermes selected for Stage 3 and numbered dependency-aware roadmap
+
+**Status:** ACCEPTED
+
+**Context:** Stage 02.5 research clarified that Hermes has a distinct intended role from n8n and from the already deployed CloudCLI/Codex/Antigravity tools. The user intends Home/PAI to use OpenClaw with local vLLM, while `edge` uses Hermes as the persistent cloud-side agent that can use cloud Codex/Antigravity execution and later local vLLM. CloudCLI/Codex/Antigravity remain directly usable manual tools/executors rather than replacing the persistent agent role.
+
+**Decision:**
+
+1. `Remaining Standalone Core Services` research selects **Hermes Agent** as the only additional full standalone service.
+2. Future Stage 3 is **`03 — Edge Hermes Agent Runtime`** and contains Hermes only plus the minimum infrastructure-level integration required to use already accepted executors.
+3. Role separation is explicit:
+   - n8n = deterministic automation/orchestration, triggers, schedules, APIs and workflow state;
+   - Hermes = persistent agentic reasoning, tools, supervision and delegation;
+   - CloudCLI = manual web/remote Cloud AI workspace;
+   - Codex CLI and Antigravity CLI = specialized executors usable manually and delegatable by Hermes;
+   - OpenClaw = Home/PAI local personal-agent role;
+   - vLLM on `ai-node` = local inference backend made available to Hermes only after cross-site connectivity exists.
+4. Hermes should invoke supported Codex/Antigravity providers/executors directly. Do not route Hermes through CloudCLI as an execution proxy.
+5. Preferred Hermes placement is **host-native under `core`**. This is an accepted exception to Docker-by-default because containerization would complicate direct reuse of the existing host-native Codex/Antigravity binaries and user/runtime/auth context. Reconsider Docker only for a concrete Stage 3 upstream/compatibility reason.
+6. Stage 3 must establish and verify the infrastructure path `n8n -> Hermes -> Codex/AGY -> Hermes -> n8n` with a minimal non-user-specific acceptance flow.
+7. The target architecture also includes `Hermes -> vLLM`, but that branch is deferred until the future Cross-site Connectivity Foundation stage provides accepted `edge ↔ ai-node` connectivity.
+8. Do not assign Hermes a public domain/listener by assumption.
+9. User-specific n8n/Hermes tasks, Capture Inbox, approvals, vendor watchers, bounded research jobs and durable application-level task handoff remain post-infrastructure workflows and are not Stage 3 scope.
+10. Planned dependency-aware stage order is:
+   - Stage 3 — Edge Hermes Agent Runtime;
+   - Stage 4 — Edge Cross-site Connectivity Foundation;
+   - Stage 5 — Edge Cross-site Data & Knowledge Services;
+   - Stage 6 — Edge Remaining Infrastructure Services, conditional only;
+   - Stage 7 — Edge Backrest & Recovery;
+   - Stage 8 — Edge Maintenance & Update, including a separate Codex `update.escloud.us` substage;
+   - Stage 9 — Edge Monitoring, Heartbeats & Alerts;
+   - Stage 10 — Edge Cloud Portal, including a separate Codex `app.escloud.us` substage;
+   - Stage 11 — Edge Final Integrated Infrastructure Acceptance;
+   - then a continuous post-infrastructure Automation & User Workflows workstream.
+11. If no real service is selected for conditional Stage 6 by Stage 02.5 closure, remove that empty stage and normalize later numbering before Stage 3 opens rather than preserving an empty branch.
+
+**Constraints:**
+
+- Stage 02.5 remains ACTIVE / RESEARCH-ONLY; this decision does not authorize Hermes installation yet.
+- Stage 3 opens only after the complete Stage 02.5 research matrix, normalized remaining service inventory, dependency graph/final stage roadmap and canonical read-back are accepted.
+- Backrest-before-Semaphore remains mandatory.
+- Production monitoring remains after the substantially complete service inventory and lifecycle layers.
+- `update.escloud.us` and `app.escloud.us` remain separate UI responsibilities and separate Codex substages.
+
+**Supersedes:**
+
+- the conditional Hermes status in the 2026-09-17T21:05:00+03:00 decision;
+- any interpretation that CloudCLI/Codex/Antigravity eliminate the need for a separate persistent agent runtime;
+- the old historical Stage 3–7 numbering as future deployment chronology.
