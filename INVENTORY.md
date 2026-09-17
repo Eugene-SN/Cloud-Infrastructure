@@ -25,7 +25,8 @@ This inventory distinguishes live accepted runtime from future accepted/planned 
 - Hysteria2 `2.12.3`;
 - Authelia `4.39.27`;
 - UFW listener contract: TCP 22/80/443 and UDP 443 only;
-- shared service account `core`, UID/GID `1000:1000`, locked password, no sudo/docker group.
+- shared service account `core`, UID/GID `1000:1000`, locked password, no sudo/docker group;
+- `core` linger enabled for persistent headless Antigravity systemd user service; `user@1000.service` active and `/run/user/1000/bus` present at acceptance.
 
 ## Stage 2 credential migration rule
 
@@ -42,7 +43,7 @@ This inventory distinguishes live accepted runtime from future accepted/planned 
 | n8n | LIVE / ACCEPTED | `2.39.7`; clean state; one new owner; `127.0.0.1:15678`; public `https://n8n.escloud.us/`; Authelia protected |
 | CloudCLI | LIVE / ACCEPTED | `1.37.3`; systemd `cloudcli.service`; one new local user; `127.0.0.1:18140`; public `https://code.escloud.us/`; Authelia protected |
 | Codex CLI | LIVE / ACCEPTED | `0.154.0`; official standalone runtime; fresh ChatGPT auth; managed app-server Remote Control enabled and server-side accepted |
-| Antigravity CLI | LIVE / ACCEPTED | `1.2.5`; `/home/core/.local/bin/agy`; fresh Google OAuth accepted; authenticated headless probe PASS |
+| Antigravity CLI | LIVE / ACCEPTED | `1.2.5`; fresh Google OAuth; instance `edge`; `antigravity-cli-daemon.service` enabled/running under `core`; headless Remote Control registered/running |
 | Stalwart | TARGET-ACCEPTED / pending Stage 2 | mail server; preserve useful mail account/data/settings but recreate credentials |
 | Bulwark | TARGET-ACCEPTED / pending Stage 2 | webmail frontend; fresh credentials/integration pending |
 | Backrest | TARGET-ACCEPTED / pending Stage 2 | `backup.escloud.us` allocated; clean deployment/credentials |
@@ -87,16 +88,22 @@ This inventory distinguishes live accepted runtime from future accepted/planned 
 - Codex CLI `0.154.0` uses the official standalone install, not npm `@openai/codex`;
 - launcher `/home/core/.local/bin/codex` -> `/home/core/.codex/packages/standalone/current/bin/codex`;
 - fresh ChatGPT device authorization accepted and preserved across reinstall; auth object `/home/core/.codex/auth.json`, `core:core`, mode `0600`;
-- managed app-server backend `pid`, auto-update enabled, Remote Control enabled;
-- app-server/control runtime version `0.154.0` matches CLI;
-- control socket `/home/core/.codex/app-server-control/app-server-control.sock`, `core:core`, mode `0600`;
-- active managed processes: app-server with `--remote-control --listen unix://` and daemon `pid-update-loop`;
+- Codex managed app-server backend `pid`, auto-update enabled, Remote Control enabled;
+- Codex app-server/control runtime version `0.154.0` matches CLI;
+- Codex control socket `/home/core/.codex/app-server-control/app-server-control.sock`, `core:core`, mode `0600`;
+- Codex active managed processes: app-server with `--remote-control --listen unix://` and daemon `pid-update-loop`;
 - no public Codex/app-server network listener;
-- user configured Remote Control pairing on iPhone, MacBook and iPad; server-side acceptance PASS; client-originated end-to-end remote task acceptance not separately recorded yet;
+- user configured Codex Remote Control pairing on iPhone, MacBook and iPad; server-side acceptance PASS; client-originated end-to-end remote task acceptance not separately recorded yet;
 - Antigravity CLI `1.2.5`, `/home/core/.local/bin/agy`; fresh Google OAuth accepted;
 - Antigravity state root `/home/core/.gemini/antigravity-cli`; OAuth credential contents are not documented;
-- authenticated Antigravity headless probe returned `ANTIGRAVITY_AUTH_OK`, RC `0`;
-- legacy custom `codex-app-server` and `codex-runner` are absent; official managed daemon supersedes their function.
+- Antigravity Remote Control instance name `edge`;
+- user unit `/home/core/.config/systemd/user/antigravity-cli-daemon.service` enabled and active/running;
+- active daemon `/home/core/.local/bin/agy remote-control serve`;
+- `core` linger enabled; `user@1000.service` active; `/run/user/1000/bus` present;
+- `agy remote-control status` reports `Daemon status: active` and instance name `edge`;
+- authenticated Antigravity post-activation probe returned `ANTIGRAVITY_REMOTE_AUTH_OK`, RC `0`;
+- Codex login and managed daemon remained healthy after Antigravity Remote Control activation;
+- legacy custom `codex-app-server` and `codex-runner` are absent; official Codex managed daemon supersedes their function.
 
 ## Domain inventory
 
