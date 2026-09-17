@@ -6,7 +6,20 @@
 **Current work branch:** `02 — Edge Core Applications`  
 **Primary GitHub repository:** `Eugene-SN/Cloud-Infrastructure`
 
-Stage 0 and Stage 1 are **COMPLETE / ACCEPTED**. `EDGE_STAGE1_FINAL_INTEGRATED_ACCEPTANCE=PASS` on 2026-09-17. Stage 2 has begun; n8n is the first fully restored and integrated Stage 2 application component.
+Stage 0 and Stage 1 are **COMPLETE / ACCEPTED**. `EDGE_STAGE1_FINAL_INTEGRATED_ACCEPTANCE=PASS` on 2026-09-17.
+
+Current Stage 2 accepted application state includes clean-reinitialized Authelia, n8n and CloudCLI. Codex CLI and Antigravity CLI are installed but still require fresh user authorization.
+
+## Stage 2 rebuild / credential policy
+
+Current accepted rebuild rule:
+
+- application authentication credentials are recreated fresh for **every service without exception**;
+- legacy usernames/password hashes, passwords, API tokens, OAuth/session state and application auth databases are not restored as production credentials;
+- services may preserve useful non-authentication configuration/data only where explicitly required;
+- **mail is the data-preservation exception, not a credential exception**: preserve the existing useful mailbox/account identity, addresses/aliases, mailbox data and required mail settings/state, but create new mail-user and administrative authentication credentials;
+- native application credentials behind Authelia remain new and unique; Authelia is the primary human-facing Web UI gate where applicable;
+- migration-preservation material remains reference/recovery input and is not automatically restored into production auth state.
 
 ## Host
 
@@ -20,10 +33,7 @@ Stage 0 and Stage 1 are **COMPLETE / ACCEPTED**. `EDGE_STAGE1_FINAL_INTEGRATED_A
 - QEMU guest agent active;
 - journald `SystemMaxUse=500M`.
 
-`edge.escloud.us` public DNS is accepted as:
-
-- A `45.92.156.17`;
-- AAAA `2a0c:b847:ffff:283::a`.
+`edge.escloud.us` DNS: A `45.92.156.17`, AAAA `2a0c:b847:ffff:283::a`.
 
 ## Runtime foundation
 
@@ -36,14 +46,7 @@ Stage 0 and Stage 1 are **COMPLETE / ACCEPTED**. `EDGE_STAGE1_FINAL_INTEGRATED_A
 - `/etc/<service>` host-native configuration;
 - `/var/www/<site>` static roots.
 
-Shared host service account:
-
-- user/group `core`;
-- UID/GID `1000:1000`;
-- home `/home/core`, mode `0750`;
-- password locked;
-- no sudo and no Docker group membership;
-- default owner for compatible application persistent state; preserve upstream container UID/GID when required.
+Shared service account `core`: UID/GID `1000:1000`, home `/home/core` mode `0750`, password locked, no sudo/docker group.
 
 ## Stage 1 ingress / VPN foundation
 
@@ -57,146 +60,130 @@ Shared host service account:
 
 ### Xray / Hysteria2
 
-- Xray `26.3.27`, host-native, owns public TCP/443 and falls back to nginx `127.0.0.1:8080` with `xver=1`;
-- Hysteria2 `2.12.3`, host-native, owns public UDP/443, strict SNI guard, userpass auth;
-- accepted public listeners remain TCP/22, TCP/80, TCP/443 and UDP/443 only.
+- Xray `26.3.27`, host-native, public TCP/443, fallback to nginx `127.0.0.1:8080` with `xver=1`;
+- Hysteria2 `2.12.3`, host-native, public UDP/443, strict SNI guard, userpass auth;
+- accepted public listeners: TCP/22, TCP/80, TCP/443, UDP/443 only.
 
-### Authelia
+### Authelia — clean accepted state
+
+`STAGE2_AUTHELIA_CLEAN_REINITIALIZATION=PASS`  
+`STAGE1_PRODUCTION_NON_REGRESSION=PASS`
 
 - Authelia `4.39.27`;
-- `/opt/authelia/compose.yaml`, persistent `/srv/authelia`;
-- container `authelia`, `restart: unless-stopped`;
+- compose `/opt/authelia/compose.yaml`, SHA256 `265dc881294e4b14bf9da5b529570ff6a2f234de2a3e335681d34d3deb447e96`;
+- persistent root `/srv/authelia`;
+- container `authelia`, `restart: unless-stopped`, `running/healthy`;
 - loopback `127.0.0.1:19091 -> 9091/tcp`;
-- current accepted state `running/healthy`;
-- `auth.escloud.us` ingress is Xray -> nginx -> Authelia.
+- public `auth.escloud.us` via Xray -> nginx -> Authelia;
+- configuration `/srv/authelia/config/configuration.yml`, SHA256 `4c5343de85783bb0ed4973722f36df73c550708b7ffc48b2292f95aef6d62574`;
+- fresh operator account `eugene` created with a new Argon2id password hash;
+- legacy user/password hash, session/TOTP/WebAuthn/preferences/storage state removed;
+- JWT/session/storage-encryption secrets regenerated;
+- current user DB SHA256 `7d3407a469ca5755056e60508b553511f5792e114640c69ea3e60062a81daff9`;
+- clean storage DB SHA256 after reinitialization `d06edef4c052839e25f0b2cb79f12e1350ba4ce14b6cdf9cf5ec78691081ae0d`;
+- temporary recovery archive from reinitialization removed after acceptance.
 
-Current protected namespace rules include `app`, `n8n`, `backup`, `ops`, `docs`, `cloud`, `sync`, `code`, and `chat.escloud.us`; legacy `go.escloud.us` rule has been removed.
+Protected namespace includes `app`, `n8n`, `backup`, `ops`, `docs`, `cloud`, `sync`, `code`, `chat.escloud.us`; legacy `go.escloud.us` removed.
 
 ## TLS / certificate lifecycle
 
-Certificate name: `escloud.us`; Certbot `4.0.0`; active lineage `/etc/letsencrypt/live/escloud.us`.
+Certificate `escloud.us`; Certbot `4.0.0`; lineage `/etc/letsencrypt/live/escloud.us`.
 
-Accepted current SAN set:
-
-- `escloud.us`;
-- `app.escloud.us`;
-- `auth.escloud.us`;
-- `backup.escloud.us`;
-- `chat.escloud.us`;
-- `cloud.escloud.us`;
-- `code.escloud.us`;
-- `docs.escloud.us`;
-- `mail.escloud.us`;
-- `n8n.escloud.us`;
-- `ops.escloud.us`;
-- `sync.escloud.us`.
-
-`go.escloud.us` is no longer part of the certificate target.
+Current SANs: `escloud.us`, `app.escloud.us`, `auth.escloud.us`, `backup.escloud.us`, `chat.escloud.us`, `cloud.escloud.us`, `code.escloud.us`, `docs.escloud.us`, `mail.escloud.us`, `n8n.escloud.us`, `ops.escloud.us`, `sync.escloud.us`.
 
 - Certbot timer active/enabled;
 - deploy hook `/etc/letsencrypt/renewal-hooks/deploy/20-vpn-cert-sync`;
-- Xray/Hysteria certificate fingerprints matched the live lineage after namespace normalization;
-- manual certificate domain source `/opt/vpn-stack/state/web-domains.txt`, SHA256 `cab0467df32ef5cbed2af58f0ac91624962632de84af8faf86286788ca4a7eb9`;
+- `/opt/vpn-stack/state/web-domains.txt` SHA256 `cab0467df32ef5cbed2af58f0ac91624962632de84af8faf86286788ca4a7eb9`;
 - `/opt/vpn-stack/scripts/maintctl` SHA256 `0e7b2b2f6b1a3b3d6563157520d15060e3c29ce64c94e147035a3beddced3257`;
-- `maintctl` primary domain file and fallback domain set match the accepted certificate SAN set; `maintctl web-check` passed for every accepted hostname.
+- `maintctl web-check` PASS for accepted SAN names.
 
 ## Domain namespace
 
-Canonical allocation is documented in `DOMAIN_NAMESPACE.md`.
+Canonical allocation: `DOMAIN_NAMESPACE.md`.
 
-Active/current Stage 2 names:
+Active/current Stage 2 names: `escloud.us`, `edge.escloud.us`, `auth.escloud.us`, `n8n.escloud.us`, `code.escloud.us`; allocated targets include `app`, `mail`, `backup`, `ops.escloud.us`; `docs`, `chat`, `cloud`, `sync.escloud.us` remain reserved according to their planned stages. `go.escloud.us` is retired.
 
-- `escloud.us` — public masking page;
-- `edge.escloud.us` — VPS infrastructure identity;
-- `auth.escloud.us` — Authelia;
-- `app.escloud.us` — future private Cloud Infrastructure portal;
-- `n8n.escloud.us` — n8n;
-- `code.escloud.us` — CloudCLI;
-- `mail.escloud.us` — Stalwart + Bulwark;
-- `backup.escloud.us` — Backrest;
-- `ops.escloud.us` — Semaphore.
+## n8n — clean accepted Stage 2 state
 
-Reserved names:
-
-- `docs.escloud.us` — future technical documentation library;
-- `chat.escloud.us` — future service reserve;
-- `cloud.escloud.us` — Stage 4 file-access layer;
-- `sync.escloud.us` — Stage 4 synchronization layer.
-
-Legacy `go.escloud.us` is retired from target configuration after accepted migration to `n8n.escloud.us`; its Cloudflare DNS record may be removed.
-
-## n8n — Stage 2 accepted production state
-
-`STAGE2_N8N_LOCAL_RESTORE_DEPLOYMENT=PASS`  
-`STAGE2_N8N_PUBLIC_IDENTITY_MIGRATION=PASS`  
-`STAGE2_N8N_INGRESS_DEPLOYMENT=PASS`  
-`STAGE2_N8N_COMPONENT_ACCEPTANCE=PASS`  
-`STAGE1_PRODUCTION_NON_REGRESSION=PASS`
+`STAGE2_N8N_CLEAN_REINITIALIZATION=PASS`  
+`STAGE2_N8N_BOOTSTRAP_OWNER_STATE=PASS`  
+`STAGE2_N8N_POST_ONBOARDING_ACCEPTANCE=PASS`  
+`STAGE2_NEW_APPLICATION_CREDENTIAL_POLICY=PASS`
 
 Runtime:
 
 - n8n `2.39.7`;
-- OCI image `docker.n8n.io/n8nio/n8n:stable`;
-- deployed image ID / repo digest `sha256:54323be085a6086acd87f612a25752d6582d3a0c0b07cc93c2b40a9356c3203b`;
-- container `n8n`;
-- restart policy `unless-stopped`;
-- backend publish `127.0.0.1:15678 -> 5678/tcp` only;
-- local readiness `/healthz/readiness` returned HTTP 200;
-- public canonical URL `https://n8n.escloud.us/`;
-- public HTTP redirects to HTTPS;
-- HTTPS path is Xray TCP/443 -> nginx `127.0.0.1:8080` -> Authelia auth request -> n8n loopback backend;
-- unauthenticated HTTPS request redirects to `https://auth.escloud.us/?rd=https://n8n.escloud.us/`;
-- served TLS certificate contains `n8n.escloud.us`;
+- image `docker.n8n.io/n8nio/n8n:stable`;
+- deployed image ID/repo digest `sha256:54323be085a6086acd87f612a25752d6582d3a0c0b07cc93c2b40a9356c3203b`;
+- container `n8n`, `restart: unless-stopped`, `running/healthy`;
+- backend `127.0.0.1:15678 -> 5678/tcp` only;
+- readiness `/healthz/readiness` HTTP 200;
+- public `https://n8n.escloud.us/` through Xray -> nginx -> Authelia -> loopback backend;
+- unauthenticated HTTPS redirects to `https://auth.escloud.us/?rd=https://n8n.escloud.us/`;
 - no public TCP/15678 listener.
 
-Paths and ownership:
+Paths:
 
-- compose `/opt/n8n/compose.yaml`, root-owned mode `0644`, SHA256 `42009eb90d1411b168f4ff9fd072108021a8e9b2467f5c59a01bcf4dcc5ad5bf`;
-- persistent state `/srv/n8n`, owned `core:core` / UID:GID `1000:1000`, directory mode `0750`;
-- database `/srv/n8n/database.sqlite`, `core:core`, mode `0640`;
-- n8n config `/srv/n8n/config`, `core:core`, mode `0600`, SHA256 `a3dbdaaed5a50616b46f55bc8cd02bef592f5ba14f26f3198c0e816769f12431`;
-- nginx vhost `/etc/nginx/sites-available/n8n-escloud-us.conf`, enabled through `sites-enabled`, SHA256 `0c9e944233fa6243cb24f10d42157457d741f401bb555c62bb744382a03ed7ae`.
+- compose `/opt/n8n/compose.yaml`, SHA256 `42009eb90d1411b168f4ff9fd072108021a8e9b2467f5c59a01bcf4dcc5ad5bf`;
+- state `/srv/n8n`, `core:core` UID:GID `1000:1000`;
+- database `/srv/n8n/database.sqlite`, current post-onboarding SHA256 `b7e3a41780dbcb65d214fca4484ad68910c5e34649c368507dd77c08af89d0c4`;
+- config `/srv/n8n/config`, SHA256 `48887ced0df600f4b20f93062414fa585448cda2c9c1b89176a1ecb5ea89b11f`;
+- fresh encryption-key SHA256 `be3df4bce01e664d188d2be5d781e52fe8d923eeb2b98b387b56b92f5ae6c284`;
+- nginx vhost `/etc/nginx/sites-available/n8n-escloud-us.conf`, SHA256 `0c9e944233fa6243cb24f10d42157457d741f401bb555c62bb744382a03ed7ae`.
 
-Preserved/restored application state after migration:
+Current clean application state after fresh owner onboarding:
 
-- SQLite quick/integrity checks `ok`;
-- workflows `2`;
-- credentials `1`;
+- users `1` — new owner account with new password;
+- workflows `0`;
+- credentials `0`;
 - executions `0`;
 - webhooks `0`;
-- projects `1`;
-- active workflows `0`;
-- schema migrations `254`;
-- latest migration `CreateAgentWorkflowDependencyTable1788522448804`;
-- preserved credential decryptability gate PASS without exposing secret content.
+- legacy workflows/credential/project/auth state removed;
+- retained recovery archive from failed V1 acceptance was removed after successful recovery V2.
 
-n8n current identity variables:
+Identity variables remain `N8N_HOST=n8n.escloud.us`, `N8N_PROTOCOL=https`, `WEBHOOK_URL=https://n8n.escloud.us/`, `N8N_EDITOR_BASE_URL=https://n8n.escloud.us/`.
 
-- `N8N_HOST=n8n.escloud.us`;
-- `N8N_PROTOCOL=https`;
-- `WEBHOOK_URL=https://n8n.escloud.us/`;
-- `N8N_EDITOR_BASE_URL=https://n8n.escloud.us/`.
+## CloudCLI — clean accepted Stage 2 state
 
-The old `go.escloud.us` identity is no longer present in n8n runtime/compose, Authelia target policy, or certificate SANs.
+`STAGE2_CLOUDCLI_LOCAL_RUNTIME_DEPLOYMENT=PASS`  
+`STAGE2_CLOUDCLI_INGRESS_DEPLOYMENT=PASS`  
+`STAGE2_CLOUDCLI_PRE_ONBOARDING_ACCEPTANCE=PASS`  
+`STAGE2_CLOUDCLI_POST_ONBOARDING_ACCEPTANCE=PASS`
+
+- CloudCLI `1.37.3` installed for `core` under `/home/core/.local`;
+- systemd unit `/etc/systemd/system/cloudcli.service`, SHA256 `8bf303e000b3de0f5a761fc0a466139a75e72fd6ec5d07b08ab7cb82f95382af`;
+- service active/enabled, `NRestarts=0` at deployment acceptance;
+- working directory `/srv/ai-workspace`, `core:core`, mode `0750`;
+- backend strictly `127.0.0.1:18140`;
+- persistent DB `/home/core/.cloudcli/auth.db`;
+- public `https://code.escloud.us/` through Xray -> nginx -> Authelia -> loopback backend;
+- nginx vhost `/etc/nginx/sites-available/code-escloud-us.conf`, SHA256 `6e6bd9f82fa9ea0f8bc576b6e4d71fcf583abef4b748c6326a7a2a7ca8de1896`;
+- fresh local CloudCLI user exists with populated new `password_hash` and username;
+- current post-onboarding DB SHA256 `8ae972e3e0183ed9f17f7138d9e63cfa169be043f7345f29ce6857cee72874a8`;
+- clean state at post-onboarding acceptance: users `1`, projects `0`, sessions `0`, `user_credentials` `0`;
+- no legacy CloudCLI auth DB/config/workspace/session state restored.
+
+## Cloud AI CLI tooling installed / authorization pending
+
+- Node `22.22.1`;
+- npm `9.2.0`;
+- Codex CLI `0.154.0` installed under `/home/core/.local`, fresh authorization still pending;
+- Antigravity CLI `1.2.5` at `/home/core/.local/bin/agy`, fresh authorization still pending;
+- no legacy Codex auth/config or Antigravity auth state restored;
+- custom legacy `codex-app-server` and `codex-runner` are absent unless later demonstrated necessary.
 
 ## Firewall
 
-UFW remains accepted from Stage 1:
-
-- active/enabled;
-- default incoming deny, outgoing allow, routed deny;
-- inbound TCP/22, TCP/80, TCP/443, UDP/443 for IPv4/IPv6;
-- Docker firewall rules enabled;
-- application containers remain loopback-published by default.
+UFW remains accepted: active/enabled; default incoming deny, outgoing allow, routed deny; inbound TCP/22, TCP/80, TCP/443 and UDP/443 for IPv4/IPv6; Docker firewall enabled; application services loopback-published by default.
 
 ## Recovery checkpoints
 
-Stage 1 local recovery archive remains:
+Stage 1 recovery archive:
 
 - `/srv/backups/edge-stage1/edge-stage1-base-20260916T234611Z.tar.gz`;
 - SHA256 `37486e763ddac4c5ef3a92a35c3dad49787d75ffd8b97499073c79af617cc566`.
 
-The external credential-bearing migration-preservation archive remains required during Stage 2 because other accepted services still need restoration/migration. Do not delete it after n8n alone.
+External migration-preservation archive remains required during Stage 2 primarily for mail data/settings reconstruction. Do not restore its application credentials into production.
 
 ## Current stage boundary
 
@@ -204,6 +191,6 @@ Stage 0: **COMPLETE / ACCEPTED**.
 Stage 1: **COMPLETE / ACCEPTED**.  
 Stage 2: **IN PROGRESS**.
 
-Accepted Stage 2 products still pending deployment/integration include Stalwart + Bulwark, CloudCLI, Codex CLI, Antigravity CLI, Backrest, Semaphore, maintenance page, and the full private Cloud Infrastructure portal.
+Pending Stage 2 work includes fresh Codex CLI authorization, fresh Antigravity CLI authorization, Stalwart + Bulwark mail migration with new credentials, Backrest, Semaphore, maintenance page, and full private Cloud Infrastructure portal.
 
 Canonical Obsidian vault remains on `ai-node` at `/srv/ai-data/knowledge/obsidian`.
