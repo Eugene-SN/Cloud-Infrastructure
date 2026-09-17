@@ -491,3 +491,37 @@ This sequencing was later found to conflict with the intended project workflow a
 - Do not let known/accepted deployment cross into unresolved future-stage capabilities.
 
 **Supersedes:** only the sequencing portions of the 2026-09-16T22:13:31+03:00 entry that required all unresolved Stage 1 selection/composition work to precede architecture-dependent deployment. Stage boundaries and the prohibition on opening the next branch before full Stage 1 acceptance remain in force.
+
+---
+
+## 2026-09-17T20:00:00+03:00 — Defer portal and operations lifecycle until service composition stabilizes
+
+**Status:** ACCEPTED
+
+**Context:** Stage 2 core applications are now deployed and accepted individually. Backrest, Semaphore, the maintenance page and `app.escloud.us` were still listed as pending Stage 2 work, but their correct design depends on the substantially complete final server service inventory. Configuring them now would force repeated rework and would prevent backup/update policy from being defined against the actual production system.
+
+**Decision:**
+
+1. Remove Backrest, Semaphore, the maintenance page and the full private `app.escloud.us` portal from the remaining deployment scope of Stage 2 Core Applications.
+2. Defer `app.escloud.us` until near the end of the overall functional deployment, after the service structure is substantially complete. Build it once as the private Cloud Infrastructure home/overview rather than repeatedly revisiting it as services are added.
+3. Determine portal functionality at that late implementation stage from the actual service inventory. Baseline intent is a unified entry point to Cloud Infrastructure services plus useful simple status/monitoring. The existing `home.lan` implementation is an engineering/reference point; a compact Home Infrastructure monitoring summary may be mirrored in a separate collapsed-by-default portal section if that remains simple and useful.
+4. Do not precommit a heavy monitoring stack for the portal. Prefer direct health/status integrations and simple read-only data sources; decide richer monitoring only from concrete needs at portal implementation time.
+5. Defer Backrest until the server is substantially complete so backup scope, exclusions, repositories, retention, schedules and restore procedures are designed for the final production structure rather than an intermediate state.
+6. Deploy and accept Backrest **before** Semaphore/update testing so working pre-update backups and restore paths are available during maintenance experiments.
+7. Deploy Semaphore and the maintenance page together as one operational workstream. The maintenance page should integrate with Semaphore so update execution/progress/results are visible and can be validated while update workflows are tested.
+8. Use the existing PVE/Home update tool and maintenance workflow as the accepted engineering reference for `edge`, with explicit audit, optimization and adaptation. Reuse proven concepts and behavior; do not blindly copy PVE-specific implementation or assumptions.
+9. Final integrated server acceptance occurs only after late-stage portal acceptance, Backrest restore acceptance, Semaphore/update acceptance, maintenance-page integration acceptance and final cleanup.
+10. This restructuring means Stage 2 now contains only the already deployed Core Applications. Stage 2 is not declared COMPLETE merely by this sequencing decision; perform one final integrated Stage 2 acceptance and persist that factual checkpoint before branch transition.
+
+**Constraints:**
+
+- Do not assign heavy monitoring, control-plane or database responsibilities to `app.escloud.us` without a demonstrated need.
+- Do not define backup/update policies against transient deployment state when the remaining service composition is still changing.
+- Do not use Semaphore testing before Backrest can provide the intended pre-update backup/restore safety path.
+- Exact numbering/naming of the late portal and Operations & Lifecycle stages may be finalized when the intervening functional stages are clearer; the accepted dependency order above is authoritative regardless of numbering.
+
+**Supersedes:**
+
+- the assumption in current Stage 2 planning that Backrest, Semaphore, maintenance page and full private portal must be deployed before Stage 2 can close;
+- the earlier placement of full private Cloud portal/status UI in Stage 2;
+- any sequencing that tests Semaphore/update automation before the accepted Backrest safety path exists.
