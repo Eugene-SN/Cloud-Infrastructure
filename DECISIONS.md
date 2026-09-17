@@ -222,7 +222,7 @@ Do not keep Syncthing merely because task execution may use files.
 
 **Status:** ACCEPTED
 
-**Context:** A broad catalog of common private-VPS use cases was reviewed against the existing Home Infrastructure and Personal Agents Infrastructure. The purpose was to eliminate obvious duplication before deeper research.
+**Context:** A broad catalog of 75 common private-VPS use cases was reviewed against the existing Home Infrastructure and Personal Agents Infrastructure. The purpose was to eliminate obvious duplication before deeper research.
 
 **Decision:**
 
@@ -283,7 +283,7 @@ Do not keep Syncthing merely because task execution may use files.
 
 **Constraints:** Do not infer a product choice from an accepted capability unless the product has already been explicitly accepted elsewhere in this log. Continue capability-level discussion before topology/product research.
 
-**Supersedes:** the unfiltered capability catalog as a working scope.
+**Supersedes:** the unfiltered 75-item capability catalog as a working scope.
 
 ---
 
@@ -306,27 +306,225 @@ Do not keep Syncthing merely because task execution may use files.
 
 ---
 
+## 2026-09-16T16:56:26+03:00 — Migration preservation archive may include credentials
+
+**Status:** ACCEPTED
+
+**Context:** Stage 0 preservation is intended to support a possible clean Ubuntu rebuild while retaining expensive-to-reconstruct service state.
+
+**Decision:** The manually downloaded migration-preservation archive may and should include the complete configuration and persistent state of services selected for the future `edge`, including credentials, authentication state, application secrets, private keys, TLS material and other sensitive files required for faithful restoration or migration.
+
+Initial high-priority preservation audit focuses on Stalwart + Bulwark and Xray + Hysteria2, including the complete current `maintctl` script for later adaptation/optimization. The preservation scope may also include nginx, n8n, Authelia, CloudCLI, Codex CLI and other accepted services once their exact current paths and dependencies are audited.
+
+**Constraints:**
+
+- Sensitive archive contents are for local/manual transfer and recovery only.
+- Do not commit credentials, private keys, application secrets or credential-bearing archives to GitHub.
+- Do not print secret values into routine audit output when path/metadata verification is sufficient.
+- Verify archive integrity before any destructive rebuild.
+
+**Supersedes:** any narrower interpretation that the migration archive should omit credentials or secret state.
+
+---
+
+## 2026-09-16T19:44:00+03:00 — Two-plane migration preservation model
+
+**Status:** ACCEPTED
+
+**Context:** A complete credential-bearing migration archive is useful for disaster recovery, but is a poor working format for engineering review and should not be committed into Git history. The project also needs durable, directly readable migration context available to ChatGPT through the private GitHub repository during the fresh deployment.
+
+**Decision:** Use two distinct preservation planes:
+
+1. **Recovery plane** — the complete sensitive migration archive stays outside GitHub as authoritative recovery material. It may contain credentials, private keys, TLS material, application databases and auth state. The provider-level full VPS backup is an independent second recovery path.
+2. **Engineering-context plane** — create a structured `migration-reference/` tree in `Eugene-SN/Cloud-Infrastructure` containing useful text/configuration/script/runtime-reference artifacts needed to understand and adapt the legacy implementation during fresh deployment.
+
+The engineering-context tree should include, where useful:
+
+- `maintctl` and `vpnctl` source scripts;
+- Xray/Hysteria configuration structure and systemd units;
+- nginx routing configuration;
+- mail Compose/configuration structure and DNS/runtime notes;
+- n8n/Authelia Compose/runtime structure;
+- CloudCLI/Codex service definitions and non-secret runtime/reference configuration;
+- firewall/network/systemd/package/runtime metadata needed for reconstruction.
+
+**Constraints:**
+
+- Do not commit private keys, SSH private keys, TLS private keys, application auth databases, OAuth/session tokens, raw credential files, mail databases, n8n credential databases, Authelia secret files or other credential-bearing state into GitHub.
+- Do not place the complete migration archive in GitHub, Git LFS or release assets as normal project context.
+- Before committing candidate text files, perform a secret-content audit and either verify that the file is safe verbatim or create a clearly marked redacted copy.
+- Preserve original filenames/paths in manifests so the legacy implementation can be reconstructed accurately.
+- The GitHub engineering reference is for architecture/migration work and is not itself the authoritative recovery backup.
+
+**Supersedes:** any idea of using the complete credential-bearing archive as the primary GitHub project context.
+
+---
+
+## 2026-09-16T20:34:11+03:00 — Clean `edge` rebuild and substrate acceptance
+
+**Status:** ACCEPTED
+
+**Context:** Stage 0 preservation and both recovery planes were already accepted. The user selected and executed a GreenCloud provider rebuild of the existing VPS with Ubuntu 26.04, hostname `edge.escloud.us`, 4 GiB swap and the existing Termius ED25519 SSH key. The rebuilt host then underwent read-only first-boot audits, GRUB root-cause analysis, a controlled reboot and post-reboot acceptance.
+
+**Decision:**
+
+- The migration method for the legacy VPS is a **clean provider-level Ubuntu rebuild**, not an in-place migration.
+- The rebuilt VPS is now the live Cloud Infrastructure node **`edge`**.
+- `EDGE_FRESH_OS_SUBSTRATE_ACCEPTANCE=PASS`.
+- Accepted substrate state includes Ubuntu 26.04.1 LTS, kernel `7.0.0-31-generic`, KVM/x86_64, 2 vCPU, ~15 GiB RAM, 4 GiB swap, ~155 GiB root filesystem class, IPv4 `45.92.156.17/24`, IPv6 `2a0c:b847:ffff:283::a/64`, working DNS/NTP and SSH key access.
+- OpenSSH socket activation through `ssh.socket` is accepted; do not enable `ssh.service` merely to match the previous service model.
+- Root SSH access remains key-only in effective configuration (`PermitRootLogin prohibit-password`; password and keyboard-interactive authentication disabled).
+- The first-boot `grub-initrd-fallback.service` failure is classified as a transient provider-provisioning race while `grub2-common` was upgraded from `2.14-2ubuntu2` to `2.14-2ubuntu2.1` during the same boot. After controlled reboot both GRUB units returned `success`, system state was `running`, failed units were 0 and no current-boot errors remained.
+- GreenCloud cloud-init schema/deprecation warnings are non-blocking because effective SSH, swap and network state are correct; do not rewrite working provider-generated configuration solely to silence them.
+- Historical `NL_CORE_VDS_Current_State_Baseline_2026-09-14.md` remains unchanged as the pre-reinstall historical snapshot and no longer describes current runtime state.
+
+**Constraints:**
+
+- This acceptance authorizes the clean substrate and explicitly scoped base-bootstrap work only.
+- It does not implicitly authorize target-service restoration/deployment or architecture-dependent networking/storage/ingress changes.
+- `migration-reference/` remains engineering context, not a restore bundle.
+- Provider backup remains the whole-VPS rollback path; the external sensitive migration archive remains the selective recovery source.
+
+**Supersedes:**
+
+- the unresolved `in-place migration versus clean Ubuntu reinstall` status;
+- the prior rule that no runtime mutation whatsoever could occur before a complete Architecture Contract, but only for the now-completed clean substrate reset and explicitly scoped base-bootstrap work.
+
+---
+
+## 2026-09-16T21:44:20+03:00 — Implementation chronology and branch/stage distinction
+
+**Status:** SUPERSEDED
+
+**Context:** This entry attempted to resolve sequencing drift by separating work-branch numbering from implementation-stage numbering and directing work through a separate functional-composition branch followed by a separate Architecture Contract branch.
+
+**Historical decision:**
+
+- branch `01` was treated as complete after clean substrate/minimal bootstrap even though its title still included unfinished Base Platform Deployment;
+- branch `02 — Edge Functional Composition & Deferred Capabilities` was made the next work branch;
+- branch `03 — Edge Architecture Contract & Topology` was planned before returning to finish Stage 1.
+
+This sequencing was later found to conflict with the intended project workflow and is no longer current authority.
+
+**Superseded by:** `2026-09-16T22:13:31+03:00 — Stage-aligned branch lifecycle and rollback to unfinished Stage 1`.
+
+---
+
+## 2026-09-16T22:13:31+03:00 — Stage-aligned branch lifecycle and rollback to unfinished Stage 1
+
+**Status:** ACCEPTED
+
+**Context:** The branch `01 — Edge Clean Rebuild & Base Platform Deployment` completed only the clean rebuild/substrate portion and a minimal architecture-independent bootstrap. The Base Platform Deployment part of that branch was not completed. Moving to a new branch at that point created false chronology. In addition, the project currently has a broad functional scaffold but has not selected every service/program for the final server. A premature proposed Architecture Contract also preselected future-stage products and topology before the corresponding stage-specific requirements discussions had occurred.
+
+**Decision:**
+
+1. Restore the canonical current checkpoint to **`01 — Edge Clean Rebuild & Base Platform Deployment`**.
+2. Stage 1 / branch 01 remains **IN PROGRESS / NOT ACCEPTED** until the complete Base Platform scope is designed, deployed, verified and explicitly accepted.
+3. `EDGE_FRESH_OS_SUBSTRATE_ACCEPTANCE=PASS` and `EDGE_MINIMAL_BASE_BOOTSTRAP_ACCEPTANCE=PASS` are subset acceptances inside Stage 1; neither is Stage 1 acceptance.
+4. The prematurely opened `02 — Edge Functional Composition & Deferred Capabilities` is not the canonical continuation point and must not be used to skip unfinished Stage 1 work.
+5. From Stage 1 onward, each implementation stage has its own work branch:
+   - `01 — Edge Clean Rebuild & Base Platform Deployment`;
+   - `02 — Edge Core Applications`;
+   - `03 — Edge Monitoring & Human Interaction`;
+   - `04 — Edge Files, Sync & Obsidian`;
+   - `05 — Edge Information & Cloud AI`;
+   - `06 — Edge Home & PAI Integration`;
+   - `07 — Edge Optional Capabilities`.
+6. Every stage branch must begin with **stage-specific functional-requirements review and service/product/mechanism discussion** before architecture-dependent deployment.
+7. Mandatory lifecycle for each implementation stage is:
+   - requirements review;
+   - unresolved service/product selection;
+   - explicit stage-composition acceptance;
+   - stage-scoped architecture/deployment contract and recovery path;
+   - deployment;
+   - verification;
+   - explicit stage acceptance;
+   - GitHub persistence/read-back;
+   - only then branch transition.
+8. The global `FUNCTIONAL_SCAFFOLD_DRAFT.md` is a capability scaffold, not a complete service/product inventory and not a final architecture. It intentionally leaves unresolved products for the stage where they are actually needed.
+9. Already accepted global products (including Xray, Hysteria2, nginx, n8n, CloudCLI, Stalwart + Bulwark, Authelia, Codex CLI and Antigravity CLI) are not re-opened for replacement research without a concrete incompatibility or changed requirement, but their stage-specific deployment/integration details still require discussion and acceptance.
+10. The previous detailed proposed `ARCHITECTURE.md` is withdrawn as current authority because it prematurely selected future-stage products/topology. In particular, SFTPGo, Self-hosted LiveSync/CouchDB, Syncthing, NetBird, the proposed complete domain map and proposed future-stage runtime topology are not accepted merely because they appeared in that proposal.
+11. `ARCHITECTURE.md` now accumulates only accepted architecture facts/invariants and stage-scoped decisions after the corresponding stage composition is accepted.
+12. ChatGPT must not suggest a new branch while the current branch/stage contains unfinished scope. When a stage is fully accepted, it should proactively propose the next stage-aligned branch name and a concise starter prompt.
+
+**Current Stage 1 next step:** continue in branch `01` with Stage 1 requirements review and service/product selection for the unfinished Base Platform scope, then define its scoped deployment contract and complete deployment/acceptance.
+
+**Constraints:**
+
+- Do not preselect unresolved future-stage products to make a complete-looking architecture.
+- Do not deploy Stage 2+ services before Stage 1 acceptance.
+- Do not treat a branch title as complete when only one subtask inside it has been accepted.
+- Historical Git commits are not rewritten; superseded/premature proposals remain available in history but are removed or replaced as current-tree authority.
+
+**Supersedes:**
+
+- `2026-09-16T21:44:20+03:00 — Implementation chronology and branch/stage distinction`;
+- the current-authority status of the premature full-target `ARCHITECTURE.md` proposal;
+- any guidance to continue in `02 — Edge Functional Composition & Deferred Capabilities` before Stage 1 acceptance;
+- any workflow that requires selecting all final server products before proceeding stage-by-stage.
+
+---
+
+## 2026-09-16T22:33:00+03:00 — Accepted-first deployment order and legacy implementation continuity
+
+**Status:** ACCEPTED
+
+**Context:** Stage 1 already has a substantial set of accepted carry-forward services and a preserved working legacy implementation. Requiring a fresh product-selection cycle before deploying those known components would discard useful migration evidence and force unnecessary clean-sheet decisions.
+
+**Decision:**
+
+1. Within every implementation stage, separate **known/accepted baseline** from **genuinely unresolved choices**.
+2. Deploy and verify already accepted, dependency-ready components first; do not block them on unrelated unresolved research.
+3. For accepted carry-forward services, the preserved legacy VPS implementation is the default engineering starting point. Re-read `migration-reference/`, the historical baseline and, where credentials/state are required, the sensitive recovery archive. Propose explicit retain / simplify / optimize / change deltas instead of asking the user to design the service again from zero.
+4. Docker Engine + Docker Compose are accepted as the primary runtime for suitable application services on `edge`, because containerization is preferred for deployment cleanliness, lifecycle control, maintenance and updates.
+5. Host-native deployment remains allowed where it is materially simpler or better suited to the service. Such exceptions must be justified against the container default; they are not automatic.
+6. For Stage 1 specifically, nginx, Xray, Hysteria2, Authelia and the associated `escloud.us` ingress/TLS operating scenario must first be reconstructed from the preserved deployment before redesign is proposed.
+7. The preserved TLS baseline is Certbot/ACME webroot with a shared `escloud.us` SAN certificate set, renewal through Certbot, and certificate synchronization/deploy-hook logic for Xray and Hysteria2. Treat this as the carry-forward baseline unless a concrete improvement is accepted.
+8. Derive the base host package set from the accepted functional/runtime structure and actual consumer dependencies now; do not postpone obvious foundation packages until later product research.
+9. Historical service versions are evidence, not target pins. Use the current supported stable release/update path at deployment time unless compatibility requires otherwise.
+10. The legacy firewall state must be determined from evidence, not recollection. The preserved audit shows UFW was active; whether to retain it on the Docker-based target is a separate Stage 1 engineering decision based on real benefit and Docker firewall semantics.
+
+**Constraints:**
+
+- Do not redeploy legacy services that were explicitly rejected or made unresolved by later decisions merely because they existed before.
+- Do not redesign accepted working behavior without a concrete operational, compatibility or maintainability reason.
+- Do not let known/accepted deployment cross into unresolved future-stage capabilities.
+
+**Supersedes:** only the sequencing portions of the 2026-09-16T22:13:31+03:00 entry that required all unresolved Stage 1 selection/composition work to precede architecture-dependent deployment. Stage boundaries and the prohibition on opening the next branch before full Stage 1 acceptance remain in force.
+
+---
+
 ## 2026-09-17T20:00:00+03:00 — Defer portal and operations lifecycle until service composition stabilizes
 
 **Status:** ACCEPTED
 
-**Context:** Stage 2 core applications are deployed and accepted individually. Backrest, Semaphore, the maintenance page and `app.escloud.us` were still listed as pending Stage 2 work, but their correct design depends on the substantially complete final server service inventory.
+**Context:** Stage 2 core applications are now deployed and accepted individually. Backrest, Semaphore, the maintenance page and `app.escloud.us` were still listed as pending Stage 2 work, but their correct design depends on the substantially complete final server service inventory. Configuring them now would force repeated rework and would prevent backup/update policy from being defined against the actual production system.
 
 **Decision:**
 
-1. Remove Backrest, Semaphore, the maintenance page and the full private `app.escloud.us` portal from Stage 2 deployment scope.
-2. Defer `app.escloud.us` until near the end after the service structure is substantially complete.
-3. Determine portal functionality at that late implementation stage from the actual service inventory.
-4. Do not precommit a heavy monitoring stack for the portal.
-5. Defer Backrest until the server is substantially complete.
-6. Deploy and accept Backrest before Semaphore/update testing.
-7. Deploy Semaphore and the maintenance page together as one operational workstream.
-8. Use the existing PVE/Home update tool and maintenance workflow as the accepted engineering reference for `edge`, with explicit audit, optimization and adaptation.
+1. Remove Backrest, Semaphore, the maintenance page and the full private `app.escloud.us` portal from the remaining deployment scope of Stage 2 Core Applications.
+2. Defer `app.escloud.us` until near the end of the overall functional deployment, after the service structure is substantially complete. Build it once as the private Cloud Infrastructure home/overview rather than repeatedly revisiting it as services are added.
+3. Determine portal functionality at that late implementation stage from the actual service inventory. Baseline intent is a unified entry point to Cloud Infrastructure services plus useful simple status/monitoring. The existing `home.lan` implementation is an engineering/reference point; a compact Home Infrastructure monitoring summary may be mirrored in a separate collapsed-by-default portal section if that remains simple and useful.
+4. Do not precommit a heavy monitoring stack for the portal. Prefer direct health/status integrations and simple read-only data sources; decide richer monitoring only from concrete needs at portal implementation time.
+5. Defer Backrest until the server is substantially complete so backup scope, exclusions, repositories, retention, schedules and restore procedures are designed for the final production structure rather than an intermediate state.
+6. Deploy and accept Backrest **before** Semaphore/update testing so working pre-update backups and restore paths are available during maintenance experiments.
+7. Deploy Semaphore and the maintenance page together as one operational workstream. The maintenance page should integrate with Semaphore so update execution/progress/results are visible and can be validated while update workflows are tested.
+8. Use the existing PVE/Home update tool and maintenance workflow as the accepted engineering reference for `edge`, with explicit audit, optimization and adaptation. Reuse proven concepts and behavior; do not blindly copy PVE-specific implementation or assumptions.
 9. Final integrated server acceptance occurs only after late-stage portal acceptance, Backrest restore acceptance, Semaphore/update acceptance, maintenance-page integration acceptance and final cleanup.
+10. This restructuring means Stage 2 now contains only the already deployed Core Applications. Stage 2 is not declared COMPLETE merely by this sequencing decision; perform one final integrated Stage 2 acceptance and persist that factual checkpoint before branch transition.
 
-**Constraints:** Exact numbering/naming of the late portal and lifecycle stages may be finalized when the intervening functional stages are clearer.
+**Constraints:**
 
-**Supersedes:** previous Stage 2 placement of these components and any sequencing that tests Semaphore/update automation before Backrest safety exists.
+- Do not assign heavy monitoring, control-plane or database responsibilities to `app.escloud.us` without a demonstrated need.
+- Do not define backup/update policies against transient deployment state when the remaining service composition is still changing.
+- Do not use Semaphore testing before Backrest can provide the intended pre-update backup/restore safety path.
+- Exact numbering/naming of the late portal and Operations & Lifecycle stages may be finalized when the intervening functional stages are clearer; the accepted dependency order above is authoritative regardless of numbering.
+
+**Supersedes:**
+
+- the assumption in current Stage 2 planning that Backrest, Semaphore, maintenance page and full private portal must be deployed before Stage 2 can close;
+- the earlier placement of full private Cloud portal/status UI in Stage 2;
+- any sequencing that tests Semaphore/update automation before the accepted Backrest safety path exists.
 
 ---
 
