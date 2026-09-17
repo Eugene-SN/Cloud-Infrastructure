@@ -10,7 +10,7 @@ Fresh runtime verification outranks this file. This inventory records accepted l
 |---|---|---|
 | `edge` / `edge.escloud.us` | Cloud Infrastructure VPS | LIVE; Stage 0/1/2 accepted; Stage 02.5 research active |
 | `nl-core-vds` | historical legacy VPS identity | HISTORICAL ONLY |
-| `ai-node` | PAI compute/data/knowledge node | external dependency/context; future cross-site peer |
+| `ai-node` | PAI compute/data/knowledge node | external dependency/context; future cross-site peer and local-vLLM endpoint |
 | PVE / Home Infrastructure | home infrastructure plane | external dependency/context; future cross-site peer |
 
 ## Live `edge` substrate
@@ -77,10 +77,10 @@ Fresh runtime verification outranks this file. This inventory records accepted l
 - `mail.escloud.us` — live Stalwart + Bulwark;
 - `backup.escloud.us` — future Backrest management UI;
 - `ops.escloud.us` — future Semaphore operational execution UI;
-- `update.escloud.us` — future dedicated custom maintenance/update page; Cloudflare record already created by the user; implementation deferred to a dedicated Codex substage after Semaphore/update backend contract exists;
+- `update.escloud.us` — future dedicated custom maintenance/update page; Cloudflare record already created by the user; dedicated Codex substage after Semaphore/update backend contract exists;
 - `app.escloud.us` — future final private Cloud Infrastructure portal/dashboard; dedicated Codex substage after monitoring/status sources exist;
 - `docs.escloud.us` — reserved;
-- `chat.escloud.us` — reserved;
+- `chat.escloud.us` — reserved; not automatically assigned to Hermes;
 - `cloud.escloud.us` — future file-access layer; implementation unresolved;
 - `sync.escloud.us` — future synchronization layer; implementation unresolved;
 - `go.escloud.us` — retired.
@@ -89,21 +89,37 @@ Fresh runtime verification outranks this file. This inventory records accepted l
 
 ### Remaining Standalone Core Services
 
-Status: **RESEARCH NEXT**.
+Status: **RESEARCH BLOCK COMPLETE / SELECTED**.
 
-Goal: identify any additional full services that provide durable infrastructure value on `edge` and can be deployed/accepted independently before cross-site connectivity and late lifecycle layers.
+Selected product:
 
-Do not include user-specific n8n workflows or agent tasks merely because they execute on `edge`.
+| Component | Outcome | Intended role |
+|---|---|---|
+| Hermes Agent | `SELECTED` | persistent cloud-side agent runtime for agentic reasoning, tools and delegation; future Stage 3 |
+
+Accepted placement/integration direction:
+
+- host-native under `core` by default;
+- Docker not preferred because it would complicate direct reuse of host-native Codex/Antigravity binaries and user/runtime context;
+- n8n remains deterministic workflow/orchestration plane;
+- Hermes remains agentic reasoning/delegation plane;
+- CloudCLI/Codex/Antigravity remain manually usable tools/executors;
+- Stage 3 verifies `n8n -> Hermes -> Codex/AGY -> Hermes -> n8n` at infrastructure level;
+- Hermes -> local vLLM on `ai-node` is deferred until Stage 4 cross-site connectivity is accepted;
+- no public Hermes domain/listener is assumed.
+
+Other previously considered standalone candidates are not part of Stage 3. Notification brokers remain a later monitoring/alerts decision; password/2FA remains optional; feed/change-detection/search/capture products remain workflow-layer decisions unless a later concrete requirement proves a dedicated service necessary.
 
 ### Cross-site Connectivity Foundation
 
-Status: **UNRESOLVED / RESEARCH REQUIRED**.
+Status: **UNRESOLVED / CURRENT NEXT RESEARCH BLOCK**.
 
 - real `edge ↔ ai-node ↔ PVE/Home` flows must be defined first;
 - NetBird is candidate only;
 - direct WireGuard is candidate only;
 - authenticated HTTPS/public mechanisms remain valid candidates where simpler;
-- final transport/topology must be driven by actual required flows and real connectivity conditions.
+- final transport/topology must be driven by actual required flows and real connectivity conditions;
+- accepted connectivity will also enable Hermes to use the local vLLM endpoint on `ai-node`.
 
 ### Cross-site Data & Knowledge Services
 
@@ -120,22 +136,26 @@ Status: **UNRESOLVED / DEPENDS ON CONNECTIVITY**.
 - canonical Obsidian vault remains `/srv/ai-data/knowledge/obsidian` on `ai-node`;
 - `edge` role for Obsidian remains to be selected.
 
-## Accepted late lifecycle targets
+## Planned deployment stage inventory
 
-| Capability/component | Current status | Dependency placement |
+| Stage | Scope | Current status |
 |---|---|---|
-| Backrest + Restic | PRODUCT DIRECTION ACCEPTED / DEPLOYMENT DEFERRED | after main infrastructure service inventory stabilizes; before Semaphore/update testing |
-| Semaphore | PRODUCT ACCEPTED / DEPLOYMENT DEFERRED | after Backrest restore path is usable |
-| `update.escloud.us` | CAPABILITY ACCEPTED / IMPLEMENTATION DEFERRED | dedicated Codex substage coupled to accepted Semaphore/update backend contract |
-| Infrastructure-wide monitoring | REQUIRED / PRODUCT UNRESOLVED | after services, connectivity, Backrest and update subsystem substantially exist |
-| Home/PVE/`ai-node` heartbeat monitoring | REQUIRED / PRODUCT UNRESOLVED | part of late monitoring after cross-site connectivity exists |
-| `app.escloud.us` | CAPABILITY ACCEPTED / IMPLEMENTATION DEFERRED | after monitoring/status sources and final service inventory are known; dedicated Codex substage |
-| Final integrated infrastructure acceptance | REQUIRED | after all above and final cleanup |
+| 3 | Hermes Agent Runtime | PRODUCT/ROLE/PLACEMENT SELECTED; deployment blocked by Stage 02.5 completion |
+| 4 | Cross-site Connectivity Foundation | RESEARCH REQUIRED |
+| 5 | Cross-site Data & Knowledge Services | DEPENDS ON Stage 4; RESEARCH REQUIRED |
+| 6 | Remaining Infrastructure Services | CONDITIONAL; remove/renumber if no service is selected |
+| 7 | Backrest & Recovery | PRODUCT DIRECTION ACCEPTED; topology research pending |
+| 8 | Maintenance & Update: Semaphore + update workflow + Codex `update.escloud.us` substage | PRODUCT ACCEPTED / DEPLOYMENT DEFERRED until Stage 7 restore acceptance |
+| 9 | Monitoring, Heartbeats & Alerts | REQUIRED / PRODUCT UNRESOLVED; deploy after stable inventory/lifecycle layers |
+| 10 | Cloud Portal: `app.escloud.us` | CAPABILITY ACCEPTED / separate Codex substage after Stage 9 |
+| 11 | Final Integrated Infrastructure Acceptance | REQUIRED / FINAL GATE |
 
 ## Post-infrastructure application/workflow layer
 
-These remain valid capabilities but are **not infrastructure-completion blockers** and are implemented after the service framework is accepted unless Stage 02.5 research finds that one requires a dedicated infrastructure service:
+This is a continuous workstream after Stage 11, not an infrastructure-completion stage:
 
+- n8n workflows;
+- Hermes/agent workflows;
 - Universal Capture Inbox — low-friction submission of URLs/text/files/images/commands into workflows;
 - human-in-the-loop approvals — explicit approve/reject/choice gates in workflows;
 - mail-triggered automation;
@@ -143,8 +163,7 @@ These remain valid capabilities but are **not infrastructure-completion blockers
 - bounded AI research jobs;
 - durable application-level store-and-forward/retry for actual cross-site tasks;
 - optional messaging/bot command frontend;
-- orchestration among n8n, CloudCLI, Codex CLI, Antigravity CLI and PAI;
-- Hermes only if it proves a concrete gap not already covered by the accepted stack.
+- user-specific orchestration among n8n, Hermes, Codex CLI, Antigravity CLI and local vLLM/PAI.
 
 ## Optional capabilities still requiring disposition
 
@@ -165,4 +184,4 @@ Stage 1 — COMPLETE / ACCEPTED.
 Stage 2 — COMPLETE / ACCEPTED.  
 Stage 02.5 — ACTIVE / RESEARCH-ONLY.
 
-The old historical Stage 3–7 grouping is no longer authoritative. Exact replacement stage numbering will be accepted only after Stage 02.5 completes the research matrix and normalized service/product inventory.
+The old thematic Stage 3–7 grouping is no longer authoritative. Stage 3 Hermes composition is accepted; later stages follow the dependency-aware roadmap above and remain subject to the remaining Stage 02.5 research.
