@@ -2,7 +2,7 @@
 
 ## Semantics
 
-Fresh runtime verification outranks this file. This inventory records accepted live components, selected/deferred targets, and unresolved later-stage choices.
+Fresh runtime verification outranks this file. This inventory records accepted live components, selected/deferred targets, external dependencies and unresolved later-stage choices.
 
 ## Nodes
 
@@ -10,8 +10,11 @@ Fresh runtime verification outranks this file. This inventory records accepted l
 |---|---|---|
 | `edge` / `edge.escloud.us` | Cloud Infrastructure VPS | LIVE; Stage 0/1/2 accepted; Stage 02.5 research active |
 | `nl-core-vds` | historical legacy VPS identity | HISTORICAL ONLY |
-| `ai-node` | PAI compute/data/knowledge node | external dependency/context; future cross-site peer and local-vLLM endpoint |
-| PVE / Home Infrastructure | home infrastructure plane | external dependency/context; future cross-site peer |
+| `ai-node` | PAI compute/data/knowledge node | external dependency/context; Stage 3 private target; Stage 4 local-vLLM endpoint |
+| PVE / Home Infrastructure | home infrastructure plane | external dependency/context; Stage 3 private routed fabric |
+| CT300 `remote-access` | Home self-hosted NetBird control/routing plane | EXISTING / REUSE IN Stage 3 |
+| VM100 `gateway-core` | Home VRRP/Mihomo gateway | EXISTING / routing participant for Home→NetBird account path |
+| MikroTik | Home physical router / VRRP backup | EXISTING / routing participant and fallback |
 
 ## Live `edge` substrate
 
@@ -62,12 +65,11 @@ Fresh runtime verification outranks this file. This inventory records accepted l
 - active DKIM: `v1-rsa-20260917`, `v1-ed25519-20260917`;
 - legacy DKIM `v1-rsa-20260713` retired;
 - `es@escloud.us`: 6 mailboxes, 14 migrated messages plus useful address-book/calendar/identity state;
-- malformed legacy contact repaired with a new valid UID;
-- legacy admin mailbox contained no useful mail data;
-- outbound Gmail: delivery/SPF/RSA-DKIM/DMARC PASS;
-- inbound Gmail reply: delivery/readback/SPF/DKIM/DMARC PASS.
+- outbound/inbound Gmail acceptance: delivery, SPF, DKIM and DMARC PASS as documented in Stage 2 acceptance.
 
 ## Domain inventory
+
+### Public/current/future `escloud.us`
 
 - `escloud.us` — public masking/masquerade page;
 - `edge.escloud.us` — infrastructure hostname;
@@ -77,72 +79,98 @@ Fresh runtime verification outranks this file. This inventory records accepted l
 - `mail.escloud.us` — live Stalwart + Bulwark;
 - `backup.escloud.us` — future Backrest management UI;
 - `ops.escloud.us` — future Semaphore operational execution UI;
-- `update.escloud.us` — future dedicated custom maintenance/update page; Cloudflare record already created by the user; dedicated Codex substage after Semaphore/update backend contract exists;
-- `app.escloud.us` — future final private Cloud Infrastructure portal/dashboard; dedicated Codex substage after monitoring/status sources exist;
+- `update.escloud.us` — future dedicated custom maintenance/update page; Cloudflare record already exists; dedicated Codex substage after backend contract;
+- `app.escloud.us` — future final Cloud Infrastructure portal/dashboard; dedicated Codex substage after monitoring/status sources;
 - `docs.escloud.us` — reserved;
 - `chat.escloud.us` — reserved; not automatically assigned to Hermes;
 - `cloud.escloud.us` — future file-access layer; implementation unresolved;
 - `sync.escloud.us` — future synchronization layer; implementation unresolved;
 - `go.escloud.us` — retired.
 
-## Stage 02.5 — active research inventory
+### Private `.lan`
 
-### Remaining Standalone Core Services
+- existing Home `.lan` namespace is accepted for NetBird split-DNS reuse on `edge`;
+- `edge.lan` is planned only after Stage 3 enrollment/routing acceptance, through the existing canonical Home DNS mechanism;
+- `.lan` does not replace public `*.escloud.us` service naming.
+
+# Stage 02.5 — active research inventory
+
+## Remaining Standalone Core Services
 
 Status: **RESEARCH BLOCK COMPLETE / SELECTED**.
 
-Selected product:
-
 | Component | Outcome | Intended role |
 |---|---|---|
-| Hermes Agent | `SELECTED` | persistent cloud-side agent runtime for agentic reasoning, tools and delegation; future Stage 3 |
+| Hermes Agent | `SELECTED` | persistent cloud-side agent runtime for agentic reasoning, tools and delegation; future Stage 4 |
 
 Accepted placement/integration direction:
 
 - host-native under `core` by default;
-- Docker not preferred because it would complicate direct reuse of host-native Codex/Antigravity binaries and user/runtime context;
 - n8n remains deterministic workflow/orchestration plane;
 - Hermes remains agentic reasoning/delegation plane;
 - CloudCLI/Codex/Antigravity remain manually usable tools/executors;
-- Stage 3 verifies `n8n -> Hermes -> Codex/AGY -> Hermes -> n8n` at infrastructure level;
-- Hermes -> local vLLM on `ai-node` is deferred until Stage 4 cross-site connectivity is accepted;
+- Stage 4 verifies `n8n -> Hermes -> Codex/AGY -> Hermes -> n8n`;
+- Stage 4 also verifies real `Hermes -> vLLM on ai-node` through the Stage 3 private fabric;
 - no public Hermes domain/listener is assumed.
 
-Other previously considered standalone candidates are not part of Stage 3. Notification brokers remain a later monitoring/alerts decision; password/2FA remains optional; feed/change-detection/search/capture products remain workflow-layer decisions unless a later concrete requirement proves a dedicated service necessary.
+## Cross-site Connectivity Foundation
 
-### Cross-site Connectivity Foundation
+Status: **RESEARCH BLOCK COMPLETE / SELECTED / REUSE EXISTING**.
 
-Status: **UNRESOLVED / CURRENT NEXT RESEARCH BLOCK**.
+Accepted mechanism: existing self-hosted Home NetBird.
 
-- real `edge ↔ ai-node ↔ PVE/Home` flows must be defined first;
-- NetBird is candidate only;
-- direct WireGuard is candidate only;
-- authenticated HTTPS/public mechanisms remain valid candidates where simpler;
-- final transport/topology must be driven by actual required flows and real connectivity conditions;
-- accepted connectivity will also enable Hermes to use the local vLLM endpoint on `ai-node`.
+Fresh audited baseline:
 
-### Cross-site Data & Knowledge Services
+- Home LAN `192.168.1.0/24`;
+- CT300 `192.168.1.90`;
+- NetBird routing peer `100.105.97.126/16`;
+- account overlay `100.105.0.0/16`;
+- `Networks` model active; legacy routes empty;
+- `Home LAN` resource `192.168.1.0/24`;
+- `Internet` resource `0.0.0.0/0` currently restricted to `User Devices` policy;
+- split-DNS `192.168.1.1:53` for `lan`;
+- CT300 own default gateway `192.168.1.1`;
+- NetBird `wt0` traffic policy-routed through VRRP VIP `192.168.1.254` for the existing Home Internet Exit use case.
 
-Status: **UNRESOLVED / DEPENDS ON CONNECTIVITY**.
+Accepted Stage 3 target:
+
+- host-native NetBird peer on `edge`;
+- dedicated Cloud service-peer group/policy;
+- Home LAN access for `edge`, no Home Internet Exit;
+- provider-local `edge` default Internet route unchanged;
+- Home/PAI clientless routing to `edge` via `100.105.0.0/16 -> CT300 192.168.1.90` on VM100 and MikroTik;
+- narrow VM100 forwarding rule only;
+- reuse existing NetBird-managed Site-to-VPN masquerade;
+- reuse `.lan` split DNS and later add `edge.lan`;
+- direct/relay, reboot, public-service non-regression and controlled VRRP acceptance.
+
+Detailed record: `STAGE_02_5_CONNECTIVITY_SELECTION_ACCEPTANCE_2026-09-17.md`.
+
+## Cross-site Data & Knowledge Services
+
+Status: **CURRENT NEXT RESEARCH BLOCK**.
+
+Unresolved:
 
 - VPS working storage and web file management;
 - MacBook/iPhone/iPad/`ai-node` file access;
 - Filestash — candidate only;
 - SFTPGo — candidate only;
 - Syncthing — under review by use case;
-- selected-directory synchronization — unresolved;
+- selected-directory synchronization;
 - Self-hosted LiveSync/CouchDB — candidate only for Obsidian;
-- other current free/self-hosted Obsidian mechanisms must be researched;
-- canonical Obsidian vault remains `/srv/ai-data/knowledge/obsidian` on `ai-node`;
-- `edge` role for Obsidian remains to be selected.
+- other current free/self-hosted Obsidian mechanisms;
+- exact `edge` Obsidian role.
 
-## Planned deployment stage inventory
+Canonical Obsidian vault remains `/srv/ai-data/knowledge/obsidian` on `ai-node`.
+
+# Planned deployment stage inventory
 
 | Stage | Scope | Current status |
 |---|---|---|
-| 3 | Hermes Agent Runtime | PRODUCT/ROLE/PLACEMENT SELECTED; deployment blocked by Stage 02.5 completion |
-| 4 | Cross-site Connectivity Foundation | RESEARCH REQUIRED |
-| 5 | Cross-site Data & Knowledge Services | DEPENDS ON Stage 4; RESEARCH REQUIRED |
+| 3 | Cross-site Connectivity Foundation | MECHANISM/ARCHITECTURE SELECTED; deployment blocked by Stage 02.5 completion |
+| 4 | Hermes Agent Runtime | PRODUCT/ROLE/PLACEMENT SELECTED; depends on Stage 3; must include local-vLLM acceptance |
+| 5 | Cross-site Data & Knowledge Services | RESEARCH REQUIRED; depends on Stage 3 connectivity |
 | 6 | Remaining Infrastructure Services | CONDITIONAL; remove/renumber if no service is selected |
 | 7 | Backrest & Recovery | PRODUCT DIRECTION ACCEPTED; topology research pending |
 | 8 | Maintenance & Update: Semaphore + update workflow + Codex `update.escloud.us` substage | PRODUCT ACCEPTED / DEPLOYMENT DEFERRED until Stage 7 restore acceptance |
@@ -152,14 +180,14 @@ Status: **UNRESOLVED / DEPENDS ON CONNECTIVITY**.
 
 ## Post-infrastructure application/workflow layer
 
-This is a continuous workstream after Stage 11, not an infrastructure-completion stage:
+Continuous workstream after Stage 11, not an infrastructure-completion stage:
 
 - n8n workflows;
 - Hermes/agent workflows;
-- Universal Capture Inbox — low-friction submission of URLs/text/files/images/commands into workflows;
-- human-in-the-loop approvals — explicit approve/reject/choice gates in workflows;
+- Universal Capture Inbox;
+- human-in-the-loop approvals;
 - mail-triggered automation;
-- continuous information intake/change detection workflows;
+- continuous information intake/change detection;
 - bounded AI research jobs;
 - durable application-level store-and-forward/retry for actual cross-site tasks;
 - optional messaging/bot command frontend;
@@ -169,7 +197,7 @@ This is a continuous workstream after Stage 11, not an infrastructure-completion
 
 - password/2FA vault;
 - limited failover/secondary-endpoint role;
-- additional messaging/control frontend only if it adds value beyond the chosen workflow interaction surfaces.
+- additional messaging/control frontend only if it adds value beyond selected workflow interaction surfaces.
 
 ## Recovery artifacts
 
@@ -184,4 +212,4 @@ Stage 1 — COMPLETE / ACCEPTED.
 Stage 2 — COMPLETE / ACCEPTED.  
 Stage 02.5 — ACTIVE / RESEARCH-ONLY.
 
-The old thematic Stage 3–7 grouping is no longer authoritative. Stage 3 Hermes composition is accepted; later stages follow the dependency-aware roadmap above and remain subject to the remaining Stage 02.5 research.
+Cross-site Connectivity Foundation selection is complete. The next Stage 02.5 research block is Cross-site Data & Knowledge Services.
