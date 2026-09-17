@@ -1,6 +1,6 @@
 # Cloud Infrastructure — Accepted Implementation Phases
 
-**Status:** ACCEPTED chronology; Stage 02.5 is the active research/reconciliation checkpoint and all post-Stage-2 deployment stages remain subject to its final acceptance.
+**Status:** Stage 0–2 COMPLETE / ACCEPTED; Stage 02.5 ACTIVE / RESEARCH-ONLY. Stage 3 composition is selected, but no post-Stage-2 production branch opens until Stage 02.5 is fully accepted.
 
 This document is the canonical stage chronology for Cloud Infrastructure / `edge`.
 
@@ -10,35 +10,34 @@ Each implementation stage has its own work branch and follows the accepted-first
 
 1. requirements/baseline review;
 2. legacy implementation reconstruction where relevant;
-3. deployment of known/accepted dependency-ready components;
-4. research/selection only for genuinely unresolved mechanisms or concrete incompatibilities;
-5. stage-composition acceptance;
-6. stage-scoped architecture/deployment contract;
-7. deployment;
-8. verification/acceptance;
-9. persistence/read-back in GitHub;
-10. branch transition only after complete stage acceptance.
+3. research/selection only for genuinely unresolved mechanisms or concrete incompatibilities;
+4. explicit stage-composition acceptance;
+5. stage-scoped architecture/deployment contract and recovery path;
+6. deployment;
+7. verification and explicit acceptance;
+8. persistence/read-back in GitHub;
+9. branch transition only after complete stage acceptance.
 
-Do not reopen accepted products without a concrete reason. Historical versions are evidence, not automatic pins. Docker + Compose are the default runtime for suitable application services; host-native remains valid where materially simpler.
+Do not reopen accepted products without a concrete incompatibility or changed requirement. Historical versions are evidence, not automatic pins. Docker + Compose remain the default for suitable application services; host-native placement is preferred where containerization materially complicates the supported operating model or integration with existing host-native executors.
 
 ## Roadmap construction rule after Stage 2
 
-Post-Stage-2 work is ordered by dependency direction rather than by broad thematic categories.
+Post-Stage-2 work is ordered by dependency direction rather than by historical thematic categories.
 
 The governing sequence is:
 
-1. deploy remaining standalone core services that can be fully accepted on `edge` without depending on future Home/PAI integration or late lifecycle tooling;
-2. establish the required `edge ↔ ai-node ↔ PVE/Home` connectivity foundation before deploying services whose correctness depends on that connectivity;
-3. deploy cross-site data/integration services such as working-file access, selected-directory synchronization and Obsidian synchronization only after the transport they depend on is accepted;
-4. finish any remaining infrastructure services so the production service inventory is substantially stable;
-5. deploy Backrest and prove backup/restore against the substantially complete server;
-6. deploy Semaphore and the dedicated maintenance/update surface together, using working Backrest pre-update backups during update testing;
-7. deploy infrastructure-wide monitoring/heartbeats/alerts only after the monitored service inventory, cross-site connectivity and lifecycle services substantially exist;
-8. build the final `app.escloud.us` portal on top of the accepted monitoring/status sources and final service inventory;
+1. deploy Hermes as the one selected remaining standalone core service;
+2. establish `edge ↔ ai-node ↔ PVE/Home` connectivity before services that depend on it;
+3. deploy cross-site data/knowledge services such as files, selected-directory synchronization and Obsidian only after connectivity is accepted;
+4. complete any other selected infrastructure services whose dependencies are now satisfied;
+5. deploy Backrest + Restic and prove restore against the substantially complete service inventory;
+6. deploy Semaphore and the maintenance/update workflow, then build `update.escloud.us` as a separate Codex substage against the real backend contract;
+7. deploy infrastructure-wide monitoring, Home/PAI heartbeats and alerts after the monitored inventory and lifecycle services substantially exist;
+8. build `app.escloud.us` as a separate Codex substage on top of the final service inventory and accepted monitoring/status sources;
 9. perform final server-wide integrated acceptance and cleanup;
-10. only after the infrastructure framework is accepted, develop ongoing user-specific n8n/agent automations and application workflows as a separate, continuously evolving layer.
+10. only after infrastructure acceptance, develop ongoing user-specific n8n/agent workflows as a separate continuously evolving workstream.
 
-This prevents repeated rework of monitoring, backup policy, update tooling and portal composition as new services are added.
+This prevents repeated rework of connectivity-dependent services, backup policy, update tooling, monitoring and portal composition.
 
 ---
 
@@ -99,7 +98,7 @@ Accepted Stage 2 production set:
 - Bulwark;
 - accepted mail migration, DNS/DKIM/TLS/public-protocol contract and external bidirectional E2E verification.
 
-Backrest, Semaphore, the maintenance/update page and the full private `app.escloud.us` portal were explicitly removed from Stage 2 completion scope because their correct design depends on a substantially complete final service inventory.
+Backrest, Semaphore, maintenance/update UI and `app.escloud.us` were deliberately moved out of Stage 2 so they can be designed against the substantially complete server.
 
 ---
 
@@ -115,165 +114,267 @@ Backrest, Semaphore, the maintenance/update page and the full private `app.esclo
 
 ### Purpose
 
-Stage 02.5 is the post-Stage-2 architecture/research checkpoint for the entire remaining Cloud Infrastructure roadmap. It reconciles the full remaining capability inventory, selects unresolved products/mechanisms where evidence permits, and replaces the old thematic Stage 3–7 ordering with dependency-aware deployment stages.
-
-### Accepted dependency-aware direction
-
-Stage 02.5 must preserve the following execution model:
-
-1. `Remaining Standalone Core Services` first;
-2. `Cross-site Connectivity Foundation` before any service that requires Home/PAI connectivity;
-3. cross-site file/sync/Obsidian/integration services after connectivity;
-4. all remaining infrastructure services before infrastructure-wide lifecycle/presentation layers;
-5. Backrest before Semaphore/update testing;
-6. Semaphore plus a dedicated maintenance/update page as one workstream;
-7. monitoring/heartbeats/alerts after the service inventory and lifecycle components substantially exist;
-8. final `app.escloud.us` after monitoring/status sources are accepted;
-9. final integrated infrastructure acceptance;
-10. user-specific n8n/agent workflows after the infrastructure framework is accepted.
-
-### Required research domains
-
-Research must still cover every unresolved functional domain, including:
-
-- remaining standalone full services that provide enduring infrastructure value on `edge`;
-- `edge ↔ ai-node ↔ PVE/Home` connectivity and the actual flows it must support;
-- VPS working-file access and web file management;
-- MacBook/iPhone/iPad/`ai-node` file access;
-- selected-directory synchronization;
-- free/self-hosted Obsidian synchronization while `ai-node:/srv/ai-data/knowledge/obsidian` remains canonical;
-- off-site/recovery topology around the accepted Backrest/Restic direction;
-- monitoring, external availability checks, dead-man/heartbeats and alert delivery;
-- optional messaging/control frontend, password/2FA vault and limited failover/secondary endpoint;
-- Hermes or any other additional agent runtime only if it closes a concrete gap not already satisfied by n8n, CloudCLI, Codex CLI and Antigravity CLI;
-- application/workflow capabilities such as Capture Inbox, approvals, mail-triggered automation, durable store-and-forward and bounded AI research, while recognizing that their deployment belongs to the post-infrastructure workflow layer unless they prove to require a dedicated infrastructure service.
+Stage 02.5 reconciles the complete remaining capability inventory, selects unresolved products/mechanisms, fixes dependency order and produces the final remaining roadmap before any new production branch opens.
 
 ### Research outcome classes
 
-Each unresolved capability must end Stage 02.5 with one of:
+Each unresolved capability ends Stage 02.5 as one of:
 
-- `SELECTED` — concrete product/mechanism accepted for later implementation;
-- `REUSE EXISTING` — no new package/service required;
-- `DEFERRED` — useful but correctly decided only after a later dependency becomes concrete;
-- `REJECTED` — insufficient value or unnecessary duplication/complexity;
-- `RESEARCH STILL REQUIRED` — only when available evidence is genuinely insufficient.
+- `SELECTED`;
+- `REUSE EXISTING`;
+- `DEFERRED`;
+- `REJECTED`;
+- `RESEARCH STILL REQUIRED` only where evidence is genuinely insufficient.
 
-### Required Stage 02.5 deliverables
+### Current accepted research result — Remaining Standalone Core Services
 
-Before Stage 02.5 closes, explicitly accept:
+**Hermes Agent — SELECTED.**
 
-1. reconciled remaining capability inventory;
-2. research matrix for every unresolved capability;
-3. normalized remaining service/product inventory;
-4. revised dependency graph and execution order;
-5. final post-Stage-2 stage names/numbers/scopes;
-6. explicit placement of Backrest, Semaphore + maintenance/update page, monitoring, `app.escloud.us` and final integrated acceptance;
-7. explicit list of intentionally deferred decisions and their blocking dependencies;
-8. canonical GitHub updates and read-back.
+Hermes is the only selected full service in this block. Its role is a persistent cloud-side agent runtime on `edge`, distinct from both n8n and the manual Cloud AI workspace.
 
-No production deployment branch after Stage 2 becomes authoritative until these deliverables are accepted.
+Role separation:
+
+- **n8n** — deterministic automation/orchestration: schedules, webhooks, mail/API triggers, data routing and workflow state;
+- **Hermes** — agentic reasoning, tool use, supervisory/delegation logic and long-running autonomous agent execution;
+- **CloudCLI / Codex CLI / Antigravity CLI** — manual cloud-AI workspace and specialized executors available directly to the user; Codex/Antigravity can also be delegated to by Hermes;
+- **OpenClaw in Home/PAI** — local personal agent role;
+- **vLLM on `ai-node`** — local inference backend, connected to Hermes only after cross-site connectivity exists.
+
+Stage 3 should use a **host-native Hermes deployment under `core`** unless a concrete Stage 3 compatibility finding requires otherwise. Docker is not the preferred design because Hermes must directly reuse the existing host-native Codex/Antigravity executors and their working user context; containerizing Hermes would add avoidable binary/auth/runtime bridging.
+
+Stage 3 must establish the infrastructure integration contract for this future flow without prematurely implementing user-specific workflows:
+
+```text
+Internet / schedule / mail / webhook
+                |
+               n8n
+                |
+        deterministic steps
+                |
+                v
+             Hermes
+        agentic reasoning
+          +-----+-----+
+          |     |     |
+          v     v     v
+        Codex   AGY   vLLM
+          |             ^
+          v             |
+       result     enabled after Stage 4
+          |
+          v
+         n8n
+          |
+notification / storage / next step
+```
+
+During Stage 3 the Codex and Antigravity branches can be implemented and verified locally on `edge`; the vLLM branch is explicitly deferred until Stage 4 connectivity is accepted. User-specific n8n/Hermes automations remain post-infrastructure work.
+
+### Remaining Stage 02.5 research
+
+Stage 02.5 still must research and disposition:
+
+- cross-site connectivity and real flows;
+- working-file access and web file management;
+- MacBook/iPhone/iPad/`ai-node` access;
+- selected-directory synchronization;
+- free/self-hosted Obsidian synchronization while `ai-node:/srv/ai-data/knowledge/obsidian` stays canonical;
+- any additional infrastructure service that proves necessary after those dependencies are understood;
+- Backrest/off-site recovery topology details;
+- external availability monitoring, dead-man/heartbeats and alert delivery;
+- optional password/2FA vault, messaging/control frontend and limited failover;
+- application/workflow capabilities, while their actual implementation remains outside the finite infrastructure build unless they require a dedicated infrastructure service.
+
+No Stage 3 production branch becomes authoritative until the complete Stage 02.5 deliverables are explicitly accepted and canonical files are read back.
 
 ---
 
-## Provisional post-Stage-02.5 deployment skeleton
+# Planned post-Stage-02.5 deployment roadmap
 
-The following is an **accepted dependency skeleton, not yet the final numbered roadmap**. Exact stage numbers and component composition will be finalized after the research matrix is accepted.
+The dependency order below is accepted. Stage 3 composition is selected now; later stage composition remains subject to the relevant Stage 02.5 research decisions. If the conditional Stage 6 slot is empty at Stage 02.5 closure, it should be removed rather than creating an empty deployment branch, with later stage numbering normalized before Stage 3 opens.
 
-### A. Remaining Standalone Core Services
+## Stage 3 — Edge Hermes Agent Runtime
 
-Deploy any still-required full services that can operate and be accepted independently on `edge` without relying on later Home/PAI connectivity, monitoring, backup-management or update/portal layers.
+### Planned work branch
 
-This stage intentionally excludes user-specific n8n workflows and agent tasks; those belong to the post-infrastructure application/workflow layer.
+`03 — Edge Hermes Agent Runtime`
 
-### B. Cross-site Connectivity Foundation
+### Scope
 
-Define and deploy the minimum required transport between `edge`, `ai-node` and PVE/Home from real flows. Compare NetBird, direct WireGuard, authenticated HTTPS and other simple mechanisms only against those requirements.
+Only Hermes and its infrastructure-level integration with already accepted local `edge` executors.
 
-The stage establishes connectivity, routing/reachability and required machine endpoints. It does not prematurely implement application-level durable queues or user workflows.
+Planned requirements:
 
-### C. Cross-site Data & Knowledge Services
+- host-native runtime under `core` by default;
+- persistent upstream-supported service lifecycle;
+- persistent Hermes state/configuration using the accepted host layout conventions where compatible with upstream;
+- no new public WebUI/port/domain by assumption;
+- direct Hermes access to Codex and Antigravity executors without routing through CloudCLI;
+- a stable machine interface by which n8n can invoke Hermes and receive task result/status;
+- verify the `n8n -> Hermes -> Codex/AGY -> Hermes -> n8n` infrastructure path with a minimal non-user-specific acceptance flow;
+- reserve the `vLLM on ai-node` provider/inference branch in architecture, but do not implement it before Stage 4 connectivity;
+- no Capture Inbox, vendor watchers, bounded research jobs or other user-specific automations in Stage 3.
 
-After connectivity is accepted, deploy services that depend on it, including as selected by Stage 02.5 research:
+## Stage 4 — Edge Cross-site Connectivity Foundation
+
+### Planned work branch
+
+`04 — Edge Cross-site Connectivity Foundation`
+
+### Scope
+
+Define real flows first, then select/deploy the minimum required transport/reachability among:
+
+- `edge`;
+- `ai-node`;
+- PVE/Home Infrastructure.
+
+Candidate mechanisms such as NetBird, direct WireGuard, authenticated HTTPS or another simple transport remain unselected until compared against actual flows and real operating conditions. This stage also enables the deferred Hermes -> local vLLM relationship after connectivity acceptance.
+
+Connectivity is transport/reachability/endpoints. Durable application-level task queues/retry semantics remain a later workflow concern.
+
+## Stage 5 — Edge Cross-site Data & Knowledge Services
+
+### Planned work branch
+
+`05 — Edge Cross-site Data & Knowledge Services`
+
+### Scope
+
+After Stage 4 acceptance, deploy the selected connectivity-dependent data services:
 
 - VPS working-file access and web file management;
-- cross-device access from MacBook/iPhone/iPad/`ai-node`;
+- MacBook/iPhone/iPad/`ai-node` access;
 - selected-directory synchronization;
-- Obsidian synchronization/relay/mirror role while the canonical vault remains on `ai-node`.
+- Obsidian synchronization/relay/mirror role.
 
-### D. Remaining Infrastructure Services
+Canonical Obsidian remains `ai-node:/srv/ai-data/knowledge/obsidian`.
 
-Deploy any other selected infrastructure service whose dependencies are now satisfied, so the overall production service inventory becomes substantially stable before lifecycle tooling is finalized.
+## Stage 6 — Edge Remaining Infrastructure Services
 
-### E. Backrest & Recovery
+### Planned status
 
-Deploy/configure the already accepted Backrest + Restic direction against the substantially complete server. Define repositories, exclusions, schedules, retention, off-site topology and verified restore procedures.
+**CONDITIONAL.**
 
-Backrest restore acceptance is mandatory before update testing.
+Use this stage only if the remaining Stage 02.5 research selects another full infrastructure service whose dependencies are satisfied after Stage 5 and which does not belong to backup/update/monitoring/portal layers. Do not create an empty branch merely to preserve numbering.
 
-### F. Semaphore & Maintenance / Update
+## Stage 7 — Edge Backrest & Recovery
 
-Deploy Semaphore and the maintenance/update surface together, using the working PVE/Home update tooling as an engineering reference that is audited and adapted for `edge` rather than copied blindly.
+### Planned work branch
 
-The dedicated custom maintenance/update page is `update.escloud.us`; it is separate from the general `app.escloud.us` portal.
+`07 — Edge Backrest & Recovery`
 
-A dedicated Codex substage will build `update.escloud.us` only after the real Semaphore/update backend contract and status/control interfaces are known.
+### Scope
 
-### G. Monitoring, Heartbeats & Alerts
+Deploy/configure the already accepted Backrest + Restic direction against the substantially complete server. Define:
 
-Deploy production monitoring only after the infrastructure it monitors substantially exists. The final monitoring scope may include:
+- backup scope and exclusions;
+- repository/off-site topology;
+- retention and schedules;
+- recovery procedures;
+- verified restore acceptance.
+
+A usable restore path is mandatory before Stage 8 update testing.
+
+## Stage 8 — Edge Maintenance & Update
+
+### Planned work branch
+
+`08 — Edge Maintenance & Update`
+
+### Scope
+
+Deploy Semaphore and the maintenance/update workflow after Backrest acceptance. Audit/adapt the existing PVE/Home updater; do not copy PVE-specific implementation blindly.
+
+Dedicated Codex substage:
+
+**Stage 8C — Codex: build `update.escloud.us`**
+
+This substage begins only after the real Semaphore/update backend, status model and control contract are known. `update.escloud.us` remains separate from `app.escloud.us`.
+
+## Stage 9 — Edge Monitoring, Heartbeats & Alerts
+
+### Planned work branch
+
+`09 — Edge Monitoring, Heartbeats & Alerts`
+
+### Scope
+
+Deploy production monitoring against the substantially complete infrastructure, including as selected:
 
 - `edge` service availability;
-- cross-site connectivity;
+- important external availability checks;
+- cross-site connectivity health;
 - selected Home/PVE/`ai-node` heartbeats;
 - file/sync health where useful;
-- Backrest backup/job health;
+- Backrest job/backup health;
 - Semaphore/update health/state;
-- important external availability checks and alert delivery.
+- alert delivery.
 
-Avoid a heavyweight metrics/logging stack unless Stage 02.5 research demonstrates concrete value.
+Avoid a heavyweight metrics/logging platform unless research proves concrete value.
 
-### H. `app.escloud.us` Portal
+## Stage 10 — Edge Cloud Portal
 
-Build the private Cloud Infrastructure portal after the final service inventory and monitoring/status sources are known.
+### Planned work branch
 
-The portal is a navigation/status surface, not a replacement operational control plane. Detailed update/maintenance control remains on `update.escloud.us`.
+`10 — Edge Cloud Portal`
 
-A dedicated Codex substage will build `app.escloud.us` against the accepted service URLs and monitoring/status interfaces.
+### Scope
 
-### I. Final Integrated Infrastructure Acceptance
+Build `app.escloud.us` only after Stage 9 monitoring/status sources and the final service inventory are accepted.
 
-Perform server-wide acceptance only after:
+Dedicated Codex substage:
+
+**Stage 10C — Codex: build `app.escloud.us`**
+
+The portal is navigation plus concise infrastructure/status presentation. It does not absorb detailed maintenance/update controls from `update.escloud.us`.
+
+## Stage 11 — Edge Final Integrated Infrastructure Acceptance
+
+### Planned work branch
+
+`11 — Edge Final Integrated Infrastructure Acceptance`
+
+### Scope
+
+Perform final server-wide acceptance only after:
 
 - all selected infrastructure services are accepted;
-- cross-site integration is accepted;
+- cross-site connectivity and data/knowledge integration are accepted;
 - Backrest backup/restore is accepted;
 - Semaphore/update and `update.escloud.us` are accepted;
-- monitoring/alerts are accepted;
+- monitoring/heartbeats/alerts are accepted;
 - `app.escloud.us` is accepted;
 - final cleanup is complete.
 
-### J. Automation & User Workflows
+Stage 11 closes the finite Cloud Infrastructure build.
 
-This is a separate post-infrastructure layer rather than a blocker for infrastructure completion.
+---
 
-Examples include:
+## Post-infrastructure continuous workstream — Automation & User Workflows
 
-- Universal Capture Inbox — user submission of URLs/text/files/images into workflows;
-- human-in-the-loop approvals — approve/reject/choice gates inside n8n/agent workflows;
+This is deliberately **not** an infrastructure-completion stage. It begins only after Stage 11 and evolves continuously.
+
+Examples:
+
+- n8n workflows;
+- Hermes/agent workflows;
+- Universal Capture Inbox — submission of URLs/text/files/images/commands into workflows;
+- human-in-the-loop approvals;
 - mail-triggered automation;
-- continuous vendor/document intake;
+- continuous vendor/document intake and change detection;
 - bounded AI research jobs;
-- durable application-level store-and-forward/retry for cross-site tasks;
-- user-facing bot/messaging commands;
-- ongoing Codex/Antigravity/CloudCLI orchestration.
+- durable application-level store-and-forward/retry for real cross-site tasks;
+- messaging/bot commands;
+- user-specific orchestration among n8n, Hermes, Codex, Antigravity, local vLLM and other accepted endpoints.
 
-These workflows will evolve continuously and therefore should not prevent the infrastructure itself from reaching final acceptance.
+Infrastructure stages should provide stable primitives for these workflows without attempting to prebuild the workflows themselves.
 
 ---
 
 ## Historical Stage 3–7 disposition
 
-The previous historical groupings:
+The previous thematic groupings:
 
 - `03 — Edge Monitoring & Human Interaction`;
 - `04 — Edge Files, Sync & Obsidian`;
@@ -281,9 +382,7 @@ The previous historical groupings:
 - `06 — Edge Home & PAI Integration`;
 - `07 — Edge Optional Capabilities`;
 
-are retained only as historical planning context and are **not authoritative future deployment stages**. They mixed infrastructure services, cross-site dependencies, late lifecycle tooling and user workflows in ways that would cause repeated rework.
-
-Final replacement stage numbering will be accepted at the end of Stage 02.5.
+are historical planning context only and are not authoritative future deployment stages.
 
 ---
 
@@ -298,4 +397,4 @@ Current branch:
 
 `02.5 — Remaining Functional Scope Reconciliation & Research`
 
-Next activity: research and selection for **Remaining Standalone Core Services** before any new production deployment branch is opened.
+Current next research block: **Cross-site Connectivity Foundation**. Hermes selection for Stage 3 is accepted, but Stage 3 does not begin until all Stage 02.5 deliverables are accepted.
