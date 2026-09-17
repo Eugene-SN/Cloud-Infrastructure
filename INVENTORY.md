@@ -24,7 +24,7 @@ This inventory distinguishes live accepted runtime from future accepted/planned 
 - Xray `26.3.27`;
 - Hysteria2 `2.12.3`;
 - Authelia `4.39.27`;
-- UFW listener contract: TCP 22/80/443 and UDP 443 only;
+- UFW listener contract: Stage 1 TCP 22/80/443 and UDP 443 plus Stage 2 mail TCP 25/465/993; Docker mail publication is IPv4-only;
 - shared service account `core`, UID/GID `1000:1000`, locked password, no sudo/docker group;
 - `core` linger enabled for persistent headless Antigravity systemd user service; `user@1000.service` active and `/run/user/1000/bus` present at acceptance.
 
@@ -44,8 +44,8 @@ This inventory distinguishes live accepted runtime from future accepted/planned 
 | CloudCLI | LIVE / ACCEPTED | `1.37.3`; systemd `cloudcli.service`; one new local user; `127.0.0.1:18140`; public `https://code.escloud.us/`; Authelia protected |
 | Codex CLI | LIVE / ACCEPTED | `0.154.0`; official standalone runtime; fresh ChatGPT auth; managed app-server Remote Control enabled and server-side accepted |
 | Antigravity CLI | LIVE / ACCEPTED | `1.2.5`; fresh Google OAuth; instance `edge`; `antigravity-cli-daemon.service` enabled/running under `core`; headless Remote Control registered/running; user confirmed `edge` Online in UI |
-| Stalwart | TARGET-ACCEPTED / source migration prepared | clean production deployment pending; legacy useful state captured without credential reuse |
-| Bulwark | TARGET-ACCEPTED / pending Stage 2 | webmail frontend; fresh session/auth state required |
+| Stalwart | LIVE / ACCEPTED | `0.16.22`; fresh production credentials/keys; public SMTP 25, SMTPS 465, IMAPS 993; useful legacy user data migrated and E2E accepted |
+| Bulwark | LIVE / ACCEPTED | `1.9.2`; fresh session/admin state; `127.0.0.1:18084`; public default webmail route on `mail.escloud.us` |
 | Backrest | TARGET-ACCEPTED / pending Stage 2 | `backup.escloud.us` allocated; clean deployment/credentials |
 | Semaphore | TARGET-ACCEPTED / pending Stage 2 | `ops.escloud.us` allocated; clean deployment/credentials |
 | Cloud Infrastructure portal | TARGET-ACCEPTED / pending Stage 2 | `app.escloud.us`; replaces legacy Homepage |
@@ -106,20 +106,25 @@ This inventory distinguishes live accepted runtime from future accepted/planned 
 - Codex login and managed daemon remained healthy after Antigravity Remote Control activation;
 - legacy custom `codex-app-server` and `codex-runner` are absent; official Codex managed daemon supersedes their function.
 
-### Mail migration source inventory
+### Mail accepted production inventory
 
-- migration-preservation archive `/tmp/edge-migration-preservation-20260916T141048Z.tar.gz`, SHA256 `0203e5845f57bc1d04b384cef2b26a45fbff855c341e1edf1193034c34de9fdf`; retain until final mail migration acceptance;
-- legacy Stalwart `0.16.21`, image digest `sha256:93c574e52249c1ebf90061da2c4c0756a7b72abfcc1fec34506a03c2e38b5977`;
-- preserved source storage RocksDB, ~111 MB;
-- source domain `escloud.us`, manual DNS and manual TLS management;
-- source accounts: `es@escloud.us` (`Eugene S`, User) and legacy `admin@escloud.us` (System Administrator); no source credentials will be reused;
-- source DKIM selector `v1-rsa-20260713`, RSA/SHA256; legacy private key is excluded from target credential/key material;
-- Vandelay `1.0.10` temporary migration archive `/tmp/stalwart-vandelay-capture/es.sqlite`, SHA256 `45e4d80e421921440a936f0fdb24f7a8121adcbf7252b77b90812ca243823f42`, SQLite integrity `ok`;
-- captured account source is JMAP account `c` / `es@escloud.us` using a temporary recovery administrator, not the legacy user password;
-- Vandelay captured 6 mailboxes, 14 emails, 14 blobs (~405.2 KB), 2 address books, 1 calendar, 1 identity and 1 participant identity; zero Sieve scripts, file nodes and calendar events;
-- one source ContactCard (`id=b`, address book `c`) is malformed: missing UID, but contains meaningful name and email fields; it was not imported into the Vandelay archive;
-- migration constraint: reconstruct that contact separately with a new valid UID during target migration; do not mutate the preserved source;
-- temporary migration/recovery containers and networks are removed after audits; current production applications remain non-regressed.
+- Stalwart `0.16.22`, image `stalwartlabs/stalwart:v0.16`, digest `sha256:388dcb75a70727c5b551249a6d34b1f1321294852489e4fa3a4e6be698b7c4f0`;
+- Bulwark `1.9.2`, image `ghcr.io/bulwarkmail/webmail:1.9.2`, digest `sha256:0e8d1339277033b6569a76c6f8192396e6edd66fd917d64d9ed505e8b81dac6d`;
+- compose `/opt/mail-stack/compose.yaml`, SHA256 `7de766ed23fd7c30f63870f25af648f018d3295685fb58e40b88eaa578d2d4de`;
+- nginx vhost `/etc/nginx/sites-available/mail-escloud-us.conf`, SHA256 `601ff1feffcef8729901b1e00ab98001934db03a1315b55233965ba5d75f079c`;
+- Stalwart state `/srv/mail/stalwart/etc`, `/srv/mail/stalwart/lib`; Bulwark state `/srv/mail/bulwark/{settings,admin,admin-state,telemetry}`;
+- loopback web backends: Stalwart `127.0.0.1:18083 -> 8080`, Bulwark `127.0.0.1:18084 -> 3000`;
+- split-route contract: default webmail routes to Bulwark; Stalwart management/JMAP routes remain on Stalwart;
+- public protocol listeners: IPv4 TCP/25 SMTP, TCP/465 SMTPS submission, TCP/993 IMAPS; TCP/587, TCP/995 and TCP/4190 remain unpublished;
+- fresh mail user/admin credentials, fresh Bulwark session secret/admin state, fresh DKIM key material; no legacy authentication/session/key material reused;
+- `es@escloud.us` useful source data migrated: 6 mailboxes, 14 emails, address-book/calendar/identity state; malformed legacy contact reconstructed with a new valid UID while preserving its useful fields and Trusted Senders relationship;
+- legacy `admin@escloud.us` direct audit found 0 messages and only default/automatic state; no useful admin data required migration;
+- MX `10 mail.escloud.us.`, A `45.92.156.17`, PTR `mail.escloud.us`, SPF `v=spf1 ip4:45.92.156.17 -all`, DMARC `v=DMARC1; p=none; adkim=s; aspf=s`;
+- active DKIM selectors: `v1-rsa-20260917` and `v1-ed25519-20260917`; legacy `v1-rsa-20260713` retired after E2E acceptance;
+- external Gmail outbound test: delivery PASS, SPF PASS, RSA DKIM PASS using `v1-rsa-20260917`, DMARC PASS; Gmail reported the parallel Ed25519 signature neutral/no-key without affecting RSA/DMARC acceptance;
+- external Gmail inbound reply: delivery PASS through SMTP/25, readback PASS through IMAPS/993; Stalwart recorded Gmail SPF/DKIM/DMARC PASS and reply references matched the exact outbound test message;
+- temporary Vandelay capture `/tmp/stalwart-vandelay-capture` removed after final acceptance;
+- migration-preservation archive `/tmp/edge-migration-preservation-20260916T141048Z.tar.gz`, SHA256 `0203e5845f57bc1d04b384cef2b26a45fbff855c341e1edf1193034c34de9fdf`, intentionally retained through the remainder of Stage 2 for still-pending legacy-reference work.
 
 ## Domain inventory
 
@@ -133,7 +138,7 @@ Current active/allocated names:
 - `app.escloud.us` — Stage 2 portal target;
 - `n8n.escloud.us` — live accepted n8n;
 - `code.escloud.us` — live accepted CloudCLI;
-- `mail.escloud.us` — Stalwart/Bulwark target;
+- `mail.escloud.us` — live accepted Stalwart/Bulwark mail stack;
 - `backup.escloud.us` — Backrest target;
 - `ops.escloud.us` — Semaphore target;
 - `docs.escloud.us` — reserved technical documentation library;
@@ -150,7 +155,8 @@ Current shared SANs: `escloud.us`, `app`, `auth`, `backup`, `chat`, `cloud`, `co
 - `/opt/vpn-stack/state/web-domains.txt` SHA256 `cab0467df32ef5cbed2af58f0ac91624962632de84af8faf86286788ca4a7eb9`;
 - `/opt/vpn-stack/scripts/maintctl` SHA256 `0e7b2b2f6b1a3b3d6563157520d15060e3c29ce64c94e147035a3beddced3257`;
 - `maintctl web-check` PASS for current SAN names;
-- Certbot deploy hook synchronizes Xray/Hysteria certificate copies.
+- Certbot deploy hook synchronizes Xray/Hysteria/Stalwart certificate copies;
+- mail TLS acceptance fingerprint `3D:5A:77:15:78:4C:53:74:4B:D7:C2:6C:86:96:5B:10:DB:F9:7B:32:45:9A:F0:CD:B9:BD:39:A1:8B:9B:9B:F8`.
 
 ## Backup / operations direction
 
@@ -185,11 +191,11 @@ Current shared SANs: `escloud.us`, `app`, `auth`, `backup`, `chat`, `cloud`, `co
 
 - canonical legacy baseline: `NL_CORE_VDS_Current_State_Baseline_2026-09-14.md`;
 - Stage 1 recovery archive: `/srv/backups/edge-stage1/edge-stage1-base-20260916T234611Z.tar.gz`, SHA256 `37486e763ddac4c5ef3a92a35c3dad49787d75ffd8b97499073c79af617cc566`;
-- external migration-preservation archive remains required during Stage 2 primarily for mail data/settings reconstruction; do not restore application credentials from it;
-- temporary Vandelay archive `/tmp/stalwart-vandelay-capture/es.sqlite` is retained only until mail migration acceptance, then must be removed.
+- external migration-preservation archive `/tmp/edge-migration-preservation-20260916T141048Z.tar.gz`, SHA256 `0203e5845f57bc1d04b384cef2b26a45fbff855c341e1edf1193034c34de9fdf`, remains required through the remainder of Stage 2 for still-pending legacy-derived configuration/reference work; do not restore credentials from it;
+- temporary Vandelay archive and extracted binaries were removed after mail migration acceptance.
 
 ## Current stage boundary
 
 Stage 0 — COMPLETE / ACCEPTED.  
 Stage 1 — COMPLETE / ACCEPTED.  
-Stage 2 — IN PROGRESS; Authelia, n8n, CloudCLI, Codex CLI and Antigravity CLI accepted; mail migration source prepared; remaining Stage 2 components pending.
+Stage 2 — IN PROGRESS; Authelia, n8n, CloudCLI, Codex CLI, Antigravity CLI, Stalwart and Bulwark accepted; Backrest, Semaphore, maintenance page and full private portal remain pending.
