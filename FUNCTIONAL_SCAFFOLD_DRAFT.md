@@ -1,10 +1,10 @@
 # Cloud Infrastructure — Preliminary Functional Scaffold
 
-**Status:** working draft / global capability scaffold accepted as input for stage-by-stage design
+**Status:** global capability scaffold retained as requirements input; post-Stage-2 sequencing superseded by the accepted Stage 02.5 dependency-aware roadmap.
 
-This document is intentionally **not** the final Architecture Contract and does not define the complete service/product inventory, network topology, container layout, domains, storage paths, private-backbone technology or final deployment architecture.
+This document intentionally describes broad functional directions for `edge`. It does not by itself define the final service/product inventory, network topology, container layout, domains, storage paths, private-backbone technology or final deployment architecture.
 
-Its purpose is to capture the broad functional directions for `edge` after screening common private-VPS use cases against the already developed Home Infrastructure and Personal Agents Infrastructure.
+Its purpose is to preserve the functional requirements identified during architecture discovery while allowing Stage 02.5 to normalize which requirements are infrastructure services, which are cross-site dependencies, and which are later user/workflow capabilities.
 
 ## Design rule
 
@@ -12,19 +12,24 @@ Cloud Infrastructure should complement Home Infrastructure and PAI by exploiting
 
 Do not duplicate Home/PAI capabilities merely because they can also run on a VPS.
 
-## Stage-selection rule
+## Current sequencing rule
 
-This scaffold defines primarily **what capabilities are wanted**, not **which final program implements every capability**.
+The historical thematic Stage 3–7 grouping is no longer authoritative.
 
-Unresolved products/services are intentionally selected later, at the beginning of the implementation stage where they are actually needed:
+Post-Stage-2 deployment now follows dependency direction:
 
-1. review that stage's functional requirements from this scaffold;
-2. research/discuss unresolved candidate services/mechanisms for that stage;
-3. explicitly accept the stage composition;
-4. define the stage-scoped architecture/deployment contract;
-5. only then deploy.
+1. remaining standalone core services;
+2. cross-site connectivity foundation;
+3. cross-site data/knowledge services such as files/sync/Obsidian;
+4. remaining infrastructure services;
+5. Backrest/restore;
+6. Semaphore + dedicated `update.escloud.us` maintenance/update page;
+7. infrastructure-wide monitoring/heartbeats/alerts;
+8. final `app.escloud.us` portal/dashboard;
+9. final integrated infrastructure acceptance;
+10. user-specific n8n/agent workflows as a separate post-infrastructure layer.
 
-Products already explicitly ACCEPTED in `DECISIONS.md` are anchors and should not be re-opened for replacement search without a concrete incompatibility or changed requirement. Their deployment/integration details may still remain unresolved until their implementation stage.
+Products already explicitly ACCEPTED in `DECISIONS.md` are anchors and should not be re-opened for replacement search without a concrete incompatibility or changed requirement.
 
 ---
 
@@ -49,12 +54,9 @@ Products already explicitly ACCEPTED in `DECISIONS.md` are anchors and should no
 - Public plausible/decoy page for the VPN-facing domain/endpoint.
 - Private Cloud Infrastructure portal/status page replacing legacy Homepage.
 
-### Still unresolved
+### Current state
 
-- exact domain layout;
-- exact TLS/ACME mechanics;
-- which interfaces are public, private or machine-only;
-- final public decoy/masquerade implementation.
+The base ingress/TLS/auth/decoy implementation is already deployed and accepted in Stage 1/2. Future work in this area is limited to new service-specific ingress as those services are selected and deployed.
 
 ---
 
@@ -75,44 +77,23 @@ Products already explicitly ACCEPTED in `DECISIONS.md` are anchors and should no
 - orchestration of Cloud, Home and PAI workflows;
 - notifications and result delivery.
 
-### Universal Capture Inbox
+### Universal Capture Inbox — универсальный приём материалов
 
-Provide one or more simple user-facing entry points that allow the user to submit material from any device into automation/knowledge workflows, for example:
+Provide one or more low-friction user-facing entry points for URLs, text/notes, files/PDFs, images and commands into automation/knowledge workflows.
 
-- URL;
-- text/note;
-- file or PDF;
-- image;
-- message/command.
+### Human-in-the-loop approvals — ручное подтверждение действий
 
-The functional goal is a low-friction `device → edge → n8n → target workflow` path. This does not imply a dedicated new service; implementation can reuse existing web, mail, messaging or file interfaces.
+Selected n8n/agent workflows should be able to pause for an explicit approve/reject/choice/confirmation through existing user interaction surfaces.
 
-### Human-in-the-loop approvals
+### Mail as automation transport — почта как транспорт автоматизаций
 
-Automation and agent workflows should be able to pause for an explicit human decision where appropriate, for example:
+The accepted Stalwart + Bulwark stack may provide inbound mail/attachment triggers and outbound system notifications for n8n workflows.
 
-- approve/reject a proposed action;
-- choose between alternatives;
-- confirm a potentially disruptive task;
-- approve processing of a newly detected document/release;
-- acknowledge or retry a failed operation.
+### Placement
 
-Approvals should reuse existing notification/WebUI/messaging surfaces rather than create a separate orchestration platform.
+These are primarily **post-infrastructure user/workflow capabilities**, not reasons to delay completion of the infrastructure framework. Stage 02.5 should still research whether any of them genuinely requires a dedicated infrastructure service; otherwise they are implemented later using the accepted n8n/mail/agent stack.
 
-### Mail as automation transport
-
-The accepted Stalwart + Bulwark mail stack may also be used as a machine/user automation interface, for example:
-
-- dedicated inbound addresses feeding n8n workflows;
-- attachment/document ingestion;
-- rule-driven classification and processing;
-- outbound system notifications via the existing mail stack.
-
-Mail remains both a user service and a useful event/transport channel.
-
-### Boundary
-
-Do not add a second generic cron/job automation stack merely because a particular task is simple; use n8n unless a concrete technical reason requires another execution mechanism.
+Do not add a second generic cron/job automation stack merely because a task is simple; use n8n unless a concrete technical reason requires another execution mechanism.
 
 ---
 
@@ -130,11 +111,11 @@ Candidate scope:
 - important alert delivery;
 - status presentation on the private Cloud portal.
 
-### Boundary
+### Placement
 
-Do not assume full duplicate observability. Centralized heavy log/metric replication to `edge` is currently considered unnecessary unless a later concrete requirement proves otherwise.
+Research the implementation during Stage 02.5, but deploy production monitoring **late**, after the main service inventory, cross-site connectivity, Backrest and update subsystem substantially exist. This avoids a second monitoring deployment simply to add services introduced later.
 
-The concrete monitoring/notification products are intentionally selected during Stage 3, not by this scaffold.
+Do not assume full duplicate observability or centralized heavy log/metric replication unless a concrete requirement proves value.
 
 ---
 
@@ -142,8 +123,8 @@ The concrete monitoring/notification products are intentionally selected during 
 
 ### Accepted base
 
-- future clean `edge` deployment uses Backrest as the backup management/orchestration direction;
-- Restic remains acceptable as an underlying backup engine.
+- Backrest is the accepted future backup management/orchestration direction;
+- Restic remains acceptable as the underlying backup engine.
 
 ### Functional intent
 
@@ -152,15 +133,21 @@ The concrete monitoring/notification products are intentionally selected during 
 - evaluate whether `edge` or another external backend should hold selected geographically independent copies of critical Home/PAI data;
 - avoid treating a repository on the same VPS filesystem as complete disaster recovery.
 
+### Placement
+
+Backrest is deployed only after the primary infrastructure service inventory is substantially complete, so backup scope, exclusions, retention, repositories and restore procedures are defined against the real system.
+
+Backrest restore acceptance must precede Semaphore/update testing.
+
 ### Still unresolved
 
 - repository destinations;
 - Home ↔ Cloud backup division;
 - what Home/PAI data actually deserves off-site replication;
-- whether external object storage should complement or replace VPS-local backup storage;
-- the exact Stage 1 basic-backup mechanism versus later full backup-management implementation.
+- whether external object storage should complement VPS-local storage;
+- retention and restore policy.
 
-A separate dedicated bootstrap/DR subsystem is not currently justified; GitHub plus verified backup should cover rebuild context unless later evidence shows a gap.
+A separate dedicated bootstrap/DR subsystem is not currently justified; GitHub plus verified backup/recovery context should cover rebuild needs unless later evidence shows a gap.
 
 ---
 
@@ -175,6 +162,10 @@ A separate dedicated bootstrap/DR subsystem is not currently justified; GitHub p
 - free/self-hosted Obsidian synchronization without paid Obsidian Sync;
 - canonical Obsidian vault remains on `ai-node` at `/srv/ai-data/knowledge/obsidian`.
 
+### Dependency placement
+
+These services are deployed only **after** the required `edge ↔ ai-node ↔ PVE/Home` connectivity foundation is selected, deployed and accepted.
+
 ### Still unresolved
 
 - Filestash or alternative file layer;
@@ -184,7 +175,7 @@ A separate dedicated bootstrap/DR subsystem is not currently justified; GitHub p
 - concrete Obsidian synchronization product/mechanism;
 - conflict/versioning semantics.
 
-These choices belong to Stage 4 requirements/product-selection work. SFTPGo, Self-hosted LiveSync/CouchDB, Syncthing or any other proposal is not accepted merely because it appeared in a prior architecture draft.
+SFTPGo, Self-hosted LiveSync/CouchDB, Syncthing or any other proposal is not accepted merely because it appeared in a prior architecture draft.
 
 ---
 
@@ -208,9 +199,11 @@ High-value example:
 
 `edge` detects a new OEM technical document → n8n acquires/queues it → PAI performs OCR/translation/knowledge processing → result is stored in canonical knowledge and a notification is sent.
 
-This capability absorbs the useful parts of generic continuous web/data collection; a separate data-scraping platform is not assumed.
+### Placement
 
-Concrete implementation additions beyond already accepted anchors are selected in Stage 5.
+The infrastructure stage should select/deploy only any dedicated full service that proves necessary. The actual vendor/document watchers, workflow logic and content-specific jobs belong to the post-infrastructure automation/workflow layer after cross-site connectivity and all required services exist.
+
+Do not assume a separate scraping platform if n8n and ordinary HTTP/feed/mail mechanisms are sufficient.
 
 ---
 
@@ -231,9 +224,13 @@ Concrete implementation additions beyond already accepted anchors are selected i
 - controlled access to repositories and working files;
 - ability to request human approval before selected agent actions when a workflow requires it.
 
-### Candidate extension
+### Hermes candidate
 
-Hermes remains a candidate for a persistent personal-agent/supervisor role on `edge`, coordinating cloud subscription tools and, later, selected Home/PAI capabilities. Hermes placement and responsibilities are not accepted and must be evaluated in the relevant stage.
+Hermes remains only a candidate for a persistent personal-agent/supervisor role on `edge`.
+
+Stage 02.5 should select Hermes only if it closes a concrete infrastructure/runtime gap not already served by n8n + CloudCLI + Codex CLI + Antigravity CLI. Otherwise reject it as duplicate complexity.
+
+Actual user-specific long-running agent tasks and orchestration workflows belong to the post-infrastructure application layer.
 
 ---
 
@@ -252,61 +249,73 @@ Examples:
 - periodically research narrowly defined topics;
 - pause for user approval before an expensive, disruptive or consequential follow-up action where appropriate.
 
-Likely orchestration can involve n8n plus accepted Cloud AI anchors and any later accepted agent extension.
+### Placement
 
-Do not assume an endlessly autonomous agent that decides its own research agenda.
+These are post-infrastructure workflows unless Stage 02.5 proves that a dedicated infrastructure service is required. Orchestration should preferentially reuse n8n plus the accepted Cloud AI anchors and PAI.
 
 ---
 
 ## 9. Cloud ↔ Home/PAI orchestration and durable handoff
 
-### Functional intent
+### Infrastructure prerequisite: connectivity
 
-Allow `edge` to coordinate tasks with Home Infrastructure and Personal Agents Infrastructure without duplicating their compute or storage roles.
+Before any cross-site dependent service or workflow is deployed, establish the required connectivity among `edge`, `ai-node` and PVE/Home from actual flows.
 
-Candidate flows:
+The private transport is not preselected. NetBird/WireGuard, authenticated HTTPS over public endpoints, another tunnel or another simple mechanism must be compared against the real flows and operating conditions.
 
-- `edge` receives an Internet event and invokes a Home/PAI workflow;
-- `edge` discovers a document and sends it to `ai-node` for OCR/translation;
-- cloud agents use local vLLM when appropriate;
-- `edge` receives job status/results and publishes notifications;
-- working files/results move between cloud-agent workspaces and local PAI pipelines.
+### Application-level durable store-and-forward — гарантированная отложенная доставка задач
 
-### Durable store-and-forward requirement
+Cross-site workflows should later be able to survive temporary destination unavailability through persisted state, retry/resume, observable outcomes and safe re-delivery where required.
 
-Cross-site workflows must not require `edge` and Home/PAI to be online simultaneously.
+This requirement does not imply a dedicated message broker. It is an application/workflow concern to be implemented when real cross-site jobs exist, using the simplest mechanism that satisfies their durability semantics.
 
-The functional contract should allow:
-
-1. `edge` to accept/persist a task or event;
-2. temporary Home/PAI unavailability without losing that task;
-3. retry/resume when the destination becomes available;
-4. observable success/failure state;
-5. idempotent or otherwise safe re-delivery where the workflow requires it.
-
-This requirement does **not** imply a dedicated message broker. The simplest implementation that satisfies durability and retry semantics should be preferred.
-
-### Boundary
-
-The private transport is **not selected**. NetBird/WireGuard, authenticated HTTPS over the existing home public IP, another tunnel or another simple mechanism must be compared in Stage 6 only after the required flows are known.
+Connectivity foundation and application-level task durability are therefore separate layers.
 
 Existing Home Mihomo policy routing already covers Home-side foreign egress and should not be duplicated as a new Cloud capability.
 
 ---
 
-## 10. Optional / later capabilities
+## 10. Late lifecycle, monitoring and presentation
 
-These remain candidates but are not part of the core accepted product set:
+### Backrest & Recovery — резервное копирование и восстановление
 
-### Password / 2FA vault
+Deploy after the main service inventory is substantially complete. Verify restore before update testing.
 
-Potential future cross-platform/self-hosted credential service. Keep low priority while the Apple/iCloud Passwords workflow remains satisfactory.
+### Semaphore + `update.escloud.us` — обслуживание и обновления
 
-### Messaging/bot interface
+Semaphore is the accepted operational execution product. The dedicated maintenance/update page lives at `update.escloud.us`, not inside `app.escloud.us`.
 
-Telegram or another messaging surface may become a convenient frontend to n8n/a later agent runtime for commands, notifications, approvals and status. Treat it as an interface, not a separate orchestration platform.
+`update.escloud.us` is built in a separate Codex substage only after the real update backend contract is known.
 
-### Limited failover/secondary endpoint
+### Monitoring, Heartbeats & Alerts — мониторинг, heartbeat и оповещения
+
+Deploy after the service inventory, cross-site connectivity, Backrest and update subsystem exist so production monitoring can cover the finished infrastructure in one coherent stage.
+
+### `app.escloud.us` — основной портал Cloud Infrastructure
+
+Build after monitoring/status sources and the final service inventory are known. The page provides navigation and concise status/summary information, while detailed update controls remain on `update.escloud.us`.
+
+`app.escloud.us` is built in a separate Codex substage.
+
+### Final integrated infrastructure acceptance
+
+Infrastructure is considered complete only after all selected services, cross-site integration, backup/restore, update/maintenance, monitoring, portal and cleanup are accepted.
+
+---
+
+## 11. Optional / later capabilities
+
+These remain candidates but are not part of the current accepted product set:
+
+### Password / 2FA vault — хранилище паролей и 2FA
+
+Potential future cross-platform/self-hosted credential service. Keep low priority while the existing Apple/iCloud Passwords workflow remains satisfactory.
+
+### Messaging/bot interface — интерфейс команд и уведомлений через мессенджер
+
+Telegram or another messaging surface may become a convenient frontend for commands, notifications, approvals and status. Treat it primarily as an interface to workflows, not a separate orchestration platform.
+
+### Limited failover/secondary endpoint — ограниченный резервный endpoint
 
 May be considered only after the primary Home/PAI/Cloud architecture is complete. Do not design a duplicate cloud copy of Home Infrastructure.
 
@@ -314,7 +323,7 @@ May be considered only after the primary Home/PAI/Cloud architecture is complete
 
 ## Explicitly outside the current `edge` scope
 
-The following functions are intentionally not part of the current Cloud capability scaffold unless a new requirement appears:
+The following functions remain outside the current Cloud capability scaffold unless a new requirement appears:
 
 - authoritative/recursive home DNS replacement;
 - full personal cloud drive as the main household storage platform;
@@ -338,14 +347,10 @@ The following functions are intentionally not part of the current Cloud capabili
 
 ## Current usage rule
 
-This scaffold is the **global requirements map** used as input to implementation stages.
+This scaffold is now a **requirements map**, not a stage chronology.
 
-It must not be converted into one giant pre-deployment product-selection exercise.
+Current project work is:
 
-Current project work remains in Stage 1 / branch:
+`02.5 — Remaining Functional Scope Reconciliation & Research`
 
-`01 — Edge Clean Rebuild & Base Platform Deployment`
-
-The next activity is to take only the Stage 1-relevant requirements from this scaffold, discuss/select unresolved Stage 1 implementation choices, accept the Stage 1 composition/contract, and finish Base Platform deployment.
-
-Only after Stage 1 acceptance does the project open `02 — Edge Core Applications`, which begins its own requirements/product-selection cycle.
+The immediate next research block is **Remaining Standalone Core Services**: determine which additional full, independently deployable services are actually required before cross-site connectivity and late lifecycle stages, and select concrete packages only where a real capability gap exists.
