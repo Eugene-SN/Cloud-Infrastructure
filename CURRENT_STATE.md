@@ -5,14 +5,17 @@
 **Stage 0 — COMPLETE / ACCEPTED**  
 **Stage 1 — COMPLETE / ACCEPTED**  
 **Stage 2 — Edge Core Applications — COMPLETE / ACCEPTED**  
+**Stage 02.5 — Remaining Functional Scope Reconciliation & Research — ACTIVE / RESEARCH-ONLY**
 
 `EDGE_STAGE2_FINAL_INTEGRATED_ACCEPTANCE=PASS` on 2026-09-17.
 
-Completed work branch: `02 — Edge Core Applications`.
+Current work branch: `02.5 — Remaining Functional Scope Reconciliation & Research`.
 
 Primary repository: `Eugene-SN/Cloud-Infrastructure`.
 
-The accepted Stage 2 production set is Authelia, n8n, CloudCLI, Codex CLI, Antigravity CLI, Stalwart and Bulwark. Backrest, Semaphore, the maintenance page and the full private `app.escloud.us` portal were explicitly removed from Stage 2 scope and deferred to late-stage Operations & Lifecycle work after the functional service composition stabilizes.
+The accepted Stage 2 production set is Authelia, n8n, CloudCLI, Codex CLI, Antigravity CLI, Stalwart and Bulwark. Backrest, Semaphore, the maintenance/update page and the full private `app.escloud.us` portal were explicitly removed from Stage 2 scope and deferred to late infrastructure lifecycle work after the functional service composition stabilizes.
+
+Stage 02.5 has now accepted a dependency-aware roadmap direction: remaining standalone full services first; then the `edge ↔ ai-node ↔ PVE/Home` connectivity foundation; then cross-site data/knowledge services; then remaining infrastructure services; then Backrest; then Semaphore plus the dedicated `update.escloud.us` maintenance/update page; then infrastructure-wide monitoring/heartbeats/alerts; then the final `app.escloud.us` portal; then final integrated infrastructure acceptance. User-specific n8n/agent workflows are a post-infrastructure application layer rather than blockers for infrastructure completion.
 
 ## Host / foundation
 
@@ -44,13 +47,13 @@ Shared service account `core`: UID/GID `1000:1000`, password locked, no sudo/doc
 - no legacy password/session/TOTP/WebAuthn/auth state reused;
 - public `auth.escloud.us` accepted.
 
-Protected private web namespace includes `n8n`, `code`, future `app`, `backup`, `ops`, `docs`, `cloud`, `sync`, `chat`. `mail.escloud.us` intentionally uses native mail-stack authentication.
+Protected private web namespace includes `n8n`, `code`, future `app`, `backup`, `ops`, `update`, `docs`, `cloud`, `sync`, `chat`. `mail.escloud.us` intentionally uses native mail-stack authentication.
 
 ## TLS
 
 Shared Certbot lineage: `/etc/letsencrypt/live/escloud.us`.
 
-Current SAN set includes `escloud.us`, `app`, `auth`, `backup`, `chat`, `cloud`, `code`, `docs`, `mail`, `n8n`, `ops`, `sync.escloud.us`.
+Current SAN set includes `escloud.us`, `app`, `auth`, `backup`, `chat`, `cloud`, `code`, `docs`, `mail`, `n8n`, `ops`, `sync.escloud.us`. `update.escloud.us` has been added in Cloudflare for the future dedicated maintenance/update page; certificate/ingress activation is deferred until its deployment stage.
 
 Certbot deploy hook synchronizes/reloads Xray, Hysteria2 and Stalwart. Accepted mail TLS fingerprint:
 
@@ -154,14 +157,21 @@ The V1 and V2 acceptance interruptions were diagnostic-script defects only (root
 - temporary Vandelay migration directory removed;
 - authoritative migration-preservation archive `/tmp/edge-migration-preservation-20260916T141048Z.tar.gz`, SHA256 `0203e5845f57bc1d04b384cef2b26a45fbff855c341e1edf1193034c34de9fdf`, intentionally retained beyond Stage 2 because later functional stages may still need legacy configuration/reference material; do not restore legacy credentials from it.
 
-## Deferred late-stage lifecycle scope
+## Accepted remaining lifecycle direction
 
-Accepted sequencing after the remaining functional stages stabilize:
+The current dependency skeleton after Stage 02.5 reconciliation is:
 
-1. build `app.escloud.us` near the end from the actual final service inventory, including useful simple monitoring/status and optionally a collapsed Home Infrastructure summary;
-2. deploy Backrest and accept backup/restore policy against the substantially complete server;
-3. deploy Semaphore and the maintenance page together, using the accepted PVE/Home updater as an engineering reference with `edge`-specific adaptation;
-4. use working Backrest pre-update backups during Semaphore/update testing;
-5. perform final server-wide integrated acceptance and cleanup.
+1. remaining standalone core services;
+2. cross-site connectivity foundation;
+3. cross-site data/knowledge services such as file access, sync and Obsidian;
+4. remaining infrastructure services;
+5. Backrest + verified restore;
+6. Semaphore + dedicated `update.escloud.us` maintenance/update page, with a separate Codex implementation substage;
+7. infrastructure-wide monitoring, Home/PAI heartbeats and alerts;
+8. final `app.escloud.us` portal/dashboard built in a separate Codex substage on top of accepted monitoring/status sources;
+9. final integrated infrastructure acceptance and cleanup;
+10. post-infrastructure user automation/workflow development.
+
+Exact post-Stage-02.5 stage numbering remains intentionally unset until the remaining service/product research matrix is accepted.
 
 Canonical Obsidian vault remains on `ai-node` at `/srv/ai-data/knowledge/obsidian`.
