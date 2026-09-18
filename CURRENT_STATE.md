@@ -213,7 +213,7 @@ Detailed factual record: `STAGE_04_HERMES_POST_SETUP_BASELINE_2026-09-18.md`.
 
 Stage 4 remains **IN PROGRESS / NOT YET ACCEPTED**.
 
-Mattermost Stage 4E pre-deployment audit is accepted: `STAGE4E_MATTERMOST_PREDEPLOY_AUDIT=PASS`. Runtime is ready for deployment; selected backend mapping is `127.0.0.1:18065 -> Mattermost:8065`, PostgreSQL remains internal-only, no Calls listener or UFW change is required.
+Mattermost Stage 4E pre-deployment audit is accepted: `STAGE4E_MATTERMOST_PREDEPLOY_AUDIT=PASS`. **The official Mattermost Docker runtime is now deployed and running, but final core-runtime acceptance is pending only the remaining post-deployment publication/listener and Hermes non-regression gates.** Confirmed runtime: upstream `mattermost/docker` commit `497414659ee7127677d2b91b44bb4f3ea9d14695`, Mattermost Team `11.11.0`, PostgreSQL 18-alpine, Mattermost API `status=OK`, host publication `127.0.0.1:18065 -> 8065`; PostgreSQL is not publicly published in Compose output.
 
 ## Recovery / preserved state
 
