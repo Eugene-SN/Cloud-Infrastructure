@@ -137,7 +137,7 @@ Requirements:
 - keep the Hermes Dashboard backend loopback-only by default (upstream default `127.0.0.1:9119`); do not expose port 9119 directly to the Internet;
 - do not create a separate direct public Hermes API/backend listener merely for n8n;
 - preserve the project-wide authentication rule: service subdomains are protected by Authelia; only the root landing page `escloud.us` remains unauthenticated;
-- configure only the minimum Hermes-native remote-dashboard authentication required by upstream for a non-loopback public URL and make it compatible with the existing reverse-proxy/Authelia path;
+- do not preselect Nous OAuth. Current Hermes Desktop supports self-hosted Remote Gateway credentials by session token as well as gated OAuth/username-password flows; test session token first and only add a Hermes-native gated provider if the actual installed build/reverse-proxy behavior requires it;
 - direct Hermes access to Codex and Antigravity without CloudCLI as a proxy;
 - stable machine interface for n8n invocation/result/status;
 - minimal infrastructure acceptance of `n8n -> Hermes -> Codex/AGY -> Hermes -> n8n`;
@@ -152,9 +152,9 @@ After the server-side Hermes runtime, Web Dashboard, executors, n8n machine inte
 1. install/use the supported Hermes Desktop application on macOS;
 2. test the simplest supported **Remote Gateway** mode first;
 3. configure **Settings -> Gateways -> Remote gateway** with the remote Dashboard backend URL, intended to be `https://hermes.escloud.us`;
-4. verify the app detects the backend auth provider, completes sign-in, reaches backend readiness, establishes real chat/WebSocket operation, and reconnects after application restart;
+4. test the self-hosted **Session token** Remote Gateway credential first; verify backend readiness, real chat/WebSocket operation, and reconnect after application restart;
 5. treat the remote backend as the running `hermes dashboard` service, not as the separate messaging gateway process;
-6. evaluate an alternative connection mode only if a demonstrated incompatibility prevents the simple Remote Gateway path from working with the accepted nginx/Authelia/Hermes-auth topology.
+6. if session-token Remote Gateway is incompatible with the actually installed Hermes build or the accepted nginx/Authelia reverse-proxy path, test the minimum next supported credential mode (username/password or OAuth) without assuming Nous OAuth in advance; evaluate a different connection mode only after Remote Gateway itself is proven incompatible.
 
 This Desktop integration is the **last Stage 4 integration task**, not a user-specific workflow.
 
