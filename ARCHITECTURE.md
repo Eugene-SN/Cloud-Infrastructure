@@ -5,14 +5,16 @@
 **Stage 0:** COMPLETE / ACCEPTED  
 **Stage 1:** COMPLETE / ACCEPTED  
 **Stage 2:** COMPLETE / ACCEPTED  
-**Stage 02.5:** COMPLETE / ACCEPTED
+**Stage 02.5:** COMPLETE / ACCEPTED  
+**Stage 3:** COMPLETE / ACCEPTED
 
 `EDGE_STAGE2_FINAL_INTEGRATED_ACCEPTANCE=PASS`  
-`CLOUD_STAGE_02_5_FINAL_SCOPE_ACCEPTANCE=PASS`
+`CLOUD_STAGE_02_5_FINAL_SCOPE_ACCEPTANCE=PASS`  
+`EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS`
 
 Next production branch:
 
-`03 — Edge Cross-site Connectivity Foundation`
+`04 — Edge Hermes Agent Runtime`
 
 Final Stage 02.5 record:
 
@@ -110,9 +112,13 @@ Hermes invokes Codex/Antigravity directly; CloudCLI is not a proxy between them.
 
 # Accepted Cross-site Connectivity Architecture
 
-Detailed record:
+Selection record:
 
 `STAGE_02_5_CONNECTIVITY_SELECTION_ACCEPTANCE_2026-09-17.md`
+
+Final implementation acceptance:
+
+`STAGE_03_ACCEPTANCE_2026-09-18.md`
 
 ## Technology choice
 
@@ -172,6 +178,18 @@ Reuse Home `.lan` split DNS only for `edge` resolving Home services:
 - `*.lan` from `edge` → Home DNS through the accepted NetBird split-DNS policy;
 - general Internet DNS stays VPS-local;
 - do not create `edge.lan`: Cloud services already have the accepted public VPS IP and `escloud.us` / service-subdomain namespace, and ordinary Home LAN hosts are not routed into the NetBird overlay by default.
+
+## Accepted Stage 3 runtime
+
+- NetBird `0.78.2` runs host-native on `edge`;
+- `edge` overlay IPv4 is `100.105.178.187/16`;
+- CT300 overlay IPv4 is `100.105.97.126/16`;
+- `192.168.1.0/24 dev wt0` and Home `.lan` split DNS persist across reboot;
+- direct CT300 <-> `edge` P2P over UDP/51820 is verified;
+- synchronized final reboot recovery reached working P2P approximately `13.187s` after actual edge boot;
+- sustained post-recovery traffic passed with 0% loss;
+- public `ens3` is IPv4-only; IPv6 remains available for link-local/NetBird overlay use;
+- Docker `live-restore=false` is the separately accepted current platform state after correction of the Stage 1 reboot-lifecycle regression.
 
 ## Transport fallback
 
@@ -249,11 +267,9 @@ MacBook/iPhone/iPad sync mechanisms are intentionally absent from this architect
 
 ## Stage 3 — Cross-site Connectivity Foundation
 
-Deploy and accept the minimum NetBird cross-site connectivity required by Cloud workloads before connectivity-dependent applications.
+**COMPLETE / ACCEPTED.** `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS`.
 
-The baseline Stage 3 path is `edge -> Home/PAI`; it deliberately avoids VM100/MikroTik mutations for hypothetical LAN-wide Home -> `edge` access. Public Cloud ingress remains the normal reverse-direction path.
-
-Stage 3 does not own vLLM service/provider configuration beyond reachability.
+The accepted baseline path is `edge -> Home/PAI`; VM100/MikroTik remain unchanged for hypothetical LAN-wide Home -> `edge` access. Public Cloud ingress remains the normal reverse-direction path. Stage 3 does not own vLLM service/provider configuration beyond reachability.
 
 ## Stage 4 — Hermes Agent Runtime
 
