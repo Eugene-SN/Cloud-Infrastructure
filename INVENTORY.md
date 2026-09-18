@@ -232,7 +232,7 @@ Continuous workstream after Stage 10, not an infrastructure-completion stage:
 
 ### Mattermost
 
-- status: **CORE RUNTIME + PUBLIC INGRESS + NATIVE SERVER CONFIG + HERMES↔MATTERMOST + N8N↔MATTERMOST E2E ACCEPTED; MOBILE/TPNS + PLUGIN DISPOSITION PENDING**;
+- status: **CORE RUNTIME + PUBLIC INGRESS + NATIVE SERVER CONFIG + HERMES↔MATTERMOST + N8N↔MATTERMOST E2E + AGENTS NORMALIZATION ACCEPTED; MOBILE/TPNS PENDING**;
 - Mattermost Team `11.11.0`, official `mattermost/docker` commit `497414659ee7127677d2b91b44bb4f3ea9d14695`;
 - PostgreSQL `18-alpine`;
 - persistent state under `/srv/mattermost`, upstream deployment under `/opt/mattermost`;
@@ -242,7 +242,7 @@ Continuous workstream after Stage 10, not an infrastructure-completion stage:
 - TPNS configured; Calls disabled;
 - Hermes↔Mattermost accepted with bot `hermes`, private service channel `hermes` and real E2E response;
 - Mattermost↔Stalwart SMTP explicitly not required / not enabled;
-- prepackaged `mattermost-ai` plugin is currently enabled but is not accepted as a Hermes replacement; disposition pending before final Stage 4 acceptance.
+- prepackaged `mattermost-ai` / Agents `2.6.1` remains installed but is disabled; enabled-list count `0`, disabled-list count `1`, `config.json` state `Enable=false`.
 
 Acceptance records:
 
@@ -251,7 +251,8 @@ Acceptance records:
 - `STAGE_04E_MATTERMOST_INGRESS_ACCEPTANCE_2026-09-18.md`;
 - `STAGE_04E_MATTERMOST_NATIVE_SERVER_CONFIG_ACCEPTANCE_2026-09-18.md`;
 - `STAGE_04E_HERMES_MATTERMOST_INTEGRATION_ACCEPTANCE_2026-09-18.md`;
-- `STAGE_04E_N8N_MATTERMOST_INTEGRATION_ACCEPTANCE_2026-09-18.md`.
+- `STAGE_04E_N8N_MATTERMOST_INTEGRATION_ACCEPTANCE_2026-09-18.md`;
+- `STAGE_04E_MATTERMOST_AGENTS_NORMALIZATION_ACCEPTANCE_2026-09-18.md`.
 
 ### n8n ↔ Mattermost
 
@@ -268,7 +269,7 @@ Acceptance records:
 - production workflows: 0; executions: 0 after the isolated throwaway-clone E2E probe;
 - `STAGE4E_N8N_MATTERMOST_INTEGRATION=PASS`.
 
-Remaining Stage 4E Mattermost gates are real official mobile-client login + delivered TPNS push, explicit `mattermost-ai` disposition, and final Stage 4E non-regression.
+Remaining Stage 4E Mattermost gates are real official mobile-client login + delivered TPNS push, followed by final Stage 4E non-regression.
 
 ### Hermes lifecycle observation
 
