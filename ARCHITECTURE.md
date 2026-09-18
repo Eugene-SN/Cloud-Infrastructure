@@ -157,7 +157,7 @@ Accepted/current directions:
 
 For any other service or direction, verify current upstream support first. Do not substitute a custom plugin, patched source, shim service, direct database coupling, bespoke bridge, compatibility hack or n8n-mediated relay solely to connect otherwise unrelated products.
 
-The enabled prepackaged Mattermost Agents plugin is not part of the accepted agent architecture and does not supersede Hermes; its runtime presence requires explicit disposition before final Stage 4 acceptance.
+The prepackaged Mattermost Agents plugin is not part of the accepted agent architecture and does not supersede Hermes. It remains installed but is explicitly disabled in runtime; `STAGE4E_MATTERMOST_AGENTS_NORMALIZATION=PASS`.
 
 Detailed research: `STAGE_04_MATTERMOST_RESEARCH_BRIEF_2026-09-18.md`.
 
