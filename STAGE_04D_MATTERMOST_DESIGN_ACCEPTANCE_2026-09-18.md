@@ -21,17 +21,23 @@ Stage 4D research/design is complete. The accepted Mattermost target for `edge` 
 
 ## Integration-selection policy
 
-The target requires Mattermost to integrate with Hermes, n8n, Stalwart and other useful `edge` services, but **the exact integration mechanism for each service is intentionally not frozen at Stage 4D**.
+Mattermost integration follows a **native-only current-project rule**.
 
-During Stage 4E:
+For every service already deployed or selected in Cloud Infrastructure:
 
-1. inspect all currently supported upstream/native integration mechanisms available in the deployed versions of both sides;
-2. prefer the most direct vendor/upstream-supported mechanism with the least operational coupling and no unnecessary intermediary;
-3. compare native nodes/adapters, official APIs, webhooks, slash commands, SMTP or other documented interfaces as applicable;
-4. use custom plugins, source patches, shim services, direct database access or bespoke bridges only if every practical native/upstream-supported mechanism has a demonstrated incompatibility and the operator explicitly accepts the exception;
-5. do not encode speculative future workflows into the infrastructure deployment.
+1. first determine whether the service developers/upstream explicitly provide a Mattermost integration or a standard protocol integration that Mattermost explicitly supports;
+2. if such a first-party/upstream-supported integration exists, select it, document it in the project and verify it during the owning deployment stage;
+3. if no such native/upstream-supported integration exists, **do not build a substitute integration in the current project**;
+4. specifically, do not introduce custom plugins, source patches, shim services, direct database coupling, bespoke bridges, compatibility hacks, or an n8n-mediated bridge merely to claim that two products are integrated;
+5. an integration absent from upstream support may be revisited only as a separate future task outside the current Cloud Infrastructure build.
 
-Known native integration surfaces discovered during research include Hermes' Mattermost support, n8n's official Mattermost integration surface, Mattermost's documented API/webhook/slash-command mechanisms, and standard SMTP. These are **candidates/evidence of native support, not preselected per-direction implementation decisions**.
+Confirmed native integrations at Stage 4D:
+
+- **Hermes ↔ Mattermost:** fixed to Hermes' built-in Mattermost gateway adapter using Mattermost REST API v4 + WebSocket;
+- **n8n → Mattermost:** fixed to n8n's official built-in Mattermost integration/node for the operations it natively supports;
+- **Mattermost → mail:** fixed to Mattermost's standard SMTP integration using the existing Stalwart SMTP service.
+
+For any additional direction or product, Stage 4E must verify current upstream support before enabling it. Generic Mattermost APIs/webhooks/slash commands are not automatically treated as permission to build a custom cross-product bridge; they are used only where the other product also provides an explicit supported counterpart for the actual use case.
 
 ## Accepted ingress shape
 
@@ -57,7 +63,7 @@ INTERNET
    `-- dedicated PostgreSQL
 ```
 
-Service integrations remain native-first and are selected/verified during Stage 4E rather than hard-coded by this design record.
+Only confirmed native/upstream-supported integrations are implemented in the current project. Unsupported cross-product integrations are deferred outside the current Cloud Infrastructure build.
 
 ## Stage effect
 
