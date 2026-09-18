@@ -216,7 +216,7 @@ Accepted target remains Mattermost Team Edition, official Docker Compose pattern
 
 #### Stage 4E — Private Mattermost deployment and native service integrations
 
-**Status: IN PROGRESS.**
+**Status: IN PROGRESS — n8n integration accepted; mobile/TPNS and final normalization remain.**
 
 Accepted:
 
@@ -224,23 +224,18 @@ Accepted:
 - private application/database topology and persistent local state;
 - public `https://chat.escloud.us` through Xray -> host nginx -> shared TLS;
 - native Mattermost authentication without Authelia;
-- TPNS configured;
+- TPNS server configuration at `https://push-test.mattermost.com`;
 - Calls disabled;
 - Hermes bot provisioning/channel normalization/E2E accepted;
+- native n8n↔Mattermost integration accepted using the official built-in n8n Mattermost node;
+- n8n E2E used the existing single credential/bot against an isolated throwaway clone and left production at 0 workflows / 0 executions;
+- `STAGE4E_N8N_MATTERMOST_INTEGRATION=PASS`;
 - Mattermost↔Stalwart SMTP explicitly reviewed and not required / not enabled.
-
-Current n8n state:
-
-- one dedicated bot `n8n`;
-- one active access token;
-- one n8n `mattermostApi` credential;
-- credential validates successfully against the Mattermost API;
-- no n8n workflows or executions exist.
 
 Remaining Stage 4E gates:
 
-- prove an official n8n Mattermost node end-to-end action using the existing credential/bot without creating permanent user workflow logic;
-- verify the practical native-client/push behavior required by the accepted Mattermost scope if not already demonstrated;
+- verify login using the official Mattermost mobile client against `https://chat.escloud.us`;
+- verify an actual notification delivered through TPNS to that mobile client; configuration-only evidence is insufficient;
 - explicitly disposition the currently enabled prepackaged `mattermost-ai` plugin rather than silently treating it as accepted architecture;
 - perform the Stage 4E-specific non-regression check after final normalization.
 
