@@ -328,3 +328,46 @@ Post-infrastructure user-specific n8n/Hermes/agent automation remains a continuo
 Detailed record: `EDGE_REBOOT_LIFECYCLE_FIX_ACCEPTANCE_2026-09-18.md`.
 
 **Supersedes:** only the `live-restore: true` runtime property from the Stage 1 Docker/final acceptance state. Stage 1 historical acceptance records remain unchanged as historical evidence.
+
+
+---
+
+## 2026-09-18T04:58:00Z — Stage 3 final cross-site connectivity acceptance
+
+**Status:** ACCEPTED
+
+**Decision:** Stage 3 — Edge Cross-site Connectivity Foundation is complete.
+
+Final record:
+
+`STAGE_03_ACCEPTANCE_2026-09-18.md`
+
+Final acceptance:
+
+`EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS`
+
+Accepted current contract:
+
+- host-native NetBird `0.78.2` on `edge`;
+- `edge` overlay IPv4 `100.105.178.187/16`;
+- CT300 remains the Home routing/control-plane peer at overlay `100.105.97.126/16`;
+- `edge -> Home/PAI` uses the private NetBird routed path for `192.168.1.0/24`;
+- `edge` consumes Home `.lan` split DNS and keeps provider-local public/default Internet;
+- `edge` does not receive the Home Internet `0.0.0.0/0` resource;
+- baseline Home/PAI -> Cloud access remains public VPS IPv4 / `escloud.us` service ingress;
+- VM100 and MikroTik remain unchanged; LAN-wide clientless overlay routing is deferred until a concrete private-only workload requires it;
+- no `edge.lan` record is created.
+
+Final reboot evidence:
+
+- edge boot completed in `14.881s`;
+- wait-online persistence PASS;
+- public IPv4-only ens3 state PASS;
+- NetBird autostart/control/P2P PASS;
+- Home route and split-DNS persistence PASS;
+- 30/30 zero-loss traffic to CT300 overlay, PVE and `ai-node`;
+- synchronized CT300 watcher measured working P2P recovery approximately `13.187s` from actual edge boot and 0% post-recovery packet loss.
+
+The independent Docker reboot-lifecycle regression discovered during Stage 3 is resolved by the separately accepted `live-restore=false` correction.
+
+**Roadmap effect:** Stage 4 — Edge Hermes Agent Runtime is the next production stage.
