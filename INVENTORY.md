@@ -172,27 +172,21 @@ Current Stage 3 runtime / accepted scope:
 - no VM100/MikroTik route/firewall mutation in the baseline implementation;
 - no `edge.lan` baseline record;
 - LAN-wide clientless Home/PAI -> `edge` overlay routing deferred until a concrete private-only workload requires it;
-- Stage 3 reboot acceptance uncovered and resolved the independent Docker `live-restore` shutdown regression; connectivity-specific final acceptance remains in progress.
+- Stage 3 reboot acceptance uncovered and resolved the independent Docker `live-restore` shutdown regression; final connectivity acceptance is complete.
 
 Detailed record: `STAGE_02_5_CONNECTIVITY_SELECTION_ACCEPTANCE_2026-09-17.md`.
 
-## Cross-site Data & Knowledge Services
+## Stage 5 knowledge/data boundary
 
-Status: **SUPERSEDED BY FINAL STAGE 02.5 SCOPE / CLOUD STAGE 5 INTEGRATION BOUNDARY**.
+Status: **ACCEPTED INTEGRATION BOUNDARY; DEPLOYMENT DEFERRED TO STAGE 5**.
 
-Unresolved:
-
-- VPS working storage and web file management;
-- MacBook/iPhone/iPad/`ai-node` file access;
-- Filestash — candidate only;
-- SFTPGo — candidate only;
-- Syncthing — under review by use case;
-- selected-directory synchronization;
-- Self-hosted LiveSync/CouchDB — candidate only for Obsidian;
-- other current free/self-hosted Obsidian mechanisms;
-- exact `edge` Obsidian role.
-
-Canonical Obsidian vault remains `/srv/ai-data/knowledge/obsidian` on `ai-node`.
+- Home Infrastructure owns the future PVE canonical knowledge foundation.
+- Personal Agents Infrastructure owns the `ai-node` active RW replica and local AI consumers/producers after Home cutover.
+- Cloud Infrastructure owns only the `edge` active RW replica and Cloud-side integration.
+- Until Home explicitly accepts the PVE canonical migration, `ai-node:/srv/ai-data/knowledge/obsidian` remains the factual current runtime source.
+- Stage 5 must begin with a fresh cross-project read-only audit and reuse the Home-accepted server-side synchronization mechanism by default.
+- MacBook/iPhone/iPad Obsidian synchronization is outside Cloud Infrastructure scope.
+- Filestash, SFTPGo, Syncthing, LiveSync/CouchDB or other Cloud-side file/sync products are not selected by assumption.
 
 # Planned deployment stage inventory
 
@@ -209,7 +203,7 @@ Canonical Obsidian vault remains `/srv/ai-data/knowledge/obsidian` on `ai-node`.
 
 ## Post-infrastructure application/workflow layer
 
-Continuous workstream after Stage 11, not an infrastructure-completion stage:
+Continuous workstream after Stage 10, not an infrastructure-completion stage:
 
 - n8n workflows;
 - Hermes/agent workflows;
