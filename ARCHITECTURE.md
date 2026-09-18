@@ -159,23 +159,19 @@ This is routed L3 connectivity, not an L2 bridge.
 
 ### `Home/PAI -> edge`
 
-Ordinary Home/PAI hosts do not need individual NetBird clients by default.
+The baseline architecture does **not** inject the NetBird overlay into the whole Home LAN.
 
-Use gateway-level routing:
+For current workloads, Home/PAI consumers reach Cloud services through the existing VPS public IP or `escloud.us` / service-subdomain ingress. Hosts that are themselves NetBird peers may use normal peer-to-peer NetBird reachability.
 
-```text
-100.105.0.0/16 via 192.168.1.90
-```
-
-on both VM100 and MikroTik, with only the narrow forwarding needed on VM100. Reuse NetBird-managed Site-to-VPN masquerade before considering manual duplicate NAT.
+Do not add `100.105.0.0/16 via 192.168.1.90` to VM100/MikroTik and do not alter VM100 forwarding merely to provide hypothetical LAN-wide private access. Clientless gateway routing is an on-demand extension only when a concrete private-only workload proves that public ingress and a peer on the specific initiating host are both inferior.
 
 ## Private DNS
 
-Reuse Home `.lan` split DNS:
+Reuse Home `.lan` split DNS only for `edge` resolving Home services:
 
-- `*.lan` from `edge` → `192.168.1.1:53`;
+- `*.lan` from `edge` → Home DNS through the accepted NetBird split-DNS policy;
 - general Internet DNS stays VPS-local;
-- add `edge.lan` after Stage 3 enrollment/routing acceptance through the existing Home DNS mechanism.
+- do not create `edge.lan`: Cloud services already have the accepted public VPS IP and `escloud.us` / service-subdomain namespace, and ordinary Home LAN hosts are not routed into the NetBird overlay by default.
 
 ## Transport fallback
 
@@ -253,7 +249,9 @@ MacBook/iPhone/iPad sync mechanisms are intentionally absent from this architect
 
 ## Stage 3 — Cross-site Connectivity Foundation
 
-Deploy and accept NetBird routing/private naming before connectivity-dependent applications.
+Deploy and accept the minimum NetBird cross-site connectivity required by Cloud workloads before connectivity-dependent applications.
+
+The baseline Stage 3 path is `edge -> Home/PAI`; it deliberately avoids VM100/MikroTik mutations for hypothetical LAN-wide Home -> `edge` access. Public Cloud ingress remains the normal reverse-direction path.
 
 Stage 3 does not own vLLM service/provider configuration beyond reachability.
 
