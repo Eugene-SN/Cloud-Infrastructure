@@ -144,18 +144,19 @@ Architectural role:
 - CloudCLI remains manual cloud-AI workspace;
 - Stalwart remains the existing mail subsystem.
 
-### Integration-selection invariant
+### Native-only Mattermost integration invariant
 
-Stage 4D does **not** freeze the exact per-service integration mechanism.
+Cloud Infrastructure implements a direct Mattermost integration **only when the relevant developers/upstream provide a supported integration path**.
 
-During Stage 4E, for Hermes, n8n, Stalwart and every other service connection:
+Confirmed current project integrations:
 
-1. enumerate all current native/upstream-supported integration mechanisms available in the actually deployed versions;
-2. compare reliability, simplicity, update compatibility and operational coupling;
-3. choose the most native/direct supported option that satisfies the use case;
-4. do not introduce custom plugins, patched source, shim services, direct DB coupling or bespoke bridges unless practical native options are proven insufficient and the operator explicitly accepts the exception.
+- **Hermes ↔ Mattermost:** Hermes built-in Mattermost gateway adapter using Mattermost REST API v4 + WebSocket;
+- **n8n → Mattermost:** n8n official built-in Mattermost integration/node for the operations it supports;
+- **Mattermost → Stalwart:** Mattermost's standard SMTP integration, with Stalwart providing the SMTP service.
 
-Known native surfaces discovered during research — Hermes Mattermost support, n8n's official Mattermost integration surface, Mattermost APIs/webhooks/slash commands and standard mail interfaces — are evidence/candidates, **not preselected implementation decisions**.
+For every other service or traffic direction, verify current upstream support first. If no native/product-supported integration exists, do not create one in the current project. Do not substitute a custom plugin, patched source, shim service, direct database access, bespoke bridge, compatibility hack, or an n8n relay solely to connect otherwise unrelated products.
+
+Such missing integrations may be revisited as separate future work outside the current Cloud Infrastructure build if upstream support or a new requirement appears.
 
 Detailed research:
 
