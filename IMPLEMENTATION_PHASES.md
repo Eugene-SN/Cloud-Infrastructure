@@ -1,6 +1,6 @@
 # Cloud Infrastructure — Accepted Implementation Phases
 
-**Status:** Stage 0–2 COMPLETE / ACCEPTED; Stage 02.5 COMPLETE / ACCEPTED; Stage 3 is the next production stage.
+**Status:** Stage 0–2 COMPLETE / ACCEPTED; Stage 02.5 COMPLETE / ACCEPTED; Stage 3 ACTIVE / IN PROGRESS.
 
 This document is the canonical stage chronology for Cloud Infrastructure / `edge`.
 
@@ -83,6 +83,8 @@ Accepted results include:
 # Final post-Stage-02.5 deployment roadmap
 
 ## Stage 3 — Edge Cross-site Connectivity Foundation
+
+**Status:** ACTIVE / IN PROGRESS. NetBird runtime is deployed; the independent Docker reboot-lifecycle regression discovered during reboot acceptance has been fixed and accepted. Connectivity-specific final acceptance remains pending.
 
 ### Work branch
 
@@ -269,8 +271,9 @@ Apple-device/Obsidian synchronization is not part of this Cloud workstream; it b
 Stage 0: **COMPLETE / ACCEPTED**.  
 Stage 1: **COMPLETE / ACCEPTED**.  
 Stage 2: **COMPLETE / ACCEPTED**.  
-Stage 02.5: **COMPLETE / ACCEPTED**.
+Stage 02.5: **COMPLETE / ACCEPTED**.  
+Stage 3: **ACTIVE / IN PROGRESS**.
 
-Next branch:
+Active branch:
 
 `03 — Edge Cross-site Connectivity Foundation`
