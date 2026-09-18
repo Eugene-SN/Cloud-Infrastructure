@@ -232,7 +232,7 @@ Continuous workstream after Stage 10, not an infrastructure-completion stage:
 
 ### Mattermost
 
-- status: **CORE RUNTIME + PUBLIC INGRESS + NATIVE SERVER CONFIG + HERMES↔MATTERMOST + N8N↔MATTERMOST E2E + AGENTS NORMALIZATION ACCEPTED; MOBILE/TPNS PENDING**;
+- status: **CORE RUNTIME + PUBLIC INGRESS + NATIVE SERVER CONFIG + HERMES↔MATTERMOST + N8N↔MATTERMOST E2E + AGENTS NORMALIZATION + MOBILE/TPNS ACCEPTED; FINAL STAGE 4E NON-REGRESSION PENDING**;
 - Mattermost Team `11.11.0`, official `mattermost/docker` commit `497414659ee7127677d2b91b44bb4f3ea9d14695`;
 - PostgreSQL `18-alpine`;
 - persistent state under `/srv/mattermost`, upstream deployment under `/opt/mattermost`;
@@ -252,7 +252,8 @@ Acceptance records:
 - `STAGE_04E_MATTERMOST_NATIVE_SERVER_CONFIG_ACCEPTANCE_2026-09-18.md`;
 - `STAGE_04E_HERMES_MATTERMOST_INTEGRATION_ACCEPTANCE_2026-09-18.md`;
 - `STAGE_04E_N8N_MATTERMOST_INTEGRATION_ACCEPTANCE_2026-09-18.md`;
-- `STAGE_04E_MATTERMOST_AGENTS_NORMALIZATION_ACCEPTANCE_2026-09-18.md`.
+- `STAGE_04E_MATTERMOST_AGENTS_NORMALIZATION_ACCEPTANCE_2026-09-18.md`;
+- `STAGE_04E_MATTERMOST_MOBILE_TPNS_ACCEPTANCE_2026-09-18.md`.
 
 ### n8n ↔ Mattermost
 
@@ -269,7 +270,7 @@ Acceptance records:
 - production workflows: 0; executions: 0 after the isolated throwaway-clone E2E probe;
 - `STAGE4E_N8N_MATTERMOST_INTEGRATION=PASS`.
 
-Remaining Stage 4E Mattermost gates are real official mobile-client login + delivered TPNS push, followed by final Stage 4E non-regression.
+Remaining Stage 4E gate: bounded final non-regression only. The operator explicitly accepted the official iOS Mattermost/mobile TPNS path as PASS.
 
 ### Hermes lifecycle observation
 
