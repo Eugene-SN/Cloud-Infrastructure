@@ -232,7 +232,7 @@ Continuous workstream after Stage 10, not an infrastructure-completion stage:
 
 ### Mattermost
 
-- status: **CORE RUNTIME + PUBLIC INGRESS + NATIVE SERVER CONFIG + HERMES↔MATTERMOST E2E ACCEPTED; N8N NATIVE-NODE E2E PENDING**;
+- status: **CORE RUNTIME + PUBLIC INGRESS + NATIVE SERVER CONFIG + HERMES↔MATTERMOST + N8N↔MATTERMOST E2E ACCEPTED; MOBILE/TPNS + PLUGIN DISPOSITION PENDING**;
 - Mattermost Team `11.11.0`, official `mattermost/docker` commit `497414659ee7127677d2b91b44bb4f3ea9d14695`;
 - PostgreSQL `18-alpine`;
 - persistent state under `/srv/mattermost`, upstream deployment under `/opt/mattermost`;
@@ -250,19 +250,25 @@ Acceptance records:
 - `STAGE_04E_MATTERMOST_CORE_RUNTIME_ACCEPTANCE_2026-09-18.md`;
 - `STAGE_04E_MATTERMOST_INGRESS_ACCEPTANCE_2026-09-18.md`;
 - `STAGE_04E_MATTERMOST_NATIVE_SERVER_CONFIG_ACCEPTANCE_2026-09-18.md`;
-- `STAGE_04E_HERMES_MATTERMOST_INTEGRATION_ACCEPTANCE_2026-09-18.md`.
+- `STAGE_04E_HERMES_MATTERMOST_INTEGRATION_ACCEPTANCE_2026-09-18.md`;
+- `STAGE_04E_N8N_MATTERMOST_INTEGRATION_ACCEPTANCE_2026-09-18.md`.
 
 ### n8n ↔ Mattermost
 
+- status: **COMPLETE / ACCEPTED**;
 - n8n `2.39.7`;
-- built-in Mattermost node and `mattermostApi` credential type present;
+- official built-in `n8n-nodes-base.mattermost`, typeVersion `1`;
 - one credential: `Mattermost API - chat.escloud.us`, ID `16a0a988ad514ab1`;
 - Mattermost bot `n8n`, ID `4ty8tfwmdir9mxkeua3n7658mc`;
 - one active bot access token, description `n8n-native-mattermost`;
 - credential/API identity validation: PASS;
-- operator DM exists;
-- workflows: 0; executions: 0;
-- official n8n Mattermost node E2E: **PENDING / NOT ACCEPTED**.
+- operator DM channel ID `srzsm58fepgujjfnyxb8f7zo3o`;
+- native-node E2E marker: `N8N_MATTERMOST_NATIVE_E2E_OK_20260918T135107Z`;
+- verified Mattermost post ID `1fgnm3fumbyy8b4usrrs41kouc`;
+- production workflows: 0; executions: 0 after the isolated throwaway-clone E2E probe;
+- `STAGE4E_N8N_MATTERMOST_INTEGRATION=PASS`.
+
+Remaining Stage 4E Mattermost gates are real official mobile-client login + delivered TPNS push, explicit `mattermost-ai` disposition, and final Stage 4E non-regression.
 
 ### Hermes lifecycle observation
 
