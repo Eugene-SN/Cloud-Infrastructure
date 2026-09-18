@@ -287,27 +287,30 @@ Stage 4 remains **IN PROGRESS / NOT YET ACCEPTED**.
 - Stage 1 recovery archive: `/srv/backups/edge-stage1/edge-stage1-base-20260916T234611Z.tar.gz`, SHA256 `37486e763ddac4c5ef3a92a35c3dad49787d75ffd8b97499073c79af617cc566`;
 - migration-preservation archive: `/tmp/edge-migration-preservation-20260916T141048Z.tar.gz`, SHA256 `0203e5845f57bc1d04b384cef2b26a45fbff855c341e1edf1193034c34de9fdf`, retained outside GitHub for legacy-reference/recovery use; do not indiscriminately restore legacy credentials.
 
-## Stage 4C recovery reconciliation — 2026-09-18
+## Stage 4C Dashboard deployment — 2026-09-18
 
-**CURRENT RUNTIME — directly inspected locally on edge under core:**
+**CURRENT RUNTIME — DEPLOYED; FUNCTIONAL ACCEPTANCE PENDING.**
 
-- execution host is `edge.escloud.us`; no SSH connection is needed for local core-owned work;
-- Hermes checkout remains `d177b119e9c56c9ddc0b7379ffce52341ec06584`;
-- main config SHA256 remains `c57ca6bc0b301250d4825060fcf5f8d90af94c7cee4f1632e0b648189fd994ae`;
-- `systemctl --user` reports `hermes-gateway.service` active/enabled, running, `NRestarts=0`; a system-manager not-found result is not a gateway failure;
-- Dashboard user/system unit paths, `hermes_cli/web_dist`, Dashboard config keys and listener TCP/9119 are absent;
-- no Hermes hostname/9119 reference was found in readable nginx configuration;
-- `hermes.escloud.us` resolves to `45.92.156.17`; `92.156.17` in the handoff was incomplete;
-- Certbot reports `4.0.0`, not `0.0`; existing renewal state selects `webroot` and `/var/www/letsencrypt`; timer active/enabled;
-- Authelia OIDC discovery currently returns HTTP 404.
+- Public URL: `https://hermes.escloud.us`; DNS `45.92.156.17`.
+- Hermes exact source remains `d177b119e9c56c9ddc0b7379ffce52341ec06584`; upstream automatic frontend build completed successfully.
+- Core user-systemd `hermes-dashboard.service` active/enabled, `NRestarts=0`, backend exclusively `127.0.0.1:9119`. No public TCP/9119 listener.
+- Existing Xray TLS -> nginx `127.0.0.1:8080 proxy_protocol` -> Dashboard; HTTP redirects to HTTPS; WebSocket forwarding configured. No Hermes nginx auth_request.
+- Public `/api/status` returns HTTP 200, `auth_required=true`, exactly `auth_providers=["self-hosted"]`, `auth_flows=["cookie","native_pkce"]`.
+- Anonymous root redirects to login; login page loads; anonymous `/api/auth/me` denied with HTTP 401.
+- OIDC authorization redirect verified against issuer `https://auth.escloud.us`, client `hermes-dashboard`, exact callback `https://hermes.escloud.us/auth/callback`, code flow and PKCE/S256. PKCE cookie Secure/HttpOnly verified. This is not yet a completed browser callback.
+- Authelia v4.39.27 OIDC activated after native validation of staged configuration; discovery now HTTP 200. Public client, token auth none, explicit consent, one_factor, scopes openid/profile/email/offline_access, authorization-code and refresh-token grants. Existing access_control unchanged.
+- Certbot 4.0.0 expanded the existing `escloud.us` lineage through its existing `webroot` / `/var/www/letsencrypt` mechanism. All original 12 SANs retained plus Hermes; current certificate expires 2026-12-17. Existing deploy hook completed TLS distribution and Xray/Hysteria/Stalwart restarts. No second lineage or nginx Certbot plugin.
+- Gateway remains active/enabled, `NRestarts=0`; public status reports Mattermost connected. This is a bounded state check, not a rerun of accepted E2E tests.
+- Main Hermes config SHA256 unchanged: `c57ca6bc0b301250d4825060fcf5f8d90af94c7cee4f1632e0b648189fd994ae`; Dashboard settings are isolated in its user-systemd environment.
+- Root-only recovery snapshot: `/srv/backups/edge-stage4c/recovery-20260918T171719Z`; contains original Authelia configuration and ingress/config/TLS archive. Application rollback retains the valid expanded certificate.
 
-**OPERATOR-REPORTED / NOT YET FULLY RECONCILED:** the previous `STAGE4C_HERMES_DASHBOARD_AUTHELIA_OIDC_DEPLOY_V1` stopped at `CERTBOT_NGINX_PLUGIN_GATE=FAIL`, RC 40, before mutation. The readable observations above are consistent with that report, but root-only Authelia configuration/secrets and current certificate SANs still require inspection. The prior session's full command transcript is unavailable; GitHub commits alone cannot prove every server action.
+**ACCEPTED DECISION:** latest Stage 4C self-hosted OIDC deployment design in DECISIONS.md. Older forward-auth/session-token-first assumptions are superseded.
 
-**ASSISTANT / TEST-HARNESS DEFECT:** requiring a nonexistent nginx Certbot plugin contradicts the accepted webroot mechanism. Local recovery searches also encountered missing optional paths; those read-only probe defects are not production failures. No Stage 4A/B/D/E E2E tests were repeated.
+**PENDING EXTERNAL EVIDENCE:** real operator browser sign-in and successful callback, loaded authenticated Dashboard, actual Chat response, authenticated Chat/PTY WebSockets. Operator test requested. Stage 4C is **NOT ACCEPTED**, and no Stage 4C final PASS marker exists.
 
-**AUTH CANDIDATE / NOT ACCEPTED:** native Hermes self-hosted OIDC with Authelia as IdP, loopback Dashboard, existing Xray/nginx ingress, no nginx `auth_request` in front of Hermes, one interactive provider, public PKCE/S256 client. Older forward-auth/session-token-first wording is suspended for this recovery; see the latest reconciliation decision. Source support is confirmed, but design acceptance requires completing the runtime/recovery contract, and Stage 4C acceptance still requires real browser login and Chat/WS.
+**RECOVERY FINDINGS:** before these mutations, local/root inspection confirmed no partial Dashboard/OIDC deployment, consistent with the reported previous block stopping at `CERTBOT_NGINX_PLUGIN_GATE=FAIL`, RC 40. Root-only evidence was subsequently obtained after the operator enabled sudo. Full previous-session transcripts are unavailable; reviewed GitHub commits and live state are the evidentiary boundary.
 
-**ACCESS UPDATE:** the operator subsequently provisioned non-interactive root sudo. Root recovery completed: Authelia v4.39.27, native config validation PASS, OIDC config/secrets absent, current 12-SAN shared certificate excludes Hermes. The Stage 4C OIDC deployment design is now ACCEPTED in the latest decision; runtime activation and browser acceptance remain pending.
+**ASSISTANT / TEST-HARNESS DEFECTS:** the old nonexistent nginx-plugin prerequisite and missing-path probes were verifier errors, not production regressions. One HTTP 502 probe during first frontend build occurred before backend readiness; readiness and subsequent public checks passed. Accepted Stage 4A/B/D/E E2E tests were not repeated.
 
 ## Current next step
 
