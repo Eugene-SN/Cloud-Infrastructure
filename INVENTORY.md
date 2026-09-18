@@ -110,7 +110,7 @@ Final record: `STAGE_03_ACCEPTANCE_2026-09-18.md`.
 - `update.escloud.us` — future dedicated custom maintenance/update page; Cloudflare record already exists; dedicated Codex substage after backend contract;
 - `app.escloud.us` — future final Cloud Infrastructure portal/dashboard; dedicated Codex substage after monitoring/status sources;
 - `docs.escloud.us` — reserved;
-- `chat.escloud.us` — reserved; not automatically assigned to Hermes;
+- `chat.escloud.us` — Stage 4 Mattermost human endpoint; target accepted, not yet deployed; native Mattermost authentication without Authelia;
 - `cloud.escloud.us` — future file-access layer; implementation unresolved;
 - `sync.escloud.us` — future synchronization layer; implementation unresolved;
 - `go.escloud.us` — retired.
@@ -230,12 +230,20 @@ Continuous workstream after Stage 10, not an infrastructure-completion stage:
 
 ## Planned Stage 4 service — Mattermost
 
-- status: **SELECTED / NOT YET DEPLOYED**;
+- status: **TARGET ARCHITECTURE ACCEPTED / NOT YET DEPLOYED**;
+- Stage 4D acceptance: `STAGE4D_MATTERMOST_TARGET_ARCHITECTURE_ACCEPTANCE=PASS`;
+- acceptance record: `STAGE_04D_MATTERMOST_DESIGN_ACCEPTANCE_2026-09-18.md`;
 - role: private collaboration/control/notification surface for Hermes, n8n and later infrastructure integrations;
-- research record: `STAGE_04_MATTERMOST_RESEARCH_BRIEF_2026-09-18.md`;
-- preferred human namespace: `chat.escloud.us`, pending Stage 4D auth/client compatibility acceptance;
-- intended integrations: native Hermes Mattermost gateway, n8n official Mattermost node plus webhooks/slash commands, Stalwart SMTP, later monitoring/maintenance/backup notifications;
-- exact runtime placement, PostgreSQL topology, private backend endpoint and storage layout are unresolved until Stage 4D acceptance.
+- edition/runtime: Mattermost Team Edition using the current official Docker Compose pattern;
+- topology: separate Mattermost application + dedicated PostgreSQL containers; no Preview all-in-one image;
+- persistence: local `/srv` state; exact deployment paths selected during Stage 4E runtime planning;
+- human endpoint: `https://chat.escloud.us` through existing Xray -> host nginx -> shared TLS;
+- authentication: Mattermost-native; **no Authelia** on `chat.escloud.us`;
+- mobile push: free TPNS accepted for official Mattermost mobile clients;
+- Calls: explicitly excluded from current Stage 4;
+- backend/database listeners remain private;
+- exact Hermes/n8n/Stalwart/other integration mechanisms are intentionally **not preselected**; Stage 4E evaluates all native/upstream-supported options and chooses the simplest/reliable supported mechanism per connection;
+- custom plugins, patches, shim services or direct DB coupling require a demonstrated native-integration gap and explicit operator acceptance.
 ## Stage boundary
 
 Stage 0 — COMPLETE / ACCEPTED.  
