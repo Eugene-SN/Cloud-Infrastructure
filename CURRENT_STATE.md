@@ -207,6 +207,7 @@ Current confirmed baseline:
 - Dashboard/API/n8n integration and final macOS Remote Gateway integration remain pending;
 - Hermes host/toolchain normalization accepted: `ripgrep`, `ffmpeg`, build/Python/libffi development dependencies and Chromium system libraries installed; `browser-use` backend and managed Chromium `browser_exec` verified end-to-end; `cua-driver 0.28.2` available under the actual `core` runtime; marker `STAGE4_HERMES_SYSTEM_TOOLCHAIN_NORMALIZATION=PASS`;
 - wizard-selected `openai-codex` image generation is not currently usable because Hermes-managed Codex auth is absent.
+- Mattermost is now a mandatory Stage 4 private collaboration/control substage; it is selected but **NOT YET DEPLOYED**. Preliminary deep research is recorded in `STAGE_04_MATTERMOST_RESEARCH_BRIEF_2026-09-18.md`; preferred public namespace is `chat.escloud.us`, subject to Stage 4D auth/client compatibility acceptance;
 
 Detailed factual record: `STAGE_04_HERMES_POST_SETUP_BASELINE_2026-09-18.md`.
 
@@ -219,4 +220,4 @@ Stage 4 remains **IN PROGRESS / NOT YET ACCEPTED**.
 
 ## Current next step
 
-Stage 4 — Edge Hermes Agent Runtime is **IN PROGRESS**. Continue from the confirmed post-setup baseline in `STAGE_04_HERMES_POST_SETUP_BASELINE_2026-09-18.md`; do not reinstall Hermes or reopen Stage 3 transport unless a concrete incompatibility appears.
+Stage 4 — Edge Hermes Agent Runtime is **IN PROGRESS**. Follow the complete authoritative Stage 4A–4I sequence in `IMPLEMENTATION_PHASES.md`; do not collapse Stage 4 to only the immediate next test block. Continue from `STAGE_04_HERMES_POST_SETUP_BASELINE_2026-09-18.md`. Mattermost Stage 4D research/design must be explicitly accepted before Mattermost deployment. Do not reinstall Hermes or reopen Stage 3 transport unless a concrete incompatibility appears.
