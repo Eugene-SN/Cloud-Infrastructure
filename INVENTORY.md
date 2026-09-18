@@ -242,6 +242,7 @@ Continuous workstream after Stage 10, not an infrastructure-completion stage:
 - mobile push: free TPNS accepted for official Mattermost mobile clients;
 - Calls: explicitly excluded from current Stage 4;
 - backend/database listeners remain private;
+- fresh Stage 4E audit selected host backend mapping `127.0.0.1:18065 -> Mattermost:8065`; PostgreSQL remains Compose-internal; ports 8065/8443/5432 were free and no public firewall change is required;
 - confirmed current-project native integrations: Hermes built-in Mattermost gateway (REST v4 + WebSocket), n8n official built-in Mattermost node for supported operations, and Mattermost SMTP via the existing Stalwart SMTP service;
 - every other service/direction is integrated only if its current upstream explicitly provides a Mattermost integration or supported standard-protocol counterpart; otherwise it remains unintegrated in the current project and may be reconsidered only as future out-of-project work;
 - custom plugins, patches, shim services, direct DB coupling, bespoke bridges, compatibility hacks, or an n8n relay are not substitutes for missing upstream integration.
