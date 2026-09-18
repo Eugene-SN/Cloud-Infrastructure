@@ -135,42 +135,142 @@ Stage 3 establishes the Cloud-to-Home private transport needed by later workload
 
 ### Work branch
 
-`04 — Edge Hermes Agent Runtime`
+04 — Edge Hermes Agent Runtime
 
 ### Scope
 
-Deploy Hermes after Stage 3 connectivity is accepted so the stage can verify human WebUI access, cloud executors, machine integration and real local-vLLM use in one coherent acceptance.
+Deploy Hermes after Stage 3 connectivity is accepted so the stage can verify the complete practical Hermes capability set, human WebUI access, direct cloud executors, Mattermost collaboration/control, machine integration and real local-vLLM use in one coherent acceptance.
 
 Requirements:
 
-- use the upstream-recommended Hermes installation path as published by Nous Research at deployment time; do not invent an independent version-selection policy;
-- host-native runtime under `core` by default;
+- use the upstream-recommended Hermes installation path at deployment time; do not invent an independent version-selection policy;
+- host-native runtime under core by default;
 - persistent upstream-supported lifecycle/state;
+- retain the full practical upstream-supported Hermes tool/runtime capability set rather than an intentionally reduced core path;
 - deploy the Hermes Web Dashboard as the normal human UI;
-- publish the Dashboard at `https://hermes.escloud.us` through the existing Xray/nginx/TLS/Authelia service-ingress architecture;
-- keep the Hermes Dashboard backend loopback-only by default (upstream default `127.0.0.1:9119`); do not expose port 9119 directly to the Internet;
-- do not create a separate direct public Hermes API/backend listener merely for n8n;
-- preserve the project-wide authentication rule: service subdomains are protected by Authelia; only the root landing page `escloud.us` remains unauthenticated;
-- do not preselect Nous OAuth. Current Hermes Desktop supports self-hosted Remote Gateway credentials by session token as well as gated OAuth/username-password flows; test session token first and only add a Hermes-native gated provider if the actual installed build/reverse-proxy behavior requires it;
-- direct Hermes access to Codex and Antigravity without CloudCLI as a proxy;
+- publish it at https://hermes.escloud.us through existing Xray/nginx/TLS/Authelia;
+- keep the Dashboard backend loopback-only by default and do not expose port 9119 directly;
+- keep the n8n machine interface local/private rather than creating a public Hermes API;
+- preserve the project-wide Authelia policy for service subdomains;
+- direct Hermes access to Codex and Antigravity without CloudCLI as proxy;
 - stable machine interface for n8n invocation/result/status;
-- minimal infrastructure acceptance of `n8n -> Hermes -> Codex/AGY -> Hermes -> n8n`;
-- inspect current `ai-node` vLLM bind/exposure and make only the minimum private-fabric change required;
-- verify real `Hermes -> vLLM` inference;
-- no user-specific automation/workflows in Stage 4.
+- infrastructure acceptance of n8n -> Hermes -> Codex/AGY -> Hermes -> n8n;
+- deploy a lightweight private Mattermost server only after its dedicated deep-research/design gate is accepted;
+- integrate Mattermost with Hermes natively and with other compatible edge services through the simplest supported interfaces;
+- verify real Hermes -> vLLM inference;
+- no user-specific automation workflows beyond minimum integration acceptance probes.
 
-### Final Stage 4 substage — macOS Hermes Desktop integration
+### Authoritative Stage 4 execution substages
 
-After the server-side Hermes runtime, Web Dashboard, executors, n8n machine interface and vLLM path are accepted:
+These substages are the canonical sequence. A short list of immediate next tasks must not be treated as the full remaining Stage 4 scope.
 
-1. install/use the supported Hermes Desktop application on macOS;
-2. test the simplest supported **Remote Gateway** mode first;
-3. configure **Settings -> Gateways -> Remote gateway** with the remote Dashboard backend URL, intended to be `https://hermes.escloud.us`;
-4. test the self-hosted **Session token** Remote Gateway credential first; verify backend readiness, real chat/WebSocket operation, and reconnect after application restart;
-5. treat the remote backend as the running `hermes dashboard` service, not as the separate messaging gateway process;
-6. if session-token Remote Gateway is incompatible with the actually installed Hermes build or the accepted nginx/Authelia reverse-proxy path, test the minimum next supported credential mode (username/password or OAuth) without assuming Nous OAuth in advance; evaluate a different connection mode only after Remote Gateway itself is proven incompatible.
+#### Stage 4A — Hermes core runtime and Full Setup capability completion
 
-This Desktop integration is the **last Stage 4 integration task**, not a user-specific workflow.
+- upstream installation/provenance;
+- AI-Node vLLM provider;
+- Qwen3.8 model-native reasoning/replay;
+- terminal/tool calling;
+- full practical local toolchain;
+- Browser Use/managed Chromium;
+- real functional verification/normalization of remaining Full Setup surfaces: CUA, Vision, TTS, Web Search/Extract and Image Generation.
+
+Accepted so far:
+- STAGE4_HERMES_QWEN38_REASONING_NORMALIZATION=PASS
+- STAGE4_HERMES_SYSTEM_TOOLCHAIN_NORMALIZATION=PASS
+
+#### Stage 4B — Direct Codex and Antigravity executor integration
+
+- verify bundled Codex skill and standalone Codex CLI under real core runtime;
+- establish the correct Antigravity skill/integration path if no bundled skill exists;
+- prove harmless Hermes -> Codex CLI and Hermes -> Antigravity CLI delegation;
+- do not route through CloudCLI.
+
+#### Stage 4C — Hermes Web Dashboard, ingress and auth
+
+- persistent Dashboard backend;
+- loopback-only backend unless a concrete incompatibility requires otherwise;
+- https://hermes.escloud.us through Xray/nginx/shared TLS/Authelia;
+- WebSocket and session persistence;
+- reconcile Hermes-native remote-dashboard auth with Authelia without preselecting Nous OAuth;
+- keep n8n machine API private/local.
+
+#### Stage 4D — Mattermost deep research and deployment design
+
+Mandatory research/design gate before Mattermost mutation.
+
+Research record: STAGE_04_MATTERMOST_RESEARCH_BRIEF_2026-09-18.md
+
+Must cover:
+- current Team Edition/license state;
+- edge resource headroom;
+- native APT vs official-image Docker/Compose;
+- PostgreSQL placement/update/restore;
+- file storage;
+- chat.escloud.us ingress and WebSocket;
+- Authelia compatibility with web/desktop/mobile clients;
+- internal Hermes and n8n routes;
+- Stalwart SMTP;
+- bot/webhook/slash-command model;
+- later backup/monitoring implications.
+
+No production Mattermost mutation before explicit Stage 4D acceptance.
+
+#### Stage 4E — Private Mattermost deployment and service integrations
+
+After Stage 4D acceptance:
+- deploy selected current stable Mattermost edition/runtime and PostgreSQL topology;
+- keep application/database backends private;
+- preferred human URL is https://chat.escloud.us, subject to Stage 4D client/auth acceptance;
+- reuse Xray/nginx/shared TLS and accepted auth policy;
+- preserve REST + WebSocket behavior;
+- configure dedicated Hermes Mattermost bot using native Hermes adapter;
+- verify DM, channel, mention/reply, attachments/images, slash commands and proactive/home-channel flows;
+- configure n8n official Mattermost node for supported operations;
+- prefer outgoing webhooks/custom slash commands into n8n Webhook for inbound flows;
+- configure SMTP through Stalwart and prove reset/notification delivery;
+- keep Codex/Antigravity behind Hermes rather than duplicate Mattermost bots by default;
+- keep CloudCLI as manual workspace;
+- make Mattermost ready for later monitoring/maintenance/backup notifications without implementing those future workflows;
+- verify resource delta, persistence and non-regression.
+
+#### Stage 4F — Hermes private machine interface and n8n agent integration
+
+- enable minimum supported Hermes machine interface required by n8n;
+- keep it local/private and authenticated;
+- prove n8n invoke/result/status;
+- prove n8n -> Hermes -> Qwen3.8/Codex/AGY -> Hermes -> n8n;
+- no user-specific workflow logic beyond acceptance probes.
+
+#### Stage 4G — Server-side integrated acceptance
+
+Verify together:
+- Hermes/vLLM/reasoning/tools;
+- Codex/Antigravity;
+- Dashboard + authenticated ingress;
+- Mattermost + Hermes + n8n + Stalwart;
+- private n8n machine interface;
+- gateway lifecycle;
+- NetBird/private PAI path;
+- listeners/UFW/TLS/non-regression;
+- persistence and, if justified, one controlled reboot.
+
+#### Stage 4H — Final integration task: macOS Hermes Desktop
+
+After all server-side components are accepted:
+1. use supported Hermes Desktop on macOS;
+2. test Remote Gateway first;
+3. use intended remote URL https://hermes.escloud.us;
+4. test self-hosted Session token first;
+5. verify readiness, live chat/WebSocket and reconnect after app restart;
+6. if incompatible, test minimum next supported username/password or OAuth mode without assuming Nous OAuth; alternative connection mode only after Remote Gateway itself is proven incompatible.
+
+This remains the last Stage 4 integration task.
+
+#### Stage 4I — Final Stage 4 acceptance and repository persistence
+
+- final integrated acceptance record;
+- update/read-back CURRENT_STATE, INVENTORY, ARCHITECTURE, IMPLEMENTATION_PHASES and applicable decisions;
+- only then mark Stage 4 COMPLETE / ACCEPTED and open Stage 5.
 
 ## Stage 5 — Edge Knowledge Replication & Data Integration
 
