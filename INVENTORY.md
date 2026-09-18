@@ -230,11 +230,12 @@ Continuous workstream after Stage 10, not an infrastructure-completion stage:
 
 ## Planned Stage 4 service — Mattermost
 
-- status: **CORE RUNTIME + PUBLIC INGRESS + NATIVE SERVER CONFIG ACCEPTED; HERMES BOT/INTEGRATION PENDING**;
+- status: **CORE RUNTIME + PUBLIC INGRESS + NATIVE SERVER CONFIG + HERMES BOT PROVISIONING ACCEPTED; HERMES E2E MESSAGE TEST PENDING**;
 - Stage 4D acceptance: `STAGE4D_MATTERMOST_TARGET_ARCHITECTURE_ACCEPTANCE=PASS`;
 - core runtime acceptance: `STAGE4E_MATTERMOST_CORE_RUNTIME_ACCEPTANCE=PASS`; record `STAGE_04E_MATTERMOST_CORE_RUNTIME_ACCEPTANCE_2026-09-18.md`;
 - ingress acceptance: `STAGE4E_MATTERMOST_INGRESS_ACCEPTANCE=PASS`; record `STAGE_04E_MATTERMOST_INGRESS_ACCEPTANCE_2026-09-18.md`;
 - native server configuration acceptance: `STAGE4E_MATTERMOST_NATIVE_SERVER_CONFIG=PASS`; bot account creation enabled, public signup disabled, TPNS enabled, Calls disabled; record `STAGE_04E_MATTERMOST_NATIVE_SERVER_CONFIG_ACCEPTANCE_2026-09-18.md`;
+- Hermes bot provisioning acceptance: `STAGE4E_HERMES_MATTERMOST_BOT_PROVISION=PASS`; bot `hermes` ID `sceogxkhh3nh9y89uc6eza9ije`, team `es-cloud`, channel `town-square`, token validated/stored in Hermes env, operator allowlist `mof5mc6w3jds8qp36b678qrzoc`; E2E message test pending.
 - acceptance record: `STAGE_04D_MATTERMOST_DESIGN_ACCEPTANCE_2026-09-18.md`;
 - role: private collaboration/control/notification surface for Hermes, n8n and later infrastructure integrations;
 - edition/runtime: Mattermost Team Edition `11.11.0` using official `mattermost/docker` commit `497414659ee7127677d2b91b44bb4f3ea9d14695`;
