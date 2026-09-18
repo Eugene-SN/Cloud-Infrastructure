@@ -42,18 +42,21 @@ Detailed acceptance record:
 
 `STAGE_02_5_CONNECTIVITY_SELECTION_ACCEPTANCE_2026-09-17.md`
 
-Accepted target:
+Current accepted/runtime state:
 
-- `edge` becomes an ordinary host-native NetBird service peer;
+- `edge` is an ordinary host-native NetBird service peer on NetBird `0.78.2`;
+- `edge` NetBird IPv4 is `100.105.178.187/16`;
 - Home CT300 remains the Home routing/control-plane foundation;
-- `edge` receives Home LAN access but not the Home Internet `0.0.0.0/0` resource;
-- `edge` keeps direct VPS-provider Internet/default routing;
-- Home/PAI clientless hosts reach `edge` through gateway-level routing of `100.105.0.0/16` via CT300 `192.168.1.90`;
-- VM100 and MikroTik both participate in route persistence so VRRP ownership does not change private reachability;
-- existing `.lan` split DNS is reused on `edge` and `edge.lan` is added through the existing Home DNS mechanism after Stage 3 enrollment/routing acceptance;
-- direct WireGuard/Tailscale are rejected as duplicate private backbones; AmneziaWG is contingency only if real Stage 3 transport acceptance fails.
+- `edge -> Home/PAI` through the existing `Home LAN 192.168.1.0/24` resource is verified;
+- `edge` does not receive the Home Internet `0.0.0.0/0` resource;
+- `edge` keeps direct VPS-provider Internet/default routing and public IPv4 `45.92.156.17`;
+- Home `.lan` split DNS is consumed by `edge`; `pve.lan -> 192.168.1.3` is verified;
+- LAN-wide clientless Home/PAI -> `edge` routing is **not part of the baseline**: VM100 and MikroTik remain unchanged because current Home/PAI consumers can use the existing public VPS IP or `escloud.us` / service-subdomain ingress;
+- `edge.lan` is intentionally not created because it adds no useful access path for the current architecture;
+- clientless gateway routing to the NetBird overlay is deferred and requires a concrete private-only workload before any VM100/MikroTik change;
+- direct WireGuard/Tailscale remain rejected as duplicate private backbones; AmneziaWG remains contingency only for a demonstrated NetBird transport failure.
 
-No Stage 02.5 runtime networking/DNS/firewall mutation was performed.
+Stage 3 control-plane grouping/policy and host-native `edge` enrollment are complete and verified. VM100/MikroTik routing/firewall state has not been mutated by Stage 3.
 
 ### Data / knowledge project boundary
 
