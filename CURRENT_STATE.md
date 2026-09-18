@@ -213,6 +213,8 @@ Detailed factual record: `STAGE_04_HERMES_POST_SETUP_BASELINE_2026-09-18.md`.
 
 Stage 4 remains **IN PROGRESS / NOT YET ACCEPTED**.
 
+Mattermost Stage 4E pre-deployment audit is accepted: `STAGE4E_MATTERMOST_PREDEPLOY_AUDIT=PASS`. Runtime is ready for deployment; selected backend mapping is `127.0.0.1:18065 -> Mattermost:8065`, PostgreSQL remains internal-only, no Calls listener or UFW change is required.
+
 ## Recovery / preserved state
 
 - Stage 1 recovery archive: `/srv/backups/edge-stage1/edge-stage1-base-20260916T234611Z.tar.gz`, SHA256 `37486e763ddac4c5ef3a92a35c3dad49787d75ffd8b97499073c79af617cc566`;
