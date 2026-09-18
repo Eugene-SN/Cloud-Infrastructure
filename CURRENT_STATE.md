@@ -242,18 +242,26 @@ Hermes↔Mattermost accepted state:
 
 ### n8n ↔ Mattermost
 
-Status: **IN PROGRESS / NOT YET ACCEPTED**.
+Status: **COMPLETE / ACCEPTED**.
 
-Fresh recovery audit established:
+Accepted state:
 
 - n8n `2.39.7` healthy at `127.0.0.1:15678`;
-- official built-in Mattermost node and `mattermostApi` credential type are present;
-- exactly one Mattermost credential exists: `Mattermost API - chat.escloud.us`, ID `16a0a988ad514ab1`;
-- the credential validates against `/api/v4/users/me` with HTTP 200 as bot `n8n`, ID `4ty8tfwmdir9mxkeua3n7658mc`;
-- exactly one active access token exists for `n8n`, description `n8n-native-mattermost`;
-- direct-message channel `eugene ↔ n8n` exists;
-- n8n has no workflows and no executions;
-- provisioning/authentication is therefore valid, but official n8n Mattermost node E2E behavior has not yet been accepted.
+- official built-in `n8n-nodes-base.mattermost` node, typeVersion `1`;
+- one production `mattermostApi` credential: `Mattermost API - chat.escloud.us`, ID `16a0a988ad514ab1`;
+- credential validates against `/api/v4/users/me` with HTTP 200 as bot `n8n`, ID `4ty8tfwmdir9mxkeua3n7658mc`;
+- exactly one active Mattermost access token exists for `n8n`, description `n8n-native-mattermost`;
+- operator DM channel ID `srzsm58fepgujjfnyxb8f7zo3o`;
+- native-node E2E acceptance marker `N8N_MATTERMOST_NATIVE_E2E_OK_20260918T135107Z`;
+- Mattermost database verified exactly one matching post authored by the `n8n` bot, post ID `1fgnm3fumbyy8b4usrrs41kouc`;
+- the E2E workflow executed only against a throwaway SQLite/config clone under `/tmp`;
+- production n8n remained at workflows `0`, executions `0`, one Mattermost credential;
+- n8n and Mattermost health remained PASS after the probe;
+- throwaway host/container artifacts were removed;
+- acceptance record: `STAGE_04E_N8N_MATTERMOST_INTEGRATION_ACCEPTANCE_2026-09-18.md`;
+- marker: `STAGE4E_N8N_MATTERMOST_INTEGRATION=PASS`.
+
+Stage 4E itself remains **IN PROGRESS** because the accepted Mattermost scope separately requires real official mobile-client login plus delivered TPNS push, and the currently enabled prepackaged `mattermost-ai` plugin still requires explicit disposition followed by Stage 4E-specific non-regression.
 
 Detailed accepted records remain authoritative for completed substages; the expanded audit does not retroactively rewrite historical records.
 
@@ -266,10 +274,9 @@ Stage 4 remains **IN PROGRESS / NOT YET ACCEPTED**.
 
 ## Current next step
 
-1. Finish Stage 4E by proving the official n8n Mattermost node end-to-end with the already validated single credential/bot; do not create duplicate credentials, tokens or permanent user workflows for the probe.
+1. Finish the remaining Stage 4E gates: real official Mattermost mobile-client login, delivered TPNS push, explicit disposition of the enabled prepackaged `mattermost-ai` plugin, then Stage 4E-specific non-regression.
 2. Resolve or explicitly characterize the Hermes controlled stop/restart exit-status defect before server-side final acceptance.
-3. Explicitly disposition the currently enabled prepackaged `mattermost-ai` plugin; do not treat it as accepted architecture by default.
-4. Resume remaining Hermes Stage 4A/4B/4C work, then Stage 4F machine-interface integration.
-5. Perform Stage 4G server-side integrated acceptance, Stage 4H macOS Hermes Desktop integration, and Stage 4I final repository persistence/acceptance.
+3. Resume remaining Hermes Stage 4A/4B/4C work, then Stage 4F machine-interface integration.
+4. Perform Stage 4G server-side integrated acceptance, Stage 4H macOS Hermes Desktop integration, and Stage 4I final repository persistence/acceptance.
 
 Do not reopen Stage 3 transport or reinstall already accepted Stage 4 components without a concrete incompatibility.
