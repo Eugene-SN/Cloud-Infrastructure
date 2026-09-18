@@ -146,25 +146,22 @@ Architectural role:
 
 ### Native-only Mattermost integration invariant
 
-Cloud Infrastructure implements a direct Mattermost integration **only when the relevant developers/upstream provide a supported integration path**.
+Cloud Infrastructure implements a direct Mattermost integration only when the relevant upstream provides a supported path.
 
-Confirmed current project integrations:
+Accepted/current directions:
 
-- **Hermes ↔ Mattermost:** Hermes built-in Mattermost gateway adapter using Mattermost REST API v4 + WebSocket;
-- **n8n → Mattermost:** n8n official built-in Mattermost integration/node for the operations it supports;
-- **Mattermost → Stalwart SMTP:** standard SMTP support exists, but enabling it is intentionally deferred until after Hermes and n8n integration so its actual value (email notifications/password recovery versus existing mail clients and push) can be judged.
+- **Hermes ↔ Mattermost:** Hermes built-in Mattermost gateway over Mattermost REST API v4 + WebSocket; accepted end-to-end.
+- **n8n → Mattermost:** official built-in n8n Mattermost node/credential path; provisioning/authentication is valid, final node E2E acceptance remains pending.
+- **Mattermost → Stalwart SMTP:** explicitly reviewed and **not required / not enabled** in the accepted target state.
 
-For every other service or traffic direction, verify current upstream support first. If no native/product-supported integration exists, do not create one in the current project. Do not substitute a custom plugin, patched source, shim service, direct database access, bespoke bridge, compatibility hack, or an n8n relay solely to connect otherwise unrelated products.
+For any other service or direction, verify current upstream support first. Do not substitute a custom plugin, patched source, shim service, direct database coupling, bespoke bridge, compatibility hack or n8n-mediated relay solely to connect otherwise unrelated products.
 
-Such missing integrations may be revisited as separate future work outside the current Cloud Infrastructure build if upstream support or a new requirement appears.
+The enabled prepackaged Mattermost Agents plugin is not part of the accepted agent architecture and does not supersede Hermes; its runtime presence requires explicit disposition before final Stage 4 acceptance.
 
-Mattermost integration execution order for Stage 4E: **Hermes first, n8n second, Stalwart usefulness review third**.
-
-Detailed research:
-
-`STAGE_04_MATTERMOST_RESEARCH_BRIEF_2026-09-18.md`
+Detailed research: `STAGE_04_MATTERMOST_RESEARCH_BRIEF_2026-09-18.md`.
 
 `STAGE4D_MATTERMOST_TARGET_ARCHITECTURE_ACCEPTANCE=PASS`
+
 # Accepted Cross-site Connectivity Architecture
 
 Selection record:
@@ -328,29 +325,47 @@ The accepted baseline path is `edge -> Home/PAI`; VM100/MikroTik remain unchange
 
 ## Stage 4 — Hermes Agent Runtime
 
-Preferred placement: host-native under `core`.
+Preferred Hermes placement: host-native under `core`.
 
-Accepted UI/ingress contract:
+Stage 4 architecture combines:
 
-- Hermes Web Dashboard is part of the Stage 4 production scope and is the normal human UI;
-- public user URL is `https://hermes.escloud.us`;
-- reuse the existing service-ingress pattern: public TCP/443 -> Xray/nginx -> Authelia -> loopback Hermes Dashboard backend;
-- Hermes Dashboard remains host-local/loopback by default (expected upstream default `127.0.0.1:9119`); do not expose its backend port directly to the Internet;
-- `hermes.escloud.us` is an authenticated service subdomain; the project exception remains only the public landing page `escloud.us`, which does not require Authelia;
-- reuse the existing Certbot/nginx/TLS lifecycle rather than introducing a separate ingress stack;
-- do not preselect Nous OAuth or any other Hermes-native auth provider. Current Hermes Desktop supports self-hosted Remote Gateway operation with a session token and also supports gated OAuth/username-password flows. Test the self-hosted session-token path first; only enable a gated provider if the actually installed upstream build/reverse-proxy behavior proves it necessary.
+- Hermes core runtime using private `ai-node` vLLM;
+- direct Codex CLI and Antigravity CLI executors;
+- authenticated Hermes Web Dashboard at `https://hermes.escloud.us`;
+- private authenticated n8n machine interface;
+- Mattermost at `https://chat.escloud.us` as the private collaboration/control/notification surface;
+- final macOS Hermes Desktop Remote Gateway integration.
 
-Acceptance includes:
+Hermes Dashboard ingress:
 
-- browser access to `https://hermes.escloud.us` through the accepted nginx + Authelia ingress;
+- public TCP/443 -> Xray/nginx -> Authelia -> loopback Hermes backend;
+- backend remains non-public;
+- use the self-hosted Remote Gateway/session-token path first for Hermes Desktop;
+- add another Hermes-native credential mode only if the installed runtime proves the simple path incompatible.
+
+Mattermost ingress/auth is intentionally different:
+
+- public TCP/443 -> Xray/nginx -> loopback Mattermost backend;
+- Mattermost-native authentication;
+- no Authelia in front of `chat.escloud.us`;
+- PostgreSQL remains private;
+- Calls remains excluded.
+
+Stage 4 acceptance requires:
+
+- real Hermes -> vLLM inference;
+- practical selected Hermes tool surfaces;
+- direct Hermes -> Codex and Hermes -> Antigravity delegation;
+- Hermes Dashboard through nginx + Authelia;
+- accepted native Hermes↔Mattermost and n8n↔Mattermost paths;
+- private authenticated n8n -> Hermes machine interface;
 - `n8n -> Hermes -> Codex/AGY -> Hermes -> n8n`;
-- minimum private vLLM exposure on `ai-node`;
-- real `Hermes -> vLLM` inference;
-- final macOS Hermes Desktop integration test using **Settings -> Gateways -> Remote gateway** against the remote Dashboard backend, with `https://hermes.escloud.us` as the intended Base/Remote URL;
-- verify the selected Remote Gateway credential path, backend readiness, live chat/WebSocket operation and reconnect persistence;
-- only if the simple Remote Gateway path is incompatible with the accepted reverse-proxy/auth topology, evaluate the minimum alternative connection mode rather than pre-deploying parallel access paths.
+- clean Hermes gateway lifecycle, including controlled stop/restart and reboot persistence;
+- no unintended public Hermes machine/API listener;
+- server-side integrated non-regression;
+- final macOS Hermes Desktop readiness/live chat/WebSocket/reconnect acceptance.
 
-The public domain is for the authenticated Web Dashboard. It does **not** authorize a direct Internet-facing Hermes backend/API listener.
+User-specific automation workflows remain outside infrastructure acceptance.
 
 ## Stage 5 — Edge Knowledge Replication & Data Integration
 
