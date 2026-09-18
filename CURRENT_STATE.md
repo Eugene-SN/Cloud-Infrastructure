@@ -215,6 +215,8 @@ Stage 4 remains **IN PROGRESS / NOT YET ACCEPTED**.
 
 Mattermost Stage 4E core runtime is **ACCEPTED**: `STAGE4E_MATTERMOST_CORE_RUNTIME_ACCEPTANCE=PASS`. Runtime: upstream `mattermost/docker` commit `497414659ee7127677d2b91b44bb4f3ea9d14695`, Mattermost Team `11.11.0`, PostgreSQL `18-alpine`, Mattermost container healthy, PostgreSQL running, both `restart=unless-stopped`, host publication only `127.0.0.1:18065 -> 8065`; host ports `8065/8443/5432` are not published; Hermes gateway/config non-regression passed. Acceptance record: `STAGE_04E_MATTERMOST_CORE_RUNTIME_ACCEPTANCE_2026-09-18.md`.
 
+Mattermost public ingress is **ACCEPTED**: `STAGE4E_MATTERMOST_INGRESS_ACCEPTANCE=PASS`. `https://chat.escloud.us` now serves Mattermost through the existing Xray -> host nginx -> loopback backend path, WebSocket `/api/v4/websocket` returns `101 Switching Protocols`, Authelia is absent by design, and n8n/CloudCLI/mail ingress non-regression passed. Acceptance record: `STAGE_04E_MATTERMOST_INGRESS_ACCEPTANCE_2026-09-18.md`.
+
 ## Recovery / preserved state
 
 - Stage 1 recovery archive: `/srv/backups/edge-stage1/edge-stage1-base-20260916T234611Z.tar.gz`, SHA256 `37486e763ddac4c5ef3a92a35c3dad49787d75ffd8b97499073c79af617cc566`;
@@ -222,4 +224,4 @@ Mattermost Stage 4E core runtime is **ACCEPTED**: `STAGE4E_MATTERMOST_CORE_RUNTI
 
 ## Current next step
 
-Stage 4 — Edge Hermes Agent Runtime is **IN PROGRESS**. Follow the complete authoritative Stage 4A–4I sequence in `IMPLEMENTATION_PHASES.md`; do not collapse Stage 4 to only the immediate next test block. Continue from `STAGE_04_HERMES_POST_SETUP_BASELINE_2026-09-18.md`. Mattermost Stage 4D research/design is COMPLETE / ACCEPTED. **Stage 4E Mattermost core runtime is accepted. Current focus is Mattermost ingress + native application setup.** After public/native-client Mattermost acceptance: integrate Hermes first using the official Hermes Mattermost guide, then n8n, then discuss whether Mattermost email functionality via Stalwart is useful enough to enable. Do not reinstall Hermes or reopen Stage 3 transport unless a concrete incompatibility appears.
+Stage 4 — Edge Hermes Agent Runtime is **IN PROGRESS**. Follow the complete authoritative Stage 4A–4I sequence in `IMPLEMENTATION_PHASES.md`; do not collapse Stage 4 to only the immediate next test block. Continue from `STAGE_04_HERMES_POST_SETUP_BASELINE_2026-09-18.md`. Mattermost Stage 4D research/design is COMPLETE / ACCEPTED. **Stage 4E Mattermost core runtime and public ingress are accepted. Current focus is native Mattermost application setup.** After public/native-client Mattermost acceptance: integrate Hermes first using the official Hermes Mattermost guide, then n8n, then discuss whether Mattermost email functionality via Stalwart is useful enough to enable. Do not reinstall Hermes or reopen Stage 3 transport unless a concrete incompatibility appears.
