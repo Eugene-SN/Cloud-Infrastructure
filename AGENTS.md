@@ -20,18 +20,11 @@ Read, in this order when relevant:
 
 Current canonical work is:
 
-`02.5 — Remaining Functional Scope Reconciliation & Research`
+`04 — Edge Hermes Agent Runtime`
 
-Stage 0, Stage 1 and Stage 2 are complete and accepted. `EDGE_STAGE2_FINAL_INTEGRATED_ACCEPTANCE=PASS`.
+Stage 0, Stage 1, Stage 2, Stage 02.5 and Stage 3 are complete and accepted. `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS`.
 
-Stage 02.5 is **research-only**. Do not deploy/install/configure a new production service, mutate production DNS/firewall/runtime, or open the next production branch until all Stage 02.5 deliverables are explicitly accepted and canonical files are updated/read back.
-
-Completed Stage 02.5 research blocks:
-
-- Remaining Standalone Core Services — Hermes Agent selected;
-- Cross-site Connectivity Foundation — existing self-hosted NetBird selected/reused with bidirectional routed Cloud ↔ Home/PAI fabric and existing `.lan` split DNS.
-
-Current next research block is **Cross-site Data & Knowledge Services**.
+Stage 4 is **IN PROGRESS / NOT YET ACCEPTED**. Continue from the current Stage 4 runtime/configuration state and authoritative Stage 4 records; do not revert to the old Stage 02.5 research-only checkpoint.
 
 ## Current planned stage order
 
@@ -63,6 +56,18 @@ Each implementation stage has its own work branch. Every stage branch begins wit
 8. only then propose the next work branch.
 
 A completed subtask is not sufficient reason to leave a branch while accepted scope remains incomplete.
+
+## Functional completeness invariant
+
+Stage names, stage scopes and enumerated acceptance requirements define **minimum required outcomes and sequencing**, not an exhaustive ceiling on the capabilities of a selected service.
+
+- When a product/service has already been selected, deploy a **functionally complete, practical upstream-supported installation** appropriate to its intended long-lived role, including common toolsets/runtime dependencies that are reasonably expected to be useful across future tasks.
+- Do **not** omit a normal supported component merely because it is "not needed for the current/core Stage path". That phrase is not a valid exclusion rationale by itself.
+- Avoid deliberately minimal/slim installation profiles when they would force repeated package/runtime upgrades as ordinary new use cases appear.
+- Stage boundaries constrain sequencing, ownership and acceptance; they do not require artificial feature minimization inside an already selected service.
+- Still avoid speculative complexity: do not automatically enable mutually exclusive backends, unrelated heavyweight subsystems, unsupported/immature features, paid services, or external integrations that require credentials/accounts and have no accepted use. Defer those for a concrete reason, and state that reason explicitly.
+- Prefer installing shared local dependencies once when they support multiple standard capabilities of the selected service and carry no material downside.
+- User-specific workflows may remain post-infrastructure even when the underlying service capabilities needed to support them are installed during the infrastructure stage.
 
 ## Functional scaffold invariant
 
