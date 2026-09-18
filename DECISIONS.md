@@ -590,3 +590,25 @@ The independent Docker reboot-lifecycle regression discovered during Stage 3 is 
 **Constraints:** Revisit only if a concrete future requirement appears for Mattermost-generated email such as password-reset mail, email notifications, invitations, or another explicit mail-dependent workflow.
 
 **supersedes:** prior unresolved/pending Mattermost ↔ Stalwart usefulness discussion.
+
+---
+
+## 2026-09-18T17:18:00+03:00 — Stage 4 core-agent acceptance priority
+
+**Status:** ACCEPTED
+
+**Context:** Stage 4 capability probing proved Web Search/Extract, Edge TTS and Vision functional on the deployed Hermes runtime, while Computer Use is not applicable on the intentionally headless `edge` host. Image Generation remained blocked only by separate Hermes-managed Codex image-generation authentication. The operator clarified that image generation is not a core autonomous-agent acceptance function because useful image output inherently requires human visual review, whereas correct Qwen3.8/vLLM behavior and delegation to Codex/Antigravity define the primary Hermes role.
+
+**Decision:**
+
+1. Stage 4 critical acceptance is centered on the main agent execution path: `Hermes -> qwen3.8-27b-fp8/vLLM`, including correct reasoning mode, tool calling, reasoning replay and multi-turn/session continuity.
+2. Re-verify that the accepted Qwen3.8 normalization remains effective: no persistent `agent.reasoning_effort` override, `model.reasoning_echo=true`, model/server-native reasoning preserved, and real Hermes tool use succeeds.
+3. Stage 4B direct specialist delegation is next in priority: prove Hermes -> standalone Codex CLI and Hermes -> standalone Antigravity CLI using their official Hermes skill patterns and existing CLI authentication.
+4. Keep Hermes' default/main runtime on the accepted local custom vLLM/Qwen route. Do not switch the main agent to the optional Codex app-server runtime merely to integrate Codex.
+5. The bundled Codex skill uses Hermes terminal -> `codex exec` in a git workspace. The official optional `antigravity-cli` skill uses Hermes terminal -> `agy --print` / `agy -p`. These are the accepted integration shapes unless runtime evidence proves incompatibility.
+6. Image Generation remains an optional installed/configured capability and is **non-blocking for Stage 4 acceptance**. Do not create a separate Hermes Codex OAuth session solely to satisfy Stage 4. A future image-generation check, when actually useful, requires human visual acceptance of the result.
+7. Headless Linux CUA remains `NOT_APPLICABLE_HEADLESS_EDGE`; do not add a desktop/X11/Wayland stack solely to convert that capability into a synthetic PASS.
+8. Already-proven Web Search/Extract, Edge TTS and Vision are retained as accepted capability evidence and are not re-tested without a concrete regression signal.
+
+**Supersedes:** only the prior interpretation that Image Generation or server-side CUA must independently pass before the core Hermes Stage 4A/4B path can proceed. The functional-completeness invariant remains in force for practical capabilities that do not require disproportionate infrastructure or inherently manual acceptance.
+
