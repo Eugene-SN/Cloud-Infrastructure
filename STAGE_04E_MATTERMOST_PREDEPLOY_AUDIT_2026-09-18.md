@@ -60,3 +60,23 @@ Final recovery audit established:
 Current Mattermost upstream source/runtime contract uses UID/GID `2000:2000` for the `mattermost` account; the corrected deployment block uses that documented bind-mount ownership rather than attempting to invoke a shell in the distroless image.
 
 `STAGE4E_MATTERMOST_CORE_DEPLOY_RECOVERY_AUDIT_V3=PASS`
+
+
+## Recovery audit V4 validity correction
+
+A later recovery script printed a final PASS marker despite an arithmetic syntax error caused by a malformed container-count command substitution that produced `0\n0`. Therefore that script's final PASS marker is **INVALID** and must not be used as acceptance evidence.
+
+The useful read-only facts from that output remain valid:
+
+- `/opt/mattermost` exists as an otherwise empty root-owned directory;
+- `/srv/mattermost` exists as an otherwise empty root-owned directory;
+- all Mattermost application subdirectories are absent;
+- `/opt/mattermost/.env` and `compose.yaml` are absent;
+- no Mattermost/PostgreSQL containers were created;
+- host UID/GID 2000 have no name entries, which is irrelevant because upstream instructs numeric `chown 2000:2000`.
+
+No runtime deployment occurred.
+
+The subsequent deployment procedure is reset to the exact official `mattermost/docker` workflow documented in Stage 4D, with only the accepted loopback/no-Calls Compose override.
+
+`STAGE4E_MATTERMOST_RECOVERY_V4_FINAL_MARKER=INVALID_DUE_SCRIPT_ERROR`
