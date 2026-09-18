@@ -202,15 +202,38 @@ The controlled gateway stop/restart exit-status defect remains a documented upst
 
 #### Stage 4B — Direct Codex and Antigravity executor integration
 
-**Status: NEXT / PENDING ACCEPTANCE.**
+**Status: IN PROGRESS / TARGET ARCHITECTURE ACCEPTED / E2E PENDING.**
 
-- keep Hermes' main/default runtime on the accepted local custom Qwen3.8/vLLM route;
-- verify the bundled Codex skill and standalone Codex CLI under the real `core` runtime;
-- use the official optional `antigravity-cli` skill from the installed Hermes upstream tree; install it into the live Hermes skill set only if the read-only inventory proves it is not already installed;
-- prove harmless Hermes -> terminal -> `codex exec` delegation in a temporary git workspace;
-- prove harmless Hermes -> terminal -> `agy --print` delegation in a temporary workspace;
-- verify that the executor calls are visible in Hermes tool events/output and that each executor produces its expected test artifact/result;
-- reuse existing standalone Codex and Antigravity authentication; do not route through CloudCLI and do not switch the main Hermes runtime to Codex app-server for this acceptance.
+Accepted read-only/runtime findings:
+
+- `STAGE4B_EXECUTOR_READONLY_AUDIT=PASS`;
+- Hermes `0.21.3` exact commit `d177b119e9c56c9ddc0b7379ffce52341ec06584`, clean;
+- terminal backend `local`; gateway placeholder `terminal.cwd: "."` resolves to `/home/core`;
+- actual Hermes terminal child uses `HOME=/home/core`, `HERMES_HOME=/home/core/.hermes`, cwd `/home/core` and sees `/home/core/.local/bin`;
+- no `OPENAI_BASE_URL`, `OPENAI_API_KEY` or `CODEX_*` override contaminates the executor child environment;
+- Codex CLI `0.154.0` standalone OAuth state is present and no custom Codex model provider/MCP override is configured;
+- Antigravity CLI `1.2.5` local state is present;
+- official optional `antigravity-cli` Hermes skill is installed and matches the installed upstream source;
+- all audited Hermes/Codex/Antigravity config/auth/settings hashes remained unchanged.
+
+Accepted execution contract:
+
+- keep Hermes main/default runtime on the accepted local custom Qwen3.8/vLLM route;
+- reuse existing standalone Codex and Antigravity authentication; no CloudCLI proxy and no Codex app-server switch;
+- default Codex one-shot: Hermes terminal -> **foreground, non-PTY `codex exec`**;
+- default Antigravity one-shot: Hermes terminal -> **foreground, non-PTY `agy -p/--print`**, preferring the installed CLI's structured JSON output;
+- background + Hermes `process` is reserved for genuinely long-running/parallel executor jobs;
+- PTY is reserved for genuinely interactive TUI sessions rather than ordinary headless one-shots;
+- do not impose blanket sandbox/container/workspace-only/network restrictions on trusted executors under `core`;
+- gate critical destructive/system-wide/production/network/credential/data mutations through Hermes/operator approval instructions before delegation; after approval, provide the executor the access required to complete the authorized task;
+- ordinary non-critical tasks should not incur unnecessary confirmation friction.
+
+Remaining Stage 4B acceptance:
+
+1. prove a bounded real Hermes/Qwen -> foreground non-PTY Codex `exec` delegation and verify the real executor result is consumed by Hermes;
+2. prove a bounded real Hermes/Qwen -> foreground non-PTY Antigravity print-mode delegation using structured output and verify the real executor result is consumed by Hermes;
+3. verify main Hermes provider/config remains unchanged and gateway non-regression holds;
+4. persist the Stage 4B final acceptance record only after both executor paths pass.
 
 #### Stage 4C — Hermes Web Dashboard, ingress and auth
 
