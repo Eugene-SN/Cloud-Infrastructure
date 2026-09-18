@@ -1,187 +1,118 @@
 # Stage 04 — Mattermost Deep Research Brief — 2026-09-18
 
-**Status:** PRELIMINARY DEEP RESEARCH COMPLETE / DEPLOYMENT NOT STARTED / ARCHITECTURE ACCEPTANCE REQUIRED BEFORE MUTATION
+**Status:** RESEARCH COMPLETE / TARGET ARCHITECTURE ACCEPTED / DEPLOYMENT NOT STARTED
+
+Final design acceptance:
+
+`STAGE_04D_MATTERMOST_DESIGN_ACCEPTANCE_2026-09-18.md`
+
+`STAGE4D_MATTERMOST_TARGET_ARCHITECTURE_ACCEPTANCE=PASS`
 
 ## Purpose
 
-Add a lightweight private Mattermost collaboration/control surface to Stage 4 and integrate it efficiently with Hermes, n8n and other compatible services already present on edge, without turning Mattermost into a second orchestration engine.
+Research deployment and integration options for a lightweight private Mattermost collaboration/control surface in Stage 4, with emphasis on reliable long-term operation, native clients, Hermes/n8n integration, low maintenance overhead and no unnecessary enterprise components.
 
-Mattermost itself is selected by operator requirement. Exact deployment method, network/auth details and integration topology remain subject to Stage 4D acceptance before any production mutation.
+## Research findings retained
 
-## Current upstream facts
+- Mattermost Team Edition is the selected free/self-hosted edition.
+- Small private deployments are a good fit for the official Docker pattern with a dedicated PostgreSQL service.
+- The official Preview all-in-one image includes its own database but is an evaluation image and is not the target for persistent production use.
+- Existing host Xray/nginx/shared TLS makes Mattermost's optional bundled nginx unnecessary.
+- Mattermost native mobile/desktop clients rely on Mattermost API/WebSocket behavior; an interactive forward-auth proxy in front of the whole service is a poor fit.
+- Mattermost's dedicated pre-authentication-secret mechanism is a separate commercial feature and is not the baseline for Team Edition.
+- The free Mattermost Test Push Notification Service (TPNS) can deliver push notifications to the official iOS/Android Mattermost applications connected to a self-hosted server, but it has no production SLA.
+- Calls has separate media/network requirements and is explicitly out of current scope.
+- For this scale there is no current justification for Kubernetes, HA, Elasticsearch/OpenSearch, Redis, MinIO/S3, a custom push proxy or custom mobile builds.
 
-- Current stable Mattermost Server release at research time: **11.11.0**, released 2026-09-16.
-- Mattermost Team Edition remains available as the fully open-source MIT-licensed edition.
-- Do not pin 11.11.0 as a project baseline. Deployment follows the project's normal latest-stable policy.
-- Mattermost requires PostgreSQL 14+ for new deployments.
-- Official small-host guidance starts at approximately 1 vCPU / 2 GB RAM; fresh edge headroom must still be audited immediately before deployment.
-- Mattermost recommends single-team deployments for simpler integration behavior.
-- PostgreSQL core search is intended for deployments below roughly 2–3 million posts/file entries, so Elasticsearch/OpenSearch is not justified by default for this private instance.
-- Local file storage is technically supported for simple/single-node deployments. S3/MinIO/NFS is not automatically required.
-- Mattermost current docs present Linux/APT as a normal production path while Docker quick-start/Compose is evaluation-oriented; official Team Edition container images exist. Stage 4D must explicitly compare supportability, cleanliness, update/backup behavior and resource overhead before selecting native APT vs official-image Compose.
+## Accepted target topology
 
-## Intended role
+- Mattermost Team Edition;
+- current official Mattermost Docker Compose pattern;
+- separate Mattermost and dedicated PostgreSQL containers;
+- local persistent `/srv` state;
+- existing host Xray -> nginx -> shared TLS;
+- `https://chat.escloud.us` as the human endpoint;
+- no Authelia in front of Mattermost;
+- Mattermost-native authentication for clients;
+- Mattermost backend and PostgreSQL remain private;
+- free TPNS enabled for official mobile clients;
+- Calls disabled for the current stage.
 
-- **Mattermost** — private collaboration/control/notification surface.
-- **Hermes** — persistent agent runtime, reasoning, tools and delegation.
-- **n8n** — deterministic orchestration.
-- **Codex CLI / Antigravity CLI** — specialist executors delegated through Hermes by default.
-- **CloudCLI** — manual cloud-AI workspace.
-- **Stalwart** — existing mail subsystem and preferred SMTP source for Mattermost notifications/password resets.
-- Later monitoring/maintenance/backup stages may deliver alerts/status into Mattermost, but those later workflows remain owned by their own stages.
+## Integration research
 
-## Hermes integration
+Research confirmed multiple upstream/native integration surfaces:
 
-Hermes upstream has a native Mattermost gateway adapter using Mattermost REST API v4 plus WebSocket real-time events. It supports DMs, channels, text, files, images, slash commands and proactive/home-channel delivery.
+- Hermes has Mattermost integration support;
+- n8n has an official Mattermost integration surface, including its documented Mattermost integration page/node;
+- Mattermost exposes documented REST API, WebSocket, webhooks and slash-command mechanisms;
+- SMTP is a standard Mattermost integration surface for mail delivery.
 
-Target model:
+These findings **do not preselect the exact per-service integration mechanism**.
 
-1. enable Mattermost bot accounts;
-2. create a dedicated Hermes bot account;
-3. use the bot token instead of a human/System Admin token;
-4. allow only the operator's Mattermost user ID by default;
-5. keep mention requirements conservative in shared channels and enable free-response only where useful;
-6. configure a Mattermost home channel for proactive Hermes delivery;
-7. connect the host-native Hermes gateway to an internal Mattermost endpoint, not through public nginx + Authelia;
-8. verify REST auth, WebSocket reconnect, DM, channel, attachment/image, slash-command and proactive-delivery behavior.
+### Accepted integration-selection rule
 
-Relevant Hermes settings include MATTERMOST_URL, MATTERMOST_TOKEN, MATTERMOST_ALLOWED_USERS, MATTERMOST_ALLOWED_CHANNELS, MATTERMOST_HOME_CHANNEL, MATTERMOST_REQUIRE_MENTION, MATTERMOST_FREE_RESPONSE_CHANNELS and MATTERMOST_REPLY_MODE.
+During Stage 4E, for every service-to-Mattermost connection:
 
-## n8n integration
+1. enumerate all current native/upstream-supported mechanisms available in the deployed versions;
+2. compare them for reliability, simplicity, lifecycle/update compatibility and operational coupling;
+3. select the most native/direct supported option that satisfies the actual use case;
+4. avoid custom plugins, patched source, shim services, direct database coupling or bespoke bridges unless native options are proven insufficient and the operator explicitly accepts the exception.
 
-n8n includes an official built-in Mattermost node supporting channel/user operations, normal and ephemeral posts, and reactions.
+Examples such as Hermes native Mattermost support, the n8n Mattermost node, Mattermost webhooks/slash commands or SMTP remain **candidate mechanisms**, not fixed implementation decisions in this research record.
 
-Preferred design:
+## Public ingress decision
 
-- dedicated Mattermost bot/API credential in n8n;
-- official Mattermost node for supported outbound/API actions;
-- for Mattermost -> n8n inbound flows, prefer Mattermost outgoing webhooks or custom slash commands targeting n8n Webhook endpoints rather than adding a third-party Mattermost trigger node by default;
-- use the Mattermost REST API through n8n HTTP Request only when the built-in node lacks a required operation;
-- use an internal/private route from the n8n container to Mattermost rather than public Authelia-protected ingress.
+`chat.escloud.us` is an explicit exception to the normal Cloud Infrastructure service-subdomain Authelia rule:
 
-Stage 4D must audit the current n8n Docker network and choose the simplest supported internal route without exposing a new public API port.
+```text
+Internet
+  -> Xray
+  -> host nginx + shared TLS
+  -> chat.escloud.us
+  -> Mattermost native authentication
+  -> private Mattermost backend
+```
 
-## Stalwart integration
+Authelia is not inserted in front of Mattermost.
 
-Mattermost expects SMTP in a production-style deployment for password reset and notifications.
+## Push decision
 
-Target direction:
+Use Mattermost Test Push Notification Service (TPNS) with the official Mattermost mobile applications. This allows push delivery for the self-hosted Mattermost server without a custom push proxy or custom mobile build. Lack of production SLA is accepted for this private deployment.
 
-- reuse existing Stalwart;
-- prefer a dedicated Mattermost sender identity/address;
-- test SMTP connection, password-reset mail and notification delivery;
-- do not deploy a second SMTP service.
+## Calls decision
 
-Exact local/container SMTP route and credentials are decided from fresh runtime state after placement is selected.
+Mattermost Calls is not required at this stage and is excluded from deployment/acceptance. Do not open Calls-specific TCP/UDP ports, deploy TURN, or add Calls media components.
 
-## Public ingress and private machine paths
+## Remaining deployment-time audit items
 
-The project already has chat.escloud.us in the shared TLS SAN set and protected service namespace. It is therefore the preferred human-facing URL unless Stage 4D finds a concrete incompatibility.
+These are implementation details, not open architecture questions:
 
-Target contract:
+- fresh `edge` CPU/RAM/storage headroom;
+- current stable Mattermost/Team image tags at deployment time;
+- exact Compose files/environment values based on current upstream;
+- exact `/srv` paths and ownership;
+- exact loopback/private backend binding;
+- PostgreSQL credentials and lifecycle;
+- nginx WebSocket proxy details;
+- TPNS configuration;
+- exact initial Mattermost account/team/channel state needed for acceptance;
+- native integration mechanism selection per connected service;
+- resource delta, persistence and reboot/non-regression verification.
 
-- human UI: https://chat.escloud.us;
-- reuse Xray -> nginx -> shared TLS -> Authelia;
-- Mattermost application backend remains non-public;
-- preserve WebSocket upgrade handling, especially /api/v4/websocket;
-- Hermes and n8n use internal Mattermost URLs and native Mattermost credentials;
-- no direct public PostgreSQL listener;
-- no direct public Mattermost backend port.
+## Source set used during research
 
-### Mandatory auth/client compatibility research
+- Mattermost server releases and licensing documentation;
+- Mattermost deployment/container/PostgreSQL/file-storage documentation;
+- Mattermost mobile/push/TPNS documentation;
+- Mattermost integration/API/webhook/slash-command documentation;
+- Mattermost community forum and user deployment discussions;
+- Hermes Mattermost integration documentation/source;
+- n8n official Mattermost integration documentation/source.
 
-Authelia forward-auth is simple for browsers, but native desktop/mobile clients can fail when a reverse proxy redirects API/WebSocket requests to an interactive browser login page. Mattermost's own pre-authentication-secret feature is Enterprise Advanced-only and is therefore not an assumed Team Edition solution.
+## Research closure
 
-Before deployment Stage 4D must explicitly research/test:
+Stage 4D is complete. The accepted target is recorded in:
 
-1. browser use of chat.escloud.us behind Authelia plus native Mattermost login;
-2. Mattermost Desktop/mobile compatibility through the same ingress;
-3. whether path-specific Authelia policy, native Mattermost auth on API/WebSocket paths, a NetBird-only client path, or another supported arrangement is required;
-4. whether any exception to the project-wide service-subdomains-behind-Authelia rule is actually necessary.
+`STAGE_04D_MATTERMOST_DESIGN_ACCEPTANCE_2026-09-18.md`
 
-No API/WebSocket bypass may be introduced silently.
-
-## Lightweight topology principles
-
-The target is small but not functionally crippled.
-
-Do not add by assumption:
-
-- Kubernetes;
-- HA cluster;
-- Elasticsearch/OpenSearch;
-- Redis unless the selected current Mattermost architecture requires it;
-- MinIO/S3 unless local storage proves inadequate;
-- separate push proxy unless mobile push requirements justify it;
-- Calls media stack / additional UDP listeners unless voice/video use is explicitly accepted;
-- custom Mattermost plugins if native Hermes integration, REST API, n8n, webhooks and slash commands cover the requirement.
-
-These are scale/feature-specific subsystems with independent operational cost, not ordinary features being stripped from Mattermost.
-
-## Integration map to validate
-
-Human -> chat.escloud.us -> Xray/nginx/TLS/Authelia -> Mattermost
-
-Mattermost -> Stalwart SMTP
-
-Mattermost <-> Hermes Gateway -> Qwen3.8/vLLM + Codex CLI + Antigravity CLI
-
-Mattermost <-> n8n -> deterministic workflows and later integrations
-
-## Required Stage 4D audit before deployment
-
-1. fresh edge CPU/RAM/storage headroom;
-2. current Mattermost stable release and Team Edition feature/licensing check;
-3. native APT vs official-image Docker/Compose comparison;
-4. PostgreSQL placement/version/lifecycle;
-5. persistent data and local file-storage layout;
-6. update path and later Stage 6 backup scope;
-7. nginx WebSocket/proxy contract;
-8. Authelia vs Mattermost web/desktop/mobile behavior;
-9. internal Hermes -> Mattermost route;
-10. internal n8n -> Mattermost route;
-11. Stalwart SMTP route and sender identity;
-12. bot/webhook/slash-command permission model;
-13. initial team/channel model sufficient for infrastructure acceptance without user-specific workflows;
-14. resource delta and reboot persistence.
-
-## Preliminary authoritative sources
-
-- Hermes Mattermost integration:
-  https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/mattermost.md
-- Hermes Messaging Gateway:
-  https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/index.md
-- Mattermost server releases:
-  https://docs.mattermost.com/product-overview/mattermost-server-releases
-- Mattermost Team Edition/version archive:
-  https://docs.mattermost.com/product-overview/version-archive
-- Mattermost licensing:
-  https://docs.mattermost.com/product-overview/faq-license
-- Mattermost requirements:
-  https://docs.mattermost.com/deployment-guide/software-hardware-requirements
-- Mattermost PostgreSQL:
-  https://docs.mattermost.com/deployment-guide/server/prepare-database
-- Mattermost file storage:
-  https://docs.mattermost.com/deployment-guide/server/prepare-file-storage
-- Mattermost integration/API:
-  https://docs.mattermost.com/developers/integrate/getting-started
-- Mattermost SMTP:
-  https://docs.mattermost.com/administration-guide/configure/smtp-email
-- n8n Mattermost node:
-  https://github.com/n8n-io/n8n-docs/blob/main/docs/integrations/builtin/app-nodes/n8n-nodes-base.mattermost.md
-
-## Research status
-
-Mattermost product inclusion in Stage 4 is accepted.
-
-Not yet accepted until Stage 4D closure:
-
-- native vs container runtime;
-- exact PostgreSQL placement;
-- exact private backend/network topology;
-- final Authelia/client compatibility pattern;
-- exact SMTP route;
-- exact initial channels;
-- optional Calls/push/search/object-storage subsystems.
-
-No Mattermost runtime mutation has been performed by this research record.
+No Mattermost runtime mutation has been performed yet.
