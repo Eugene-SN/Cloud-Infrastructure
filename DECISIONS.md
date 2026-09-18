@@ -527,3 +527,28 @@ The independent Docker reboot-lifecycle regression discovered during Stage 3 is 
 - the Stage 4 Mattermost decision's provisional preference for specific Hermes/n8n/webhook/slash-command/SMTP integration mechanics; those exact mechanics are now intentionally selected during Stage 4E rather than frozen in advance;
 - the earlier classification of Mattermost push and Calls as unresolved: TPNS is accepted, Calls is explicitly excluded.
 
+---
+
+## 2026-09-18T12:58:00+03:00 — Mattermost integrations are native-only in the current project
+
+**Status:** ACCEPTED
+
+**Context:** the operator clarified that Mattermost must integrate with other Cloud Infrastructure services only through integration mechanisms intentionally provided and supported by the relevant developers/upstream. The project must not create custom bridges merely because Mattermost exposes a generic API/webhook primitive.
+
+**Decision:**
+
+1. For every service already deployed or selected in Cloud Infrastructure, first establish whether the current upstream provides a native Mattermost integration or an explicitly supported standard-protocol counterpart.
+2. If a supported integration exists, it becomes the project integration path and is documented/verified in the owning stage.
+3. If no supported Mattermost integration exists, the service remains **unintegrated with Mattermost in the current Cloud Infrastructure project**.
+4. Missing integrations are not replaced by custom plugins, patched source, shim services, direct database access, bespoke bridges, compatibility hacks, or an n8n-mediated relay solely to connect otherwise unrelated products.
+5. Such an integration may be reconsidered only as a separate future task outside the current project if upstream support or a new requirement appears.
+6. Confirmed native paths at this checkpoint:
+   - **Hermes ↔ Mattermost:** Hermes built-in Mattermost gateway adapter using Mattermost REST API v4 + WebSocket;
+   - **n8n → Mattermost:** n8n official built-in Mattermost integration/node for the operations it supports;
+   - **Mattermost → Stalwart:** Mattermost standard SMTP integration using the existing Stalwart SMTP service.
+7. Additional directions, including event/command flows from Mattermost into n8n, are enabled only if the actually deployed versions expose an upstream-supported counterpart for that direction. A generic webhook primitive alone is not sufficient to justify a custom bridge.
+8. Codex CLI and Antigravity CLI remain reached through Hermes in the accepted architecture; no direct Mattermost integration is added unless their upstream later provides one and a separate future task accepts it.
+9. The same rule applies to CloudCLI, Bulwark, NetBird, Backrest, Semaphore and later selected monitoring/operational services: native integration present -> adopt and document; absent -> no current-project Mattermost integration.
+
+**Supersedes:** the Stage 4D wording that merely preferred native integrations while still allowing custom bridges after native options proved insufficient. The current project now stops at the absence of upstream-supported integration and defers any custom integration outside project scope.
+
