@@ -228,6 +228,14 @@ Continuous workstream after Stage 10, not an infrastructure-completion stage:
 - Stage 1 recovery archive `/srv/backups/edge-stage1/edge-stage1-base-20260916T234611Z.tar.gz`, SHA256 `37486e763ddac4c5ef3a92a35c3dad49787d75ffd8b97499073c79af617cc566`;
 - authoritative migration-preservation archive `/tmp/edge-migration-preservation-20260916T141048Z.tar.gz`, SHA256 `0203e5845f57bc1d04b384cef2b26a45fbff855c341e1edf1193034c34de9fdf`, retained for later legacy-reference work.
 
+## Planned Stage 4 service — Mattermost
+
+- status: **SELECTED / NOT YET DEPLOYED**;
+- role: private collaboration/control/notification surface for Hermes, n8n and later infrastructure integrations;
+- research record: `STAGE_04_MATTERMOST_RESEARCH_BRIEF_2026-09-18.md`;
+- preferred human namespace: `chat.escloud.us`, pending Stage 4D auth/client compatibility acceptance;
+- intended integrations: native Hermes Mattermost gateway, n8n official Mattermost node plus webhooks/slash commands, Stalwart SMTP, later monitoring/maintenance/backup notifications;
+- exact runtime placement, PostgreSQL topology, private backend endpoint and storage layout are unresolved until Stage 4D acceptance.
 ## Stage boundary
 
 Stage 0 — COMPLETE / ACCEPTED.  
