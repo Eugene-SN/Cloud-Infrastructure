@@ -152,7 +152,7 @@ Cloud Infrastructure implements a direct Mattermost integration only when the re
 Accepted/current directions:
 
 - **Hermes ↔ Mattermost:** Hermes built-in Mattermost gateway over Mattermost REST API v4 + WebSocket; accepted end-to-end.
-- **n8n → Mattermost:** official built-in n8n Mattermost node/credential path; provisioning/authentication is valid, final node E2E acceptance remains pending.
+- **n8n → Mattermost:** official built-in n8n Mattermost node/credential path; accepted end-to-end with an isolated throwaway-clone workflow and production non-regression.
 - **Mattermost → Stalwart SMTP:** explicitly reviewed and **not required / not enabled** in the accepted target state.
 
 For any other service or direction, verify current upstream support first. Do not substitute a custom plugin, patched source, shim service, direct database coupling, bespoke bridge, compatibility hack or n8n-mediated relay solely to connect otherwise unrelated products.
