@@ -206,7 +206,14 @@ Fresh expanded read-only audit on 2026-09-18 confirms the following current runt
 - `hermes-gateway.service` is enabled and currently active under `core`; current `NRestarts=0`;
 - Mattermost environment is configured and its token validates successfully as bot `hermes`;
 - standalone Codex CLI `0.154.0` and Antigravity CLI `1.2.5` remain available to `core`;
-- Web Search/Extract, Edge TTS and Vision functional probes are PASS; CUA is accepted as `NOT_APPLICABLE_HEADLESS_EDGE`; Image Generation remains configured but is non-blocking for Stage 4 acceptance; fresh core Qwen3.8/vLLM regression is now accepted with `STAGE4A_CORE_QWEN_VLLM_REGRESSION=PASS`; direct Codex/Antigravity delegation, Dashboard/private machine interface and final macOS Remote Gateway acceptance remain pending.
+- Web Search/Extract, Edge TTS and Vision functional probes are PASS; CUA is accepted as `NOT_APPLICABLE_HEADLESS_EDGE`; Image Generation remains configured but is non-blocking for Stage 4 acceptance; fresh core Qwen3.8/vLLM regression is accepted with `STAGE4A_CORE_QWEN_VLLM_REGRESSION=PASS`.
+- Stage 4B executor read-only audit is accepted: `STAGE4B_EXECUTOR_READONLY_AUDIT=PASS`.
+- Actual Hermes local terminal child context is clean for standalone executors: cwd `/home/core`, `HOME=/home/core`, `HERMES_HOME=/home/core/.hermes`, core local bin on PATH, and no `OPENAI_BASE_URL`, `OPENAI_API_KEY` or `CODEX_*` environment override.
+- Codex CLI `0.154.0` exposes native headless `codex exec` capabilities including JSON/ephemeral/sandbox/skip-git/output-last-message/model controls and uses the existing standalone OAuth state with no custom provider/MCP override.
+- Antigravity CLI `1.2.5` raw help confirms native headless print mode plus JSON/stream-JSON, timeout, model, effort, sandbox/permission and conversation controls; its existing local auth/state is reused.
+- Accepted Stage 4B target: foreground non-PTY one-shots by default (`codex exec`; `agy -p/--print` with structured output), background only for long/parallel jobs, PTY only for interactive TUI.
+- Trusted-executor policy is accepted: no blanket sandbox/container/workspace-only/network restriction under `core`; critical high-impact mutations require operator approval at the Hermes/orchestration instruction layer before delegation, while ordinary non-critical work should remain frictionless.
+- Direct Codex/Antigravity E2E acceptance, Dashboard/private machine interface and final macOS Remote Gateway acceptance remain pending.
 
 Known lifecycle defect from the expanded audit: a controlled systemd stop/restart sends SIGTERM and Hermes logs the shutdown context, but the process exits status `1`; systemd records `Failed with result 'exit-code'` before the requested restart succeeds. The currently running service is healthy, but this graceful-stop defect must be resolved or explicitly understood before final Stage 4 acceptance.
 
@@ -274,8 +281,8 @@ Stage 4 remains **IN PROGRESS / NOT YET ACCEPTED**.
 
 ## Current next step
 
-1. Complete the interrupted Stage 4B executor-readiness recovery from the exact failure point only; do not repeat the accepted Qwen/vLLM regression.
-2. Prove direct Hermes -> Codex CLI and Hermes -> Antigravity CLI delegation using their upstream skill patterns and existing standalone authentication.
+1. Complete Stage 4B with the accepted trusted full-access executor contract: first Hermes/Qwen -> foreground non-PTY Codex `exec`, then Hermes/Qwen -> foreground non-PTY Antigravity print-mode structured output; do not repeat the accepted Qwen/vLLM or read-only executor audits.
+2. Keep blanket executor sandboxing disabled by policy; require operator approval in Hermes/orchestration instructions before critical high-impact mutations, not through generic filesystem/network confinement.
 3. Complete Stage 4C Hermes Dashboard/ingress/auth, then Stage 4F private n8n machine-interface integration.
 4. Carry the known upstream Hermes controlled-stop `SIGTERM -> exit 1` defect as a documented lifecycle constraint into Stage 4G; do not locally mask it with `SuccessExitStatus=1`.
 5. Perform Stage 4G server-side integrated acceptance, Stage 4H macOS Hermes Desktop integration, and Stage 4I final repository persistence/acceptance.
