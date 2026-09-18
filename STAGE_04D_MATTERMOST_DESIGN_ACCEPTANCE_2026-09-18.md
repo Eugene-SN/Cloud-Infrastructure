@@ -21,6 +21,23 @@ Stage 4D research/design is complete. The accepted Mattermost target for `edge` 
 - current Mattermost documentation labels Docker Compose as evaluation/testing/development and not an officially supported production topology because it does not provide clustered/HA behavior out of the box. This project **explicitly accepts that trade-off** for the private single-node/single-operator `edge` deployment, where HA/cluster behavior is not required and Docker/Compose is the accepted application runtime;
 - current official `mattermost/docker` base Compose contains separate Mattermost and PostgreSQL services. The upstream `docker-compose.without-nginx.yml` also publishes Calls TCP/UDP 8443. Because Calls is explicitly excluded and the application backend must be loopback-only, Stage 4E must **not use that overlay unmodified**; use the official base Compose pattern with the minimum project override required to publish only the Mattermost application port on loopback, with no Calls listener.
 
+### Official Docker implementation contract
+
+Stage 4E must follow the upstream Mattermost Docker procedure rather than reconstructing the stack from memory:
+
+1. clone the current official `mattermost/docker` repository into `/opt/mattermost`;
+2. copy upstream `env.example` to `.env` and change only project-required values;
+3. create the upstream-required Mattermost application directories and apply the documented numeric ownership with `chown -R 2000:2000`;
+4. keep the upstream `docker-compose.yml` unmodified;
+5. use a minimal local Compose override only for the accepted Cloud Infrastructure delta: publish Mattermost `8065` as loopback-only `127.0.0.1:18065` and do not publish Calls `8443`;
+6. do not pre-create/chown the PostgreSQL data tree using guessed container UID/GID; allow the official PostgreSQL image/Compose path to initialize it as upstream does;
+7. validate the merged Compose configuration before startup;
+8. verify readiness using Mattermost's documented `/api/v4/system/ping` endpoint, matching the official `mattermost/docker` CI acceptance pattern.
+
+The official repository's `.gitignore` already excludes `.env`; the project-local override must be excluded locally from upstream worktree tracking so future `git pull` remains clean.
+
+Mattermost-specific feature configuration (Bot Account Creation, TPNS, Calls disablement) is applied only after the base server is reachable, using documented Mattermost configuration/System Console paths rather than being guessed into the initial Compose environment.
+
 ## Integration-selection policy
 
 Mattermost integration follows a **native-only current-project rule**.
