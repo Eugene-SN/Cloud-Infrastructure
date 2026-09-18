@@ -283,7 +283,7 @@ Accepted UI/ingress contract:
 - Hermes Dashboard remains host-local/loopback by default (expected upstream default `127.0.0.1:9119`); do not expose its backend port directly to the Internet;
 - `hermes.escloud.us` is an authenticated service subdomain; the project exception remains only the public landing page `escloud.us`, which does not require Authelia;
 - reuse the existing Certbot/nginx/TLS lifecycle rather than introducing a separate ingress stack;
-- account for Hermes' own remote-dashboard authentication requirements when a non-loopback public URL is declared; select only the minimum upstream-supported auth configuration compatible with nginx/Authelia and Hermes Desktop.
+- do not preselect Nous OAuth or any other Hermes-native auth provider. Current Hermes Desktop supports self-hosted Remote Gateway operation with a session token and also supports gated OAuth/username-password flows. Test the self-hosted session-token path first; only enable a gated provider if the actually installed upstream build/reverse-proxy behavior proves it necessary.
 
 Acceptance includes:
 
@@ -292,7 +292,7 @@ Acceptance includes:
 - minimum private vLLM exposure on `ai-node`;
 - real `Hermes -> vLLM` inference;
 - final macOS Hermes Desktop integration test using **Settings -> Gateways -> Remote gateway** against the remote Dashboard backend, with `https://hermes.escloud.us` as the intended Base/Remote URL;
-- verify real Desktop authentication, backend readiness, live chat/WebSocket operation and reconnect persistence;
+- verify the selected Remote Gateway credential path, backend readiness, live chat/WebSocket operation and reconnect persistence;
 - only if the simple Remote Gateway path is incompatible with the accepted reverse-proxy/auth topology, evaluate the minimum alternative connection mode rather than pre-deploying parallel access paths.
 
 The public domain is for the authenticated Web Dashboard. It does **not** authorize a direct Internet-facing Hermes backend/API listener.
