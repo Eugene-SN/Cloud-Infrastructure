@@ -205,7 +205,7 @@ Current confirmed baseline:
 - user `hermes-gateway.service` enabled and active under `core`, but no messaging platforms and no listeners yet on `8642` or `9119`;
 - standalone Codex CLI `0.154.0` and Antigravity CLI `1.2.5` remain available to `core`;
 - Dashboard/API/n8n integration and final macOS Remote Gateway integration remain pending;
-- Browser Automation is not yet accepted: downloaded Playwright Chromium currently lacks required host shared libraries;
+- Hermes host/toolchain normalization accepted: `ripgrep`, `ffmpeg`, build/Python/libffi development dependencies and Chromium system libraries installed; `browser-use` backend and managed Chromium `browser_exec` verified end-to-end; `cua-driver 0.28.2` available under the actual `core` runtime; marker `STAGE4_HERMES_SYSTEM_TOOLCHAIN_NORMALIZATION=PASS`;
 - wizard-selected `openai-codex` image generation is not currently usable because Hermes-managed Codex auth is absent.
 
 Detailed factual record: `STAGE_04_HERMES_POST_SETUP_BASELINE_2026-09-18.md`.
