@@ -201,7 +201,7 @@ Current confirmed baseline:
 - main inference provider `AI-Node vLLM` -> `http://192.168.1.30:8000/v1`;
 - model `qwen3.8-27b-fp8`, Chat Completions mode, configured/verified context `195216`;
 - terminal backend `local`;
-- current `agent.reasoning_effort=none` from the operator-run wizard; not yet normalized/accepted;
+- Qwen3.8 reasoning normalized and accepted: `agent.reasoning_effort` unset, `model.reasoning_echo=true`, model-native thinking + terminal tool call + resumed multi-turn reasoning replay verified; current config SHA256 `c57ca6bc0b301250d4825060fcf5f8d90af94c7cee4f1632e0b648189fd994ae`;
 - user `hermes-gateway.service` enabled and active under `core`, but no messaging platforms and no listeners yet on `8642` or `9119`;
 - standalone Codex CLI `0.154.0` and Antigravity CLI `1.2.5` remain available to `core`;
 - Dashboard/API/n8n integration and final macOS Remote Gateway integration remain pending;
