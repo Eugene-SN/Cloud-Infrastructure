@@ -236,4 +236,4 @@ Stage 2 — COMPLETE / ACCEPTED.
 Stage 02.5 — COMPLETE / ACCEPTED.  
 Stage 3 — COMPLETE / ACCEPTED.  
 
-`EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS`. Final record: `STAGE_03_ACCEPTANCE_2026-09-18.md`. Stage 4 — Edge Hermes Agent Runtime is now IN PROGRESS; factual post-setup record: `STAGE_04_HERMES_POST_SETUP_BASELINE_2026-09-18.md`.
+`EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS`. Final record: `STAGE_03_ACCEPTANCE_2026-09-18.md`. Stage 4 — Edge Hermes Agent Runtime is now IN PROGRESS; factual post-setup record: `STAGE_04_HERMES_POST_SETUP_BASELINE_2026-09-18.md`. Toolchain/browser normalization is accepted with `STAGE4_HERMES_SYSTEM_TOOLCHAIN_NORMALIZATION=PASS`.
