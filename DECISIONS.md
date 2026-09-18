@@ -577,3 +577,16 @@ The independent Docker reboot-lifecycle regression discovered during Stage 3 is 
 - the earlier interpretation that Stage 4A/4B/4C must be completed before Stage 4E;
 - the 2026-09-18 native-only Mattermost integration decision only where it described Mattermost→Stalwart SMTP as already fixed for implementation. SMTP support remains a native capability, but activation is now pending explicit usefulness acceptance.
 
+
+
+## 2026-09-18 — Mattermost ↔ Stalwart SMTP not required
+
+**Status:** ACCEPTED
+
+**Context:** Mattermost email/SMTP capability was reviewed separately from the native Hermes and n8n service integrations. The deployment already has a normal mail service/client path through Stalwart, while Mattermost-generated email is not required for the accepted single-operator operating model.
+
+**Decision:** Do not configure Mattermost SMTP against Stalwart. Mattermost ↔ Stalwart email integration is out of the current target state and must not be enabled automatically.
+
+**Constraints:** Revisit only if a concrete future requirement appears for Mattermost-generated email such as password-reset mail, email notifications, invitations, or another explicit mail-dependent workflow.
+
+**supersedes:** prior unresolved/pending Mattermost ↔ Stalwart usefulness discussion.
