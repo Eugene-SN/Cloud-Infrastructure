@@ -64,6 +64,43 @@ Stage names, stage scopes and enumerated acceptance requirements define **minimu
 - Already accepted products should not be re-compared without a concrete incompatibility, regression or changed requirement.
 - Separate finite infrastructure services from continually evolving n8n/agent workflows.
 
+
+
+## Mandatory research-before-change discipline
+
+For any changing, version-sensitive, unfamiliar, externally integrated, or non-trivial service/mechanism, **do not generate implementation or diagnostic mutation blocks from memory, analogy, or guesswork**.
+
+Required evidence order:
+
+1. official product documentation for the current/relevant version;
+2. upstream source/release notes and developer-maintainer guidance where behavior or syntax matters;
+3. the exact deployed version and live runtime/configuration on `edge`;
+4. community/user reports and implementation patterns only as supplementary evidence.
+
+Community issues, Reddit posts, blog posts, videos, or one user's failure are diagnostic signals, not architectural truth. Never reject or redesign an upstream-supported mechanism solely because of an isolated user report.
+
+Before proposing a deployment/auth/reverse-proxy/update/backup/configuration mechanism:
+
+- complete the relevant research first and state the resulting target architecture/mechanism before writing mutation commands;
+- verify exact CLI flags, config schema, file format, auth flow, bind/proxy semantics and version-specific behavior against authoritative sources and/or the exact installed source;
+- when a product provides its own parser, validator, linter, `config validate`, dry-run, doctor or equivalent, prefer that native mechanism over a generic external parser;
+- never assume that a file is ordinary YAML/INI/JSON merely from its extension; first confirm the product's actual format, templating and preprocessing rules;
+- do not invent generic parsers around a third-party config/renewal format unless the format contract is confirmed;
+- if material uncertainty remains, perform only the smallest targeted read-only inspection needed to resolve it before designing the mutation;
+- do not send a broad shell block merely to discover whether an unverified idea happens to work.
+
+Command blocks must be based on a known contract. The user must not become the iterative debugger for speculative assistant-generated shell.
+
+If an assistant-generated audit/verifier/block fails because of its own parsing, quoting, portability, PATH, wrapper, test-harness or assumption error:
+
+- identify it explicitly as an assistant block/verifier defect, not a production/runtime failure;
+- preserve already-proven output;
+- resume only from the exact failed point with the minimum read-only recovery necessary;
+- do not rerun accepted or already-passed sections;
+- do not redesign the production system to accommodate a broken test harness.
+
+For architecture choices involving authentication, reverse proxies, OAuth/OIDC, remote clients, WebSockets, update mechanisms, backup/restore, networking, storage or other integration boundaries, perform an **extended design audit before implementation**. Compare upstream-recommended patterns and exact deployed behavior, then use community experience to identify practical failure modes. Prefer the simplest upstream-supported design that satisfies the accepted requirements and single-operator trust model.
+
 ## Stable project rules
 
 - Treat `nl-core-vds` as historical/as-is identity and `edge` as the current live logical node.
