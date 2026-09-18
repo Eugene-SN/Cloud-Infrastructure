@@ -1,6 +1,6 @@
 # Cloud Infrastructure — Accepted Implementation Phases
 
-**Status:** Stage 0–2 COMPLETE / ACCEPTED; Stage 02.5 COMPLETE / ACCEPTED; Stage 3 ACTIVE / IN PROGRESS.
+**Status:** Stage 0–3 COMPLETE / ACCEPTED. Stage 4 is the next production stage.
 
 This document is the canonical stage chronology for Cloud Infrastructure / `edge`.
 
@@ -84,7 +84,13 @@ Accepted results include:
 
 ## Stage 3 — Edge Cross-site Connectivity Foundation
 
-**Status:** ACTIVE / IN PROGRESS. NetBird runtime is deployed; the independent Docker reboot-lifecycle regression discovered during reboot acceptance has been fixed and accepted. Connectivity-specific final acceptance remains pending.
+**Status:** COMPLETE / ACCEPTED.
+
+`EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS`
+
+Final record: `STAGE_03_ACCEPTANCE_2026-09-18.md`.
+
+Accepted outcome includes host-native NetBird on `edge`, private `edge -> Home/PAI` routing through CT300, Home `.lan` split DNS, provider-local public/default Internet preservation, no Home Internet exit assignment, no VM100/MikroTik mutation, no `edge.lan`, deferred LAN-wide clientless reverse routing, direct P2P recovery and final reboot persistence.
 
 ### Work branch
 
@@ -272,8 +278,8 @@ Stage 0: **COMPLETE / ACCEPTED**.
 Stage 1: **COMPLETE / ACCEPTED**.  
 Stage 2: **COMPLETE / ACCEPTED**.  
 Stage 02.5: **COMPLETE / ACCEPTED**.  
-Stage 3: **ACTIVE / IN PROGRESS**.
+Stage 3: **COMPLETE / ACCEPTED**.
 
-Active branch:
+Next branch:
 
-`03 — Edge Cross-site Connectivity Foundation`
+`04 — Edge Hermes Agent Runtime`
