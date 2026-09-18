@@ -8,7 +8,7 @@ Fresh runtime verification outranks this file. This inventory records accepted l
 
 | Node | Role | State |
 |---|---|---|
-| `edge` / `edge.escloud.us` | Cloud Infrastructure VPS | LIVE; Stage 0/1/2 accepted; Stage 02.5 research active |
+| `edge` / `edge.escloud.us` | Cloud Infrastructure VPS | LIVE; Stage 0/1/2/02.5 accepted; Stage 3 active |
 | `nl-core-vds` | historical legacy VPS identity | HISTORICAL ONLY |
 | `ai-node` | PAI compute/data/knowledge node | external dependency/context; Stage 3 private target; Stage 4 local-vLLM endpoint |
 | PVE / Home Infrastructure | home infrastructure plane | external dependency/context; Stage 3 private routed fabric |
@@ -19,8 +19,8 @@ Fresh runtime verification outranks this file. This inventory records accepted l
 ## Live `edge` substrate
 
 - Ubuntu 26.04.1 LTS, kernel `7.0.0-31-generic`;
-- IPv4 `45.92.156.17`, IPv6 `2a0c:b847:ffff:283::a`;
-- Docker `29.8.1`, Compose `5.5.1`, containerd;
+- public IPv4 `45.92.156.17`; no public/global IPv6 on `ens3`; IPv6 retained for link-local/NetBird overlay use;
+- Docker `29.8.1`, Compose `5.5.1`, containerd `2.3.5`; `live-restore=false`; production application containers use `restart=unless-stopped`;
 - nginx `1.28.3-2ubuntu1.11`;
 - Xray `26.3.27`;
 - Hysteria2 `2.12.3`;
@@ -28,6 +28,15 @@ Fresh runtime verification outranks this file. This inventory records accepted l
 - service account `core` UID/GID `1000:1000`, locked password, no sudo/docker group;
 - UFW intentional ingress: TCP 22/80/443/25/465/993 and UDP 443;
 - WebUI application backends are loopback-only by default.
+
+## Reboot lifecycle corrective state
+
+- Stage 1's explicit `live-restore=true` setting was superseded on 2026-09-18;
+- current Docker runtime uses `live-restore=false`;
+- post-fix normal reboot: total boot `13.842s`, previous-journal-stop to new-kernel gap `4.203s`;
+- all four production containers returned automatically via `restart=unless-stopped`;
+- acceptance: `EDGE_REBOOT_AFTER_LIVE_RESTORE_FIX_ACCEPTANCE_V1=PASS`;
+- detailed record: `EDGE_REBOOT_LIFECYCLE_FIX_ACCEPTANCE_2026-09-18.md`.
 
 ## Stage 2 — COMPLETE / ACCEPTED
 
@@ -90,10 +99,10 @@ Fresh runtime verification outranks this file. This inventory records accepted l
 ### Private `.lan`
 
 - existing Home `.lan` namespace is accepted for NetBird split-DNS reuse on `edge`;
-- `edge.lan` is planned only after Stage 3 enrollment/routing acceptance, through the existing canonical Home DNS mechanism;
+- `edge.lan` is intentionally not created in the baseline Stage 3 architecture; public `escloud.us` naming remains the Home/PAI access path to Cloud services;
 - `.lan` does not replace public `*.escloud.us` service naming.
 
-# Stage 02.5 — active research inventory
+# Stage 02.5 — accepted research inventory
 
 ## Remaining Standalone Core Services
 
@@ -132,23 +141,25 @@ Fresh audited baseline:
 - CT300 own default gateway `192.168.1.1`;
 - NetBird `wt0` traffic policy-routed through VRRP VIP `192.168.1.254` for the existing Home Internet Exit use case.
 
-Accepted Stage 3 target:
+Current Stage 3 runtime / accepted scope:
 
-- host-native NetBird peer on `edge`;
-- dedicated Cloud service-peer group/policy;
+- host-native NetBird peer on `edge` version `0.78.2`;
+- `edge` NetBird IPv4 `100.105.178.187/16`;
+- dedicated Cloud service-peer grouping/policy deployed;
 - Home LAN access for `edge`, no Home Internet Exit;
 - provider-local `edge` default Internet route unchanged;
-- Home/PAI clientless routing to `edge` via `100.105.0.0/16 -> CT300 192.168.1.90` on VM100 and MikroTik;
-- narrow VM100 forwarding rule only;
-- reuse existing NetBird-managed Site-to-VPN masquerade;
-- reuse `.lan` split DNS and later add `edge.lan`;
-- direct/relay, reboot, public-service non-regression and controlled VRRP acceptance.
+- Home `.lan` split DNS consumed by `edge`;
+- CT300 remains the Home routing/control-plane foundation;
+- no VM100/MikroTik route/firewall mutation in the baseline implementation;
+- no `edge.lan` baseline record;
+- LAN-wide clientless Home/PAI -> `edge` overlay routing deferred until a concrete private-only workload requires it;
+- Stage 3 reboot acceptance uncovered and resolved the independent Docker `live-restore` shutdown regression; connectivity-specific final acceptance remains in progress.
 
 Detailed record: `STAGE_02_5_CONNECTIVITY_SELECTION_ACCEPTANCE_2026-09-17.md`.
 
 ## Cross-site Data & Knowledge Services
 
-Status: **CURRENT NEXT RESEARCH BLOCK**.
+Status: **SUPERSEDED BY FINAL STAGE 02.5 SCOPE / CLOUD STAGE 5 INTEGRATION BOUNDARY**.
 
 Unresolved:
 
@@ -168,15 +179,14 @@ Canonical Obsidian vault remains `/srv/ai-data/knowledge/obsidian` on `ai-node`.
 
 | Stage | Scope | Current status |
 |---|---|---|
-| 3 | Cross-site Connectivity Foundation | MECHANISM/ARCHITECTURE SELECTED; deployment blocked by Stage 02.5 completion |
-| 4 | Hermes Agent Runtime | PRODUCT/ROLE/PLACEMENT SELECTED; depends on Stage 3; must include local-vLLM acceptance |
-| 5 | Cross-site Data & Knowledge Services | RESEARCH REQUIRED; depends on Stage 3 connectivity |
-| 6 | Remaining Infrastructure Services | CONDITIONAL; remove/renumber if no service is selected |
-| 7 | Backrest & Recovery | PRODUCT DIRECTION ACCEPTED; topology research pending |
-| 8 | Maintenance & Update: Semaphore + update workflow + Codex `update.escloud.us` substage | PRODUCT ACCEPTED / DEPLOYMENT DEFERRED until Stage 7 restore acceptance |
-| 9 | Monitoring, Heartbeats & Alerts | REQUIRED / PRODUCT UNRESOLVED; deploy after stable inventory/lifecycle layers |
-| 10 | Cloud Portal: `app.escloud.us` | CAPABILITY ACCEPTED / separate Codex substage after Stage 9 |
-| 11 | Final Integrated Infrastructure Acceptance | REQUIRED / FINAL GATE |
+| 3 | Cross-site Connectivity Foundation | ACTIVE; NetBird runtime deployed; final connectivity acceptance pending |
+| 4 | Hermes Agent Runtime | SELECTED; depends on Stage 3 acceptance |
+| 5 | Edge Knowledge Replication & Data Integration | INTEGRATION STAGE; depends on accepted Home/PVE knowledge foundation plus Stage 3/4 |
+| 6 | Backrest & Recovery | PRODUCT DIRECTION ACCEPTED; topology research pending |
+| 7 | Maintenance & Update | Semaphore accepted; deploy only after Stage 6 restore acceptance |
+| 8 | Monitoring, Heartbeats & Alerts | REQUIRED / PRODUCT UNRESOLVED |
+| 9 | Cloud Portal: `app.escloud.us` | CAPABILITY ACCEPTED / dedicated Codex substage |
+| 10 | Final Integrated Infrastructure Acceptance | REQUIRED / FINAL GATE |
 
 ## Post-infrastructure application/workflow layer
 
@@ -210,6 +220,7 @@ Continuous workstream after Stage 11, not an infrastructure-completion stage:
 Stage 0 — COMPLETE / ACCEPTED.  
 Stage 1 — COMPLETE / ACCEPTED.  
 Stage 2 — COMPLETE / ACCEPTED.  
-Stage 02.5 — ACTIVE / RESEARCH-ONLY.
+Stage 02.5 — COMPLETE / ACCEPTED.  
+Stage 3 — ACTIVE / IN PROGRESS.
 
-Cross-site Connectivity Foundation selection is complete. The next Stage 02.5 research block is Cross-site Data & Knowledge Services.
+Cross-site Connectivity Foundation runtime is deployed; only its remaining connectivity-specific final acceptance is pending.
