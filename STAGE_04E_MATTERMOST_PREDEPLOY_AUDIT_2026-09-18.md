@@ -80,3 +80,25 @@ No runtime deployment occurred.
 The subsequent deployment procedure is reset to the exact official `mattermost/docker` workflow documented in Stage 4D, with only the accepted loopback/no-Calls Compose override.
 
 `STAGE4E_MATTERMOST_RECOVERY_V4_FINAL_MARKER=INVALID_DUE_SCRIPT_ERROR`
+
+## Official Docker deployment runtime reached; verification V2 false-negative
+
+The official Docker deployment itself completed successfully from upstream `mattermost/docker` commit `497414659ee7127677d2b91b44bb4f3ea9d14695`.
+
+Confirmed before the verifier stopped:
+
+- upstream worktree clean and merged Compose config valid;
+- `mattermost-mattermost-1` running healthy with `restart=unless-stopped`;
+- `mattermost-postgres-1` running with `restart=unless-stopped`;
+- PostgreSQL accepts connections;
+- Mattermost API `/api/v4/system/ping` returns `status=OK`;
+- Mattermost runtime is `11.11.0`, Team build (`Build Enterprise Ready: false`);
+- Compose reports only `127.0.0.1:18065->8065/tcp` as the Mattermost host publication; PostgreSQL shows internal `5432/tcp` only;
+- the host listener output explicitly shows `127.0.0.1:18065`.
+
+The later `LOOPBACK_BACKEND_GATE=FAIL` is a verifier false-negative caused by combining `set -o pipefail` with a `... | grep -q ...` pipeline: after `grep -q` exits on the first match, an upstream process can receive SIGPIPE, making the pipeline non-zero despite a successful match.
+
+Do not repeat already-passed database/API/version/runtime checks. Final core acceptance requires only the missing listener/publication and Hermes post-deployment non-regression checks.
+
+`STAGE4E_MATTERMOST_DEPLOY_RUNTIME=RUNNING_ACCEPTANCE_PENDING_FINAL_MISSING_GATES`
+
