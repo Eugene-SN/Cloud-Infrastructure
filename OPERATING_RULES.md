@@ -44,27 +44,25 @@ Completed canonical stages:
 
 - `00 — Cloud Infrastructure Architecture Discovery & Target Design` — Stage 0 — COMPLETE / ACCEPTED;
 - `01 — Edge Clean Rebuild & Base Platform Deployment` — Stage 1 — COMPLETE / ACCEPTED;
-- `02 — Edge Core Applications` — Stage 2 — COMPLETE / ACCEPTED with `EDGE_STAGE2_FINAL_INTEGRATED_ACCEPTANCE=PASS`.
+- `02 — Edge Core Applications` — Stage 2 — COMPLETE / ACCEPTED;
+- `02.5 — Remaining Functional Scope Reconciliation & Research` — COMPLETE / ACCEPTED / RESEARCH-ONLY;
+- `03 — Edge Cross-site Connectivity Foundation` — Stage 3 — COMPLETE / ACCEPTED with `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS`.
 
-Current canonical branch:
+Next canonical branch:
 
-- `02.5 — Remaining Functional Scope Reconciliation & Research` — **ACTIVE / RESEARCH-ONLY**.
+- `04 — Edge Hermes Agent Runtime`.
 
-Accepted/planned post-Stage-02.5 roadmap:
+Remaining finite infrastructure roadmap:
 
-- `03 — Edge Cross-site Connectivity Foundation`;
 - `04 — Edge Hermes Agent Runtime`;
-- `05 — Edge Cross-site Data & Knowledge Services`;
-- `06 — Edge Remaining Infrastructure Services` — conditional; remove/renumber at Stage 02.5 closure if no service is selected;
-- `07 — Edge Backrest & Recovery`;
-- `08 — Edge Maintenance & Update` — Semaphore/update workflow plus separate Codex `update.escloud.us` substage;
-- `09 — Edge Monitoring, Heartbeats & Alerts`;
-- `10 — Edge Cloud Portal` — separate Codex `app.escloud.us` substage;
-- `11 — Edge Final Integrated Infrastructure Acceptance`.
+- `05 — Edge Knowledge Replication & Data Integration`;
+- `06 — Edge Backrest & Recovery`;
+- `07 — Edge Maintenance & Update` — Semaphore/update workflow plus separate Codex `update.escloud.us` substage;
+- `08 — Edge Monitoring, Heartbeats & Alerts`;
+- `09 — Edge Cloud Portal` — separate Codex `app.escloud.us` substage;
+- `10 — Edge Final Integrated Infrastructure Acceptance`.
 
-After Stage 11, **Automation & User Workflows** is a continuous post-infrastructure workstream, not another infrastructure-completion stage.
-
-The prior `Hermes Stage 3 / Connectivity Stage 4` order is superseded. The still older thematic Stage 3–7 grouping is historical only.
+After Stage 10, **Automation & User Workflows** is a continuous post-infrastructure workstream, not another infrastructure-completion stage.
 
 ## Mandatory lifecycle for every implementation stage
 
@@ -86,32 +84,17 @@ A completed subtask is not permission to leave a branch while its accepted scope
 
 ## Current work checkpoint
 
-Current canonical branch:
-
-`02.5 — Remaining Functional Scope Reconciliation & Research`
-
 Current facts:
 
 1. Stage 0 preservation/recovery is complete.
 2. Stage 1 clean rebuild/base platform is complete and accepted.
 3. Stage 2 Core Applications is complete and accepted.
-4. `EDGE_STAGE2_FINAL_INTEGRATED_ACCEPTANCE=PASS`.
-5. Stage 02.5 is research-only; no new production service deployment/configuration mutation is authorized.
-6. Remaining Standalone Core Services research is complete: **Hermes Agent is SELECTED**.
-7. Cross-site Connectivity Foundation research is complete: **existing self-hosted NetBird is SELECTED / REUSE EXISTING**.
-8. Current next research block is **Cross-site Data & Knowledge Services**.
-9. No Stage 3 production branch opens until all Stage 02.5 deliverables are explicitly accepted and canonical files are read back.
-
-## Stage 02.5 research-only gate
-
-During Stage 02.5:
-
-- do not deploy/install/configure new production services;
-- do not mutate production DNS/firewall/runtime;
-- read-only runtime inspection is allowed only when a concrete unknown factual state materially blocks a decision;
-- do not reopen accepted product anchors without a concrete incompatibility or changed requirement;
-- use current official/upstream information first for changing facts, then maintainer evidence, then community evidence;
-- classify unresolved capabilities as `SELECTED`, `REUSE EXISTING`, `DEFERRED`, `REJECTED` or, only when genuinely necessary, `RESEARCH STILL REQUIRED`.
+4. Stage 02.5 research reconciliation is complete and accepted.
+5. Stage 3 Cross-site Connectivity Foundation is complete and accepted.
+6. `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS`.
+7. The next independent production branch is `04 — Edge Hermes Agent Runtime`.
+8. Reuse the accepted Stage 3 transport; do not reopen NetBird/routing choices without a concrete incompatibility.
+9. The Stage 1 Docker `live-restore=true` setting is superseded; current accepted runtime is `live-restore=false`.
 
 # Stage 3 — Cross-site Connectivity contract
 
@@ -121,25 +104,25 @@ Authoritative detailed acceptance record:
 
 Stage 3 reuses the existing Home self-hosted NetBird architecture as a bidirectional routed private fabric.
 
-Accepted contract:
+Accepted final contract:
 
-- CT300 `remote-access` remains the Home routing peer at `192.168.1.90`;
+- CT300 `remote-access` remains the Home routing peer at `192.168.1.90`, overlay `100.105.97.126/16`;
 - NetBird account IPv4 overlay is `100.105.0.0/16`;
 - existing Home LAN resource is `192.168.1.0/24`;
-- `edge` is an ordinary **host-native** NetBird service peer;
-- `edge` gets Home LAN reachability but **not** the Home `0.0.0.0/0` Internet resource;
+- `edge` is an ordinary host-native NetBird service peer, overlay `100.105.178.187/16`;
+- `edge` gets Home LAN reachability but not the Home `0.0.0.0/0` Internet resource;
 - `edge` retains its direct VPS-provider default Internet route;
-- Home/PAI clientless hosts reach `edge` through gateway-level `100.105.0.0/16 via 192.168.1.90` routing on both VM100 and MikroTik;
-- VM100 receives only the narrow forwarding allowance needed for LAN → NetBird-account traffic;
-- reuse and verify existing NetBird-managed Site-to-VPN masquerade before adding any manual NAT;
-- individual NetBird peers on PVE/`ai-node`/CT220 are not baseline requirements;
-- reuse existing NetBird split-DNS `192.168.1.1:53` only for match domain `lan`; ordinary `edge` DNS remains VPS-local;
-- add `edge.lan` through the existing Home DNS mechanism after enrollment/routing acceptance;
-- verify real direct/relay behavior, reboot persistence, public-service non-regression and controlled VRRP failover during Stage 3 acceptance.
+- reuse existing NetBird-managed Site-to-VPN masquerade; do not add duplicate manual NAT;
+- reuse Home split-DNS `192.168.1.1:53` for match domain `lan`; ordinary `edge` DNS remains VPS-local;
+- VM100 and MikroTik remain unchanged in the baseline;
+- do not create `edge.lan`;
+- Home/PAI normally reaches Cloud services through the public VPS IPv4 or accepted `escloud.us` / service-subdomain ingress;
+- LAN-wide clientless Home/PAI -> `edge` overlay routing is deferred until a concrete private-only workload justifies gateway mutation;
+- direct/relay behavior, process recovery, CT300 reboot recovery and edge full-reboot persistence are accepted in `STAGE_03_ACCEPTANCE_2026-09-18.md`.
 
-Existing user-device Home Internet Exit remains separate. Fresh audit showed CT300 itself defaults to MikroTik `192.168.1.1`, while NetBird traffic arriving on `wt0` uses a policy table whose default is VRRP VIP `192.168.1.254`, normally leading through VM100/Mihomo. Do not assign that `0.0.0.0/0` resource to `edge`.
+Existing user-device Home Internet Exit remains separate. Do not assign its `0.0.0.0/0` resource to `edge`.
 
-Direct WireGuard and Tailscale are rejected as duplicate parallel backbones. AmneziaWG remains contingency only if real NetBird acceptance demonstrates an unresolved transport/DPI failure.
+Direct WireGuard and Tailscale remain rejected as duplicate parallel backbones. AmneziaWG remains contingency only for a demonstrated NetBird transport/DPI failure.
 
 Connectivity is transport/reachability/private naming. Application-level durable store-and-forward/retry is a later workflow concern.
 
@@ -169,31 +152,20 @@ Actual user-specific n8n/Hermes workflows are not part of Stage 4. Do not assign
 
 ## Data/knowledge sequencing
 
-Stage 5 covers connectivity-dependent working data services such as:
+Stage 5 is **Edge Knowledge Replication & Data Integration** and is owned as an integration stage, not a second knowledge-platform design project.
 
-- VPS working-file access;
-- web file management;
-- MacBook/iPhone/iPad/`ai-node` access;
-- selected-directory synchronization;
-- Obsidian synchronization/relay/mirror.
-
-Canonical Obsidian vault remains:
-
-`ai-node:/srv/ai-data/knowledge/obsidian`
-
-Do not make `edge` the canonical source of truth by assumption.
-
-## Conditional Stage 6 rule
-
-Stage 6 exists only if remaining Stage 02.5 research selects another full infrastructure service that belongs after Stage 5 and before lifecycle tooling.
-
-Do not create an empty branch merely to preserve numbering. If no such service exists, remove Stage 6 and normalize downstream numbering before Stage 3 opens.
+- Home Infrastructure owns the future PVE canonical knowledge foundation.
+- Personal Agents Infrastructure owns the `ai-node` active replica and local AI consumers/producers after Home cutover.
+- Cloud Infrastructure owns only the `edge` active RW replica and Cloud-side consumers/producers.
+- Until Home explicitly accepts PVE canonical migration, the current `ai-node:/srv/ai-data/knowledge/obsidian` remains factual runtime state.
+- Stage 5 begins with a fresh cross-project read-only audit and reuses the Home-accepted server-side synchronization mechanism by default.
+- MacBook/iPhone/iPad Obsidian synchronization is outside Cloud Infrastructure scope.
 
 ## Backup/update sequencing
 
 - Backrest using Restic is the accepted backup-management direction.
-- Backrest is deployed against the substantially complete service inventory.
-- A usable backup/restore path must be accepted before Semaphore/update testing.
+- Stage 6 deploys Backrest against the substantially complete service inventory.
+- A usable Stage 6 backup/restore path must be accepted before Stage 7 Semaphore/update testing.
 - Semaphore and maintenance/update workflow are developed/tested together.
 - Existing PVE/Home update tooling is an engineering reference to audit/adapt, not copy blindly.
 - `ops.escloud.us` remains Semaphore's operational execution UI.
@@ -201,20 +173,20 @@ Do not create an empty branch merely to preserve numbering. If no such service e
 
 ## Monitoring sequencing
 
-Research monitoring architecture during Stage 02.5, but deploy production monitoring only after the service inventory, connectivity, Backrest and update subsystem substantially exist.
+Stage 8 finalizes/deploys production monitoring only after the service inventory, connectivity, Backrest and update subsystem substantially exist.
 
 Avoid heavyweight metrics/logging/observability stacks unless concrete requirements justify them.
 
 ## Portal sequencing
 
 - `app.escloud.us` is the final Cloud Infrastructure navigation/status dashboard.
-- It is built only after Stage 9 monitoring/status sources and final service inventory are accepted.
+- It is built in Stage 9 only after Stage 8 monitoring/status sources and final service inventory are accepted.
 - It is a separate Codex substage.
 - Do not put detailed maintenance/update controls into `app.escloud.us`; those remain on `update.escloud.us`.
 
 ## Post-infrastructure workflow rule
 
-After Stage 11, user-specific automation can evolve independently: n8n workflows, Hermes/agent workflows, Capture Inbox, approvals, mail-triggered automation, continuous information intake/change detection, bounded AI research, durable application-level cross-site task handoff, messaging/bot commands and orchestration across n8n, Hermes, Codex, Antigravity and local vLLM/PAI.
+After Stage 10, user-specific automation can evolve independently: n8n workflows, Hermes/agent workflows, Capture Inbox, approvals, mail-triggered automation, continuous information intake/change detection, bounded AI research, durable application-level cross-site task handoff, messaging/bot commands and orchestration across n8n, Hermes, Codex, Antigravity and local vLLM/PAI.
 
 These are not blockers for final infrastructure acceptance.
 
@@ -235,12 +207,13 @@ Accepted live substrate facts include:
 - kernel `7.0.0-31-generic` at current accepted state;
 - 2 vCPU, ~15 GiB RAM, 4 GiB swap;
 - IPv4 `45.92.156.17/24`, gateway `45.92.156.1`;
-- IPv6 `2a0c:b847:ffff:283::a/64`, gateway `2a0c:b847:ffff::1`;
+- no public/global IPv6 on `ens3`; IPv6 remains enabled for link-local and NetBird overlay use;
 - SSH public-key access works; root password authentication is disabled;
 - OpenSSH is socket-activated through `ssh.socket`;
 - persistent journald-use ceiling is `500M`;
-- provider-generated working Netplan/cloud-init networking remains authoritative unless a later concrete change requires otherwise;
-- Docker/Compose, nginx, Xray, Hysteria2, Authelia, n8n, CloudCLI, Codex CLI, Antigravity CLI, Stalwart and Bulwark are accepted current runtime components as documented in `CURRENT_STATE.md`.
+- `/etc/netplan/50-cloud-init.yaml` is the current authoritative IPv4-only public network config; cloud-init network regeneration is disabled by `/etc/cloud/cloud.cfg.d/99-edge-disable-network-config.cfg`;
+- Docker/Compose, nginx, Xray, Hysteria2, Authelia, n8n, CloudCLI, Codex CLI, Antigravity CLI, Stalwart and Bulwark are accepted current runtime components as documented in `CURRENT_STATE.md`;
+- Docker `live-restore=false` is the accepted current lifecycle state; application containers use `restart=unless-stopped` for reboot persistence.
 
 Fresh runtime/configuration has priority over historical reference.
 
@@ -326,4 +299,4 @@ Avoid restart/reboot unless actually required.
 - VPN/proxy services used for DPI bypass are separate from the private infrastructure backbone.
 - Home/PAI connectivity must not become a foundation requirement for independently useful `edge` capabilities, but it must exist before services whose correctness depends on Home/PAI.
 - Do not carry legacy configuration forward blindly; use `migration-reference/` for engineering context and the external archive only where exact state/credentials are actually required.
-- Do not open the next production deployment branch until Stage 02.5 deliverables are explicitly accepted and canonical files have been updated/read back.
+- Do not open a new production branch until the current stage is accepted and canonical files have been updated/read back.
