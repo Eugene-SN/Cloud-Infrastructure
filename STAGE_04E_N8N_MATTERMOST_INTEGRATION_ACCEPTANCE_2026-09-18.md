@@ -65,15 +65,17 @@ After the E2E probe:
 - `STAGE4E_N8N_MATTERMOST_NATIVE_E2E=PASS`;
 - `STAGE4E_N8N_MATTERMOST_INTEGRATION=PASS`.
 
-With previously accepted Mattermost core runtime, ingress, native configuration and Hermes↔Mattermost integration, Stage 4E is now **COMPLETE / ACCEPTED**.
+The n8n↔Mattermost integration is therefore **COMPLETE / ACCEPTED**.
 
-## Remaining Stage 4 work
+This acceptance does **not** by itself close Stage 4E. The accepted Stage 4E contract separately requires real native mobile-client/push verification; the current repository contains configuration evidence for TPNS but no recorded successful iOS/iPad login plus delivered push notification. Stage 4E also retains the explicit disposition of the currently enabled prepackaged `mattermost-ai` plugin and a final Stage 4E non-regression check after normalization.
 
-Stage 4 itself remains IN PROGRESS.
+## Remaining Stage 4E / Stage 4 work
 
-Before final server-side acceptance:
+Stage 4E remains **IN PROGRESS** until:
 
-- disposition the currently enabled prepackaged `mattermost-ai` plugin;
-- resolve or explicitly characterize Hermes controlled stop/restart behavior where SIGTERM currently exits status 1;
-- resume remaining Hermes 4A/4B/4C work;
-- complete Stage 4F, 4G, 4H and 4I.
+- official Mattermost mobile client login is verified against `https://chat.escloud.us`;
+- a real TPNS notification is delivered to the official mobile client;
+- the prepackaged `mattermost-ai` plugin is explicitly dispositioned rather than silently adopted;
+- Stage 4E-specific non-regression passes after the final normalization.
+
+Stage 4 itself remains IN PROGRESS. Separately, Hermes controlled stop/restart behavior where SIGTERM currently exits status 1 must be resolved or explicitly characterized before final server-side acceptance; remaining Hermes 4A/4B/4C, then 4F/4G/4H/4I, remain pending.
