@@ -135,7 +135,7 @@ Acceptance record: `EDGE_REBOOT_LIFECYCLE_FIX_ACCEPTANCE_2026-09-18.md`.
 - fresh operator/auth state;
 - public `auth.escloud.us` accepted.
 
-Protected private web namespace includes `n8n`, `code`, future `app`, `backup`, `ops`, `update`, `docs`, `cloud`, `sync`, `chat`. `mail.escloud.us` intentionally uses native mail-stack authentication.
+Protected private web namespace includes `n8n`, `code`, future `app`, `backup`, `ops`, `update`, `docs`, `cloud` and `sync`. `mail.escloud.us` intentionally uses native mail-stack authentication. Stage 4D also accepts `chat.escloud.us` as an explicit native-client exception: Mattermost will use Mattermost-native authentication without Authelia.
 
 ## TLS
 
@@ -207,7 +207,7 @@ Current confirmed baseline:
 - Dashboard/API/n8n integration and final macOS Remote Gateway integration remain pending;
 - Hermes host/toolchain normalization accepted: `ripgrep`, `ffmpeg`, build/Python/libffi development dependencies and Chromium system libraries installed; `browser-use` backend and managed Chromium `browser_exec` verified end-to-end; `cua-driver 0.28.2` available under the actual `core` runtime; marker `STAGE4_HERMES_SYSTEM_TOOLCHAIN_NORMALIZATION=PASS`;
 - wizard-selected `openai-codex` image generation is not currently usable because Hermes-managed Codex auth is absent.
-- Mattermost is now a mandatory Stage 4 private collaboration/control substage; it is selected but **NOT YET DEPLOYED**. Preliminary deep research is recorded in `STAGE_04_MATTERMOST_RESEARCH_BRIEF_2026-09-18.md`; preferred public namespace is `chat.escloud.us`, subject to Stage 4D auth/client compatibility acceptance;
+- Mattermost is a mandatory Stage 4 private collaboration/control substage and is **NOT YET DEPLOYED**. Stage 4D design is COMPLETE / ACCEPTED: Mattermost Team Edition, official Docker Compose pattern, separate dedicated PostgreSQL container, local `/srv` state, existing Xray/host-nginx/shared-TLS ingress, `https://chat.escloud.us` with Mattermost-native authentication and **no Authelia**, TPNS enabled for official mobile clients, Calls excluded. Exact service-integration mechanisms remain intentionally unresolved until Stage 4E and must be selected native/upstream-first. Acceptance: `STAGE4D_MATTERMOST_TARGET_ARCHITECTURE_ACCEPTANCE=PASS`;
 
 Detailed factual record: `STAGE_04_HERMES_POST_SETUP_BASELINE_2026-09-18.md`.
 
@@ -220,4 +220,4 @@ Stage 4 remains **IN PROGRESS / NOT YET ACCEPTED**.
 
 ## Current next step
 
-Stage 4 — Edge Hermes Agent Runtime is **IN PROGRESS**. Follow the complete authoritative Stage 4A–4I sequence in `IMPLEMENTATION_PHASES.md`; do not collapse Stage 4 to only the immediate next test block. Continue from `STAGE_04_HERMES_POST_SETUP_BASELINE_2026-09-18.md`. Mattermost Stage 4D research/design must be explicitly accepted before Mattermost deployment. Do not reinstall Hermes or reopen Stage 3 transport unless a concrete incompatibility appears.
+Stage 4 — Edge Hermes Agent Runtime is **IN PROGRESS**. Follow the complete authoritative Stage 4A–4I sequence in `IMPLEMENTATION_PHASES.md`; do not collapse Stage 4 to only the immediate next test block. Continue from `STAGE_04_HERMES_POST_SETUP_BASELINE_2026-09-18.md`. Mattermost Stage 4D research/design is already COMPLETE / ACCEPTED; deployment begins only in Stage 4E using the accepted target while selecting exact service integrations during deployment. Do not reinstall Hermes or reopen Stage 3 transport unless a concrete incompatibility appears.
