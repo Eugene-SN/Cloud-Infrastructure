@@ -110,6 +110,31 @@ Do not reopen them without concrete incompatibility or changed requirement.
 
 Hermes invokes Codex/Antigravity directly; CloudCLI is not a proxy between them.
 
+## Stage 4 private collaboration/control surface — Mattermost
+
+Mattermost is a selected mandatory Stage 4 service, with deployment gated by explicit Stage 4D deep-research/design acceptance.
+
+Architectural role:
+
+- private/self-hosted collaboration and operator command/notification surface;
+- not a replacement for Hermes or n8n;
+- Hermes uses its native Mattermost adapter over Mattermost REST API v4 + WebSocket;
+- n8n uses the official Mattermost integration/API plus webhooks/slash commands where appropriate;
+- Codex/Antigravity remain specialist executors behind Hermes rather than receiving independent Mattermost bots by default;
+- CloudCLI remains the manual cloud-AI workspace;
+- Stalwart is the preferred existing SMTP subsystem for Mattermost mail;
+- later monitoring/backup/update stages may deliver alerts/status into Mattermost without moving those later-stage implementations into Stage 4.
+
+Preferred public namespace is `https://chat.escloud.us`. Mattermost application/PostgreSQL backends remain private. Human traffic reuses Xray/nginx/shared TLS and the project authentication policy; Hermes/n8n machine traffic should use internal Mattermost routes rather than traversing Authelia.
+
+Before deployment Stage 4D must resolve native APT vs official-image container runtime, PostgreSQL/file storage, real resource budget, WebSocket proxying, Authelia compatibility with Mattermost web/desktop/mobile clients, internal Hermes/n8n routes and Stalwart SMTP.
+
+Do not add Kubernetes, HA, Elasticsearch/OpenSearch, MinIO/S3, Calls/push infrastructure or custom plugins without a concrete need. Normal Mattermost Team Edition messaging/files/API/bot/webhook/slash-command capabilities remain part of the intended practical service surface.
+
+Detailed preliminary research:
+
+`STAGE_04_MATTERMOST_RESEARCH_BRIEF_2026-09-18.md`
+
 # Accepted Cross-site Connectivity Architecture
 
 Selection record:
