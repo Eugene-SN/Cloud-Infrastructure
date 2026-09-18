@@ -107,7 +107,7 @@ These are implementation details, not open architecture questions:
 - Mattermost integration/API/webhook/slash-command documentation;
 - Mattermost community forum and user deployment discussions;
 - Hermes Mattermost integration documentation/source;
-- n8n official Mattermost integration documentation/source.
+- n8n official Mattermost integration page (`https://n8n.io/integrations/mattermost/`) and built-in Mattermost node documentation/source.
 
 ## Research closure
 
