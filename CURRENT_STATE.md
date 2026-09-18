@@ -206,7 +206,7 @@ Fresh expanded read-only audit on 2026-09-18 confirms the following current runt
 - `hermes-gateway.service` is enabled and currently active under `core`; current `NRestarts=0`;
 - Mattermost environment is configured and its token validates successfully as bot `hermes`;
 - standalone Codex CLI `0.154.0` and Antigravity CLI `1.2.5` remain available to `core`;
-- remaining Full Setup capability verification, direct Codex/Antigravity delegation, Dashboard/private machine interface and final macOS Remote Gateway acceptance are pending.
+- Web Search/Extract, Edge TTS and Vision functional probes are PASS; CUA is accepted as `NOT_APPLICABLE_HEADLESS_EDGE`; Image Generation remains configured but is non-blocking for Stage 4 acceptance; fresh core Qwen3.8/vLLM regression plus direct Codex/Antigravity delegation, Dashboard/private machine interface and final macOS Remote Gateway acceptance remain pending.
 
 Known lifecycle defect from the expanded audit: a controlled systemd stop/restart sends SIGTERM and Hermes logs the shutdown context, but the process exits status `1`; systemd records `Failed with result 'exit-code'` before the requested restart succeeds. The currently running service is healthy, but this graceful-stop defect must be resolved or explicitly understood before final Stage 4 acceptance.
 
@@ -274,10 +274,12 @@ Stage 4 remains **IN PROGRESS / NOT YET ACCEPTED**.
 
 ## Current next step
 
-1. Resume remaining Hermes Stage 4A capability verification/normalization.
-2. Complete Stage 4B direct Codex/Antigravity integration and Stage 4C Hermes Dashboard/ingress/auth.
-3. Complete Stage 4F private n8n machine-interface integration.
+1. Run a focused core-agent regression of the accepted Hermes -> local Qwen3.8/vLLM path, specifically reasoning mode, tool calling, reasoning replay and session continuity.
+2. Immediately thereafter complete Stage 4B direct Hermes -> Codex CLI and Hermes -> Antigravity CLI delegation using their upstream skill patterns and existing standalone authentication.
+3. Complete Stage 4C Hermes Dashboard/ingress/auth, then Stage 4F private n8n machine-interface integration.
 4. Carry the known upstream Hermes controlled-stop `SIGTERM -> exit 1` defect as a documented lifecycle constraint into Stage 4G; do not locally mask it with `SuccessExitStatus=1`.
 5. Perform Stage 4G server-side integrated acceptance, Stage 4H macOS Hermes Desktop integration, and Stage 4I final repository persistence/acceptance.
+
+Image Generation is non-blocking for Stage 4 and must not divert the critical path; any later image-quality acceptance is human/visual. Do not add a desktop stack solely to make CUA applicable on the headless `edge`.
 
 Do not reopen Stage 3 transport or reinstall already accepted Stage 4 components without a concrete incompatibility.
