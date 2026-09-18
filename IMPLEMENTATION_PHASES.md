@@ -90,7 +90,7 @@ Accepted results include:
 
 ### Scope
 
-Deploy and accept the selected bidirectional NetBird private fabric before any connectivity-dependent application stage.
+Deploy and accept the minimum-risk NetBird private fabric required before connectivity-dependent application stages.
 
 Requirements:
 
@@ -98,16 +98,16 @@ Requirements:
 - dedicated Cloud Infrastructure service-peer grouping/policy;
 - `edge -> Home/PAI` through existing `Home LAN 192.168.1.0/24` resource;
 - no `0.0.0.0/0` Home Internet resource for `edge`;
-- preserve direct provider Internet/default route on `edge`;
-- Home/PAI -> `edge` through `100.105.0.0/16` gateway-level routing via CT300;
-- narrow VM100 forwarding allowance and MikroTik/VM100 route persistence;
-- reuse/verify NetBird-managed Site-to-VPN masquerade before considering manual NAT;
-- reuse `.lan` split-DNS and add `edge.lan` through the existing Home DNS mechanism;
+- preserve direct provider Internet/default route and public-service behavior on `edge`;
+- reuse/verify existing CT300 NetBird routing and Site-to-VPN masquerade; do not add duplicate NAT;
+- consume existing Home `.lan` split DNS from `edge`;
 - verify private reachability to `ai-node`, PVE and selected Home targets;
-- verify direct/relay behavior, reboot persistence and public-service non-regression;
-- controlled VRRP failover acceptance when the recovery plan permits it.
+- verify NetBird management/signal/relay availability, reboot persistence and public-service non-regression;
+- keep VM100 and MikroTik unchanged for the baseline Stage 3 implementation;
+- do not create `edge.lan`; Home/PAI reaches Cloud services through the VPS public IP or accepted `escloud.us` / service-subdomain ingress;
+- treat LAN-wide clientless Home/PAI -> `edge` overlay routing as a deferred on-demand capability requiring a concrete private-only workload before any gateway mutation.
 
-Stage 3 establishes transport/routing/private naming only. It does not own vLLM service bind/provider configuration beyond reachability.
+Stage 3 establishes the Cloud-to-Home private transport needed by later workloads while preserving the existing Home gateway plane. It does not own vLLM service bind/provider configuration beyond reachability.
 
 ## Stage 4 — Edge Hermes Agent Runtime
 
