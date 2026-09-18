@@ -275,13 +275,27 @@ The accepted baseline path is `edge -> Home/PAI`; VM100/MikroTik remain unchange
 
 Preferred placement: host-native under `core`.
 
+Accepted UI/ingress contract:
+
+- Hermes Web Dashboard is part of the Stage 4 production scope and is the normal human UI;
+- public user URL is `https://hermes.escloud.us`;
+- reuse the existing service-ingress pattern: public TCP/443 -> Xray/nginx -> Authelia -> loopback Hermes Dashboard backend;
+- Hermes Dashboard remains host-local/loopback by default (expected upstream default `127.0.0.1:9119`); do not expose its backend port directly to the Internet;
+- `hermes.escloud.us` is an authenticated service subdomain; the project exception remains only the public landing page `escloud.us`, which does not require Authelia;
+- reuse the existing Certbot/nginx/TLS lifecycle rather than introducing a separate ingress stack;
+- account for Hermes' own remote-dashboard authentication requirements when a non-loopback public URL is declared; select only the minimum upstream-supported auth configuration compatible with nginx/Authelia and Hermes Desktop.
+
 Acceptance includes:
 
+- browser access to `https://hermes.escloud.us` through the accepted nginx + Authelia ingress;
 - `n8n -> Hermes -> Codex/AGY -> Hermes -> n8n`;
 - minimum private vLLM exposure on `ai-node`;
-- real `Hermes -> vLLM` inference.
+- real `Hermes -> vLLM` inference;
+- final macOS Hermes Desktop integration test using **Settings -> Gateways -> Remote gateway** against the remote Dashboard backend, with `https://hermes.escloud.us` as the intended Base/Remote URL;
+- verify real Desktop authentication, backend readiness, live chat/WebSocket operation and reconnect persistence;
+- only if the simple Remote Gateway path is incompatible with the accepted reverse-proxy/auth topology, evaluate the minimum alternative connection mode rather than pre-deploying parallel access paths.
 
-No public Hermes domain/listener is assumed.
+The public domain is for the authenticated Web Dashboard. It does **not** authorize a direct Internet-facing Hermes backend/API listener.
 
 ## Stage 5 — Edge Knowledge Replication & Data Integration
 
