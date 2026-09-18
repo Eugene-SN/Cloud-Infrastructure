@@ -371,3 +371,28 @@ Final reboot evidence:
 The independent Docker reboot-lifecycle regression discovered during Stage 3 is resolved by the separately accepted `live-restore=false` correction.
 
 **Roadmap effect:** Stage 4 — Edge Hermes Agent Runtime is the next production stage.
+
+---
+
+## 2026-09-18T08:05:00+03:00 — Stage 4 Hermes WebUI and macOS Remote Gateway contract correction
+
+**Status:** ACCEPTED
+
+**Context:** Stage 4 requirements review clarified that Hermes is not intended to be deployed headless. Cloud Infrastructure already uses a consistent service-ingress pattern in which application WebUIs are published on authenticated `*.escloud.us` subdomains behind the existing Xray/nginx/TLS/Authelia stack, while only the root landing page `escloud.us` is intentionally unauthenticated. The DNS record `hermes.escloud.us` has already been prepared by the operator. Upstream Hermes documentation also defines Hermes Desktop remote-backend operation against a running `hermes dashboard` service through Settings -> Gateways -> Remote gateway.
+
+**Decision:**
+
+1. Hermes Web Dashboard is a required part of Stage 4 production scope and the normal human UI.
+2. Public user URL is `https://hermes.escloud.us`.
+3. Reuse the accepted Xray/nginx/shared-TLS/Authelia ingress pattern; do not build a separate ingress stack.
+4. Keep the Hermes Dashboard backend host-local/loopback by default (upstream default `127.0.0.1:9119`) and do not expose port 9119 directly to the Internet.
+5. The existence of `hermes.escloud.us` does not authorize a direct public Hermes API/backend listener. n8n should use the minimum local/private machine interface.
+6. Because upstream Hermes engages remote-dashboard authentication semantics for a non-loopback public URL, Stage 4 must configure the minimum supported Hermes-native auth/session mechanism that works with the existing nginx/Authelia path and verify it end-to-end rather than assuming Authelia alone substitutes for Hermes Desktop authentication.
+7. The **final Stage 4 integration task** is macOS Hermes Desktop.
+8. Test the simplest supported Desktop path first: **Settings -> Gateways -> Remote gateway**, with the remote Dashboard backend URL intended to be `https://hermes.escloud.us`.
+9. Acceptance must prove real sign-in/auth-provider detection, backend readiness, live chat/WebSocket operation and reconnect/session persistence.
+10. Only if that Remote Gateway path demonstrates a concrete incompatibility with the accepted reverse-proxy/auth topology may an alternative Desktop connection mode be evaluated.
+11. User-specific Hermes/n8n workflows remain post-infrastructure scope.
+
+**Supersedes:** only the earlier Stage 02.5 wording that no public Hermes domain/listener was assumed. The selected Hermes product, host-native `core` placement, direct Codex/Antigravity delegation, n8n machine-interface requirement, Stage 3 NetBird dependency and post-infrastructure workflow boundary remain unchanged.
+
