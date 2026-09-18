@@ -24,23 +24,9 @@ Current canonical work is:
 
 Stage 0, Stage 1, Stage 2, Stage 02.5 and Stage 3 are complete and accepted. `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS`.
 
-Stage 4 is **IN PROGRESS / NOT YET ACCEPTED**. Continue from the current Stage 4 runtime/configuration state and authoritative Stage 4 records; do not revert to the old Stage 02.5 research-only checkpoint.
+Stage 4 is **IN PROGRESS / NOT YET ACCEPTED**. Use `CURRENT_STATE.md` for confirmed runtime, `IMPLEMENTATION_PHASES.md` for the authoritative current roadmap/substage scope, and the latest applicable ACCEPTED entries/records for supersession.
 
-## Current planned stage order
-
-- Stage 3 — `03 — Edge Cross-site Connectivity Foundation`
-- Stage 4 — `04 — Edge Hermes Agent Runtime`
-- Stage 5 — `05 — Edge Cross-site Data & Knowledge Services`
-- Stage 6 — `06 — Edge Remaining Infrastructure Services` — conditional; remove/renumber if empty at Stage 02.5 closure
-- Stage 7 — `07 — Edge Backrest & Recovery`
-- Stage 8 — `08 — Edge Maintenance & Update`
-- Stage 9 — `09 — Edge Monitoring, Heartbeats & Alerts`
-- Stage 10 — `10 — Edge Cloud Portal`
-- Stage 11 — `11 — Edge Final Integrated Infrastructure Acceptance`
-
-After Stage 11, Automation & User Workflows is a continuous post-infrastructure workstream, not an infrastructure-completion stage.
-
-The former `Hermes Stage 3 / Connectivity Stage 4` ordering is historical and superseded.
+Do not duplicate mutable stage chronology in this file. `AGENTS.md` should contain durable cross-agent rules; volatile progress belongs in `CURRENT_STATE.md` and `IMPLEMENTATION_PHASES.md`.
 
 ## Stage workflow invariant
 
@@ -109,80 +95,61 @@ Backrest + Restic is the accepted backup-management direction. Semaphore is the 
 
 ## Stage 3 connectivity invariant
 
-Detailed accepted architecture:
+Stage 3 is complete and accepted. Final record: `STAGE_03_ACCEPTANCE_2026-09-18.md`.
 
-`STAGE_02_5_CONNECTIVITY_SELECTION_ACCEPTANCE_2026-09-17.md`
+Durable accepted contract:
 
-Stage 3 reuses the existing Home self-hosted NetBird architecture as a bidirectional routed private fabric.
+- self-hosted Home NetBird is the Cloud ↔ Home/PAI private fabric;
+- `edge` is an ordinary host-native NetBird service peer at `100.105.178.187/16`;
+- `edge -> Home/PAI` uses the existing `192.168.1.0/24` Home LAN resource through CT300;
+- `edge` must not receive the Home `0.0.0.0/0` Internet resource and keeps its VPS-provider default route;
+- Home `.lan` split DNS is reused from `edge`;
+- VM100 and MikroTik remain unchanged in the accepted baseline;
+- do not create `edge.lan`;
+- LAN-wide clientless Home/PAI -> `edge` overlay routing is deferred until a concrete private-only workload justifies gateway mutation;
+- direct WireGuard and Tailscale remain rejected as duplicate private backbones; AmneziaWG is contingency only for a demonstrated NetBird transport failure.
 
-Accepted facts/direction:
-
-- Home LAN `192.168.1.0/24`;
-- CT300 `remote-access` `192.168.1.90` remains the Home routing peer;
-- NetBird account IPv4 overlay `100.105.0.0/16`;
-- `edge` becomes an ordinary **host-native** NetBird service peer;
-- `edge` receives the Home LAN resource but must **not** receive Home `0.0.0.0/0` Internet Exit;
-- `edge` keeps its VPS-provider default Internet route;
-- Home/PAI clientless hosts reach `edge` through gateway-level `100.105.0.0/16 via 192.168.1.90` routing on both VM100 and MikroTik;
-- VM100 receives only the narrow forwarding allowance required for LAN → NetBird-account traffic;
-- reuse and verify NetBird-managed Site-to-VPN masquerade before adding any manual NAT;
-- individual NetBird peers on PVE/`ai-node`/CT220 are not baseline requirements;
-- reuse existing `.lan` split DNS: `192.168.1.1:53` only for match domain `lan`; ordinary `edge` DNS remains VPS-local;
-- add `edge.lan` through the existing Home DNS mechanism after enrollment/routing acceptance;
-- verify real direct/relay behavior and controlled VRRP failover during Stage 3 acceptance.
-
-Existing remote-user Internet Exit remains a separate capability of `User Devices`: CT300 policy-routes traffic from `wt0` through VRRP VIP `192.168.1.254`, normally reaching VM100/Mihomo. Do not assign this resource to `edge`.
-
-Direct WireGuard and Tailscale are rejected as duplicate parallel backbones. AmneziaWG is contingency only if real NetBird acceptance demonstrates an unresolved transport/DPI failure.
-
-Connectivity means transport/reachability/private naming. Durable application-level task retry/store-and-forward is a later workflow concern.
+Application-level durable retry/store-and-forward is not part of the connectivity layer.
 
 ## Stage 4 Hermes invariant
 
-Stage 4 is **Hermes-only** plus the minimum consumer-side integration needed to use already accepted executors and local vLLM over Stage 3 connectivity.
+Stage 4 is the **Hermes Agent Runtime stage**, including the infrastructure integrations required to make Hermes practically usable: local vLLM, direct Codex/Antigravity executors, the authenticated Hermes Dashboard, the private n8n machine interface, and the accepted Mattermost collaboration/control surface.
 
-Role separation:
+Durable role separation:
 
 - n8n — deterministic workflow/orchestration plane;
 - Hermes — persistent cloud-side agentic reasoning/tool/delegation plane;
+- Mattermost — private collaboration/control/notification surface;
 - CloudCLI — manual web/remote cloud-AI workspace;
-- Codex CLI and Antigravity CLI — specialized executors usable manually and delegatable by Hermes;
+- Codex CLI and Antigravity CLI — specialist executors used directly and through Hermes;
 - OpenClaw — Home/PAI-side local personal agent;
-- vLLM on `ai-node` — local inference backend reached through the accepted Stage 3 private fabric.
+- vLLM on `ai-node` — local inference backend reached through Stage 3.
 
-Preferred Hermes deployment is **host-native under `core`**. Docker is not preferred because it would complicate direct reuse of existing host-native Codex/Antigravity binaries and user/runtime/auth context. Reconsider only for a concrete upstream/runtime incompatibility.
+Hermes remains host-native under `core` by default so it can reuse the host-native executor/auth context.
 
-Stage 4 should verify:
+Mattermost is a mandatory accepted Stage 4 substage. `chat.escloud.us` uses Mattermost-native authentication with no Authelia; integrations are native/upstream-supported only. Hermes↔Mattermost is an accepted native path. n8n↔Mattermost uses the official n8n Mattermost integration. Mattermost↔Stalwart SMTP is explicitly **not required / not enabled**.
 
-`n8n -> Hermes -> Codex/AGY -> Hermes -> n8n`
+The Hermes Web Dashboard belongs at `https://hermes.escloud.us` behind the existing Xray/nginx/TLS/Authelia path. Do not expose a Hermes machine/API backend directly to the Internet.
 
-and also real:
+Stage 4 must ultimately prove `n8n -> Hermes -> Codex/AGY -> Hermes -> n8n`, real `Hermes -> vLLM`, server-side lifecycle/non-regression, and the final macOS Hermes Desktop Remote Gateway path.
 
-`Hermes -> vLLM on ai-node`
-
-Stage 4 must inspect the actual vLLM bind/exposure state and make only the minimum change needed for private access through Stage 3. Do not implement user-specific n8n/Hermes workflows in Stage 4. Do not assume a public Hermes domain/listener.
+Do not implement user-specific workflows as part of Stage 4 infrastructure acceptance.
 
 ## Knowledge/Obsidian invariant
 
-Canonical Obsidian vault remains:
+The permanent assumption that `ai-node:/srv/ai-data/knowledge/obsidian` must remain canonical is superseded for future architecture.
 
-`ai-node:/srv/ai-data/knowledge/obsidian`
+Current factual runtime remains the existing `ai-node` vault until Home Infrastructure explicitly accepts its PVE canonical migration.
 
-Do not make `edge` the canonical source of truth by assumption. File/sync/Obsidian implementations are selected for Stage 5 only after Stage 3 connectivity is accepted. Avoid paid Obsidian Sync and do not combine multiple primary synchronization mechanisms for one vault.
+Future ownership boundary:
 
-## Files and synchronization
+- Home Infrastructure owns the PVE 24/7 canonical knowledge foundation and server-side synchronization mechanism;
+- Personal Agents Infrastructure owns the `ai-node` active RW replica and local AI consumers/producers after cutover;
+- Cloud Infrastructure owns only the `edge` active RW replica and Cloud-side integration.
 
-Filestash, SFTPGo, Syncthing, Self-hosted LiveSync/CouchDB and other file/sync implementations remain candidates until explicitly accepted.
+Stage 5 is therefore an integration stage. It begins with a fresh Home/PAI/Cloud read-only audit and reuses the Home-accepted synchronization mechanism by default. Do not invent a second primary synchronization architecture for the same knowledge tree without a concrete incompatibility and explicit superseding decision.
 
-Stage 5 requirements include as appropriate:
-
-- VPS working storage accessible from MacBook, iPhone/iPad and `ai-node`;
-- web browsing/editing of selected VPS files;
-- cloud-agent access to the same working data;
-- selected-directory synchronization;
-- Obsidian synchronization/relay/mirror.
-
-Do not conflate application task transport with general file synchronization.
+MacBook/iPhone/iPad Obsidian synchronization is outside Cloud Infrastructure scope.
 
 ## Lifecycle ordering invariants
 
