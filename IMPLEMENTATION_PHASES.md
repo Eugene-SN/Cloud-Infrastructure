@@ -162,123 +162,136 @@ Requirements:
 
 ### Authoritative Stage 4 execution substages
 
-These substages define the complete Stage 4 scope. The **current accepted execution order is intentionally dependency-driven rather than numeric**: Stage 4D is complete, Stage 4E Mattermost deployment starts now, then the native Hermes↔Mattermost integration is completed first, then n8n↔Mattermost, after which the remaining Hermes 4A/4B/4C work resumes. The final macOS Hermes Desktop task remains last. Do not treat the substage labels as a requirement to execute 4A→4B→4C before Mattermost.
+These substages define the complete Stage 4 scope. Execution is dependency-driven rather than numeric, but Stage 4 is not complete until every applicable substage below is accepted.
 
 #### Stage 4A — Hermes core runtime and Full Setup capability completion
 
-- upstream installation/provenance;
-- AI-Node vLLM provider;
+**Status: IN PROGRESS.**
+
+Accepted:
+
+- upstream host-native installation/provenance;
+- AI-Node vLLM provider and real inference path;
 - Qwen3.8 model-native reasoning/replay;
 - terminal/tool calling;
-- full practical local toolchain;
-- Browser Use/managed Chromium;
-- real functional verification/normalization of remaining Full Setup surfaces: CUA, Vision, TTS, Web Search/Extract and Image Generation.
+- host/system toolchain normalization;
+- Browser Use + managed Chromium;
+- `STAGE4_HERMES_QWEN38_REASONING_NORMALIZATION=PASS`;
+- `STAGE4_HERMES_SYSTEM_TOOLCHAIN_NORMALIZATION=PASS`.
 
-Accepted so far:
-- STAGE4_HERMES_QWEN38_REASONING_NORMALIZATION=PASS
-- STAGE4_HERMES_SYSTEM_TOOLCHAIN_NORMALIZATION=PASS
+Remaining:
+
+- real functional verification/normalization of CUA, Vision, TTS, Web Search/Extract and Image Generation;
+- resolve or explicitly characterize the controlled gateway stop/restart exit-status defect before final lifecycle acceptance.
 
 #### Stage 4B — Direct Codex and Antigravity executor integration
 
-- verify bundled Codex skill and standalone Codex CLI under real core runtime;
-- establish the correct Antigravity skill/integration path if no bundled skill exists;
+**Status: PENDING.**
+
+- verify the bundled Codex skill and standalone Codex CLI under the real `core` runtime;
+- establish the correct Antigravity integration path;
 - prove harmless Hermes -> Codex CLI and Hermes -> Antigravity CLI delegation;
 - do not route through CloudCLI.
 
 #### Stage 4C — Hermes Web Dashboard, ingress and auth
 
+**Status: PENDING.**
+
 - persistent Dashboard backend;
 - loopback-only backend unless a concrete incompatibility requires otherwise;
-- https://hermes.escloud.us through Xray/nginx/shared TLS/Authelia;
-- WebSocket and session persistence;
-- reconcile Hermes-native remote-dashboard auth with Authelia without preselecting Nous OAuth;
-- keep n8n machine API private/local.
+- `https://hermes.escloud.us` through Xray/nginx/shared TLS/Authelia;
+- WebSocket/session persistence;
+- reconcile the actual Hermes remote-dashboard credential path with Authelia without preselecting Nous OAuth;
+- keep the n8n machine API private/local.
 
 #### Stage 4D — Mattermost deep research and deployment design
 
 **Status: COMPLETE / ACCEPTED.**
 
-Research record: `STAGE_04_MATTERMOST_RESEARCH_BRIEF_2026-09-18.md`  
-Acceptance record: `STAGE_04D_MATTERMOST_DESIGN_ACCEPTANCE_2026-09-18.md`
+- research: `STAGE_04_MATTERMOST_RESEARCH_BRIEF_2026-09-18.md`;
+- acceptance: `STAGE_04D_MATTERMOST_DESIGN_ACCEPTANCE_2026-09-18.md`;
+- `STAGE4D_MATTERMOST_TARGET_ARCHITECTURE_ACCEPTANCE=PASS`.
 
-Accepted target:
-
-- Mattermost Team Edition;
-- current official Mattermost Docker Compose pattern;
-- separate Mattermost application and dedicated PostgreSQL containers;
-- local persistent `/srv` state;
-- reuse existing Xray -> host nginx -> shared TLS;
-- public human URL `https://chat.escloud.us`;
-- no Authelia in front of Mattermost; use Mattermost-native client authentication;
-- Mattermost/PostgreSQL backends remain private;
-- enable free TPNS for official mobile clients;
-- Mattermost Calls is excluded from current Stage 4;
-- no Preview all-in-one image, bundled nginx, Kubernetes, HA, external search/object storage or custom push stack without a later concrete requirement;
-- integration order is accepted as: **Hermes first, n8n second, then a separate usefulness/necessity discussion for Mattermost↔Stalwart email functionality**; unsupported/non-useful integrations are not enabled merely because a protocol exists.
-
-`STAGE4D_MATTERMOST_TARGET_ARCHITECTURE_ACCEPTANCE=PASS`
+Accepted target remains Mattermost Team Edition, official Docker Compose pattern, dedicated PostgreSQL, local `/srv` state, existing Xray/nginx/shared TLS, native Mattermost auth with no Authelia, TPNS enabled and Calls excluded.
 
 #### Stage 4E — Private Mattermost deployment and native service integrations
 
-After accepted Stage 4D design:
+**Status: IN PROGRESS.**
 
-- deploy the current stable Mattermost Team Edition using the current official Docker Compose pattern with a dedicated PostgreSQL container;
-- keep application/database backends private and persist state under the accepted local `/srv` layout;
-- publish `https://chat.escloud.us` through existing Xray -> host nginx -> shared TLS **without Authelia**;
-- enable and verify TPNS with official mobile clients;
-- leave Mattermost Calls disabled and do not open Calls-specific ports;
-- audit every deployed/selected Cloud service for a **developer-provided/native Mattermost integration or explicitly supported standard protocol integration**;
-- where such an integration exists, select it, document it and verify it;
-- where it does not exist, leave that service **unintegrated with Mattermost in the current project** and record the possibility only as a future out-of-project task;
-- do not use custom plugins, source patches, shim services, direct DB coupling, bespoke bridges, compatibility hacks or an n8n-mediated bridge as a substitute for missing upstream integration;
-- execute service integrations in this order:
-  1. **Hermes ↔ Mattermost** — use the official Hermes Mattermost setup path and built-in gateway adapter documented at `https://hermes-agent.nousresearch.com/docs/user-guide/messaging/mattermost`; enable bot accounts, create a dedicated Hermes bot, configure `MATTERMOST_URL`, bot token and operator allowlist, then verify REST/WebSocket, DM/channel/thread/media behavior and reconnect;
-  2. **n8n ↔ Mattermost** — use only the official n8n Mattermost integration and any Mattermost+n8n direction explicitly documented by either upstream; verify supported actions/flows after Hermes acceptance;
-  3. **Mattermost ↔ Stalwart** — do **not** enable SMTP/email integration automatically. First discuss whether Mattermost email notifications/password-recovery mail add useful capability beyond the operator's ordinary mail clients and the accepted mobile/desktop push paths. Enable only if the operator accepts a concrete benefit;
-- additional directions are enabled only if the actually deployed versions expose an upstream-supported counterpart for that direction;
-- Codex/Antigravity remain behind Hermes; do not create direct Mattermost integrations for them unless their upstream later provides a native integration and a separate future task accepts it;
-- keep CloudCLI as manual workspace;
-- later monitoring/maintenance/backup services are integrated with Mattermost only if their own upstream provides a native/supported Mattermost path at the time their stage is implemented;
-- verify native web/desktop/mobile client operation, push delivery, resource delta, persistence and non-regression.
+Accepted:
+
+- Mattermost Team `11.11.0` + PostgreSQL `18-alpine`;
+- private application/database topology and persistent local state;
+- public `https://chat.escloud.us` through Xray -> host nginx -> shared TLS;
+- native Mattermost authentication without Authelia;
+- TPNS configured;
+- Calls disabled;
+- Hermes bot provisioning/channel normalization/E2E accepted;
+- Mattermost↔Stalwart SMTP explicitly reviewed and not required / not enabled.
+
+Current n8n state:
+
+- one dedicated bot `n8n`;
+- one active access token;
+- one n8n `mattermostApi` credential;
+- credential validates successfully against the Mattermost API;
+- no n8n workflows or executions exist.
+
+Remaining Stage 4E gates:
+
+- prove an official n8n Mattermost node end-to-end action using the existing credential/bot without creating permanent user workflow logic;
+- verify the practical native-client/push behavior required by the accepted Mattermost scope if not already demonstrated;
+- explicitly disposition the currently enabled prepackaged `mattermost-ai` plugin rather than silently treating it as accepted architecture;
+- perform the Stage 4E-specific non-regression check after final normalization.
+
+Custom plugins, source patches, shim services, direct DB coupling, bespoke bridges, compatibility hacks and n8n-mediated substitutes for missing upstream integrations remain prohibited.
 
 #### Stage 4F — Hermes private machine interface and n8n agent integration
 
-- enable minimum supported Hermes machine interface required by n8n;
+**Status: PENDING.**
+
+- enable the minimum supported Hermes machine interface required by n8n;
 - keep it local/private and authenticated;
 - prove n8n invoke/result/status;
-- prove n8n -> Hermes -> Qwen3.8/Codex/AGY -> Hermes -> n8n;
+- prove `n8n -> Hermes -> Qwen3.8/Codex/AGY -> Hermes -> n8n`;
 - no user-specific workflow logic beyond acceptance probes.
 
 #### Stage 4G — Server-side integrated acceptance
 
+**Status: PENDING.**
+
 Verify together:
+
 - Hermes/vLLM/reasoning/tools;
 - Codex/Antigravity;
 - Dashboard + authenticated ingress;
-- Mattermost + Hermes + n8n + Stalwart;
+- Mattermost + Hermes + n8n;
 - private n8n machine interface;
-- gateway lifecycle;
+- clean gateway lifecycle;
 - NetBird/private PAI path;
 - listeners/UFW/TLS/non-regression;
-- persistence and, if justified, one controlled reboot.
+- persistence and one controlled reboot only if justified by the final lifecycle changes.
+
+Stalwart remains an independent accepted mail service; Mattermost SMTP is not part of the target integration.
 
 #### Stage 4H — Final integration task: macOS Hermes Desktop
 
-After all server-side components are accepted:
-1. use supported Hermes Desktop on macOS;
-2. test Remote Gateway first;
-3. use intended remote URL https://hermes.escloud.us;
-4. test self-hosted Session token first;
-5. verify readiness, live chat/WebSocket and reconnect after app restart;
-6. if incompatible, test minimum next supported username/password or OAuth mode without assuming Nous OAuth; alternative connection mode only after Remote Gateway itself is proven incompatible.
+**Status: PENDING / LAST INTEGRATION TASK.**
 
-This remains the last Stage 4 integration task.
+1. use supported Hermes Desktop on macOS;
+2. test Remote Gateway against `https://hermes.escloud.us`;
+3. test the self-hosted session credential first;
+4. verify readiness, live chat/WebSocket and reconnect after app restart;
+5. use the minimum next supported credential/connection mode only if the simple Remote Gateway path proves incompatible.
 
 #### Stage 4I — Final Stage 4 acceptance and repository persistence
 
+**Status: PENDING.**
+
 - final integrated acceptance record;
-- update/read-back CURRENT_STATE, INVENTORY, ARCHITECTURE, IMPLEMENTATION_PHASES and applicable decisions;
-- only then mark Stage 4 COMPLETE / ACCEPTED and open Stage 5.
+- reconcile/read back `CURRENT_STATE.md`, `INVENTORY.md`, `ARCHITECTURE.md`, `IMPLEMENTATION_PHASES.md`, `OPERATING_RULES.md`, `AGENTS.md` and applicable decisions;
+- mark Stage 4 COMPLETE / ACCEPTED only after the whole Stage 4 contract passes;
+- only then open Stage 5.
 
 ## Stage 5 — Edge Knowledge Replication & Data Integration
 
