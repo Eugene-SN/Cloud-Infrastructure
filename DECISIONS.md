@@ -466,4 +466,30 @@ The independent Docker reboot-lifecycle regression discovered during Stage 3 is 
 `STAGE4_HERMES_QWEN38_REASONING_NORMALIZATION=PASS`
 
 **Supersedes:** the earlier Stage 4 wizard-time choice to disable reasoning for the primary Qwen3.8 model.
+---
+
+## 2026-09-18T10:37:05+03:00 — Stage 4 Mattermost private collaboration/control substage
+
+**Status:** ACCEPTED
+
+**Context:** the operator explicitly expanded Stage 4 to include a lightweight private Mattermost server integrated with Hermes and other compatible services on `edge`. The previous Stage 02.5 roadmap treated a generic messaging/control frontend as optional/deferred; that no longer reflects the Mattermost requirement.
+
+**Decision:**
+
+1. Mattermost is a mandatory Stage 4 service/substage and must complete before server-side Stage 4 integrated acceptance.
+2. Deployment is preceded by a dedicated deep-research/deployment-design gate; no Mattermost production mutation occurs until that design is explicitly accepted.
+3. Mattermost is a collaboration/control/notification surface; it does not replace Hermes or n8n.
+4. Hermes uses its native Mattermost adapter where compatible, with dedicated bot identity and native REST/WebSocket behavior.
+5. n8n uses the official Mattermost integration for supported operations and native webhooks/slash commands for inbound flows before third-party trigger nodes/custom plugins.
+6. Stalwart is the preferred existing SMTP subsystem; do not deploy a duplicate mail stack.
+7. Codex and Antigravity remain reached through Hermes by default rather than parallel Mattermost bots.
+8. `chat.escloud.us` is the preferred human-facing namespace because it already exists in the shared TLS/protected namespace. Final use is gated by Stage 4D validation of web/desktop/mobile behavior with Authelia.
+9. Mattermost application/database backends remain private; machine integrations should use internal routes and native Mattermost credentials rather than traverse Authelia.
+10. Do not add Kubernetes, HA, Elasticsearch/OpenSearch, S3/MinIO, Calls media networking, push infrastructure or custom plugins without a concrete requirement. This does not justify stripping normal Mattermost messaging/files/API/bot/webhook/slash-command capabilities.
+11. macOS Hermes Desktop Remote Gateway remains the last Stage 4 integration task after Mattermost and all other server-side substages are accepted.
+12. `IMPLEMENTATION_PHASES.md` now enumerates Stage 4A–4I so future responses must not present only the next immediate task as the complete remaining Stage 4 scope.
+
+**Research record:** `STAGE_04_MATTERMOST_RESEARCH_BRIEF_2026-09-18.md`
+
+**Supersedes:** the earlier optional/deferred classification of a generic messaging/control frontend, for Mattermost specifically.
 
