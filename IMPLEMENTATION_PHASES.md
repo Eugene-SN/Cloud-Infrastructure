@@ -1,6 +1,6 @@
 # Cloud Infrastructure — Accepted Implementation Phases
 
-**Status:** Stage 0–3 COMPLETE / ACCEPTED. Stage 4 is the next production stage.
+**Status:** Stage 0–3 COMPLETE / ACCEPTED. Stage 4 is IN PROGRESS.
 
 This document is the canonical stage chronology for Cloud Infrastructure / `edge`.
 
@@ -297,8 +297,9 @@ Stage 0: **COMPLETE / ACCEPTED**.
 Stage 1: **COMPLETE / ACCEPTED**.  
 Stage 2: **COMPLETE / ACCEPTED**.  
 Stage 02.5: **COMPLETE / ACCEPTED**.  
-Stage 3: **COMPLETE / ACCEPTED**.
+Stage 3: **COMPLETE / ACCEPTED**.  
+Stage 4: **IN PROGRESS / NOT YET ACCEPTED**.
 
-Next branch:
+Current branch:
 
 `04 — Edge Hermes Agent Runtime`
