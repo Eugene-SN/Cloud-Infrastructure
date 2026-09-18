@@ -110,7 +110,7 @@ Final record: `STAGE_03_ACCEPTANCE_2026-09-18.md`.
 - `update.escloud.us` — future dedicated custom maintenance/update page; Cloudflare record already exists; dedicated Codex substage after backend contract;
 - `app.escloud.us` — future final Cloud Infrastructure portal/dashboard; dedicated Codex substage after monitoring/status sources;
 - `docs.escloud.us` — reserved;
-- `chat.escloud.us` — Stage 4 Mattermost human endpoint; target accepted, not yet deployed; native Mattermost authentication without Authelia;
+- `chat.escloud.us` — Stage 4 Mattermost human endpoint; core runtime deployed/accepted, public nginx ingress pending; native Mattermost authentication without Authelia;
 - `cloud.escloud.us` — future file-access layer; implementation unresolved;
 - `sync.escloud.us` — future synchronization layer; implementation unresolved;
 - `go.escloud.us` — retired.
@@ -230,18 +230,19 @@ Continuous workstream after Stage 10, not an infrastructure-completion stage:
 
 ## Planned Stage 4 service — Mattermost
 
-- status: **TARGET ARCHITECTURE ACCEPTED / NOT YET DEPLOYED**;
+- status: **CORE RUNTIME DEPLOYED / ACCEPTED; INGRESS + APPLICATION SETUP PENDING**;
 - Stage 4D acceptance: `STAGE4D_MATTERMOST_TARGET_ARCHITECTURE_ACCEPTANCE=PASS`;
+- core runtime acceptance: `STAGE4E_MATTERMOST_CORE_RUNTIME_ACCEPTANCE=PASS`; record `STAGE_04E_MATTERMOST_CORE_RUNTIME_ACCEPTANCE_2026-09-18.md`;
 - acceptance record: `STAGE_04D_MATTERMOST_DESIGN_ACCEPTANCE_2026-09-18.md`;
 - role: private collaboration/control/notification surface for Hermes, n8n and later infrastructure integrations;
-- edition/runtime: Mattermost Team Edition using the current official Docker Compose pattern;
+- edition/runtime: Mattermost Team Edition `11.11.0` using official `mattermost/docker` commit `497414659ee7127677d2b91b44bb4f3ea9d14695`;
 - topology: separate Mattermost application + dedicated PostgreSQL containers; no Preview all-in-one image;
-- persistence: local `/srv` state; exact deployment paths selected during Stage 4E runtime planning;
+- persistence: local `/srv/mattermost` state; upstream repository/config under `/opt/mattermost`;
 - human endpoint: `https://chat.escloud.us` through existing Xray -> host nginx -> shared TLS;
 - authentication: Mattermost-native; **no Authelia** on `chat.escloud.us`;
 - mobile push: free TPNS accepted for official Mattermost mobile clients;
 - Calls: explicitly excluded from current Stage 4;
-- backend/database listeners remain private;
+- backend/database listeners remain private; accepted backend publication is only `127.0.0.1:18065 -> 8065`; PostgreSQL has no host binding;
 - fresh Stage 4E audit selected host backend mapping `127.0.0.1:18065 -> Mattermost:8065`; PostgreSQL remains Compose-internal; ports 8065/8443/5432 were free and no public firewall change is required;
 - confirmed current-project native integrations: Hermes built-in Mattermost gateway (REST v4 + WebSocket), n8n official built-in Mattermost node for supported operations, and Mattermost SMTP via the existing Stalwart SMTP service;
 - every other service/direction is integrated only if its current upstream explicitly provides a Mattermost integration or supported standard-protocol counterpart; otherwise it remains unintegrated in the current project and may be reconsidered only as future out-of-project work;
