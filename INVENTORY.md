@@ -110,7 +110,7 @@ Final record: `STAGE_03_ACCEPTANCE_2026-09-18.md`.
 - `update.escloud.us` — future dedicated custom maintenance/update page; Cloudflare record already exists; dedicated Codex substage after backend contract;
 - `app.escloud.us` — future final Cloud Infrastructure portal/dashboard; dedicated Codex substage after monitoring/status sources;
 - `docs.escloud.us` — reserved;
-- `chat.escloud.us` — Stage 4 Mattermost human endpoint; core runtime deployed/accepted, public nginx ingress pending; native Mattermost authentication without Authelia;
+- `chat.escloud.us` — LIVE Mattermost human endpoint; core runtime and public nginx ingress accepted; native Mattermost authentication without Authelia;
 - `cloud.escloud.us` — future file-access layer; implementation unresolved;
 - `sync.escloud.us` — future synchronization layer; implementation unresolved;
 - `go.escloud.us` — retired.
@@ -230,15 +230,16 @@ Continuous workstream after Stage 10, not an infrastructure-completion stage:
 
 ## Planned Stage 4 service — Mattermost
 
-- status: **CORE RUNTIME DEPLOYED / ACCEPTED; INGRESS + APPLICATION SETUP PENDING**;
+- status: **CORE RUNTIME + PUBLIC INGRESS DEPLOYED / ACCEPTED; NATIVE APPLICATION SETUP PENDING**;
 - Stage 4D acceptance: `STAGE4D_MATTERMOST_TARGET_ARCHITECTURE_ACCEPTANCE=PASS`;
 - core runtime acceptance: `STAGE4E_MATTERMOST_CORE_RUNTIME_ACCEPTANCE=PASS`; record `STAGE_04E_MATTERMOST_CORE_RUNTIME_ACCEPTANCE_2026-09-18.md`;
+- ingress acceptance: `STAGE4E_MATTERMOST_INGRESS_ACCEPTANCE=PASS`; record `STAGE_04E_MATTERMOST_INGRESS_ACCEPTANCE_2026-09-18.md`;
 - acceptance record: `STAGE_04D_MATTERMOST_DESIGN_ACCEPTANCE_2026-09-18.md`;
 - role: private collaboration/control/notification surface for Hermes, n8n and later infrastructure integrations;
 - edition/runtime: Mattermost Team Edition `11.11.0` using official `mattermost/docker` commit `497414659ee7127677d2b91b44bb4f3ea9d14695`;
 - topology: separate Mattermost application + dedicated PostgreSQL containers; no Preview all-in-one image;
 - persistence: local `/srv/mattermost` state; upstream repository/config under `/opt/mattermost`;
-- human endpoint: `https://chat.escloud.us` through existing Xray -> host nginx -> shared TLS;
+- human endpoint: `https://chat.escloud.us` LIVE through existing Xray -> host nginx -> shared TLS; WebSocket `/api/v4/websocket` accepted;
 - authentication: Mattermost-native; **no Authelia** on `chat.escloud.us`;
 - mobile push: free TPNS accepted for official Mattermost mobile clients;
 - Calls: explicitly excluded from current Stage 4;
