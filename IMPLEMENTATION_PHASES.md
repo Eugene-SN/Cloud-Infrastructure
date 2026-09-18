@@ -162,7 +162,7 @@ Requirements:
 
 ### Authoritative Stage 4 execution substages
 
-These substages are the canonical sequence. A short list of immediate next tasks must not be treated as the full remaining Stage 4 scope.
+These substages define the complete Stage 4 scope. The **current accepted execution order is intentionally dependency-driven rather than numeric**: Stage 4D is complete, Stage 4E Mattermost deployment starts now, then the native Hermes↔Mattermost integration is completed first, then n8n↔Mattermost, after which the remaining Hermes 4A/4B/4C work resumes. The final macOS Hermes Desktop task remains last. Do not treat the substage labels as a requirement to execute 4A→4B→4C before Mattermost.
 
 #### Stage 4A — Hermes core runtime and Full Setup capability completion
 
@@ -214,7 +214,7 @@ Accepted target:
 - enable free TPNS for official mobile clients;
 - Mattermost Calls is excluded from current Stage 4;
 - no Preview all-in-one image, bundled nginx, Kubernetes, HA, external search/object storage or custom push stack without a later concrete requirement;
-- exact service-to-Mattermost integration mechanisms remain intentionally unresolved until Stage 4E, where all current native/upstream-supported options are compared and the best supported path is selected.
+- integration order is accepted as: **Hermes first, n8n second, then a separate usefulness/necessity discussion for Mattermost↔Stalwart email functionality**; unsupported/non-useful integrations are not enabled merely because a protocol exists.
 
 `STAGE4D_MATTERMOST_TARGET_ARCHITECTURE_ACCEPTANCE=PASS`
 
@@ -231,11 +231,11 @@ After accepted Stage 4D design:
 - where such an integration exists, select it, document it and verify it;
 - where it does not exist, leave that service **unintegrated with Mattermost in the current project** and record the possibility only as a future out-of-project task;
 - do not use custom plugins, source patches, shim services, direct DB coupling, bespoke bridges, compatibility hacks or an n8n-mediated bridge as a substitute for missing upstream integration;
-- fixed native integrations already confirmed by research:
-  - Hermes ↔ Mattermost: Hermes built-in Mattermost gateway adapter (REST API v4 + WebSocket);
-  - n8n → Mattermost: n8n official built-in Mattermost integration/node for its supported actions;
-  - Mattermost → Stalwart: Mattermost standard SMTP integration using Stalwart as the SMTP service;
-- additional directions (including Mattermost → n8n event/command flows) are enabled only if the actually deployed versions expose an upstream-supported counterpart for that direction;
+- execute service integrations in this order:
+  1. **Hermes ↔ Mattermost** — use the official Hermes Mattermost setup path and built-in gateway adapter documented at `https://hermes-agent.nousresearch.com/docs/user-guide/messaging/mattermost`; enable bot accounts, create a dedicated Hermes bot, configure `MATTERMOST_URL`, bot token and operator allowlist, then verify REST/WebSocket, DM/channel/thread/media behavior and reconnect;
+  2. **n8n ↔ Mattermost** — use only the official n8n Mattermost integration and any Mattermost+n8n direction explicitly documented by either upstream; verify supported actions/flows after Hermes acceptance;
+  3. **Mattermost ↔ Stalwart** — do **not** enable SMTP/email integration automatically. First discuss whether Mattermost email notifications/password-recovery mail add useful capability beyond the operator's ordinary mail clients and the accepted mobile/desktop push paths. Enable only if the operator accepts a concrete benefit;
+- additional directions are enabled only if the actually deployed versions expose an upstream-supported counterpart for that direction;
 - Codex/Antigravity remain behind Hermes; do not create direct Mattermost integrations for them unless their upstream later provides a native integration and a separate future task accepts it;
 - keep CloudCLI as manual workspace;
 - later monitoring/maintenance/backup services are integrated with Mattermost only if their own upstream provides a native/supported Mattermost path at the time their stage is implemented;
