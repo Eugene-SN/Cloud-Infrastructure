@@ -417,3 +417,24 @@ The independent Docker reboot-lifecycle regression discovered during Stage 3 is 
 
 **Supersedes:** only the auth-provider assumption in the 2026-09-18 Stage 4 WebUI/macOS Remote Gateway contract correction. The rest of that decision remains ACCEPTED.
 
+---
+
+## 2026-09-18T09:43:00+03:00 — Stage scopes are minimum acceptance contracts, not feature ceilings
+
+**Status:** ACCEPTED
+
+**Context:** stage names and initial scope descriptions were intentionally written as planning/acceptance anchors and did not enumerate every future use of each selected service. Treating those lists as exhaustive led to recommendations to defer normal Hermes capabilities merely because they were "not needed for the current/core Stage path", which would create artificially reduced deployments and repeated later package/runtime changes.
+
+**Decision:**
+
+1. A stage scope defines mandatory outcomes, sequencing and acceptance boundaries; it is **not** an exhaustive whitelist of capabilities allowed to be installed.
+2. Once a service/product is accepted, deploy a **functionally complete practical upstream-supported set** appropriate to its long-lived role rather than an intentionally minimal/slim profile.
+3. Standard local dependencies and broadly useful capability modules should be installed during the service's infrastructure stage when this avoids predictable later rework and carries no material downside.
+4. "Not needed for the current/core Stage path" is **not a valid exclusion rationale by itself** and must not be used to justify an intentionally incomplete service deployment.
+5. Do not require the user to predict and enumerate every future workflow before installing ordinary capabilities of an already selected service.
+6. This does not mean enabling every optional external integration. Capabilities may remain disabled/deferred for concrete reasons: separate account/credential/subscription requirements, mutually exclusive backends, duplication, unsupported/alpha state with material operational cost, unrelated heavyweight dependencies, security/public-exposure consequences, or explicit user decision.
+7. User-specific workflows may remain in later/post-infrastructure workstreams while the generic underlying service capabilities needed to support them are installed earlier.
+8. This invariant applies to Stage 4 Hermes and to subsequent Cloud Infrastructure stages unless explicitly superseded.
+
+**Supersedes:** any prior interpretation of stage-scoped/minimum deployment wording that treated the enumerated stage acceptance path as a ceiling on the normal practical feature set of an already selected service.
+
