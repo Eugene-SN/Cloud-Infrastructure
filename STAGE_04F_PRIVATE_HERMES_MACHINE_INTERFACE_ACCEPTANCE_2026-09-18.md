@@ -47,4 +47,6 @@ The native HTTP API avoids strict JSONL parsing, so the known non-JSON Tirith wa
 - n8n healthy after final restart;
 - credential data verified encrypted at rest.
 
+Importable production workflow definition (no secret material): `STAGE_04F_HERMES_MACHINE_WORKFLOW_2026-09-18.json`.
+
 Recovery snapshot root: `/srv/backups/edge-stage4f/recovery-20260918T174246Z`.

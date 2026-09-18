@@ -8,7 +8,7 @@ Fresh runtime verification outranks this file. This inventory records accepted l
 
 | Node | Role | State |
 |---|---|---|
-| `edge` / `edge.escloud.us` | Cloud Infrastructure VPS | LIVE; Stage 0/1/2/02.5/3 accepted |
+| `edge` / `edge.escloud.us` | Cloud Infrastructure VPS | LIVE; Stage 0/1/2/02.5/3/4 accepted |
 | `nl-core-vds` | historical legacy VPS identity | HISTORICAL ONLY |
 | `ai-node` | PAI compute/data/knowledge node | external dependency/context; Stage 3 private target; Stage 4 local-vLLM endpoint |
 | PVE / Home Infrastructure | home infrastructure plane | external dependency/context; Stage 3 private routed fabric |
@@ -110,7 +110,7 @@ Final record: `STAGE_03_ACCEPTANCE_2026-09-18.md`.
 - `update.escloud.us` — future dedicated custom maintenance/update page; Cloudflare record already exists; dedicated Codex substage after backend contract;
 - `app.escloud.us` — future final Cloud Infrastructure portal/dashboard; dedicated Codex substage after monitoring/status sources;
 - `docs.escloud.us` — reserved;
-- `hermes.escloud.us` — required Hermes Dashboard; DNS verified as `45.92.156.17`, Dashboard not deployed at recovery inspection, Stage 4C NOT ACCEPTED;
+- `hermes.escloud.us` — LIVE accepted Hermes Dashboard/Remote Gateway; native self-hosted OIDC through Authelia; backend loopback-only;
 - `chat.escloud.us` — LIVE Mattermost human endpoint; core runtime and public nginx ingress accepted; native Mattermost authentication without Authelia;
 - `cloud.escloud.us` — future file-access layer; implementation unresolved;
 - `sync.escloud.us` — future synchronization layer; implementation unresolved;
@@ -130,7 +130,7 @@ Status: **RESEARCH BLOCK COMPLETE / SELECTED**.
 
 | Component | Outcome | Intended role |
 |---|---|---|
-| Hermes Agent | `SELECTED` | persistent cloud-side agent runtime for agentic reasoning, tools and delegation; future Stage 4 |
+| Hermes Agent | `DEPLOYED / ACCEPTED` | persistent cloud-side agent runtime for reasoning, tools, direct executors, Dashboard/Desktop and private n8n invocation |
 
 Accepted placement/integration direction:
 
@@ -140,7 +140,7 @@ Accepted placement/integration direction:
 - CloudCLI/Codex/Antigravity remain manually usable tools/executors;
 - Stage 4 verifies `n8n -> Hermes -> Codex/AGY -> Hermes -> n8n`;
 - Stage 4 also verifies real `Hermes -> vLLM on ai-node` through the Stage 3 private fabric;
-- the historical no-domain assumption is superseded: `hermes.escloud.us` is the required Dashboard endpoint; native auth/ingress is under Stage 4C recovery revalidation, with no public backend listener.
+- `hermes.escloud.us` is the accepted Dashboard/Desktop endpoint using native self-hosted OIDC; the backend remains loopback-only.
 
 ## Cross-site Connectivity Foundation
 
@@ -194,7 +194,7 @@ Status: **ACCEPTED INTEGRATION BOUNDARY; DEPLOYMENT DEFERRED TO STAGE 5**.
 | Stage | Scope | Current status |
 |---|---|---|
 | 3 | Cross-site Connectivity Foundation | COMPLETE / ACCEPTED; `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS` |
-| 4 | Hermes Agent Runtime | IN PROGRESS; 4A/B/D/E COMPLETE / ACCEPTED; 4C recovery/design revalidation, then 4F/G/H/I remain incomplete |
+| 4 | Hermes Agent Runtime | COMPLETE / ACCEPTED; `STAGE4_FINAL_ACCEPTANCE=PASS` |
 | 5 | Edge Knowledge Replication & Data Integration | INTEGRATION STAGE; depends on accepted Home/PVE knowledge foundation plus Stage 3/4 |
 | 6 | Backrest & Recovery | PRODUCT DIRECTION ACCEPTED; topology research pending |
 | 7 | Maintenance & Update | Semaphore accepted; deploy only after Stage 6 restore acceptance |
@@ -230,6 +230,28 @@ Continuous workstream after Stage 10, not an infrastructure-completion stage:
 - authoritative migration-preservation archive `/tmp/edge-migration-preservation-20260916T141048Z.tar.gz`, SHA256 `0203e5845f57bc1d04b384cef2b26a45fbff855c341e1edf1193034c34de9fdf`, retained for later legacy-reference work.
 
 ## Stage 4 services — Hermes / Mattermost / n8n integration
+
+### Hermes Dashboard / Desktop
+
+- status: **COMPLETE / ACCEPTED**;
+- Hermes `0.21.3`, commit `d177b119e9c56c9ddc0b7379ffce52341ec06584`;
+- public `https://hermes.escloud.us` through Xray/nginx/shared TLS;
+- loopback backend `127.0.0.1:9119`, persistent `hermes-dashboard.service`;
+- native self-hosted OIDC with Authelia `4.39.27`, one provider, PKCE/S256;
+- browser Dashboard Chat/session and WebSocket accepted;
+- macOS Desktop native authorization/token/WebSocket/reconnect accepted;
+- no nginx `auth_request` and no public TCP/9119.
+
+### Hermes private n8n interface
+
+- status: **COMPLETE / ACCEPTED**;
+- native API Server `172.19.0.1:8642`, Bearer auth, n8n Docker bridge only;
+- narrow UFW rule from `172.19.0.0/16`; no public nginx route/listener;
+- n8n workflow `Hermes Machine Invocation`, ID `Hermes4FMachine01`, active/published;
+- n8n encrypted Bearer credential `Hermes4FAuth01`;
+- selector values: `vllm`, `codex`, `antigravity`;
+- all three E2E paths accepted; temporary workflows removed;
+- recovery root: `/srv/backups/edge-stage4f/recovery-20260918T174246Z`.
 
 ### Mattermost
 
@@ -269,7 +291,7 @@ Acceptance records:
 - operator DM channel ID `srzsm58fepgujjfnyxb8f7zo3o`;
 - native-node E2E marker: `N8N_MATTERMOST_NATIVE_E2E_OK_20260918T135107Z`;
 - verified Mattermost post ID `1fgnm3fumbyy8b4usrrs41kouc`;
-- production workflows: 0; executions: 0 after the isolated throwaway-clone E2E probe;
+- Stage 4E acceptance left production workflows at 0; current Stage 4F production state has one published Hermes machine workflow and two total credentials;
 - `STAGE4E_N8N_MATTERMOST_INTEGRATION=PASS`.
 
 Stage 4E final non-regression passed: `STAGE4E_FINAL_NON_REGRESSION=PASS`; `STAGE4E_FINAL_ACCEPTANCE=PASS`. No Stage 4E gates remain.
@@ -278,7 +300,7 @@ Stage 4E final non-regression passed: `STAGE4E_FINAL_NON_REGRESSION=PASS`; `STAG
 
 - `hermes-gateway.service` currently active/enabled with `NRestarts=0`;
 - controlled stop/restart currently exits status 1 after SIGTERM and is recorded by systemd as a failed stop before restart succeeds;
-- graceful-stop semantics require resolution/explicit characterization before Stage 4 final lifecycle acceptance.
+- exit-status-1 is an accepted documented upstream constraint; requested restart recovery passes and no `SuccessExitStatus=1` masking is used.
 
 ## Stage boundary
 
@@ -288,4 +310,4 @@ Stage 2 — COMPLETE / ACCEPTED.
 Stage 02.5 — COMPLETE / ACCEPTED.  
 Stage 3 — COMPLETE / ACCEPTED.  
 
-`EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS`. Final record: `STAGE_03_ACCEPTANCE_2026-09-18.md`. Stage 4 — Edge Hermes Agent Runtime is now IN PROGRESS; factual post-setup record: `STAGE_04_HERMES_POST_SETUP_BASELINE_2026-09-18.md`. Toolchain/browser normalization is accepted with `STAGE4_HERMES_SYSTEM_TOOLCHAIN_NORMALIZATION=PASS`.
+`EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS`. Final Stage 3 record: `STAGE_03_ACCEPTANCE_2026-09-18.md`. Stage 4 — Edge Hermes Agent Runtime is COMPLETE / ACCEPTED with `STAGE4_FINAL_ACCEPTANCE=PASS`; final record: `STAGE_04_FINAL_ACCEPTANCE_2026-09-18.md`.

@@ -50,11 +50,10 @@ Completed canonical stages:
 
 Current canonical branch:
 
-- `04 — Edge Hermes Agent Runtime` — IN PROGRESS / NOT YET ACCEPTED.
+- `04.3 — Edge Hermes Stage 4 Recovery, Completion & Final Acceptance` — COMPLETE / ACCEPTED; `STAGE4_FINAL_ACCEPTANCE=PASS`.
 
 Remaining finite infrastructure roadmap:
 
-- `04 — Edge Hermes Agent Runtime`;
 - `05 — Edge Knowledge Replication & Data Integration`;
 - `06 — Edge Backrest & Recovery`;
 - `07 — Edge Maintenance & Update` — Semaphore/update workflow plus separate Codex `update.escloud.us` substage;
@@ -188,7 +187,7 @@ Current facts:
 4. Stage 02.5 research reconciliation is complete and accepted.
 5. Stage 3 Cross-site Connectivity Foundation is complete and accepted.
 6. `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS`.
-7. The active production branch is `04 — Edge Hermes Agent Runtime`; Stage 4 is IN PROGRESS / NOT YET ACCEPTED.
+7. Stage 4 is COMPLETE / ACCEPTED with `STAGE4_FINAL_ACCEPTANCE=PASS`; Stage 5 is the next finite infrastructure stage and has not started.
 8. Reuse the accepted Stage 3 transport; do not reopen NetBird/routing choices without a concrete incompatibility.
 9. The Stage 1 Docker `live-restore=true` setting is superseded; current accepted runtime is `live-restore=false`.
 
@@ -252,29 +251,30 @@ Mattermost is an accepted mandatory Stage 4 surface:
 - n8n↔Mattermost uses the official n8n Mattermost integration;
 - Mattermost↔Stalwart SMTP is explicitly not required / not enabled.
 
-### Hermes WebUI / ingress — recovery design gate
+### Hermes WebUI / ingress — accepted contract
 
-The Hermes Web Dashboard remains required at `https://hermes.escloud.us`, through existing Xray/nginx/shared TLS, with the backend loopback-only and no direct public 9119.
+The accepted Hermes Dashboard endpoint is `https://hermes.escloud.us` through existing Xray/nginx/shared TLS to loopback `127.0.0.1:9119`; no public TCP/9119 exists.
 
-The previous forward-auth/session-token-first contract is suspended for the 04.3 recovery workstream. Verify exact deployed source/runtime before accepting a replacement. Current candidate: Hermes-native self-hosted OIDC, Authelia as IdP, no nginx `auth_request` in front of Hermes, one interactive provider, authorization-code PKCE/S256 public client. This candidate is not deployment acceptance.
+Authentication is Hermes-native self-hosted OIDC with Authelia `4.39.27` as IdP, exactly one interactive provider, authorization-code PKCE/S256, native browser cookie flow and native Desktop RFC8252/PKCE flow. nginx does not use `auth_request` for Hermes. Historical forward-auth/session-token-first wording is superseded.
 
-Use Authelia's native validator with the actual template filter/configuration path. Reuse the existing Certbot webroot mechanism and shared `escloud.us` certificate lineage. Do not require the nginx Certbot plugin.
+Certificate issuance/renewal reuses the existing Certbot webroot mechanism and shared `escloud.us` lineage. The nginx Certbot plugin is not required.
 
 ### Stage 4 acceptance
 
-Preserve accepted Stage 4A/B/D/E evidence without repeated E2E tests absent a concrete regression. Remaining requirements:
+Stage 4A/B/C/D/E/F/G/H/I are COMPLETE / ACCEPTED. Final marker: `STAGE4_FINAL_ACCEPTANCE=PASS`.
 
-- Stage 4C: real browser/OIDC login, Dashboard Chat, authenticated WS/PTY, HTTPS and loopback-only backend;
-- Stage 4F: authenticated private n8n invoke/result/status and real `n8n -> Hermes -> Codex/AGY -> Hermes -> n8n`, accounting for Tirith stdout contamination;
-- Stage 4G: bounded server-side integration/non-regression and lifecycle review; do not mask the known SIGTERM exit-1 behavior with `SuccessExitStatus=1`;
-- Stage 4H: final macOS Desktop Remote Gateway integration, actual remote chat/WebSocket and restart/reconnect/refresh behavior using the Stage 4C accepted auth mode;
-- Stage 4I: complete-stage acceptance and canonical repository reconciliation/read-back.
+Accepted machine contract:
 
-The core Qwen/vLLM and direct executor acceptance remains valid. The existing gateway stop constraint belongs in 4G. User-specific workflows remain outside Stage 4.
+- n8n uses the upstream Hermes API Server through a private Docker-bridge listener with Bearer authentication;
+- the production n8n workflow supports `vllm`, `codex` and `antigravity` selectors;
+- no public Hermes machine API is permitted;
+- native HTTP JSON is used instead of parsing contaminated CLI `stream-json` stdout.
 
-### Final Stage 4 macOS integration
+Accepted lifecycle constraint: controlled Hermes SIGTERM can exit status 1 after graceful-shutdown logging; requested restart recovery succeeds. Do not patch Hermes casually or mask it with `SuccessExitStatus=1`.
 
-Hermes Desktop on macOS remains the last functional integration after Stage 4G. Research the actual Desktop build and exact server auth contract. If Stage 4C accepts self-hosted OIDC, use the upstream native RFC8252/PKCE path rather than a historical session-token-first assumption. Successful status probes alone are not acceptance.
+Accepted Desktop contract: macOS Hermes Desktop uses `https://hermes.escloud.us` and native self-hosted OIDC/RFC8252 PKCE; no session-token workaround or public backend port.
+
+Preserve the final Stage 4 records and do not repeat accepted E2E tests without a concrete regression signal. User-specific workflows remain outside Stage 4.
 
 ## Data/knowledge sequencing
 

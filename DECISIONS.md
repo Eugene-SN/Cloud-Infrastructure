@@ -718,3 +718,56 @@ Root recovery now confirms Authelia v4.39.27, no OIDC-related config keys or gen
 **Why this matches the deployed versions:** the immediately preceding source-verified candidate cites exact Hermes source and Authelia v4.39.27 docs/schema; local CLI help, actual Compose template filter, current webroot renewal state, ACME nginx route and deploy-hook source were additionally inspected. The root configuration passed Authelia's own validator before any change.
 
 **Supersedes:** the preceding PROPOSED candidate status and the older mandatory forward-auth/session-token-first design. This does not supersede any Stage 4A/B/D/E acceptance or claim Stage 4C deployment success.
+
+---
+
+## 2026-09-18T21:25:00+03:00 — Stage 4C Dashboard and Desktop authentication contract
+
+**Status:** ACCEPTED
+
+**Decision:**
+
+1. `https://hermes.escloud.us` is the canonical browser and macOS Desktop Remote Gateway endpoint.
+2. Hermes-native self-hosted OIDC with Authelia `4.39.27` as IdP is the accepted authentication contract. The only interactive provider is `self-hosted`.
+3. Browser authorization uses the public authorization-code client and PKCE/S256 callback `https://hermes.escloud.us/auth/callback`. Desktop uses the upstream native RFC8252/PKCE broker endpoints.
+4. nginx terminates the existing Xray-provided TLS path and proxies to loopback `127.0.0.1:9119` with WebSocket forwarding. nginx does not use `auth_request` for Hermes.
+5. No Basic/Nous fallback and no public TCP/9119 are part of the accepted runtime.
+6. The shared `escloud.us` certificate lineage and its established Certbot webroot mechanism include `hermes.escloud.us`.
+7. Browser callback/session/Chat traffic, WebSocket HTTP 101 and operator functional confirmation complete Stage 4C. Native Desktop authorize/token exchanges, two WebSocket connections and operator confirmation complete Stage 4H.
+
+**Supersedes:** all earlier current-state forward-auth/session-token-first requirements and the DESIGN ONLY/pending-acceptance status of the preceding Stage 4C decision. Historical audit records remain unchanged.
+
+---
+
+## 2026-09-18T21:26:00+03:00 — Stage 4F native Hermes API Server for n8n
+
+**Status:** ACCEPTED
+
+**Decision:**
+
+1. n8n invokes Hermes through the upstream-native Hermes API Server `/v1/responses` interface.
+2. The API binds only `172.19.0.1:8642` on the n8n Docker bridge, requires a strong Bearer key and is limited by a narrow UFW rule to the n8n subnet. It has no nginx/public route.
+3. n8n uses its built-in HTTP Request node and encrypted `httpBearerAuth` credential. No custom adapter, CLI wrapper, MCP-to-HTTP shim or public webhook is introduced.
+4. The production reusable workflow `Hermes Machine Invocation` accepts `task` plus selector `vllm`, `codex` or `antigravity`.
+5. `vllm` returns a direct result from the configured Hermes model without executor tool calls. `codex` and `antigravity` require the corresponding real foreground non-PTY CLI and return its usable result.
+6. The known Tirith CLI stdout warning is irrelevant to this path because n8n consumes native HTTP JSON rather than CLI `stream-json`.
+7. Exact-value E2E passed for all three selectors; only the reusable workflow remains in production.
+
+**Supersedes:** the unresolved Stage 4F mechanism and any assumption that a custom service is required for n8n to invoke Hermes.
+
+---
+
+## 2026-09-18T21:27:00+03:00 — Final Stage 4 runtime and lifecycle acceptance
+
+**Status:** ACCEPTED
+
+**Decision:**
+
+1. Stage 4A/B/C/D/E/F/G/H/I are COMPLETE / ACCEPTED. Final marker: `STAGE4_FINAL_ACCEPTANCE=PASS`.
+2. Hermes remains on `qwen3.8-27b-fp8` through the custom vLLM endpoint `http://192.168.1.30:8000/v1`. A Dashboard-driven switch to `openai-codex` found during 4G was a real regression and was corrected with native Hermes commands before final acceptance.
+3. Current Antigravity CLI `1.2.6` supersedes the inventory value `1.2.5`; the version change passed a bounded real n8n/Hermes/Antigravity E2E. Codex remains `0.154.0`.
+4. Controlled Hermes SIGTERM exit status 1 after graceful-shutdown logging is an accepted upstream constraint because requested restart recovery and service persistence pass. Do not patch source or add `SuccessExitStatus=1` merely to hide it.
+5. Current Hermes config SHA256 is `fe2f0fead4781ed28d0c4bf61720bdc52a6b31a41040a477afe6351b5df2f824`; accepted model semantics are restored and user Dashboard theme `rose` is preserved.
+6. Stage 5 may begin only from the persisted final Stage 4 checkpoint and its own mandatory entry audit.
+
+**Supersedes:** all remaining current-state descriptions of Stage 4C/F/G/H/I as pending. It does not rewrite the historical state recorded by earlier acceptance/audit artifacts.

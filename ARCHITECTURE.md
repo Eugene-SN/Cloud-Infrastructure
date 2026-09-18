@@ -7,15 +7,16 @@
 **Stage 2:** COMPLETE / ACCEPTED  
 **Stage 02.5:** COMPLETE / ACCEPTED  
 **Stage 3:** COMPLETE / ACCEPTED  
-**Stage 4:** IN PROGRESS / NOT YET ACCEPTED
+**Stage 4:** COMPLETE / ACCEPTED
 
 `EDGE_STAGE2_FINAL_INTEGRATED_ACCEPTANCE=PASS`  
 `CLOUD_STAGE_02_5_FINAL_SCOPE_ACCEPTANCE=PASS`  
-`EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS`
+`EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS`  
+`STAGE4_FINAL_ACCEPTANCE=PASS`
 
 Current production branch:
 
-`04 — Edge Hermes Agent Runtime`
+`04.3 — Edge Hermes Stage 4 Recovery, Completion & Final Acceptance`
 
 Final Stage 02.5 record:
 
@@ -341,46 +342,71 @@ The accepted baseline path is `edge -> Home/PAI`; VM100/MikroTik remain unchange
 
 ## Stage 4 — Hermes Agent Runtime
 
-Preferred Hermes placement: host-native under `core`.
+**COMPLETE / ACCEPTED.** `STAGE4_FINAL_ACCEPTANCE=PASS`.
 
-Stage 4 architecture combines:
+Accepted architecture:
 
-- Hermes core runtime using private `ai-node` vLLM;
-- direct Codex CLI and Antigravity CLI executors;
-- authenticated Hermes Web Dashboard at `https://hermes.escloud.us`;
-- private authenticated n8n machine interface;
-- Mattermost at `https://chat.escloud.us` as the private collaboration/control/notification surface;
-- final macOS Hermes Desktop Remote Gateway integration.
+```text
+Browser / macOS Hermes Desktop
+        |
+        v
+https://hermes.escloud.us
+        |
+Xray TLS -> nginx proxy_protocol
+        |
+127.0.0.1:9119 Hermes Dashboard
+        |
+Hermes native self-hosted OIDC
+        |
+https://auth.escloud.us (Authelia 4.39.27)
 
-Hermes Dashboard ingress:
+n8n container
+        |
+Bearer-authenticated HTTP Request
+        |
+172.19.0.1:8642 Hermes API Server
+        |
+Hermes -> qwen3.8-27b-fp8/vLLM
+        |                 \
+        |                  -> Codex CLI / Antigravity CLI
+        v
+structured result to n8n
+```
 
-- fixed constraints: public TCP/443 through existing Xray/nginx/shared TLS; Dashboard backend remains loopback-only/non-public;
-- Stage 4C authentication is under explicit recovery design revalidation; prior forward-auth/session-token-first wording is suspended;
-- candidate, not accepted deployment: Hermes-native self-hosted OIDC with Authelia as IdP, no nginx `auth_request`, one interactive provider and public PKCE/S256 client;
-- complete source/runtime/recovery verification and record the architecture decision before mutation;
-- Desktop later uses the auth mode accepted in Stage 4C, with native RFC8252/PKCE evaluated against the actual build.
+Runtime roles:
 
-Mattermost ingress/auth is intentionally different:
+- Hermes `0.21.3` at exact source commit `d177b119e9c56c9ddc0b7379ffce52341ec06584`, host-native under `core`;
+- private `ai-node` vLLM at `http://192.168.1.30:8000/v1`, model `qwen3.8-27b-fp8`, is the main reasoning backend;
+- Codex CLI and Antigravity CLI are trusted specialist executors invoked directly by Hermes;
+- Mattermost at `https://chat.escloud.us` is the native collaboration/control surface;
+- n8n remains the deterministic workflow plane and invokes Hermes through its native private API Server;
+- Hermes Dashboard and macOS Desktop use the native self-hosted OIDC/RFC8252 PKCE contract.
+
+Dashboard ingress/auth:
+
+- public TCP/443 through existing Xray/nginx/shared `escloud.us` TLS;
+- backend exclusively `127.0.0.1:9119`;
+- exactly one provider, `self-hosted`, with Authelia as IdP;
+- no nginx `auth_request`, no Basic/Nous fallback, no public 9119;
+- browser callback `/auth/callback`, native Desktop authorize/token broker and WebSocket forwarding are accepted.
+
+Private machine interface:
+
+- upstream Hermes API Server binds `172.19.0.1:8642` only;
+- Bearer authentication is stored as an encrypted n8n credential;
+- UFW permits only the n8n Docker subnet on its dedicated bridge;
+- no public nginx route or public 8642 listener;
+- the production n8n subworkflow supports `vllm`, `codex` and `antigravity` selectors;
+- native HTTP JSON avoids the known CLI `stream-json` Tirith stdout contamination.
+
+Mattermost intentionally retains a different authentication contract:
 
 - public TCP/443 -> Xray/nginx -> loopback Mattermost backend;
-- Mattermost-native authentication;
-- no Authelia in front of `chat.escloud.us`;
-- PostgreSQL remains private;
-- Calls remains excluded.
+- Mattermost-native authentication, no Authelia;
+- PostgreSQL remains private; Calls remains disabled;
+- native Hermes and n8n integrations are accepted.
 
-Stage 4 acceptance requires:
-
-- real Hermes -> vLLM inference;
-- practical selected Hermes tool surfaces;
-- direct Hermes -> Codex and Hermes -> Antigravity delegation;
-- Hermes Dashboard through nginx with the exact authentication mechanism accepted in Stage 4C;
-- accepted native Hermes↔Mattermost and n8n↔Mattermost paths;
-- private authenticated n8n -> Hermes machine interface;
-- `n8n -> Hermes -> Codex/AGY -> Hermes -> n8n`;
-- clean Hermes gateway lifecycle, including controlled stop/restart and reboot persistence;
-- no unintended public Hermes machine/API listener;
-- server-side integrated non-regression;
-- final macOS Hermes Desktop readiness/live chat/WebSocket/reconnect acceptance.
+The controlled Hermes SIGTERM exit-status-1 behavior remains an accepted upstream lifecycle constraint. Requested restart/reboot recovery succeeds; no source patch or `SuccessExitStatus=1` masking is used.
 
 User-specific automation workflows remain outside infrastructure acceptance.
 
@@ -459,3 +485,4 @@ Additional accepted directions:
 5. `IMPLEMENTATION_PHASES.md` and stage-specific records;
 6. `FUNCTIONAL_SCAFFOLD_DRAFT.md` for capability intent;
 7. `migration-reference/` and historical baseline for legacy evidence only.
+
