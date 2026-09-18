@@ -22,6 +22,9 @@ Research deployment and integration options for a lightweight private Mattermost
 - Mattermost's dedicated pre-authentication-secret mechanism is a separate commercial feature and is not the baseline for Team Edition.
 - The free Mattermost Test Push Notification Service (TPNS) can deliver push notifications to the official iOS/Android Mattermost applications connected to a self-hosted server, but it has no production SLA.
 - Calls has separate media/network requirements and is explicitly out of current scope.
+- Mattermost's current official container guide states that Docker Compose is for evaluation/testing/development and is not an officially supported production topology because it lacks HA/cluster features by default. The operator has nevertheless explicitly accepted Docker Compose for this private single-node deployment where HA is outside requirements.
+- The current official `mattermost/docker` repository uses separate Mattermost and PostgreSQL services; its example defaults currently use PostgreSQL 18-alpine and a specific Mattermost ESR tag, while the official Team image also publishes a stable `latest` tag. Project version/update policy resolves the current stable release at deployment/update time rather than preserving the example tag as an architectural pin.
+- The official `docker-compose.without-nginx.yml` exposes application port 8065 plus Calls TCP/UDP 8443. Our accepted Calls-free/loopback-only topology therefore requires using the official base Compose pattern with a minimal local override that publishes only the Mattermost app port to loopback.
 - For this scale there is no current justification for Kubernetes, HA, Elasticsearch/OpenSearch, Redis, MinIO/S3, a custom push proxy or custom mobile builds.
 
 ## Accepted target topology
