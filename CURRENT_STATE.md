@@ -190,6 +190,28 @@ Final recovery run proved foundation services, Stage 2 applications, mail, publi
 
 `EDGE_STAGE2_FINAL_INTEGRATED_ACCEPTANCE=PASS`
 
+## Stage 4 — Hermes Agent Runtime (in progress)
+
+A post-setup read-only audit on 2026-09-18 confirmed the initial host-native Hermes installation under `core`.
+
+Current confirmed baseline:
+
+- official upstream git install under `/home/core/.hermes/hermes-agent`;
+- reported version `0.21.3 (2026.9.14)`, branch `main`, commit `d177b119e9c56c9ddc0b7379ffce52341ec06584`, clean worktree;
+- main inference provider `AI-Node vLLM` -> `http://192.168.1.30:8000/v1`;
+- model `qwen3.8-27b-fp8`, Chat Completions mode, configured/verified context `195216`;
+- terminal backend `local`;
+- current `agent.reasoning_effort=none` from the operator-run wizard; not yet normalized/accepted;
+- user `hermes-gateway.service` enabled and active under `core`, but no messaging platforms and no listeners yet on `8642` or `9119`;
+- standalone Codex CLI `0.154.0` and Antigravity CLI `1.2.5` remain available to `core`;
+- Dashboard/API/n8n integration and final macOS Remote Gateway integration remain pending;
+- Browser Automation is not yet accepted: downloaded Playwright Chromium currently lacks required host shared libraries;
+- wizard-selected `openai-codex` image generation is not currently usable because Hermes-managed Codex auth is absent.
+
+Detailed factual record: `STAGE_04_HERMES_POST_SETUP_BASELINE_2026-09-18.md`.
+
+Stage 4 remains **IN PROGRESS / NOT YET ACCEPTED**.
+
 ## Recovery / preserved state
 
 - Stage 1 recovery archive: `/srv/backups/edge-stage1/edge-stage1-base-20260916T234611Z.tar.gz`, SHA256 `37486e763ddac4c5ef3a92a35c3dad49787d75ffd8b97499073c79af617cc566`;
@@ -197,4 +219,4 @@ Final recovery run proved foundation services, Stage 2 applications, mail, publi
 
 ## Current next step
 
-Stage 3 is complete and accepted with `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS`. The next independent production task is **Stage 4 — Edge Hermes Agent Runtime**. Reuse the accepted Stage 3 NetBird transport and do not reopen the resolved Docker reboot-lifecycle or Stage 3 routing choices without concrete incompatibility.
+Stage 4 — Edge Hermes Agent Runtime is **IN PROGRESS**. Continue from the confirmed post-setup baseline in `STAGE_04_HERMES_POST_SETUP_BASELINE_2026-09-18.md`; do not reinstall Hermes or reopen Stage 3 transport unless a concrete incompatibility appears.
