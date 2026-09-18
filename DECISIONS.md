@@ -438,3 +438,32 @@ The independent Docker reboot-lifecycle regression discovered during Stage 3 is 
 
 **Supersedes:** any prior interpretation of stage-scoped/minimum deployment wording that treated the enumerated stage acceptance path as a ceiling on the normal practical feature set of an already selected service.
 
+---
+
+## 2026-09-18T10:11:35+03:00 — Stage 4 Hermes Qwen3.8 model-native reasoning normalization
+
+**Status:** ACCEPTED
+
+**Context:** the Hermes Full Setup wizard had been configured with `agent.reasoning_effort: none` following an earlier assistant recommendation. Runtime inspection established that this disables thinking rather than merely hiding it. The project functional-completeness invariant requires retaining the normal useful capabilities of the selected service/model unless there is a concrete reason to disable them.
+
+**Decision:**
+
+1. Remove the persistent Hermes `agent.reasoning_effort` override for the primary `qwen3.8-27b-fp8` route.
+2. Set `model.reasoning_echo: true` for the custom vLLM provider so Hermes preserves/replays provider reasoning content across turns.
+3. Let Qwen3.8/vLLM use its model/server-native reasoning policy instead of forcing a Hermes effort override.
+4. Do not reintroduce `reasoning_effort: none` as the default Stage 4 configuration.
+5. Per-run reasoning overrides remain available when explicitly useful; they do not change the accepted default policy.
+
+**Acceptance evidence:**
+
+- direct vLLM model-native reasoning probe: HTTP 200 with non-empty reasoning;
+- Hermes runtime resolver after normalization: no persistent reasoning override;
+- Hermes turn 1: completed, terminal tool side effect verified, `reasoning_tokens=45`, 2 API calls;
+- Hermes turn 2 resumed the exact same session ID and completed successfully with `reasoning_tokens=34`;
+- `hermes-gateway.service` remained active/enabled;
+- final `config.yaml` SHA256: `c57ca6bc0b301250d4825060fcf5f8d90af94c7cee4f1632e0b648189fd994ae`.
+
+`STAGE4_HERMES_QWEN38_REASONING_NORMALIZATION=PASS`
+
+**Supersedes:** the earlier Stage 4 wizard-time choice to disable reasoning for the primary Qwen3.8 model.
+
