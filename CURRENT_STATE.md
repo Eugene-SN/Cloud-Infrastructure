@@ -307,7 +307,7 @@ Stage 4 remains **IN PROGRESS / NOT YET ACCEPTED**.
 
 **AUTH CANDIDATE / NOT ACCEPTED:** native Hermes self-hosted OIDC with Authelia as IdP, loopback Dashboard, existing Xray/nginx ingress, no nginx `auth_request` in front of Hermes, one interactive provider, public PKCE/S256 client. Older forward-auth/session-token-first wording is suspended for this recovery; see the latest reconciliation decision. Source support is confirmed, but design acceptance requires completing the runtime/recovery contract, and Stage 4C acceptance still requires real browser login and Chat/WS.
 
-**ACCESS BOUNDARY:** core has no sudo authorization. Root-owned Authelia, nginx and certificate changes require the operator's root session or an explicitly provisioned administrative execution path. This is an operating-system permission boundary, not missing SSH access.
+**ACCESS UPDATE:** the operator subsequently provisioned non-interactive root sudo. Root recovery completed: Authelia v4.39.27, native config validation PASS, OIDC config/secrets absent, current 12-SAN shared certificate excludes Hermes. The Stage 4C OIDC deployment design is now ACCEPTED in the latest decision; runtime activation and browser acceptance remain pending.
 
 ## Current next step
 

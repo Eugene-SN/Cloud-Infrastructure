@@ -694,3 +694,27 @@ This entry is not Stage 4C acceptance and does not claim deployment.
 **Still unknown before mutation:** root-only Authelia configuration/secret inventory, current certificate SANs and deploy hooks, final validated staged config and concrete recovery commands. No upstream code patch or lifecycle masking is authorized by this candidate.
 
 **Acceptance boundary:** actual browser login, Dashboard Chat, authenticated `/api/ws` and `/api/pty`, loopback exposure and main-provider/gateway non-regression are mandatory before any Stage 4C PASS.
+
+
+---
+
+## 2026-09-18T17:15:00Z — Stage 4C native self-hosted OIDC deployment design
+
+**Status:** ACCEPTED — DESIGN ONLY; Stage 4C functional acceptance remains pending.
+
+Root recovery now confirms Authelia v4.39.27, no OIDC-related config keys or generated OIDC secrets, native config validation PASS, and the existing 12-SAN certificate without Hermes. The operator provided non-interactive sudo to the local core session. Earlier lack of sudo is historical and no longer a blocker.
+
+**Accepted implementation:**
+
+1. Reuse the current Xray TLS -> nginx `127.0.0.1:8080 proxy_protocol` ingress. Publish Hermes only at `https://hermes.escloud.us`; proxy to `127.0.0.1:9119`, preserve public Host, trusted forwarded HTTPS/client metadata and WebSocket upgrades. No nginx auth_request for Hermes.
+2. Run upstream `hermes dashboard --host 127.0.0.1 --port 9119 --no-open` in a persistent core user-systemd service. Use service-local supported `HERMES_DASHBOARD_PUBLIC_URL` and `HERMES_DASHBOARD_OIDC_*` settings so the main Qwen/vLLM config need not change. Build via Hermes' upstream automatic frontend mechanism.
+3. Register exactly one interactive Hermes provider, self-hosted, issuer `https://auth.escloud.us`, client `hermes-dashboard`, scopes `openid profile email offline_access`. No Basic/Nous provider or session-token bypass.
+4. Authelia public client: `public: true`, token endpoint auth `none`, authorization-code plus refresh-token grants, response type `code`, PKCE required/S256, exact callback `https://hermes.escloud.us/auth/callback`, explicit consent. Use `one_factor` to preserve the existing service-login policy instead of silently introducing a different operator-login requirement. Ordinary access_control remains unchanged.
+5. Add isolated OIDC HMAC and RS256 RSA signing key through the existing template secret-file mechanism. Native-validate the staged complete configuration before replacing/restarting Authelia. Do not parse templated configuration with PyYAML.
+6. Extend the existing `escloud.us` certificate to preserve all current 12 SANs and add `hermes.escloud.us`, using Certbot 4.0.0 `certonly --webroot -w /var/www/letsencrypt --cert-name escloud.us --expand`. Reuse the existing account/renewal state and deploy hook. The hook copies TLS state and restarts Xray, Hysteria2 and Stalwart; this necessary disruption is explicit.
+7. Save root-only recovery copies before mutation: Authelia config, Certbot state, TLS consumer copies and nginx configuration. Keep the main Hermes config hash unchanged. Rollback application activation by disabling Dashboard, removing only the new vhost, restoring the previous Authelia config and native-validating before restart. A successfully expanded shared certificate can remain valid on application rollback; do not revoke/reissue it unnecessarily.
+8. Verify runtime/status/provider/redirect/TLS/listeners and gateway/hash properties. Browser/OIDC login, Chat and WS/PTY require actual interactive evidence before Stage 4C can pass. Desktop remains 4H after 4G.
+
+**Why this matches the deployed versions:** the immediately preceding source-verified candidate cites exact Hermes source and Authelia v4.39.27 docs/schema; local CLI help, actual Compose template filter, current webroot renewal state, ACME nginx route and deploy-hook source were additionally inspected. The root configuration passed Authelia's own validator before any change.
+
+**Supersedes:** the preceding PROPOSED candidate status and the older mandatory forward-auth/session-token-first design. This does not supersede any Stage 4A/B/D/E acceptance or claim Stage 4C deployment success.
