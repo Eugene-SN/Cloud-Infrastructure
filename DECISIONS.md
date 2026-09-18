@@ -612,3 +612,35 @@ The independent Docker reboot-lifecycle regression discovered during Stage 3 is 
 
 **Supersedes:** only the prior interpretation that Image Generation or server-side CUA must independently pass before the core Hermes Stage 4A/4B path can proceed. The functional-completeness invariant remains in force for practical capabilities that do not require disproportionate infrastructure or inherently manual acceptance.
 
+---
+
+## 2026-09-18T18:21:00+03:00 — Stage 4B trusted full-access executor contract
+
+**Status:** ACCEPTED
+
+**Context:** Stage 4B deep research and the completed read-only runtime audit established that `edge` is a single-operator trusted environment; Hermes runs host-native under `core` with `terminal.backend=local`; the actual Hermes terminal child receives `HOME=/home/core`, cwd `/home/core`, and `/home/core/.local/bin` on PATH; no `OPENAI_BASE_URL`, `OPENAI_API_KEY` or `CODEX_*` environment override leaks from the local Qwen/vLLM provider into standalone executor processes. Codex CLI `0.154.0` uses its existing OAuth state and exposes the native non-interactive `codex exec` surface. Antigravity CLI `1.2.5` exposes native headless `agy -p/--print`, JSON output, timeout/model/effort and sandbox/permission controls. The operator explicitly rejects blanket filesystem/network sandboxing as unnecessary friction that would reduce the usefulness of trusted specialist agents.
+
+**Decision:**
+
+1. Hermes remains the main orchestrator/reasoning agent on the accepted local `qwen3.8-27b-fp8` / vLLM route. Codex and Antigravity remain specialist executors invoked directly through Hermes terminal; CloudCLI is not a proxy and Codex app-server is not the main Hermes runtime.
+2. The default Stage 4B one-shot Codex path is **foreground, non-PTY `codex exec`**. PTY is reserved for genuinely interactive Codex TUI sessions; background execution is reserved for genuinely long-running or parallel jobs.
+3. The default Stage 4B one-shot Antigravity path is **foreground, non-PTY `agy -p/--print` with structured JSON output where supported by the installed CLI**. Interactive PTY and background/process lifecycle are used only when the task actually requires them.
+4. Codex and Antigravity are trusted to operate with the host/workspace access required by the delegated task under Unix user `core`. Do **not** impose blanket Docker/container isolation, workspace-only filesystem restriction, network denial, or sandbox-by-default policy merely for defense in depth.
+5. Authorization for critical mutations belongs at the **Hermes/orchestration and agent-instruction layer**, not in an artificial executor sandbox. Before delegating a destructive, system-wide, production, network, credential/auth, data-deletion or similarly high-impact mutation, Hermes must obtain the operator's explicit approval unless that exact mutation was already explicitly authorized in the current instruction.
+6. After the operator has approved the critical mutation, the executor should receive the permissions needed to complete it without an additional artificial sandbox/ACL barrier. Ordinary non-critical tasks should not incur unnecessary confirmation prompts.
+7. Executor prompts/instructions must preserve the same project discipline: inspect relevant current state before mutation, avoid unrelated redesign, verify the result, and stop for operator approval at the defined critical-action boundary.
+8. Existing standalone Codex OAuth and Antigravity authentication/state are reused. Do not create duplicate provider credentials merely for Hermes delegation.
+9. Long-running jobs may use Hermes `terminal(background=true)` plus `process(wait/poll/log)`; this remains a supported capability and is not rejected because of third-party issue reports. It is simply not the default for short one-shot work.
+10. Stage 4B acceptance must prove the selected foreground headless paths end-to-end through Hermes/Qwen while leaving the main Hermes provider/config unchanged.
+
+**Read-only audit evidence:**
+
+- `STAGE4B_EXECUTOR_READONLY_AUDIT=PASS`;
+- Hermes child cwd `/home/core`, `HOME=/home/core`, `HERMES_HOME=/home/core/.hermes`;
+- no OpenAI/Codex provider environment contamination in the Hermes terminal child;
+- Codex CLI `0.154.0`: `--json`, `--ephemeral`, `--sandbox`, `--skip-git-repo-check`, `--output-last-message` and `--model` present;
+- Antigravity CLI `1.2.5` raw help confirms `--print`, `--output-format`, `--print-timeout`, `--model`, `--effort`, `--sandbox`, `--dangerously-skip-permissions`, `--continue` and `--conversation`;
+- Hermes config/auth/skill state remained byte-identical through the audit.
+
+**Supersedes:** only the Stage 4B executor-invocation and permission portions of the 2026-09-18T17:18:00+03:00 Stage 4 core-agent priority decision where they relied on the current Hermes Codex skill's PTY-oriented example as the default one-shot shape. The product selections, Qwen/vLLM main-agent role, direct delegation architecture, and non-blocking Image Generation/CUA decisions remain ACCEPTED.
+
