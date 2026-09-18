@@ -277,3 +277,25 @@ Post-infrastructure user-specific n8n/Hermes/agent automation remains a continuo
 - Cloud Backrest repository/retention details until Stage 6;
 - monitoring product/topology until Stage 8;
 - exact user automation/workflow implementations until after Stage 10.
+
+
+---
+
+## 2026-09-18T01:41:36Z — Stage 3 scope normalization: no LAN-wide clientless route to edge
+
+**Status:** ACCEPTED
+
+**Context:** Stage 3 runtime acceptance proved that host-native NetBird on `edge` provides the required `edge -> Home/PAI` private reachability while preserving provider-local Internet egress. The reverse direction does not currently require transparent private routing for arbitrary Home LAN hosts: Cloud services on `edge` are already reachable from Home/PAI through the VPS public IP and the accepted `escloud.us` / service-subdomain ingress. Implementing LAN-wide clientless routing would require production changes to VM100 and MikroTik gateway state without a concrete current workload that benefits from them.
+
+**Decision:**
+
+- keep `edge` as a host-native NetBird service peer with private `edge -> Home/PAI` access through CT300;
+- do **not** add `100.105.0.0/16 via 192.168.1.90` to VM100 or MikroTik as part of the baseline Stage 3 implementation;
+- do **not** add the corresponding VM100 nftables forwarding rule;
+- do **not** create `edge.lan`; Home/PAI access to Cloud services uses the existing public VPS IP or accepted `escloud.us` / service-subdomain names;
+- ordinary Home/PAI hosts without NetBird do not receive transparent access to the NetBird overlay by default;
+- existing/future hosts that are themselves NetBird peers may use normal peer-to-peer NetBird reachability where useful;
+- LAN-wide clientless Home/PAI -> `edge` routing is deferred as an on-demand capability and may be introduced only for a concrete private-only workload where public ingress is unsuitable and adding NetBird to the specific initiating host is less appropriate than gateway-level routing;
+- no VM100/MikroTik/VRRP mutation is justified for the current Cloud workload.
+
+**Supersedes:** only the mandatory clientless Home/PAI -> `edge` gateway-routing, VM100/MikroTik route-persistence, and `edge.lan` portions of the 2026-09-17 NetBird connectivity decision. The NetBird product selection, CT300 routing-peer role, `edge -> Home/PAI` private connectivity, and provider-local `edge` Internet egress remain ACCEPTED.
