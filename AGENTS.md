@@ -111,6 +111,7 @@ For architecture choices involving authentication, reverse proxies, OAuth/OIDC, 
 - Preserve decision chronology and supersession semantics.
 - Fresh runtime/configuration outranks historical reference for factual state.
 - Single-operator simplicity, minimum components and upstream-supported mechanisms are preferred over enterprise complexity.
+- `core` is the trusted shared execution identity and has accepted full non-interactive root through `sudo -n` (`NOPASSWD: ALL`). Do not assume the historical `no sudo` restriction; use sudo for required root actions while preserving the project approval boundary for critical high-impact mutations.
 
 ## Accepted product anchors
 
