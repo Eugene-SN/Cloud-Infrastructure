@@ -216,7 +216,7 @@ Accepted target remains Mattermost Team Edition, official Docker Compose pattern
 
 #### Stage 4E — Private Mattermost deployment and native service integrations
 
-**Status: IN PROGRESS — all functional Stage 4E gates accepted; final bounded non-regression remains.**
+**Status: COMPLETE / ACCEPTED.**
 
 Accepted:
 
@@ -232,11 +232,11 @@ Accepted:
 - `STAGE4E_N8N_MATTERMOST_INTEGRATION=PASS`;
 - prepackaged `mattermost-ai` / Agents `2.6.1` explicitly disabled and verified (`STAGE4E_MATTERMOST_AGENTS_NORMALIZATION=PASS`);
 - operator-accepted official iOS Mattermost/mobile TPNS gate (`STAGE4E_MATTERMOST_MOBILE_TPNS=PASS`);
+- bounded final Stage 4E non-regression (`STAGE4E_FINAL_NON_REGRESSION=PASS`);
+- final Stage 4E acceptance (`STAGE4E_FINAL_ACCEPTANCE=PASS`);
 - Mattermost↔Stalwart SMTP explicitly reviewed and not required / not enabled.
 
-Remaining Stage 4E gate:
-
-- perform the bounded Stage 4E-specific non-regression check and persist final Stage 4E acceptance.
+Final record: `STAGE_04E_FINAL_ACCEPTANCE_2026-09-18.md`.
 
 Custom plugins, source patches, shim services, direct DB coupling, bespoke bridges, compatibility hacks and n8n-mediated substitutes for missing upstream integrations remain prohibited.
 
