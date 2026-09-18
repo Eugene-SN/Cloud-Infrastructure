@@ -179,19 +179,30 @@ Accepted:
 - `STAGE4_HERMES_QWEN38_REASONING_NORMALIZATION=PASS`;
 - `STAGE4_HERMES_SYSTEM_TOOLCHAIN_NORMALIZATION=PASS`.
 
-Remaining:
+Fresh 2026-09-18 capability probe additionally proved:
 
-- real functional verification/normalization of CUA, Vision, TTS, Web Search/Extract and Image Generation;
+- Web Search/Extract through Exa free tier: functional PASS;
+- Edge TTS: functional PASS;
+- Vision through the accepted custom Qwen3.8/vLLM route: functional PASS;
+- Computer Use: `NOT_APPLICABLE_HEADLESS_EDGE` because the production host intentionally has no X11/Wayland desktop session; `cua-driver 0.28.2` itself is present;
+- Image Generation remains configured but is non-blocking for Stage 4 acceptance because meaningful acceptance is inherently visual/manual and would otherwise require a separate Hermes Codex OAuth session solely for this optional capability.
+
+Remaining Stage 4A core gate:
+
+- perform a fresh core-agent regression of the accepted Qwen3.8/vLLM mode: model/server-native reasoning, no persistent Hermes reasoning-effort override, `reasoning_echo=true`, terminal tool call, session resume/reasoning replay and local vLLM reachability;
 - resolve or explicitly characterize the controlled gateway stop/restart exit-status defect before final lifecycle acceptance.
 
 #### Stage 4B — Direct Codex and Antigravity executor integration
 
-**Status: PENDING.**
+**Status: NEXT / PENDING ACCEPTANCE.**
 
+- keep Hermes' main/default runtime on the accepted local custom Qwen3.8/vLLM route;
 - verify the bundled Codex skill and standalone Codex CLI under the real `core` runtime;
-- establish the correct Antigravity integration path;
-- prove harmless Hermes -> Codex CLI and Hermes -> Antigravity CLI delegation;
-- do not route through CloudCLI.
+- use the official optional `antigravity-cli` skill from the installed Hermes upstream tree; install it into the live Hermes skill set only if the read-only inventory proves it is not already installed;
+- prove harmless Hermes -> terminal -> `codex exec` delegation in a temporary git workspace;
+- prove harmless Hermes -> terminal -> `agy --print` delegation in a temporary workspace;
+- verify that the executor calls are visible in Hermes tool events/output and that each executor produces its expected test artifact/result;
+- reuse existing standalone Codex and Antigravity authentication; do not route through CloudCLI and do not switch the main Hermes runtime to Codex app-server for this acceptance.
 
 #### Stage 4C — Hermes Web Dashboard, ingress and auth
 
