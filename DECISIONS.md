@@ -644,3 +644,23 @@ The independent Docker reboot-lifecycle regression discovered during Stage 3 is 
 
 **Supersedes:** only the Stage 4B executor-invocation and permission portions of the 2026-09-18T17:18:00+03:00 Stage 4 core-agent priority decision where they relied on the current Hermes Codex skill's PTY-oriented example as the default one-shot shape. The product selections, Qwen/vLLM main-agent role, direct delegation architecture, and non-blocking Image Generation/CUA decisions remain ACCEPTED.
 
+---
+
+## 2026-09-18T20:10:54+03:00 — Core full non-interactive root privilege
+
+**Status:** ACCEPTED
+
+**Context:** `edge` is a single-operator trusted environment and `core` is the shared host-native execution identity for Hermes, Codex, Antigravity and related Cloud Infrastructure work. The earlier rebuild baseline intentionally left `core` without sudo. Continued service deployment now requires the trusted agent/tooling context to perform system administration without switching to a separate interactive root session or introducing per-service privilege workarounds.
+
+**Decision:**
+
+1. Keep `core` as UID/GID `1000:1000` with its password locked.
+2. Grant full non-interactive sudo using `core ALL=(ALL:ALL) NOPASSWD: ALL` in `/etc/sudoers.d/90-core-root`.
+3. Use `sudo -n` from `core` for root-required host operations; do not change `core` to UID 0.
+4. Do not add `core` to the `docker` group merely for Docker administration because full sudo already provides the required capability.
+5. Preserve the existing trusted-executor safety contract: critical destructive/system-wide/production/network/credential/data mutations still require operator authorization at the orchestration/instruction layer unless already explicitly authorized.
+
+**Acceptance evidence:** `CORE_FULL_ROOT_SUDO_ACCEPTANCE_2026-09-18.md`; `visudo -c` PASS; `sudo -n` root UID/GID/user verification PASS; arbitrary run-as verification PASS; rule SHA256 `545bf1fb2ab8c68f09c45e711100bea1db2b14341db1bdec986b315d4f04fc30`.
+
+**Supersedes:** the prior current-state restriction that `core` has no sudo access. Historical stage records retain their original factual state and are not rewritten.
+
