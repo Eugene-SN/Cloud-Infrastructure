@@ -218,7 +218,7 @@ Accepted target:
 
 `STAGE4D_MATTERMOST_TARGET_ARCHITECTURE_ACCEPTANCE=PASS`
 
-#### Stage 4E — Private Mattermost deployment and service integrations
+#### Stage 4E — Private Mattermost deployment and native service integrations
 
 After accepted Stage 4D design:
 
@@ -227,12 +227,18 @@ After accepted Stage 4D design:
 - publish `https://chat.escloud.us` through existing Xray -> host nginx -> shared TLS **without Authelia**;
 - enable and verify TPNS with official mobile clients;
 - leave Mattermost Calls disabled and do not open Calls-specific ports;
-- for every Hermes/n8n/Stalwart/other service connection, enumerate all current native/upstream-supported mechanisms in the actually deployed versions, compare reliability/simplicity/maintenance characteristics, and select the best supported option during deployment;
-- do **not** pre-freeze a specific bot/node/webhook/slash-command/API/SMTP topology merely because it appeared in the research examples;
-- custom plugins, source patches, shim services, direct database coupling or bespoke bridges require demonstrated failure of practical native options plus explicit operator acceptance;
-- keep Codex/Antigravity behind Hermes unless a concrete accepted scenario proves a separate direct Mattermost integration superior;
+- audit every deployed/selected Cloud service for a **developer-provided/native Mattermost integration or explicitly supported standard protocol integration**;
+- where such an integration exists, select it, document it and verify it;
+- where it does not exist, leave that service **unintegrated with Mattermost in the current project** and record the possibility only as a future out-of-project task;
+- do not use custom plugins, source patches, shim services, direct DB coupling, bespoke bridges, compatibility hacks or an n8n-mediated bridge as a substitute for missing upstream integration;
+- fixed native integrations already confirmed by research:
+  - Hermes ↔ Mattermost: Hermes built-in Mattermost gateway adapter (REST API v4 + WebSocket);
+  - n8n → Mattermost: n8n official built-in Mattermost integration/node for its supported actions;
+  - Mattermost → Stalwart: Mattermost standard SMTP integration using Stalwart as the SMTP service;
+- additional directions (including Mattermost → n8n event/command flows) are enabled only if the actually deployed versions expose an upstream-supported counterpart for that direction;
+- Codex/Antigravity remain behind Hermes; do not create direct Mattermost integrations for them unless their upstream later provides a native integration and a separate future task accepts it;
 - keep CloudCLI as manual workspace;
-- make Mattermost ready for later monitoring/maintenance/backup notifications without implementing those future-stage workflows;
+- later monitoring/maintenance/backup services are integrated with Mattermost only if their own upstream provides a native/supported Mattermost path at the time their stage is implemented;
 - verify native web/desktop/mobile client operation, push delivery, resource delta, persistence and non-regression.
 
 #### Stage 4F — Hermes private machine interface and n8n agent integration
