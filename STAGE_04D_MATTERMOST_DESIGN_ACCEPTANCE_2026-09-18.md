@@ -36,9 +36,11 @@ Confirmed native integrations at Stage 4D:
 - **Hermes ↔ Mattermost:** fixed to Hermes' built-in Mattermost gateway adapter using Mattermost REST API v4 + WebSocket;
   Canonical implementation source: `https://hermes-agent.nousresearch.com/docs/user-guide/messaging/mattermost` (use the installed Hermes version/source to verify exact option names at deployment time).
 - **n8n → Mattermost:** fixed to n8n's official built-in Mattermost integration/node for the operations it natively supports;
-- **Mattermost → mail:** fixed to Mattermost's standard SMTP integration using the existing Stalwart SMTP service.
+- **Mattermost → Stalwart SMTP:** upstream capability is confirmed, but **activation is not accepted yet**. Its usefulness is reviewed only after Hermes and n8n integrations because ordinary mail access already exists independently through Stalwart/mail clients.
 
 For any additional direction or product, Stage 4E must verify current upstream support before enabling it. Generic Mattermost APIs/webhooks/slash commands are not automatically treated as permission to build a custom cross-product bridge; they are used only where the other product also provides an explicit supported counterpart for the actual use case.
+
+Accepted Stage 4E integration order: **Hermes first → n8n second → Mattermost/Stalwart usefulness discussion third**. The official Hermes setup guide is the canonical procedure for the first integration.
 
 ## Accepted ingress shape
 
