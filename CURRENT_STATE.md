@@ -6,16 +6,17 @@
 **Stage 1 — COMPLETE / ACCEPTED**  
 **Stage 2 — Edge Core Applications — COMPLETE / ACCEPTED**  
 **Stage 02.5 — Remaining Functional Scope Reconciliation & Research — COMPLETE / ACCEPTED**  
-**Stage 3 — Edge Cross-site Connectivity Foundation — IN PROGRESS**
+**Stage 3 — Edge Cross-site Connectivity Foundation — COMPLETE / ACCEPTED**
 
 `EDGE_STAGE2_FINAL_INTEGRATED_ACCEPTANCE=PASS` on 2026-09-17.  
-`CLOUD_STAGE_02_5_FINAL_SCOPE_ACCEPTANCE=PASS` on 2026-09-18.
+`CLOUD_STAGE_02_5_FINAL_SCOPE_ACCEPTANCE=PASS` on 2026-09-18.  
+`EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS` on 2026-09-18.
 
 Primary repository: `Eugene-SN/Cloud-Infrastructure`.
 
-Active production branch:
+Next production branch:
 
-`03 — Edge Cross-site Connectivity Foundation`
+`04 — Edge Hermes Agent Runtime`
 
 Stage 02.5 final acceptance record:
 
@@ -57,7 +58,7 @@ Current accepted/runtime state:
 - clientless gateway routing to the NetBird overlay is deferred and requires a concrete private-only workload before any VM100/MikroTik change;
 - direct WireGuard/Tailscale remain rejected as duplicate private backbones; AmneziaWG remains contingency only for a demonstrated NetBird transport failure.
 
-Stage 3 control-plane grouping/policy and host-native `edge` enrollment are complete and verified. VM100/MikroTik routing/firewall state has not been mutated by Stage 3.
+Stage 3 is COMPLETE / ACCEPTED. Final record: `STAGE_03_ACCEPTANCE_2026-09-18.md`. Control-plane grouping/policy, host-native `edge` enrollment, private Home routing, split DNS, direct P2P recovery, CT300 recovery and full `edge` reboot persistence are verified. VM100/MikroTik routing/firewall state was not mutated.
 
 ### Data / knowledge project boundary
 
@@ -79,15 +80,14 @@ MacBook/iPhone/iPad Obsidian synchronization is completely outside Cloud Infrast
 
 ## Final remaining roadmap
 
-1. **Stage 3 — Edge Cross-site Connectivity Foundation**;
-2. **Stage 4 — Edge Hermes Agent Runtime**;
-3. **Stage 5 — Edge Knowledge Replication & Data Integration**;
-4. **Stage 6 — Edge Backrest & Recovery**;
-5. **Stage 7 — Edge Maintenance & Update**, including separate Codex `update.escloud.us` substage;
-6. **Stage 8 — Edge Monitoring, Heartbeats & Alerts**;
-7. **Stage 9 — Edge Cloud Portal**, including separate Codex `app.escloud.us` substage;
-8. **Stage 10 — Edge Final Integrated Infrastructure Acceptance**;
-9. post-infrastructure **Automation & User Workflows** as a continuous workstream.
+1. **Stage 4 — Edge Hermes Agent Runtime**;
+2. **Stage 5 — Edge Knowledge Replication & Data Integration**;
+3. **Stage 6 — Edge Backrest & Recovery**;
+4. **Stage 7 — Edge Maintenance & Update**, including separate Codex `update.escloud.us` substage;
+5. **Stage 8 — Edge Monitoring, Heartbeats & Alerts**;
+6. **Stage 9 — Edge Cloud Portal**, including separate Codex `app.escloud.us` substage;
+7. **Stage 10 — Edge Final Integrated Infrastructure Acceptance**;
+8. post-infrastructure **Automation & User Workflows** as a continuous workstream.
 
 The old conditional `Remaining Infrastructure Services` stage is removed because Stage 02.5 selected no additional standalone infrastructure product requiring that slot.
 
@@ -197,4 +197,4 @@ Final recovery run proved foundation services, Stage 2 applications, mail, publi
 
 ## Current next step
 
-Stage 3 is active. The host reboot-lifecycle regression is fixed and accepted. Resume only the remaining connectivity-specific Stage 3 final verification/acceptance; do not reopen the resolved Docker reboot issue.
+Stage 3 is complete and accepted with `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS`. The next independent production task is **Stage 4 — Edge Hermes Agent Runtime**. Reuse the accepted Stage 3 NetBird transport and do not reopen the resolved Docker reboot-lifecycle or Stage 3 routing choices without concrete incompatibility.
