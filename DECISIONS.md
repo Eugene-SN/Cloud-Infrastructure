@@ -552,3 +552,28 @@ The independent Docker reboot-lifecycle regression discovered during Stage 3 is 
 
 **Supersedes:** the Stage 4D wording that merely preferred native integrations while still allowing custom bridges after native options proved insufficient. The current project now stops at the absence of upstream-supported integration and defers any custom integration outside project scope.
 
+---
+
+## 2026-09-18T13:20:00+03:00 — Stage 4 execution reordering: deploy Mattermost before remaining Hermes work
+
+**Status:** ACCEPTED
+
+**Context:** Mattermost Stage 4D design is accepted while Hermes already has a functioning gateway, vLLM inference, reasoning, terminal and browser/toolchain baseline. Deploying Mattermost now creates the real native messaging surface needed to test Hermes through its officially supported Mattermost adapter, avoiding a second round of integration testing after finishing Hermes in isolation.
+
+**Decision:**
+
+1. Stage 4 substage labels remain scope identifiers, but current execution order is dependency-driven rather than numeric.
+2. Begin **Stage 4E Mattermost deployment now**, before completing the remaining Hermes 4A/4B/4C items.
+3. After base Mattermost web/mobile/push acceptance, configure **Hermes ↔ Mattermost first** using the official Hermes guide:
+   `https://hermes-agent.nousresearch.com/docs/user-guide/messaging/mattermost`.
+4. The Hermes integration uses the built-in Mattermost gateway adapter over Mattermost REST API v4 + WebSocket, a dedicated Mattermost bot, explicit operator user allowlist, and the installed Hermes gateway lifecycle.
+5. After Hermes↔Mattermost acceptance, configure and verify **n8n ↔ Mattermost** using only upstream-supported integration paths.
+6. Only after Hermes and n8n are complete, hold a separate usefulness/necessity review for **Mattermost ↔ Stalwart SMTP/email**. Do not enable it automatically merely because Mattermost supports SMTP.
+7. Existing Stalwart email service and ordinary mail clients remain independent of Mattermost. The future SMTP review must identify concrete benefit such as Mattermost password recovery or email notifications before activation.
+8. Resume the remaining Hermes capability/executor/Dashboard work after the Mattermost/Hermes/n8n sequence; macOS Hermes Desktop remains the final Stage 4 integration task.
+
+**Supersedes:**
+
+- the earlier interpretation that Stage 4A/4B/4C must be completed before Stage 4E;
+- the 2026-09-18 native-only Mattermost integration decision only where it described Mattermost→Stalwart SMTP as already fixed for implementation. SMTP support remains a native capability, but activation is now pending explicit usefulness acceptance.
+
