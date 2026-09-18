@@ -40,25 +40,23 @@ Research deployment and integration options for a lightweight private Mattermost
 
 ## Integration research
 
-Research confirmed multiple upstream/native integration surfaces:
+Research confirmed first-party/native Mattermost integration paths that are now fixed for the current project:
 
-- Hermes has Mattermost integration support;
-- n8n has an official Mattermost integration surface, including its documented Mattermost integration page/node;
-- Mattermost exposes documented REST API, WebSocket, webhooks and slash-command mechanisms;
-- SMTP is a standard Mattermost integration surface for mail delivery.
+- **Hermes ↔ Mattermost:** Hermes' built-in Mattermost gateway adapter using Mattermost REST API v4 + WebSocket;
+- **n8n → Mattermost:** n8n's official built-in Mattermost integration/node for the operations it supports;
+- **Mattermost → Stalwart:** Mattermost's documented SMTP integration using the existing Stalwart SMTP service.
 
-These findings **do not preselect the exact per-service integration mechanism**.
+### Accepted native-only rule
 
-### Accepted integration-selection rule
+For every other service or direction:
 
-During Stage 4E, for every service-to-Mattermost connection:
+1. verify whether the current upstream/developers explicitly provide a Mattermost integration or an explicitly supported standard protocol counterpart;
+2. if yes, document and implement that supported path in the owning project stage;
+3. if no, leave the service unintegrated with Mattermost in the current Cloud Infrastructure project;
+4. do not manufacture the missing integration using custom plugins, patches, shim services, direct database access, bespoke bridges, compatibility hacks, or an n8n relay solely to connect products;
+5. unsupported integrations may be reconsidered only as separate future work outside the current project.
 
-1. enumerate all current native/upstream-supported mechanisms available in the deployed versions;
-2. compare them for reliability, simplicity, lifecycle/update compatibility and operational coupling;
-3. select the most native/direct supported option that satisfies the actual use case;
-4. avoid custom plugins, patched source, shim services, direct database coupling or bespoke bridges unless native options are proven insufficient and the operator explicitly accepts the exception.
-
-Examples such as Hermes native Mattermost support, the n8n Mattermost node, Mattermost webhooks/slash commands or SMTP remain **candidate mechanisms**, not fixed implementation decisions in this research record.
+Mattermost APIs/webhooks/slash commands remain valid native primitives, but they do not by themselves authorize a custom bridge to another product whose developers do not provide a supported Mattermost-facing counterpart.
 
 ## Public ingress decision
 
@@ -96,7 +94,7 @@ These are implementation details, not open architecture questions:
 - nginx WebSocket proxy details;
 - TPNS configuration;
 - exact initial Mattermost account/team/channel state needed for acceptance;
-- native integration mechanism selection per connected service;
+- native-integration availability audit for every relevant service/direction; implement only confirmed upstream-supported paths;
 - resource delta, persistence and reboot/non-regression verification.
 
 ## Source set used during research
