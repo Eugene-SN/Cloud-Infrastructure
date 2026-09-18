@@ -118,3 +118,20 @@ For the next verifier:
 
 `STAGE4E_MATTERMOST_CORE_RUNTIME_FINAL_VERIFY_V3=INVALID_SCRIPT`
 
+## Mattermost ingress context audit
+
+Fresh read-only ingress audit passed:
+
+- nginx configuration is currently valid;
+- public HTTP virtual hosts use port 80 directly and service HTTPS ingress arrives from Xray at `127.0.0.1:8080 proxy_protocol`;
+- global `xray-realip.conf` trusts proxy protocol only from `127.0.0.1`;
+- global `websocket-map.conf` provides `$connection_upgrade`;
+- existing application vhosts pass `Host`, forwarded scheme/host/port, real client address and HTTP/1.1 to loopback application backends;
+- `chat.escloud.us` currently has no dedicated nginx vhost and therefore still returns the default `escloud.us` site;
+- Mattermost backend `http://127.0.0.1:18065/api/v4/system/ping` remains healthy with `status=OK`;
+- no runtime mutation was performed by the audit.
+
+Current official Mattermost nginx guidance requires a reverse proxy, dynamic Host forwarding, and explicit WebSocket upgrade handling for `/api/v4/websocket`. The accepted Cloud ingress will therefore add one dedicated `chat.escloud.us` vhost without Authelia, reusing the existing Xray -> nginx proxy-protocol contract.
+
+`STAGE4E_MATTERMOST_INGRESS_CONTEXT_AUDIT=PASS`
+
