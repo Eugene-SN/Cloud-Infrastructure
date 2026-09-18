@@ -104,7 +104,7 @@ These are implementation details, not open architecture questions:
 - Mattermost mobile/push/TPNS documentation;
 - Mattermost integration/API/webhook/slash-command documentation;
 - Mattermost community forum and user deployment discussions;
-- Hermes Mattermost integration documentation/source;
+- Hermes official Mattermost setup guide (`https://hermes-agent.nousresearch.com/docs/user-guide/messaging/mattermost`) plus current Hermes adapter/source;
 - n8n official Mattermost integration page (`https://n8n.io/integrations/mattermost/`) and built-in Mattermost node documentation/source.
 
 ## Research closure
