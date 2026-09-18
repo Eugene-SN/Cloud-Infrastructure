@@ -261,7 +261,7 @@ Accepted state:
 - acceptance record: `STAGE_04E_N8N_MATTERMOST_INTEGRATION_ACCEPTANCE_2026-09-18.md`;
 - marker: `STAGE4E_N8N_MATTERMOST_INTEGRATION=PASS`.
 
-Stage 4E itself remains **IN PROGRESS** only because the accepted Mattermost scope still requires real official mobile-client login plus delivered TPNS push, followed by Stage 4E-specific non-regression. The `mattermost-ai` disposition is complete and accepted.
+Stage 4E remains **IN PROGRESS** only for the bounded final Stage 4E non-regression check. The operator explicitly accepted the official iOS Mattermost/mobile TPNS gate as PASS; acceptance record: `STAGE_04E_MATTERMOST_MOBILE_TPNS_ACCEPTANCE_2026-09-18.md`. The `mattermost-ai` disposition is complete and accepted.
 
 Detailed accepted records remain authoritative for completed substages; the expanded audit does not retroactively rewrite historical records.
 
@@ -274,7 +274,7 @@ Stage 4 remains **IN PROGRESS / NOT YET ACCEPTED**.
 
 ## Current next step
 
-1. Finish the remaining Stage 4E gates: real official Mattermost mobile-client login, delivered TPNS push, then Stage 4E-specific non-regression.
+1. Run the bounded Stage 4E-specific non-regression check and, if PASS, mark Stage 4E COMPLETE / ACCEPTED.
 2. Resolve or explicitly characterize the Hermes controlled stop/restart exit-status defect before server-side final acceptance.
 3. Resume remaining Hermes Stage 4A/4B/4C work, then Stage 4F machine-interface integration.
 4. Perform Stage 4G server-side integrated acceptance, Stage 4H macOS Hermes Desktop integration, and Stage 4I final repository persistence/acceptance.
