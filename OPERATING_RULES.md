@@ -128,7 +128,7 @@ Connectivity is transport/reachability/private naming. Application-level durable
 
 # Stage 4 — Hermes contract
 
-Stage 4 deploys Hermes only after Stage 3 connectivity is accepted, so Hermes can close both cloud and local-inference branches in one coherent acceptance.
+Stage 4 deploys Hermes only after Stage 3 connectivity is accepted, so Hermes can close human UI, cloud-executor, machine-interface and local-inference branches in one coherent acceptance.
 
 Accepted role separation:
 
@@ -141,14 +141,50 @@ Accepted role separation:
 
 Preferred Hermes placement is **host-native under `core`**. This is a justified exception to Docker-by-default because containerization would complicate direct reuse of host-native Codex/Antigravity binaries and user/runtime/auth context. Reconsider only if Stage 4 finds a concrete upstream/compatibility reason.
 
+Hermes installation follows the currently published upstream-recommended Nous Research install path. Do not independently select/pin a Hermes version unless a concrete incompatibility/regression requires an explicit exception; record the version/revision actually installed by the upstream path.
+
+### Hermes WebUI / ingress
+
+The Hermes Web Dashboard is a required Stage 4 surface, not an optional later workflow feature.
+
+Accepted topology:
+
+- browser URL: `https://hermes.escloud.us`;
+- reuse existing public ingress: Xray/nginx + shared TLS lifecycle + Authelia;
+- Dashboard backend remains loopback-only by default, expected at upstream default `127.0.0.1:9119`;
+- never expose the Dashboard backend port directly to the Internet merely because the public subdomain exists;
+- `hermes.escloud.us` follows the project-wide authenticated-service rule; the only unauthenticated public web surface remains the root landing page `escloud.us`;
+- reuse the existing Certbot/nginx extension pattern rather than introducing another reverse proxy;
+- when Hermes treats the non-loopback public URL as remote/production and requires its own auth provider, configure the minimum upstream-supported Hermes auth mechanism compatible with the accepted nginx/Authelia path;
+- do not assume that Authelia alone can replace Hermes-native session/auth semantics required by Hermes Desktop; verify the real end-to-end behavior.
+
+### Stage 4 acceptance
+
 Stage 4 must verify:
 
+- browser access to `https://hermes.escloud.us` through nginx + Authelia;
 - `n8n -> Hermes -> Codex/AGY -> Hermes -> n8n`;
 - actual current `ai-node` vLLM bind/exposure state;
 - the minimum private vLLM exposure required through Stage 3;
-- real `Hermes -> vLLM` inference.
+- real `Hermes -> vLLM` inference;
+- Hermes lifecycle/reboot persistence under `core`;
+- no unintended direct public Hermes backend/API listener.
 
-Actual user-specific n8n/Hermes workflows are not part of Stage 4. Do not assign Hermes a public domain/listener by assumption.
+Actual user-specific n8n/Hermes workflows are not part of Stage 4.
+
+### Final Stage 4 macOS integration
+
+The final Stage 4 integration task is Hermes Desktop on macOS.
+
+Default test path:
+
+1. use **Settings -> Gateways -> Remote gateway**;
+2. point the Remote/Base URL at the remote Dashboard backend, intended public URL `https://hermes.escloud.us`;
+3. verify advertised auth-provider detection and successful sign-in;
+4. verify backend readiness plus real live chat/WebSocket traffic, not only a readiness probe;
+5. verify session/reconnect behavior after Desktop restart;
+6. keep the remote `hermes dashboard` service persistent on `edge`; Hermes messaging gateway processes are separate and are not what Desktop attaches to;
+7. only if this simplest Remote Gateway design proves incompatible with the accepted reverse-proxy/auth path may Stage 4 test the minimum alternative connection mode.
 
 ## Data/knowledge sequencing
 
