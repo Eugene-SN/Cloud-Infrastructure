@@ -111,6 +111,19 @@ Do not reopen them without concrete incompatibility or changed requirement.
 
 Hermes invokes Codex/Antigravity directly; CloudCLI is not a proxy between them.
 
+### Accepted Stage 4B executor trust and invocation model
+
+- `edge` is a single-operator trusted host; Hermes and its specialist executors run under trusted Unix user `core`.
+- Hermes remains the main Qwen3.8/vLLM orchestrator. Codex and Antigravity are direct specialist executors, not replacement main runtimes.
+- Default Codex one-shot delegation is foreground, non-PTY `codex exec`; use background process management only for genuinely long/parallel work and PTY only for interactive TUI sessions.
+- Default Antigravity one-shot delegation is foreground, non-PTY `agy -p/--print`, preferring structured JSON output supported by the installed CLI; use background/PTY only when the task requires those modes.
+- Do not impose blanket executor sandboxing, container isolation, workspace-only filesystem restriction or network denial. Executors receive the host/workspace access needed for the delegated task.
+- Critical destructive/system-wide/production/network/credential/data mutations are controlled by Hermes/orchestration instructions: obtain explicit operator approval before delegation unless the current instruction already explicitly authorizes that exact mutation.
+- After approval, do not add a second artificial permission barrier that prevents the executor from completing the authorized task.
+- Ordinary non-critical work proceeds without unnecessary approval prompts.
+- Existing standalone Codex OAuth and Antigravity auth/state are reused; no duplicate Hermes-specific executor credentials are required.
+
+
 ## Stage 4 private collaboration/control surface — Mattermost
 
 Stage 4D research/design is **COMPLETE / ACCEPTED**.
