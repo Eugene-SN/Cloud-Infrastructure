@@ -141,29 +141,33 @@ Existing executors confirmed:
 - Antigravity CLI: `/home/core/.local/bin/agy`, version `1.2.5`;
 - cua-driver: `0.28.2`.
 
-## Host/browser dependencies
+## Host/browser/toolchain normalization
 
-Current host facts:
+The Full Setup installer initially could not install several host packages because `core` intentionally has no sudo access. Stage 4 subsequently completed those host-level dependencies from the root administrative context while keeping Hermes itself owned/run by `core`.
 
-- `ripgrep`: absent;
-- system `ffmpeg`: absent;
-- `build-essential`: installed;
-- compiler/toolchain (`gcc`, `g++`, `make`): present;
-- `libffi-dev`: absent;
-- the audit's `python3-dev` package line showed dpkg state `unknown ok not-installed`; it must **not** be interpreted as installed.
+Accepted current host/toolchain state:
 
-Playwright Chromium was downloaded under the `core` cache, but direct `ldd` inspection found missing shared libraries:
+- `ripgrep 15.1.0` installed and available as `/usr/bin/rg`;
+- `ffmpeg 8.0.1` installed and available as `/usr/bin/ffmpeg`;
+- `build-essential` installed;
+- `python3-dev` installed;
+- `libffi-dev` installed;
+- Playwright/Chromium host shared-library dependency set installed;
+- packaged Chromium at `/home/core/.cache/ms-playwright/chromium-1243/chrome-linux64/chrome` has no unresolved shared libraries;
+- Browser backend resolves to `browser-use`;
+- Hermes-managed Browser Use CLI resolves to `/home/core/.hermes/bin/browser-use`;
+- real Hermes `browser_exec` successfully launched the managed Chromium path, loaded `https://example.com/`, returned the expected page title/URL and cleaned up the runtime;
+- `cua-driver 0.28.2` is available to the actual `core` runtime through `/home/core/.local/bin/cua-driver`;
+- source checkout remains branch `main`, commit `d177b119e9c56c9ddc0b7379ffce52341ec06584`, clean worktree;
+- accepted reasoning config remained unchanged at SHA256 `c57ca6bc0b301250d4825060fcf5f8d90af94c7cee4f1632e0b648189fd994ae`;
+- `hermes-gateway.service` remained active/enabled.
 
-- `libatk-1.0.so.0`;
-- `libatk-bridge-2.0.so.0`;
-- `libcups.so.2`;
-- `libasound.so.2`;
-- `libXdamage.so.1`;
-- `libatspi.so.0`.
+Execution-context invariant discovered during recovery:
 
-Therefore Browser Automation is not yet accepted as functionally usable even though Hermes Doctor lists the browser toolset.
+- host-native Hermes/Codex/Antigravity probes under `core` must set `HOME=/home/core`, include `/home/core/.local/bin` and `/home/core/.hermes/bin` in PATH, and use a `core`-accessible cwd such as `/home/core`;
+- root-owned cwd such as `/root` can produce false npm/agent-browser permission failures and must not be used to judge runtime health.
 
-The `browser-use --version` probe returned RC=1 with a traceback. Because CLI support for `--version` was not established, this result alone does not prove the browser-use runtime is broken.
+Acceptance marker: `STAGE4_HERMES_SYSTEM_TOOLCHAIN_NORMALIZATION=PASS`.
 
 ## Hermes Doctor
 
@@ -192,7 +196,7 @@ Do **not** run `npm audit fix` or `hermes doctor --fix` by assumption. Any mutat
 
 ## Still pending before Stage 4 acceptance
 
-1. normalize the full practical Hermes local tool/runtime dependency set selected during setup, including host packages and browser runtime dependencies;
+1. complete real functional capability verification for the remaining Full Setup tool surfaces (Computer Use/CUA, Vision, TTS, Web Search/Extract, Image Generation) and normalize only proven gaps;
 2. verify the nested bundled Codex skill on the live host and install/verify the official Antigravity skill if required;
 3. prove direct Hermes -> Codex CLI and Hermes -> Antigravity CLI delegation;
 4. configure the Hermes API machine interface and prove `n8n -> Hermes -> Codex/AGY -> Hermes -> n8n`;
