@@ -187,10 +187,18 @@ Fresh 2026-09-18 capability probe additionally proved:
 - Computer Use: `NOT_APPLICABLE_HEADLESS_EDGE` because the production host intentionally has no X11/Wayland desktop session; `cua-driver 0.28.2` itself is present;
 - Image Generation remains configured but is non-blocking for Stage 4 acceptance because meaningful acceptance is inherently visual/manual and would otherwise require a separate Hermes Codex OAuth session solely for this optional capability.
 
-Remaining Stage 4A core gate:
+Core Qwen3.8/vLLM regression is **COMPLETE / ACCEPTED**:
 
-- perform a fresh core-agent regression of the accepted Qwen3.8/vLLM mode: model/server-native reasoning, no persistent Hermes reasoning-effort override, `reasoning_echo=true`, terminal tool call, session resume/reasoning replay and local vLLM reachability;
-- resolve or explicitly characterize the controlled gateway stop/restart exit-status defect before final lifecycle acceptance.
+- direct vLLM model-native reasoning: PASS;
+- direct Qwen tool-call path: PASS;
+- Hermes -> Qwen terminal tool execution: PASS;
+- resumed same-session continuity/reasoning replay: PASS;
+- no persistent `agent.reasoning_effort` override;
+- `model.reasoning_echo=true`;
+- `STAGE4A_CORE_QWEN_VLLM_REGRESSION=PASS`;
+- acceptance record: `STAGE_04A_CORE_QWEN_VLLM_REGRESSION_ACCEPTANCE_2026-09-18.md`.
+
+The controlled gateway stop/restart exit-status defect remains a documented upstream lifecycle constraint to carry into Stage 4G; it does not block proceeding to Stage 4B.
 
 #### Stage 4B — Direct Codex and Antigravity executor integration
 
