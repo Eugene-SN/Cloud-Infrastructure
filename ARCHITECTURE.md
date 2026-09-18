@@ -112,29 +112,56 @@ Hermes invokes Codex/Antigravity directly; CloudCLI is not a proxy between them.
 
 ## Stage 4 private collaboration/control surface — Mattermost
 
-Mattermost is a selected mandatory Stage 4 service, with deployment gated by explicit Stage 4D deep-research/design acceptance.
+Stage 4D research/design is **COMPLETE / ACCEPTED**.
+
+Acceptance record:
+
+`STAGE_04D_MATTERMOST_DESIGN_ACCEPTANCE_2026-09-18.md`
+
+Accepted target architecture:
+
+- **Mattermost Team Edition**;
+- current official Mattermost Docker Compose pattern;
+- separate Mattermost application and dedicated PostgreSQL containers;
+- local persistent `/srv` state;
+- existing Xray -> host nginx -> shared TLS ingress;
+- public human endpoint `https://chat.escloud.us`;
+- **no Authelia in front of Mattermost**; use Mattermost-native authentication for web/desktop/mobile clients;
+- Mattermost application backend remains non-public;
+- PostgreSQL remains private;
+- free Mattermost Test Push Notification Service (TPNS) is accepted for official mobile clients;
+- Mattermost Calls is explicitly out of current Stage 4 scope;
+- no Preview all-in-one image, bundled Mattermost nginx, Kubernetes, HA, Elasticsearch/OpenSearch, MinIO/S3, custom push stack or custom mobile build without a later concrete requirement.
+
+`chat.escloud.us` is therefore an explicit exception to the normal service-subdomain Authelia rule, analogous in principle to other native-client services that must retain their own protocol/authentication semantics.
 
 Architectural role:
 
-- private/self-hosted collaboration and operator command/notification surface;
-- not a replacement for Hermes or n8n;
-- Hermes uses its native Mattermost adapter over Mattermost REST API v4 + WebSocket;
-- n8n uses the official Mattermost integration/API plus webhooks/slash commands where appropriate;
-- Codex/Antigravity remain specialist executors behind Hermes rather than receiving independent Mattermost bots by default;
-- CloudCLI remains the manual cloud-AI workspace;
-- Stalwart is the preferred existing SMTP subsystem for Mattermost mail;
-- later monitoring/backup/update stages may deliver alerts/status into Mattermost without moving those later-stage implementations into Stage 4.
+- Mattermost = private/self-hosted collaboration, command and notification surface;
+- Hermes remains the persistent agent runtime/reasoning/delegation layer;
+- n8n remains deterministic orchestration;
+- Codex/Antigravity remain specialist executors;
+- CloudCLI remains manual cloud-AI workspace;
+- Stalwart remains the existing mail subsystem.
 
-Preferred public namespace is `https://chat.escloud.us`. Mattermost application/PostgreSQL backends remain private. Human traffic reuses Xray/nginx/shared TLS and the project authentication policy; Hermes/n8n machine traffic should use internal Mattermost routes rather than traversing Authelia.
+### Integration-selection invariant
 
-Before deployment Stage 4D must resolve native APT vs official-image container runtime, PostgreSQL/file storage, real resource budget, WebSocket proxying, Authelia compatibility with Mattermost web/desktop/mobile clients, internal Hermes/n8n routes and Stalwart SMTP.
+Stage 4D does **not** freeze the exact per-service integration mechanism.
 
-Do not add Kubernetes, HA, Elasticsearch/OpenSearch, MinIO/S3, Calls/push infrastructure or custom plugins without a concrete need. Normal Mattermost Team Edition messaging/files/API/bot/webhook/slash-command capabilities remain part of the intended practical service surface.
+During Stage 4E, for Hermes, n8n, Stalwart and every other service connection:
 
-Detailed preliminary research:
+1. enumerate all current native/upstream-supported integration mechanisms available in the actually deployed versions;
+2. compare reliability, simplicity, update compatibility and operational coupling;
+3. choose the most native/direct supported option that satisfies the use case;
+4. do not introduce custom plugins, patched source, shim services, direct DB coupling or bespoke bridges unless practical native options are proven insufficient and the operator explicitly accepts the exception.
+
+Known native surfaces discovered during research — Hermes Mattermost support, n8n's official Mattermost integration surface, Mattermost APIs/webhooks/slash commands and standard mail interfaces — are evidence/candidates, **not preselected implementation decisions**.
+
+Detailed research:
 
 `STAGE_04_MATTERMOST_RESEARCH_BRIEF_2026-09-18.md`
 
+`STAGE4D_MATTERMOST_TARGET_ARCHITECTURE_ACCEPTANCE=PASS`
 # Accepted Cross-site Connectivity Architecture
 
 Selection record:
