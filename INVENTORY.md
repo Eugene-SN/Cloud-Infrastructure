@@ -8,11 +8,11 @@ Fresh runtime verification outranks this file. This inventory records accepted l
 
 | Node | Role | State |
 |---|---|---|
-| `edge` / `edge.escloud.us` | Cloud Infrastructure VPS | LIVE; Stage 0/1/2/02.5 accepted; Stage 3 active |
+| `edge` / `edge.escloud.us` | Cloud Infrastructure VPS | LIVE; Stage 0/1/2/02.5/3 accepted |
 | `nl-core-vds` | historical legacy VPS identity | HISTORICAL ONLY |
 | `ai-node` | PAI compute/data/knowledge node | external dependency/context; Stage 3 private target; Stage 4 local-vLLM endpoint |
 | PVE / Home Infrastructure | home infrastructure plane | external dependency/context; Stage 3 private routed fabric |
-| CT300 `remote-access` | Home self-hosted NetBird control/routing plane | EXISTING / REUSE IN Stage 3 |
+| CT300 `remote-access` | Home self-hosted NetBird control/routing plane | EXISTING / REUSED / Stage 3 ACCEPTED |
 | VM100 `gateway-core` | Home VRRP/Mihomo gateway | EXISTING / routing participant for Home→NetBird account path |
 | MikroTik | Home physical router / VRRP backup | EXISTING / routing participant and fallback |
 
@@ -28,6 +28,25 @@ Fresh runtime verification outranks this file. This inventory records accepted l
 - service account `core` UID/GID `1000:1000`, locked password, no sudo/docker group;
 - UFW intentional ingress: TCP 22/80/443/25/465/993 and UDP 443;
 - WebUI application backends are loopback-only by default.
+
+## Stage 3 — COMPLETE / ACCEPTED
+
+`EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS` on 2026-09-18.
+
+Accepted live connectivity inventory:
+
+- NetBird `0.78.2` host-native on `edge`;
+- `edge` overlay IPv4 `100.105.178.187/16`;
+- CT300 overlay IPv4 `100.105.97.126/16`;
+- Home LAN `192.168.1.0/24` routed through `wt0`;
+- Home `.lan` split DNS available from `edge`;
+- direct P2P CT300 <-> `edge` on UDP/51820 verified;
+- final reboot P2P recovery approximately `13.187s` from actual `edge` boot;
+- final sustained CT300 -> `edge`, `edge` -> CT300/PVE/`ai-node` traffic passed with 0% loss;
+- VM100/MikroTik unchanged; LAN-wide clientless overlay routing remains deferred;
+- no `edge.lan` baseline record.
+
+Final record: `STAGE_03_ACCEPTANCE_2026-09-18.md`.
 
 ## Reboot lifecycle corrective state
 
@@ -179,7 +198,7 @@ Canonical Obsidian vault remains `/srv/ai-data/knowledge/obsidian` on `ai-node`.
 
 | Stage | Scope | Current status |
 |---|---|---|
-| 3 | Cross-site Connectivity Foundation | ACTIVE; NetBird runtime deployed; final connectivity acceptance pending |
+| 3 | Cross-site Connectivity Foundation | COMPLETE / ACCEPTED; `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS` |
 | 4 | Hermes Agent Runtime | SELECTED; depends on Stage 3 acceptance |
 | 5 | Edge Knowledge Replication & Data Integration | INTEGRATION STAGE; depends on accepted Home/PVE knowledge foundation plus Stage 3/4 |
 | 6 | Backrest & Recovery | PRODUCT DIRECTION ACCEPTED; topology research pending |
@@ -221,6 +240,6 @@ Stage 0 — COMPLETE / ACCEPTED.
 Stage 1 — COMPLETE / ACCEPTED.  
 Stage 2 — COMPLETE / ACCEPTED.  
 Stage 02.5 — COMPLETE / ACCEPTED.  
-Stage 3 — ACTIVE / IN PROGRESS.
+Stage 3 — COMPLETE / ACCEPTED.  
 
-Cross-site Connectivity Foundation runtime is deployed; only its remaining connectivity-specific final acceptance is pending.
+`EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS`. Final record: `STAGE_03_ACCEPTANCE_2026-09-18.md`. Next production stage: Stage 4 — Edge Hermes Agent Runtime.
