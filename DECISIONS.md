@@ -299,3 +299,32 @@ Post-infrastructure user-specific n8n/Hermes/agent automation remains a continuo
 - no VM100/MikroTik/VRRP mutation is justified for the current Cloud workload.
 
 **Supersedes:** only the mandatory clientless Home/PAI -> `edge` gateway-routing, VM100/MikroTik route-persistence, and `edge.lan` portions of the 2026-09-17 NetBird connectivity decision. The NetBird product selection, CT300 routing-peer role, `edge -> Home/PAI` private connectivity, and provider-local `edge` Internet egress remain ACCEPTED.
+
+
+---
+
+## 2026-09-18T04:48:18Z — Disable unnecessary Docker live-restore on `edge`
+
+**Status:** ACCEPTED
+
+**Context:** Stage 3 reboot acceptance exposed an abnormal late-shutdown delay of about 90 seconds. Differential audit showed that Stage 1 had explicitly configured Docker `live-restore: true`. On the current `edge` runtime, Docker/containerd stopped while four `containerd-shim-runc-v2` processes remained in the containerd cgroup, and the next kernel boot was delayed by approximately the systemd 90-second shutdown timeout.
+
+**Decision:**
+
+- `/etc/docker/daemon.json` uses `"live-restore": false`;
+- production containers continue to use `restart: unless-stopped` for normal reboot persistence;
+- do not change systemd/containerd `KillMode`, remove `fwupd`/mdadm, or pin/downgrade Docker/containerd for this issue;
+- retain current stable Docker/containerd versions unless a separate concrete incompatibility appears.
+
+**Acceptance evidence:**
+
+- Docker reload applied the change without restarting any production container;
+- after a normal reboot, kernel + initrd + userspace completed in `13.842s`;
+- previous-journal-stop to new-kernel gap fell from approximately 94 seconds to `4.203s`;
+- Docker and containerd returned active;
+- Authelia, Bulwark, n8n and Stalwart returned automatically under `restart=unless-stopped`;
+- system state was `running` with zero failed units.
+
+Detailed record: `EDGE_REBOOT_LIFECYCLE_FIX_ACCEPTANCE_2026-09-18.md`.
+
+**Supersedes:** only the `live-restore: true` runtime property from the Stage 1 Docker/final acceptance state. Stage 1 historical acceptance records remain unchanged as historical evidence.
