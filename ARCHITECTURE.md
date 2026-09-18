@@ -152,11 +152,13 @@ Confirmed current project integrations:
 
 - **Hermes ↔ Mattermost:** Hermes built-in Mattermost gateway adapter using Mattermost REST API v4 + WebSocket;
 - **n8n → Mattermost:** n8n official built-in Mattermost integration/node for the operations it supports;
-- **Mattermost → Stalwart:** Mattermost's standard SMTP integration, with Stalwart providing the SMTP service.
+- **Mattermost → Stalwart SMTP:** standard SMTP support exists, but enabling it is intentionally deferred until after Hermes and n8n integration so its actual value (email notifications/password recovery versus existing mail clients and push) can be judged.
 
 For every other service or traffic direction, verify current upstream support first. If no native/product-supported integration exists, do not create one in the current project. Do not substitute a custom plugin, patched source, shim service, direct database access, bespoke bridge, compatibility hack, or an n8n relay solely to connect otherwise unrelated products.
 
 Such missing integrations may be revisited as separate future work outside the current Cloud Infrastructure build if upstream support or a new requirement appears.
+
+Mattermost integration execution order for Stage 4E: **Hermes first, n8n second, Stalwart usefulness review third**.
 
 Detailed research:
 
