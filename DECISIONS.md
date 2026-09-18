@@ -396,3 +396,24 @@ The independent Docker reboot-lifecycle regression discovered during Stage 3 is 
 
 **Supersedes:** only the earlier Stage 02.5 wording that no public Hermes domain/listener was assumed. The selected Hermes product, host-native `core` placement, direct Codex/Antigravity delegation, n8n machine-interface requirement, Stage 3 NetBird dependency and post-infrastructure workflow boundary remain unchanged.
 
+---
+
+## 2026-09-18T08:48:22+03:00 — Correct Hermes Desktop auth assumptions for Stage 4
+
+**Status:** ACCEPTED
+
+**Context:** current Hermes Desktop UI/source explicitly states that hosted gateways may use OAuth or username/password while self-hosted gateways may use a session token. Current upstream source also contains a token-mode remote-gateway path. The previous Stage 4 correction was therefore too narrow where it implied that a public Remote Gateway should be planned around a Hermes-native OAuth provider, even though the product choice for authentication had not been tested against the actual installed build and the existing nginx/Authelia ingress.
+
+**Decision:**
+
+1. Keep `https://hermes.escloud.us` as the Stage 4 Web Dashboard URL behind the existing nginx + Authelia ingress.
+2. Do **not** preselect Nous OAuth.
+3. The preferred first macOS Hermes Desktop test remains **Settings -> Gateways -> Remote gateway**.
+4. For the self-hosted backend, test the **Session token** credential mode first because it is explicitly supported by the current Desktop UI/source and is the simplest candidate for this single-operator deployment.
+5. Verify actual backend readiness, live chat/WebSocket traffic and reconnect persistence; a successful status probe alone is insufficient.
+6. Current upstream also has a separate gated-dashboard mode that can be engaged by non-loopback bind/public-URL semantics and supports username/password/OAuth providers. Treat that as an implementation constraint to test, not as an advance decision to use Nous OAuth.
+7. If session-token Remote Gateway is incompatible with the installed Hermes version or the accepted nginx/Authelia proxy topology, test the minimum next supported credential mode (username/password or OAuth). Only after Remote Gateway itself is proven incompatible may Stage 4 evaluate SSH or another connection mode.
+8. Do not change the existing public-WebUI requirement, host-native `core` placement, direct Codex/Antigravity delegation, n8n machine-interface requirement, or NetBird/vLLM dependency.
+
+**Supersedes:** only the auth-provider assumption in the 2026-09-18 Stage 4 WebUI/macOS Remote Gateway contract correction. The rest of that decision remains ACCEPTED.
+
