@@ -102,3 +102,19 @@ Do not repeat already-passed database/API/version/runtime checks. Final core acc
 
 `STAGE4E_MATTERMOST_DEPLOY_RUNTIME=RUNNING_ACCEPTANCE_PENDING_FINAL_MISSING_GATES`
 
+## Verification V3 validity correction
+
+The subsequent `STAGE4E_MATTERMOST_CORE_RUNTIME_FINAL_VERIFY_V3` script is **INVALID** as acceptance evidence. Its embedded Python was passed through a shell single-quoted `python3 -c '...'` string while the Python body itself contained single-quoted dictionary keys inside an f-string expression. Shell quote removal transformed expressions such as `state.get('Status')` into `state.get(Status)`, causing a Python `NameError` before any verification could complete.
+
+This was a script-construction error, not a Mattermost runtime failure. No mutation occurred in that verifier.
+
+For the next verifier:
+- embedded Python is removed entirely;
+- container state uses direct `docker inspect -f` fields;
+- listener checks use `ss` string capture rather than pipelines;
+- no `grep -q` is used;
+- Hermes checksum parsing avoids pipelines;
+- the exact shell block was locally syntax-checked with `bash -n` and static-scanned for the previous anti-patterns before being sent.
+
+`STAGE4E_MATTERMOST_CORE_RUNTIME_FINAL_VERIFY_V3=INVALID_SCRIPT`
+
