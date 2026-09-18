@@ -213,7 +213,11 @@ Fresh expanded read-only audit on 2026-09-18 confirms the following current runt
 - Antigravity CLI `1.2.5` raw help confirms native headless print mode plus JSON/stream-JSON, timeout, model, effort, sandbox/permission and conversation controls; its existing local auth/state is reused.
 - Accepted Stage 4B target: foreground non-PTY one-shots by default (`codex exec`; `agy -p/--print` with structured output), background only for long/parallel jobs, PTY only for interactive TUI.
 - Trusted-executor policy is accepted: no blanket sandbox/container/workspace-only/network restriction under `core`; critical high-impact mutations require operator approval at the Hermes/orchestration instruction layer before delegation, while ordinary non-critical work should remain frictionless.
-- Direct Codex/Antigravity E2E acceptance, Dashboard/private machine interface and final macOS Remote Gateway acceptance remain pending.
+- Stage 4B direct executor integration is COMPLETE / ACCEPTED: `STAGE4B_DIRECT_EXECUTOR_INTEGRATION=PASS`; final record `STAGE_04B_FINAL_ACCEPTANCE_2026-09-18.md`.
+- Codex CLI `0.154.0`: real foreground non-PTY `codex exec` delegation accepted; random repository context was read by Codex and consumed by Hermes; post-test recovery/non-regression PASS.
+- Antigravity CLI `1.2.5`: real foreground non-PTY `agy -p --output-format json` delegation accepted; `status=SUCCESS`, real random file context returned and consumed exactly by Hermes; full-access policy accepted.
+- Hermes `stream-json` Tirith warning contamination remains a known non-blocking machine-output defect to address/reconcile in Stage 4F.
+- Dashboard/private machine interface and final macOS Remote Gateway acceptance remain pending.
 
 Known lifecycle defect from the expanded audit: a controlled systemd stop/restart sends SIGTERM and Hermes logs the shutdown context, but the process exits status `1`; systemd records `Failed with result 'exit-code'` before the requested restart succeeds. The currently running service is healthy, but this graceful-stop defect must be resolved or explicitly understood before final Stage 4 acceptance.
 
@@ -280,6 +284,12 @@ Stage 4 remains **IN PROGRESS / NOT YET ACCEPTED**.
 - migration-preservation archive: `/tmp/edge-migration-preservation-20260916T141048Z.tar.gz`, SHA256 `0203e5845f57bc1d04b384cef2b26a45fbff855c341e1edf1193034c34de9fdf`, retained outside GitHub for legacy-reference/recovery use; do not indiscriminately restore legacy credentials.
 
 ## Current next step
+
+1. Stage 4B is COMPLETE / ACCEPTED; do not rerun Qwen, executor read-only audits, Codex E2E or Antigravity E2E without a concrete regression signal.
+2. Proceed to Stage 4C — Hermes Web Dashboard, ingress and auth.
+3. Then complete Stage 4F private n8n machine-interface integration, carrying the known Hermes `stream-json` Tirith stdout contamination as a machine-interface constraint.
+4. Carry the known upstream Hermes controlled-stop `SIGTERM -> exit 1` defect into Stage 4G; do not locally mask it with `SuccessExitStatus=1`.
+5. Perform Stage 4G server-side integrated acceptance, Stage 4H macOS Hermes Desktop integration, and Stage 4I final Stage 4 persistence/acceptance.
 
 1. Complete Stage 4B with the accepted trusted full-access executor contract: first Hermes/Qwen -> foreground non-PTY Codex `exec`, then Hermes/Qwen -> foreground non-PTY Antigravity print-mode structured output; do not repeat the accepted Qwen/vLLM or read-only executor audits.
 2. Keep blanket executor sandboxing disabled by policy; require operator approval in Hermes/orchestration instructions before critical high-impact mutations, not through generic filesystem/network confinement.
