@@ -492,4 +492,38 @@ The independent Docker reboot-lifecycle regression discovered during Stage 3 is 
 **Research record:** `STAGE_04_MATTERMOST_RESEARCH_BRIEF_2026-09-18.md`
 
 **Supersedes:** the earlier optional/deferred classification of a generic messaging/control frontend, for Mattermost specifically.
+---
+
+## 2026-09-18T12:43:00+03:00 — Stage 4D Mattermost target deployment architecture accepted
+
+**Status:** ACCEPTED
+
+**Context:** extended research and operator review resolved the Mattermost deployment architecture. The operator also clarified that service-integration mechanisms must not be frozen prematurely: during deployment all current native/upstream-supported options are to be evaluated and the best maintainable supported mechanism selected per connection.
+
+**Decision:**
+
+1. Stage 4D research/design is complete.
+2. Deploy **Mattermost Team Edition** using the current official Mattermost Docker Compose pattern.
+3. Use separate Mattermost application and dedicated PostgreSQL containers; do not use the Preview all-in-one image.
+4. Persist Mattermost/PostgreSQL state locally under `/srv`; exact paths/ownership are finalized during Stage 4E after the fresh runtime audit.
+5. Reuse the existing Xray -> host nginx -> shared TLS ingress. Do not deploy Mattermost's optional bundled nginx.
+6. Human endpoint is `https://chat.escloud.us`.
+7. `chat.escloud.us` is an explicit exception to the normal service-subdomain Authelia rule: **do not place Authelia in front of Mattermost**. Use Mattermost-native authentication so official web/desktop/mobile clients and REST/WebSocket flows remain native.
+8. Mattermost application and PostgreSQL backends remain private; no direct public application/database listener.
+9. Enable Mattermost Test Push Notification Service (TPNS) for official mobile clients. Lack of production SLA is accepted for this private deployment.
+10. Mattermost Calls is explicitly excluded from current Stage 4; do not deploy Calls media/TURN infrastructure or open Calls-specific ports.
+11. Do not add Kubernetes, HA, Elasticsearch/OpenSearch, Redis, MinIO/S3, custom push proxy/mobile build or other scale-specific subsystems without a later concrete requirement.
+12. Integrations with Hermes, n8n, Stalwart and other services are required where useful, but the **exact per-service mechanism is intentionally not preselected**. During Stage 4E enumerate all current native/upstream-supported mechanisms, compare reliability/simplicity/update compatibility, and choose the best supported option.
+13. Research examples such as Hermes Mattermost support, n8n's official Mattermost integration page/node, Mattermost API/webhooks/slash commands and SMTP are candidates/evidence of native support, not immutable implementation choices.
+14. Custom plugins, source patches, shim services, direct DB coupling or bespoke bridges require demonstrated insufficiency of practical native options and explicit operator acceptance.
+
+**Acceptance record:** `STAGE_04D_MATTERMOST_DESIGN_ACCEPTANCE_2026-09-18.md`
+
+`STAGE4D_MATTERMOST_TARGET_ARCHITECTURE_ACCEPTANCE=PASS`
+
+**Supersedes:**
+
+- the Stage 4 Mattermost decision's provisional requirement to validate Mattermost through Authelia; Mattermost now explicitly uses native authentication without Authelia;
+- the Stage 4 Mattermost decision's provisional preference for specific Hermes/n8n/webhook/slash-command/SMTP integration mechanics; those exact mechanics are now intentionally selected during Stage 4E rather than frozen in advance;
+- the earlier classification of Mattermost push and Calls as unresolved: TPNS is accepted, Calls is explicitly excluded.
 
