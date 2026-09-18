@@ -5,14 +5,15 @@
 **Stage 0 — COMPLETE / ACCEPTED**  
 **Stage 1 — COMPLETE / ACCEPTED**  
 **Stage 2 — Edge Core Applications — COMPLETE / ACCEPTED**  
-**Stage 02.5 — Remaining Functional Scope Reconciliation & Research — COMPLETE / ACCEPTED**
+**Stage 02.5 — Remaining Functional Scope Reconciliation & Research — COMPLETE / ACCEPTED**  
+**Stage 3 — Edge Cross-site Connectivity Foundation — IN PROGRESS**
 
 `EDGE_STAGE2_FINAL_INTEGRATED_ACCEPTANCE=PASS` on 2026-09-17.  
 `CLOUD_STAGE_02_5_FINAL_SCOPE_ACCEPTANCE=PASS` on 2026-09-18.
 
 Primary repository: `Eugene-SN/Cloud-Infrastructure`.
 
-Next production branch:
+Active production branch:
 
 `03 — Edge Cross-site Connectivity Foundation`
 
@@ -97,10 +98,10 @@ Backrest-before-Semaphore remains mandatory. Monitoring remains late-stage so it
 - logical node/FQDN: `edge.escloud.us`;
 - Ubuntu 26.04.1 LTS, kernel `7.0.0-31-generic`;
 - KVM x86_64, 2 vCPU, ~15 GiB RAM, 4 GiB swap;
-- IPv4 `45.92.156.17/24`, IPv6 `2a0c:b847:ffff:283::a/64`;
+- public IPv4 `45.92.156.17/24`; no public/global IPv6 on `ens3`; IPv6 remains enabled for link-local/NetBird overlay use;
 - timezone `Europe/Moscow`;
 - root SSH key-only through `ssh.socket`;
-- Docker Engine `29.8.1`, Compose `5.5.1`, containerd;
+- Docker Engine `29.8.1`, Compose `5.5.1`, containerd `2.3.5`; Docker `live-restore=false`; production containers use `restart=unless-stopped`;
 - nginx `1.28.3-2ubuntu1.11`;
 - Xray `26.3.27` on public TCP/443 with nginx fallback;
 - Hysteria2 `2.12.3` on public UDP/443;
@@ -109,6 +110,21 @@ Backrest-before-Semaphore remains mandatory. Monitoring remains late-stage so it
 - application WebUI backends remain loopback-only unless explicitly accepted otherwise.
 
 Shared service account `core`: UID/GID `1000:1000`, password locked, no sudo/docker group. `core` linger is enabled for Antigravity Remote Control.
+
+## Reboot lifecycle correction
+
+The Stage 1 `live-restore: true` setting was superseded on 2026-09-18 after Stage 3 reboot testing proved it caused an approximately 90-second late-shutdown delay on the current `edge` runtime.
+
+Accepted current state:
+
+- `/etc/docker/daemon.json`: `"live-restore": false`;
+- post-fix reboot total boot time: `13.842s`;
+- previous-journal-stop to new-kernel gap: `4.203s` (previously ~94s);
+- Docker/containerd active after reboot;
+- Authelia, Bulwark, n8n and Stalwart all auto-started via `restart=unless-stopped`;
+- zero failed systemd units.
+
+Acceptance record: `EDGE_REBOOT_LIFECYCLE_FIX_ACCEPTANCE_2026-09-18.md`.
 
 ## Authentication / ingress
 
@@ -181,4 +197,4 @@ Final recovery run proved foundation services, Stage 2 applications, mail, publi
 
 ## Current next step
 
-Stage 02.5 is closed. The next production task is **Stage 3 — Edge Cross-site Connectivity Foundation**.
+Stage 3 is active. The host reboot-lifecycle regression is fixed and accepted. Resume only the remaining connectivity-specific Stage 3 final verification/acceptance; do not reopen the resolved Docker reboot issue.
