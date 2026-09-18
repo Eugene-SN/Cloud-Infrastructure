@@ -188,12 +188,12 @@ Status: **ACCEPTED INTEGRATION BOUNDARY; DEPLOYMENT DEFERRED TO STAGE 5**.
 - MacBook/iPhone/iPad Obsidian synchronization is outside Cloud Infrastructure scope.
 - Filestash, SFTPGo, Syncthing, LiveSync/CouchDB or other Cloud-side file/sync products are not selected by assumption.
 
-# Planned deployment stage inventory
+# Deployment stage inventory
 
 | Stage | Scope | Current status |
 |---|---|---|
 | 3 | Cross-site Connectivity Foundation | COMPLETE / ACCEPTED; `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS` |
-| 4 | Hermes Agent Runtime | IN PROGRESS; upstream host-native baseline installed/audited, integrations and final acceptance pending |
+| 4 | Hermes Agent Runtime | IN PROGRESS; Hermes↔Mattermost accepted, n8n↔Mattermost provisioned/authenticated with native-node E2E pending; remaining Hermes 4A/4B/4C/4F/4G/4H/4I pending |
 | 5 | Edge Knowledge Replication & Data Integration | INTEGRATION STAGE; depends on accepted Home/PVE knowledge foundation plus Stage 3/4 |
 | 6 | Backrest & Recovery | PRODUCT DIRECTION ACCEPTED; topology research pending |
 | 7 | Maintenance & Update | Semaphore accepted; deploy only after Stage 6 restore acceptance |
@@ -228,28 +228,48 @@ Continuous workstream after Stage 10, not an infrastructure-completion stage:
 - Stage 1 recovery archive `/srv/backups/edge-stage1/edge-stage1-base-20260916T234611Z.tar.gz`, SHA256 `37486e763ddac4c5ef3a92a35c3dad49787d75ffd8b97499073c79af617cc566`;
 - authoritative migration-preservation archive `/tmp/edge-migration-preservation-20260916T141048Z.tar.gz`, SHA256 `0203e5845f57bc1d04b384cef2b26a45fbff855c341e1edf1193034c34de9fdf`, retained for later legacy-reference work.
 
-## Planned Stage 4 service — Mattermost
+## Stage 4 services — Hermes / Mattermost / n8n integration
 
-- status: **CORE RUNTIME + PUBLIC INGRESS + NATIVE SERVER CONFIG + HERMES↔MATTERMOST E2E ACCEPTED; N8N↔MATTERMOST INTEGRATION NEXT**;
-- Stage 4D acceptance: `STAGE4D_MATTERMOST_TARGET_ARCHITECTURE_ACCEPTANCE=PASS`;
-- core runtime acceptance: `STAGE4E_MATTERMOST_CORE_RUNTIME_ACCEPTANCE=PASS`; record `STAGE_04E_MATTERMOST_CORE_RUNTIME_ACCEPTANCE_2026-09-18.md`;
-- ingress acceptance: `STAGE4E_MATTERMOST_INGRESS_ACCEPTANCE=PASS`; record `STAGE_04E_MATTERMOST_INGRESS_ACCEPTANCE_2026-09-18.md`;
-- native server configuration acceptance: `STAGE4E_MATTERMOST_NATIVE_SERVER_CONFIG=PASS`; bot account creation enabled, public signup disabled, TPNS enabled, Calls disabled; record `STAGE_04E_MATTERMOST_NATIVE_SERVER_CONFIG_ACCEPTANCE_2026-09-18.md`;
-- Hermes↔Mattermost acceptance: `STAGE4E_HERMES_MATTERMOST_BOT_PROVISION=PASS`, `STAGE4E_HERMES_MATTERMOST_CHANNEL_NORMALIZATION=PASS`, `STAGE4E_HERMES_MATTERMOST_E2E=PASS`; bot `hermes` / display name `Hermes Agent`, ID `sceogxkhh3nh9y89uc6eza9ije`; primary interaction via DM; private service/home channel `hermes` ID `6s6o3iftjprwfg5p4d1gg1bwho`; mandatory default-channel `town-square` membership retained but not used operationally.
-- acceptance record: `STAGE_04D_MATTERMOST_DESIGN_ACCEPTANCE_2026-09-18.md`;
-- role: private collaboration/control/notification surface for Hermes, n8n and later infrastructure integrations;
-- edition/runtime: Mattermost Team Edition `11.11.0` using official `mattermost/docker` commit `497414659ee7127677d2b91b44bb4f3ea9d14695`;
-- topology: separate Mattermost application + dedicated PostgreSQL containers; no Preview all-in-one image;
-- persistence: local `/srv/mattermost` state; upstream repository/config under `/opt/mattermost`;
-- human endpoint: `https://chat.escloud.us` LIVE through existing Xray -> host nginx -> shared TLS; WebSocket `/api/v4/websocket` accepted;
-- authentication: Mattermost-native; **no Authelia** on `chat.escloud.us`;
-- mobile push: free TPNS accepted for official Mattermost mobile clients;
-- Calls: explicitly excluded from current Stage 4;
-- backend/database listeners remain private; accepted backend publication is only `127.0.0.1:18065 -> 8065`; PostgreSQL has no host binding;
-- fresh Stage 4E audit selected host backend mapping `127.0.0.1:18065 -> Mattermost:8065`; PostgreSQL remains Compose-internal; ports 8065/8443/5432 were free and no public firewall change is required;
-- confirmed current-project native integrations: Hermes built-in Mattermost gateway (REST v4 + WebSocket) and n8n official built-in Mattermost node for supported operations; Mattermost↔Stalwart SMTP was explicitly reviewed and is not required / not enabled;
-- every other service/direction is integrated only if its current upstream explicitly provides a Mattermost integration or supported standard-protocol counterpart; otherwise it remains unintegrated in the current project and may be reconsidered only as future out-of-project work;
-- custom plugins, patches, shim services, direct DB coupling, bespoke bridges, compatibility hacks, or an n8n relay are not substitutes for missing upstream integration.
+### Mattermost
+
+- status: **CORE RUNTIME + PUBLIC INGRESS + NATIVE SERVER CONFIG + HERMES↔MATTERMOST E2E ACCEPTED; N8N NATIVE-NODE E2E PENDING**;
+- Mattermost Team `11.11.0`, official `mattermost/docker` commit `497414659ee7127677d2b91b44bb4f3ea9d14695`;
+- PostgreSQL `18-alpine`;
+- persistent state under `/srv/mattermost`, upstream deployment under `/opt/mattermost`;
+- only host application publication: `127.0.0.1:18065 -> 8065`; PostgreSQL no host binding;
+- public endpoint `https://chat.escloud.us` via Xray -> host nginx -> shared TLS;
+- Mattermost-native auth, no Authelia;
+- TPNS configured; Calls disabled;
+- Hermes↔Mattermost accepted with bot `hermes`, private service channel `hermes` and real E2E response;
+- Mattermost↔Stalwart SMTP explicitly not required / not enabled;
+- prepackaged `mattermost-ai` plugin is currently enabled but is not accepted as a Hermes replacement; disposition pending before final Stage 4 acceptance.
+
+Acceptance records:
+
+- `STAGE_04D_MATTERMOST_DESIGN_ACCEPTANCE_2026-09-18.md`;
+- `STAGE_04E_MATTERMOST_CORE_RUNTIME_ACCEPTANCE_2026-09-18.md`;
+- `STAGE_04E_MATTERMOST_INGRESS_ACCEPTANCE_2026-09-18.md`;
+- `STAGE_04E_MATTERMOST_NATIVE_SERVER_CONFIG_ACCEPTANCE_2026-09-18.md`;
+- `STAGE_04E_HERMES_MATTERMOST_INTEGRATION_ACCEPTANCE_2026-09-18.md`.
+
+### n8n ↔ Mattermost
+
+- n8n `2.39.7`;
+- built-in Mattermost node and `mattermostApi` credential type present;
+- one credential: `Mattermost API - chat.escloud.us`, ID `16a0a988ad514ab1`;
+- Mattermost bot `n8n`, ID `4ty8tfwmdir9mxkeua3n7658mc`;
+- one active bot access token, description `n8n-native-mattermost`;
+- credential/API identity validation: PASS;
+- operator DM exists;
+- workflows: 0; executions: 0;
+- official n8n Mattermost node E2E: **PENDING / NOT ACCEPTED**.
+
+### Hermes lifecycle observation
+
+- `hermes-gateway.service` currently active/enabled with `NRestarts=0`;
+- controlled stop/restart currently exits status 1 after SIGTERM and is recorded by systemd as a failed stop before restart succeeds;
+- graceful-stop semantics require resolution/explicit characterization before Stage 4 final lifecycle acceptance.
+
 ## Stage boundary
 
 Stage 0 — COMPLETE / ACCEPTED.  
