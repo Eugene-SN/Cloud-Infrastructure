@@ -25,7 +25,7 @@ Fresh runtime verification outranks this file. This inventory records accepted l
 - Xray `26.3.27`;
 - Hysteria2 `2.12.3`;
 - Authelia `4.39.27`;
-- service account `core` UID/GID `1000:1000`, locked password, no sudo/docker group;
+- trusted service/operator account `core` UID/GID `1000:1000`, locked password, full non-interactive root via `/etc/sudoers.d/90-core-root` (`NOPASSWD: ALL`), no separate `docker` group membership required;
 - UFW intentional ingress: TCP 22/80/443/25/465/993 and UDP 443;
 - WebUI application backends are loopback-only by default.
 
@@ -311,3 +311,4 @@ Stage 02.5 — COMPLETE / ACCEPTED.
 Stage 3 — COMPLETE / ACCEPTED.  
 
 `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS`. Final Stage 3 record: `STAGE_03_ACCEPTANCE_2026-09-18.md`. Stage 4 — Edge Hermes Agent Runtime is COMPLETE / ACCEPTED with `STAGE4_FINAL_ACCEPTANCE=PASS`; final record: `STAGE_04_FINAL_ACCEPTANCE_2026-09-18.md`.
+

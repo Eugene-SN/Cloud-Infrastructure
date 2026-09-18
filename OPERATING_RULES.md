@@ -402,6 +402,15 @@ Latest applicable `ACCEPTED` decision has priority. `SUPERSEDED`, `REJECTED`, an
 - For containers, preserve upstream-required internal users/UID/GID.
 - Verify numeric ownership before mutations rather than assuming it.
 
+## Trusted `core` privilege model
+
+- `core` is the shared trusted host service/operator account for Cloud Infrastructure.
+- Current accepted policy grants `core` full non-interactive root through `sudo`: `core ALL=(ALL:ALL) NOPASSWD: ALL` in `/etc/sudoers.d/90-core-root`.
+- Keep the Unix identity as `core`; use `sudo -n` for commands that require root rather than changing UID/GID or maintaining a separate root execution path.
+- Do not add `core` to the `docker` group solely for Docker administration; `sudo -n docker ...` already satisfies that requirement.
+- Full sudo capability does not remove the existing approval boundary for destructive, system-wide, production, network, credential/auth, data-deletion or similarly high-impact mutations. Authorization remains at the operator/orchestration instruction layer.
+- Acceptance record: `CORE_FULL_ROOT_SUDO_ACCEPTANCE_2026-09-18.md`.
+
 ## Shell block rule
 
 Any terminal block whose output must be returned to chat uses a subshell, `set -Eeuo pipefail`, ASCII/English `BLOCK_NAME`, and green BEGIN/END delimiters including final RC.
@@ -426,3 +435,4 @@ Avoid restart/reboot unless actually required.
 - Home/PAI connectivity must not become a foundation requirement for independently useful `edge` capabilities, but it must exist before services whose correctness depends on Home/PAI.
 - Do not carry legacy configuration forward blindly; use `migration-reference/` for engineering context and the external archive only where exact state/credentials are actually required.
 - Do not open a new production branch until the current stage is accepted and canonical files have been updated/read back.
+

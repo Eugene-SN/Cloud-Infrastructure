@@ -648,6 +648,26 @@ The independent Docker reboot-lifecycle regression discovered during Stage 3 is 
 
 ---
 
+## 2026-09-18T20:10:54+03:00 — Core full non-interactive root privilege
+
+**Status:** ACCEPTED
+
+**Context:** `edge` is a single-operator trusted environment and `core` is the shared host-native execution identity for Hermes, Codex, Antigravity and related Cloud Infrastructure work. The earlier rebuild baseline intentionally left `core` without sudo. Continued service deployment now requires the trusted agent/tooling context to perform system administration without switching to a separate interactive root session or introducing per-service privilege workarounds.
+
+**Decision:**
+
+1. Keep `core` as UID/GID `1000:1000` with its password locked.
+2. Grant full non-interactive sudo using `core ALL=(ALL:ALL) NOPASSWD: ALL` in `/etc/sudoers.d/90-core-root`.
+3. Use `sudo -n` from `core` for root-required host operations; do not change `core` to UID 0.
+4. Do not add `core` to the `docker` group merely for Docker administration because full sudo already provides the required capability.
+5. Preserve the existing trusted-executor safety contract: critical destructive/system-wide/production/network/credential/data mutations still require operator authorization at the orchestration/instruction layer unless already explicitly authorized.
+
+**Acceptance evidence:** `CORE_FULL_ROOT_SUDO_ACCEPTANCE_2026-09-18.md`; `visudo -c` PASS; `sudo -n` root UID/GID/user verification PASS; arbitrary run-as verification PASS; rule SHA256 `545bf1fb2ab8c68f09c45e711100bea1db2b14341db1bdec986b315d4f04fc30`.
+
+**Supersedes:** the prior current-state restriction that `core` has no sudo access. Historical stage records retain their original factual state and are not rewritten.
+
+---
+
 ## 2026-09-18 — Stage 04.3 recovery scope and evidence reconciliation
 
 **Status:** ACCEPTED — operator-directed recovery workflow, not Stage 4C architecture/deployment acceptance.
@@ -771,3 +791,4 @@ Root recovery now confirms Authelia v4.39.27, no OIDC-related config keys or gen
 6. Stage 5 may begin only from the persisted final Stage 4 checkpoint and its own mandatory entry audit.
 
 **Supersedes:** all remaining current-state descriptions of Stage 4C/F/G/H/I as pending. It does not rewrite the historical state recorded by earlier acceptance/audit artifacts.
+
