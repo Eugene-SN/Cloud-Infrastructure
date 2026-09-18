@@ -125,19 +125,38 @@ Stage 3 establishes the Cloud-to-Home private transport needed by later workload
 
 ### Scope
 
-Deploy Hermes after Stage 3 connectivity is accepted so the stage can verify both cloud executors and real local-vLLM use.
+Deploy Hermes after Stage 3 connectivity is accepted so the stage can verify human WebUI access, cloud executors, machine integration and real local-vLLM use in one coherent acceptance.
 
 Requirements:
 
+- use the upstream-recommended Hermes installation path as published by Nous Research at deployment time; do not invent an independent version-selection policy;
 - host-native runtime under `core` by default;
 - persistent upstream-supported lifecycle/state;
-- no new public WebUI/port/domain by assumption;
+- deploy the Hermes Web Dashboard as the normal human UI;
+- publish the Dashboard at `https://hermes.escloud.us` through the existing Xray/nginx/TLS/Authelia service-ingress architecture;
+- keep the Hermes Dashboard backend loopback-only by default (upstream default `127.0.0.1:9119`); do not expose port 9119 directly to the Internet;
+- do not create a separate direct public Hermes API/backend listener merely for n8n;
+- preserve the project-wide authentication rule: service subdomains are protected by Authelia; only the root landing page `escloud.us` remains unauthenticated;
+- configure only the minimum Hermes-native remote-dashboard authentication required by upstream for a non-loopback public URL and make it compatible with the existing reverse-proxy/Authelia path;
 - direct Hermes access to Codex and Antigravity without CloudCLI as a proxy;
 - stable machine interface for n8n invocation/result/status;
 - minimal infrastructure acceptance of `n8n -> Hermes -> Codex/AGY -> Hermes -> n8n`;
 - inspect current `ai-node` vLLM bind/exposure and make only the minimum private-fabric change required;
 - verify real `Hermes -> vLLM` inference;
 - no user-specific automation/workflows in Stage 4.
+
+### Final Stage 4 substage — macOS Hermes Desktop integration
+
+After the server-side Hermes runtime, Web Dashboard, executors, n8n machine interface and vLLM path are accepted:
+
+1. install/use the supported Hermes Desktop application on macOS;
+2. test the simplest supported **Remote Gateway** mode first;
+3. configure **Settings -> Gateways -> Remote gateway** with the remote Dashboard backend URL, intended to be `https://hermes.escloud.us`;
+4. verify the app detects the backend auth provider, completes sign-in, reaches backend readiness, establishes real chat/WebSocket operation, and reconnects after application restart;
+5. treat the remote backend as the running `hermes dashboard` service, not as the separate messaging gateway process;
+6. evaluate an alternative connection mode only if a demonstrated incompatibility prevents the simple Remote Gateway path from working with the accepted nginx/Authelia/Hermes-auth topology.
+
+This Desktop integration is the **last Stage 4 integration task**, not a user-specific workflow.
 
 ## Stage 5 — Edge Knowledge Replication & Data Integration
 
