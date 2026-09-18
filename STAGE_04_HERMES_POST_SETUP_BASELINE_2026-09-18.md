@@ -55,7 +55,21 @@ Fresh Stage 4 audit confirmed:
 - vLLM reports `max_model_len=195216`;
 - provider/context configuration therefore matches current PAI runtime.
 
-The wizard changed `agent.reasoning_effort` from the template default `medium` to `none`. This is a factual current setting only; its suitability for Qwen3.8 has **not** yet been accepted and must be tested before normalization.
+The wizard originally wrote `agent.reasoning_effort: none`, which disabled Qwen3.8 thinking. This was corrected on 2026-09-18 after a direct vLLM probe and Hermes runtime testing.
+
+Accepted current reasoning state:
+
+- `agent.reasoning_effort` is **unset**;
+- `model.reasoning_echo: true`;
+- Hermes therefore leaves reasoning effort to the model/server-native Qwen3.8 policy;
+- direct vLLM probe without a Hermes override returned HTTP 200 with non-empty reasoning;
+- Hermes effective runtime resolver returned `None` for the reasoning override;
+- real Hermes turn 1 completed with a terminal tool call and `reasoning_tokens=45`;
+- resumed turn 2 used the same session ID and completed with `reasoning_tokens=34`;
+- reasoning/tool replay continuity is therefore verified across turns;
+- accepted post-normalization `config.yaml` SHA256: `c57ca6bc0b301250d4825060fcf5f8d90af94c7cee4f1632e0b648189fd994ae`.
+
+Acceptance marker: `STAGE4_HERMES_QWEN38_REASONING_NORMALIZATION=PASS`.
 
 ## Terminal / agent defaults
 
@@ -178,14 +192,12 @@ Do **not** run `npm audit fix` or `hermes doctor --fix` by assumption. Any mutat
 
 ## Still pending before Stage 4 acceptance
 
-1. decide/verify Qwen3.8 reasoning behavior and whether `reasoning_effort: none` should remain;
-2. normalize user-selected optional dependencies/tool backends only where useful;
-3. verify the nested bundled Codex skill on the live host and install/verify the official Antigravity skill if required;
-4. prove real `Hermes -> vLLM` inference and tool calling;
-5. prove direct Hermes -> Codex CLI and Hermes -> Antigravity CLI delegation;
-6. configure the Hermes API machine interface and prove `n8n -> Hermes -> Codex/AGY -> Hermes -> n8n`;
-7. deploy the persistent Hermes Dashboard backend and publish `https://hermes.escloud.us` through nginx + Authelia;
-8. test the final macOS Hermes Desktop Remote Gateway path, session credential behavior, live chat/WebSocket and reconnect persistence;
-9. perform final Stage 4 non-regression/reboot acceptance.
+1. normalize the full practical Hermes local tool/runtime dependency set selected during setup, including host packages and browser runtime dependencies;
+2. verify the nested bundled Codex skill on the live host and install/verify the official Antigravity skill if required;
+3. prove direct Hermes -> Codex CLI and Hermes -> Antigravity CLI delegation;
+4. configure the Hermes API machine interface and prove `n8n -> Hermes -> Codex/AGY -> Hermes -> n8n`;
+5. deploy the persistent Hermes Dashboard backend and publish `https://hermes.escloud.us` through nginx + Authelia;
+6. test the final macOS Hermes Desktop Remote Gateway path, session credential behavior, live chat/WebSocket and reconnect persistence;
+7. perform final Stage 4 non-regression/reboot acceptance.
 
 No Stage 4 final acceptance is claimed by this audit.
