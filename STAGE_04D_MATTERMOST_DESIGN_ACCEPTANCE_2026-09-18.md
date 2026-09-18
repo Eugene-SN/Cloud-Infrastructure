@@ -34,6 +34,7 @@ For every service already deployed or selected in Cloud Infrastructure:
 Confirmed native integrations at Stage 4D:
 
 - **Hermes ↔ Mattermost:** fixed to Hermes' built-in Mattermost gateway adapter using Mattermost REST API v4 + WebSocket;
+  Canonical implementation source: `https://hermes-agent.nousresearch.com/docs/user-guide/messaging/mattermost` (use the installed Hermes version/source to verify exact option names at deployment time).
 - **n8n → Mattermost:** fixed to n8n's official built-in Mattermost integration/node for the operations it natively supports;
 - **Mattermost → mail:** fixed to Mattermost's standard SMTP integration using the existing Stalwart SMTP service.
 
