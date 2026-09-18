@@ -20,6 +20,20 @@ Each implementation stage has its own work branch and follows the accepted-first
 
 Do not reopen accepted products without a concrete incompatibility or changed requirement. Docker + Compose remain the default for suitable application services; host-native placement is preferred where containerization materially complicates the supported operating model or integration with existing host-native executors.
 
+## Scope semantics — minimum acceptance, not minimal installation
+
+A stage scope lists the required outcomes that must be closed before acceptance. It is **not** an exhaustive feature whitelist for products deployed in that stage.
+
+For already selected services:
+
+- deploy the normal, broadly useful upstream-supported capability set appropriate to the service's long-lived role;
+- install shared local dependencies that make those normal capabilities usable when doing so has no material downside;
+- do not choose a deliberately minimal/slim service profile merely because the immediate acceptance test uses fewer features;
+- do not use "not needed for the current/core Stage path" as an exclusion criterion;
+- defer only capabilities with a concrete reason such as external credentials/subscriptions, mutually exclusive architecture, duplication, unsupported/alpha maturity with material cost, heavy unrelated dependencies, or explicit user decision.
+
+This does not move user-specific workflows into infrastructure stages; it ensures the underlying service does not need routine re-installation each time a new workflow starts using another normal capability.
+
 ## Completed stages
 
 ### Stage 0 — Discovery, preservation and migration preparation
