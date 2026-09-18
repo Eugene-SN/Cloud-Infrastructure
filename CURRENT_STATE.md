@@ -14,9 +14,9 @@
 
 Primary repository: `Eugene-SN/Cloud-Infrastructure`.
 
-Next production branch:
+Current production branch:
 
-`04 — Edge Hermes Agent Runtime`
+`04 — Edge Hermes Agent Runtime` — **IN PROGRESS / NOT YET ACCEPTED**
 
 Stage 02.5 final acceptance record:
 
@@ -192,30 +192,72 @@ Final recovery run proved foundation services, Stage 2 applications, mail, publi
 
 ## Stage 4 — Hermes Agent Runtime (in progress)
 
-A post-setup read-only audit on 2026-09-18 confirmed the initial host-native Hermes installation under `core`.
+Fresh expanded read-only audit on 2026-09-18 confirms the following current runtime.
 
-Current confirmed baseline:
+### Hermes core
 
 - official upstream git install under `/home/core/.hermes/hermes-agent`;
-- reported version `0.21.3 (2026.9.14)`, branch `main`, commit `d177b119e9c56c9ddc0b7379ffce52341ec06584`, clean worktree;
-- main inference provider `AI-Node vLLM` -> `http://192.168.1.30:8000/v1`;
-- model `qwen3.8-27b-fp8`, Chat Completions mode, configured/verified context `195216`;
+- Hermes `0.21.3 (2026.9.14)`, branch `main`, commit `d177b119e9c56c9ddc0b7379ffce52341ec06584`, clean worktree;
+- main provider `AI-Node vLLM` -> `http://192.168.1.30:8000/v1`;
+- model `qwen3.8-27b-fp8`, Chat Completions mode, verified context `195216`;
+- Qwen3.8 model-native reasoning/replay accepted; `config.yaml` SHA256 remains `c57ca6bc0b301250d4825060fcf5f8d90af94c7cee4f1632e0b648189fd994ae`;
 - terminal backend `local`;
-- Qwen3.8 reasoning normalized and accepted: `agent.reasoning_effort` unset, `model.reasoning_echo=true`, model-native thinking + terminal tool call + resumed multi-turn reasoning replay verified; current config SHA256 `c57ca6bc0b301250d4825060fcf5f8d90af94c7cee4f1632e0b648189fd994ae`;
-- user `hermes-gateway.service` enabled and active under `core`, but no messaging platforms and no listeners yet on `8642` or `9119`;
+- system toolchain/browser normalization accepted, including managed Chromium and `cua-driver 0.28.2`;
+- `hermes-gateway.service` is enabled and currently active under `core`; current `NRestarts=0`;
+- Mattermost environment is configured and its token validates successfully as bot `hermes`;
 - standalone Codex CLI `0.154.0` and Antigravity CLI `1.2.5` remain available to `core`;
-- Dashboard/API/n8n integration and final macOS Remote Gateway integration remain pending;
-- Hermes host/toolchain normalization accepted: `ripgrep`, `ffmpeg`, build/Python/libffi development dependencies and Chromium system libraries installed; `browser-use` backend and managed Chromium `browser_exec` verified end-to-end; `cua-driver 0.28.2` available under the actual `core` runtime; marker `STAGE4_HERMES_SYSTEM_TOOLCHAIN_NORMALIZATION=PASS`;
-- wizard-selected `openai-codex` image generation is not currently usable because Hermes-managed Codex auth is absent.
-- Mattermost is a mandatory Stage 4 private collaboration/control substage and its **core runtime is now DEPLOYED / ACCEPTED**. Stage 4D design is COMPLETE / ACCEPTED: Mattermost Team Edition, official Docker Compose pattern, separate dedicated PostgreSQL container, local `/srv` state, existing Xray/host-nginx/shared-TLS ingress, `https://chat.escloud.us` with Mattermost-native authentication and **no Authelia**, TPNS enabled for official mobile clients, Calls excluded. Mattermost integrations follow a strict native-only current-project rule. Execution order is Hermes first, n8n second. Hermes uses the official built-in Mattermost gateway; n8n uses its official Mattermost integration for supported operations. Mattermost↔Stalwart SMTP/email has been explicitly reviewed and is **not required / not enabled** in the accepted target state. Acceptance: `STAGE4D_MATTERMOST_TARGET_ARCHITECTURE_ACCEPTANCE=PASS`;
+- remaining Full Setup capability verification, direct Codex/Antigravity delegation, Dashboard/private machine interface and final macOS Remote Gateway acceptance are pending.
 
-Detailed factual record: `STAGE_04_HERMES_POST_SETUP_BASELINE_2026-09-18.md`.
+Known lifecycle defect from the expanded audit: a controlled systemd stop/restart sends SIGTERM and Hermes logs the shutdown context, but the process exits status `1`; systemd records `Failed with result 'exit-code'` before the requested restart succeeds. The currently running service is healthy, but this graceful-stop defect must be resolved or explicitly understood before final Stage 4 acceptance.
+
+### Mattermost
+
+Stage 4D design, core runtime, ingress, native server configuration and Hermes↔Mattermost integration are accepted.
+
+Current runtime:
+
+- Mattermost Team `11.11.0`;
+- PostgreSQL `18-alpine`;
+- official `mattermost/docker` deployment at commit `497414659ee7127677d2b91b44bb4f3ea9d14695`;
+- Mattermost healthy and PostgreSQL running;
+- host publication only `127.0.0.1:18065 -> 8065`; PostgreSQL has no host binding;
+- public `https://chat.escloud.us` through Xray -> host nginx -> shared TLS;
+- WebSocket `/api/v4/websocket` returns `101 Switching Protocols`;
+- Mattermost-native authentication; no Authelia;
+- effective SiteURL supplied by `MM_SERVICESETTINGS_SITEURL=https://chat.escloud.us`;
+- bot account creation enabled; public user creation disabled;
+- TPNS configured at `https://push-test.mattermost.com`;
+- Calls plugin disabled;
+- Mattermost↔Stalwart SMTP is explicitly not required / not enabled;
+- prepackaged `mattermost-ai` plugin is currently enabled. It is not an accepted replacement for Hermes and requires explicit disposition before final Stage 4 acceptance rather than silent adoption.
+
+Hermes↔Mattermost accepted state:
+
+- bot `hermes` / display name `Hermes Agent`, ID `sceogxkhh3nh9y89uc6eza9ije`;
+- operator allowlist `mof5mc6w3jds8qp36b678qrzoc`;
+- private service/home channel `hermes`, ID `6s6o3iftjprwfg5p4d1gg1bwho`;
+- operator DM exists;
+- real E2E response `HERMES_MATTERMOST_E2E_OK` passed;
+- markers: `STAGE4E_HERMES_MATTERMOST_BOT_PROVISION=PASS`, `STAGE4E_HERMES_MATTERMOST_CHANNEL_NORMALIZATION=PASS`, `STAGE4E_HERMES_MATTERMOST_E2E=PASS`.
+
+### n8n ↔ Mattermost
+
+Status: **IN PROGRESS / NOT YET ACCEPTED**.
+
+Fresh recovery audit established:
+
+- n8n `2.39.7` healthy at `127.0.0.1:15678`;
+- official built-in Mattermost node and `mattermostApi` credential type are present;
+- exactly one Mattermost credential exists: `Mattermost API - chat.escloud.us`, ID `16a0a988ad514ab1`;
+- the credential validates against `/api/v4/users/me` with HTTP 200 as bot `n8n`, ID `4ty8tfwmdir9mxkeua3n7658mc`;
+- exactly one active access token exists for `n8n`, description `n8n-native-mattermost`;
+- direct-message channel `eugene ↔ n8n` exists;
+- n8n has no workflows and no executions;
+- provisioning/authentication is therefore valid, but official n8n Mattermost node E2E behavior has not yet been accepted.
+
+Detailed accepted records remain authoritative for completed substages; the expanded audit does not retroactively rewrite historical records.
 
 Stage 4 remains **IN PROGRESS / NOT YET ACCEPTED**.
-
-Mattermost Stage 4E core runtime is **ACCEPTED**: `STAGE4E_MATTERMOST_CORE_RUNTIME_ACCEPTANCE=PASS`. Runtime: upstream `mattermost/docker` commit `497414659ee7127677d2b91b44bb4f3ea9d14695`, Mattermost Team `11.11.0`, PostgreSQL `18-alpine`, Mattermost container healthy, PostgreSQL running, both `restart=unless-stopped`, host publication only `127.0.0.1:18065 -> 8065`; host ports `8065/8443/5432` are not published; Hermes gateway/config non-regression passed. Acceptance record: `STAGE_04E_MATTERMOST_CORE_RUNTIME_ACCEPTANCE_2026-09-18.md`.
-
-Mattermost public ingress is **ACCEPTED**: `STAGE4E_MATTERMOST_INGRESS_ACCEPTANCE=PASS`. Native application configuration context audit is complete: first System Admin account exists and System Console access was verified; `mmctl 11.11.0` local mode is operational and Calls plugin ID is `com.mattermost.calls`. Marker: `STAGE4E_MATTERMOST_NATIVE_CONFIG_CONTEXT=PASS`. A subsequent native server configuration mutation has been applied: effective SiteURL is `https://chat.escloud.us`, bot account creation enabled, public user creation disabled, TPNS enabled with `https://push-test.mattermost.com`, and Calls plugin disabled. The official `mattermost/docker` base Compose injects `MM_SERVICESETTINGS_SITEURL` from `.env` (`https://${DOMAIN}`), so SiteURL is intentionally environment-owned and overrides the blank `config.json` value; bot/signup/push/Calls settings are persisted in `config.json`. Native server configuration is now ACCEPTED: STAGE4E_MATTERMOST_NATIVE_SERVER_CONFIG=PASS; Calls is verified disabled and the public API remains healthy. Acceptance record: STAGE_04E_MATTERMOST_NATIVE_SERVER_CONFIG_ACCEPTANCE_2026-09-18.md. `https://chat.escloud.us` now serves Mattermost through the existing Xray -> host nginx -> loopback backend path, WebSocket `/api/v4/websocket` returns `101 Switching Protocols`, Authelia is absent by design, and n8n/CloudCLI/mail ingress non-regression passed. Acceptance record: `STAGE_04E_MATTERMOST_INGRESS_ACCEPTANCE_2026-09-18.md`.
 
 ## Recovery / preserved state
 
@@ -224,7 +266,10 @@ Mattermost public ingress is **ACCEPTED**: `STAGE4E_MATTERMOST_INGRESS_ACCEPTANC
 
 ## Current next step
 
-Stage 4 — Edge Hermes Agent Runtime is **IN PROGRESS**. Follow the complete authoritative Stage 4A–4I sequence in `IMPLEMENTATION_PHASES.md`; do not collapse Stage 4 to only the immediate next test block. Continue from `STAGE_04_HERMES_POST_SETUP_BASELINE_2026-09-18.md`. Mattermost Stage 4D research/design is COMPLETE / ACCEPTED. **Stage 4E Mattermost core runtime, public ingress and native server configuration are accepted. Current focus is Hermes bot identity/token provisioning and the official Hermes Mattermost gateway integration.** After public/native-client Mattermost acceptance: integrate Hermes first using the official Hermes Mattermost guide, then n8n, then discuss whether Mattermost email functionality via Stalwart is useful enough to enable. Do not reinstall Hermes or reopen Stage 3 transport unless a concrete incompatibility appears.
+1. Finish Stage 4E by proving the official n8n Mattermost node end-to-end with the already validated single credential/bot; do not create duplicate credentials, tokens or permanent user workflows for the probe.
+2. Resolve or explicitly characterize the Hermes controlled stop/restart exit-status defect before server-side final acceptance.
+3. Explicitly disposition the currently enabled prepackaged `mattermost-ai` plugin; do not treat it as accepted architecture by default.
+4. Resume remaining Hermes Stage 4A/4B/4C work, then Stage 4F machine-interface integration.
+5. Perform Stage 4G server-side integrated acceptance, Stage 4H macOS Hermes Desktop integration, and Stage 4I final repository persistence/acceptance.
 
-
-**Stage 4E Mattermost core runtime, public ingress, native server configuration, Hermes bot provisioning and Hermes↔Mattermost integration are accepted. Current focus moves to native n8n↔Mattermost integration.** Hermes bot `hermes` / display name `Hermes Agent` (`sceogxkhh3nh9y89uc6eza9ije`) is enabled; token is validated/stored in `/home/core/.hermes/.env`; operator allowlist is `mof5mc6w3jds8qp36b678qrzoc`; real E2E messaging returned `HERMES_MATTERMOST_E2E_OK`; primary interactive surface is DM with Hermes Agent; private service/home channel `hermes` (`6s6o3iftjprwfg5p4d1gg1bwho`) is used for proactive output. Mandatory `town-square` membership is accepted as a Mattermost default-channel invariant and is not used operationally. Markers: `STAGE4E_HERMES_MATTERMOST_BOT_PROVISION=PASS`, `STAGE4E_HERMES_MATTERMOST_CHANNEL_NORMALIZATION=PASS`, `STAGE4E_HERMES_MATTERMOST_E2E=PASS`.
+Do not reopen Stage 3 transport or reinstall already accepted Stage 4 components without a concrete incompatibility.
