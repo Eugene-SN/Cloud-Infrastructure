@@ -166,7 +166,7 @@ Hermes remains host-native under `core` by default so it can reuse the host-nati
 
 Mattermost is a mandatory accepted Stage 4 substage. `chat.escloud.us` uses Mattermost-native authentication with no Authelia; integrations are native/upstream-supported only. Hermes↔Mattermost is an accepted native path. n8n↔Mattermost uses the official n8n Mattermost integration. Mattermost↔Stalwart SMTP is explicitly **not required / not enabled**.
 
-The Hermes Web Dashboard belongs at `https://hermes.escloud.us` behind the existing Xray/nginx/TLS/Authelia path. Do not expose a Hermes machine/API backend directly to the Internet.
+The Hermes Web Dashboard belongs at `https://hermes.escloud.us` through the existing Xray/nginx/TLS path. During Stage 4 recovery, revalidate the exact native Hermes/Authelia auth mechanism against deployed source/runtime; do not treat old forward-auth or session-token-first wording as a final design. Self-hosted OIDC with Authelia as IdP is a candidate until the Stage 4C design gate is explicitly recorded. Do not expose a Hermes machine/API backend directly to the Internet.
 
 Stage 4 must ultimately prove `n8n -> Hermes -> Codex/AGY -> Hermes -> n8n`, real `Hermes -> vLLM`, server-side lifecycle/non-regression, and the final macOS Hermes Desktop Remote Gateway path.
 

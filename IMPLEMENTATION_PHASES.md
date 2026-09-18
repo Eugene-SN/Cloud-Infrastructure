@@ -148,7 +148,7 @@ Requirements:
 - persistent upstream-supported lifecycle/state;
 - retain the full practical upstream-supported Hermes tool/runtime capability set rather than an intentionally reduced core path;
 - deploy the Hermes Web Dashboard as the normal human UI;
-- publish it at https://hermes.escloud.us through existing Xray/nginx/TLS/Authelia;
+- publish it at https://hermes.escloud.us through existing Xray/nginx/TLS; revalidate the exact Hermes/Authelia authentication mechanism in Stage 4C before implementation;
 - keep the Dashboard backend loopback-only by default and do not expose port 9119 directly;
 - keep the n8n machine interface local/private rather than creating a public Hermes API;
 - preserve the project-wide Authelia policy for service subdomains except explicitly accepted native-client services such as `mail.escloud.us` and the Stage 4 Mattermost endpoint `chat.escloud.us`;
@@ -166,7 +166,7 @@ These substages define the complete Stage 4 scope. Execution is dependency-drive
 
 #### Stage 4A — Hermes core runtime and Full Setup capability completion
 
-**Status: IN PROGRESS.**
+**Status: COMPLETE / ACCEPTED.** Core acceptance is preserved; the already documented gateway stop constraint is tracked in Stage 4G, not a reason to repeat Stage 4A.
 
 Accepted:
 
@@ -230,14 +230,17 @@ Accepted outcome:
 
 #### Stage 4C — Hermes Web Dashboard, ingress and auth
 
-**Status: PENDING.**
+**Status: RECOVERY / DESIGN REVALIDATION / NOT ACCEPTED.**
 
-- persistent Dashboard backend;
-- loopback-only backend unless a concrete incompatibility requires otherwise;
-- `https://hermes.escloud.us` through Xray/nginx/shared TLS/Authelia;
-- WebSocket/session persistence;
-- reconcile the actual Hermes remote-dashboard credential path with Authelia without preselecting Nous OAuth;
-- keep the n8n machine API private/local.
+- complete the bounded recovery inspection of the failed Certbot precondition; preserve prior PASS evidence;
+- establish the exact installed Hermes/OIDC, Authelia and existing Certbot webroot contract;
+- candidate: `https://hermes.escloud.us` through Xray/nginx/shared TLS to loopback Dashboard, native self-hosted OIDC with Authelia as IdP and no nginx `auth_request`;
+- one interactive provider, public authorization-code PKCE/S256 client, callback `https://hermes.escloud.us/auth/callback`;
+- old session-token-first / forward-auth assumptions are suspended pending design revalidation;
+- explicitly record architecture and recovery path before runtime mutation;
+- native Authelia validation, shared-lineage certificate extension, persistent core user service, frontend and WebSocket forwarding;
+- accept only after actual browser/OIDC login, Dashboard Chat and WS/PTY verification;
+- keep the n8n machine interface private/local.
 
 #### Stage 4D — Mattermost deep research and deployment design
 
@@ -309,9 +312,9 @@ Stalwart remains an independent accepted mail service; Mattermost SMTP is not pa
 
 1. use supported Hermes Desktop on macOS;
 2. test Remote Gateway against `https://hermes.escloud.us`;
-3. test the self-hosted session credential first;
+3. use the authentication mechanism actually accepted in Stage 4C; verify the installed/current Desktop native PKCE path when self-hosted OIDC is selected, without restoring a stale session-token-first assumption;
 4. verify readiness, live chat/WebSocket and reconnect after app restart;
-5. use the minimum next supported credential/connection mode only if the simple Remote Gateway path proves incompatible.
+5. investigate exact current Desktop/server behavior before any workaround; do not change auth merely to bypass a failed test.
 
 #### Stage 4I — Final Stage 4 acceptance and repository persistence
 
@@ -467,3 +470,7 @@ Stage 4: **IN PROGRESS / NOT YET ACCEPTED**.
 Current branch:
 
 `04 — Edge Hermes Agent Runtime`
+
+## Current recovery workstream
+
+`04.3 — Edge Hermes Stage 4 Recovery, Completion & Final Acceptance` on Git branch `04.3-edge-hermes-recovery-completion`. This continues Stage 4; it does not open Stage 5. Stages 4A/B/D/E remain accepted; 4C/F/G/H/I remain incomplete.

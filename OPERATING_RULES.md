@@ -252,40 +252,29 @@ Mattermost is an accepted mandatory Stage 4 surface:
 - n8n↔Mattermost uses the official n8n Mattermost integration;
 - Mattermost↔Stalwart SMTP is explicitly not required / not enabled.
 
-### Hermes WebUI / ingress
+### Hermes WebUI / ingress — recovery design gate
 
-The Hermes Web Dashboard is a required Stage 4 surface.
+The Hermes Web Dashboard remains required at `https://hermes.escloud.us`, through existing Xray/nginx/shared TLS, with the backend loopback-only and no direct public 9119.
 
-Accepted topology:
+The previous forward-auth/session-token-first contract is suspended for the 04.3 recovery workstream. Verify exact deployed source/runtime before accepting a replacement. Current candidate: Hermes-native self-hosted OIDC, Authelia as IdP, no nginx `auth_request` in front of Hermes, one interactive provider, authorization-code PKCE/S256 public client. This candidate is not deployment acceptance.
 
-- browser URL: `https://hermes.escloud.us`;
-- reuse Xray/nginx + shared TLS + Authelia;
-- backend remains loopback-only by default;
-- never expose the Dashboard or machine-interface backend directly to the Internet merely because the public subdomain exists;
-- test the self-hosted Remote Gateway/session-token path first for Hermes Desktop;
-- introduce an alternative Hermes-native auth mode only if the installed runtime proves the simple path incompatible.
+Use Authelia's native validator with the actual template filter/configuration path. Reuse the existing Certbot webroot mechanism and shared `escloud.us` certificate lineage. Do not require the nginx Certbot plugin.
 
 ### Stage 4 acceptance
 
-Stage 4 must verify:
+Preserve accepted Stage 4A/B/D/E evidence without repeated E2E tests absent a concrete regression. Remaining requirements:
 
-- real `Hermes -> vLLM` inference through the accepted Stage 3 path;
-- full practical Hermes tool surfaces selected for this deployment;
-- direct Hermes -> Codex CLI and Hermes -> Antigravity CLI delegation;
-- browser access to `https://hermes.escloud.us` through nginx + Authelia;
-- Mattermost core/ingress/native configuration and native Hermes/n8n integration;
-- a private authenticated n8n machine interface to Hermes;
-- `n8n -> Hermes -> Codex/AGY -> Hermes -> n8n`;
-- clean Hermes gateway lifecycle, including controlled stop/restart semantics and reboot persistence;
-- no unintended public Hermes backend/API listener;
-- server-side integrated non-regression;
-- final macOS Hermes Desktop Remote Gateway readiness, live chat/WebSocket and reconnect persistence.
+- Stage 4C: real browser/OIDC login, Dashboard Chat, authenticated WS/PTY, HTTPS and loopback-only backend;
+- Stage 4F: authenticated private n8n invoke/result/status and real `n8n -> Hermes -> Codex/AGY -> Hermes -> n8n`, accounting for Tirith stdout contamination;
+- Stage 4G: bounded server-side integration/non-regression and lifecycle review; do not mask the known SIGTERM exit-1 behavior with `SuccessExitStatus=1`;
+- Stage 4H: final macOS Desktop Remote Gateway integration, actual remote chat/WebSocket and restart/reconnect/refresh behavior using the Stage 4C accepted auth mode;
+- Stage 4I: complete-stage acceptance and canonical repository reconciliation/read-back.
 
-Actual user-specific n8n/Hermes workflows are not part of Stage 4.
+The core Qwen/vLLM and direct executor acceptance remains valid. The existing gateway stop constraint belongs in 4G. User-specific workflows remain outside Stage 4.
 
 ### Final Stage 4 macOS integration
 
-Hermes Desktop on macOS remains the final Stage 4 integration task. Use the supported Remote Gateway path against `https://hermes.escloud.us`, test the self-hosted session credential first, verify real chat/WebSocket traffic and reconnect after app restart, and only then consider the minimum alternative supported credential/connection mode if necessary.
+Hermes Desktop on macOS remains the last functional integration after Stage 4G. Research the actual Desktop build and exact server auth contract. If Stage 4C accepts self-hosted OIDC, use the upstream native RFC8252/PKCE path rather than a historical session-token-first assumption. Successful status probes alone are not acceptance.
 
 ## Data/knowledge sequencing
 

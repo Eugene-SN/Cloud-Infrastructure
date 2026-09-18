@@ -14,9 +14,13 @@
 
 Primary repository: `Eugene-SN/Cloud-Infrastructure`.
 
-Current production branch:
+Current recovery workstream:
 
-`04 — Edge Hermes Agent Runtime` — **IN PROGRESS / NOT YET ACCEPTED**
+`04.3 — Edge Hermes Stage 4 Recovery, Completion & Final Acceptance`
+
+Git branch: `04.3-edge-hermes-recovery-completion`.
+
+Stage 4 — Edge Hermes Agent Runtime remains **IN PROGRESS / NOT YET ACCEPTED**.
 
 Stage 02.5 final acceptance record:
 
@@ -283,6 +287,28 @@ Stage 4 remains **IN PROGRESS / NOT YET ACCEPTED**.
 - Stage 1 recovery archive: `/srv/backups/edge-stage1/edge-stage1-base-20260916T234611Z.tar.gz`, SHA256 `37486e763ddac4c5ef3a92a35c3dad49787d75ffd8b97499073c79af617cc566`;
 - migration-preservation archive: `/tmp/edge-migration-preservation-20260916T141048Z.tar.gz`, SHA256 `0203e5845f57bc1d04b384cef2b26a45fbff855c341e1edf1193034c34de9fdf`, retained outside GitHub for legacy-reference/recovery use; do not indiscriminately restore legacy credentials.
 
+## Stage 4C recovery reconciliation — 2026-09-18
+
+**CURRENT RUNTIME — directly inspected locally on edge under core:**
+
+- execution host is `edge.escloud.us`; no SSH connection is needed for local core-owned work;
+- Hermes checkout remains `d177b119e9c56c9ddc0b7379ffce52341ec06584`;
+- main config SHA256 remains `c57ca6bc0b301250d4825060fcf5f8d90af94c7cee4f1632e0b648189fd994ae`;
+- `systemctl --user` reports `hermes-gateway.service` active/enabled, running, `NRestarts=0`; a system-manager not-found result is not a gateway failure;
+- Dashboard user/system unit paths, `hermes_cli/web_dist`, Dashboard config keys and listener TCP/9119 are absent;
+- no Hermes hostname/9119 reference was found in readable nginx configuration;
+- `hermes.escloud.us` resolves to `45.92.156.17`; `92.156.17` in the handoff was incomplete;
+- Certbot reports `4.0.0`, not `0.0`; existing renewal state selects `webroot` and `/var/www/letsencrypt`; timer active/enabled;
+- Authelia OIDC discovery currently returns HTTP 404.
+
+**OPERATOR-REPORTED / NOT YET FULLY RECONCILED:** the previous `STAGE4C_HERMES_DASHBOARD_AUTHELIA_OIDC_DEPLOY_V1` stopped at `CERTBOT_NGINX_PLUGIN_GATE=FAIL`, RC 40, before mutation. The readable observations above are consistent with that report, but root-only Authelia configuration/secrets and current certificate SANs still require inspection. The prior session's full command transcript is unavailable; GitHub commits alone cannot prove every server action.
+
+**ASSISTANT / TEST-HARNESS DEFECT:** requiring a nonexistent nginx Certbot plugin contradicts the accepted webroot mechanism. Local recovery searches also encountered missing optional paths; those read-only probe defects are not production failures. No Stage 4A/B/D/E E2E tests were repeated.
+
+**AUTH CANDIDATE / NOT ACCEPTED:** native Hermes self-hosted OIDC with Authelia as IdP, loopback Dashboard, existing Xray/nginx ingress, no nginx `auth_request` in front of Hermes, one interactive provider, public PKCE/S256 client. Older forward-auth/session-token-first wording is suspended for this recovery; see the latest reconciliation decision. Source support is confirmed, but design acceptance requires completing the runtime/recovery contract, and Stage 4C acceptance still requires real browser login and Chat/WS.
+
+**ACCESS BOUNDARY:** core has no sudo authorization. Root-owned Authelia, nginx and certificate changes require the operator's root session or an explicitly provisioned administrative execution path. This is an operating-system permission boundary, not missing SSH access.
+
 ## Current next step
 
 1. Stage 4B is COMPLETE / ACCEPTED; do not rerun Qwen, executor read-only audits, Codex E2E or Antigravity E2E without a concrete regression signal.
@@ -291,11 +317,6 @@ Stage 4 remains **IN PROGRESS / NOT YET ACCEPTED**.
 4. Carry the known upstream Hermes controlled-stop `SIGTERM -> exit 1` defect into Stage 4G; do not locally mask it with `SuccessExitStatus=1`.
 5. Perform Stage 4G server-side integrated acceptance, Stage 4H macOS Hermes Desktop integration, and Stage 4I final Stage 4 persistence/acceptance.
 
-1. Complete Stage 4B with the accepted trusted full-access executor contract: first Hermes/Qwen -> foreground non-PTY Codex `exec`, then Hermes/Qwen -> foreground non-PTY Antigravity print-mode structured output; do not repeat the accepted Qwen/vLLM or read-only executor audits.
-2. Keep blanket executor sandboxing disabled by policy; require operator approval in Hermes/orchestration instructions before critical high-impact mutations, not through generic filesystem/network confinement.
-3. Complete Stage 4C Hermes Dashboard/ingress/auth, then Stage 4F private n8n machine-interface integration.
-4. Carry the known upstream Hermes controlled-stop `SIGTERM -> exit 1` defect as a documented lifecycle constraint into Stage 4G; do not locally mask it with `SuccessExitStatus=1`.
-5. Perform Stage 4G server-side integrated acceptance, Stage 4H macOS Hermes Desktop integration, and Stage 4I final repository persistence/acceptance.
 
 Image Generation is non-blocking for Stage 4 and must not divert the critical path; any later image-quality acceptance is human/visual. Do not add a desktop stack solely to make CUA applicable on the headless `edge`.
 

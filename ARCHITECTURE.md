@@ -354,10 +354,11 @@ Stage 4 architecture combines:
 
 Hermes Dashboard ingress:
 
-- public TCP/443 -> Xray/nginx -> Authelia -> loopback Hermes backend;
-- backend remains non-public;
-- use the self-hosted Remote Gateway/session-token path first for Hermes Desktop;
-- add another Hermes-native credential mode only if the installed runtime proves the simple path incompatible.
+- fixed constraints: public TCP/443 through existing Xray/nginx/shared TLS; Dashboard backend remains loopback-only/non-public;
+- Stage 4C authentication is under explicit recovery design revalidation; prior forward-auth/session-token-first wording is suspended;
+- candidate, not accepted deployment: Hermes-native self-hosted OIDC with Authelia as IdP, no nginx `auth_request`, one interactive provider and public PKCE/S256 client;
+- complete source/runtime/recovery verification and record the architecture decision before mutation;
+- Desktop later uses the auth mode accepted in Stage 4C, with native RFC8252/PKCE evaluated against the actual build.
 
 Mattermost ingress/auth is intentionally different:
 
@@ -372,7 +373,7 @@ Stage 4 acceptance requires:
 - real Hermes -> vLLM inference;
 - practical selected Hermes tool surfaces;
 - direct Hermes -> Codex and Hermes -> Antigravity delegation;
-- Hermes Dashboard through nginx + Authelia;
+- Hermes Dashboard through nginx with the exact authentication mechanism accepted in Stage 4C;
 - accepted native Hermes↔Mattermost and n8n↔Mattermost paths;
 - private authenticated n8n -> Hermes machine interface;
 - `n8n -> Hermes -> Codex/AGY -> Hermes -> n8n`;

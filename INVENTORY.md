@@ -110,6 +110,7 @@ Final record: `STAGE_03_ACCEPTANCE_2026-09-18.md`.
 - `update.escloud.us` — future dedicated custom maintenance/update page; Cloudflare record already exists; dedicated Codex substage after backend contract;
 - `app.escloud.us` — future final Cloud Infrastructure portal/dashboard; dedicated Codex substage after monitoring/status sources;
 - `docs.escloud.us` — reserved;
+- `hermes.escloud.us` — required Hermes Dashboard; DNS verified as `45.92.156.17`, Dashboard not deployed at recovery inspection, Stage 4C NOT ACCEPTED;
 - `chat.escloud.us` — LIVE Mattermost human endpoint; core runtime and public nginx ingress accepted; native Mattermost authentication without Authelia;
 - `cloud.escloud.us` — future file-access layer; implementation unresolved;
 - `sync.escloud.us` — future synchronization layer; implementation unresolved;
@@ -139,7 +140,7 @@ Accepted placement/integration direction:
 - CloudCLI/Codex/Antigravity remain manually usable tools/executors;
 - Stage 4 verifies `n8n -> Hermes -> Codex/AGY -> Hermes -> n8n`;
 - Stage 4 also verifies real `Hermes -> vLLM on ai-node` through the Stage 3 private fabric;
-- no public Hermes domain/listener is assumed.
+- the historical no-domain assumption is superseded: `hermes.escloud.us` is the required Dashboard endpoint; native auth/ingress is under Stage 4C recovery revalidation, with no public backend listener.
 
 ## Cross-site Connectivity Foundation
 
@@ -193,7 +194,7 @@ Status: **ACCEPTED INTEGRATION BOUNDARY; DEPLOYMENT DEFERRED TO STAGE 5**.
 | Stage | Scope | Current status |
 |---|---|---|
 | 3 | Cross-site Connectivity Foundation | COMPLETE / ACCEPTED; `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS` |
-| 4 | Hermes Agent Runtime | IN PROGRESS; Hermes↔Mattermost accepted, n8n↔Mattermost provisioned/authenticated with native-node E2E pending; remaining Hermes 4A/4B/4C/4F/4G/4H/4I pending |
+| 4 | Hermes Agent Runtime | IN PROGRESS; 4A/B/D/E COMPLETE / ACCEPTED; 4C recovery/design revalidation, then 4F/G/H/I remain incomplete |
 | 5 | Edge Knowledge Replication & Data Integration | INTEGRATION STAGE; depends on accepted Home/PVE knowledge foundation plus Stage 3/4 |
 | 6 | Backrest & Recovery | PRODUCT DIRECTION ACCEPTED; topology research pending |
 | 7 | Maintenance & Update | Semaphore accepted; deploy only after Stage 6 restore acceptance |
