@@ -109,7 +109,17 @@ Backrest-before-Semaphore remains mandatory. Monitoring remains late-stage so it
 - intentional public TCP listeners: 22, 80, 443, 25, 465, 993; UDP 443;
 - application WebUI backends remain loopback-only unless explicitly accepted otherwise.
 
-Shared service account `core`: UID/GID `1000:1000`, password locked, no sudo/docker group. `core` linger is enabled for Antigravity Remote Control.
+Shared trusted service/operator account `core`: UID/GID `1000:1000`, password locked, full non-interactive root via `sudo` (`NOPASSWD: ALL`); no `docker` group membership is required. `core` linger remains enabled for persistent user services.
+
+## Core privilege model
+
+Accepted corrective record: `CORE_FULL_ROOT_SUDO_ACCEPTANCE_2026-09-18.md`.
+
+- `core` remains UID/GID `1000:1000` with a locked password;
+- `/etc/sudoers.d/90-core-root` grants `core ALL=(ALL:ALL) NOPASSWD: ALL`;
+- non-interactive root execution through `sudo -n` is verified;
+- no separate `docker` group membership is required;
+- critical high-impact mutations remain subject to the existing operator-approval policy at the orchestration/instruction layer.
 
 ## Reboot lifecycle correction
 
