@@ -18,6 +18,8 @@ Stage 4D research/design is complete. The accepted Mattermost target for `edge` 
 - enable the free Mattermost **Test Push Notification Service (TPNS)** for the official Mattermost mobile applications; the service is accepted for this private installation despite its lack of production SLA;
 - **Mattermost Calls is excluded from the current Stage 4 scope by explicit operator decision**; no Calls media service, TURN, or additional Calls UDP/TCP listener is deployed;
 - no Kubernetes, HA cluster, Elasticsearch/OpenSearch, Redis, MinIO/S3, custom push proxy, custom mobile build, or custom Mattermost plugin without a later concrete requirement.
+- current Mattermost documentation labels Docker Compose as evaluation/testing/development and not an officially supported production topology because it does not provide clustered/HA behavior out of the box. This project **explicitly accepts that trade-off** for the private single-node/single-operator `edge` deployment, where HA/cluster behavior is not required and Docker/Compose is the accepted application runtime;
+- current official `mattermost/docker` base Compose contains separate Mattermost and PostgreSQL services. The upstream `docker-compose.without-nginx.yml` also publishes Calls TCP/UDP 8443. Because Calls is explicitly excluded and the application backend must be loopback-only, Stage 4E must **not use that overlay unmodified**; use the official base Compose pattern with the minimum project override required to publish only the Mattermost application port on loopback, with no Calls listener.
 
 ## Integration-selection policy
 
