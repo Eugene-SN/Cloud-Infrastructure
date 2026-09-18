@@ -229,7 +229,7 @@ Current runtime:
 - TPNS configured at `https://push-test.mattermost.com`;
 - Calls plugin disabled;
 - Mattermost↔Stalwart SMTP is explicitly not required / not enabled;
-- prepackaged `mattermost-ai` plugin is currently enabled. It is not an accepted replacement for Hermes and requires explicit disposition before final Stage 4 acceptance rather than silent adoption.
+- prepackaged `mattermost-ai` / Agents `2.6.1` remains installed but is explicitly **disabled**; runtime disabled-list verification and `config.json` `Enable=false` both passed. Acceptance record: `STAGE_04E_MATTERMOST_AGENTS_NORMALIZATION_ACCEPTANCE_2026-09-18.md`.
 
 Hermes↔Mattermost accepted state:
 
@@ -261,7 +261,7 @@ Accepted state:
 - acceptance record: `STAGE_04E_N8N_MATTERMOST_INTEGRATION_ACCEPTANCE_2026-09-18.md`;
 - marker: `STAGE4E_N8N_MATTERMOST_INTEGRATION=PASS`.
 
-Stage 4E itself remains **IN PROGRESS** because the accepted Mattermost scope separately requires real official mobile-client login plus delivered TPNS push, and the currently enabled prepackaged `mattermost-ai` plugin still requires explicit disposition followed by Stage 4E-specific non-regression.
+Stage 4E itself remains **IN PROGRESS** only because the accepted Mattermost scope still requires real official mobile-client login plus delivered TPNS push, followed by Stage 4E-specific non-regression. The `mattermost-ai` disposition is complete and accepted.
 
 Detailed accepted records remain authoritative for completed substages; the expanded audit does not retroactively rewrite historical records.
 
@@ -274,7 +274,7 @@ Stage 4 remains **IN PROGRESS / NOT YET ACCEPTED**.
 
 ## Current next step
 
-1. Finish the remaining Stage 4E gates: real official Mattermost mobile-client login, delivered TPNS push, explicit disposition of the enabled prepackaged `mattermost-ai` plugin, then Stage 4E-specific non-regression.
+1. Finish the remaining Stage 4E gates: real official Mattermost mobile-client login, delivered TPNS push, then Stage 4E-specific non-regression.
 2. Resolve or explicitly characterize the Hermes controlled stop/restart exit-status defect before server-side final acceptance.
 3. Resume remaining Hermes Stage 4A/4B/4C work, then Stage 4F machine-interface integration.
 4. Perform Stage 4G server-side integrated acceptance, Stage 4H macOS Hermes Desktop integration, and Stage 4I final repository persistence/acceptance.
