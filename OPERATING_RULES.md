@@ -48,9 +48,9 @@ Completed canonical stages:
 - `02.5 — Remaining Functional Scope Reconciliation & Research` — COMPLETE / ACCEPTED / RESEARCH-ONLY;
 - `03 — Edge Cross-site Connectivity Foundation` — Stage 3 — COMPLETE / ACCEPTED with `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS`.
 
-Next canonical branch:
+Current canonical branch:
 
-- `04 — Edge Hermes Agent Runtime`.
+- `04 — Edge Hermes Agent Runtime` — IN PROGRESS / NOT YET ACCEPTED.
 
 Remaining finite infrastructure roadmap:
 
@@ -63,6 +63,20 @@ Remaining finite infrastructure roadmap:
 - `10 — Edge Final Integrated Infrastructure Acceptance`.
 
 After Stage 10, **Automation & User Workflows** is a continuous post-infrastructure workstream, not another infrastructure-completion stage.
+
+## Functional completeness of selected services
+
+Implementation stages are organizational and acceptance boundaries. Their short scope descriptions are **minimum requirements**, not exhaustive lists of every capability that a selected service should have installed.
+
+Rules:
+
+- For an accepted service/product, target a **full practical upstream-supported deployment** suitable for long-term use rather than an intentionally stripped/minimal image or profile.
+- Include common local dependencies and standard capability modules when they are part of the normal useful service surface and are likely to prevent repeated future installation work.
+- Never exclude a component solely because it is "not needed for the current/core Stage path". A stage's current acceptance path is not a feature ceiling.
+- Do not postpone ordinary service capabilities merely to make the current stage look smaller when the postponement would require later package/runtime modification for routine use.
+- Stage scope still governs ownership, sequencing, integration and acceptance. User-specific workflows can remain later work even when their supporting generic service capabilities are already present.
+- This rule does **not** require enabling every optional integration. External providers/channels that require separate accounts, credentials, subscriptions, public exposure, mutually exclusive runtime choices, unsupported/alpha features with material operational cost, or unrelated heavyweight subsystems may remain disabled until there is a concrete use.
+- Any omission from the normal practical feature set must have a concrete rationale (incompatibility, duplication, material resource/operational cost, unsupported state, external credential/account requirement, or explicit user decision), not merely "outside the current core path".
 
 ## Mandatory lifecycle for every implementation stage
 
