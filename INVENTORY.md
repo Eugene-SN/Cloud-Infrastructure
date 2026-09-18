@@ -230,10 +230,11 @@ Continuous workstream after Stage 10, not an infrastructure-completion stage:
 
 ## Planned Stage 4 service — Mattermost
 
-- status: **CORE RUNTIME + PUBLIC INGRESS DEPLOYED / ACCEPTED; NATIVE APPLICATION SETUP PENDING**;
+- status: **CORE RUNTIME + PUBLIC INGRESS + NATIVE SERVER CONFIG ACCEPTED; HERMES BOT/INTEGRATION PENDING**;
 - Stage 4D acceptance: `STAGE4D_MATTERMOST_TARGET_ARCHITECTURE_ACCEPTANCE=PASS`;
 - core runtime acceptance: `STAGE4E_MATTERMOST_CORE_RUNTIME_ACCEPTANCE=PASS`; record `STAGE_04E_MATTERMOST_CORE_RUNTIME_ACCEPTANCE_2026-09-18.md`;
 - ingress acceptance: `STAGE4E_MATTERMOST_INGRESS_ACCEPTANCE=PASS`; record `STAGE_04E_MATTERMOST_INGRESS_ACCEPTANCE_2026-09-18.md`;
+- native server configuration acceptance: `STAGE4E_MATTERMOST_NATIVE_SERVER_CONFIG=PASS`; bot account creation enabled, public signup disabled, TPNS enabled, Calls disabled; record `STAGE_04E_MATTERMOST_NATIVE_SERVER_CONFIG_ACCEPTANCE_2026-09-18.md`;
 - acceptance record: `STAGE_04D_MATTERMOST_DESIGN_ACCEPTANCE_2026-09-18.md`;
 - role: private collaboration/control/notification surface for Hermes, n8n and later infrastructure integrations;
 - edition/runtime: Mattermost Team Edition `11.11.0` using official `mattermost/docker` commit `497414659ee7127677d2b91b44bb4f3ea9d14695`;
