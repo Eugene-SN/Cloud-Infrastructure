@@ -78,6 +78,88 @@ Rules:
 - This rule does **not** require enabling every optional integration. External providers/channels that require separate accounts, credentials, subscriptions, public exposure, mutually exclusive runtime choices, unsupported/alpha features with material operational cost, or unrelated heavyweight subsystems may remain disabled until there is a concrete use.
 - Any omission from the normal practical feature set must have a concrete rationale (incompatibility, duplication, material resource/operational cost, unsupported state, external credential/account requirement, or explicit user decision), not merely "outside the current core path".
 
+
+
+## Mandatory research and command-generation discipline
+
+This rule is mandatory for all remaining stages and all agents working on this project.
+
+### Evidence hierarchy
+
+For any version-sensitive, externally integrated, unfamiliar or non-trivial mechanism, use this order:
+
+1. **official documentation for the relevant/current version**;
+2. **upstream source, release notes and maintainer/developer guidance** where exact behavior, syntax or compatibility matters;
+3. **fresh evidence from the exact deployed version/runtime/configuration**;
+4. **community/user implementation experience** as supplementary evidence only.
+
+Do not elevate an isolated GitHub issue, forum post, Reddit thread, video or user report over the product's documented contract and the exact deployed runtime. Such reports are useful for identifying edge cases and failure modes, not for declaring an officially supported mechanism broken.
+
+### Research before architecture and mutation
+
+Before producing a deployment or mutation block for auth/OAuth/OIDC, reverse proxying, WebSockets, certificates, update mechanisms, backup/restore, networking, storage, service lifecycle or another integration boundary:
+
+- complete the relevant design/recommendation research first;
+- compare upstream-recommended deployment patterns and maintainer guidance;
+- reconcile them with the exact versions already installed on `edge`;
+- identify known practical failure modes from community experience;
+- state the proposed target mechanism/architecture before implementing it;
+- prefer the simplest upstream-supported design compatible with the project's single-operator trust model.
+
+Do not jump from an incomplete audit directly into implementation merely because enough information exists to try something experimentally.
+
+### Exact syntax and config-format verification
+
+Before emitting commands:
+
+- verify exact CLI flags and semantics against the relevant version's help/docs/source;
+- verify config schema and file format before attempting to parse or modify it;
+- account for templating, preprocessing, includes, generated files and product-specific syntax;
+- prefer the product's native validator/parser/linter/dry-run/doctor over a generic external parser;
+- never assume `.yml`, `.conf` or similar means generic YAML/INI that can safely be fed to PyYAML, `configparser`, `awk`, etc.;
+- do not invent a custom parser for a third-party format unless its grammar/contract is confirmed;
+- if uncertain, perform a minimal targeted read-only inspection to resolve the uncertainty first.
+
+A shell block is an implementation of a verified plan, not an exploratory guessing mechanism.
+
+### Assistant-generated block failures
+
+If a diagnostic, verifier or implementation block fails because of assistant-authored syntax, quoting, portability, parser choice, PATH behavior, wrapper/instrumentation, test-harness logic or an unverified assumption:
+
+- classify it explicitly as an **assistant block/verifier defect**, not a runtime/service defect;
+- do not infer production failure from that result;
+- retain already-proven sections and evidence;
+- recover from the exact failure point only;
+- do not repeat accepted or already-passed audits/tests;
+- fix or replace the broken block mechanism instead of changing production to satisfy it;
+- when the product has a native validation path, switch to it rather than iterating custom parsers.
+
+The user must not be required to repeatedly debug speculative assistant-generated blocks.
+
+### Community evidence
+
+Community experience is valuable for:
+
+- finding real-world interoperability problems;
+- identifying version-specific bugs;
+- revealing UX problems or missing documentation;
+- discovering implementation patterns worth verifying.
+
+It is not sufficient by itself to:
+
+- reject a documented upstream mechanism;
+- declare a feature unusable;
+- introduce a workaround;
+- choose a more complex architecture.
+
+Any such conclusion requires corroboration from upstream/maintainer guidance and/or the exact deployed runtime.
+
+### Stop condition before mutation
+
+Do not mutate production while a material design assumption is still unresolved.
+
+A stage-specific mutation may begin only when the relevant topology/mechanism is understood well enough that the command block is expected to implement a defined target rather than probe whether an idea works. For high-risk changes, retain the existing AUDIT -> PLAN -> RECOVERY PATH -> MUTATION -> VERIFY -> ACCEPTANCE workflow.
+
 ## Mandatory lifecycle for every implementation stage
 
 Every new implementation-stage branch starts with analysis/design, not installation.
