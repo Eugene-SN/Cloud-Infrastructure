@@ -39,3 +39,24 @@ Fresh read-only audit on `edge`:
 - Hermes baseline is clean enough to proceed with Mattermost before the remaining Hermes capability work.
 
 `STAGE4E_MATTERMOST_PREDEPLOY_AUDIT=PASS`
+
+
+## Recovery continuation after initial deployment-script probes
+
+The first deployment attempt stopped before filesystem/runtime mutation because the current Mattermost Team image is distroless and has no `sh`. A follow-up metadata probe also stopped on an optional Docker inspect key that was absent. Neither failure created `/opt/mattermost`, `/srv/mattermost`, or Mattermost/PostgreSQL containers; only image pulls occurred.
+
+Final recovery audit established:
+
+- Mattermost image ID: `sha256:335db2833330323d9a9f43313429f4b16b497067644660acfdfc2424ab04d2de`;
+- runtime image user: `mattermost`;
+- image command: `/mattermost/bin/mattermost`;
+- image is distroless (no shell);
+- Mattermost version: **11.11.0**, Team build (`Build Enterprise Ready: false`);
+- PostgreSQL image ID: `sha256:6c538e7206ea40ff740ef27883529390a690b6ead6ba96b44c67a9f7c638e8fd`;
+- PostgreSQL runtime UID/GID from the current image: `70:70`;
+- ports 18065/8065/8443/5432 remained free;
+- deployment continuation point is filesystem layout + Compose creation.
+
+Current Mattermost upstream source/runtime contract uses UID/GID `2000:2000` for the `mattermost` account; the corrected deployment block uses that documented bind-mount ownership rather than attempting to invoke a shell in the distroless image.
+
+`STAGE4E_MATTERMOST_CORE_DEPLOY_RECOVERY_AUDIT_V3=PASS`
