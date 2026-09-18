@@ -155,8 +155,9 @@ Accepted topology:
 - never expose the Dashboard backend port directly to the Internet merely because the public subdomain exists;
 - `hermes.escloud.us` follows the project-wide authenticated-service rule; the only unauthenticated public web surface remains the root landing page `escloud.us`;
 - reuse the existing Certbot/nginx extension pattern rather than introducing another reverse proxy;
-- when Hermes treats the non-loopback public URL as remote/production and requires its own auth provider, configure the minimum upstream-supported Hermes auth mechanism compatible with the accepted nginx/Authelia path;
-- do not assume that Authelia alone can replace Hermes-native session/auth semantics required by Hermes Desktop; verify the real end-to-end behavior.
+- do not preselect Nous OAuth or another Hermes-native auth provider. Current Hermes Desktop supports self-hosted Remote Gateway operation with a session token and also supports gated username/password/OAuth flows;
+- test the self-hosted session-token path first. If the actual installed Hermes build or reverse-proxy/public-URL semantics require the gated dashboard mode, use the minimum supported provider compatible with nginx/Authelia and Desktop;
+- verify the real end-to-end behavior instead of inferring Desktop authentication from documentation alone.
 
 ### Stage 4 acceptance
 
@@ -180,11 +181,11 @@ Default test path:
 
 1. use **Settings -> Gateways -> Remote gateway**;
 2. point the Remote/Base URL at the remote Dashboard backend, intended public URL `https://hermes.escloud.us`;
-3. verify advertised auth-provider detection and successful sign-in;
+3. select the self-hosted **Session token** credential first and use the token expected by the remote Hermes backend;
 4. verify backend readiness plus real live chat/WebSocket traffic, not only a readiness probe;
-5. verify session/reconnect behavior after Desktop restart;
-6. keep the remote `hermes dashboard` service persistent on `edge`; Hermes messaging gateway processes are separate and are not what Desktop attaches to;
-7. only if this simplest Remote Gateway design proves incompatible with the accepted reverse-proxy/auth path may Stage 4 test the minimum alternative connection mode.
+5. verify token/session persistence and reconnect behavior after Desktop restart;
+6. keep the remote `hermes dashboard`/backend service persistent on `edge`; Hermes messaging gateway processes are separate and are not what Desktop attaches to;
+7. if session-token Remote Gateway proves incompatible with the installed Hermes build or the accepted reverse-proxy/Authelia path, test username/password or OAuth as the minimum next supported credential mode; use a different connection mode only if Remote Gateway itself is incompatible.
 
 ## Data/knowledge sequencing
 
