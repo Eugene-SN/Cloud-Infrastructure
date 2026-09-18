@@ -242,8 +242,9 @@ Continuous workstream after Stage 10, not an infrastructure-completion stage:
 - mobile push: free TPNS accepted for official Mattermost mobile clients;
 - Calls: explicitly excluded from current Stage 4;
 - backend/database listeners remain private;
-- exact Hermes/n8n/Stalwart/other integration mechanisms are intentionally **not preselected**; Stage 4E evaluates all native/upstream-supported options and chooses the simplest/reliable supported mechanism per connection;
-- custom plugins, patches, shim services or direct DB coupling require a demonstrated native-integration gap and explicit operator acceptance.
+- confirmed current-project native integrations: Hermes built-in Mattermost gateway (REST v4 + WebSocket), n8n official built-in Mattermost node for supported operations, and Mattermost SMTP via the existing Stalwart SMTP service;
+- every other service/direction is integrated only if its current upstream explicitly provides a Mattermost integration or supported standard-protocol counterpart; otherwise it remains unintegrated in the current project and may be reconsidered only as future out-of-project work;
+- custom plugins, patches, shim services, direct DB coupling, bespoke bridges, compatibility hacks, or an n8n relay are not substitutes for missing upstream integration.
 ## Stage boundary
 
 Stage 0 — COMPLETE / ACCEPTED.  
