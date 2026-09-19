@@ -1,6 +1,6 @@
 # Cloud Infrastructure — Accepted Implementation Phases
 
-**Status:** Stage 0–4 COMPLETE / ACCEPTED. Stage 05.1 is COMPLETE / ACCEPTED; Stage 05.2 is NEXT; Stage 05.3 is PLANNED.
+**Status:** Stage 0–4 COMPLETE / ACCEPTED. Stage 05.1 and Stage 05.2 are COMPLETE / ACCEPTED; Stage 05.3 is NEXT.
 
 This document is the canonical stage chronology for Cloud Infrastructure / `edge`.
 
@@ -338,8 +338,8 @@ Stage 5 is now eligible to begin under its own mandatory entry audit.
 ### Current status
 
 - **05.1 — Cross-project Knowledge Reconciliation & Target Architecture:** COMPLETE / ACCEPTED.
-- **05.2 — PVE Canonical Obsidian Runtime & WebUI:** NEXT / IMPLEMENTATION NOT STARTED.
-- **05.3 — Edge Knowledge Replication & Data Integration:** PLANNED / IMPLEMENTATION NOT STARTED.
+- **05.2 — PVE Canonical Obsidian Runtime & WebUI:** COMPLETE / ACCEPTED.
+- **05.3 — Edge Knowledge Replication & Data Integration:** NEXT / IMPLEMENTATION NOT STARTED.
 
 Authoritative Stage 05.1 record:
 
@@ -352,7 +352,7 @@ Entry evidence already accepted:
 - `EDGE_STAGE5_ENTRY_AUDIT=PASS`;
 - `PVE_OBSIDIAN_RESOURCE_READINESS_AUDIT=PASS`.
 
-No Stage 5 production mutation has occurred.
+Stage 05.2 production deployment is complete and accepted; Stage 05.3 has not started.
 
 ### Cross-project target
 
@@ -396,6 +396,8 @@ PVE host swap remains at the existing 8 GiB unless post-deployment evidence demo
 14. clean temporary artifacts and persist 05.2 acceptance/read-back.
 
 05.2 explicitly does not redesign ai-node, OpenClaw behavior, edge replication or external client access.
+
+Final production acceptance: `STAGE05_2_PVE_CANONICAL_OBSIDIAN_RUNTIME=PASS`. Authoritative record: `STAGE_05_2_FINAL_ACCEPTANCE_2026-09-19.md`.
 
 ### 05.3 — Edge Knowledge Replication & Data Integration
 
