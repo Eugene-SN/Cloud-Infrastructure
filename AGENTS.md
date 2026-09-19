@@ -20,7 +20,7 @@ Read, in this order when relevant:
 
 Current accepted checkpoint is:
 
-`05 — Edge Knowledge Replication & Data Integration — target architecture accepted; expanded entry audit complete; runtime implementation not started` — COMPLETE / ACCEPTED.
+`05.1 — Cross-project Knowledge Reconciliation & Target Architecture — COMPLETE / ACCEPTED; 05.2 implementation pending` — COMPLETE / ACCEPTED.
 
 Stage 0, Stage 1, Stage 2, Stage 02.5, Stage 3 and Stage 4 are complete and accepted. `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS`; `STAGE4_FINAL_ACCEPTANCE=PASS`.
 
@@ -191,9 +191,9 @@ Future ownership/role boundary:
 
 Accepted topology is PVE ↔ ai-node plus PVE ↔ edge. Do not add direct edge ↔ ai-node Syncthing merely for nominal full-mesh symmetry because the current edge -> Home path itself depends on CT300 on PVE.
 
-Cloud Stage 5 mutates **edge only**; PVE/ai-node remain dependency and non-regression boundaries. PVE registration/sharing of the future edge Syncthing Device ID is a separate Home prerequisite unless explicitly re-scoped. Reuse Syncthing; do not invent a second primary server-side synchronization engine without a concrete incompatibility and explicit superseding decision.
+Stage 5 is split into `05.1` research/architecture and `05.2` implementation. 05.2 deploys edge and may inspect/change PVE where required for edge↔PVE Syncthing integration. ai-node remains a dependency/non-regression node and is not redesigned; do not deploy the future ai-node Obsidian WebUI or redesign OpenClaw in Stage 5. Reuse Syncthing; do not invent a second primary server-side synchronization engine without a concrete incompatibility and explicit superseding decision.
 
-Future external/iOS client data access is intended to terminate on edge through a separately selected client-facing mechanism without public Syncthing exposure. A future private Obsidian WebUI belongs on ai-node, not edge.
+Future external iOS/macOS/Windows client data access is intended to terminate on edge through a separately selected client-facing mechanism without public Syncthing exposure, but that client-access implementation is not part of Stage 5. A future private Obsidian WebUI belongs on ai-node, not edge.
 
 ## Lifecycle ordering invariants
 
