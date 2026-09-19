@@ -7,18 +7,20 @@
 **Stage 2:** COMPLETE / ACCEPTED  
 **Stage 02.5:** COMPLETE / ACCEPTED  
 **Stage 3:** COMPLETE / ACCEPTED  
-**Stage 4:** COMPLETE / ACCEPTED
+**Stage 4:** COMPLETE / ACCEPTED  
+**Stage 5:** ARCHITECTURE ACCEPTED / ENTRY AUDIT COMPLETE / IMPLEMENTATION NOT STARTED
 
 `EDGE_STAGE2_FINAL_INTEGRATED_ACCEPTANCE=PASS`  
 `CLOUD_STAGE_02_5_FINAL_SCOPE_ACCEPTANCE=PASS`  
 `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS`  
-`STAGE4_FINAL_ACCEPTANCE=PASS`
+`STAGE4_FINAL_ACCEPTANCE=PASS`  
+`STAGE5_KNOWLEDGE_ARCHITECTURE_ACCEPTANCE=PASS`
 
 `STAGE4F_STABLE_DOCKER_BRIDGE_HARDENING=PASS`
 
 Current accepted checkpoint on `main`:
 
-`04.3 — Edge Hermes Stage 4 Recovery, Completion & Final Acceptance`
+`05 — Edge Knowledge Replication & Data Integration — target architecture accepted; entry audit complete; runtime implementation pending`
 
 Final Stage 02.5 record:
 
