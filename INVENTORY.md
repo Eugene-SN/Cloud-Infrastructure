@@ -179,7 +179,8 @@ Detailed record: `STAGE_02_5_CONNECTIVITY_SELECTION_ACCEPTANCE_2026-09-17.md`.
 
 ## Stage 5 knowledge/data boundary
 
-Status: **Stage 5 COMPLETE / ACCEPTED**.
+Status: **Stage 5 COMPLETE / ACCEPTED**.  
+`STAGE05_FINAL_ACCEPTANCE=PASS`.
 
 Authoritative records:
 
