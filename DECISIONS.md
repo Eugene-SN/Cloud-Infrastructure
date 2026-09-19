@@ -950,7 +950,7 @@ Authoritative record:
 
 ## 2026-09-19 — Stage 05.2 Obsidian runtime packaging and rootfs sizing
 
-**Status:** ACCEPTED
+**Status:** SUPERSEDED
 
 **Decision:**
 
@@ -969,7 +969,7 @@ Authoritative record:
 
 ## 2026-09-19 — Stage 05.2 CT210 rootfs resize after measured LSIO footprint
 
-**Status:** ACCEPTED
+**Status:** SUPERSEDED
 
 **Context:** the LinuxServer Obsidian/Selkies smoke deployment on CT210 measured approximately 6.4 GiB used on the originally accepted 8 GiB rootfs, leaving only about 997 MiB free (87% used). The active LSIO image measured approximately 5.179 GB and the container writable layer approximately 362 MB, leaving insufficient practical headroom for normal pull/recreate updates.
 
@@ -983,3 +983,38 @@ Authoritative record:
 
 **Acceptance marker:** `STAGE05_2_CT210_ROOTFS_RESIZE=PASS`
 
+
+
+---
+
+## 2026-09-19 — Stage 05.2 Ignis runtime selection and clean production reset
+
+**Status:** ACCEPTED
+
+**Context:** Stage 05.2 performed a bounded comparative experiment without mounting the canonical vault. LinuxServer Obsidian/Selkies proved unnecessarily heavy for the role. Native official Obsidian + Selkies 2.0.0rc0 preserved the Electron runtime but failed the required adaptive browser UX without Selkies-specific compositor/session plumbing. Ignis provided the required browser UX and then passed the server-role acceptance on an isolated test vault. After selection, the entire experimental CT210 was stopped and destroyed; its rootfs and PVE registration are absent and the canonical vault was never mounted or mutated by the experiment.
+
+**Decision:**
+
+1. Stage 05.2 production runtime is **Ignis inside a dedicated PVE LXC**.
+2. The dedicated LXC remains justified as an independent lifecycle boundary for the RW canonical-vault application runtime; do not merge Ignis into unrelated existing LXCs or install Docker directly on the PVE host merely to save a small amount of RAM.
+3. Production CT210 starts fresh with **1 vCPU, 512 MiB RAM, 256 MiB swap, 8 GiB rootfs and onboot enabled**.
+4. The canonical vault remains ordinary filesystem data on PVE at `/srv/knowledge/obsidian` and is bind-mounted RW into CT210. Ignis must not become a separate source of truth.
+5. Ignis supplies the private Obsidian WebUI plus the Obsidian-aware capabilities required by the PVE role: File Recovery baseline, filesystem/external-change bridge, and the headless bridge (`ob` / Headless Sync). Full native Electron parity is not a requirement unless a concrete workflow later proves it necessary.
+6. Syncthing replication and Restic/Backrest recovery remain independent infrastructure layers and are not acceptance responsibilities of Ignis itself.
+7. The normal maintenance/update unit is the **Ignis image**. Use the Obsidian version supported by the installed Ignis release; do not independently auto-update or advance Obsidian ahead of Ignis without a concrete compatibility reason.
+8. `obsidian.lan` remains private to Home LAN and NetBird-routed Home clients.
+9. Experimental versions, images and the temporary 16 GiB CT210 rootfs are historical test evidence only and are not production baselines.
+10. Production Stage 05.2 implementation is still **not started** after this decision; a new clean 05.2 production branch creates CT210 from scratch and performs the canonical-vault deployment.
+
+**Acceptance evidence:**
+
+- `IGNIS_FILESYSTEM_BRIDGE=PASS`
+- `IGNIS_EXTERNAL_CHANGE_VISIBILITY=PASS`
+- `IGNIS_FILE_RECOVERY_BASELINE=PASS`
+- `IGNIS_HEADLESS_BRIDGE=PASS`
+- `IGNIS_RESTART_PERSISTENCE=PASS`
+- `CANONICAL_VAULT_ISOLATION=PASS`
+- `IGNIS_SERVER_ROLE_ACCEPTANCE=PASS`
+- `STAGE05_2_CT210_EXPERIMENT_FULL_PRUNE=PASS`
+
+**Supersedes:** the 2026-09-19 Stage 05.2 LinuxServer Obsidian/Selkies packaging decision and the subsequent 16 GiB LSIO rootfs resize decision. It also resolves the runtime-packaging comparison gate in the Stage 05.1 architecture. Non-conflicting Stage 05.1 topology and data-role decisions remain accepted.
