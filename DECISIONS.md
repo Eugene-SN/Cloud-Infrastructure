@@ -946,4 +946,23 @@ Authoritative record:
 
 **Supersedes:** the prior Stage 05.1 decisions that (a) placed the future private Obsidian WebUI on ai-node, (b) treated PVE Obsidian runtime as optional/not required, and (c) split Stage 5 into only 05.1 + 05.2 with edge deployment as 05.2. Non-conflicting topology, paths and audit evidence remain accepted.
 
+---
+
+## 2026-09-19 — Stage 05.2 Obsidian runtime packaging and rootfs sizing
+
+**Status:** ACCEPTED
+
+**Decision:**
+
+1. Stage 05.2 uses **LinuxServer Obsidian/Selkies inside the dedicated PVE LXC**.
+2. The native official Obsidian + native Selkies alternative is not selected for this deployment because the LinuxServer image provides a more integrated display/session/WebUI lifecycle and a simpler upstream-supported container update path.
+3. The LXC resource envelope is 1 vCPU, 1024 MiB RAM, 512 MiB swap and **8 GiB rootfs**, with onboot enabled.
+4. The increase from the earlier approximately 4 GiB planning value to 8 GiB is accepted because the LinuxServer image, Docker/containerd layers and persistent application state make 4 GiB unnecessarily tight.
+5. The canonical vault remains outside the LXC rootfs at `/srv/knowledge/obsidian` and is mounted RW into the application LXC. This decision does not move or duplicate canonical Knowledge data.
+6. PVE host swap remains unchanged at 8 GiB unless later measurements show real memory pressure.
+7. Stage 05.2 implementation remains private Home LAN / NetBird only and does not add edge replication or external client access.
+
+**Acceptance marker:** `STAGE05_2_RUNTIME_PACKAGING_GATE=PASS`
+
+**Supersedes:** only the unresolved packaging gate and the approximately 4 GiB rootfs planning value in the 2026-09-19 final Stage 05.1 runtime-placement decision. All other Stage 05.1 architecture remains accepted.
 
