@@ -300,14 +300,14 @@ PVE owns:
 - PVE Syncthing hub;
 - canonical Home backup/restore authority;
 - CT220/OpenClaw canonical read-only Knowledge source;
-- the single full server-side Obsidian application runtime.
+- the single Ignis-based server-side Obsidian-aware application runtime.
 
 Stage 05.2 deploys the Obsidian runtime in a new lightweight LXC. Accepted LXC envelope after the runtime packaging gate:
 
 - 1 vCPU;
-- 1024 MiB RAM;
-- 512 MiB LXC swap limit;
-- 16 GiB rootfs;
+- 512 MiB RAM;
+- 256 MiB LXC swap limit;
+- 8 GiB rootfs;
 - onboot enabled.
 
 The canonical vault stays on the existing dedicated `pve/knowledge` 32 GiB ext4 LV and is bind-mounted RW into the LXC. The vault must not become dependent on the LXC rootfs.
@@ -316,13 +316,13 @@ The PVE Obsidian runtime provides:
 
 - File Recovery;
 - Obsidian index/metadata model;
-- Obsidian CLI availability where supported by the running app;
+- Ignis headless bridge (`ob` / Headless Sync) where applicable;
 - core plugins and future explicitly selected plugins;
 - private browser UI at `obsidian.lan`.
 
 `obsidian.lan` is private to Home LAN and NetBird-routed Home clients; no public Internet Obsidian UI is part of Stage 5.
 
-Runtime packaging inside the LXC is resolved: LinuxServer Obsidian/Selkies is the accepted implementation. It provides the integrated browser/session stack and a single container lifecycle/update path, avoiding custom native Obsidian + native Selkies session plumbing. No full desktop environment is introduced.
+Runtime packaging inside the LXC is resolved: Ignis is the accepted implementation. Ignis runs the official Obsidian client code through its browser compatibility layer while keeping the vault as ordinary filesystem data. Native Electron parity is not a requirement unless a concrete workflow later needs it. The production update boundary is the Ignis image and its upstream-supported Obsidian version; do not independently advance Obsidian ahead of Ignis without a concrete compatibility reason.
 
 Fresh PVE resource evidence from `PVE_OBSIDIAN_RESOURCE_READINESS_AUDIT=PASS`:
 
@@ -494,7 +494,7 @@ User-specific automation workflows remain outside infrastructure acceptance.
 
 Authoritative record: `STAGE_05_1_FINAL_KNOWLEDGE_RUNTIME_ARCHITECTURE_ACCEPTANCE_2026-09-19.md`.
 
-- `05.2 — PVE Canonical Obsidian Runtime & WebUI`: deploy the dedicated lightweight PVE LXC, bind the canonical vault, install the selected full Obsidian/Selkies runtime, enable File Recovery and private `obsidian.lan`, and verify resource/reboot/non-regression behavior.
+- `05.2 — PVE Canonical Obsidian Runtime & WebUI`: deploy the dedicated lightweight PVE LXC, bind the canonical vault, install the selected Ignis runtime, enable File Recovery and private `obsidian.lan`, and verify resource/reboot/non-regression behavior.
 - `05.3 — Edge Knowledge Replication & Data Integration`: deploy the edge RW replica, integrate PVE↔edge Syncthing and edge consumers, then verify propagation/conflict/outage/reboot behavior and final Stage 5 acceptance.
 
 External iOS/macOS/Windows/Android client-access implementation through edge remains future work and is not part of Stage 5.
