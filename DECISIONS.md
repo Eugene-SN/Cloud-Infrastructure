@@ -860,3 +860,32 @@ Root recovery now confirms Authelia v4.39.27, no OIDC-related config keys or gen
 **Acceptance evidence:** `STAGE4_FINAL_BOUNDARY_RECONCILIATION=PASS`; `STAGE4_FINAL_ACCEPTANCE_STATUS=SUPPORTED`.
 
 **Supersedes:** only current-state references that described Antigravity `1.2.6` as the live runtime. It does not supersede or rewrite historical Stage 4B/4G acceptance evidence.
+---
+
+## 2026-09-19T18:01:00+03:00 — Three-node Knowledge Fabric roles and edge-only Stage 5 mutation scope
+
+**Status:** ACCEPTED
+
+Detailed record:
+
+`STAGE_05_KNOWLEDGE_ARCHITECTURE_ACCEPTANCE_2026-09-19.md`
+
+**Context:** the fresh Stage 5 entry audit confirmed the accepted PVE canonical vault, healthy PVE ↔ ai-node Syncthing fabric, ai-node local n8n consumption, edge private reachability to Home/PAI, edge resource/account model, and absence of an existing edge Syncthing/Knowledge tree.
+
+**Decision:**
+
+1. PVE remains the canonical administrative/recovery Knowledge authority and Syncthing hub at `/srv/knowledge/obsidian`.
+2. ai-node remains an active RW non-canonical replica at `/srv/ai-data/knowledge/obsidian` and the local Knowledge/application layer for PAI workloads; n8n is a confirmed current RW consumer.
+3. edge becomes an active RW non-canonical replica at `/srv/knowledge/obsidian` and the Cloud Knowledge source for Hermes, n8n, Codex and Antigravity.
+4. Replication topology remains PVE-centered: PVE ↔ ai-node plus PVE ↔ edge. Do not add direct edge ↔ ai-node Syncthing merely to create a nominal full mesh because the edge -> Home path itself depends on CT300 on PVE.
+5. `canonical` does not make PVE an online master. Secondary nodes continue local RW application operation during disconnection; only convergence pauses.
+6. edge ownership target is `/srv/knowledge core:core 0755` and `/srv/knowledge/obsidian core:core 2775`; Syncthing runs under `core`.
+7. No Obsidian runtime/WebUI is required on edge. ai-node is the preferred future private Obsidian/WebUI host (`obsidian.lan` direction); PVE runtime remains optional/not established.
+8. edge is the accepted future Internet-reachable data-access node for iOS/other external client applications. Exact client/protocol/access service remains unresolved and must not be substituted with public Syncthing exposure.
+9. Cloud Stage 5 runtime mutation scope is **edge only**. PVE/ai-node target roles are recorded for future reconfiguration and for non-regression checks.
+10. PVE currently lacks the edge Device ID/folder relationship; that remote authorization is a cross-project prerequisite to be performed under Home Infrastructure or after explicit later scope exception. Cloud Stage 5 must not silently mutate PVE.
+11. OpenClaw keeps the current PVE canonical RO path. Direct ai-node Knowledge fallback is not required; n8n may pass locally sourced context to OpenClaw for n8n-driven tasks.
+
+**Supersedes in part:** prior blanket statements that MacBook/iPhone/iPad Obsidian integration is completely outside Cloud Infrastructure. Future public/mobile data access through edge is now an accepted Cloud role, while exact implementation remains deferred.
+
+
