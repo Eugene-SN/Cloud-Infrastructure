@@ -70,23 +70,48 @@ Stage 3 is COMPLETE / ACCEPTED. Final record: `STAGE_03_ACCEPTANCE_2026-09-18.md
 
 ### Data / knowledge project boundary
 
-The previous future-architecture constraint that `ai-node:/srv/ai-data/knowledge/obsidian` must permanently remain canonical is superseded.
+Detailed accepted target: `STAGE_05_KNOWLEDGE_ARCHITECTURE_ACCEPTANCE_2026-09-19.md`.
 
-Home Infrastructure records `KNOWLEDGE_FABRIC_CANONICAL_CUTOVER=PASS` on 2026-09-18: PVE `/srv/knowledge/obsidian` is canonical and `ai-node:/srv/ai-data/knowledge/obsidian` is an active RW Syncthing replica. This is accepted cross-project evidence; a fresh Home/PAI runtime audit remains mandatory before Cloud Stage 5 deployment.
+The fresh 2026-09-19 Stage 5 reconciliation is complete:
 
-Source: [Home Infrastructure CURRENT_STATE.md](https://github.com/Eugene-SN/Home-Infrastructure/blob/main/CURRENT_STATE.md). Home-selected synchronization is Syncthing `2.1.5`; CT220 consumes the PVE vault read-only and CT208 backup/restore is accepted. Cloud replica deployment has not been accepted.
+- `PVE_STAGE5_ENTRY_AUDIT=PASS`;
+- `AI_NODE_STAGE5_ENTRY_AUDIT=PASS`;
+- `EDGE_STAGE5_ENTRY_AUDIT=PASS`;
+- no Stage 5 production mutation has occurred.
 
-Accepted ownership boundary:
+Confirmed runtime:
 
-- **Home Infrastructure** owns the accepted PVE 24/7 canonical knowledge foundation, PVE-side synchronization service, Home consumers and Home-side backup integration;
-- **Personal Agents Infrastructure** owns the `ai-node` active RW synchronized replica and local n8n/OpenClaw/vLLM/OCR/RAG consumers/producers after Home cutover;
-- **Cloud Infrastructure** owns only the `edge` active RW synchronized replica and n8n/Hermes/cloud-AI integration.
+- PVE `/srv/knowledge/obsidian` is canonical, backed by `pve/knowledge`, with Syncthing `2.1.5`;
+- PVE ↔ ai-node `knowledge-obsidian` is connected and 100% complete;
+- ai-node `/srv/ai-data/knowledge/obsidian` is an active RW non-canonical replica;
+- ai-node n8n is a confirmed RW consumer;
+- CT220 uses the PVE canonical vault read-only;
+- CT208 Knowledge backup/restore and production policy remain accepted;
+- edge has no Syncthing installation or Knowledge tree yet;
+- edge can reach PVE and ai-node TCP/22000 through the accepted NetBird/Home route;
+- edge Hermes and n8n both use numeric UID/GID `1000:1000`;
+- edge has no public Syncthing listeners/rules.
 
-Cloud Stage 5 is therefore an integration stage. It must begin with a fresh expanded read-only Home/PAI/Cloud audit and must reuse the Home-accepted server-side synchronization mechanism by default.
+Accepted target roles:
 
-If the fresh Stage 5 entry audit cannot confirm the accepted PVE canonical runtime and healthy PVE ↔ `ai-node` synchronization, Stage 5 stops before mutation and reconciles the dependency instead of creating a parallel canonical/sync architecture.
+- **PVE:** canonical data/recovery authority and Syncthing hub;
+- **ai-node:** internal active RW PAI/application replica; preferred future private Obsidian/WebUI host;
+- **edge:** active RW Cloud/agent replica; future Internet-reachable data endpoint for external/iOS client applications, but no Obsidian runtime/WebUI on edge.
 
-MacBook/iPhone/iPad Obsidian synchronization is completely outside Cloud Infrastructure scope and is assigned to a later separate Home Infrastructure user-integration branch.
+Accepted data topology remains PVE ↔ ai-node plus PVE ↔ edge. Direct edge ↔ ai-node Syncthing is intentionally omitted because edge -> Home connectivity itself depends on CT300 on PVE.
+
+Cloud Stage 5 mutation scope is **edge only**. PVE/ai-node are reference and non-regression boundaries. PVE currently does not have edge registered as a Syncthing device; that authorization/share is a cross-project Home prerequisite or requires a later explicit scope exception.
+
+Edge target path contract:
+
+- `/srv/knowledge` → `core:core 0755`;
+- `/srv/knowledge/obsidian` → `core:core 2775`;
+- Syncthing under `core`;
+- n8n RW mount target `/home/node/knowledge-canonical`;
+- Hermes/Codex/Antigravity direct host-path access.
+
+Older blanket wording that Apple-device/Obsidian integration is completely outside Cloud is superseded in part. Future external client **data access through edge** is an accepted direction; exact public client-access mechanism is not yet selected and is not deployed.
+
 
 ## Final remaining roadmap
 
@@ -347,7 +372,7 @@ Root recovery snapshots remain under `/srv/backups/edge-stage4c`, `/srv/backups/
 
 ## Current next step
 
-Stage 4 is complete and persisted. The next finite infrastructure stage is Stage 5 — Edge Knowledge Replication & Data Integration. Stage 5 must begin with its required expanded read-only Home/PAI/Cloud reconciliation and must not reinterpret historical Stage 4 test-harness failures as production failures.
+Stage 5 expanded cross-project entry audit is complete and the cross-project Knowledge Fabric target architecture is accepted/persisted. Production implementation has not started. The immediate next step is operator approval of the Stage 5 substage plan; implementation then continues in `05.2 — Edge Knowledge Replication & Data Integration` with edge-only runtime mutation and an explicit Home-side Syncthing peer-authorization prerequisite.
 
 Image Generation is non-blocking for Stage 4 and must not divert the critical path; any later image-quality acceptance is human/visual. Do not add a desktop stack solely to make CUA applicable on the headless `edge`.
 
