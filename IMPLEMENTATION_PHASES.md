@@ -345,7 +345,7 @@ Stage 5 is now eligible to begin under its own mandatory entry audit.
 
 Detailed target record:
 
-`STAGE_05_KNOWLEDGE_ARCHITECTURE_ACCEPTANCE_2026-09-19.md`
+`STAGE_05_1_KNOWLEDGE_RECONCILIATION_TARGET_ARCHITECTURE_ACCEPTANCE_2026-09-19.md`
 
 Entry gates:
 
