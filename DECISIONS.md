@@ -1018,3 +1018,27 @@ Authoritative record:
 - `STAGE05_2_CT210_EXPERIMENT_FULL_PRUNE=PASS`
 
 **Supersedes:** the 2026-09-19 Stage 05.2 LinuxServer Obsidian/Selkies packaging decision and the subsequent 16 GiB LSIO rootfs resize decision. It also resolves the runtime-packaging comparison gate in the Stage 05.1 architecture. Non-conflicting Stage 05.1 topology and data-role decisions remain accepted.
+
+---
+
+## 2026-09-19 — Stage 05.2 production deployment and final acceptance
+
+**Status:** ACCEPTED
+
+**Context:** The clean production CT210 deployment completed after the Ignis runtime-selection experiment. Initial direct mounting of the canonical vault under Ignis `/vaults` exposed an upstream entrypoint behavior that recursively `chown -R`s `/vaults` on startup and changed the canonical PVE root ownership. The production integration was corrected without patching the Ignis image by using the upstream-supported symlinked-vault pattern and mounting the canonical target at the same absolute path inside the container.
+
+**Decision:**
+
+1. CT210 `obsidian` is the accepted production PVE Obsidian runtime: 1 vCPU, 512 MiB RAM, 256 MiB swap, 8 GiB rootfs, onboot, static `192.168.1.15/24`.
+2. PVE `/srv/knowledge/obsidian` remains the sole canonical vault and is mounted RW into CT210; canonical root ownership remains `0:990:2775`.
+3. Ignis runs unpatched from the upstream image update path. Inside Ignis, `/vaults/obsidian` is a symlink to `/srv/knowledge/obsidian`; the canonical path is separately bind-mounted at that same absolute location. This prevents Ignis startup recursive ownership changes from traversing the canonical tree while preserving normal upstream updates.
+4. Ignis writes as `PUID=999`, `PGID=990`. Current accepted application stack is Ignis 0.8.11 / Obsidian 1.12.7 with Caddy private HTTPS.
+5. `obsidian.lan -> 192.168.1.15` is the accepted private DNS identity through MikroTik. Caddy internal CA is the accepted TLS mechanism for Home LAN / NetBird clients; the CA private key remains inside CT210 and only the root certificate is distributed to clients.
+6. Obsidian `Use native menus` / system context menu must remain disabled in Ignis because Electron-native menu codepaths do not work in the browser. With it disabled, create/edit/delete UI operations are accepted.
+7. File Recovery is enabled/configured. Production acceptance does not require a repeated destructive restore E2E because the runtime-selection gate already established the File Recovery baseline and the final production audit confirms the core plugin is enabled.
+8. Final LXC reboot/autostart, DNS/HTTPS recovery, canonical ownership persistence and measured resource envelope all pass. No resource increase is justified by current evidence.
+9. Stage 05.2 is COMPLETE / ACCEPTED. Stage 05.3 becomes the next Cloud Infrastructure stage.
+
+**Acceptance marker:** `STAGE05_2_PVE_CANONICAL_OBSIDIAN_RUNTIME=PASS`
+
+**Supersedes:** only the previous current-state wording that production Stage 05.2 had not started. It does not rewrite the historical runtime-selection experiment or its cleanup evidence.
