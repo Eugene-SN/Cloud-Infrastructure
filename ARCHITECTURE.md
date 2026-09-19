@@ -8,13 +8,13 @@
 **Stage 02.5:** COMPLETE / ACCEPTED  
 **Stage 3:** COMPLETE / ACCEPTED  
 **Stage 4:** COMPLETE / ACCEPTED  
-**Stage 5:** ARCHITECTURE ACCEPTED / ENTRY AUDIT COMPLETE / IMPLEMENTATION NOT STARTED
+**Stage 5:** 05.1 COMPLETE / ACCEPTED; 05.2 NEXT; 05.3 PLANNED
 
 `EDGE_STAGE2_FINAL_INTEGRATED_ACCEPTANCE=PASS`  
 `CLOUD_STAGE_02_5_FINAL_SCOPE_ACCEPTANCE=PASS`  
 `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS`  
 `STAGE4_FINAL_ACCEPTANCE=PASS`  
-`STAGE05_1_KNOWLEDGE_RECONCILIATION_TARGET_ARCHITECTURE=PASS`
+`STAGE05_1_FINAL_KNOWLEDGE_RUNTIME_ARCHITECTURE=PASS`
 
 `STAGE4F_STABLE_DOCKER_BRIDGE_HARDENING=PASS`
 
@@ -35,7 +35,7 @@ Unless superseded by a later ACCEPTED decision:
 3. Home Infrastructure owns the accepted PVE canonical knowledge foundation. Cloud Infrastructure does not redesign or duplicate that authority.
 4. Home accepted canonical cutover on 2026-09-18: PVE `/srv/knowledge/obsidian` is canonical and `ai-node:/srv/ai-data/knowledge/obsidian` is an active RW Syncthing replica. Cloud Stage 5 must revalidate that accepted cross-project state before deployment.
 5. After Home cutover, `edge` is an active synchronized RW knowledge replica/producer, not canonical authority.
-6. `edge` is the accepted future Internet-reachable Knowledge client-access node for external/iOS clients, while a future private Obsidian WebUI belongs on the resource-rich `ai-node`; exact client-access mechanisms remain separately unresolved and are not implied by Stage 5 core replication.
+6. PVE is the single full server-side Obsidian application/WebUI node (`obsidian.lan`); edge remains the accepted future Internet-reachable Knowledge client-access node for iOS/macOS/Windows/Android through a separately selected mechanism, while ai-node remains a replica/application-consumer node without server-side Obsidian runtime by default.
 7. VPN/DPI-bypass functionality and the private infrastructure backbone are separate concerns.
 8. Single-operator simplicity is preferred over enterprise-style complexity without demonstrated need.
 9. Fresh verified runtime/configuration outranks historical reference.
