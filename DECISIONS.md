@@ -965,4 +965,21 @@ Authoritative record:
 **Acceptance marker:** `STAGE05_2_RUNTIME_PACKAGING_GATE=PASS`
 
 **Supersedes:** only the unresolved packaging gate and the approximately 4 GiB rootfs planning value in the 2026-09-19 final Stage 05.1 runtime-placement decision. All other Stage 05.1 architecture remains accepted.
+---
+
+## 2026-09-19 — Stage 05.2 CT210 rootfs resize after measured LSIO footprint
+
+**Status:** ACCEPTED
+
+**Context:** the LinuxServer Obsidian/Selkies smoke deployment on CT210 measured approximately 6.4 GiB used on the originally accepted 8 GiB rootfs, leaving only about 997 MiB free (87% used). The active LSIO image measured approximately 5.179 GB and the container writable layer approximately 362 MB, leaving insufficient practical headroom for normal pull/recreate updates.
+
+**Decision:**
+
+1. CT210 rootfs is increased from 8 GiB to **16 GiB**.
+2. The resize is performed in place on `local-lvm`; the canonical vault remains outside the rootfs and is not involved.
+3. Post-resize filesystem use is approximately 44% with about 8.5 GiB free.
+4. Docker and Obsidian/Selkies restart persistence passed after CT stop/start; HTTPS recovered immediately and the container retained `RestartCount=0`.
+5. The earlier 8 GiB rootfs target is superseded by measured production packaging requirements.
+
+**Acceptance marker:** `STAGE05_2_CT210_ROOTFS_RESIZE=PASS`
 
