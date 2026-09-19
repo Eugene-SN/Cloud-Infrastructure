@@ -282,7 +282,7 @@ Preserve the final Stage 4 records and do not repeat accepted E2E tests without 
 
 Latest target record: `STAGE_05_1_FINAL_KNOWLEDGE_RUNTIME_ARCHITECTURE_ACCEPTANCE_2026-09-19.md`.
 
-- PVE owns canonical Knowledge at `/srv/knowledge/obsidian`, the Syncthing hub, primary Home Knowledge recovery authority and the single full server-side Obsidian runtime.
+- PVE owns canonical Knowledge at `/srv/knowledge/obsidian`, the Syncthing hub, primary Home Knowledge recovery authority and the single Ignis-based server-side Obsidian-aware runtime.
 - ai-node owns the active RW PAI/application replica at `/srv/ai-data/knowledge/obsidian`; no server-side Obsidian runtime/WebUI is planned there by default.
 - edge owns the future active RW Cloud/agent replica at `/srv/knowledge/obsidian`; no edge Obsidian runtime/WebUI is deployed in Stage 5.
 - Accepted data topology is PVE ↔ ai-node plus PVE ↔ edge; no direct edge ↔ ai-node Syncthing peer is required under the current CT300/PVE network dependency.
@@ -290,9 +290,9 @@ Latest target record: `STAGE_05_1_FINAL_KNOWLEDGE_RUNTIME_ARCHITECTURE_ACCEPTANC
   - `05.1` architecture/reconciliation — COMPLETE / ACCEPTED;
   - `05.2` PVE Canonical Obsidian Runtime & WebUI — NEXT;
   - `05.3` Edge Knowledge Replication & Data Integration — PLANNED.
-- 05.2 target LXC: 1 vCPU, 1024 MiB RAM, 512 MiB swap, 16 GiB rootfs, onboot; canonical vault remains outside the rootfs and is RW bind-mounted from `/srv/knowledge/obsidian`.
+- 05.2 target LXC: 1 vCPU, 512 MiB RAM, 256 MiB swap, 8 GiB rootfs, onboot; canonical vault remains outside the rootfs and is RW bind-mounted from `/srv/knowledge/obsidian`.
 - Existing PVE host swap is 8 GiB with ~5.6 GiB free at the readiness audit; do not expand host swap without measured need.
-- 05.2 runtime packaging is accepted as LinuxServer Obsidian/Selkies inside the dedicated LXC; do not replace it with native Obsidian + native Selkies without a concrete incompatibility or an explicit new decision.
+- 05.2 runtime packaging is accepted as Ignis inside the dedicated LXC. Treat the Ignis image as the normal update unit and use the Obsidian version supported by that Ignis release; do not independently advance Obsidian ahead of Ignis without a concrete compatibility reason.
 - `obsidian.lan` is private Home LAN + NetBird-routed access only; no public Internet Obsidian WebUI.
 - 05.3 reuses Syncthing and performs required PVE↔edge integration, edge consumer integration and failure/conflict/reboot acceptance.
 - Future public iOS/macOS/Windows/Android client access uses edge through a separately selected client-facing mechanism; document the direction now, but do not implement it in Stage 5 or expose Syncthing publicly for this purpose.
