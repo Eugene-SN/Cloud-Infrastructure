@@ -1,6 +1,6 @@
 # Cloud Infrastructure — Accepted Implementation Phases
 
-**Status:** Stage 0–4 COMPLETE / ACCEPTED. Stage 05.1 is COMPLETE / ACCEPTED; Stage 05.2 runtime implementation has not started.
+**Status:** Stage 0–4 COMPLETE / ACCEPTED. Stage 05.1 is COMPLETE / ACCEPTED; Stage 05.2 is NEXT; Stage 05.3 is PLANNED.
 
 This document is the canonical stage chronology for Cloud Infrastructure / `edge`.
 
@@ -333,94 +333,103 @@ The known controlled SIGTERM exit-status-1 defect remains an accepted upstream c
 
 Stage 5 is now eligible to begin under its own mandatory entry audit.
 
-## Stage 5 — Edge Knowledge Replication & Data Integration
-
-### Stage label
-
-`05 — Edge Knowledge Replication & Data Integration`
+## Stage 5 — Knowledge Fabric Runtime Deployment
 
 ### Current status
 
-**ARCHITECTURE ACCEPTED / ENTRY AUDIT COMPLETE / PRODUCTION IMPLEMENTATION NOT STARTED**
+- **05.1 — Cross-project Knowledge Reconciliation & Target Architecture:** COMPLETE / ACCEPTED.
+- **05.2 — PVE Canonical Obsidian Runtime & WebUI:** NEXT / IMPLEMENTATION NOT STARTED.
+- **05.3 — Edge Knowledge Replication & Data Integration:** PLANNED / IMPLEMENTATION NOT STARTED.
 
-Detailed target record:
+Authoritative Stage 05.1 record:
 
-`STAGE_05_1_KNOWLEDGE_RECONCILIATION_TARGET_ARCHITECTURE_ACCEPTANCE_2026-09-19.md`
+`STAGE_05_1_FINAL_KNOWLEDGE_RUNTIME_ARCHITECTURE_ACCEPTANCE_2026-09-19.md`
 
-Entry gates:
+Entry evidence already accepted:
 
 - `PVE_STAGE5_ENTRY_AUDIT=PASS`;
 - `AI_NODE_STAGE5_ENTRY_AUDIT=PASS`;
-- `EDGE_STAGE5_ENTRY_AUDIT=PASS`.
+- `EDGE_STAGE5_ENTRY_AUDIT=PASS`;
+- `PVE_OBSIDIAN_RESOURCE_READINESS_AUDIT=PASS`.
 
 No Stage 5 production mutation has occurred.
 
 ### Cross-project target
 
-The target Knowledge Fabric is intentionally PVE-centered:
+- PVE = canonical RW Knowledge authority, Syncthing hub, primary durable recovery authority and full server-side Obsidian runtime/WebUI host.
+- ai-node = active RW non-canonical PAI/application replica; no server-side Obsidian runtime/WebUI by default.
+- edge = active RW non-canonical Cloud/agent replica; future external client-access endpoint; no Obsidian WebUI and no Obsidian runtime in Stage 5.
 
-- PVE = canonical RW data/recovery authority and Syncthing hub at `/srv/knowledge/obsidian`;
-- ai-node = active RW non-canonical PAI replica at `/srv/ai-data/knowledge/obsidian`;
-- edge = active RW non-canonical Cloud replica at `/srv/knowledge/obsidian`.
+Data topology remains PVE ↔ ai-node plus PVE ↔ edge.
 
-Data topology is PVE ↔ ai-node and PVE ↔ edge. A direct edge ↔ ai-node Syncthing peer is not part of the accepted target because current edge -> Home/PAI reachability itself depends on CT300 hosted on PVE.
+### 05.2 — PVE Canonical Obsidian Runtime & WebUI
 
-### Stage 5 branch and mutation scope
+Purpose: make the canonical PVE Knowledge node the single server-side full Obsidian application authority while keeping vault storage independent of the application LXC.
 
-Stage 5 is deliberately split into exactly two work branches:
+Accepted initial LXC target:
 
-- **05.1 — Cross-project Knowledge Reconciliation & Target Architecture** — COMPLETE / ACCEPTED; read-only reconciliation, architecture and planning;
-- **05.2 — Edge Knowledge Replication & Data Integration** — all runtime deployment, integration, verification and final Stage 5 acceptance.
+- 1 vCPU;
+- 1024 MiB RAM;
+- 512 MiB swap limit;
+- ~4 GiB rootfs;
+- onboot enabled;
+- canonical vault remains on `pve/knowledge` and is bind-mounted RW from `/srv/knowledge/obsidian`.
 
-05.2 deploys edge and may also inspect/change PVE where required for the planned edge↔PVE Syncthing integration, including edge Device ID registration and folder sharing. These are part of Stage 5 integration, not an external project prerequisite.
+PVE host swap remains at the existing 8 GiB unless post-deployment evidence demonstrates actual memory pressure; no speculative swap expansion is part of 05.2.
 
-ai-node remains an existing dependency/reference/non-regression node: do not redesign it or deploy the future Obsidian WebUI in Stage 5. OpenClaw behavior/current PVE Knowledge integration is likewise preserved.
+05.2 sequence:
 
-Future external iOS/macOS/Windows client access through edge is documented in the architecture but is not implemented in 05.2.
+1. targeted pre-mutation verification and rollback/recovery path;
+2. create the dedicated LXC with the accepted resource envelope;
+3. bind the existing canonical vault RW into the LXC without copying it into rootfs;
+4. run a deployment-method gate:
+   - official native Obsidian Linux package/AppImage + native Selkies/session lifecycle;
+   - LinuxServer Obsidian/Selkies container inside the dedicated LXC;
+   select the simpler, better-supported stable path;
+5. deploy current stable full Obsidian runtime;
+6. persist application/config state independently from the vault;
+7. open the canonical vault and verify normal indexing;
+8. enable/verify File Recovery;
+9. verify Obsidian CLI/core-plugin baseline where supported;
+10. publish private WebUI as `obsidian.lan` for Home LAN and NetBird-routed Home clients only;
+11. verify idle, active-WebUI and reindex resource consumption against the 1 GiB LXC limit;
+12. verify reboot persistence;
+13. verify no regression to PVE Syncthing, CT208 Backrest/Restic, CT220/OpenClaw, VM100/critical Home guests;
+14. clean temporary artifacts and persist 05.2 acceptance/read-back.
 
-### Accepted edge deployment contract
+05.2 explicitly does not redesign ai-node, OpenClaw behavior, edge replication or external client access.
 
-- persistent root: `/srv/knowledge` = `core:core 0755`;
-- replica: `/srv/knowledge/obsidian` = `core:core 2775`;
-- synchronization engine: reuse Syncthing;
-- folder ID: `knowledge-obsidian`;
-- folder type: `sendreceive`;
-- Syncthing service identity: `core`;
-- management/listeners remain private; no public Syncthing exposure;
-- Hermes/Codex/Antigravity access the host path directly;
-- n8n receives RW bind mount at `/home/node/knowledge-canonical`;
-- no Obsidian Desktop/runtime on edge;
-- no Obsidian WebUI on edge.
+### 05.3 — Edge Knowledge Replication & Data Integration
 
-### Future access/UI directions, not current core deployment
+Accepted edge contract:
 
-- edge is the preferred Internet-reachable data endpoint for future iOS/other external client applications, without requiring NetBird on those clients;
-- exact client application/protocol/access service remains unresolved and requires separate selection;
-- ai-node is the preferred resource-rich host for a future private Obsidian WebUI, potentially `obsidian.lan`, for LAN and NetBird-routed Home clients;
-- PVE Obsidian runtime is optional/not established;
-- direct OpenClaw fallback to ai-node Knowledge is not currently required.
+- `/srv/knowledge` = `core:core 0755`;
+- `/srv/knowledge/obsidian` = `core:core 2775`;
+- reuse Syncthing, folder ID `knowledge-obsidian`, `sendreceive`;
+- edge Syncthing under `core`;
+- Hermes/Codex/Antigravity direct local path access;
+- edge n8n RW bind `/home/node/knowledge-canonical`;
+- no public Syncthing;
+- no edge Obsidian WebUI;
+- no edge Obsidian runtime in Stage 5.
 
-These directions must not be mistaken for already deployed runtime.
+05.3 sequence:
 
-### Stage 5 acceptance properties
+1. targeted edge/PVE pre-mutation verification and recovery path;
+2. create edge Knowledge paths;
+3. install/configure edge Syncthing;
+4. register/authorize edge on PVE and share `knowledge-obsidian`;
+5. complete initial convergence;
+6. integrate Hermes/Codex/Antigravity and edge n8n;
+7. verify PVE -> edge, edge -> PVE and edge -> PVE -> ai-node propagation;
+8. verify controlled conflict behavior without silent loss;
+9. verify edge sync outage/reconnect and convergence;
+10. verify edge reboot persistence;
+11. verify no public Syncthing exposure;
+12. verify PVE↔ai-node, PVE Obsidian, CT220/OpenClaw and canonical ownership non-regression;
+13. remove synthetic test data and perform final Stage 5 repository reconciliation/read-back.
 
-When the cross-project PVE peer-authorization prerequisite is satisfied, final Stage 5 acceptance must prove:
-
-1. edge replica exists at the accepted path and ownership;
-2. initial synchronization completes;
-3. PVE -> edge propagation works;
-4. edge -> PVE -> ai-node propagation works;
-5. controlled conflict behavior produces no silent data loss;
-6. edge sync outage/reconnect converges;
-7. reboot persistence works;
-8. Hermes has local RW access;
-9. edge n8n has local RW access;
-10. no public Syncthing management/transfer exposure is introduced;
-11. PVE ↔ ai-node remains healthy and PVE canonical ownership is unchanged;
-12. all synthetic test artifacts are removed;
-13. canonical repository state is updated and read back.
-
-Detailed 05.2 substage sequencing remains to be approved by the operator before implementation. After approval, all Stage 5 runtime work continues in `05.2 — Edge Knowledge Replication & Data Integration`; no additional Stage 5 project branch is planned.
+Future iOS/macOS/Windows/Android client access through edge is an accepted architectural direction but is not implemented in 05.3. A future edge Obsidian runtime remains conditional on that later client-access design or a separately accepted edge-local Obsidian requirement.
 
 
 ## Stage 6 — Edge Backrest & Recovery
