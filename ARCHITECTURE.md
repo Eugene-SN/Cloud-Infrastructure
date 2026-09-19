@@ -8,23 +8,18 @@
 **Stage 02.5:** COMPLETE / ACCEPTED  
 **Stage 3:** COMPLETE / ACCEPTED  
 **Stage 4:** COMPLETE / ACCEPTED  
-**Stage 5:** 05.1 COMPLETE / ACCEPTED; 05.2 NEXT; 05.3 PLANNED
+**Stage 5:** COMPLETE / ACCEPTED
 
-`EDGE_STAGE2_FINAL_INTEGRATED_ACCEPTANCE=PASS`  
-`CLOUD_STAGE_02_5_FINAL_SCOPE_ACCEPTANCE=PASS`  
 `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS`  
 `STAGE4_FINAL_ACCEPTANCE=PASS`  
-`STAGE05_1_FINAL_KNOWLEDGE_RUNTIME_ARCHITECTURE=PASS`
+`STAGE05_1_FINAL_KNOWLEDGE_RUNTIME_ARCHITECTURE=PASS`  
+`STAGE05_2_PVE_CANONICAL_OBSIDIAN_RUNTIME=PASS`  
+`STAGE05_3_EDGE_KNOWLEDGE_REPLICATION_DATA_INTEGRATION=PASS`  
+`STAGE05_FINAL_ACCEPTANCE=PASS`
 
-`STAGE4F_STABLE_DOCKER_BRIDGE_HARDENING=PASS`
+Current accepted checkpoint: `Stage 5 — Knowledge Fabric Runtime Deployment — COMPLETE / ACCEPTED`.
 
-Current accepted checkpoint on `main`:
-
-`05.1 — Cross-project Knowledge Reconciliation & Target Architecture — COMPLETE / ACCEPTED; 05.2 PVE Obsidian implementation pending`
-
-Final Stage 02.5 record:
-
-`STAGE_02_5_FINAL_SCOPE_ACCEPTANCE_2026-09-18.md`
+Next finite infrastructure stage: `Stage 6 — Edge Backrest & Recovery`.
 
 ## Accepted architectural invariants
 
@@ -354,7 +349,7 @@ Stage 05.3 target:
 - `/srv/knowledge/obsidian` = `core:core 2775`;
 - Syncthing under `core`;
 - Hermes/Codex/Antigravity direct local path access;
-- edge n8n RW bind at `/home/node/knowledge-canonical`;
+- edge n8n RW bind at `/srv/knowledge/obsidian`;
 - no Obsidian WebUI;
 - no Obsidian runtime in Stage 5.
 
@@ -388,26 +383,28 @@ File Recovery complements rather than replaces Restic. Live replicas are synchro
 
 ## Stage 5 implementation structure
 
-Stage 5 is split into three project branches:
+Stage 5 is COMPLETE / ACCEPTED:
 
 - `05.1 — Cross-project Knowledge Reconciliation & Target Architecture` — COMPLETE / ACCEPTED;
-- `05.2 — PVE Canonical Obsidian Runtime & WebUI` — NEXT / implementation not started;
-- `05.3 — Edge Knowledge Replication & Data Integration` — PLANNED / implementation not started.
+- `05.2 — PVE Canonical Obsidian Runtime & WebUI` — COMPLETE / ACCEPTED;
+- `05.3 — Edge Knowledge Replication & Data Integration` — COMPLETE / ACCEPTED.
 
-05.2 may create/configure the new PVE LXC and private `obsidian.lan` WebUI while preserving PVE Syncthing, CT208 Backrest and CT220/OpenClaw behavior.
+Final topology is PVE ↔ ai-node plus PVE ↔ edge. edge is an active RW replica at `/srv/knowledge/obsidian`; no direct edge ↔ ai-node peer exists.
 
-05.3 performs all edge Knowledge deployment and the required PVE↔edge Syncthing integration. ai-node remains a non-redesign/non-regression node.
+Accepted edge runtime:
 
-Future external-client access through edge is documented architecture but is explicitly outside Stage 5 implementation.
+- `/srv/knowledge` = `core:core 0755`;
+- `/srv/knowledge/obsidian` = `core:core 2775`;
+- Syncthing `2.1.5` under `core`, boot-persistent;
+- edge initiates PVE connection to `tcp://192.168.1.3:22000`;
+- local Syncthing listener/API remain loopback-only;
+- Hermes/Codex/Antigravity use the local host path directly;
+- n8n uses `/srv/knowledge/obsidian:/srv/knowledge/obsidian:rw`;
+- no edge Obsidian runtime/WebUI and no public Syncthing exposure.
 
-The Stage 5 expanded entry audit remains valid:
+Propagation, outage/reconnect, conflict preservation and full edge reboot recovery all passed. Stage 4 runtime/network contracts remained intact.
 
-- `PVE_STAGE5_ENTRY_AUDIT=PASS`;
-- `AI_NODE_STAGE5_ENTRY_AUDIT=PASS`;
-- `EDGE_STAGE5_ENTRY_AUDIT=PASS`.
-
-No Stage 5 production mutation has yet occurred.
-
+Authoritative final record: `STAGE_05_3_FINAL_ACCEPTANCE_2026-09-20.md`.
 
 # Final dependency-aware remaining architecture
 
