@@ -8,7 +8,8 @@
 **Stage 02.5 — Remaining Functional Scope Reconciliation & Research — COMPLETE / ACCEPTED**  
 **Stage 3 — Edge Cross-site Connectivity Foundation — COMPLETE / ACCEPTED**  
 **Stage 4 — Edge Hermes Agent Runtime — COMPLETE / ACCEPTED**  
-**Stage 5 — Edge Knowledge Replication & Data Integration — ARCHITECTURE ACCEPTED / ENTRY AUDIT COMPLETE / IMPLEMENTATION NOT STARTED**
+**Stage 05.1 — Cross-project Knowledge Reconciliation & Target Architecture — COMPLETE / ACCEPTED**  
+**Stage 05.2 — Edge Knowledge Replication & Data Integration — IMPLEMENTATION NOT STARTED**
 
 `EDGE_STAGE2_FINAL_INTEGRATED_ACCEPTANCE=PASS` on 2026-09-17.  
 `CLOUD_STAGE_02_5_FINAL_SCOPE_ACCEPTANCE=PASS` on 2026-09-18.  
@@ -102,7 +103,7 @@ Accepted target roles:
 
 Accepted data topology remains PVE ↔ ai-node plus PVE ↔ edge. Direct edge ↔ ai-node Syncthing is intentionally omitted because edge -> Home connectivity itself depends on CT300 on PVE.
 
-Cloud Stage 5 mutation scope is **edge only**. PVE/ai-node are reference and non-regression boundaries. PVE currently does not have edge registered as a Syncthing device; that authorization/share is a cross-project Home prerequisite or requires a later explicit scope exception.
+Stage 05.2 is centered on edge deployment, but PVE may be inspected and changed where required for edge↔PVE Syncthing integration and verification, including edge Device ID authorization/folder sharing. ai-node remains a reference/non-regression node and is not redesigned; the future ai-node Obsidian WebUI is not deployed in Stage 5. OpenClaw behavior/current Knowledge relationship is preserved.
 
 Edge target path contract:
 
@@ -112,7 +113,7 @@ Edge target path contract:
 - n8n RW mount target `/home/node/knowledge-canonical`;
 - Hermes/Codex/Antigravity direct host-path access.
 
-Older blanket wording that Apple-device/Obsidian integration is completely outside Cloud is superseded in part. Future external client **data access through edge** is an accepted direction; exact public client-access mechanism is not yet selected and is not deployed.
+Older blanket wording that Apple-device/Obsidian integration is completely outside Cloud is superseded in part. Future external client **data access through edge** for iOS/macOS/Windows is an accepted direction; exact client-access mechanism is not yet selected and is explicitly not deployed in Stage 5.
 
 
 ## Final remaining roadmap
@@ -374,7 +375,7 @@ Root recovery snapshots remain under `/srv/backups/edge-stage4c`, `/srv/backups/
 
 ## Current next step
 
-Stage 5 expanded cross-project entry audit is complete and the cross-project Knowledge Fabric target architecture is accepted/persisted. Production implementation has not started. The immediate next step is operator approval of the Stage 5 substage plan; implementation then continues in `05.2 — Edge Knowledge Replication & Data Integration` with edge-only runtime mutation and an explicit Home-side Syncthing peer-authorization prerequisite.
+Stage 05.1 is complete and accepted. The immediate next step is operator approval of the 05.2 implementation plan. After approval, all Stage 5 runtime work continues in `05.2 — Edge Knowledge Replication & Data Integration`, including the PVE-side Syncthing changes required for edge integration; ai-node redesign, ai-node Obsidian WebUI, OpenClaw redesign and external iOS/macOS/Windows client-access implementation remain out of 05.2 scope.
 
 Image Generation is non-blocking for Stage 4 and must not divert the critical path; any later image-quality acceptance is human/visual. Do not add a desktop stack solely to make CUA applicable on the headless `edge`.
 
