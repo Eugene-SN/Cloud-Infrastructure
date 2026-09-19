@@ -179,66 +179,53 @@ Detailed record: `STAGE_02_5_CONNECTIVITY_SELECTION_ACCEPTANCE_2026-09-17.md`.
 
 ## Stage 5 knowledge/data boundary
 
-Status: **05.1 COMPLETE / ACCEPTED; 05.2 COMPLETE / ACCEPTED; 05.3 PLANNED**.
+Status: **Stage 5 COMPLETE / ACCEPTED**.
 
-Authoritative record: `STAGE_05_1_FINAL_KNOWLEDGE_RUNTIME_ARCHITECTURE_ACCEPTANCE_2026-09-19.md`.
+Authoritative records:
 
-Confirmed current inventory:
-
-- PVE canonical vault `/srv/knowledge/obsidian` on dedicated `pve/knowledge` 32 GiB ext4;
-- PVE Syncthing `2.1.5`, folder `knowledge-obsidian`, existing ai-node peer;
-- ai-node active RW replica `/srv/ai-data/knowledge/obsidian`, current n8n RW consumer;
-- CT220 PVE canonical RO consumer;
-- CT208 accepted canonical Knowledge backup/restore;
-- edge has no Syncthing or `/srv/knowledge` tree yet;
-- edge -> PVE/ai-node TCP/22000 reachability passes over the accepted private route.
-
-Fresh PVE Obsidian-readiness inventory:
-
-- CPU: Intel Core i3-N305, 8 cores;
-- RAM: ~15 GiB total, ~6.5 GiB available;
-- host swap: 8 GiB total, ~5.6 GiB free;
-- PVE manager `9.2.20`;
-- no host swap expansion planned without measured post-deployment pressure.
-
-Accepted target inventory:
+- `STAGE_05_1_FINAL_KNOWLEDGE_RUNTIME_ARCHITECTURE_ACCEPTANCE_2026-09-19.md`;
+- `STAGE_05_2_FINAL_ACCEPTANCE_2026-09-19.md`;
+- `STAGE_05_3_FINAL_ACCEPTANCE_2026-09-20.md`.
 
 ### PVE / CT210 `obsidian` — LIVE / ACCEPTED
 
-- PVE remains canonical RW Knowledge authority, Syncthing hub and primary durable recovery authority;
-- CT210 is a fresh dedicated production LXC: 1 vCPU, 512 MiB RAM, 256 MiB swap, 8 GiB rootfs, onboot enabled;
-- network identity: `192.168.1.15/24`, gateway `192.168.1.254`, DNS `192.168.1.1`, search domain `lan`;
-- canonical vault remains outside rootfs at PVE `/srv/knowledge/obsidian`, mounted RW into CT210 at the same path;
-- canonical root contract is `0:990:2775`; Ignis writes as `999:990`;
-- Ignis vault exposure uses `/opt/obsidian/vaults/obsidian -> /srv/knowledge/obsidian` plus the same absolute canonical bind inside the container, preventing Ignis startup `chown -R /vaults` from traversing and mutating canonical ownership;
-- Ignis current production release path is upstream `nobbe/ignis:latest`; deployed Ignis release is 0.8.11 with Obsidian 1.12.7 and `obsidian-headless` 0.0.14;
-- Docker Engine 29.8.1 and Compose 5.5.1 run inside CT210;
-- Ignis backend is published only on CT loopback `127.0.0.1:8080`;
-- Caddy provides private `https://obsidian.lan` on CT210 with an internal CA; MikroTik static DNS resolves `obsidian.lan -> 192.168.1.15`;
-- production Caddy root CA SHA256 fingerprint: `B0:C6:CC:50:4D:B2:20:AE:08:09:21:99:9C:95:D5:6D:DB:D0:D4:50:CD:4E:8D:8A:D4:D0:B6:D3:6E:44:93:4A`;
-- macOS client trust and browser access were verified; private HTTPS has no certificate warning after trust installation;
-- WebUI create/edit/delete functionality is accepted; Obsidian `Use native menus` / system context menu must remain disabled for Ignis browser compatibility;
-- File Recovery core plugin is enabled/configured; full restore E2E was not repeated in production;
-- final CT reboot acceptance passed: Docker stack autostarts, DNS/HTTPS recover, and canonical ownership remains unchanged;
-- post-reboot snapshot: 106 MiB LXC memory used, 0 swap used; Caddy ~51.84 MiB and Ignis ~89.8 MiB container memory at the measured instant;
-- final acceptance record: `STAGE_05_2_FINAL_ACCEPTANCE_2026-09-19.md`.
+- dedicated `pve/knowledge` 32 GiB ext4 LV mounted at `/srv/knowledge`;
+- vault `/srv/knowledge/obsidian`;
+- PVE Syncthing `2.1.5`, folder ID `knowledge-obsidian`, `sendreceive`;
+- PVE Device ID `I6IHLDJ-2E2SH2D-RREAJIY-VFP7TG5-N4DKRDR-GDIUQHA-P2NHQ3O-MR4WOAY`;
+- listener `192.168.1.3:22000`, GUI/API `127.0.0.1:8384`;
+- peers: ai-node and edge;
+- CT210 remains the accepted Ignis/Obsidian private runtime at `obsidian.lan`.
 
-### ai-node
+### ai-node — LIVE / ACCEPTED
 
-- active RW PAI/application replica;
-- n8n/OCR/RAG/AI consumers;
-- no server-side Obsidian runtime/WebUI by default.
+- active RW replica `/srv/ai-data/knowledge/obsidian`;
+- existing Syncthing peer to PVE;
+- n8n/OCR/RAG/AI consumers remain in place;
+- no server-side Obsidian runtime/WebUI by default;
+- normal edge → PVE → ai-node propagation verified.
 
-### edge
+### edge — LIVE / ACCEPTED
 
-- future active RW Cloud/agent replica at `/srv/knowledge/obsidian`;
-- target ownership `/srv/knowledge core:core 0755`, replica `core:core 2775`;
-- edge n8n target bind `/home/node/knowledge-canonical`;
-- Hermes/Codex/Antigravity direct host-path consumers;
-- no edge Obsidian WebUI;
-- no edge Obsidian runtime in Stage 5;
-- future iOS/macOS/Windows/Android client-access endpoint role remains accepted, exact mechanism unresolved and not deployed in Stage 5.
+- active RW replica `/srv/knowledge/obsidian`;
+- `/srv/knowledge`: `core:core 0755`;
+- `/srv/knowledge/obsidian`: `core:core 2775`;
+- Syncthing `2.1.5` from upstream `stable-v2`;
+- service `syncthing@core.service`: enabled and reboot-persistent;
+- edge Device ID `DPBP3KW-L5BEWJM-RPDDHO2-ON5AYFR-VEE4TP5-NOIOOES-NGJ3D4R-VJFXQAE`;
+- PVE peer `I6IHLDJ-2E2SH2D-RREAJIY-VFP7TG5-N4DKRDR-GDIUQHA-P2NHQ3O-MR4WOAY` at `tcp://192.168.1.3:22000`;
+- folder ID `knowledge-obsidian`, type `sendreceive`, watcher enabled, rescan 3600 s;
+- edge listener `127.0.0.1:22000`, GUI/API `127.0.0.1:8384`;
+- global/local discovery, relays and NAT traversal disabled;
+- no public Syncthing exposure;
+- Hermes/Codex/Antigravity use the local path directly;
+- n8n bind `/srv/knowledge/obsidian:/srv/knowledge/obsidian:rw`;
+- n8n `node` UID/GID `1000:1000`;
+- `n8n_hermes` bridge contract unchanged;
+- propagation, outage/reconnect, conflict preservation and edge reboot acceptance passed;
+- no edge Obsidian runtime/WebUI.
 
+Future external client access through edge remains outside Stage 5.
 
 # Deployment stage inventory
 
@@ -248,7 +235,7 @@ Accepted target inventory:
 | 4 | Hermes Agent Runtime | COMPLETE / ACCEPTED; `STAGE4_FINAL_ACCEPTANCE=PASS` |
 | 05.1 | Cross-project Knowledge Reconciliation & Target Architecture | COMPLETE / ACCEPTED |
 | 05.2 | PVE Canonical Obsidian Runtime & WebUI | COMPLETE / ACCEPTED; `STAGE05_2_PVE_CANONICAL_OBSIDIAN_RUNTIME=PASS` |
-| 05.3 | Edge Knowledge Replication & Data Integration | PLANNED / IMPLEMENTATION NOT STARTED |
+| 05.3 | Edge Knowledge Replication & Data Integration | COMPLETE / ACCEPTED; `STAGE05_3_EDGE_KNOWLEDGE_REPLICATION_DATA_INTEGRATION=PASS` |
 | 6 | Backrest & Recovery | PRODUCT DIRECTION ACCEPTED; topology research pending |
 | 7 | Maintenance & Update | Semaphore accepted; deploy only after Stage 6 restore acceptance |
 | 8 | Monitoring, Heartbeats & Alerts | REQUIRED / PRODUCT UNRESOLVED |
