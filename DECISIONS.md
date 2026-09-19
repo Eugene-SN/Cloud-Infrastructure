@@ -887,5 +887,29 @@ Detailed record:
 11. OpenClaw keeps the current PVE canonical RO path. Direct ai-node Knowledge fallback is not required; n8n may pass locally sourced context to OpenClaw for n8n-driven tasks.
 
 **Supersedes in part:** prior blanket statements that MacBook/iPhone/iPad Obsidian integration is completely outside Cloud Infrastructure. Future public/mobile data access through edge is now an accepted Cloud role, while exact implementation remains deferred.
+---
+
+## 2026-09-19 — Stage 05.1 scope correction and 05.2 implementation boundary
+
+**Status:** ACCEPTED
+
+Authoritative record:
+
+`STAGE_05_1_KNOWLEDGE_RECONCILIATION_TARGET_ARCHITECTURE_ACCEPTANCE_2026-09-19.md`
+
+**Decision:**
+
+1. Stage 5 is split into exactly two Cloud Infrastructure work branches:
+   - `05.1 — Cross-project Knowledge Reconciliation & Target Architecture`;
+   - `05.2 — Edge Knowledge Replication & Data Integration`.
+2. 05.1 is research/architecture only and is COMPLETE / ACCEPTED.
+3. 05.2 owns all Stage 5 runtime implementation and final acceptance.
+4. 05.2 is centered on edge deployment but may inspect and modify PVE where required for edge↔PVE Syncthing integration, topology correctness and verification.
+5. ai-node is not redesigned in Stage 5; do not deploy the future Obsidian WebUI or otherwise restructure PAI application architecture in 05.2.
+6. OpenClaw behavior/current PVE Knowledge relationship is not redesigned in Stage 5.
+7. Future external iOS/macOS/Windows client data access through edge remains part of the documented target architecture but is **not implemented in Stage 5**.
+8. Existing PVE↔ai-node runtime is preserved and verified for non-regression; edge→PVE→ai-node propagation is an acceptance requirement.
+
+**Supersedes:** only clauses 9–10 of the immediately preceding accepted decision `Three-node Knowledge Fabric roles and edge-only Stage 5 mutation scope` insofar as they restricted Stage 5 mutations to edge and treated PVE peer authorization as an external prerequisite. All non-conflicting topology, role, path and future-access decisions remain accepted.
 
 
