@@ -179,15 +179,36 @@ Detailed record: `STAGE_02_5_CONNECTIVITY_SELECTION_ACCEPTANCE_2026-09-17.md`.
 
 ## Stage 5 knowledge/data boundary
 
-Status: **ACCEPTED INTEGRATION BOUNDARY; DEPLOYMENT DEFERRED TO STAGE 5**.
+Status: **TARGET ARCHITECTURE ACCEPTED; ENTRY AUDIT COMPLETE; EDGE DEPLOYMENT NOT STARTED**.
 
-- Home Infrastructure owns the accepted PVE canonical knowledge foundation at `/srv/knowledge/obsidian`.
-- Personal Agents Infrastructure owns the `ai-node` active RW replica and local AI consumers/producers after Home cutover.
-- Cloud Infrastructure owns only the `edge` active RW replica and Cloud-side integration.
-- Home accepted canonical cutover and Syncthing `2.1.5` replication on 2026-09-18; `ai-node:/srv/ai-data/knowledge/obsidian` is the active RW replica. CT208 canonical backup/restore is accepted. These are cross-project records requiring live revalidation at Cloud Stage 5 entry.
-- Stage 5 must begin with a fresh cross-project read-only audit and reuse the Home-accepted server-side synchronization mechanism by default.
-- MacBook/iPhone/iPad Obsidian synchronization is outside Cloud Infrastructure scope.
-- Filestash, SFTPGo, Syncthing, LiveSync/CouchDB or other Cloud-side file/sync products are not selected by assumption.
+Detailed record: `STAGE_05_KNOWLEDGE_ARCHITECTURE_ACCEPTANCE_2026-09-19.md`.
+
+Confirmed current inventory:
+
+- PVE canonical vault `/srv/knowledge/obsidian`, Syncthing `2.1.5`, folder `knowledge-obsidian`, existing ai-node peer;
+- ai-node active RW replica `/srv/ai-data/knowledge/obsidian`, Syncthing `2.1.5`, current n8n RW consumer;
+- CT220 PVE canonical RO consumer;
+- CT208 accepted canonical Knowledge backup/restore;
+- edge has no Syncthing or `/srv/knowledge` tree yet;
+- edge -> PVE and edge -> ai-node TCP/22000 reachability passes over the accepted NetBird/Home route;
+- edge Hermes runs as `core` UID/GID `1000:1000`;
+- edge n8n runs as container UID/GID `1000:1000`;
+- no edge public Syncthing listeners/firewall rules.
+
+Accepted target inventory:
+
+- PVE = canonical RW data/recovery authority and Syncthing hub;
+- ai-node = active RW PAI/application replica;
+- edge = active RW Cloud/agent replica at `/srv/knowledge/obsidian`;
+- edge path ownership: `/srv/knowledge core:core 0755`, replica `core:core 2775`;
+- edge n8n target bind: `/home/node/knowledge-canonical`;
+- edge Hermes/Codex/Antigravity direct host-path consumers;
+- no edge Obsidian runtime/WebUI;
+- future external/iOS data-access endpoint role belongs to edge, exact client mechanism unresolved;
+- future private Obsidian WebUI direction belongs to ai-node, potentially `obsidian.lan`.
+
+Stage 5 mutates edge only. PVE peer registration/share for the new edge Syncthing Device ID is a required cross-project Home prerequisite unless explicitly re-scoped later.
+
 
 # Deployment stage inventory
 
@@ -195,7 +216,7 @@ Status: **ACCEPTED INTEGRATION BOUNDARY; DEPLOYMENT DEFERRED TO STAGE 5**.
 |---|---|---|
 | 3 | Cross-site Connectivity Foundation | COMPLETE / ACCEPTED; `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS` |
 | 4 | Hermes Agent Runtime | COMPLETE / ACCEPTED; `STAGE4_FINAL_ACCEPTANCE=PASS` |
-| 5 | Edge Knowledge Replication & Data Integration | INTEGRATION STAGE; depends on accepted Home/PVE knowledge foundation plus Stage 3/4 |
+| 5 | Edge Knowledge Replication & Data Integration | ARCHITECTURE ACCEPTED / ENTRY AUDIT COMPLETE / EDGE DEPLOYMENT NOT STARTED |
 | 6 | Backrest & Recovery | PRODUCT DIRECTION ACCEPTED; topology research pending |
 | 7 | Maintenance & Update | Semaphore accepted; deploy only after Stage 6 restore acceptance |
 | 8 | Monitoring, Heartbeats & Alerts | REQUIRED / PRODUCT UNRESOLVED |
