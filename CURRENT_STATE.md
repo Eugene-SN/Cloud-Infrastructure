@@ -9,13 +9,14 @@
 **Stage 3 — Edge Cross-site Connectivity Foundation — COMPLETE / ACCEPTED**  
 **Stage 4 — Edge Hermes Agent Runtime — COMPLETE / ACCEPTED**  
 **Stage 05.1 — Cross-project Knowledge Reconciliation & Target Architecture — COMPLETE / ACCEPTED**  
-**Stage 05.2 — PVE Canonical Obsidian Runtime & WebUI — RUNTIME SELECTED / PRODUCTION IMPLEMENTATION NOT STARTED**  
+**Stage 05.2 — PVE Canonical Obsidian Runtime & WebUI — COMPLETE / ACCEPTED**  
 **Stage 05.3 — Edge Knowledge Replication & Data Integration — PLANNED / IMPLEMENTATION NOT STARTED**
 
 `EDGE_STAGE2_FINAL_INTEGRATED_ACCEPTANCE=PASS` on 2026-09-17.  
 `CLOUD_STAGE_02_5_FINAL_SCOPE_ACCEPTANCE=PASS` on 2026-09-18.  
 `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS` on 2026-09-18.  
 `STAGE05_1_FINAL_KNOWLEDGE_RUNTIME_ARCHITECTURE=PASS` on 2026-09-19.  
+`STAGE05_2_PVE_CANONICAL_OBSIDIAN_RUNTIME=PASS` on 2026-09-19.  
 `STAGE4_FINAL_ACCEPTANCE=PASS` on 2026-09-18.
 
 `STAGE4F_STABLE_DOCKER_BRIDGE_HARDENING=PASS` on 2026-09-19.
@@ -117,7 +118,7 @@ Accepted 05.2 production LXC envelope: 1 vCPU, 512 MiB RAM, 256 MiB swap, 8 GiB 
 
 05.2 runtime packaging is **SELECTED / ACCEPTED**: Ignis inside the dedicated PVE LXC. Comparative testing rejected LinuxServer Obsidian/Selkies and native official Obsidian + Selkies for this use case; Ignis passed the required filesystem bridge, external-change visibility, File Recovery baseline, headless bridge and restart-persistence gates on an isolated test vault.
 
-The comparative CT210 was fully pruned after acceptance: CT210 is absent from PVE, its experimental rootfs is removed, and the canonical vault was never mounted or mutated by the experiment. Production 05.2 deployment has not started. A fresh CT210 must be created from scratch with the accepted 1 vCPU / 512 MiB RAM / 256 MiB swap / 8 GiB rootfs envelope and the current stable Ignis update path; experimental image/version state is not a production baseline.
+Stage 05.2 production deployment is complete and accepted. Fresh CT210 `obsidian` is live on PVE with 1 vCPU, 512 MiB RAM, 256 MiB swap, 8 GiB rootfs, onboot enabled and static `192.168.1.15/24`. The canonical vault remains on PVE at `/srv/knowledge/obsidian` and is bind-mounted RW. Ignis runs with the upstream image update path and Obsidian 1.12.7; Caddy provides private HTTPS for `obsidian.lan`. The Ignis vault path uses a symlink topology so the image entrypoint can own `/vaults` without recursively changing canonical PVE ownership; canonical root remains `0:990:2775` across container and LXC restarts. Browser create/edit/delete works with Obsidian `Use native menus` disabled. File Recovery is enabled/configured; a full restore E2E was intentionally not repeated. Final reboot/autostart, DNS/HTTPS, ownership and resource acceptance all pass. Final record: `STAGE_05_2_FINAL_ACCEPTANCE_2026-09-19.md`.
 
 Future external client-access implementation through edge is accepted architecture but explicitly outside Stage 5. Edge Obsidian runtime remains conditional future work.
 
@@ -126,14 +127,13 @@ Future external client-access implementation through edge is accepted architectu
 
 Stage 4 is complete and accepted. PR #1 was merged into `main` on 2026-09-19 as commit `c4d402175ea1a049f20a93ab77daa0b068071277`; no Stage 4 branch checkpoint remains pending.
 
-1. **Stage 05.2 — PVE Canonical Obsidian Runtime & WebUI**;
-2. **Stage 05.3 — Edge Knowledge Replication & Data Integration**;
-3. **Stage 6 — Edge Backrest & Recovery**;
-4. **Stage 7 — Edge Maintenance & Update**, including separate Codex `update.escloud.us` substage;
-5. **Stage 8 — Edge Monitoring, Heartbeats & Alerts**;
-6. **Stage 9 — Edge Cloud Portal**, including separate Codex `app.escloud.us` substage;
-7. **Stage 10 — Edge Final Integrated Infrastructure Acceptance**;
-8. post-infrastructure **Automation & User Workflows** as a continuous workstream.
+1. **Stage 05.3 — Edge Knowledge Replication & Data Integration**;
+2. **Stage 6 — Edge Backrest & Recovery**;
+3. **Stage 7 — Edge Maintenance & Update**, including separate Codex `update.escloud.us` substage;
+4. **Stage 8 — Edge Monitoring, Heartbeats & Alerts**;
+5. **Stage 9 — Edge Cloud Portal**, including separate Codex `app.escloud.us` substage;
+6. **Stage 10 — Edge Final Integrated Infrastructure Acceptance**;
+7. post-infrastructure **Automation & User Workflows** as a continuous workstream.
 
 The old conditional `Remaining Infrastructure Services` stage is removed because Stage 02.5 selected no additional standalone infrastructure product requiring that slot.
 
