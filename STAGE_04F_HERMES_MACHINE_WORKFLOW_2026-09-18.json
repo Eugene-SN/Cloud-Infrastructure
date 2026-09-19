@@ -1,0 +1,138 @@
+[
+  {
+    "id": "Hermes4FMachine01",
+    "name": "Hermes Machine Invocation",
+    "active": false,
+    "nodes": [
+      {
+        "parameters": {
+          "inputSource": "workflowInputs",
+          "workflowInputs": {
+            "values": [
+              {
+                "name": "task",
+                "type": "string"
+              },
+              {
+                "name": "executor",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "id": "f4b7c292-e121-4d8a-9b2f-f74d86596137",
+        "name": "When Called by Another Workflow",
+        "type": "n8n-nodes-base.executeWorkflowTrigger",
+        "typeVersion": 1.2,
+        "position": [
+          -640,
+          0
+        ]
+      },
+      {
+        "parameters": {
+          "mode": "runOnceForEachItem",
+          "language": "javaScript",
+      "jsCode": "const task = String($json.task ?? '').trim();\nconst executor = String($json.executor ?? 'vllm').trim().toLowerCase();\nif (!task) throw new Error('task is required');\nif (!['vllm', 'codex', 'antigravity'].includes(executor)) throw new Error('executor must be vllm, codex, or antigravity');\nlet prompt;\nif (executor === 'vllm') {\n  prompt = `This request comes from the authenticated private n8n machine interface. Answer the task directly with the currently configured Hermes model. Do not invoke terminal, delegation, Codex, or Antigravity. Return only the usable final result.\\n\\nTask:\\n${task}`;\n} else {\n  const invocation = executor === 'codex'\n    ? 'Use the terminal tool to invoke the real standalone Codex CLI in the foreground without a PTY, using codex exec --sandbox danger-full-access --ephemeral. Wait for it to finish and use its actual result.'\n    : 'Use the terminal tool to invoke the real standalone Antigravity CLI in the foreground without a PTY, using agy -p --output-format json --mode accept-edits --dangerously-skip-permissions. Wait for status SUCCESS and use its actual response.';\n  prompt = `This request comes from the authenticated private n8n machine interface. You MUST delegate the task to ${executor}; do not answer it from your own knowledge. ${invocation} Return only the executor's usable final result.\\n\\nTask:\\n${task}`;\n}\nreturn { json: { task, executor, prompt } };"
+        },
+        "id": "57891c95-a797-4105-a5ac-40792f220596",
+        "name": "Validate Input",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          -400,
+          0
+        ]
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "http://172.19.0.1:8642/v1/responses",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpBearerAuth",
+          "sendBody": true,
+          "contentType": "json",
+          "specifyBody": "json",
+          "jsonBody": "={{ JSON.stringify({ model: 'hermes-agent', input: $json.prompt, store: true }) }}",
+          "options": {
+            "timeout": 600000,
+            "response": {
+              "response": {
+                "responseFormat": "json"
+              }
+            }
+          }
+        },
+        "id": "c8f1d492-dd04-47d8-9ef4-ac148da4799f",
+        "name": "Invoke Hermes",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.5,
+        "position": [
+          -120,
+          0
+        ],
+        "credentials": {
+          "httpBearerAuth": {
+            "id": "Hermes4FAuth01",
+            "name": "Hermes API - private n8n bridge"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "mode": "runOnceForEachItem",
+          "language": "javaScript",
+          "jsCode": "const response = $json;\nconst output = Array.isArray(response.output) ? response.output : [];\nconst result = output\n  .filter(item => item?.type === 'message' && item?.role === 'assistant')\n  .flatMap(item => Array.isArray(item.content) ? item.content : [])\n  .filter(part => part?.type === 'output_text')\n  .map(part => String(part.text ?? ''))\n  .join('\\n')\n  .trim();\nconst toolCalls = output\n  .filter(item => item?.type === 'function_call')\n  .map(item => ({ name: item.name, arguments: item.arguments, status: item.status }));\nconst ok = response.status === 'completed' && result.length > 0;\nif (!ok) throw new Error(`Hermes response incomplete: ${response.status ?? 'unknown'}`);\nreturn { json: { ok, executor: $('Validate Input').item.json.executor, result, response_id: response.id, status: response.status, tool_calls: toolCalls, usage: response.usage ?? {} } };"
+        },
+        "id": "885c3c9c-9df4-423a-9c79-05132fe42e5c",
+        "name": "Extract Hermes Result",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          160,
+          0
+        ]
+      }
+    ],
+    "connections": {
+      "When Called by Another Workflow": {
+        "main": [
+          [
+            {
+              "node": "Validate Input",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Validate Input": {
+        "main": [
+          [
+            {
+              "node": "Invoke Hermes",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Invoke Hermes": {
+        "main": [
+          [
+            {
+              "node": "Extract Hermes Result",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "settings": {
+      "executionOrder": "v1"
+    },
+    "pinData": {},
+    "tags": []
+  }
+]

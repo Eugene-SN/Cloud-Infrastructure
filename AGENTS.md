@@ -18,13 +18,13 @@ Read, in this order when relevant:
 
 ## Current checkpoint invariant
 
-Current canonical work is:
+Current accepted checkpoint is:
 
-`04 — Edge Hermes Agent Runtime`
+`04.3 — Edge Hermes Stage 4 Recovery, Completion & Final Acceptance` — COMPLETE / ACCEPTED.
 
-Stage 0, Stage 1, Stage 2, Stage 02.5 and Stage 3 are complete and accepted. `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS`.
+Stage 0, Stage 1, Stage 2, Stage 02.5, Stage 3 and Stage 4 are complete and accepted. `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS`; `STAGE4_FINAL_ACCEPTANCE=PASS`.
 
-Stage 4 is **IN PROGRESS / NOT YET ACCEPTED**. Use `CURRENT_STATE.md` for confirmed runtime, `IMPLEMENTATION_PHASES.md` for the authoritative current roadmap/substage scope, and the latest applicable ACCEPTED entries/records for supersession.
+Next canonical work is `05 — Edge Knowledge Replication & Data Integration`; it has not started. Use `CURRENT_STATE.md` for confirmed runtime, `IMPLEMENTATION_PHASES.md` for the authoritative roadmap/substage scope, and the latest applicable ACCEPTED entries/records for supersession.
 
 Do not duplicate mutable stage chronology in this file. `AGENTS.md` should contain durable cross-agent rules; volatile progress belongs in `CURRENT_STATE.md` and `IMPLEMENTATION_PHASES.md`.
 
@@ -167,9 +167,9 @@ Hermes remains host-native under `core` by default so it can reuse the host-nati
 
 Mattermost is a mandatory accepted Stage 4 substage. `chat.escloud.us` uses Mattermost-native authentication with no Authelia; integrations are native/upstream-supported only. Hermes↔Mattermost is an accepted native path. n8n↔Mattermost uses the official n8n Mattermost integration. Mattermost↔Stalwart SMTP is explicitly **not required / not enabled**.
 
-The Hermes Web Dashboard belongs at `https://hermes.escloud.us` behind the existing Xray/nginx/TLS/Authelia path. Do not expose a Hermes machine/API backend directly to the Internet.
+The accepted Hermes Web Dashboard and macOS Remote Gateway endpoint is `https://hermes.escloud.us` through the existing Xray/nginx/TLS path. Authentication is Hermes-native self-hosted OIDC with Authelia as IdP and native browser/Desktop PKCE. Do not expose the Dashboard backend or Hermes machine API directly to the Internet.
 
-Stage 4 must ultimately prove `n8n -> Hermes -> Codex/AGY -> Hermes -> n8n`, real `Hermes -> vLLM`, server-side lifecycle/non-regression, and the final macOS Hermes Desktop Remote Gateway path.
+Stage 4 is COMPLETE / ACCEPTED with `STAGE4_FINAL_ACCEPTANCE=PASS`. Preserve its accepted n8n -> Hermes -> vLLM/Codex/Antigravity paths, Dashboard/OIDC, Mattermost and macOS Desktop evidence unless a concrete regression appears.
 
 Do not implement user-specific workflows as part of Stage 4 infrastructure acceptance.
 
@@ -177,7 +177,7 @@ Do not implement user-specific workflows as part of Stage 4 infrastructure accep
 
 The permanent assumption that `ai-node:/srv/ai-data/knowledge/obsidian` must remain canonical is superseded for future architecture.
 
-Current factual runtime remains the existing `ai-node` vault until Home Infrastructure explicitly accepts its PVE canonical migration.
+Home Infrastructure records `KNOWLEDGE_FABRIC_CANONICAL_CUTOVER=PASS` on 2026-09-18: PVE `/srv/knowledge/obsidian` is canonical and `ai-node:/srv/ai-data/knowledge/obsidian` is an active RW Syncthing replica. This is accepted cross-project evidence; a fresh Home/PAI runtime audit remains mandatory before Cloud Stage 5 deployment.
 
 Future ownership boundary:
 

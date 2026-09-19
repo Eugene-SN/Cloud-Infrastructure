@@ -1,6 +1,6 @@
 # Cloud Infrastructure — Accepted Implementation Phases
 
-**Status:** Stage 0–3 COMPLETE / ACCEPTED. Stage 4 is IN PROGRESS.
+**Status:** Stage 0–4 COMPLETE / ACCEPTED. Stage 5 is the next finite infrastructure stage.
 
 This document is the canonical stage chronology for Cloud Infrastructure / `edge`.
 
@@ -135,7 +135,7 @@ Stage 3 establishes the Cloud-to-Home private transport needed by later workload
 
 ### Work branch
 
-04 — Edge Hermes Agent Runtime
+04.3 — Edge Hermes Stage 4 Recovery, Completion & Final Acceptance
 
 ### Scope
 
@@ -148,13 +148,13 @@ Requirements:
 - persistent upstream-supported lifecycle/state;
 - retain the full practical upstream-supported Hermes tool/runtime capability set rather than an intentionally reduced core path;
 - deploy the Hermes Web Dashboard as the normal human UI;
-- publish it at https://hermes.escloud.us through existing Xray/nginx/TLS/Authelia;
+- publish it at https://hermes.escloud.us through existing Xray/nginx/TLS using accepted Hermes-native self-hosted OIDC with Authelia as IdP;
 - keep the Dashboard backend loopback-only by default and do not expose port 9119 directly;
 - keep the n8n machine interface local/private rather than creating a public Hermes API;
 - preserve the project-wide Authelia policy for service subdomains except explicitly accepted native-client services such as `mail.escloud.us` and the Stage 4 Mattermost endpoint `chat.escloud.us`;
 - direct Hermes access to Codex and Antigravity without CloudCLI as proxy;
 - stable machine interface for n8n invocation/result/status;
-- infrastructure acceptance of n8n -> Hermes -> Codex/AGY -> Hermes -> n8n;
+- infrastructure acceptance of n8n -> Hermes -> vLLM/Codex/AGY -> Hermes -> n8n;
 - deploy a lightweight private Mattermost server only after its dedicated deep-research/design gate is accepted;
 - integrate Mattermost with Hermes natively and with other compatible edge services through the simplest supported interfaces;
 - verify real Hermes -> vLLM inference;
@@ -166,7 +166,7 @@ These substages define the complete Stage 4 scope. Execution is dependency-drive
 
 #### Stage 4A — Hermes core runtime and Full Setup capability completion
 
-**Status: IN PROGRESS.**
+**Status: COMPLETE / ACCEPTED.** Core acceptance is preserved; the already documented gateway stop constraint is tracked in Stage 4G, not a reason to repeat Stage 4A.
 
 Accepted:
 
@@ -230,14 +230,17 @@ Accepted outcome:
 
 #### Stage 4C — Hermes Web Dashboard, ingress and auth
 
-**Status: PENDING.**
+**Status: COMPLETE / ACCEPTED.**
 
-- persistent Dashboard backend;
-- loopback-only backend unless a concrete incompatibility requires otherwise;
-- `https://hermes.escloud.us` through Xray/nginx/shared TLS/Authelia;
-- WebSocket/session persistence;
-- reconcile the actual Hermes remote-dashboard credential path with Authelia without preselecting Nous OAuth;
-- keep the n8n machine API private/local.
+- `https://hermes.escloud.us` through Xray/nginx/shared TLS to `127.0.0.1:9119`;
+- persistent `hermes-dashboard.service` under `core`, active/enabled;
+- Hermes-native self-hosted OIDC with Authelia `4.39.27` as IdP;
+- one interactive provider, authorization-code PKCE/S256, browser and native Desktop flows;
+- no nginx `auth_request`, Basic/Nous fallback or public TCP/9119;
+- existing Certbot webroot lineage expanded to include `hermes.escloud.us`;
+- real browser callback, authenticated Chat/session traffic and WebSocket HTTP 101 accepted;
+- `STAGE4C_HERMES_DASHBOARD_OIDC_ACCEPTANCE=PASS`;
+- record: `STAGE_04C_FINAL_ACCEPTANCE_2026-09-18.md`.
 
 #### Stage 4D — Mattermost deep research and deployment design
 
@@ -277,50 +280,56 @@ Custom plugins, source patches, shim services, direct DB coupling, bespoke bridg
 
 #### Stage 4F — Hermes private machine interface and n8n agent integration
 
-**Status: PENDING.**
+**Status: COMPLETE / ACCEPTED.**
 
-- enable the minimum supported Hermes machine interface required by n8n;
-- keep it local/private and authenticated;
-- prove n8n invoke/result/status;
-- prove `n8n -> Hermes -> Qwen3.8/Codex/AGY -> Hermes -> n8n`;
-- no user-specific workflow logic beyond acceptance probes.
+- upstream Hermes API Server selected after exact-source research;
+- private Bearer-authenticated listener `172.19.0.1:8642` on the n8n Docker bridge;
+- narrow UFW allowance from `172.19.0.0/16`; no public listener or nginx route;
+- n8n built-in HTTP Request v4.5 plus encrypted Bearer credential;
+- published reusable workflow `Hermes Machine Invocation` supports `vllm`, `codex` and `antigravity` selectors;
+- exact-value E2E PASS for remote vLLM, real Codex and real Antigravity;
+- native HTTP JSON avoids Tirith `stream-json` stdout contamination;
+- temporary acceptance workflows removed; production contains one Hermes workflow and two total credentials;
+- `STAGE4F_PRIVATE_HERMES_MACHINE_INTERFACE=PASS`;
+- record: `STAGE_04F_PRIVATE_HERMES_MACHINE_INTERFACE_ACCEPTANCE_2026-09-18.md`.
 
 #### Stage 4G — Server-side integrated acceptance
 
-**Status: PENDING.**
+**Status: COMPLETE / ACCEPTED.**
 
-Verify together:
+Bounded integrated acceptance reused prior PASS evidence and verified current boundaries: gateway/Dashboard persistence, vLLM, Codex, current Antigravity `1.2.6`, Dashboard/OIDC/TLS, Mattermost, n8n, private API, listeners and configuration semantics.
 
-- Hermes/vLLM/reasoning/tools;
-- Codex/Antigravity;
-- Dashboard + authenticated ingress;
-- Mattermost + Hermes + n8n;
-- private n8n machine interface;
-- clean gateway lifecycle;
-- NetBird/private PAI path;
-- listeners/UFW/TLS/non-regression;
-- persistence and one controlled reboot only if justified by the final lifecycle changes.
+A Dashboard-driven global model switch was detected as a real regression signal. The accepted Qwen3.8/custom-vLLM settings were restored with native Hermes commands, native-validated and re-proven through n8n E2E. Current config SHA256: `fe2f0fead4781ed28d0c4bf61720bdc52a6b31a41040a477afe6351b5df2f824`.
 
-Stalwart remains an independent accepted mail service; Mattermost SMTP is not part of the target integration.
+The known controlled SIGTERM exit-status-1 defect remains an accepted upstream constraint; restart recovery passes and no lifecycle masking was introduced.
+
+`STAGE4G_SERVER_INTEGRATED_ACCEPTANCE=PASS`. Record: `STAGE_04G_SERVER_INTEGRATED_ACCEPTANCE_2026-09-18.md`.
 
 #### Stage 4H — Final integration task: macOS Hermes Desktop
 
-**Status: PENDING / LAST INTEGRATION TASK.**
+**Status: COMPLETE / ACCEPTED.**
 
-1. use supported Hermes Desktop on macOS;
-2. test Remote Gateway against `https://hermes.escloud.us`;
-3. test the self-hosted session credential first;
-4. verify readiness, live chat/WebSocket and reconnect after app restart;
-5. use the minimum next supported credential/connection mode only if the simple Remote Gateway path proves incompatible.
+- Remote Gateway target `https://hermes.escloud.us`;
+- upstream native self-hosted OIDC/RFC8252 PKCE path;
+- real native authorize/callback/token exchange;
+- remote WebSocket HTTP 101 observed twice;
+- authenticated remote Chat/session traffic and operator functional confirmation;
+- no accidental local bundled backend and no public TCP/9119;
+- `STAGE4H_MACOS_DESKTOP_REMOTE_GATEWAY=PASS`;
+- record: `STAGE_04H_MACOS_DESKTOP_REMOTE_GATEWAY_ACCEPTANCE_2026-09-18.md`.
 
 #### Stage 4I — Final Stage 4 acceptance and repository persistence
 
-**Status: PENDING.**
+**Status: COMPLETE / ACCEPTED.**
 
-- final integrated acceptance record;
-- reconcile/read back `CURRENT_STATE.md`, `INVENTORY.md`, `ARCHITECTURE.md`, `IMPLEMENTATION_PHASES.md`, `OPERATING_RULES.md`, `AGENTS.md` and applicable decisions;
-- mark Stage 4 COMPLETE / ACCEPTED only after the whole Stage 4 contract passes;
-- only then open Stage 5.
+- Stage 4A/B/C/D/E/F/G/H evidence reconciled;
+- canonical current documents and latest applicable decision semantics normalized;
+- historical audit/failure artifacts preserved without representing assistant harness defects as production failures;
+- critical GitHub writes read back;
+- `STAGE4_FINAL_ACCEPTANCE=PASS`;
+- final record: `STAGE_04_FINAL_ACCEPTANCE_2026-09-18.md`.
+
+Stage 5 is now eligible to begin under its own mandatory entry audit.
 
 ## Stage 5 — Edge Knowledge Replication & Data Integration
 
@@ -332,7 +341,21 @@ Stalwart remains an independent accepted mail service; Mattermost SMTP is not pa
 
 Home Infrastructure owns the PVE canonical knowledge foundation. Personal Agents Infrastructure owns the `ai-node` local active replica and local AI producers/consumers. Cloud Infrastructure owns only the `edge` replica/data integration.
 
-The previous permanent assumption that `ai-node:/srv/ai-data/knowledge/obsidian` must remain canonical is superseded for future architecture. Until Home Infrastructure explicitly accepts its migration, the existing `ai-node` vault remains the factual current runtime source.
+Home Infrastructure records `KNOWLEDGE_FABRIC_CANONICAL_CUTOVER=PASS` on 2026-09-18: PVE `/srv/knowledge/obsidian` is canonical and `ai-node:/srv/ai-data/knowledge/obsidian` is an active RW Syncthing replica. This is accepted cross-project evidence; a fresh Home/PAI runtime audit remains mandatory before Cloud Stage 5 deployment.
+
+### Accepted dependency evidence reconciled on 2026-09-19
+
+[Home Infrastructure CURRENT_STATE.md](https://github.com/Eugene-SN/Home-Infrastructure/blob/main/CURRENT_STATE.md) records:
+- canonical PVE vault `/srv/knowledge/obsidian`, with `KNOWLEDGE_FABRIC_CANONICAL_CUTOVER=PASS`;
+- Syncthing `2.1.5` on PVE and ai-node, direct static TCP/22000, sendreceive folder `knowledge-obsidian`;
+- localhost-only management APIs, discovery/relays/NAT traversal and automatic self-upgrades disabled;
+- bidirectional physical-content verification and approximately two-second Markdown propagation after watcher tuning;
+- CT220 canonical read-only mount switched to PVE; obsolete canonical CIFS dependency removed;
+- CT208 full-vault backup/restore accepted and PVE production backup policy enabled.
+
+PAI records an independent local Knowledge backup with `KNOWLEDGE_AI_NODE_DEDICATED_LOCAL_BACKUP=PASS`. These existing acceptances remove the documentary uncertainty about Home cutover; they do not substitute for fresh health, permissions, conflict/outage and capacity checks before adding edge.
+
+Cloud Stage 5 deployment remains unaccepted. Reuse Syncthing by default; do not reopen product selection without a demonstrated incompatibility.
 
 ### Mandatory Stage 5 entry audit
 
@@ -369,7 +392,7 @@ At minimum audit:
 - actual RO/RW consumers on `edge`;
 - whether a full replica or bounded subset is justified.
 
-If Home PVE canonical migration is not accepted at Stage 5 entry, **stop before mutation and reconcile the dependency**. Do not invent a parallel Cloud canonical/sync architecture.
+If the fresh entry audit cannot confirm the accepted PVE canonical runtime and healthy PVE ↔ `ai-node` synchronization, **stop before mutation and reconcile the dependency**. Do not invent a parallel Cloud canonical/sync architecture.
 
 ### Implementation principle
 
@@ -395,6 +418,15 @@ Deploy/configure Backrest + Restic against the substantially complete server. De
 
 A usable restore path is mandatory before Stage 7 update testing.
 
+Planning checklist:
+- inventory persistent state and restore ordering for mail, n8n credentials/workflows, Mattermost/PostgreSQL, Hermes, auth/TLS and host configuration;
+- decide application-consistent capture, exclusions, off-host recovery topology and protected key recovery;
+- retain the accepted independent edge Knowledge backup role: whole vault, no D5 tier-copy for that dedicated chain; planned windows 04:00/10:00/16:00/22:00 local, unchanged-snapshot skipping and monthly check/prune;
+- reconcile the optional reduced non-canonical history (approximately three months) before activation; do not copy PVE's canonical one-year policy automatically;
+- verify actual restore into an isolated destination, including application usability and access to required recovery keys.
+
+Cloud-wide off-site disaster recovery is distinct from the dedicated local Knowledge chain. Same-host checkpoints alone do not close this stage.
+
 ## Stage 7 — Edge Maintenance & Update
 
 ### Work branch
@@ -409,6 +441,8 @@ Dedicated Codex substage:
 
 This begins only after the real Semaphore/update backend, status model and control contract are known. `update.escloud.us` remains separate from `app.escloud.us`.
 
+Acceptance planning: define each component's supported update path, pre-update backup gate, health checks, failure reporting and rollback/recovery. Verify one controlled update/recovery scenario after Stage 6, then build the UI against that tested contract.
+
 ## Stage 8 — Edge Monitoring, Heartbeats & Alerts
 
 ### Work branch
@@ -418,6 +452,8 @@ This begins only after the real Semaphore/update backend, status model and contr
 Research/finalize and deploy production monitoring against the substantially complete infrastructure, including as selected external availability, cross-site connectivity health, selected Home/PVE/`ai-node` heartbeats, knowledge-sync health, Backrest health, Semaphore/update state and alert delivery.
 
 Avoid a heavyweight metrics/logging platform unless concrete requirements justify it.
+
+Acceptance planning: select the monitoring implementation only after requirements are reconciled; distinguish Internet/service outages, loss of Home connectivity and unavailable inference. Verify meaningful failure and recovery notifications, backup freshness, synchronization health and maintenance suppression without repetitive unchanged-state alerts.
 
 ## Stage 9 — Edge Cloud Portal
 
@@ -433,6 +469,8 @@ Dedicated Codex substage:
 
 The portal is navigation plus concise infrastructure/status presentation. It does not absorb detailed maintenance/update controls from `update.escloud.us`.
 
+Acceptance planning: verify authenticated access, actual service links, current status and explicit stale/unavailable-data presentation using the accepted Stage 8 sources.
+
 ## Stage 10 — Edge Final Integrated Infrastructure Acceptance
 
 ### Work branch
@@ -440,6 +478,8 @@ The portal is navigation plus concise infrastructure/status presentation. It doe
 `10 — Edge Final Integrated Infrastructure Acceptance`
 
 Perform final server-wide acceptance only after all selected infrastructure services, cross-site connectivity/data integration, Backrest restore, Semaphore/update, monitoring/alerts, `app.escloud.us` and final cleanup are accepted.
+
+Acceptance planning: reconcile runtime inventory with GitHub; verify access, ingress/TLS, service persistence, cross-site/data integration, recovery, update status, alerts and portal behavior. Record known accepted constraints separately from failures and remove only confirmed temporary artifacts. Any disruptive recovery/reboot scenario belongs to separately authorized implementation/acceptance work, not the current read-only audit.
 
 Stage 10 closes the finite Cloud Infrastructure build.
 
@@ -462,8 +502,12 @@ Stage 1: **COMPLETE / ACCEPTED**.
 Stage 2: **COMPLETE / ACCEPTED**.  
 Stage 02.5: **COMPLETE / ACCEPTED**.  
 Stage 3: **COMPLETE / ACCEPTED**.  
-Stage 4: **IN PROGRESS / NOT YET ACCEPTED**.
+Stage 4: **COMPLETE / ACCEPTED**. `STAGE4_FINAL_ACCEPTANCE=PASS`.
 
 Current branch:
 
-`04 — Edge Hermes Agent Runtime`
+`04.3 — Edge Hermes Stage 4 Recovery, Completion & Final Acceptance`
+
+## Next finite infrastructure stage
+
+Stage 4 is fully accepted on Git branch `04.3-edge-hermes-recovery-completion`. Stage 5 may now begin only through its mandatory expanded read-only entry audit.

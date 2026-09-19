@@ -6,17 +6,23 @@
 **Stage 1 — COMPLETE / ACCEPTED**  
 **Stage 2 — Edge Core Applications — COMPLETE / ACCEPTED**  
 **Stage 02.5 — Remaining Functional Scope Reconciliation & Research — COMPLETE / ACCEPTED**  
-**Stage 3 — Edge Cross-site Connectivity Foundation — COMPLETE / ACCEPTED**
+**Stage 3 — Edge Cross-site Connectivity Foundation — COMPLETE / ACCEPTED**  
+**Stage 4 — Edge Hermes Agent Runtime — COMPLETE / ACCEPTED**
 
 `EDGE_STAGE2_FINAL_INTEGRATED_ACCEPTANCE=PASS` on 2026-09-17.  
 `CLOUD_STAGE_02_5_FINAL_SCOPE_ACCEPTANCE=PASS` on 2026-09-18.  
-`EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS` on 2026-09-18.
+`EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS` on 2026-09-18.  
+`STAGE4_FINAL_ACCEPTANCE=PASS` on 2026-09-18.
 
 Primary repository: `Eugene-SN/Cloud-Infrastructure`.
 
-Current production branch:
+Completed recovery workstream:
 
-`04 — Edge Hermes Agent Runtime` — **IN PROGRESS / NOT YET ACCEPTED**
+`04.3 — Edge Hermes Stage 4 Recovery, Completion & Final Acceptance`
+
+Git branch: `04.3-edge-hermes-recovery-completion`.
+
+Stage 4 — Edge Hermes Agent Runtime is **COMPLETE / ACCEPTED**. Final record: `STAGE_04_FINAL_ACCEPTANCE_2026-09-18.md`.
 
 Stage 02.5 final acceptance record:
 
@@ -64,30 +70,33 @@ Stage 3 is COMPLETE / ACCEPTED. Final record: `STAGE_03_ACCEPTANCE_2026-09-18.md
 
 The previous future-architecture constraint that `ai-node:/srv/ai-data/knowledge/obsidian` must permanently remain canonical is superseded.
 
-**Current factual runtime remains unchanged until Home Infrastructure completes its migration.** The existing vault on `ai-node` remains the current source at this checkpoint.
+Home Infrastructure records `KNOWLEDGE_FABRIC_CANONICAL_CUTOVER=PASS` on 2026-09-18: PVE `/srv/knowledge/obsidian` is canonical and `ai-node:/srv/ai-data/knowledge/obsidian` is an active RW Syncthing replica. This is accepted cross-project evidence; a fresh Home/PAI runtime audit remains mandatory before Cloud Stage 5 deployment.
 
-Accepted future ownership boundary:
+Source: [Home Infrastructure CURRENT_STATE.md](https://github.com/Eugene-SN/Home-Infrastructure/blob/main/CURRENT_STATE.md). Home-selected synchronization is Syncthing `2.1.5`; CT220 consumes the PVE vault read-only and CT208 backup/restore is accepted. Cloud replica deployment has not been accepted.
 
-- **Home Infrastructure** owns the PVE 24/7 canonical knowledge foundation, PVE-side synchronization service, Home consumers and Home-side backup integration;
+Accepted ownership boundary:
+
+- **Home Infrastructure** owns the accepted PVE 24/7 canonical knowledge foundation, PVE-side synchronization service, Home consumers and Home-side backup integration;
 - **Personal Agents Infrastructure** owns the `ai-node` active RW synchronized replica and local n8n/OpenClaw/vLLM/OCR/RAG consumers/producers after Home cutover;
 - **Cloud Infrastructure** owns only the `edge` active RW synchronized replica and n8n/Hermes/cloud-AI integration.
 
 Cloud Stage 5 is therefore an integration stage. It must begin with a fresh expanded read-only Home/PAI/Cloud audit and must reuse the Home-accepted server-side synchronization mechanism by default.
 
-If PVE canonical migration has not reached explicit Home acceptance when Stage 5 begins, Stage 5 stops before mutation and reconciles the dependency instead of creating a parallel canonical/sync architecture.
+If the fresh Stage 5 entry audit cannot confirm the accepted PVE canonical runtime and healthy PVE ↔ `ai-node` synchronization, Stage 5 stops before mutation and reconciles the dependency instead of creating a parallel canonical/sync architecture.
 
 MacBook/iPhone/iPad Obsidian synchronization is completely outside Cloud Infrastructure scope and is assigned to a later separate Home Infrastructure user-integration branch.
 
 ## Final remaining roadmap
 
-1. **Stage 4 — Edge Hermes Agent Runtime**;
-2. **Stage 5 — Edge Knowledge Replication & Data Integration**;
-3. **Stage 6 — Edge Backrest & Recovery**;
-4. **Stage 7 — Edge Maintenance & Update**, including separate Codex `update.escloud.us` substage;
-5. **Stage 8 — Edge Monitoring, Heartbeats & Alerts**;
-6. **Stage 9 — Edge Cloud Portal**, including separate Codex `app.escloud.us` substage;
-7. **Stage 10 — Edge Final Integrated Infrastructure Acceptance**;
-8. post-infrastructure **Automation & User Workflows** as a continuous workstream.
+Stage 4 is complete and accepted; its GitHub persistence is in `04.3-edge-hermes-recovery-completion` (open draft PR #1 at the 2026-09-19 audit). The older `main` checkpoint is not evidence of unfinished runtime work.
+
+1. **Stage 5 — Edge Knowledge Replication & Data Integration**;
+2. **Stage 6 — Edge Backrest & Recovery**;
+3. **Stage 7 — Edge Maintenance & Update**, including separate Codex `update.escloud.us` substage;
+4. **Stage 8 — Edge Monitoring, Heartbeats & Alerts**;
+5. **Stage 9 — Edge Cloud Portal**, including separate Codex `app.escloud.us` substage;
+6. **Stage 10 — Edge Final Integrated Infrastructure Acceptance**;
+7. post-infrastructure **Automation & User Workflows** as a continuous workstream.
 
 The old conditional `Remaining Infrastructure Services` stage is removed because Stage 02.5 selected no additional standalone infrastructure product requiring that slot.
 
@@ -145,13 +154,13 @@ Acceptance record: `EDGE_REBOOT_LIFECYCLE_FIX_ACCEPTANCE_2026-09-18.md`.
 - fresh operator/auth state;
 - public `auth.escloud.us` accepted.
 
-Protected private web namespace includes `n8n`, `code`, future `app`, `backup`, `ops`, `update`, `docs`, `cloud` and `sync`. `mail.escloud.us` intentionally uses native mail-stack authentication. Stage 4D also accepts `chat.escloud.us` as an explicit native-client exception: Mattermost will use Mattermost-native authentication without Authelia.
+Protected private web namespace includes `n8n`, `code`, future `app`, `backup`, `ops`, `update`, `docs`, `cloud` and `sync`. `mail.escloud.us` intentionally uses native mail-stack authentication. Stage 4D also accepts `chat.escloud.us` as an explicit native-client exception: Mattermost uses Mattermost-native authentication without Authelia.
 
 ## TLS
 
 Shared Certbot lineage: `/etc/letsencrypt/live/escloud.us`.
 
-Current SAN set includes `escloud.us`, `app`, `auth`, `backup`, `chat`, `cloud`, `code`, `docs`, `mail`, `n8n`, `ops`, `sync.escloud.us`. `update.escloud.us` has been created in DNS for the future maintenance/update page; certificate/ingress activation remains deferred to Stage 7.
+Current SAN set includes `escloud.us`, `app.escloud.us`, `auth.escloud.us`, `backup.escloud.us`, `chat.escloud.us`, `cloud.escloud.us`, `code.escloud.us`, `docs.escloud.us`, `hermes.escloud.us`, `mail.escloud.us`, `n8n.escloud.us`, `ops.escloud.us` and `sync.escloud.us`. `update.escloud.us` has been created in DNS for the future maintenance/update page; certificate/ingress activation remains deferred to Stage 7.
 
 ## Stage 2 applications
 
@@ -178,7 +187,7 @@ Current SAN set includes `escloud.us`, `app`, `auth`, `backup`, `chat`, `cloud`,
 
 ### Antigravity CLI
 
-- version `1.2.5`;
+- current accepted version `1.2.6` (Stage 4G); Stage 2/4B accepted `1.2.5` historically;
 - fresh Google OAuth;
 - Remote Control instance `edge`;
 - persistent user service accepted.
@@ -200,7 +209,7 @@ Final recovery run proved foundation services, Stage 2 applications, mail, publi
 
 `EDGE_STAGE2_FINAL_INTEGRATED_ACCEPTANCE=PASS`
 
-## Stage 4 — Hermes Agent Runtime (in progress)
+## Stage 4 — Hermes Agent Runtime (complete / accepted)
 
 Fresh expanded read-only audit on 2026-09-18 confirms the following current runtime.
 
@@ -210,26 +219,26 @@ Fresh expanded read-only audit on 2026-09-18 confirms the following current runt
 - Hermes `0.21.3 (2026.9.14)`, branch `main`, commit `d177b119e9c56c9ddc0b7379ffce52341ec06584`, clean worktree;
 - main provider `AI-Node vLLM` -> `http://192.168.1.30:8000/v1`;
 - model `qwen3.8-27b-fp8`, Chat Completions mode, verified context `195216`;
-- Qwen3.8 model-native reasoning/replay accepted; `config.yaml` SHA256 remains `c57ca6bc0b301250d4825060fcf5f8d90af94c7cee4f1632e0b648189fd994ae`;
+- Qwen3.8 model-native reasoning/replay accepted; current `config.yaml` SHA256 is `fe2f0fead4781ed28d0c4bf61720bdc52a6b31a41040a477afe6351b5df2f824` after preserving Dashboard theme `rose` and restoring the accepted model semantics;
 - terminal backend `local`;
 - system toolchain/browser normalization accepted, including managed Chromium and `cua-driver 0.28.2`;
 - `hermes-gateway.service` is enabled and currently active under `core`; current `NRestarts=0`;
 - Mattermost environment is configured and its token validates successfully as bot `hermes`;
-- standalone Codex CLI `0.154.0` and Antigravity CLI `1.2.5` remain available to `core`;
+- standalone Codex CLI `0.154.0` and current Antigravity CLI `1.2.6` remain available to `core`;
 - Web Search/Extract, Edge TTS and Vision functional probes are PASS; CUA is accepted as `NOT_APPLICABLE_HEADLESS_EDGE`; Image Generation remains configured but is non-blocking for Stage 4 acceptance; fresh core Qwen3.8/vLLM regression is accepted with `STAGE4A_CORE_QWEN_VLLM_REGRESSION=PASS`.
 - Stage 4B executor read-only audit is accepted: `STAGE4B_EXECUTOR_READONLY_AUDIT=PASS`.
 - Actual Hermes local terminal child context is clean for standalone executors: cwd `/home/core`, `HOME=/home/core`, `HERMES_HOME=/home/core/.hermes`, core local bin on PATH, and no `OPENAI_BASE_URL`, `OPENAI_API_KEY` or `CODEX_*` environment override.
 - Codex CLI `0.154.0` exposes native headless `codex exec` capabilities including JSON/ephemeral/sandbox/skip-git/output-last-message/model controls and uses the existing standalone OAuth state with no custom provider/MCP override.
-- Antigravity CLI `1.2.5` raw help confirms native headless print mode plus JSON/stream-JSON, timeout, model, effort, sandbox/permission and conversation controls; its existing local auth/state is reused.
+- At Stage 4B acceptance, Antigravity CLI `1.2.5` raw help confirmed native headless print mode plus JSON/stream-JSON, timeout, model, effort, sandbox/permission and conversation controls; current `1.2.6` later passed bounded Stage 4G E2E.
 - Accepted Stage 4B target: foreground non-PTY one-shots by default (`codex exec`; `agy -p/--print` with structured output), background only for long/parallel jobs, PTY only for interactive TUI.
 - Trusted-executor policy is accepted: no blanket sandbox/container/workspace-only/network restriction under `core`; critical high-impact mutations require operator approval at the Hermes/orchestration instruction layer before delegation, while ordinary non-critical work should remain frictionless.
 - Stage 4B direct executor integration is COMPLETE / ACCEPTED: `STAGE4B_DIRECT_EXECUTOR_INTEGRATION=PASS`; final record `STAGE_04B_FINAL_ACCEPTANCE_2026-09-18.md`.
 - Codex CLI `0.154.0`: real foreground non-PTY `codex exec` delegation accepted; random repository context was read by Codex and consumed by Hermes; post-test recovery/non-regression PASS.
-- Antigravity CLI `1.2.5`: real foreground non-PTY `agy -p --output-format json` delegation accepted; `status=SUCCESS`, real random file context returned and consumed exactly by Hermes; full-access policy accepted.
-- Hermes `stream-json` Tirith warning contamination remains a known non-blocking machine-output defect to address/reconcile in Stage 4F.
-- Dashboard/private machine interface and final macOS Remote Gateway acceptance remain pending.
+- Stage 4B accepted Antigravity CLI `1.2.5` with real foreground non-PTY `agy -p --output-format json`; current `1.2.6` re-passed the same integration boundary through n8n/Hermes in Stage 4G.
+- Hermes `stream-json` Tirith warning contamination remains a known CLI constraint; the accepted Stage 4F interface uses native HTTP JSON and is unaffected.
+- Dashboard/OIDC, private n8n machine interface, bounded integrated acceptance and macOS Remote Gateway are COMPLETE / ACCEPTED.
 
-Known lifecycle defect from the expanded audit: a controlled systemd stop/restart sends SIGTERM and Hermes logs the shutdown context, but the process exits status `1`; systemd records `Failed with result 'exit-code'` before the requested restart succeeds. The currently running service is healthy, but this graceful-stop defect must be resolved or explicitly understood before final Stage 4 acceptance.
+Known accepted upstream lifecycle constraint: a controlled systemd stop/restart sends SIGTERM and Hermes logs graceful shutdown, but the process exits status `1`; systemd briefly records `Failed with result 'exit-code'` before the requested restart succeeds. Recovery is healthy and persistent; no source patch or `SuccessExitStatus=1` masking is used.
 
 ### Mattermost
 
@@ -276,7 +285,7 @@ Accepted state:
 - native-node E2E acceptance marker `N8N_MATTERMOST_NATIVE_E2E_OK_20260918T135107Z`;
 - Mattermost database verified exactly one matching post authored by the `n8n` bot, post ID `1fgnm3fumbyy8b4usrrs41kouc`;
 - the E2E workflow executed only against a throwaway SQLite/config clone under `/tmp`;
-- production n8n remained at workflows `0`, executions `0`, one Mattermost credential;
+- the Stage 4E probe left production n8n at workflows `0`, executions `0`, one Mattermost credential at that checkpoint; current Stage 4F production state is one Hermes machine workflow and two credentials;
 - n8n and Mattermost health remained PASS after the probe;
 - throwaway host/container artifacts were removed;
 - acceptance record: `STAGE_04E_N8N_MATTERMOST_INTEGRATION_ACCEPTANCE_2026-09-18.md`;
@@ -286,26 +295,48 @@ Stage 4E is **COMPLETE / ACCEPTED**. Final bounded non-regression passed with `S
 
 Detailed accepted records remain authoritative for completed substages; the expanded audit does not retroactively rewrite historical records.
 
-Stage 4 remains **IN PROGRESS / NOT YET ACCEPTED**.
+Stage 4 is **COMPLETE / ACCEPTED** with `STAGE4_FINAL_ACCEPTANCE=PASS`.
 
 ## Recovery / preserved state
 
 - Stage 1 recovery archive: `/srv/backups/edge-stage1/edge-stage1-base-20260916T234611Z.tar.gz`, SHA256 `37486e763ddac4c5ef3a92a35c3dad49787d75ffd8b97499073c79af617cc566`;
-- migration-preservation archive: `/tmp/edge-migration-preservation-20260916T141048Z.tar.gz`, SHA256 `0203e5845f57bc1d04b384cef2b26a45fbff855c341e1edf1193034c34de9fdf`, retained outside GitHub for legacy-reference/recovery use; do not indiscriminately restore legacy credentials.
+- the sensitive migration-preservation archive was created at `/tmp/edge-migration-preservation-20260916T141048Z.tar.gz` with SHA256 `0203e5845f57bc1d04b384cef2b26a45fbff855c341e1edf1193034c34de9fdf`, but the 2026-09-19 read-only audit found that temporary path absent. The hash remains historical evidence, not an available recovery artifact. `migration-reference/` remains the sanitized engineering reference; recreate any required sensitive preservation archive only into deliberate persistent/off-host storage.
+
+## Stage 4C/4F/4G/4H accepted runtime — 2026-09-18
+
+### Dashboard and Desktop
+
+- `https://hermes.escloud.us` is live through Xray/nginx/shared TLS to loopback `127.0.0.1:9119`.
+- `hermes-dashboard.service` is active/enabled with `NRestarts=0`; no public TCP/9119 exists.
+- Hermes native self-hosted OIDC is the only provider; Authelia `4.39.27` is the IdP; nginx does not use `auth_request` for Hermes.
+- Browser OIDC callback, authenticated session/message traffic and WebSocket HTTP 101 were observed; the operator confirmed Dashboard operation.
+- macOS Hermes Desktop completed native authorize/callback/token exchange and remote WebSocket connection twice; operator confirmed successful operation and reconnect.
+- The existing Certbot webroot lineage includes `hermes.escloud.us`; no second lineage or nginx Certbot plugin exists.
+- Acceptance records: `STAGE_04C_FINAL_ACCEPTANCE_2026-09-18.md` and `STAGE_04H_MACOS_DESKTOP_REMOTE_GATEWAY_ACCEPTANCE_2026-09-18.md`.
+
+### Private n8n machine interface
+
+- Hermes' upstream API Server binds only `172.19.0.1:8642` on the n8n Docker bridge with Bearer authentication and a narrow UFW rule; it has no public nginx route or public listener.
+- n8n `2.39.7` production workflow `Hermes Machine Invocation` (`Hermes4FMachine01`) uses the built-in HTTP Request node and encrypted credential `Hermes4FAuth01`.
+- The current private path depends on Docker network `n8n_default`, bridge `br-2bdcbc775588`, subnet `172.19.0.0/16` and gateway `172.19.0.1`. Recreating or renumbering that network requires a read-only topology check followed by coordinated Hermes bind, workflow URL and UFW reconciliation before service acceptance.
+- Selector values `vllm`, `codex` and `antigravity` are supported.
+- Exact random-value E2E passed for direct Hermes/vLLM response, real foreground Codex CLI and real foreground Antigravity CLI.
+- Final production n8n state: one published Hermes workflow, Mattermost plus Hermes credentials, no acceptance/test workflow, healthy container.
+- Acceptance record: `STAGE_04F_PRIVATE_HERMES_MACHINE_INTERFACE_ACCEPTANCE_2026-09-18.md`.
+
+### Integrated acceptance
+
+- Native Hermes detailed health reports gateway/model/config/state DB healthy and both Mattermost and API Server connected.
+- The audit detected and corrected an operator/UI model switch away from vLLM. Accepted `qwen3.8-27b-fp8`/custom/chat-completions semantics were restored with native Hermes commands and re-proven through n8n E2E.
+- Codex `0.154.0` and Antigravity `1.2.6` current runtime paths passed.
+- Mattermost/n8n native integration, public Dashboard/OIDC, private listeners, TLS and Stage 3 vLLM reachability remained healthy.
+- Acceptance record: `STAGE_04G_SERVER_INTEGRATED_ACCEPTANCE_2026-09-18.md`.
+
+Root recovery snapshots remain under `/srv/backups/edge-stage4c` and `/srv/backups/edge-stage4f`.
 
 ## Current next step
 
-1. Stage 4B is COMPLETE / ACCEPTED; do not rerun Qwen, executor read-only audits, Codex E2E or Antigravity E2E without a concrete regression signal.
-2. Proceed to Stage 4C — Hermes Web Dashboard, ingress and auth.
-3. Then complete Stage 4F private n8n machine-interface integration, carrying the known Hermes `stream-json` Tirith stdout contamination as a machine-interface constraint.
-4. Carry the known upstream Hermes controlled-stop `SIGTERM -> exit 1` defect into Stage 4G; do not locally mask it with `SuccessExitStatus=1`.
-5. Perform Stage 4G server-side integrated acceptance, Stage 4H macOS Hermes Desktop integration, and Stage 4I final Stage 4 persistence/acceptance.
-
-1. Complete Stage 4B with the accepted trusted full-access executor contract: first Hermes/Qwen -> foreground non-PTY Codex `exec`, then Hermes/Qwen -> foreground non-PTY Antigravity print-mode structured output; do not repeat the accepted Qwen/vLLM or read-only executor audits.
-2. Keep blanket executor sandboxing disabled by policy; require operator approval in Hermes/orchestration instructions before critical high-impact mutations, not through generic filesystem/network confinement.
-3. Complete Stage 4C Hermes Dashboard/ingress/auth, then Stage 4F private n8n machine-interface integration.
-4. Carry the known upstream Hermes controlled-stop `SIGTERM -> exit 1` defect as a documented lifecycle constraint into Stage 4G; do not locally mask it with `SuccessExitStatus=1`.
-5. Perform Stage 4G server-side integrated acceptance, Stage 4H macOS Hermes Desktop integration, and Stage 4I final repository persistence/acceptance.
+Stage 4 is complete and persisted. The next finite infrastructure stage is Stage 5 — Edge Knowledge Replication & Data Integration. Stage 5 must begin with its required expanded read-only Home/PAI/Cloud reconciliation and must not reinterpret historical Stage 4 test-harness failures as production failures.
 
 Image Generation is non-blocking for Stage 4 and must not divert the critical path; any later image-quality acceptance is human/visual. Do not add a desktop stack solely to make CUA applicable on the headless `edge`.
 

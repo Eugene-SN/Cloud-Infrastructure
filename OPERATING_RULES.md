@@ -50,11 +50,10 @@ Completed canonical stages:
 
 Current canonical branch:
 
-- `04 — Edge Hermes Agent Runtime` — IN PROGRESS / NOT YET ACCEPTED.
+- `04.3 — Edge Hermes Stage 4 Recovery, Completion & Final Acceptance` — COMPLETE / ACCEPTED; `STAGE4_FINAL_ACCEPTANCE=PASS`.
 
 Remaining finite infrastructure roadmap:
 
-- `04 — Edge Hermes Agent Runtime`;
 - `05 — Edge Knowledge Replication & Data Integration`;
 - `06 — Edge Backrest & Recovery`;
 - `07 — Edge Maintenance & Update` — Semaphore/update workflow plus separate Codex `update.escloud.us` substage;
@@ -188,7 +187,7 @@ Current facts:
 4. Stage 02.5 research reconciliation is complete and accepted.
 5. Stage 3 Cross-site Connectivity Foundation is complete and accepted.
 6. `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS`.
-7. The active production branch is `04 — Edge Hermes Agent Runtime`; Stage 4 is IN PROGRESS / NOT YET ACCEPTED.
+7. Stage 4 is COMPLETE / ACCEPTED with `STAGE4_FINAL_ACCEPTANCE=PASS`; Stage 5 is the next finite infrastructure stage and has not started.
 8. Reuse the accepted Stage 3 transport; do not reopen NetBird/routing choices without a concrete incompatibility.
 9. The Stage 1 Docker `live-restore=true` setting is superseded; current accepted runtime is `live-restore=false`.
 
@@ -252,49 +251,39 @@ Mattermost is an accepted mandatory Stage 4 surface:
 - n8n↔Mattermost uses the official n8n Mattermost integration;
 - Mattermost↔Stalwart SMTP is explicitly not required / not enabled.
 
-### Hermes WebUI / ingress
+### Hermes WebUI / ingress — accepted contract
 
-The Hermes Web Dashboard is a required Stage 4 surface.
+The accepted Hermes Dashboard endpoint is `https://hermes.escloud.us` through existing Xray/nginx/shared TLS to loopback `127.0.0.1:9119`; no public TCP/9119 exists.
 
-Accepted topology:
+Authentication is Hermes-native self-hosted OIDC with Authelia `4.39.27` as IdP, exactly one interactive provider, authorization-code PKCE/S256, native browser cookie flow and native Desktop RFC8252/PKCE flow. nginx does not use `auth_request` for Hermes. Historical forward-auth/session-token-first wording is superseded.
 
-- browser URL: `https://hermes.escloud.us`;
-- reuse Xray/nginx + shared TLS + Authelia;
-- backend remains loopback-only by default;
-- never expose the Dashboard or machine-interface backend directly to the Internet merely because the public subdomain exists;
-- test the self-hosted Remote Gateway/session-token path first for Hermes Desktop;
-- introduce an alternative Hermes-native auth mode only if the installed runtime proves the simple path incompatible.
+Certificate issuance/renewal reuses the existing Certbot webroot mechanism and shared `escloud.us` lineage. The nginx Certbot plugin is not required.
 
 ### Stage 4 acceptance
 
-Stage 4 must verify:
+Stage 4A/B/C/D/E/F/G/H/I are COMPLETE / ACCEPTED. Final marker: `STAGE4_FINAL_ACCEPTANCE=PASS`.
 
-- real `Hermes -> vLLM` inference through the accepted Stage 3 path;
-- full practical Hermes tool surfaces selected for this deployment;
-- direct Hermes -> Codex CLI and Hermes -> Antigravity CLI delegation;
-- browser access to `https://hermes.escloud.us` through nginx + Authelia;
-- Mattermost core/ingress/native configuration and native Hermes/n8n integration;
-- a private authenticated n8n machine interface to Hermes;
-- `n8n -> Hermes -> Codex/AGY -> Hermes -> n8n`;
-- clean Hermes gateway lifecycle, including controlled stop/restart semantics and reboot persistence;
-- no unintended public Hermes backend/API listener;
-- server-side integrated non-regression;
-- final macOS Hermes Desktop Remote Gateway readiness, live chat/WebSocket and reconnect persistence.
+Accepted machine contract:
 
-Actual user-specific n8n/Hermes workflows are not part of Stage 4.
+- n8n uses the upstream Hermes API Server through a private Docker-bridge listener with Bearer authentication;
+- the production n8n workflow supports `vllm`, `codex` and `antigravity` selectors;
+- no public Hermes machine API is permitted;
+- native HTTP JSON is used instead of parsing contaminated CLI `stream-json` stdout.
 
-### Final Stage 4 macOS integration
+Accepted lifecycle constraint: controlled Hermes SIGTERM can exit status 1 after graceful-shutdown logging; requested restart recovery succeeds. Do not patch Hermes casually or mask it with `SuccessExitStatus=1`.
 
-Hermes Desktop on macOS remains the final Stage 4 integration task. Use the supported Remote Gateway path against `https://hermes.escloud.us`, test the self-hosted session credential first, verify real chat/WebSocket traffic and reconnect after app restart, and only then consider the minimum alternative supported credential/connection mode if necessary.
+Accepted Desktop contract: macOS Hermes Desktop uses `https://hermes.escloud.us` and native self-hosted OIDC/RFC8252 PKCE; no session-token workaround or public backend port.
+
+Preserve the final Stage 4 records and do not repeat accepted E2E tests without a concrete regression signal. User-specific workflows remain outside Stage 4.
 
 ## Data/knowledge sequencing
 
 Stage 5 is **Edge Knowledge Replication & Data Integration** and is owned as an integration stage, not a second knowledge-platform design project.
 
-- Home Infrastructure owns the future PVE canonical knowledge foundation.
+- Home Infrastructure owns the accepted PVE canonical knowledge foundation at `/srv/knowledge/obsidian`.
 - Personal Agents Infrastructure owns the `ai-node` active replica and local AI consumers/producers after Home cutover.
 - Cloud Infrastructure owns only the `edge` active RW replica and Cloud-side consumers/producers.
-- Until Home explicitly accepts PVE canonical migration, the current `ai-node:/srv/ai-data/knowledge/obsidian` remains factual runtime state.
+- Home accepted PVE canonical cutover on 2026-09-18; `ai-node:/srv/ai-data/knowledge/obsidian` is now an active RW replica according to that record. Revalidate the live cross-project state at Stage 5 entry.
 - Stage 5 begins with a fresh cross-project read-only audit and reuses the Home-accepted server-side synchronization mechanism by default.
 - MacBook/iPhone/iPad Obsidian synchronization is outside Cloud Infrastructure scope.
 
@@ -446,3 +435,4 @@ Avoid restart/reboot unless actually required.
 - Home/PAI connectivity must not become a foundation requirement for independently useful `edge` capabilities, but it must exist before services whose correctness depends on Home/PAI.
 - Do not carry legacy configuration forward blindly; use `migration-reference/` for engineering context and the external archive only where exact state/credentials are actually required.
 - Do not open a new production branch until the current stage is accepted and canonical files have been updated/read back.
+

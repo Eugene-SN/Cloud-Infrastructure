@@ -644,6 +644,8 @@ The independent Docker reboot-lifecycle regression discovered during Stage 3 is 
 
 **Supersedes:** only the Stage 4B executor-invocation and permission portions of the 2026-09-18T17:18:00+03:00 Stage 4 core-agent priority decision where they relied on the current Hermes Codex skill's PTY-oriented example as the default one-shot shape. The product selections, Qwen/vLLM main-agent role, direct delegation architecture, and non-blocking Image Generation/CUA decisions remain ACCEPTED.
 
+
+
 ---
 
 ## 2026-09-18T20:10:54+03:00 — Core full non-interactive root privilege
@@ -664,3 +666,144 @@ The independent Docker reboot-lifecycle regression discovered during Stage 3 is 
 
 **Supersedes:** the prior current-state restriction that `core` has no sudo access. Historical stage records retain their original factual state and are not rewritten.
 
+---
+
+## 2026-09-18 — Stage 04.3 recovery scope and evidence reconciliation
+
+**Status:** ACCEPTED — operator-directed recovery workflow, not Stage 4C architecture/deployment acceptance.
+
+**Decision:**
+
+1. Continue Stage 4 in `04.3 — Edge Hermes Stage 4 Recovery, Completion & Final Acceptance`; Git branch `04.3-edge-hermes-recovery-completion` starts from `32cd97b7da9a62250f30c2f8240fcbe06f48186b`.
+2. Preserve Stage 4A core/capability, Stage 4B executor, Stage 4D design and Stage 4E implementation acceptance. Do not repeat these E2E tests without a concrete regression signal. Track the already-known gateway SIGTERM exit-1 constraint in 4G.
+3. Stage 4C is NOT ACCEPTED. Suspend earlier mandatory nginx forward-auth/session-token-first assumptions pending exact-source and live-runtime design verification. Required endpoint, loopback backend, existing ingress and prohibition on a public machine API remain unchanged.
+4. Correct current-document duplication/stale summaries without retroactively rewriting historical acceptance records. Earlier records listing a then-future 4B are chronology, not evidence that 4B needs repeating.
+5. GitHub reconciliation identifies the duplicate next-step list introduced by `5597ff7b`; the nine requested commits modify only documentation. The accepted 4B evidence record distinguishes actual executor success from a failed receipt wrapper. No reviewed commit accepts Stage 4C or deploys OIDC.
+6. Direct local read-only evidence on edge confirms the accepted Hermes source/config hash, healthy user gateway, no Dashboard listener/unit/frontend/config section, Certbot 4.0.0 with existing webroot renewal and DNS 45.92.156.17. This is bounded recovery evidence, not a new 4A/B acceptance run.
+7. The previous failed deployment's pre-mutation stop is operator-reported and consistent with readable runtime; the full previous-session transcript and root-only recovery inspection are still unavailable. Do not label that full recovery gate PASS yet.
+8. Complete the Stage 4C source/runtime/recovery contract and explicitly record its architecture decision before mutation. Browser/OIDC Chat/WS acceptance precedes 4F; 4G precedes macOS 4H; Stage 5 stays closed until 4I is persisted.
+
+**Supersedes:** the operational force of the 2026-09-18 08:05 and 08:48 Stage 4 auth decisions only where they mandate forward-auth/session-token-first. The replacement OIDC architecture below remains PROPOSED pending the recovery design gate.
+
+## 2026-09-18 — Stage 4C self-hosted OIDC candidate and verified source contract
+
+**Status:** PROPOSED / SOURCE-VERIFIED / ROOT RUNTIME RECONCILIATION PENDING.
+
+This entry is not Stage 4C acceptance and does not claim deployment.
+
+**Candidate:**
+
+- Browser/future Desktop -> `https://hermes.escloud.us` -> existing Xray TLS and nginx fallback -> `127.0.0.1:9119`.
+- Hermes native self-hosted OIDC with issuer `https://auth.escloud.us`; exactly one interactive provider, `self-hosted`.
+- No nginx `auth_request` in front of Hermes, no Basic/Nous provider by default, no public 9119.
+- Hermes public URL set explicitly; upstream-supported frontend build and persistent user-systemd Dashboard under `core`.
+- Authelia public client: `public: true`, no client secret, `token_endpoint_auth_method: none`, `require_pkce: true`, `pkce_challenge_method: S256`, authorization-code flow, callback `https://hermes.escloud.us/auth/callback`. Final refresh/scopes/policy settings must preserve upstream refresh semantics and the actual operator authentication policy.
+- Authelia provider requires a separate HMAC secret and issuer JWK; RS256 RSA private signing key is supported. Secrets stay outside Git. Existing template filter is confirmed in the live Compose definition; use native config validation, not PyYAML.
+- Reuse `escloud.us` certificate lineage with the existing `webroot` authenticator and `/var/www/letsencrypt`. Preserve the complete current SAN set and deploy-hook behavior when adding `hermes.escloud.us`; no nginx Certbot plugin is required.
+
+**Verified version-specific evidence:**
+
+- [Hermes Dashboard guide at deployed commit](https://github.com/NousResearch/hermes-agent/blob/d177b119e9c56c9ddc0b7379ffce52341ec06584/website/docs/user-guide/features/web-dashboard.md): self-hosted OIDC is supported for Internet exposure; config uses `dashboard.oauth.self_hosted.{issuer,client_id,scopes}` or equivalent `HERMES_DASHBOARD_OIDC_*` environment settings.
+- [Actual self-hosted provider](https://github.com/NousResearch/hermes-agent/blob/d177b119e9c56c9ddc0b7379ffce52341ec06584/plugins/dashboard_auth/self_hosted/__init__.py): discovery, S256 authorization, ID-token verification against issuer/audience/JWKS and refresh are implemented. The source additionally supports confidential clients despite a stale documentation sentence denying them; public PKCE works without relying on that discrepancy.
+- [Server auth gate](https://github.com/NousResearch/hermes-agent/blob/d177b119e9c56c9ddc0b7379ffce52341ec06584/hermes_cli/web_server.py): a non-loopback `public_url` engages auth on a loopback bind and declares the accepted public Host/Origin; no configured provider means fail-closed. Forwarded headers are trusted only from bounded configured proxies/loopback.
+- [Auth routes](https://github.com/NousResearch/hermes-agent/blob/d177b119e9c56c9ddc0b7379ffce52341ec06584/hermes_cli/dashboard_auth/routes.py) and [WS tickets](https://github.com/NousResearch/hermes-agent/blob/d177b119e9c56c9ddc0b7379ffce52341ec06584/hermes_cli/dashboard_auth/ws_tickets.py): browser callback is `/auth/callback`; authenticated `POST /api/auth/ws-ticket` mints a single-use 30-second ticket for WS upgrade. Native endpoints broker Desktop sign-in rather than requiring a separate Desktop callback in Authelia.
+- [Native Desktop sign-in](https://github.com/NousResearch/hermes-agent/blob/d177b119e9c56c9ddc0b7379ffce52341ec06584/website/docs/guides/desktop-native-signin.md): RFC8252/PKCE flow, system browser, token exchange/refresh and capability detection. This establishes source support, not observed macOS acceptance.
+- [Authelia v4.39.27 provider](https://github.com/authelia/authelia/blob/v4.39.27/docs/content/configuration/identity-providers/openid-connect/provider.md), [clients](https://github.com/authelia/authelia/blob/v4.39.27/docs/content/configuration/identity-providers/openid-connect/clients.md) and [schema](https://github.com/authelia/authelia/blob/v4.39.27/internal/configuration/schema/identity_providers.go): HMAC/JWK/public-client/PKCE syntax confirmed. OIDC client authorization policy is distinct from ordinary access_control rules; an nginx auth_request bypass/access-control rule is not required for an OIDC-only relying party.
+- Stage 1 TLS record and directly read live renewal configuration agree on webroot. Live Certbot version is 4.0.0.
+
+**Still unknown before mutation:** root-only Authelia configuration/secret inventory, current certificate SANs and deploy hooks, final validated staged config and concrete recovery commands. No upstream code patch or lifecycle masking is authorized by this candidate.
+
+**Acceptance boundary:** actual browser login, Dashboard Chat, authenticated `/api/ws` and `/api/pty`, loopback exposure and main-provider/gateway non-regression are mandatory before any Stage 4C PASS.
+
+
+---
+
+## 2026-09-18T17:15:00Z — Stage 4C native self-hosted OIDC deployment design
+
+**Status:** ACCEPTED — DESIGN ONLY; Stage 4C functional acceptance remains pending.
+
+Root recovery now confirms Authelia v4.39.27, no OIDC-related config keys or generated OIDC secrets, native config validation PASS, and the existing 12-SAN certificate without Hermes. The operator provided non-interactive sudo to the local core session. Earlier lack of sudo is historical and no longer a blocker.
+
+**Accepted implementation:**
+
+1. Reuse the current Xray TLS -> nginx `127.0.0.1:8080 proxy_protocol` ingress. Publish Hermes only at `https://hermes.escloud.us`; proxy to `127.0.0.1:9119`, preserve public Host, trusted forwarded HTTPS/client metadata and WebSocket upgrades. No nginx auth_request for Hermes.
+2. Run upstream `hermes dashboard --host 127.0.0.1 --port 9119 --no-open` in a persistent core user-systemd service. Use service-local supported `HERMES_DASHBOARD_PUBLIC_URL` and `HERMES_DASHBOARD_OIDC_*` settings so the main Qwen/vLLM config need not change. Build via Hermes' upstream automatic frontend mechanism.
+3. Register exactly one interactive Hermes provider, self-hosted, issuer `https://auth.escloud.us`, client `hermes-dashboard`, scopes `openid profile email offline_access`. No Basic/Nous provider or session-token bypass.
+4. Authelia public client: `public: true`, token endpoint auth `none`, authorization-code plus refresh-token grants, response type `code`, PKCE required/S256, exact callback `https://hermes.escloud.us/auth/callback`, explicit consent. Use `one_factor` to preserve the existing service-login policy instead of silently introducing a different operator-login requirement. Ordinary access_control remains unchanged.
+5. Add isolated OIDC HMAC and RS256 RSA signing key through the existing template secret-file mechanism. Native-validate the staged complete configuration before replacing/restarting Authelia. Do not parse templated configuration with PyYAML.
+6. Extend the existing `escloud.us` certificate to preserve all current 12 SANs and add `hermes.escloud.us`, using Certbot 4.0.0 `certonly --webroot -w /var/www/letsencrypt --cert-name escloud.us --expand`. Reuse the existing account/renewal state and deploy hook. The hook copies TLS state and restarts Xray, Hysteria2 and Stalwart; this necessary disruption is explicit.
+7. Save root-only recovery copies before mutation: Authelia config, Certbot state, TLS consumer copies and nginx configuration. Keep the main Hermes config hash unchanged. Rollback application activation by disabling Dashboard, removing only the new vhost, restoring the previous Authelia config and native-validating before restart. A successfully expanded shared certificate can remain valid on application rollback; do not revoke/reissue it unnecessarily.
+8. Verify runtime/status/provider/redirect/TLS/listeners and gateway/hash properties. Browser/OIDC login, Chat and WS/PTY require actual interactive evidence before Stage 4C can pass. Desktop remains 4H after 4G.
+
+**Why this matches the deployed versions:** the immediately preceding source-verified candidate cites exact Hermes source and Authelia v4.39.27 docs/schema; local CLI help, actual Compose template filter, current webroot renewal state, ACME nginx route and deploy-hook source were additionally inspected. The root configuration passed Authelia's own validator before any change.
+
+**Supersedes:** the preceding PROPOSED candidate status and the older mandatory forward-auth/session-token-first design. This does not supersede any Stage 4A/B/D/E acceptance or claim Stage 4C deployment success.
+
+---
+
+## 2026-09-18T21:25:00+03:00 — Stage 4C Dashboard and Desktop authentication contract
+
+**Status:** ACCEPTED
+
+**Decision:**
+
+1. `https://hermes.escloud.us` is the canonical browser and macOS Desktop Remote Gateway endpoint.
+2. Hermes-native self-hosted OIDC with Authelia `4.39.27` as IdP is the accepted authentication contract. The only interactive provider is `self-hosted`.
+3. Browser authorization uses the public authorization-code client and PKCE/S256 callback `https://hermes.escloud.us/auth/callback`. Desktop uses the upstream native RFC8252/PKCE broker endpoints.
+4. nginx terminates the existing Xray-provided TLS path and proxies to loopback `127.0.0.1:9119` with WebSocket forwarding. nginx does not use `auth_request` for Hermes.
+5. No Basic/Nous fallback and no public TCP/9119 are part of the accepted runtime.
+6. The shared `escloud.us` certificate lineage and its established Certbot webroot mechanism include `hermes.escloud.us`.
+7. Browser callback/session/Chat traffic, WebSocket HTTP 101 and operator functional confirmation complete Stage 4C. Native Desktop authorize/token exchanges, two WebSocket connections and operator confirmation complete Stage 4H.
+
+**Supersedes:** all earlier current-state forward-auth/session-token-first requirements and the DESIGN ONLY/pending-acceptance status of the preceding Stage 4C decision. Historical audit records remain unchanged.
+
+---
+
+## 2026-09-18T21:26:00+03:00 — Stage 4F native Hermes API Server for n8n
+
+**Status:** ACCEPTED
+
+**Decision:**
+
+1. n8n invokes Hermes through the upstream-native Hermes API Server `/v1/responses` interface.
+2. The API binds only `172.19.0.1:8642` on the n8n Docker bridge, requires a strong Bearer key and is limited by a narrow UFW rule to the n8n subnet. It has no nginx/public route.
+3. n8n uses its built-in HTTP Request node and encrypted `httpBearerAuth` credential. No custom adapter, CLI wrapper, MCP-to-HTTP shim or public webhook is introduced.
+4. The production reusable workflow `Hermes Machine Invocation` accepts `task` plus selector `vllm`, `codex` or `antigravity`.
+5. `vllm` returns a direct result from the configured Hermes model without executor tool calls. `codex` and `antigravity` require the corresponding real foreground non-PTY CLI and return its usable result.
+6. The known Tirith CLI stdout warning is irrelevant to this path because n8n consumes native HTTP JSON rather than CLI `stream-json`.
+7. Exact-value E2E passed for all three selectors; only the reusable workflow remains in production.
+
+**Supersedes:** the unresolved Stage 4F mechanism and any assumption that a custom service is required for n8n to invoke Hermes.
+
+---
+
+## 2026-09-18T21:27:00+03:00 — Final Stage 4 runtime and lifecycle acceptance
+
+**Status:** ACCEPTED
+
+**Decision:**
+
+1. Stage 4A/B/C/D/E/F/G/H/I are COMPLETE / ACCEPTED. Final marker: `STAGE4_FINAL_ACCEPTANCE=PASS`.
+2. Hermes remains on `qwen3.8-27b-fp8` through the custom vLLM endpoint `http://192.168.1.30:8000/v1`. A Dashboard-driven switch to `openai-codex` found during 4G was a real regression and was corrected with native Hermes commands before final acceptance.
+3. Current Antigravity CLI `1.2.6` supersedes the inventory value `1.2.5`; the version change passed a bounded real n8n/Hermes/Antigravity E2E. Codex remains `0.154.0`.
+4. Controlled Hermes SIGTERM exit status 1 after graceful-shutdown logging is an accepted upstream constraint because requested restart recovery and service persistence pass. Do not patch source or add `SuccessExitStatus=1` merely to hide it.
+5. Current Hermes config SHA256 is `fe2f0fead4781ed28d0c4bf61720bdc52a6b31a41040a477afe6351b5df2f824`; accepted model semantics are restored and user Dashboard theme `rose` is preserved.
+6. Stage 5 may begin only from the persisted final Stage 4 checkpoint and its own mandatory entry audit.
+
+**Supersedes:** all remaining current-state descriptions of Stage 4C/F/G/H/I as pending. It does not rewrite the historical state recorded by earlier acceptance/audit artifacts.
+
+---
+
+## 2026-09-19 — Read-only checkpoint and cross-project documentation reconciliation
+
+**Status:** EVIDENCE RECONCILIATION ONLY; no new architecture decision or runtime deployment.
+
+- Stage 4 closure is preserved: `STAGE4_FINAL_ACCEPTANCE=PASS`, recorded on 2026-09-18 in `04.3-edge-hermes-recovery-completion`. The open draft PR #1 and stale main checkpoint do not reopen the completed stage.
+- Read-only edge inspection on 2026-09-19 confirmed active/enabled Gateway and Dashboard with `NRestarts=0`, the accepted Hermes commit/config hash, loopback Dashboard, private bridge API and one active production Hermes n8n workflow with two credential records. It did not repeat E2E or reboot acceptance.
+- [Home Infrastructure CURRENT_STATE.md](https://github.com/Eugene-SN/Home-Infrastructure/blob/main/CURRENT_STATE.md) (content blob `7c70ae1069568c2538f3b14d518765e8861b6fe3`) records accepted PVE canonical cutover, Syncthing 2.1.5, CT220 cutover/legacy cleanup and CT208 backup/restore plus production policy.
+- [PAI CURRENT_STATE.md](https://github.com/Eugene-SN/Personal-Agents-Infrastructure/blob/main/CURRENT_STATE.md) (content blob `41a827a5338d976caf2cace92e1f1853a45cb1c9`) records ai-node as non-canonical and its accepted dedicated local Knowledge backup.
+- These later Home/PAI records supersede Cloud current-state wording that describes Home cutover as still pending. Historical acceptance records and earlier decision chronology remain unchanged.
+- Cloud Stage 5 remains undeployed/unaccepted. Its fresh Home/PAI/Cloud entry audit is still mandatory. PVE's documented completion is not a fresh remote runtime measurement.
+- Remaining stages are 5 through 10; the existing lifecycle ordering and product anchors remain unchanged. Detailed additions to the roadmap are planning/acceptance checklists, not implementation authorization.
+- The Stage 0 migration-preservation archive identity and SHA256 remain historical evidence, but the 2026-09-19 read-only edge audit found its `/tmp` path absent. Current documents must not present it as available recovery state.
+- The Stage 4F private n8n path currently depends on the concrete `n8n_default` bridge/subnet identity. This is accepted current runtime, not a portable invariant; Docker network recreation requires coordinated bind/workflow/UFW reconciliation.
