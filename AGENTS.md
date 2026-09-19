@@ -68,6 +68,21 @@ Stage names, stage scopes and enumerated acceptance requirements define **minimu
 
 
 
+## Evidence and assumption invariant
+
+Never invent, infer silently, or present an unverified detail as factual project state.
+
+Every material claim about runtime state, paths, names, versions, topology, ownership, configuration, behavior, capabilities, causes, or dependencies must be treated as one of:
+
+- **CONFIRMED FACT** — directly supported by fresh runtime/config evidence, authoritative current repository state, explicit operator-provided evidence, or an authoritative upstream source applicable to the exact case;
+- **INFERENCE** — logically derived from confirmed facts but not directly observed; label it explicitly as an inference and state the supporting facts;
+- **ASSUMPTION** — plausible but lacking sufficient confirming evidence; label it explicitly as an assumption and state what evidence is missing;
+- **UNKNOWN** — evidence is insufficient or contradictory.
+
+Do not silently fill gaps from analogy, memory, previous deployments, naming conventions, best practices, or what would be convenient. If a proposed mutation depends materially on an inference or assumption, stop before mutation and obtain only the minimum read-only evidence needed to convert it into a confirmed fact or explicitly accepted design choice.
+
+When sources disagree, report drift/uncertainty explicitly. Do not choose the preferred-looking value and present it as fact.
+
 ## Mandatory research-before-change discipline
 
 For any changing, version-sensitive, unfamiliar, externally integrated, or non-trivial service/mechanism, **do not generate implementation or diagnostic mutation blocks from memory, analogy, or guesswork**.
