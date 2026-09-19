@@ -911,5 +911,39 @@ Authoritative record:
 8. Existing PVE↔ai-node runtime is preserved and verified for non-regression; edge→PVE→ai-node propagation is an acceptance requirement.
 
 **Supersedes:** only clauses 9–10 of the immediately preceding accepted decision `Three-node Knowledge Fabric roles and edge-only Stage 5 mutation scope` insofar as they restricted Stage 5 mutations to edge and treated PVE peer authorization as an external prerequisite. All non-conflicting topology, role, path and future-access decisions remain accepted.
+---
+
+## 2026-09-19 — Final Knowledge runtime placement and three-branch Stage 5 structure
+
+**Status:** ACCEPTED
+
+Authoritative record:
+
+`STAGE_05_1_FINAL_KNOWLEDGE_RUNTIME_ARCHITECTURE_ACCEPTANCE_2026-09-19.md`
+
+**Context:** fresh PVE resource readiness confirmed an Intel Core i3-N305 with 8 cores, ~15 GiB RAM, ~6.5 GiB available memory, existing 8 GiB host swap with ~5.6 GiB free, and the canonical vault already isolated on the dedicated `pve/knowledge` 32 GiB ext4 LV. The operator selected a PVE-centered full Obsidian runtime model and split Stage 5 further to isolate PVE application deployment from edge deployment.
+
+**Decision:**
+
+1. PVE remains canonical RW Knowledge authority, Syncthing hub and primary durable Knowledge recovery authority.
+2. A new dedicated lightweight PVE LXC becomes the single full server-side Obsidian application node for the canonical vault.
+3. Initial LXC envelope: 1 vCPU, 1024 MiB RAM, 512 MiB swap, approximately 4 GiB rootfs, onboot enabled.
+4. The vault remains on `/srv/knowledge/obsidian` backed by the dedicated `pve/knowledge` LV and is RW bind-mounted into the LXC; it must not be copied into or depend on the LXC rootfs.
+5. The PVE Obsidian runtime provides File Recovery, index/metadata, CLI/core-plugin capability and private `obsidian.lan` browser UI.
+6. `obsidian.lan` is private Home LAN / NetBird-routed access only.
+7. ai-node remains a secondary RW PAI/application replica with n8n/OCR/RAG/AI consumers and no server-side Obsidian runtime/WebUI by default.
+8. edge remains a secondary RW Cloud/agent replica. No edge Obsidian WebUI/runtime is deployed in Stage 5.
+9. Future iOS/macOS/Windows/Android client access terminates on edge through a separately selected client-facing mechanism. That implementation is not part of Stage 5. A future edge Obsidian runtime is conditional only if the later client-access design or another explicitly accepted edge-local Obsidian requirement needs it.
+10. Existing 8 GiB PVE host swap remains unchanged. Do not expand swap merely because disk space is available; revisit only if post-deployment measurements show actual pressure.
+11. LXC runtime packaging is not pre-committed to native or Docker. Stage 05.2 compares official native Obsidian + native Selkies against LinuxServer Obsidian/Selkies and selects the simpler, better-supported stable implementation. Native is a preference, not a requirement.
+12. Stage 5 is split into three branches:
+    - `05.1 — Cross-project Knowledge Reconciliation & Target Architecture` — COMPLETE / ACCEPTED;
+    - `05.2 — PVE Canonical Obsidian Runtime & WebUI` — NEXT;
+    - `05.3 — Edge Knowledge Replication & Data Integration` — PLANNED.
+13. 05.2 owns PVE Obsidian LXC/runtime/WebUI deployment and non-regression acceptance.
+14. 05.3 owns edge replica/Syncthing/consumer deployment and final Stage 5 integration acceptance.
+15. OpenClaw keeps its current PVE canonical RO Knowledge relationship; Stage 5 does not redesign it.
+
+**Supersedes:** the prior Stage 05.1 decisions that (a) placed the future private Obsidian WebUI on ai-node, (b) treated PVE Obsidian runtime as optional/not required, and (c) split Stage 5 into only 05.1 + 05.2 with edge deployment as 05.2. Non-conflicting topology, paths and audit evidence remain accepted.
 
 
