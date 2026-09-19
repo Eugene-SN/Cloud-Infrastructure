@@ -9,7 +9,7 @@
 **Stage 3 — Edge Cross-site Connectivity Foundation — COMPLETE / ACCEPTED**  
 **Stage 4 — Edge Hermes Agent Runtime — COMPLETE / ACCEPTED**  
 **Stage 05.1 — Cross-project Knowledge Reconciliation & Target Architecture — COMPLETE / ACCEPTED**  
-**Stage 05.2 — PVE Canonical Obsidian Runtime & WebUI — NEXT / IMPLEMENTATION NOT STARTED**  
+**Stage 05.2 — PVE Canonical Obsidian Runtime & WebUI — RUNTIME SELECTED / PRODUCTION IMPLEMENTATION NOT STARTED**  
 **Stage 05.3 — Edge Knowledge Replication & Data Integration — PLANNED / IMPLEMENTATION NOT STARTED**
 
 `EDGE_STAGE2_FINAL_INTEGRATED_ACCEPTANCE=PASS` on 2026-09-17.  
@@ -103,21 +103,21 @@ Fresh PVE resource state for the accepted Obsidian placement:
 
 Accepted target roles:
 
-- **PVE:** canonical data/recovery authority + Syncthing hub + single full server-side Obsidian runtime, File Recovery and private `obsidian.lan` WebUI.
+- **PVE:** canonical data/recovery authority + Syncthing hub + single Ignis-based server-side Obsidian-aware runtime, File Recovery and private `obsidian.lan` WebUI.
 - **ai-node:** secondary RW PAI/application replica; n8n/OCR/RAG/AI consumers; no server-side Obsidian runtime/WebUI by default.
 - **edge:** secondary RW Cloud/agent replica; future global iOS/macOS/Windows/Android client-access endpoint; no WebUI and no Obsidian runtime in Stage 5.
 
 Stage split:
 
 - **05.1:** architecture/reconciliation — COMPLETE / ACCEPTED.
-- **05.2:** deploy dedicated PVE Obsidian LXC, full runtime, File Recovery and private `obsidian.lan`.
+- **05.2:** deploy dedicated PVE Obsidian LXC with Ignis, File Recovery and private `obsidian.lan`.
 - **05.3:** deploy edge replica and Cloud-side integration.
 
-Accepted 05.2 LXC envelope after the runtime packaging gate: 1 vCPU, 1024 MiB RAM, 512 MiB swap, 8 GiB rootfs, onboot. The canonical vault remains outside the LXC rootfs and is bind-mounted from `/srv/knowledge/obsidian`.
+Accepted 05.2 production LXC envelope: 1 vCPU, 512 MiB RAM, 256 MiB swap, 8 GiB rootfs, onboot. The canonical vault remains outside the LXC rootfs and is bind-mounted RW from `/srv/knowledge/obsidian`.
 
-05.2 runtime packaging is **SELECTED / ACCEPTED**: LinuxServer Obsidian/Selkies inside the dedicated LXC. The native official Obsidian + native Selkies alternative was evaluated and rejected for this deployment because it requires more custom display/session lifecycle plumbing and a less unified update path.
+05.2 runtime packaging is **SELECTED / ACCEPTED**: Ignis inside the dedicated PVE LXC. Comparative testing rejected LinuxServer Obsidian/Selkies and native official Obsidian + Selkies for this use case; Ignis passed the required filesystem bridge, external-change visibility, File Recovery baseline, headless bridge and restart-persistence gates on an isolated test vault.
 
-Current 05.2 runtime checkpoint: CT210 `obsidian` is created and running on PVE with Debian 13.6, 1 vCPU, 1024 MiB RAM, 512 MiB swap, 16 GiB rootfs, `onboot=1`, static `192.168.1.15/24`, gateway `192.168.1.254`, DNS `192.168.1.1`, search domain `lan`. Base network/private/public DNS acceptance passed. Docker CE `29.8.1`, containerd `2.3.5` and Compose `5.5.1` are installed. LinuxServer Obsidian/Selkies minimal smoke acceptance passed with image digest `sha256:c6c86336a2cf57506b0db2beb09ef4a50170808820a59c20063e669d12122dd4`, HTTPS on TCP/3001, restart count 0 and no canonical-vault mount. Measured rootfs use at 8 GiB was 6.4 GiB of 7.8 GiB (87%, ~997 MiB free), proving that size operationally too tight for normal image-update headroom. CT210 rootfs was therefore expanded to 16 GiB; post-resize filesystem use is ~6.4 GiB of 16 GiB (44%, ~8.5 GiB free). Docker and Obsidian/Selkies automatically recovered after CT stop/start, HTTPS passed immediately, and the canonical vault remains unmounted.
+The comparative CT210 was fully pruned after acceptance: CT210 is absent from PVE, its experimental rootfs is removed, and the canonical vault was never mounted or mutated by the experiment. Production 05.2 deployment has not started. A fresh CT210 must be created from scratch with the accepted 1 vCPU / 512 MiB RAM / 256 MiB swap / 8 GiB rootfs envelope and the current stable Ignis update path; experimental image/version state is not a production baseline.
 
 Future external client-access implementation through edge is accepted architecture but explicitly outside Stage 5. Edge Obsidian runtime remains conditional future work.
 
