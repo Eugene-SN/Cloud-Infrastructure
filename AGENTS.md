@@ -20,11 +20,11 @@ Read, in this order when relevant:
 
 Current accepted checkpoint is:
 
-`05.1 — Cross-project Knowledge Reconciliation & Target Architecture — COMPLETE / ACCEPTED; 05.2 PVE Obsidian implementation pending` — COMPLETE / ACCEPTED.
+`05.1 — Cross-project Knowledge Reconciliation & Target Architecture — COMPLETE / ACCEPTED`.
 
-Stage 0, Stage 1, Stage 2, Stage 02.5, Stage 3 and Stage 4 are complete and accepted. `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS`; `STAGE4_FINAL_ACCEPTANCE=PASS`.
+Stage 0, Stage 1, Stage 2, Stage 02.5, Stage 3 and Stage 4 are complete and accepted. `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS`; `STAGE4_FINAL_ACCEPTANCE=PASS`; `STAGE05_1_FINAL_KNOWLEDGE_RUNTIME_ARCHITECTURE=PASS`.
 
-Next canonical work is `05 — Edge Knowledge Replication & Data Integration`; it has not started. Use `CURRENT_STATE.md` for confirmed runtime, `IMPLEMENTATION_PHASES.md` for the authoritative roadmap/substage scope, and the latest applicable ACCEPTED entries/records for supersession.
+Next canonical work is `05.2 — PVE Canonical Obsidian Runtime & WebUI`. After 05.2 acceptance, continue with `05.3 — Edge Knowledge Replication & Data Integration`. Use `CURRENT_STATE.md` for confirmed runtime, `IMPLEMENTATION_PHASES.md` for the authoritative roadmap/substage scope, and the latest applicable ACCEPTED entries/records for supersession.
 
 Do not duplicate mutable stage chronology in this file. `AGENTS.md` should contain durable cross-agent rules; volatile progress belongs in `CURRENT_STATE.md` and `IMPLEMENTATION_PHASES.md`.
 
