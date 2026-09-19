@@ -8,7 +8,7 @@ Fresh runtime verification outranks this file. This inventory records accepted l
 
 | Node | Role | State |
 |---|---|---|
-| `edge` / `edge.escloud.us` | Cloud Infrastructure VPS | LIVE; Stage 0/1/2/02.5/3/4 accepted |
+| `edge` / `edge.escloud.us` | Cloud Infrastructure VPS | LIVE; Stage 0–4 accepted; Stage 5 architecture accepted / deployment not started |
 | `nl-core-vds` | historical legacy VPS identity | HISTORICAL ONLY |
 | `ai-node` | PAI compute/data/knowledge node | external dependency/context; Stage 3 private target; Stage 4 local-vLLM endpoint |
 | PVE / Home Infrastructure | home infrastructure plane | external dependency/context; Stage 3 private routed fabric |
