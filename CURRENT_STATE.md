@@ -117,6 +117,8 @@ Accepted 05.2 LXC envelope after the runtime packaging gate: 1 vCPU, 1024 MiB RA
 
 05.2 runtime packaging is **SELECTED / ACCEPTED**: LinuxServer Obsidian/Selkies inside the dedicated LXC. The native official Obsidian + native Selkies alternative was evaluated and rejected for this deployment because it requires more custom display/session lifecycle plumbing and a less unified update path.
 
+Current 05.2 runtime checkpoint: CT210 `obsidian` is created and running on PVE with Debian 13.6, 1 vCPU, 1024 MiB RAM, 512 MiB swap, 8 GiB rootfs, `onboot=1`, static `192.168.1.15/24`, gateway `192.168.1.254`, DNS `192.168.1.1`, search domain `lan`. Base network/private/public DNS acceptance passed. The canonical vault is not yet mounted and Docker/Obsidian are not yet installed.
+
 Future external client-access implementation through edge is accepted architecture but explicitly outside Stage 5. Edge Obsidian runtime remains conditional future work.
 
 
