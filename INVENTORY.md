@@ -208,6 +208,9 @@ Accepted target inventory:
 - PVE remains canonical RW Knowledge authority, Syncthing hub and primary durable recovery authority;
 - CT210 `obsidian` exists and is running as the dedicated lightweight LXC for the full server-side Obsidian runtime;
 - guest OS Debian 13.6; static IP `192.168.1.15/24`; gateway `192.168.1.254`; DNS `192.168.1.1`; search domain `lan`;
+- Docker CE `29.8.1`, containerd `2.3.5`, Compose `5.5.1` installed and accepted in smoke testing;
+- LinuxServer Obsidian/Selkies smoke runtime accepted on TCP/3001 with image digest `sha256:c6c86336a2cf57506b0db2beb09ef4a50170808820a59c20063e669d12122dd4`;
+- canonical vault is not yet mounted; measured 8 GiB rootfs occupancy is 87%, requiring rootfs resize before vault integration;
 - target LXC: 1 vCPU, 1024 MiB RAM, 512 MiB swap, 8 GiB rootfs, onboot;
 - canonical vault remains outside rootfs and is bind-mounted RW from `/srv/knowledge/obsidian`;
 - runtime provides File Recovery, index/metadata, CLI/core-plugin baseline and private `obsidian.lan` WebUI;
