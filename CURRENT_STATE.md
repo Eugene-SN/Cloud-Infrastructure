@@ -10,13 +10,16 @@
 **Stage 4 — Edge Hermes Agent Runtime — COMPLETE / ACCEPTED**  
 **Stage 05.1 — Cross-project Knowledge Reconciliation & Target Architecture — COMPLETE / ACCEPTED**  
 **Stage 05.2 — PVE Canonical Obsidian Runtime & WebUI — COMPLETE / ACCEPTED**  
-**Stage 05.3 — Edge Knowledge Replication & Data Integration — PLANNED / IMPLEMENTATION NOT STARTED**
+**Stage 05.3 — Edge Knowledge Replication & Data Integration — COMPLETE / ACCEPTED**  
+**Stage 5 — Knowledge Fabric Runtime Deployment — COMPLETE / ACCEPTED**
 
 `EDGE_STAGE2_FINAL_INTEGRATED_ACCEPTANCE=PASS` on 2026-09-17.  
 `CLOUD_STAGE_02_5_FINAL_SCOPE_ACCEPTANCE=PASS` on 2026-09-18.  
 `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS` on 2026-09-18.  
 `STAGE05_1_FINAL_KNOWLEDGE_RUNTIME_ARCHITECTURE=PASS` on 2026-09-19.  
 `STAGE05_2_PVE_CANONICAL_OBSIDIAN_RUNTIME=PASS` on 2026-09-19.  
+`STAGE05_3_EDGE_KNOWLEDGE_REPLICATION_DATA_INTEGRATION=PASS` on 2026-09-20.  
+`STAGE05_FINAL_ACCEPTANCE=PASS` on 2026-09-20.  
 `STAGE4_FINAL_ACCEPTANCE=PASS` on 2026-09-18.
 
 `STAGE4F_STABLE_DOCKER_BRIDGE_HARDENING=PASS` on 2026-09-19.
@@ -75,67 +78,52 @@ Stage 3 is COMPLETE / ACCEPTED. Final record: `STAGE_03_ACCEPTANCE_2026-09-18.md
 
 ### Data / knowledge project boundary
 
-Latest accepted target: `STAGE_05_1_FINAL_KNOWLEDGE_RUNTIME_ARCHITECTURE_ACCEPTANCE_2026-09-19.md`.
+Stage 5 is **COMPLETE / ACCEPTED**.
 
-Fresh accepted evidence:
+Authoritative records:
 
-- `PVE_STAGE5_ENTRY_AUDIT=PASS`;
-- `AI_NODE_STAGE5_ENTRY_AUDIT=PASS`;
-- `EDGE_STAGE5_ENTRY_AUDIT=PASS`;
-- `PVE_OBSIDIAN_RESOURCE_READINESS_AUDIT=PASS`;
-- no Stage 5 production mutation has occurred.
+- `STAGE_05_1_FINAL_KNOWLEDGE_RUNTIME_ARCHITECTURE_ACCEPTANCE_2026-09-19.md`;
+- `STAGE_05_2_FINAL_ACCEPTANCE_2026-09-19.md`;
+- `STAGE_05_3_FINAL_ACCEPTANCE_2026-09-20.md`.
 
-Confirmed current runtime:
+Current accepted runtime:
 
-- PVE `/srv/knowledge/obsidian` is canonical on dedicated `pve/knowledge` 32 GiB ext4 storage;
-- PVE Syncthing `2.1.5` ↔ ai-node `knowledge-obsidian` is healthy and 100% complete;
-- ai-node `/srv/ai-data/knowledge/obsidian` is an active RW non-canonical replica and n8n RW source;
-- CT220 uses PVE canonical Knowledge read-only;
-- CT208 Knowledge backup/restore and production policy remain accepted;
-- edge has no Syncthing/Knowledge tree yet;
-- edge can reach PVE/ai-node TCP/22000 through the accepted private path.
+- PVE Knowledge filesystem is the dedicated `pve/knowledge` 32 GiB ext4 LV mounted at `/srv/knowledge`; the Obsidian vault is `/srv/knowledge/obsidian`;
+- PVE remains the authoritative Knowledge/recovery node and Syncthing hub;
+- CT210 `obsidian` remains the single full server-side Obsidian runtime/WebUI at private `https://obsidian.lan`;
+- ai-node remains an active RW replica at `/srv/ai-data/knowledge/obsidian`;
+- edge is an active RW replica at `/srv/knowledge/obsidian`;
+- accepted live topology is PVE ↔ ai-node plus PVE ↔ edge; no direct edge ↔ ai-node Syncthing peer exists;
+- edge Syncthing `2.1.5` runs as `syncthing@core.service`, enabled at boot;
+- edge dials PVE at `tcp://192.168.1.3:22000`;
+- edge Syncthing GUI/API and listener are loopback-only at `127.0.0.1:8384` and `127.0.0.1:22000`; global/local discovery, relays and NAT traversal are disabled;
+- edge `/srv/knowledge` is `core:core 0755`; `/srv/knowledge/obsidian` is `core:core 2775`;
+- Hermes, Codex and Antigravity run under `core` and use the local host path directly;
+- edge n8n binds `/srv/knowledge/obsidian:/srv/knowledge/obsidian:rw`; container user `node` is UID/GID `1000:1000`;
+- existing `n8n_hermes` network remains unchanged;
+- PVE → edge, edge → PVE, and edge → PVE → ai-node propagation passed;
+- controlled edge outage/reconnect and PVE/edge conflict preservation passed;
+- whether the conflict copy itself reached ai-node before cleanup was not directly captured and remains **UNKNOWN**; normal edge → PVE → ai-node propagation was independently verified;
+- controlled edge reboot acceptance passed with Knowledge converged, n8n healthy and Stage 4 user services active;
+- OpenClaw/CT220 relationship remains unchanged;
+- no edge Obsidian runtime/WebUI was added;
+- external client-access implementation remains outside Stage 5.
 
-Fresh PVE resource state for the accepted Obsidian placement:
+Acceptance markers:
 
-- Intel Core i3-N305, 8 cores;
-- ~15 GiB RAM total, ~6.5 GiB available;
-- 8 GiB host swap total, ~5.6 GiB free;
-- existing host swap is sufficient; no swap expansion is planned without measured pressure.
-
-Accepted target roles:
-
-- **PVE:** canonical data/recovery authority + Syncthing hub + single Ignis-based server-side Obsidian-aware runtime, File Recovery and private `obsidian.lan` WebUI.
-- **ai-node:** secondary RW PAI/application replica; n8n/OCR/RAG/AI consumers; no server-side Obsidian runtime/WebUI by default.
-- **edge:** secondary RW Cloud/agent replica; future global iOS/macOS/Windows/Android client-access endpoint; no WebUI and no Obsidian runtime in Stage 5.
-
-Stage split:
-
-- **05.1:** architecture/reconciliation — COMPLETE / ACCEPTED.
-- **05.2:** deploy dedicated PVE Obsidian LXC with Ignis, File Recovery and private `obsidian.lan`.
-- **05.3:** deploy edge replica and Cloud-side integration.
-
-Accepted 05.2 production LXC envelope: 1 vCPU, 512 MiB RAM, 256 MiB swap, 8 GiB rootfs, onboot. The canonical vault remains outside the LXC rootfs and is bind-mounted RW from `/srv/knowledge/obsidian`.
-
-05.2 runtime packaging is **SELECTED / ACCEPTED**: Ignis inside the dedicated PVE LXC. Comparative testing rejected LinuxServer Obsidian/Selkies and native official Obsidian + Selkies for this use case; Ignis passed the required filesystem bridge, external-change visibility, File Recovery baseline, headless bridge and restart-persistence gates on an isolated test vault.
-
-Stage 05.2 production deployment is complete and accepted. Fresh CT210 `obsidian` is live on PVE with 1 vCPU, 512 MiB RAM, 256 MiB swap, 8 GiB rootfs, onboot enabled and static `192.168.1.15/24`. The canonical vault remains on PVE at `/srv/knowledge/obsidian` and is bind-mounted RW. Ignis runs with the upstream image update path and Obsidian 1.12.7; Caddy provides private HTTPS for `obsidian.lan`. The Ignis vault path uses a symlink topology so the image entrypoint can own `/vaults` without recursively changing canonical PVE ownership; canonical root remains `0:990:2775` across container and LXC restarts. Browser create/edit/delete works with Obsidian `Use native menus` disabled. File Recovery is enabled/configured; a full restore E2E was intentionally not repeated. Final reboot/autostart, DNS/HTTPS, ownership and resource acceptance all pass. Final record: `STAGE_05_2_FINAL_ACCEPTANCE_2026-09-19.md`.
-
-Future external client-access implementation through edge is accepted architecture but explicitly outside Stage 5. Edge Obsidian runtime remains conditional future work.
-
+- `STAGE05_3_EDGE_KNOWLEDGE_REPLICATION_DATA_INTEGRATION=PASS`;
+- `STAGE05_FINAL_ACCEPTANCE=PASS`.
 
 ## Final remaining roadmap
 
-Stage 4 is complete and accepted. PR #1 was merged into `main` on 2026-09-19 as commit `c4d402175ea1a049f20a93ab77daa0b068071277`; no Stage 4 branch checkpoint remains pending.
+Stage 5 is complete and accepted. The next finite infrastructure stage is Stage 6.
 
-1. **Stage 05.3 — Edge Knowledge Replication & Data Integration**;
-2. **Stage 6 — Edge Backrest & Recovery**;
-3. **Stage 7 — Edge Maintenance & Update**, including separate Codex `update.escloud.us` substage;
-4. **Stage 8 — Edge Monitoring, Heartbeats & Alerts**;
-5. **Stage 9 — Edge Cloud Portal**, including separate Codex `app.escloud.us` substage;
-6. **Stage 10 — Edge Final Integrated Infrastructure Acceptance**;
-7. post-infrastructure **Automation & User Workflows** as a continuous workstream.
-
-The old conditional `Remaining Infrastructure Services` stage is removed because Stage 02.5 selected no additional standalone infrastructure product requiring that slot.
+1. **Stage 6 — Edge Backrest & Recovery**;
+2. **Stage 7 — Edge Maintenance & Update**, including separate Codex `update.escloud.us` substage;
+3. **Stage 8 — Edge Monitoring, Heartbeats & Alerts**;
+4. **Stage 9 — Edge Cloud Portal**, including separate Codex `app.escloud.us` substage;
+5. **Stage 10 — Edge Final Integrated Infrastructure Acceptance**;
+6. post-infrastructure **Automation & User Workflows** as a continuous workstream.
 
 Backrest-before-Semaphore remains mandatory. Monitoring remains late-stage so it is built once against the substantially complete inventory. `update.escloud.us` and `app.escloud.us` remain separate UI responsibilities.
 
