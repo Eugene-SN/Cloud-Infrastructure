@@ -207,7 +207,7 @@ Accepted target inventory:
 - future external/iOS data-access endpoint role belongs to edge, exact client mechanism unresolved;
 - future private Obsidian WebUI direction belongs to ai-node, potentially `obsidian.lan`.
 
-Stage 5 mutates edge only. PVE peer registration/share for the new edge Syncthing Device ID is a required cross-project Home prerequisite unless explicitly re-scoped later.
+Stage 05.2 deploys edge and may perform the narrowly required PVE changes for edge↔PVE Syncthing integration, including edge Device ID registration/folder sharing. ai-node and OpenClaw application architecture are preserved; future ai-node Obsidian WebUI and external iOS/macOS/Windows client-access implementation are outside Stage 5 runtime scope.
 
 
 # Deployment stage inventory
@@ -216,7 +216,8 @@ Stage 5 mutates edge only. PVE peer registration/share for the new edge Syncthin
 |---|---|---|
 | 3 | Cross-site Connectivity Foundation | COMPLETE / ACCEPTED; `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS` |
 | 4 | Hermes Agent Runtime | COMPLETE / ACCEPTED; `STAGE4_FINAL_ACCEPTANCE=PASS` |
-| 5 | Edge Knowledge Replication & Data Integration | ARCHITECTURE ACCEPTED / ENTRY AUDIT COMPLETE / EDGE DEPLOYMENT NOT STARTED |
+| 05.1 | Cross-project Knowledge Reconciliation & Target Architecture | COMPLETE / ACCEPTED | 
+| 05.2 | Edge Knowledge Replication & Data Integration | IMPLEMENTATION NOT STARTED |
 | 6 | Backrest & Recovery | PRODUCT DIRECTION ACCEPTED; topology research pending |
 | 7 | Maintenance & Update | Semaphore accepted; deploy only after Stage 6 restore acceptance |
 | 8 | Monitoring, Heartbeats & Alerts | REQUIRED / PRODUCT UNRESOLVED |
