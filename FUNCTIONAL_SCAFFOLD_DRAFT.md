@@ -1,6 +1,6 @@
 # Cloud Infrastructure — Functional Scaffold
 
-**Status:** capability scaffold normalized after Stage 02.5 final acceptance.
+**Status:** capability scaffold reconciled with accepted Stage 3/4 and Home Knowledge records on 2026-09-19.
 
 This document preserves functional requirements for `edge`. It is not an independent chronology source; implementation order is defined by `IMPLEMENTATION_PHASES.md`.
 
@@ -131,13 +131,13 @@ Exact repositories, retention and schedules are Stage 6 implementation details, 
 
 The knowledge platform is not owned end-to-end by Cloud Infrastructure.
 
-**Home Infrastructure** owns the future PVE 24/7 canonical knowledge foundation and server-side synchronization authority.
+**Home Infrastructure** owns the accepted PVE 24/7 canonical knowledge foundation and server-side synchronization authority.
 
 **Personal Agents Infrastructure** owns the `ai-node` active RW replica and local AI producers/consumers after Home cutover.
 
 **Cloud Infrastructure** owns the `edge` active RW replica and Cloud-side n8n/Hermes/cloud-AI integration.
 
-Until Home migration reaches explicit acceptance, the existing `ai-node:/srv/ai-data/knowledge/obsidian` remains factual current runtime state.
+Home Infrastructure records `KNOWLEDGE_FABRIC_CANONICAL_CUTOVER=PASS` on 2026-09-18: PVE `/srv/knowledge/obsidian` is canonical and `ai-node:/srv/ai-data/knowledge/obsidian` is an active RW Syncthing replica. This is accepted cross-project evidence; a fresh Home/PAI runtime audit remains mandatory before Cloud Stage 5 deployment.
 
 ### Stage 5 placement
 
@@ -257,7 +257,7 @@ Accepted architecture:
 - Home LAN `192.168.1.0/24`;
 - `edge` becomes ordinary host-native service peer;
 - `edge` gets Home LAN reachability but not Home `0.0.0.0/0` Internet exit;
-- Home/PAI clientless hosts reach `edge` through gateway-level routing via CT300;
+- Home/PAI clientless hosts use accepted public edge ingress; LAN-wide overlay routing via CT300 remains deferred until a concrete private-only workload requires it; VM100/MikroTik were unchanged in Stage 3;
 - reuse `.lan` split DNS;
 - reuse existing NetBird-managed masquerade before considering duplicate NAT;
 - direct WireGuard/Tailscale rejected as duplicate backbones;
@@ -301,7 +301,7 @@ Finite Cloud infrastructure closes only after selected services, cross-site inte
 
 ### Messaging/bot interface
 
-**DEFERRED TO USER WORKFLOWS.** Treat it as an interface to workflows, not another orchestration platform.
+Mattermost and its native Hermes/n8n integrations are deployed and accepted in Stage 4. Additional user-specific bot commands and automation remain deferred to user workflows; they do not constitute another orchestration platform.
 
 ### Limited failover / secondary endpoint
 
@@ -344,6 +344,8 @@ Stage 02.5 is **COMPLETE / ACCEPTED**.
 
 `CLOUD_STAGE_02_5_FINAL_SCOPE_ACCEPTANCE=PASS`
 
-Next production stage:
+Stages 3 and 4 are COMPLETE / ACCEPTED. Next finite infrastructure stage:
 
-`03 — Edge Cross-site Connectivity Foundation`
+`05 — Edge Knowledge Replication & Data Integration`
+
+Begin with the required cross-project read-only entry audit; this scaffold does not authorize deployment.

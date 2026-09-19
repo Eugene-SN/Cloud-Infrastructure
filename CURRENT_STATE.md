@@ -70,11 +70,13 @@ Stage 3 is COMPLETE / ACCEPTED. Final record: `STAGE_03_ACCEPTANCE_2026-09-18.md
 
 The previous future-architecture constraint that `ai-node:/srv/ai-data/knowledge/obsidian` must permanently remain canonical is superseded.
 
-**Current factual runtime remains unchanged until Home Infrastructure completes its migration.** The existing vault on `ai-node` remains the current source at this checkpoint.
+Home Infrastructure records `KNOWLEDGE_FABRIC_CANONICAL_CUTOVER=PASS` on 2026-09-18: PVE `/srv/knowledge/obsidian` is canonical and `ai-node:/srv/ai-data/knowledge/obsidian` is an active RW Syncthing replica. This is accepted cross-project evidence; a fresh Home/PAI runtime audit remains mandatory before Cloud Stage 5 deployment.
 
-Accepted future ownership boundary:
+Source: [Home Infrastructure CURRENT_STATE.md](https://github.com/Eugene-SN/Home-Infrastructure/blob/main/CURRENT_STATE.md). Home-selected synchronization is Syncthing `2.1.5`; CT220 consumes the PVE vault read-only and CT208 backup/restore is accepted. Cloud replica deployment has not been accepted.
 
-- **Home Infrastructure** owns the PVE 24/7 canonical knowledge foundation, PVE-side synchronization service, Home consumers and Home-side backup integration;
+Accepted ownership boundary:
+
+- **Home Infrastructure** owns the accepted PVE 24/7 canonical knowledge foundation, PVE-side synchronization service, Home consumers and Home-side backup integration;
 - **Personal Agents Infrastructure** owns the `ai-node` active RW synchronized replica and local n8n/OpenClaw/vLLM/OCR/RAG consumers/producers after Home cutover;
 - **Cloud Infrastructure** owns only the `edge` active RW synchronized replica and n8n/Hermes/cloud-AI integration.
 
@@ -86,14 +88,15 @@ MacBook/iPhone/iPad Obsidian synchronization is completely outside Cloud Infrast
 
 ## Final remaining roadmap
 
-1. **Stage 4 — Edge Hermes Agent Runtime**;
-2. **Stage 5 — Edge Knowledge Replication & Data Integration**;
-3. **Stage 6 — Edge Backrest & Recovery**;
-4. **Stage 7 — Edge Maintenance & Update**, including separate Codex `update.escloud.us` substage;
-5. **Stage 8 — Edge Monitoring, Heartbeats & Alerts**;
-6. **Stage 9 — Edge Cloud Portal**, including separate Codex `app.escloud.us` substage;
-7. **Stage 10 — Edge Final Integrated Infrastructure Acceptance**;
-8. post-infrastructure **Automation & User Workflows** as a continuous workstream.
+Stage 4 is complete and accepted; its GitHub persistence is in `04.3-edge-hermes-recovery-completion` (open draft PR #1 at the 2026-09-19 audit). The older `main` checkpoint is not evidence of unfinished runtime work.
+
+1. **Stage 5 — Edge Knowledge Replication & Data Integration**;
+2. **Stage 6 — Edge Backrest & Recovery**;
+3. **Stage 7 — Edge Maintenance & Update**, including separate Codex `update.escloud.us` substage;
+4. **Stage 8 — Edge Monitoring, Heartbeats & Alerts**;
+5. **Stage 9 — Edge Cloud Portal**, including separate Codex `app.escloud.us` substage;
+6. **Stage 10 — Edge Final Integrated Infrastructure Acceptance**;
+7. post-infrastructure **Automation & User Workflows** as a continuous workstream.
 
 The old conditional `Remaining Infrastructure Services` stage is removed because Stage 02.5 selected no additional standalone infrastructure product requiring that slot.
 
@@ -151,7 +154,7 @@ Acceptance record: `EDGE_REBOOT_LIFECYCLE_FIX_ACCEPTANCE_2026-09-18.md`.
 - fresh operator/auth state;
 - public `auth.escloud.us` accepted.
 
-Protected private web namespace includes `n8n`, `code`, future `app`, `backup`, `ops`, `update`, `docs`, `cloud` and `sync`. `mail.escloud.us` intentionally uses native mail-stack authentication. Stage 4D also accepts `chat.escloud.us` as an explicit native-client exception: Mattermost will use Mattermost-native authentication without Authelia.
+Protected private web namespace includes `n8n`, `code`, future `app`, `backup`, `ops`, `update`, `docs`, `cloud` and `sync`. `mail.escloud.us` intentionally uses native mail-stack authentication. Stage 4D also accepts `chat.escloud.us` as an explicit native-client exception: Mattermost uses Mattermost-native authentication without Authelia.
 
 ## TLS
 
@@ -184,7 +187,7 @@ Current SAN set includes `escloud.us`, `app`, `auth`, `backup`, `chat`, `cloud`,
 
 ### Antigravity CLI
 
-- version `1.2.5`;
+- current accepted version `1.2.6` (Stage 4G); Stage 2/4B accepted `1.2.5` historically;
 - fresh Google OAuth;
 - Remote Control instance `edge`;
 - persistent user service accepted.

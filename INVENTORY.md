@@ -67,7 +67,7 @@ Final record: `STAGE_03_ACCEPTANCE_2026-09-18.md`.
 | n8n | LIVE / ACCEPTED | `2.39.7`; `127.0.0.1:15678`; fresh one-owner state; `n8n.escloud.us`; Authelia protected |
 | CloudCLI | LIVE / ACCEPTED | `1.37.3`; systemd; `127.0.0.1:18140`; fresh local user; `code.escloud.us`; Authelia protected |
 | Codex CLI | LIVE / ACCEPTED | `0.154.0`; official standalone; fresh ChatGPT auth; managed Remote Control via Unix socket |
-| Antigravity CLI | LIVE / ACCEPTED | `1.2.5`; fresh Google OAuth; instance `edge`; persistent user service, Online confirmed |
+| Antigravity CLI | LIVE / ACCEPTED | current `1.2.6` accepted in Stage 4G; Stage 2/4B historical `1.2.5`; Google OAuth; instance `edge`; persistent user service |
 | Stalwart | LIVE / ACCEPTED | `0.16.22`; public SMTP25/SMTPS465/IMAPS993; useful mail data migrated; fresh auth/DKIM |
 | Bulwark | LIVE / ACCEPTED | `1.9.2`; `127.0.0.1:18084`; fresh session/admin state; default webmail route on `mail.escloud.us` |
 
@@ -181,10 +181,10 @@ Detailed record: `STAGE_02_5_CONNECTIVITY_SELECTION_ACCEPTANCE_2026-09-17.md`.
 
 Status: **ACCEPTED INTEGRATION BOUNDARY; DEPLOYMENT DEFERRED TO STAGE 5**.
 
-- Home Infrastructure owns the future PVE canonical knowledge foundation.
+- Home Infrastructure owns the accepted PVE canonical knowledge foundation at `/srv/knowledge/obsidian`.
 - Personal Agents Infrastructure owns the `ai-node` active RW replica and local AI consumers/producers after Home cutover.
 - Cloud Infrastructure owns only the `edge` active RW replica and Cloud-side integration.
-- Until Home explicitly accepts the PVE canonical migration, `ai-node:/srv/ai-data/knowledge/obsidian` remains the factual current runtime source.
+- Home accepted canonical cutover and Syncthing `2.1.5` replication on 2026-09-18; `ai-node:/srv/ai-data/knowledge/obsidian` is the active RW replica. CT208 canonical backup/restore is accepted. These are cross-project records requiring live revalidation at Cloud Stage 5 entry.
 - Stage 5 must begin with a fresh cross-project read-only audit and reuse the Home-accepted server-side synchronization mechanism by default.
 - MacBook/iPhone/iPad Obsidian synchronization is outside Cloud Infrastructure scope.
 - Filestash, SFTPGo, Syncthing, LiveSync/CouchDB or other Cloud-side file/sync products are not selected by assumption.

@@ -341,7 +341,21 @@ Stage 5 is now eligible to begin under its own mandatory entry audit.
 
 Home Infrastructure owns the PVE canonical knowledge foundation. Personal Agents Infrastructure owns the `ai-node` local active replica and local AI producers/consumers. Cloud Infrastructure owns only the `edge` replica/data integration.
 
-The previous permanent assumption that `ai-node:/srv/ai-data/knowledge/obsidian` must remain canonical is superseded for future architecture. Until Home Infrastructure explicitly accepts its migration, the existing `ai-node` vault remains the factual current runtime source.
+Home Infrastructure records `KNOWLEDGE_FABRIC_CANONICAL_CUTOVER=PASS` on 2026-09-18: PVE `/srv/knowledge/obsidian` is canonical and `ai-node:/srv/ai-data/knowledge/obsidian` is an active RW Syncthing replica. This is accepted cross-project evidence; a fresh Home/PAI runtime audit remains mandatory before Cloud Stage 5 deployment.
+
+### Accepted dependency evidence reconciled on 2026-09-19
+
+[Home Infrastructure CURRENT_STATE.md](https://github.com/Eugene-SN/Home-Infrastructure/blob/main/CURRENT_STATE.md) records:
+- canonical PVE vault `/srv/knowledge/obsidian`, with `KNOWLEDGE_FABRIC_CANONICAL_CUTOVER=PASS`;
+- Syncthing `2.1.5` on PVE and ai-node, direct static TCP/22000, sendreceive folder `knowledge-obsidian`;
+- localhost-only management APIs, discovery/relays/NAT traversal and automatic self-upgrades disabled;
+- bidirectional physical-content verification and approximately two-second Markdown propagation after watcher tuning;
+- CT220 canonical read-only mount switched to PVE; obsolete canonical CIFS dependency removed;
+- CT208 full-vault backup/restore accepted and PVE production backup policy enabled.
+
+PAI records an independent local Knowledge backup with `KNOWLEDGE_AI_NODE_DEDICATED_LOCAL_BACKUP=PASS`. These existing acceptances remove the documentary uncertainty about Home cutover; they do not substitute for fresh health, permissions, conflict/outage and capacity checks before adding edge.
+
+Cloud Stage 5 deployment remains unaccepted. Reuse Syncthing by default; do not reopen product selection without a demonstrated incompatibility.
 
 ### Mandatory Stage 5 entry audit
 
@@ -404,6 +418,15 @@ Deploy/configure Backrest + Restic against the substantially complete server. De
 
 A usable restore path is mandatory before Stage 7 update testing.
 
+Planning checklist:
+- inventory persistent state and restore ordering for mail, n8n credentials/workflows, Mattermost/PostgreSQL, Hermes, auth/TLS and host configuration;
+- decide application-consistent capture, exclusions, off-host recovery topology and protected key recovery;
+- retain the accepted independent edge Knowledge backup role: whole vault, no D5 tier-copy for that dedicated chain; planned windows 04:00/10:00/16:00/22:00 local, unchanged-snapshot skipping and monthly check/prune;
+- reconcile the optional reduced non-canonical history (approximately three months) before activation; do not copy PVE's canonical one-year policy automatically;
+- verify actual restore into an isolated destination, including application usability and access to required recovery keys.
+
+Cloud-wide off-site disaster recovery is distinct from the dedicated local Knowledge chain. Same-host checkpoints alone do not close this stage.
+
 ## Stage 7 — Edge Maintenance & Update
 
 ### Work branch
@@ -418,6 +441,8 @@ Dedicated Codex substage:
 
 This begins only after the real Semaphore/update backend, status model and control contract are known. `update.escloud.us` remains separate from `app.escloud.us`.
 
+Acceptance planning: define each component's supported update path, pre-update backup gate, health checks, failure reporting and rollback/recovery. Verify one controlled update/recovery scenario after Stage 6, then build the UI against that tested contract.
+
 ## Stage 8 — Edge Monitoring, Heartbeats & Alerts
 
 ### Work branch
@@ -427,6 +452,8 @@ This begins only after the real Semaphore/update backend, status model and contr
 Research/finalize and deploy production monitoring against the substantially complete infrastructure, including as selected external availability, cross-site connectivity health, selected Home/PVE/`ai-node` heartbeats, knowledge-sync health, Backrest health, Semaphore/update state and alert delivery.
 
 Avoid a heavyweight metrics/logging platform unless concrete requirements justify it.
+
+Acceptance planning: select the monitoring implementation only after requirements are reconciled; distinguish Internet/service outages, loss of Home connectivity and unavailable inference. Verify meaningful failure and recovery notifications, backup freshness, synchronization health and maintenance suppression without repetitive unchanged-state alerts.
 
 ## Stage 9 — Edge Cloud Portal
 
@@ -442,6 +469,8 @@ Dedicated Codex substage:
 
 The portal is navigation plus concise infrastructure/status presentation. It does not absorb detailed maintenance/update controls from `update.escloud.us`.
 
+Acceptance planning: verify authenticated access, actual service links, current status and explicit stale/unavailable-data presentation using the accepted Stage 8 sources.
+
 ## Stage 10 — Edge Final Integrated Infrastructure Acceptance
 
 ### Work branch
@@ -449,6 +478,8 @@ The portal is navigation plus concise infrastructure/status presentation. It doe
 `10 — Edge Final Integrated Infrastructure Acceptance`
 
 Perform final server-wide acceptance only after all selected infrastructure services, cross-site connectivity/data integration, Backrest restore, Semaphore/update, monitoring/alerts, `app.escloud.us` and final cleanup are accepted.
+
+Acceptance planning: reconcile runtime inventory with GitHub; verify access, ingress/TLS, service persistence, cross-site/data integration, recovery, update status, alerts and portal behavior. Record known accepted constraints separately from failures and remove only confirmed temporary artifacts. Any disruptive recovery/reboot scenario belongs to separately authorized implementation/acceptance work, not the current read-only audit.
 
 Stage 10 closes the finite Cloud Infrastructure build.
 

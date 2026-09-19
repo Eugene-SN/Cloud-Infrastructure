@@ -792,3 +792,16 @@ Root recovery now confirms Authelia v4.39.27, no OIDC-related config keys or gen
 
 **Supersedes:** all remaining current-state descriptions of Stage 4C/F/G/H/I as pending. It does not rewrite the historical state recorded by earlier acceptance/audit artifacts.
 
+---
+
+## 2026-09-19 — Read-only checkpoint and cross-project documentation reconciliation
+
+**Status:** EVIDENCE RECONCILIATION ONLY; no new architecture decision or runtime deployment.
+
+- Stage 4 closure is preserved: `STAGE4_FINAL_ACCEPTANCE=PASS`, recorded on 2026-09-18 in `04.3-edge-hermes-recovery-completion`. The open draft PR #1 and stale main checkpoint do not reopen the completed stage.
+- Read-only edge inspection on 2026-09-19 confirmed active/enabled Gateway and Dashboard with `NRestarts=0`, the accepted Hermes commit/config hash, loopback Dashboard, private bridge API and one active production Hermes n8n workflow with two credential records. It did not repeat E2E or reboot acceptance.
+- [Home Infrastructure CURRENT_STATE.md](https://github.com/Eugene-SN/Home-Infrastructure/blob/main/CURRENT_STATE.md) (content blob `7c70ae1069568c2538f3b14d518765e8861b6fe3`) records accepted PVE canonical cutover, Syncthing 2.1.5, CT220 cutover/legacy cleanup and CT208 backup/restore plus production policy.
+- [PAI CURRENT_STATE.md](https://github.com/Eugene-SN/Personal-Agents-Infrastructure/blob/main/CURRENT_STATE.md) (content blob `41a827a5338d976caf2cace92e1f1853a45cb1c9`) records ai-node as non-canonical and its accepted dedicated local Knowledge backup.
+- These later Home/PAI records supersede Cloud current-state wording that describes Home cutover as still pending. Historical acceptance records and earlier decision chronology remain unchanged.
+- Cloud Stage 5 remains undeployed/unaccepted. Its fresh Home/PAI/Cloud entry audit is still mandatory. PVE's documented completion is not a fresh remote runtime measurement.
+- Remaining stages are 5 through 10; the existing lifecycle ordering and product anchors remain unchanged. Detailed additions to the roadmap are planning/acceptance checklists, not implementation authorization.

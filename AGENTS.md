@@ -177,7 +177,7 @@ Do not implement user-specific workflows as part of Stage 4 infrastructure accep
 
 The permanent assumption that `ai-node:/srv/ai-data/knowledge/obsidian` must remain canonical is superseded for future architecture.
 
-Current factual runtime remains the existing `ai-node` vault until Home Infrastructure explicitly accepts its PVE canonical migration.
+Home Infrastructure records `KNOWLEDGE_FABRIC_CANONICAL_CUTOVER=PASS` on 2026-09-18: PVE `/srv/knowledge/obsidian` is canonical and `ai-node:/srv/ai-data/knowledge/obsidian` is an active RW Syncthing replica. This is accepted cross-project evidence; a fresh Home/PAI runtime audit remains mandatory before Cloud Stage 5 deployment.
 
 Future ownership boundary:
 

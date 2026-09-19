@@ -28,8 +28,8 @@ Unless superseded by a later ACCEPTED decision:
 
 1. `edge` is the external 24/7 Cloud Infrastructure node and complements Home Infrastructure and Personal Agents Infrastructure rather than duplicating them.
 2. `edge` remains independently useful without Home/PAI connectivity.
-3. Home Infrastructure owns the future PVE canonical knowledge foundation. Cloud Infrastructure does not redesign or duplicate that authority.
-4. Until Home explicitly accepts PVE canonical migration, the existing `ai-node:/srv/ai-data/knowledge/obsidian` remains factual current runtime state rather than the final architecture target.
+3. Home Infrastructure owns the accepted PVE canonical knowledge foundation. Cloud Infrastructure does not redesign or duplicate that authority.
+4. Home accepted canonical cutover on 2026-09-18: PVE `/srv/knowledge/obsidian` is canonical and `ai-node:/srv/ai-data/knowledge/obsidian` is an active RW Syncthing replica. Cloud Stage 5 must revalidate that accepted cross-project state before deployment.
 5. After Home cutover, `edge` is an active synchronized RW knowledge replica/producer, not canonical authority.
 6. Apple-device/Obsidian integration is outside Cloud Infrastructure and belongs to a separate late Home Infrastructure user-integration branch.
 7. VPN/DPI-bypass functionality and the private infrastructure backbone are separate concerns.

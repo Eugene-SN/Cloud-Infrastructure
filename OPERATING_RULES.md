@@ -280,10 +280,10 @@ Preserve the final Stage 4 records and do not repeat accepted E2E tests without 
 
 Stage 5 is **Edge Knowledge Replication & Data Integration** and is owned as an integration stage, not a second knowledge-platform design project.
 
-- Home Infrastructure owns the future PVE canonical knowledge foundation.
+- Home Infrastructure owns the accepted PVE canonical knowledge foundation at `/srv/knowledge/obsidian`.
 - Personal Agents Infrastructure owns the `ai-node` active replica and local AI consumers/producers after Home cutover.
 - Cloud Infrastructure owns only the `edge` active RW replica and Cloud-side consumers/producers.
-- Until Home explicitly accepts PVE canonical migration, the current `ai-node:/srv/ai-data/knowledge/obsidian` remains factual runtime state.
+- Home accepted PVE canonical cutover on 2026-09-18; `ai-node:/srv/ai-data/knowledge/obsidian` is now an active RW replica according to that record. Revalidate the live cross-project state at Stage 5 entry.
 - Stage 5 begins with a fresh cross-project read-only audit and reuses the Home-accepted server-side synchronization mechanism by default.
 - MacBook/iPhone/iPad Obsidian synchronization is outside Cloud Infrastructure scope.
 

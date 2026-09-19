@@ -2,7 +2,7 @@
 
 ## Status
 
-**ACCEPTED target namespace as of 2026-09-17, updated for the Stage 02.5 dependency-aware roadmap.**
+**ACCEPTED target namespace reconciled on 2026-09-19 against Stage 4 final acceptance.**
 
 This file defines the intended `escloud.us` hostname allocation for Cloud Infrastructure. It is a naming/ingress contract, not proof that every listed service is already deployed.
 
@@ -16,6 +16,8 @@ This file defines the intended `escloud.us` hostname allocation for Cloud Infras
 | `n8n.escloud.us` | n8n automation UI/API/webhooks | ACTIVE |
 | `code.escloud.us` | CloudCLI workspace/interface | ACTIVE |
 | `mail.escloud.us` | Stalwart APIs/admin/JMAP plus Bulwark webmail | ACTIVE |
+| `hermes.escloud.us` | Hermes Dashboard and Desktop Remote Gateway | ACTIVE; native self-hosted OIDC through Authelia; loopback backend |
+| `chat.escloud.us` | Mattermost collaboration/control | ACTIVE; Mattermost-native authentication; no Authelia proxy auth |
 
 ## Accepted future functional names
 
@@ -33,7 +35,6 @@ This file defines the intended `escloud.us` hostname allocation for Cloud Infras
 | FQDN | Reserved role | State |
 |---|---|---|
 | `docs.escloud.us` | technical documentation library or documentation-facing endpoint | RESERVED; no service implied |
-| `chat.escloud.us` | potential future chat/messaging/control endpoint | RESERVED; no service implied |
 
 Reserved names do not authorize premature service deployment.
 
@@ -52,7 +53,7 @@ Application/service A records point to the current public IPv4 of `edge`, `45.92
 `edge.escloud.us` is the infrastructure hostname. Current intended records are:
 
 - `A edge.escloud.us -> 45.92.156.17`
-- `AAAA edge.escloud.us -> 2a0c:b847:ffff:283::a`
+- The former `AAAA edge.escloud.us -> 2a0c:b847:ffff:283::a` is an earlier documented allocation, not evidence of current IPv6 reachability. Current accepted edge public networking is IPv4-only. Verify authoritative DNS separately before any DNS change; this reconciliation changes documentation only.
 
 `edge.escloud.us` does not require an nginx vhost, Authelia rule, or inclusion in the shared application TLS certificate unless an HTTPS service is deliberately assigned to that hostname later.
 
@@ -72,6 +73,7 @@ The intended namespace includes:
 - `cloud.escloud.us`
 - `code.escloud.us`
 - `docs.escloud.us`
+- `hermes.escloud.us`
 - `mail.escloud.us`
 - `n8n.escloud.us`
 - `ops.escloud.us`
@@ -92,7 +94,9 @@ Protected application names are expected to include, when corresponding services
 - `backup.escloud.us`;
 - `ops.escloud.us`;
 - `update.escloud.us`;
-- reserved future `docs.escloud.us`, `chat.escloud.us`, `cloud.escloud.us`, and `sync.escloud.us` where appropriate.
+- future/reserved `docs.escloud.us`, `cloud.escloud.us`, and `sync.escloud.us` where appropriate.
+
+`chat.escloud.us` uses Mattermost-native authentication without Authelia. `hermes.escloud.us` uses Hermes-native self-hosted OIDC with Authelia as IdP; nginx does not use `auth_request` for Hermes. See `STAGE_04C_FINAL_ACCEPTANCE_2026-09-18.md` and `STAGE_04E_FINAL_ACCEPTANCE_2026-09-18.md`.
 
 `mail.escloud.us` is not blanket-assigned to generic Authelia protection because Stalwart/JMAP/webmail has protocol/API-specific routing and authentication semantics; its ingress is handled separately.
 
