@@ -371,7 +371,7 @@ Accepted LXC target after the runtime packaging gate:
 - 1 vCPU;
 - 1024 MiB RAM;
 - 512 MiB swap limit;
-- 8 GiB rootfs;
+- 16 GiB rootfs;
 - onboot enabled;
 - canonical vault remains on `pve/knowledge` and is bind-mounted RW from `/srv/knowledge/obsidian`;
 - LinuxServer Obsidian/Selkies inside the LXC is the selected runtime packaging.
