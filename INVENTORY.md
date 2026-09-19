@@ -179,7 +179,7 @@ Detailed record: `STAGE_02_5_CONNECTIVITY_SELECTION_ACCEPTANCE_2026-09-17.md`.
 
 ## Stage 5 knowledge/data boundary
 
-Status: **05.1 COMPLETE / ACCEPTED; 05.2 NEXT; 05.3 PLANNED**.
+Status: **05.1 COMPLETE / ACCEPTED; 05.2 COMPLETE / ACCEPTED; 05.3 PLANNED**.
 
 Authoritative record: `STAGE_05_1_FINAL_KNOWLEDGE_RUNTIME_ARCHITECTURE_ACCEPTANCE_2026-09-19.md`.
 
@@ -203,17 +203,25 @@ Fresh PVE Obsidian-readiness inventory:
 
 Accepted target inventory:
 
-### PVE / CT210 `obsidian` — production target, currently absent
+### PVE / CT210 `obsidian` — LIVE / ACCEPTED
 
 - PVE remains canonical RW Knowledge authority, Syncthing hub and primary durable recovery authority;
-- the comparative CT210 used for Stage 05.2 runtime evaluation was fully destroyed on 2026-09-19; its config and experimental rootfs are absent, and the canonical vault was never mounted or mutated by that experiment;
-- production CT210 has not yet been deployed;
-- accepted production network identity remains CT210 `obsidian`, static `192.168.1.15/24`, gateway `192.168.1.254`, DNS `192.168.1.1`, search domain `lan`;
-- accepted production LXC envelope: 1 vCPU, 512 MiB RAM, 256 MiB swap, 8 GiB rootfs, onboot;
-- canonical vault remains outside rootfs and is bind-mounted RW from `/srv/knowledge/obsidian`;
-- selected runtime packaging: current stable Ignis in the dedicated LXC;
-- Ignis acceptance on an isolated test vault passed filesystem bridge, external-change visibility, File Recovery baseline, `ob`/Headless Sync presence and restart persistence;
-- runtime role is private `obsidian.lan` WebUI plus required Obsidian-aware File Recovery/index/headless bridge capabilities; Syncthing and Restic remain independent infrastructure layers.
+- CT210 is a fresh dedicated production LXC: 1 vCPU, 512 MiB RAM, 256 MiB swap, 8 GiB rootfs, onboot enabled;
+- network identity: `192.168.1.15/24`, gateway `192.168.1.254`, DNS `192.168.1.1`, search domain `lan`;
+- canonical vault remains outside rootfs at PVE `/srv/knowledge/obsidian`, mounted RW into CT210 at the same path;
+- canonical root contract is `0:990:2775`; Ignis writes as `999:990`;
+- Ignis vault exposure uses `/opt/obsidian/vaults/obsidian -> /srv/knowledge/obsidian` plus the same absolute canonical bind inside the container, preventing Ignis startup `chown -R /vaults` from traversing and mutating canonical ownership;
+- Ignis current production release path is upstream `nobbe/ignis:latest`; deployed Ignis release is 0.8.11 with Obsidian 1.12.7 and `obsidian-headless` 0.0.14;
+- Docker Engine 29.8.1 and Compose 5.5.1 run inside CT210;
+- Ignis backend is published only on CT loopback `127.0.0.1:8080`;
+- Caddy provides private `https://obsidian.lan` on CT210 with an internal CA; MikroTik static DNS resolves `obsidian.lan -> 192.168.1.15`;
+- production Caddy root CA SHA256 fingerprint: `B0:C6:CC:50:4D:B2:20:AE:08:09:21:99:9C:95:D5:6D:DB:D0:D4:50:CD:4E:8D:8A:D4:D0:B6:D3:6E:44:93:4A`;
+- macOS client trust and browser access were verified; private HTTPS has no certificate warning after trust installation;
+- WebUI create/edit/delete functionality is accepted; Obsidian `Use native menus` / system context menu must remain disabled for Ignis browser compatibility;
+- File Recovery core plugin is enabled/configured; full restore E2E was not repeated in production;
+- final CT reboot acceptance passed: Docker stack autostarts, DNS/HTTPS recover, and canonical ownership remains unchanged;
+- post-reboot snapshot: 106 MiB LXC memory used, 0 swap used; Caddy ~51.84 MiB and Ignis ~89.8 MiB container memory at the measured instant;
+- final acceptance record: `STAGE_05_2_FINAL_ACCEPTANCE_2026-09-19.md`.
 
 ### ai-node
 
@@ -239,7 +247,7 @@ Accepted target inventory:
 | 3 | Cross-site Connectivity Foundation | COMPLETE / ACCEPTED; `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS` |
 | 4 | Hermes Agent Runtime | COMPLETE / ACCEPTED; `STAGE4_FINAL_ACCEPTANCE=PASS` |
 | 05.1 | Cross-project Knowledge Reconciliation & Target Architecture | COMPLETE / ACCEPTED |
-| 05.2 | PVE Canonical Obsidian Runtime & WebUI | NEXT / IMPLEMENTATION NOT STARTED |
+| 05.2 | PVE Canonical Obsidian Runtime & WebUI | COMPLETE / ACCEPTED; `STAGE05_2_PVE_CANONICAL_OBSIDIAN_RUNTIME=PASS` |
 | 05.3 | Edge Knowledge Replication & Data Integration | PLANNED / IMPLEMENTATION NOT STARTED |
 | 6 | Backrest & Recovery | PRODUCT DIRECTION ACCEPTED; topology research pending |
 | 7 | Maintenance & Update | Semaphore accepted; deploy only after Stage 6 restore acceptance |
