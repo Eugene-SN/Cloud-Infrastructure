@@ -9,12 +9,13 @@
 **Stage 3 — Edge Cross-site Connectivity Foundation — COMPLETE / ACCEPTED**  
 **Stage 4 — Edge Hermes Agent Runtime — COMPLETE / ACCEPTED**  
 **Stage 05.1 — Cross-project Knowledge Reconciliation & Target Architecture — COMPLETE / ACCEPTED**  
-**Stage 05.2 — Edge Knowledge Replication & Data Integration — IMPLEMENTATION NOT STARTED**
+**Stage 05.2 — PVE Canonical Obsidian Runtime & WebUI — NEXT / IMPLEMENTATION NOT STARTED**  
+**Stage 05.3 — Edge Knowledge Replication & Data Integration — PLANNED / IMPLEMENTATION NOT STARTED**
 
 `EDGE_STAGE2_FINAL_INTEGRATED_ACCEPTANCE=PASS` on 2026-09-17.  
 `CLOUD_STAGE_02_5_FINAL_SCOPE_ACCEPTANCE=PASS` on 2026-09-18.  
 `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS` on 2026-09-18.  
-`STAGE05_1_KNOWLEDGE_RECONCILIATION_TARGET_ARCHITECTURE=PASS` on 2026-09-19.  
+`STAGE05_1_FINAL_KNOWLEDGE_RUNTIME_ARCHITECTURE=PASS` on 2026-09-19.  
 `STAGE4_FINAL_ACCEPTANCE=PASS` on 2026-09-18.
 
 `STAGE4F_STABLE_DOCKER_BRIDGE_HARDENING=PASS` on 2026-09-19.
@@ -73,60 +74,64 @@ Stage 3 is COMPLETE / ACCEPTED. Final record: `STAGE_03_ACCEPTANCE_2026-09-18.md
 
 ### Data / knowledge project boundary
 
-Detailed accepted target: `STAGE_05_1_KNOWLEDGE_RECONCILIATION_TARGET_ARCHITECTURE_ACCEPTANCE_2026-09-19.md`.
+Latest accepted target: `STAGE_05_1_FINAL_KNOWLEDGE_RUNTIME_ARCHITECTURE_ACCEPTANCE_2026-09-19.md`.
 
-The fresh 2026-09-19 Stage 5 reconciliation is complete:
+Fresh accepted evidence:
 
 - `PVE_STAGE5_ENTRY_AUDIT=PASS`;
 - `AI_NODE_STAGE5_ENTRY_AUDIT=PASS`;
 - `EDGE_STAGE5_ENTRY_AUDIT=PASS`;
+- `PVE_OBSIDIAN_RESOURCE_READINESS_AUDIT=PASS`;
 - no Stage 5 production mutation has occurred.
 
-Confirmed runtime:
+Confirmed current runtime:
 
-- PVE `/srv/knowledge/obsidian` is canonical, backed by `pve/knowledge`, with Syncthing `2.1.5`;
-- PVE ↔ ai-node `knowledge-obsidian` is connected and 100% complete;
-- ai-node `/srv/ai-data/knowledge/obsidian` is an active RW non-canonical replica;
-- ai-node n8n is a confirmed RW consumer;
-- CT220 uses the PVE canonical vault read-only;
+- PVE `/srv/knowledge/obsidian` is canonical on dedicated `pve/knowledge` 32 GiB ext4 storage;
+- PVE Syncthing `2.1.5` ↔ ai-node `knowledge-obsidian` is healthy and 100% complete;
+- ai-node `/srv/ai-data/knowledge/obsidian` is an active RW non-canonical replica and n8n RW source;
+- CT220 uses PVE canonical Knowledge read-only;
 - CT208 Knowledge backup/restore and production policy remain accepted;
-- edge has no Syncthing installation or Knowledge tree yet;
-- edge can reach PVE and ai-node TCP/22000 through the accepted NetBird/Home route;
-- edge Hermes and n8n both use numeric UID/GID `1000:1000`;
-- edge has no public Syncthing listeners/rules.
+- edge has no Syncthing/Knowledge tree yet;
+- edge can reach PVE/ai-node TCP/22000 through the accepted private path.
+
+Fresh PVE resource state for the accepted Obsidian placement:
+
+- Intel Core i3-N305, 8 cores;
+- ~15 GiB RAM total, ~6.5 GiB available;
+- 8 GiB host swap total, ~5.6 GiB free;
+- existing host swap is sufficient; no swap expansion is planned without measured pressure.
 
 Accepted target roles:
 
-- **PVE:** canonical data/recovery authority and Syncthing hub;
-- **ai-node:** internal active RW PAI/application replica; preferred future private Obsidian/WebUI host;
-- **edge:** active RW Cloud/agent replica; future Internet-reachable data endpoint for external/iOS client applications, but no Obsidian runtime/WebUI on edge.
+- **PVE:** canonical data/recovery authority + Syncthing hub + single full server-side Obsidian runtime, File Recovery and private `obsidian.lan` WebUI.
+- **ai-node:** secondary RW PAI/application replica; n8n/OCR/RAG/AI consumers; no server-side Obsidian runtime/WebUI by default.
+- **edge:** secondary RW Cloud/agent replica; future global iOS/macOS/Windows/Android client-access endpoint; no WebUI and no Obsidian runtime in Stage 5.
 
-Accepted data topology remains PVE ↔ ai-node plus PVE ↔ edge. Direct edge ↔ ai-node Syncthing is intentionally omitted because edge -> Home connectivity itself depends on CT300 on PVE.
+Stage split:
 
-Stage 05.2 is centered on edge deployment, but PVE may be inspected and changed where required for edge↔PVE Syncthing integration and verification, including edge Device ID authorization/folder sharing. ai-node remains a reference/non-regression node and is not redesigned; the future ai-node Obsidian WebUI is not deployed in Stage 5. OpenClaw behavior/current Knowledge relationship is preserved.
+- **05.1:** architecture/reconciliation — COMPLETE / ACCEPTED.
+- **05.2:** deploy dedicated PVE Obsidian LXC, full runtime, File Recovery and private `obsidian.lan`.
+- **05.3:** deploy edge replica and Cloud-side integration.
 
-Edge target path contract:
+Accepted 05.2 initial LXC envelope: 1 vCPU, 1024 MiB RAM, 512 MiB swap, ~4 GiB rootfs, onboot. The canonical vault remains outside the LXC rootfs and is bind-mounted from `/srv/knowledge/obsidian`.
 
-- `/srv/knowledge` → `core:core 0755`;
-- `/srv/knowledge/obsidian` → `core:core 2775`;
-- Syncthing under `core`;
-- n8n RW mount target `/home/node/knowledge-canonical`;
-- Hermes/Codex/Antigravity direct host-path access.
+Runtime packaging for 05.2 remains a deployment-method gate: native official Obsidian + native Selkies is preferred only if it proves simpler/easier to maintain than LinuxServer Obsidian/Selkies inside the dedicated LXC.
 
-Older blanket wording that Apple-device/Obsidian integration is completely outside Cloud is superseded in part. Future external client **data access through edge** for iOS/macOS/Windows is an accepted direction; exact client-access mechanism is not yet selected and is explicitly not deployed in Stage 5.
+Future external client-access implementation through edge is accepted architecture but explicitly outside Stage 5. Edge Obsidian runtime remains conditional future work.
 
 
 ## Final remaining roadmap
 
 Stage 4 is complete and accepted. PR #1 was merged into `main` on 2026-09-19 as commit `c4d402175ea1a049f20a93ab77daa0b068071277`; no Stage 4 branch checkpoint remains pending.
 
-1. **Stage 5 — Edge Knowledge Replication & Data Integration**;
-2. **Stage 6 — Edge Backrest & Recovery**;
-3. **Stage 7 — Edge Maintenance & Update**, including separate Codex `update.escloud.us` substage;
-4. **Stage 8 — Edge Monitoring, Heartbeats & Alerts**;
-5. **Stage 9 — Edge Cloud Portal**, including separate Codex `app.escloud.us` substage;
-6. **Stage 10 — Edge Final Integrated Infrastructure Acceptance**;
-7. post-infrastructure **Automation & User Workflows** as a continuous workstream.
+1. **Stage 05.2 — PVE Canonical Obsidian Runtime & WebUI**;
+2. **Stage 05.3 — Edge Knowledge Replication & Data Integration**;
+3. **Stage 6 — Edge Backrest & Recovery**;
+4. **Stage 7 — Edge Maintenance & Update**, including separate Codex `update.escloud.us` substage;
+5. **Stage 8 — Edge Monitoring, Heartbeats & Alerts**;
+6. **Stage 9 — Edge Cloud Portal**, including separate Codex `app.escloud.us` substage;
+7. **Stage 10 — Edge Final Integrated Infrastructure Acceptance**;
+8. post-infrastructure **Automation & User Workflows** as a continuous workstream.
 
 The old conditional `Remaining Infrastructure Services` stage is removed because Stage 02.5 selected no additional standalone infrastructure product requiring that slot.
 
@@ -375,7 +380,7 @@ Root recovery snapshots remain under `/srv/backups/edge-stage4c`, `/srv/backups/
 
 ## Current next step
 
-Stage 05.1 is complete and accepted. The immediate next step is operator approval of the 05.2 implementation plan. After approval, all Stage 5 runtime work continues in `05.2 — Edge Knowledge Replication & Data Integration`, including the PVE-side Syncthing changes required for edge integration; ai-node redesign, ai-node Obsidian WebUI, OpenClaw redesign and external iOS/macOS/Windows client-access implementation remain out of 05.2 scope.
+Stage 05.1 is complete and accepted under the final runtime architecture. The immediate next branch is `05.2 — PVE Canonical Obsidian Runtime & WebUI`. After 05.2 acceptance, edge deployment continues separately in `05.3 — Edge Knowledge Replication & Data Integration`. External iOS/macOS/Windows/Android client-access implementation remains future work.
 
 Image Generation is non-blocking for Stage 4 and must not divert the critical path; any later image-quality acceptance is human/visual. Do not add a desktop stack solely to make CUA applicable on the headless `edge`.
 
