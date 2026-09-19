@@ -113,9 +113,9 @@ Stage split:
 - **05.2:** deploy dedicated PVE Obsidian LXC, full runtime, File Recovery and private `obsidian.lan`.
 - **05.3:** deploy edge replica and Cloud-side integration.
 
-Accepted 05.2 initial LXC envelope: 1 vCPU, 1024 MiB RAM, 512 MiB swap, ~4 GiB rootfs, onboot. The canonical vault remains outside the LXC rootfs and is bind-mounted from `/srv/knowledge/obsidian`.
+Accepted 05.2 LXC envelope after the runtime packaging gate: 1 vCPU, 1024 MiB RAM, 512 MiB swap, 8 GiB rootfs, onboot. The canonical vault remains outside the LXC rootfs and is bind-mounted from `/srv/knowledge/obsidian`.
 
-Runtime packaging for 05.2 remains a deployment-method gate: native official Obsidian + native Selkies is preferred only if it proves simpler/easier to maintain than LinuxServer Obsidian/Selkies inside the dedicated LXC.
+05.2 runtime packaging is **SELECTED / ACCEPTED**: LinuxServer Obsidian/Selkies inside the dedicated LXC. The native official Obsidian + native Selkies alternative was evaluated and rejected for this deployment because it requires more custom display/session lifecycle plumbing and a less unified update path.
 
 Future external client-access implementation through edge is accepted architecture but explicitly outside Stage 5. Edge Obsidian runtime remains conditional future work.
 
