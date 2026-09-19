@@ -207,10 +207,10 @@ Accepted target inventory:
 
 - PVE remains canonical RW Knowledge authority, Syncthing hub and primary durable recovery authority;
 - add one dedicated lightweight LXC for the full server-side Obsidian runtime;
-- target LXC: 1 vCPU, 1024 MiB RAM, 512 MiB swap, ~4 GiB rootfs, onboot;
+- target LXC: 1 vCPU, 1024 MiB RAM, 512 MiB swap, 8 GiB rootfs, onboot;
 - canonical vault remains outside rootfs and is bind-mounted RW from `/srv/knowledge/obsidian`;
 - runtime provides File Recovery, index/metadata, CLI/core-plugin baseline and private `obsidian.lan` WebUI;
-- packaging method chosen in 05.2 between native Obsidian+Selkies and LinuxServer Obsidian/Selkies based on simplicity/supportability.
+- selected packaging: LinuxServer Obsidian/Selkies inside the dedicated LXC.
 
 ### ai-node
 
