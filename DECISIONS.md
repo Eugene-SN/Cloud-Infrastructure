@@ -1042,3 +1042,33 @@ Authoritative record:
 **Acceptance marker:** `STAGE05_2_PVE_CANONICAL_OBSIDIAN_RUNTIME=PASS`
 
 **Supersedes:** only the previous current-state wording that production Stage 05.2 had not started. It does not rewrite the historical runtime-selection experiment or its cleanup evidence.
+
+---
+
+## 2026-09-20T00:47:25+03:00 — Stage 05.3 deployment and final Stage 5 acceptance
+
+**Status:** ACCEPTED
+
+**Context:** Stage 05.3 deployed and exercised the edge Knowledge replica against the already accepted PVE hub. Fresh runtime evidence confirmed the standard edge path, Syncthing peer behavior, n8n container identity/path compatibility, bidirectional propagation, controlled outage/conflict handling and full edge reboot recovery. Earlier planning text that used the container alias `/home/node/knowledge-canonical` was not implemented.
+
+**Decision:**
+
+1. edge is an active RW non-authoritative Knowledge replica at `/srv/knowledge/obsidian`; `/srv/knowledge` is `core:core 0755` and the vault root is `core:core 2775`.
+2. edge uses Syncthing `2.1.5` under `core` via `syncthing@core.service`, enabled at boot.
+3. edge initiates the PVE peer connection to `tcp://192.168.1.3:22000`; PVE remains the Syncthing hub and retains its existing ai-node peer.
+4. edge Syncthing GUI/API and listener remain loopback-only at `127.0.0.1:8384` and `127.0.0.1:22000`; global/local discovery, relays and NAT traversal are disabled.
+5. Hermes, Codex and Antigravity use `/srv/knowledge/obsidian` directly on the host.
+6. edge n8n uses the same path on both sides of the bind: `/srv/knowledge/obsidian:/srv/knowledge/obsidian:rw`. The older planned alias `/home/node/knowledge-canonical` is superseded.
+7. Accepted topology remains PVE ↔ ai-node plus PVE ↔ edge; no direct edge ↔ ai-node peer is added.
+8. PVE → edge, edge → PVE and edge → PVE → ai-node live propagation passed.
+9. Controlled edge Syncthing outage/reconnect and divergent-edit conflict preservation passed without silent data loss. Whether the conflict copy itself reached ai-node before cleanup was not directly captured; normal edge → PVE → ai-node propagation was independently verified.
+10. Controlled edge reboot acceptance passed: Syncthing auto-started, recovered the PVE connection, Knowledge converged with no pending items/pull errors, n8n returned healthy with its Knowledge bind, and Stage 4 user services remained active.
+11. No edge Obsidian runtime/WebUI or public Syncthing exposure is part of the accepted baseline.
+12. Stage 05.3 is COMPLETE / ACCEPTED and Stage 5 as a whole is COMPLETE / ACCEPTED. Stage 6 — Edge Backrest & Recovery is next.
+
+**Acceptance markers:**
+
+- `STAGE05_3_EDGE_KNOWLEDGE_REPLICATION_DATA_INTEGRATION=PASS`
+- `STAGE05_FINAL_ACCEPTANCE=PASS`
+
+**Supersedes:** the prior planned/not-started status for 05.3 and the earlier planned edge n8n alias `/home/node/knowledge-canonical`. It does not rewrite historical Stage 05.1/05.2 acceptance evidence.
