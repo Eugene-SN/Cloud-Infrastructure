@@ -286,10 +286,10 @@ Detailed target record: `STAGE_05_KNOWLEDGE_ARCHITECTURE_ACCEPTANCE_2026-09-19.m
 - Cloud Infrastructure owns the `edge` active RW replica target at `/srv/knowledge/obsidian` and Cloud-side consumers/producers.
 - Accepted data topology is PVE ↔ ai-node plus PVE ↔ edge; a direct edge ↔ ai-node Syncthing peer is not required under the current CT300/PVE network dependency.
 - The 2026-09-19 Stage 5 entry audit has already confirmed the live PVE/ai-node fabric and edge prerequisites; do not rerun broad entry audits without a concrete regression signal.
-- Cloud Stage 5 mutates **edge only**. PVE/ai-node are reference/non-regression boundaries; PVE authorization of the new edge Syncthing Device ID/share is a separate Home prerequisite unless explicitly re-scoped.
+- Stage 5 is split into `05.1` research/architecture and `05.2` implementation. 05.2 deploys edge and may inspect/change PVE where required for edge↔PVE Syncthing integration, including edge Device ID authorization/folder sharing. ai-node remains a non-redesign/non-regression boundary; do not deploy its future Obsidian WebUI or redesign OpenClaw in Stage 5.
 - Reuse the Home Syncthing mechanism; do not add another primary server-side synchronization engine without concrete incompatibility and explicit superseding acceptance.
 - Edge target ownership is `/srv/knowledge core:core 0755` and `/srv/knowledge/obsidian core:core 2775`; Syncthing runs under `core`.
-- Future public/mobile client data access is intended to use edge through a separately selected client-facing mechanism; do not expose Syncthing publicly for this purpose.
+- Future public iOS/macOS/Windows client data access is intended to use edge through a separately selected client-facing mechanism; document this direction now, but do not implement the client-access layer in Stage 5 or expose Syncthing publicly for this purpose.
 - A future private Obsidian WebUI belongs on ai-node (`obsidian.lan` direction), not on resource-sensitive edge.
 - PVE Obsidian runtime is optional/not established; do not install it merely for symmetry.
 - OpenClaw keeps its current PVE canonical RO relationship unless a later accepted use case requires otherwise.
