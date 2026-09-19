@@ -368,6 +368,17 @@ The historical temporary migration-preservation archive is absent and no longer 
 
 ## Source-of-truth and persistence rules
 
+### Evidence classification rule
+
+Never invent or silently assume project facts. For any material statement about runtime state, paths, versions, names, topology, ownership, configuration, behavior, capabilities, causes, or dependencies:
+
+- state it as a **confirmed fact** only when supported by applicable evidence;
+- label a logical but unobserved conclusion explicitly as **INFERENCE**;
+- label a plausible but unconfirmed statement explicitly as **ASSUMPTION** and identify the missing evidence;
+- use **UNKNOWN** when evidence is insufficient or contradictory.
+
+Do not fill factual gaps from analogy, memory, prior deployments, naming conventions, or best-practice expectations. A mutation that materially depends on an inference or assumption must wait for the minimum required read-only verification or an explicit operator decision accepting that design choice.
+
 For project intent, use latest applicable ACCEPTED decisions and canonical current documents. For factual runtime state, priority is:
 
 1. fresh runtime audit;
