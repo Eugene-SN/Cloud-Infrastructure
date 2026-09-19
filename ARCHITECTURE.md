@@ -20,7 +20,7 @@
 
 Current accepted checkpoint on `main`:
 
-`05 — Edge Knowledge Replication & Data Integration — target architecture accepted; entry audit complete; runtime implementation pending`
+`05.1 — Cross-project Knowledge Reconciliation & Target Architecture — COMPLETE / ACCEPTED; 05.2 implementation pending`
 
 Final Stage 02.5 record:
 
@@ -272,7 +272,7 @@ AmneziaWG remains contingency only if real Stage 3 deployment acceptance exposes
 
 # Cross-project Knowledge Architecture Boundary
 
-Detailed acceptance record: `STAGE_05_KNOWLEDGE_ARCHITECTURE_ACCEPTANCE_2026-09-19.md`.
+Authoritative accepted record: `STAGE_05_1_KNOWLEDGE_RECONCILIATION_TARGET_ARCHITECTURE_ACCEPTANCE_2026-09-19.md`.
 
 ## Accepted topology and ownership
 
@@ -338,11 +338,18 @@ Future access role: edge is the preferred always-reachable Internet data endpoin
 - PVE host loss: edge and ai-node stay locally usable but cannot synchronize with each other under the current network topology;
 - returning connectivity causes normal Syncthing reconciliation; simultaneous edits may create conflict copies.
 
-## Stage 5 mutation boundary
+## Stage 5 implementation boundary
 
-The cross-project target is documented so later Home/PAI work can converge on it, but Cloud Stage 5 mutates **edge only**.
+Stage 5 is split into two project branches:
 
-PVE and ai-node are read-only dependency/non-regression boundaries during Cloud Stage 5. The audited PVE config currently has only ai-node registered, so edge Device ID/folder authorization on PVE is a required cross-project prerequisite. Perform that under Home Infrastructure or only after an explicit later exception; do not hide a PVE mutation inside Cloud Stage 5.
+- `05.1 — Cross-project Knowledge Reconciliation & Target Architecture` — COMPLETE / ACCEPTED, read-only research/architecture;
+- `05.2 — Edge Knowledge Replication & Data Integration` — implementation, integration, verification and final Stage 5 acceptance.
+
+05.2 is centered on deploying the new edge Knowledge node, but it may inspect and change PVE where required for correct edge ↔ PVE integration, including Syncthing edge Device ID registration/folder sharing and narrowly required topology corrections. PVE remains canonical.
+
+ai-node is not redesigned in Stage 5: preserve its current replica/application role, use it for required end-to-end propagation/non-regression verification, and do not deploy the future Obsidian WebUI there in 05.2.
+
+OpenClaw behavior and its current PVE canonical Knowledge relationship are not redesigned in Stage 5.
 
 The Stage 5 expanded entry audit is complete:
 
@@ -436,15 +443,13 @@ User-specific automation workflows remain outside infrastructure acceptance.
 
 ## Stage 5 — Edge Knowledge Replication & Data Integration
 
-**ARCHITECTURE ACCEPTED / ENTRY AUDIT COMPLETE / IMPLEMENTATION NOT STARTED.**
+**05.1 COMPLETE / ACCEPTED; 05.2 IMPLEMENTATION NOT STARTED.**
 
-Detailed record: `STAGE_05_KNOWLEDGE_ARCHITECTURE_ACCEPTANCE_2026-09-19.md`.
+Authoritative record: `STAGE_05_1_KNOWLEDGE_RECONCILIATION_TARGET_ARCHITECTURE_ACCEPTANCE_2026-09-19.md`.
 
-Cloud Stage 5 configures edge only. Its runtime target is an active RW Syncthing replica at `/srv/knowledge/obsidian`, integrated with Hermes, n8n, Codex and Antigravity. PVE and ai-node remain cross-project dependency/non-regression boundaries.
+Stage 5 implementation is performed in `05.2 — Edge Knowledge Replication & Data Integration`. It deploys the edge RW Syncthing replica at `/srv/knowledge/obsidian` and performs the PVE-side changes required for edge↔PVE integration. ai-node is preserved as-is apart from required verification; its future Obsidian WebUI is not deployed in Stage 5. OpenClaw is not redesigned.
 
-The accepted data topology is PVE ↔ ai-node plus PVE ↔ edge. The required PVE-side authorization/share for the future edge Syncthing Device ID is a Home Infrastructure prerequisite unless explicitly re-scoped.
-
-Future external/iOS client data access through edge and a future private ai-node Obsidian WebUI are accepted architectural directions but are not automatically part of current Stage 5 core deployment.
+Future iOS/macOS/Windows client data access through edge is documented as an accepted architectural direction but is explicitly excluded from Stage 5 implementation.
 
 ## Stage 6 — Backrest & Recovery
 
