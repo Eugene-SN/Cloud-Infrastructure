@@ -74,7 +74,7 @@ Final record: `STAGE_03_ACCEPTANCE_2026-09-18.md`.
 ### Accepted identities / hashes
 
 - Authelia compose SHA256 `265dc881294e4b14bf9da5b529570ff6a2f234de2a3e335681d34d3deb447e96`;
-- n8n compose SHA256 `42009eb90d1411b168f4ff9fd072108021a8e9b2467f5c59a01bcf4dcc5ad5bf`;
+- n8n compose SHA256 `03f6e88c137dedf5c5ed5cb8481c097bc2ab322e612c745f636a8fcc9117dda0`;
 - CloudCLI systemd unit SHA256 `8bf303e000b3de0f5a761fc0a466139a75e72fd6ec5d07b08ab7cb82f95382af`;
 - mail compose SHA256 `7de766ed23fd7c30f63870f25af648f018d3295685fb58e40b88eaa578d2d4de`;
 - mail nginx SHA256 `601ff1feffcef8729901b1e00ab98001934db03a1315b55233965ba5d75f079c`;
@@ -227,7 +227,7 @@ Continuous workstream after Stage 10, not an infrastructure-completion stage:
 
 - historical baseline: `NL_CORE_VDS_Current_State_Baseline_2026-09-14.md`;
 - Stage 1 recovery archive `/srv/backups/edge-stage1/edge-stage1-base-20260916T234611Z.tar.gz`, SHA256 `37486e763ddac4c5ef3a92a35c3dad49787d75ffd8b97499073c79af617cc566`;
-- historical migration-preservation archive identity: `/tmp/edge-migration-preservation-20260916T141048Z.tar.gz`, SHA256 `0203e5845f57bc1d04b384cef2b26a45fbff855c341e1edf1193034c34de9fdf`. The 2026-09-19 read-only audit found the temporary path absent, so this is not a currently available recovery artifact. The sanitized `migration-reference/` remains in Git.
+- historical migration-preservation archive identity: `/tmp/edge-migration-preservation-20260916T141048Z.tar.gz`, SHA256 `0203e5845f57bc1d04b384cef2b26a45fbff855c341e1edf1193034c34de9fdf`. The path is absent and the archive was declared no longer required on 2026-09-19. It must not be recreated; sanitized `migration-reference/` remains in Git.
 
 ## Stage 4 services — Hermes / Mattermost / n8n integration
 
@@ -246,12 +246,14 @@ Continuous workstream after Stage 10, not an infrastructure-completion stage:
 
 - status: **COMPLETE / ACCEPTED**;
 - native API Server `172.19.0.1:8642`, Bearer auth, n8n Docker bridge only;
-- narrow UFW rule from `172.19.0.0/16`; no public nginx route/listener;
+- Compose network `n8n_hermes`, stable Linux bridge `n8n-hermes`, subnet `172.19.0.0/16`, gateway `172.19.0.1`;
+- narrow UFW rule from `172.19.0.0/16` on `n8n-hermes`; no public nginx route/listener;
 - n8n workflow `Hermes Machine Invocation`, ID `Hermes4FMachine01`, active/published;
 - n8n encrypted Bearer credential `Hermes4FAuth01`;
 - selector values: `vllm`, `codex`, `antigravity`;
 - all three E2E paths accepted; temporary workflows removed;
-- recovery root: `/srv/backups/edge-stage4f/recovery-20260918T174246Z`.
+- original recovery root: `/srv/backups/edge-stage4f/recovery-20260918T174246Z`;
+- network-hardening recovery root: `/srv/backups/edge-stage4f-network/recovery-20260919T124318Z`.
 
 ### Mattermost
 

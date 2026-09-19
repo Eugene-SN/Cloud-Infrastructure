@@ -28,9 +28,11 @@ Next canonical work is `05 — Edge Knowledge Replication & Data Integration`; i
 
 Do not duplicate mutable stage chronology in this file. `AGENTS.md` should contain durable cross-agent rules; volatile progress belongs in `CURRENT_STATE.md` and `IMPLEMENTATION_PHASES.md`.
 
-## Stage workflow invariant
+## Repository and stage workflow invariant
 
-Each implementation stage has its own work branch. Every stage branch begins with design/discussion before deployment:
+The repository workflow is direct-to-`main` by default. Before work, fetch and read the latest `origin/main`. Persist a coherent accepted change as a commit directly on `main`, push it, and read back the remote commit and critical files. Create a branch or pull request only when the operator explicitly requests one.
+
+Every implementation stage begins with design/discussion before deployment:
 
 1. review exact requirements/baseline for that stage;
 2. research only genuinely unresolved product/mechanism choices;
@@ -39,9 +41,9 @@ Each implementation stage has its own work branch. Every stage branch begins wit
 5. deploy;
 6. verify properties, not only command RC;
 7. explicitly accept and persist current state/decisions;
-8. only then propose the next work branch.
+8. only then persist the completed scope to `main` and propose the next stage.
 
-A completed subtask is not sufficient reason to leave a branch while accepted scope remains incomplete.
+A completed subtask is not sufficient reason to leave accepted stage scope incomplete.
 
 ## Functional completeness invariant
 
@@ -170,6 +172,8 @@ Mattermost is a mandatory accepted Stage 4 substage. `chat.escloud.us` uses Matt
 The accepted Hermes Web Dashboard and macOS Remote Gateway endpoint is `https://hermes.escloud.us` through the existing Xray/nginx/TLS path. Authentication is Hermes-native self-hosted OIDC with Authelia as IdP and native browser/Desktop PKCE. Do not expose the Dashboard backend or Hermes machine API directly to the Internet.
 
 Stage 4 is COMPLETE / ACCEPTED with `STAGE4_FINAL_ACCEPTANCE=PASS`. Preserve its accepted n8n -> Hermes -> vLLM/Codex/Antigravity paths, Dashboard/OIDC, Mattermost and macOS Desktop evidence unless a concrete regression appears.
+
+The private n8n path uses Docker network `n8n_hermes`, stable Linux bridge `n8n-hermes`, subnet `172.19.0.0/16` and gateway/Hermes bind `172.19.0.1`; UFW must target `n8n-hermes`. Marker: `STAGE4F_STABLE_DOCKER_BRIDGE_HARDENING=PASS`.
 
 Do not implement user-specific workflows as part of Stage 4 infrastructure acceptance.
 

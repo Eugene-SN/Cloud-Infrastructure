@@ -6,7 +6,7 @@ This document is the canonical stage chronology for Cloud Infrastructure / `edge
 
 ## Core workflow rule
 
-Each implementation stage has its own work branch and follows the accepted-first lifecycle:
+Each implementation stage follows the accepted-first lifecycle. Repository persistence goes directly to the latest `main` by default; use a branch or pull request only when the operator explicitly requests one:
 
 1. requirements/baseline review;
 2. legacy implementation reconstruction where relevant;
@@ -16,7 +16,7 @@ Each implementation stage has its own work branch and follows the accepted-first
 6. deployment;
 7. verification and explicit acceptance;
 8. persistence/read-back in GitHub;
-9. branch transition only after complete stage acceptance.
+9. coherent commit/push/read-back on `main` only after complete stage acceptance.
 
 Do not reopen accepted products without a concrete incompatibility or changed requirement. Docker + Compose remain the default for suitable application services; host-native placement is preferred where containerization materially complicates the supported operating model or integration with existing host-native executors.
 
@@ -38,14 +38,14 @@ This does not move user-specific workflows into infrastructure stages; it ensure
 
 ### Stage 0 — Discovery, preservation and migration preparation
 
-Branch: `00 — Cloud Infrastructure Architecture Discovery & Target Design`  
+Historical stage label: `00 — Cloud Infrastructure Architecture Discovery & Target Design`
 Status: **COMPLETE / ACCEPTED**.
 
-Accepted outcome includes the historical legacy baseline, provider backup, sensitive migration-preservation archive, sanitized `migration-reference/`, clean-rebuild decision and verified recovery paths.
+Accepted outcome included the historical legacy baseline, provider backup, the then-created sensitive migration-preservation archive, sanitized `migration-reference/`, clean-rebuild decision and verified recovery paths. The temporary archive is now absent and was declared no longer required on 2026-09-19; it must not be recreated.
 
 ### Stage 1 — Base `edge` Platform
 
-Branch: `01 — Edge Clean Rebuild & Base Platform Deployment`  
+Historical stage label: `01 — Edge Clean Rebuild & Base Platform Deployment`
 Status: **COMPLETE / ACCEPTED**.
 
 `EDGE_STAGE1_FINAL_INTEGRATED_ACCEPTANCE=PASS`
@@ -54,7 +54,7 @@ Accepted composition includes Ubuntu substrate, SSH, journald policy, Docker/Com
 
 ### Stage 2 — Core Applications
 
-Branch: `02 — Edge Core Applications`  
+Historical stage label: `02 — Edge Core Applications`
 Status: **COMPLETE / ACCEPTED**.
 
 `EDGE_STAGE2_FINAL_INTEGRATED_ACCEPTANCE=PASS`
@@ -71,7 +71,7 @@ Accepted production set:
 
 ### Stage 02.5 — Remaining Functional Scope Reconciliation & Research
 
-Branch: `02.5 — Remaining Functional Scope Reconciliation & Research`  
+Historical stage label: `02.5 — Remaining Functional Scope Reconciliation & Research`
 Status: **COMPLETE / ACCEPTED / RESEARCH-ONLY**.
 
 Final acceptance record:
@@ -106,7 +106,7 @@ Final record: `STAGE_03_ACCEPTANCE_2026-09-18.md`.
 
 Accepted outcome includes host-native NetBird on `edge`, private `edge -> Home/PAI` routing through CT300, Home `.lan` split DNS, provider-local public/default Internet preservation, no Home Internet exit assignment, no VM100/MikroTik mutation, no `edge.lan`, deferred LAN-wide clientless reverse routing, direct P2P recovery and final reboot persistence.
 
-### Work branch
+### Stage label
 
 `03 — Edge Cross-site Connectivity Foundation`
 
@@ -133,7 +133,7 @@ Stage 3 establishes the Cloud-to-Home private transport needed by later workload
 
 ## Stage 4 — Edge Hermes Agent Runtime
 
-### Work branch
+### Stage label
 
 04.3 — Edge Hermes Stage 4 Recovery, Completion & Final Acceptance
 
@@ -284,14 +284,16 @@ Custom plugins, source patches, shim services, direct DB coupling, bespoke bridg
 
 - upstream Hermes API Server selected after exact-source research;
 - private Bearer-authenticated listener `172.19.0.1:8642` on the n8n Docker bridge;
-- narrow UFW allowance from `172.19.0.0/16`; no public listener or nginx route;
+- explicit Compose network `n8n_hermes` with stable Linux bridge `n8n-hermes`, subnet `172.19.0.0/16` and gateway `172.19.0.1`;
+- narrow UFW allowance from `172.19.0.0/16` on `n8n-hermes`; no public listener or nginx route;
 - n8n built-in HTTP Request v4.5 plus encrypted Bearer credential;
 - published reusable workflow `Hermes Machine Invocation` supports `vllm`, `codex` and `antigravity` selectors;
 - exact-value E2E PASS for remote vLLM, real Codex and real Antigravity;
 - native HTTP JSON avoids Tirith `stream-json` stdout contamination;
 - temporary acceptance workflows removed; production contains one Hermes workflow and two total credentials;
 - `STAGE4F_PRIVATE_HERMES_MACHINE_INTERFACE=PASS`;
-- record: `STAGE_04F_PRIVATE_HERMES_MACHINE_INTERFACE_ACCEPTANCE_2026-09-18.md`.
+- post-acceptance network-identity hardening: `STAGE4F_STABLE_DOCKER_BRIDGE_HARDENING=PASS`;
+- records: `STAGE_04F_PRIVATE_HERMES_MACHINE_INTERFACE_ACCEPTANCE_2026-09-18.md` and `STAGE_04F_NETWORK_IDENTITY_HARDENING_ACCEPTANCE_2026-09-19.md`.
 
 #### Stage 4G — Server-side integrated acceptance
 
@@ -333,7 +335,7 @@ Stage 5 is now eligible to begin under its own mandatory entry audit.
 
 ## Stage 5 — Edge Knowledge Replication & Data Integration
 
-### Work branch
+### Stage label
 
 `05 — Edge Knowledge Replication & Data Integration`
 
@@ -410,7 +412,7 @@ MacBook/iPhone/iPad Obsidian synchronization is **out of Cloud scope** and must 
 
 ## Stage 6 — Edge Backrest & Recovery
 
-### Work branch
+### Stage label
 
 `06 — Edge Backrest & Recovery`
 
@@ -429,7 +431,7 @@ Cloud-wide off-site disaster recovery is distinct from the dedicated local Knowl
 
 ## Stage 7 — Edge Maintenance & Update
 
-### Work branch
+### Stage label
 
 `07 — Edge Maintenance & Update`
 
@@ -445,7 +447,7 @@ Acceptance planning: define each component's supported update path, pre-update b
 
 ## Stage 8 — Edge Monitoring, Heartbeats & Alerts
 
-### Work branch
+### Stage label
 
 `08 — Edge Monitoring, Heartbeats & Alerts`
 
@@ -457,7 +459,7 @@ Acceptance planning: select the monitoring implementation only after requirement
 
 ## Stage 9 — Edge Cloud Portal
 
-### Work branch
+### Stage label
 
 `09 — Edge Cloud Portal`
 
@@ -473,7 +475,7 @@ Acceptance planning: verify authenticated access, actual service links, current 
 
 ## Stage 10 — Edge Final Integrated Infrastructure Acceptance
 
-### Work branch
+### Stage label
 
 `10 — Edge Final Integrated Infrastructure Acceptance`
 
@@ -504,10 +506,10 @@ Stage 02.5: **COMPLETE / ACCEPTED**.
 Stage 3: **COMPLETE / ACCEPTED**.  
 Stage 4: **COMPLETE / ACCEPTED**. `STAGE4_FINAL_ACCEPTANCE=PASS`.
 
-Current branch:
+Current accepted checkpoint on `main`:
 
 `04.3 — Edge Hermes Stage 4 Recovery, Completion & Final Acceptance`
 
 ## Next finite infrastructure stage
 
-Stage 4 is fully accepted on Git branch `04.3-edge-hermes-recovery-completion`. Stage 5 may now begin only through its mandatory expanded read-only entry audit.
+Stage 4 is fully accepted and merged into `main` at `c4d402175ea1a049f20a93ab77daa0b068071277`; the 2026-09-19 Stage 4F network hardening is the latest accepted follow-up. Stage 5 may now begin only through its mandatory expanded read-only entry audit.

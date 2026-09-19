@@ -14,7 +14,9 @@
 `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS`  
 `STAGE4_FINAL_ACCEPTANCE=PASS`
 
-Current production branch:
+`STAGE4F_STABLE_DOCKER_BRIDGE_HARDENING=PASS`
+
+Current accepted checkpoint on `main`:
 
 `04.3 — Edge Hermes Stage 4 Recovery, Completion & Final Acceptance`
 
@@ -393,8 +395,9 @@ Dashboard ingress/auth:
 Private machine interface:
 
 - upstream Hermes API Server binds `172.19.0.1:8642` only;
+- n8n uses the explicitly named Docker network `n8n_hermes` with stable Linux bridge `n8n-hermes`, subnet `172.19.0.0/16` and gateway `172.19.0.1`;
 - Bearer authentication is stored as an encrypted n8n credential;
-- UFW permits only the n8n Docker subnet on its dedicated bridge;
+- UFW permits only the n8n Docker subnet on `n8n-hermes`;
 - no public nginx route or public 8642 listener;
 - the production n8n subworkflow supports `vllm`, `codex` and `antigravity` selectors;
 - native HTTP JSON avoids the known CLI `stream-json` Tirith stdout contamination.

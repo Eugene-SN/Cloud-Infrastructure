@@ -4,7 +4,7 @@
 
 - **Project name:** Cloud Infrastructure
 - **Primary repository:** `Eugene-SN/Cloud-Infrastructure`
-- **GitHub workflow:** ON
+- **GitHub workflow:** direct commits to `main` by default; branches/PRs only by explicit operator request
 - **Primary VPS node:** `edge`
 - **Current FQDN:** `edge.escloud.us`
 - `edge` is a logical, location-agnostic node name. Do not encode provider/datacenter/country into target-state naming.
@@ -38,7 +38,7 @@ Rules:
 - distinguish finite infrastructure services from continuously evolving user-specific n8n/agent workflows;
 - select unresolved mechanisms from actual requirements/dependencies rather than filling roadmap stages with speculative products.
 
-## Implementation stages and work branches
+## Implementation stages and repository workflow
 
 Completed canonical stages:
 
@@ -48,7 +48,7 @@ Completed canonical stages:
 - `02.5 — Remaining Functional Scope Reconciliation & Research` — COMPLETE / ACCEPTED / RESEARCH-ONLY;
 - `03 — Edge Cross-site Connectivity Foundation` — Stage 3 — COMPLETE / ACCEPTED with `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS`.
 
-Current canonical branch:
+Current accepted checkpoint:
 
 - `04.3 — Edge Hermes Stage 4 Recovery, Completion & Final Acceptance` — COMPLETE / ACCEPTED; `STAGE4_FINAL_ACCEPTANCE=PASS`.
 
@@ -161,7 +161,7 @@ A stage-specific mutation may begin only when the relevant topology/mechanism is
 
 ## Mandatory lifecycle for every implementation stage
 
-Every new implementation-stage branch starts with analysis/design, not installation.
+Every new implementation stage starts with analysis/design, not installation. Repository changes are committed directly to the latest `main` by default.
 
 Before stage-dependent runtime mutation, perform in order:
 
@@ -173,9 +173,9 @@ Before stage-dependent runtime mutation, perform in order:
 6. **VERIFY** — verify properties, not merely command return codes.
 7. **ACCEPTANCE** — mark complete only after the whole stage passes.
 8. **PERSISTENCE** — update canonical repository state and read back critical writes.
-9. **BRANCH TRANSITION** — only after acceptance may ChatGPT propose the next branch and starter prompt.
+9. **MAIN PERSISTENCE / NEXT STAGE** — only after acceptance may ChatGPT persist the coherent result to `main` and propose the next stage and starter prompt.
 
-A completed subtask is not permission to leave a branch while its accepted scope remains incomplete.
+A completed subtask is not permission to leave accepted stage scope incomplete.
 
 ## Current work checkpoint
 
@@ -266,6 +266,7 @@ Stage 4A/B/C/D/E/F/G/H/I are COMPLETE / ACCEPTED. Final marker: `STAGE4_FINAL_AC
 Accepted machine contract:
 
 - n8n uses the upstream Hermes API Server through a private Docker-bridge listener with Bearer authentication;
+- Compose explicitly fixes network `n8n_hermes`, Linux bridge `n8n-hermes`, subnet `172.19.0.0/16` and gateway `172.19.0.1`; UFW targets the stable bridge name;
 - the production n8n workflow supports `vllm`, `codex` and `antigravity` selectors;
 - no public Hermes machine API is permitted;
 - native HTTP JSON is used instead of parsing contaminated CLI `stream-json` stdout.
@@ -348,11 +349,11 @@ Fresh runtime/configuration has priority over historical reference.
 Current recovery layers include:
 
 1. provider-level whole-VPS backup / rollback path from Stage 0 where applicable;
-2. external sensitive migration archive with SHA256 `0203e5845f57bc1d04b384cef2b26a45fbff855c341e1edf1193034c34de9fdf` retained for selective legacy reference/recovery;
-3. Stage 1 same-VPS recovery checkpoint `/srv/backups/edge-stage1/edge-stage1-base-20260916T234611Z.tar.gz`, which is not complete host-loss DR;
+2. Stage 1 same-VPS recovery checkpoint `/srv/backups/edge-stage1/edge-stage1-base-20260916T234611Z.tar.gz`, which is not complete host-loss DR;
+3. stage-specific recovery checkpoints for later production mutations, including `/srv/backups/edge-stage4f-network/recovery-20260919T124318Z`;
 4. future Backrest + Restic topology, still unresolved for off-site repository placement and final retention/restore policy.
 
-`migration-reference/` is engineering context only and must not be used as an authoritative restore bundle.
+The historical temporary migration-preservation archive is absent and no longer required. Do not recreate it. `migration-reference/` is the retained sanitized engineering context only and must not be used as an authoritative restore bundle.
 
 ## Source-of-truth and persistence rules
 
@@ -367,11 +368,12 @@ A discrepancy is drift and must be resolved explicitly rather than guessed.
 
 Before modifying project files:
 
-1. read current repository state;
+1. fetch and read the latest `origin/main`;
 2. avoid duplicate documents/facts;
 3. update canonical existing documents for current state/architecture;
 4. preserve historical acceptance/audit artifacts rather than rewriting them retroactively;
-5. read back critical writes.
+5. commit and push directly to `main` unless the operator explicitly requested a branch/PR;
+6. read back the remote commit and critical writes.
 
 Store structured state and decisions, not chat transcripts.
 
@@ -389,6 +391,8 @@ Latest applicable `ACCEPTED` decision has priority. `SUPERSEDED`, `REJECTED`, an
 
 ## Git and secrets
 
+- Direct-to-`main` is the default repository workflow for ChatGPT/Codex work in this project.
+- Do not create a branch or pull request unless the operator explicitly asks for one.
 - Do not commit credentials or secrets to GitHub.
 - Persistent non-secret configuration/design/runbooks may be stored in Git.
 - Sensitive recovery state remains outside GitHub.
@@ -433,6 +437,5 @@ Avoid restart/reboot unless actually required.
 - Prefer simple upstream-supported mechanisms and minimum custom code.
 - VPN/proxy services used for DPI bypass are separate from the private infrastructure backbone.
 - Home/PAI connectivity must not become a foundation requirement for independently useful `edge` capabilities, but it must exist before services whose correctness depends on Home/PAI.
-- Do not carry legacy configuration forward blindly; use `migration-reference/` for engineering context and the external archive only where exact state/credentials are actually required.
-- Do not open a new production branch until the current stage is accepted and canonical files have been updated/read back.
-
+- Do not carry legacy configuration forward blindly; use `migration-reference/` only as sanitized engineering context.
+- Do not begin the next implementation stage until the current stage is accepted and canonical files have been committed to `main` and read back.

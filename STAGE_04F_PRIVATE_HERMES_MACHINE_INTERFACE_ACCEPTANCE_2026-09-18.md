@@ -54,3 +54,9 @@ Importable production workflow definition (no secret material): `STAGE_04F_HERME
 The accepted address and UFW rule depend on the current Docker network identity (`n8n_default`, `br-2bdcbc775588`, `172.19.0.0/16`, gateway `172.19.0.1`). Recreating or renumbering that network requires coordinated reconciliation of the Hermes bind, n8n workflow URL and UFW rule.
 
 Recovery snapshot root: `/srv/backups/edge-stage4f/recovery-20260918T174246Z`.
+
+## 2026-09-19 post-acceptance hardening
+
+The network-identity dependency above is preserved as the factual 2026-09-18 acceptance state and is superseded operationally by `STAGE_04F_NETWORK_IDENTITY_HARDENING_ACCEPTANCE_2026-09-19.md`.
+
+Current Compose explicitly creates network `n8n_hermes` with Linux bridge `n8n-hermes`, subnet `172.19.0.0/16` and gateway `172.19.0.1`. UFW now targets `n8n-hermes`, so Docker network-ID recreation no longer changes the firewall interface identity.

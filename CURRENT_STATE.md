@@ -14,13 +14,15 @@
 `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS` on 2026-09-18.  
 `STAGE4_FINAL_ACCEPTANCE=PASS` on 2026-09-18.
 
+`STAGE4F_STABLE_DOCKER_BRIDGE_HARDENING=PASS` on 2026-09-19.
+
 Primary repository: `Eugene-SN/Cloud-Infrastructure`.
 
-Completed recovery workstream:
+Completed recovery workstream, now merged into `main`:
 
 `04.3 — Edge Hermes Stage 4 Recovery, Completion & Final Acceptance`
 
-Git branch: `04.3-edge-hermes-recovery-completion`.
+Git checkpoint: merge commit `c4d402175ea1a049f20a93ab77daa0b068071277` on `main`.
 
 Stage 4 — Edge Hermes Agent Runtime is **COMPLETE / ACCEPTED**. Final record: `STAGE_04_FINAL_ACCEPTANCE_2026-09-18.md`.
 
@@ -88,7 +90,7 @@ MacBook/iPhone/iPad Obsidian synchronization is completely outside Cloud Infrast
 
 ## Final remaining roadmap
 
-Stage 4 is complete and accepted; its GitHub persistence is in `04.3-edge-hermes-recovery-completion` (open draft PR #1 at the 2026-09-19 audit). The older `main` checkpoint is not evidence of unfinished runtime work.
+Stage 4 is complete and accepted. PR #1 was merged into `main` on 2026-09-19 as commit `c4d402175ea1a049f20a93ab77daa0b068071277`; no Stage 4 branch checkpoint remains pending.
 
 1. **Stage 5 — Edge Knowledge Replication & Data Integration**;
 2. **Stage 6 — Edge Backrest & Recovery**;
@@ -300,7 +302,7 @@ Stage 4 is **COMPLETE / ACCEPTED** with `STAGE4_FINAL_ACCEPTANCE=PASS`.
 ## Recovery / preserved state
 
 - Stage 1 recovery archive: `/srv/backups/edge-stage1/edge-stage1-base-20260916T234611Z.tar.gz`, SHA256 `37486e763ddac4c5ef3a92a35c3dad49787d75ffd8b97499073c79af617cc566`;
-- the sensitive migration-preservation archive was created at `/tmp/edge-migration-preservation-20260916T141048Z.tar.gz` with SHA256 `0203e5845f57bc1d04b384cef2b26a45fbff855c341e1edf1193034c34de9fdf`, but the 2026-09-19 read-only audit found that temporary path absent. The hash remains historical evidence, not an available recovery artifact. `migration-reference/` remains the sanitized engineering reference; recreate any required sensitive preservation archive only into deliberate persistent/off-host storage.
+- the sensitive migration-preservation archive was historically created at `/tmp/edge-migration-preservation-20260916T141048Z.tar.gz` with SHA256 `0203e5845f57bc1d04b384cef2b26a45fbff855c341e1edf1193034c34de9fdf`, but the temporary path is absent and the operator declared the archive no longer required on 2026-09-19. The hash is historical evidence only. Do not recreate the archive; `migration-reference/` is the retained sanitized engineering reference.
 
 ## Stage 4C/4F/4G/4H accepted runtime — 2026-09-18
 
@@ -318,11 +320,12 @@ Stage 4 is **COMPLETE / ACCEPTED** with `STAGE4_FINAL_ACCEPTANCE=PASS`.
 
 - Hermes' upstream API Server binds only `172.19.0.1:8642` on the n8n Docker bridge with Bearer authentication and a narrow UFW rule; it has no public nginx route or public listener.
 - n8n `2.39.7` production workflow `Hermes Machine Invocation` (`Hermes4FMachine01`) uses the built-in HTTP Request node and encrypted credential `Hermes4FAuth01`.
-- The current private path depends on Docker network `n8n_default`, bridge `br-2bdcbc775588`, subnet `172.19.0.0/16` and gateway `172.19.0.1`. Recreating or renumbering that network requires a read-only topology check followed by coordinated Hermes bind, workflow URL and UFW reconciliation before service acceptance.
+- Docker Compose now explicitly defines network `n8n_hermes`, Linux bridge `n8n-hermes`, subnet `172.19.0.0/16` and gateway `172.19.0.1`; the stable bridge name survives network-ID recreation.
+- UFW permits `172.19.0.0/16 -> 172.19.0.1:8642/tcp` only on `n8n-hermes`; the obsolete `br-2bdcbc775588` rule is removed.
 - Selector values `vllm`, `codex` and `antigravity` are supported.
 - Exact random-value E2E passed for direct Hermes/vLLM response, real foreground Codex CLI and real foreground Antigravity CLI.
 - Final production n8n state: one published Hermes workflow, Mattermost plus Hermes credentials, no acceptance/test workflow, healthy container.
-- Acceptance record: `STAGE_04F_PRIVATE_HERMES_MACHINE_INTERFACE_ACCEPTANCE_2026-09-18.md`.
+- Acceptance records: `STAGE_04F_PRIVATE_HERMES_MACHINE_INTERFACE_ACCEPTANCE_2026-09-18.md` and `STAGE_04F_NETWORK_IDENTITY_HARDENING_ACCEPTANCE_2026-09-19.md`.
 
 ### Integrated acceptance
 
@@ -332,7 +335,7 @@ Stage 4 is **COMPLETE / ACCEPTED** with `STAGE4_FINAL_ACCEPTANCE=PASS`.
 - Mattermost/n8n native integration, public Dashboard/OIDC, private listeners, TLS and Stage 3 vLLM reachability remained healthy.
 - Acceptance record: `STAGE_04G_SERVER_INTEGRATED_ACCEPTANCE_2026-09-18.md`.
 
-Root recovery snapshots remain under `/srv/backups/edge-stage4c` and `/srv/backups/edge-stage4f`.
+Root recovery snapshots remain under `/srv/backups/edge-stage4c`, `/srv/backups/edge-stage4f` and `/srv/backups/edge-stage4f-network`.
 
 ## Current next step
 

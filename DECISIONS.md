@@ -807,3 +807,37 @@ Root recovery now confirms Authelia v4.39.27, no OIDC-related config keys or gen
 - Remaining stages are 5 through 10; the existing lifecycle ordering and product anchors remain unchanged. Detailed additions to the roadmap are planning/acceptance checklists, not implementation authorization.
 - The Stage 0 migration-preservation archive identity and SHA256 remain historical evidence, but the 2026-09-19 read-only edge audit found its `/tmp` path absent. Current documents must not present it as available recovery state.
 - The Stage 4F private n8n path currently depends on the concrete `n8n_default` bridge/subnet identity. This is accepted current runtime, not a portable invariant; Docker network recreation requires coordinated bind/workflow/UFW reconciliation.
+
+---
+
+## 2026-09-19T15:45:20+03:00 — Direct-to-main workflow and migration-archive retirement
+
+**Status:** ACCEPTED
+
+**Decision:**
+
+1. ChatGPT/Codex writes to the latest `main` by default for this repository. It fetches/reads `origin/main`, produces one coherent accepted commit, pushes directly to `main`, and reads back the remote commit and critical files.
+2. A branch or pull request is created only when the operator explicitly requests one. Stage boundaries and acceptance gates remain unchanged.
+3. PR #1 is merged into `main` as `c4d402175ea1a049f20a93ab77daa0b068071277`; Stage 4 has no pending GitHub persistence work.
+4. The historical temporary migration-preservation archive is absent and no longer required. Its identity/hash remain chronology only; do not recreate it.
+5. Sanitized `migration-reference/` remains the engineering reference. New recovery artifacts are created only for a concrete current recovery requirement.
+
+**Supersedes:** the 2026-09-16 stage-aligned branch lifecycle as a repository-branch requirement; the accepted-first stage lifecycle remains in force. Also supersedes any current requirement to retain or recreate the historical migration-preservation archive.
+
+---
+
+## 2026-09-19T15:45:20+03:00 — Stable n8n Docker bridge identity for Hermes
+
+**Status:** ACCEPTED
+
+**Decision:**
+
+1. Preserve the accepted private `172.19.0.1:8642` Hermes API, Bearer authentication, n8n subnet and absence of public ingress.
+2. Define the Compose default network explicitly as Docker network `n8n_hermes`, bridge driver, Linux bridge `n8n-hermes`, subnet `172.19.0.0/16`, gateway `172.19.0.1`.
+3. Bind the narrow UFW allowance to stable interface `n8n-hermes`; remove the obsolete network-ID-derived `br-2bdcbc775588` rule only after authenticated n8n-container reachability passes.
+4. Keep the production workflow URL and Hermes bind unchanged because the gateway address remains `172.19.0.1`.
+5. Preserve recovery checkpoint `/srv/backups/edge-stage4f-network/recovery-20260919T124318Z` and acceptance record `STAGE_04F_NETWORK_IDENTITY_HARDENING_ACCEPTANCE_2026-09-19.md`.
+
+**Acceptance evidence:** `docker compose config` PASS; n8n healthy/readiness PASS; unauthenticated container request HTTP 401; authenticated container request HTTP 200 with Hermes `status=ok`; production workflow active; gateway/Docker/NetBird/nginx and other containers non-regressed. Marker: `STAGE4F_STABLE_DOCKER_BRIDGE_HARDENING=PASS`.
+
+**Supersedes:** the operational `n8n_default` / `br-2bdcbc775588` dependency recorded on 2026-09-18 and in the earlier 2026-09-19 read-only reconciliation. The original entries remain historical evidence.
