@@ -290,9 +290,9 @@ Latest target record: `STAGE_05_1_FINAL_KNOWLEDGE_RUNTIME_ARCHITECTURE_ACCEPTANC
   - `05.1` architecture/reconciliation — COMPLETE / ACCEPTED;
   - `05.2` PVE Canonical Obsidian Runtime & WebUI — NEXT;
   - `05.3` Edge Knowledge Replication & Data Integration — PLANNED.
-- 05.2 target LXC: 1 vCPU, 1024 MiB RAM, 512 MiB swap, ~4 GiB rootfs, onboot; canonical vault remains outside the rootfs and is RW bind-mounted from `/srv/knowledge/obsidian`.
+- 05.2 target LXC: 1 vCPU, 1024 MiB RAM, 512 MiB swap, 8 GiB rootfs, onboot; canonical vault remains outside the rootfs and is RW bind-mounted from `/srv/knowledge/obsidian`.
 - Existing PVE host swap is 8 GiB with ~5.6 GiB free at the readiness audit; do not expand host swap without measured need.
-- 05.2 runtime packaging remains an implementation gate: native official Obsidian + native Selkies is preferred only if simpler/easier to maintain than LinuxServer Obsidian/Selkies in the dedicated LXC.
+- 05.2 runtime packaging is accepted as LinuxServer Obsidian/Selkies inside the dedicated LXC; do not replace it with native Obsidian + native Selkies without a concrete incompatibility or an explicit new decision.
 - `obsidian.lan` is private Home LAN + NetBird-routed access only; no public Internet Obsidian WebUI.
 - 05.3 reuses Syncthing and performs required PVE↔edge integration, edge consumer integration and failure/conflict/reboot acceptance.
 - Future public iOS/macOS/Windows/Android client access uses edge through a separately selected client-facing mechanism; document the direction now, but do not implement it in Stage 5 or expose Syncthing publicly for this purpose.
