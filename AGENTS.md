@@ -18,13 +18,13 @@ Read, in this order when relevant:
 
 ## Current checkpoint invariant
 
-Current accepted checkpoint is:
+Current accepted checkpoint:
 
-`05.1 — Cross-project Knowledge Reconciliation & Target Architecture — COMPLETE / ACCEPTED`.
+`Stage 5 — Knowledge Fabric Runtime Deployment — COMPLETE / ACCEPTED`.
 
-Stage 0, Stage 1, Stage 2, Stage 02.5, Stage 3 and Stage 4 are complete and accepted. `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS`; `STAGE4_FINAL_ACCEPTANCE=PASS`; `STAGE05_1_FINAL_KNOWLEDGE_RUNTIME_ARCHITECTURE=PASS`.
+Stage 0 through Stage 5 are complete and accepted. Current markers include `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS`, `STAGE4_FINAL_ACCEPTANCE=PASS`, `STAGE05_2_PVE_CANONICAL_OBSIDIAN_RUNTIME=PASS`, `STAGE05_3_EDGE_KNOWLEDGE_REPLICATION_DATA_INTEGRATION=PASS`, and `STAGE05_FINAL_ACCEPTANCE=PASS`.
 
-Next canonical work is `05.2 — PVE Canonical Obsidian Runtime & WebUI`. After 05.2 acceptance, continue with `05.3 — Edge Knowledge Replication & Data Integration`. Use `CURRENT_STATE.md` for confirmed runtime, `IMPLEMENTATION_PHASES.md` for the authoritative roadmap/substage scope, and the latest applicable ACCEPTED entries/records for supersession.
+Next canonical work is `Stage 6 — Edge Backrest & Recovery`. Use `CURRENT_STATE.md` for confirmed runtime, `IMPLEMENTATION_PHASES.md` for the authoritative roadmap/substage scope, and the latest applicable ACCEPTED entries/records for supersession.
 
 Do not duplicate mutable stage chronology in this file. `AGENTS.md` should contain durable cross-agent rules; volatile progress belongs in `CURRENT_STATE.md` and `IMPLEMENTATION_PHASES.md`.
 
@@ -194,30 +194,24 @@ Do not implement user-specific workflows as part of Stage 4 infrastructure accep
 
 ## Knowledge/Obsidian invariant
 
-Latest authoritative target: `STAGE_05_1_FINAL_KNOWLEDGE_RUNTIME_ARCHITECTURE_ACCEPTANCE_2026-09-19.md`.
+Latest authoritative Stage 5 completion record: `STAGE_05_3_FINAL_ACCEPTANCE_2026-09-20.md`.
 
-PVE is the canonical Knowledge authority and Syncthing hub. ai-node and edge are active RW non-canonical replicas in the accepted target; no direct edge↔ai-node Syncthing peer is required under the current CT300/PVE network dependency.
+Durable accepted contract:
 
-Stage 5 branch structure:
+- PVE is the authoritative Knowledge/recovery node and Syncthing hub; vault path `/srv/knowledge/obsidian` on the dedicated `pve/knowledge` filesystem;
+- CT210 is the single full server-side Obsidian runtime/WebUI node and remains private at `obsidian.lan`;
+- ai-node is an active RW replica at `/srv/ai-data/knowledge/obsidian`;
+- edge is an active RW replica at `/srv/knowledge/obsidian`;
+- topology is PVE ↔ ai-node plus PVE ↔ edge; no direct edge ↔ ai-node Syncthing peer is required under the current topology;
+- edge Syncthing runs under `core` and is loopback-only locally; do not expose Syncthing publicly;
+- edge n8n uses `/srv/knowledge/obsidian:/srv/knowledge/obsidian:rw`;
+- Hermes/Codex/Antigravity use the same local edge path directly;
+- Stage 5 propagation, outage/reconnect, conflict preservation and edge reboot recovery are accepted;
+- edge has no Obsidian runtime/WebUI in the accepted Stage 5 baseline;
+- OpenClaw keeps its existing PVE read-only Knowledge relationship;
+- future external client access through edge is a separate future mechanism and must not be inferred to mean public Syncthing exposure.
 
-- `05.1 — Cross-project Knowledge Reconciliation & Target Architecture` — COMPLETE / ACCEPTED;
-- `05.2 — PVE Canonical Obsidian Runtime & WebUI` — NEXT;
-- `05.3 — Edge Knowledge Replication & Data Integration` — PLANNED.
-
-05.2 deploys one dedicated lightweight PVE LXC for the **single full server-side Obsidian runtime**:
-
-- initial limit 1 vCPU / 1024 MiB RAM / 512 MiB swap / ~4 GiB rootfs / onboot;
-- canonical vault remains on `pve/knowledge` and is RW bind-mounted from `/srv/knowledge/obsidian`;
-- File Recovery, index/metadata, CLI/core-plugin baseline and private `obsidian.lan` WebUI are required outcomes;
-- existing PVE 8 GiB host swap is sufficient unless measured evidence later proves otherwise;
-- runtime packaging is decided inside 05.2: native official Obsidian+Selkies is preferred only if it is genuinely simpler/more supportable than LinuxServer Obsidian/Selkies in the LXC.
-
-ai-node is not redesigned and receives no server-side Obsidian runtime/WebUI by default. Preserve current n8n/PAI consumers.
-
-05.3 deploys the edge RW replica and Cloud consumers. edge gets no Obsidian WebUI/runtime in Stage 5. Future external iOS/macOS/Windows/Android client access terminates on edge through a separately selected client-facing mechanism, but that implementation is outside Stage 5.
-
-OpenClaw keeps its current PVE canonical RO Knowledge relationship. Reuse Syncthing and do not add a second primary server-side synchronization engine without a concrete incompatibility and explicit superseding decision.
-
+Stage 5 branches 05.1, 05.2 and 05.3 are all COMPLETE / ACCEPTED.
 
 ## Lifecycle ordering invariants
 
