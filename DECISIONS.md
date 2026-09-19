@@ -841,3 +841,22 @@ Root recovery now confirms Authelia v4.39.27, no OIDC-related config keys or gen
 **Acceptance evidence:** `docker compose config` PASS; n8n healthy/readiness PASS; unauthenticated container request HTTP 401; authenticated container request HTTP 200 with Hermes `status=ok`; production workflow active; gateway/Docker/NetBird/nginx and other containers non-regressed. Marker: `STAGE4F_STABLE_DOCKER_BRIDGE_HARDENING=PASS`.
 
 **Supersedes:** the operational `n8n_default` / `br-2bdcbc775588` dependency recorded on 2026-09-18 and in the earlier 2026-09-19 read-only reconciliation. The original entries remain historical evidence.
+
+
+---
+
+## 2026-09-19T15:57:00+03:00 — Stage 4 post-acceptance runtime reconciliation
+
+**Status:** ACCEPTED
+
+**Decision:**
+
+1. Preserve `STAGE4_FINAL_ACCEPTANCE=PASS`; Stage 4 remains COMPLETE / ACCEPTED and is not reopened.
+2. Record current Antigravity CLI runtime as `1.2.7`. Historical acceptance remains unchanged: Stage 4B accepted `1.2.5`, and Stage 4G accepted `1.2.6` with bounded real E2E.
+3. Fresh read-only reconciliation confirms current Stage 4 server boundaries: Hermes Gateway/Dashboard active/enabled; Dashboard self-hosted OIDC and PKCE/S256; loopback `127.0.0.1:9119`; private Hermes API `172.19.0.1:8642`; Docker network `n8n_hermes` with stable Linux bridge `n8n-hermes`; one active Hermes n8n workflow and two accepted credentials; stable UFW rule; Mattermost and foundation non-regression.
+4. The attempted Antigravity `1.2.7` smoke verifiers that stalled are classified as assistant test-harness defects (root-owned temporary-directory traversal and job-control/timeout behavior), not production failures. No production mutation or service restart occurred.
+5. Current repo/runtime drift is reconciled. Stage 5 entry is eligible.
+
+**Acceptance evidence:** `STAGE4_FINAL_BOUNDARY_RECONCILIATION=PASS`; `STAGE4_FINAL_ACCEPTANCE_STATUS=SUPPORTED`.
+
+**Supersedes:** only current-state references that described Antigravity `1.2.6` as the live runtime. It does not supersede or rewrite historical Stage 4B/4G acceptance evidence.
