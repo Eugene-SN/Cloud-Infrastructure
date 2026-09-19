@@ -50,11 +50,12 @@ Completed canonical stages:
 
 Current accepted checkpoint:
 
-- `04.3 — Edge Hermes Stage 4 Recovery, Completion & Final Acceptance` — COMPLETE / ACCEPTED; `STAGE4_FINAL_ACCEPTANCE=PASS`.
+- `05.1 — Cross-project Knowledge Reconciliation & Target Architecture` — COMPLETE / ACCEPTED; `STAGE05_1_FINAL_KNOWLEDGE_RUNTIME_ARCHITECTURE=PASS`.
 
 Remaining finite infrastructure roadmap:
 
-- `05 — Edge Knowledge Replication & Data Integration`;
+- `05.2 — PVE Canonical Obsidian Runtime & WebUI`;
+- `05.3 — Edge Knowledge Replication & Data Integration`;
 - `06 — Edge Backrest & Recovery`;
 - `07 — Edge Maintenance & Update` — Semaphore/update workflow plus separate Codex `update.escloud.us` substage;
 - `08 — Edge Monitoring, Heartbeats & Alerts`;
