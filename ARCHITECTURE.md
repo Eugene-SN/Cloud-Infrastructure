@@ -302,12 +302,12 @@ PVE owns:
 - CT220/OpenClaw canonical read-only Knowledge source;
 - the single full server-side Obsidian application runtime.
 
-Stage 05.2 deploys the Obsidian runtime in a new lightweight LXC. Accepted initial LXC envelope:
+Stage 05.2 deploys the Obsidian runtime in a new lightweight LXC. Accepted LXC envelope after the runtime packaging gate:
 
 - 1 vCPU;
 - 1024 MiB RAM;
 - 512 MiB LXC swap limit;
-- approximately 4 GiB rootfs;
+- 8 GiB rootfs;
 - onboot enabled.
 
 The canonical vault stays on the existing dedicated `pve/knowledge` 32 GiB ext4 LV and is bind-mounted RW into the LXC. The vault must not become dependent on the LXC rootfs.
