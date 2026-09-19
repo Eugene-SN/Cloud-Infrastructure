@@ -20,7 +20,7 @@ Read, in this order when relevant:
 
 Current accepted checkpoint is:
 
-`04.3 — Edge Hermes Stage 4 Recovery, Completion & Final Acceptance` — COMPLETE / ACCEPTED.
+`05 — Edge Knowledge Replication & Data Integration — target architecture accepted; expanded entry audit complete; runtime implementation not started` — COMPLETE / ACCEPTED.
 
 Stage 0, Stage 1, Stage 2, Stage 02.5, Stage 3 and Stage 4 are complete and accepted. `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS`; `STAGE4_FINAL_ACCEPTANCE=PASS`.
 
