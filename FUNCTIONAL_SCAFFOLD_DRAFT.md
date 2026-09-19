@@ -160,7 +160,7 @@ The audit must establish:
 - Stage 4 Hermes/vLLM non-regression;
 - `edge` storage/path and actual RW/RO consumers.
 
-If Home PVE canonical migration is not accepted when Stage 5 begins, Stage 5 stops before mutation and reconciles the dependency.
+If the fresh Stage 5 audit cannot confirm the accepted PVE canonical runtime and healthy PVE ↔ `ai-node` synchronization, Stage 5 stops before mutation and reconciles the dependency.
 
 ### Implementation principle
 

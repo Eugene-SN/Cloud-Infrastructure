@@ -37,6 +37,8 @@ Markers:
 - `STAGE4F_N8N_HERMES_CODEX_E2E=PASS`
 - `STAGE4G_N8N_HERMES_ANTIGRAVITY_E2E=PASS`
 
+The Antigravity marker retains the `STAGE4G` prefix because the final bounded Antigravity rerun occurred during Stage 4G after the CLI changed to `1.2.6`; it is not evidence of an untested Stage 4F selector.
+
 The native HTTP API avoids strict JSONL parsing, so the known non-JSON Tirith warning from `hermes --format stream-json` does not contaminate n8n responses.
 
 ## Final n8n state
@@ -47,6 +49,8 @@ The native HTTP API avoids strict JSONL parsing, so the known non-JSON Tirith wa
 - n8n healthy after final restart;
 - credential data verified encrypted at rest.
 
-Importable production workflow definition (no secret material): `STAGE_04F_HERMES_MACHINE_WORKFLOW_2026-09-18.json`.
+Importable production workflow definition (no secret material): `STAGE_04F_HERMES_MACHINE_WORKFLOW_2026-09-18.json`. The artifact deliberately has `active=false`; after import, verify the encrypted credential and current private Docker-bridge topology before publishing/activating it.
+
+The accepted address and UFW rule depend on the current Docker network identity (`n8n_default`, `br-2bdcbc775588`, `172.19.0.0/16`, gateway `172.19.0.1`). Recreating or renumbering that network requires coordinated reconciliation of the Hermes bind, n8n workflow URL and UFW rule.
 
 Recovery snapshot root: `/srv/backups/edge-stage4f/recovery-20260918T174246Z`.

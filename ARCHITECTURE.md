@@ -326,7 +326,7 @@ Audit must prove at least:
 - Stage 4 Hermes/vLLM non-regression;
 - `edge` storage and actual RW/RO consumer requirements.
 
-If Home PVE canonical migration is not accepted, Stage 5 stops before mutation and reconciles that prerequisite instead of inventing a parallel architecture.
+If fresh Stage 5 evidence cannot confirm the accepted PVE canonical runtime and healthy PVE ↔ `ai-node` synchronization, Stage 5 stops before mutation and reconciles that prerequisite instead of inventing a parallel architecture.
 
 The Home-accepted server-side sync mechanism is reused by default. A second primary engine for the same knowledge tree requires concrete incompatibility plus explicit superseding acceptance.
 
@@ -485,4 +485,3 @@ Additional accepted directions:
 5. `IMPLEMENTATION_PHASES.md` and stage-specific records;
 6. `FUNCTIONAL_SCAFFOLD_DRAFT.md` for capability intent;
 7. `migration-reference/` and historical baseline for legacy evidence only.
-

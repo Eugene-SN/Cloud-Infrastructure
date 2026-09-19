@@ -805,3 +805,5 @@ Root recovery now confirms Authelia v4.39.27, no OIDC-related config keys or gen
 - These later Home/PAI records supersede Cloud current-state wording that describes Home cutover as still pending. Historical acceptance records and earlier decision chronology remain unchanged.
 - Cloud Stage 5 remains undeployed/unaccepted. Its fresh Home/PAI/Cloud entry audit is still mandatory. PVE's documented completion is not a fresh remote runtime measurement.
 - Remaining stages are 5 through 10; the existing lifecycle ordering and product anchors remain unchanged. Detailed additions to the roadmap are planning/acceptance checklists, not implementation authorization.
+- The Stage 0 migration-preservation archive identity and SHA256 remain historical evidence, but the 2026-09-19 read-only edge audit found its `/tmp` path absent. Current documents must not present it as available recovery state.
+- The Stage 4F private n8n path currently depends on the concrete `n8n_default` bridge/subnet identity. This is accepted current runtime, not a portable invariant; Docker network recreation requires coordinated bind/workflow/UFW reconciliation.

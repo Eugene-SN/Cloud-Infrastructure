@@ -82,7 +82,7 @@ Accepted ownership boundary:
 
 Cloud Stage 5 is therefore an integration stage. It must begin with a fresh expanded read-only Home/PAI/Cloud audit and must reuse the Home-accepted server-side synchronization mechanism by default.
 
-If PVE canonical migration has not reached explicit Home acceptance when Stage 5 begins, Stage 5 stops before mutation and reconciles the dependency instead of creating a parallel canonical/sync architecture.
+If the fresh Stage 5 entry audit cannot confirm the accepted PVE canonical runtime and healthy PVE ↔ `ai-node` synchronization, Stage 5 stops before mutation and reconciles the dependency instead of creating a parallel canonical/sync architecture.
 
 MacBook/iPhone/iPad Obsidian synchronization is completely outside Cloud Infrastructure scope and is assigned to a later separate Home Infrastructure user-integration branch.
 
@@ -160,7 +160,7 @@ Protected private web namespace includes `n8n`, `code`, future `app`, `backup`, 
 
 Shared Certbot lineage: `/etc/letsencrypt/live/escloud.us`.
 
-Current SAN set includes `escloud.us`, `app`, `auth`, `backup`, `chat`, `cloud`, `code`, `docs`, `hermes`, `mail`, `n8n`, `ops`, `sync.escloud.us`. `update.escloud.us` has been created in DNS for the future maintenance/update page; certificate/ingress activation remains deferred to Stage 7.
+Current SAN set includes `escloud.us`, `app.escloud.us`, `auth.escloud.us`, `backup.escloud.us`, `chat.escloud.us`, `cloud.escloud.us`, `code.escloud.us`, `docs.escloud.us`, `hermes.escloud.us`, `mail.escloud.us`, `n8n.escloud.us`, `ops.escloud.us` and `sync.escloud.us`. `update.escloud.us` has been created in DNS for the future maintenance/update page; certificate/ingress activation remains deferred to Stage 7.
 
 ## Stage 2 applications
 
@@ -300,7 +300,7 @@ Stage 4 is **COMPLETE / ACCEPTED** with `STAGE4_FINAL_ACCEPTANCE=PASS`.
 ## Recovery / preserved state
 
 - Stage 1 recovery archive: `/srv/backups/edge-stage1/edge-stage1-base-20260916T234611Z.tar.gz`, SHA256 `37486e763ddac4c5ef3a92a35c3dad49787d75ffd8b97499073c79af617cc566`;
-- migration-preservation archive: `/tmp/edge-migration-preservation-20260916T141048Z.tar.gz`, SHA256 `0203e5845f57bc1d04b384cef2b26a45fbff855c341e1edf1193034c34de9fdf`, retained outside GitHub for legacy-reference/recovery use; do not indiscriminately restore legacy credentials.
+- the sensitive migration-preservation archive was created at `/tmp/edge-migration-preservation-20260916T141048Z.tar.gz` with SHA256 `0203e5845f57bc1d04b384cef2b26a45fbff855c341e1edf1193034c34de9fdf`, but the 2026-09-19 read-only audit found that temporary path absent. The hash remains historical evidence, not an available recovery artifact. `migration-reference/` remains the sanitized engineering reference; recreate any required sensitive preservation archive only into deliberate persistent/off-host storage.
 
 ## Stage 4C/4F/4G/4H accepted runtime — 2026-09-18
 
@@ -318,6 +318,7 @@ Stage 4 is **COMPLETE / ACCEPTED** with `STAGE4_FINAL_ACCEPTANCE=PASS`.
 
 - Hermes' upstream API Server binds only `172.19.0.1:8642` on the n8n Docker bridge with Bearer authentication and a narrow UFW rule; it has no public nginx route or public listener.
 - n8n `2.39.7` production workflow `Hermes Machine Invocation` (`Hermes4FMachine01`) uses the built-in HTTP Request node and encrypted credential `Hermes4FAuth01`.
+- The current private path depends on Docker network `n8n_default`, bridge `br-2bdcbc775588`, subnet `172.19.0.0/16` and gateway `172.19.0.1`. Recreating or renumbering that network requires a read-only topology check followed by coordinated Hermes bind, workflow URL and UFW reconciliation before service acceptance.
 - Selector values `vllm`, `codex` and `antigravity` are supported.
 - Exact random-value E2E passed for direct Hermes/vLLM response, real foreground Codex CLI and real foreground Antigravity CLI.
 - Final production n8n state: one published Hermes workflow, Mattermost plus Hermes credentials, no acceptance/test workflow, healthy container.
@@ -340,4 +341,3 @@ Stage 4 is complete and persisted. The next finite infrastructure stage is Stage
 Image Generation is non-blocking for Stage 4 and must not divert the critical path; any later image-quality acceptance is human/visual. Do not add a desktop stack solely to make CUA applicable on the headless `edge`.
 
 Do not reopen Stage 3 transport or reinstall already accepted Stage 4 components without a concrete incompatibility.
-

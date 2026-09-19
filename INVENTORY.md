@@ -227,7 +227,7 @@ Continuous workstream after Stage 10, not an infrastructure-completion stage:
 
 - historical baseline: `NL_CORE_VDS_Current_State_Baseline_2026-09-14.md`;
 - Stage 1 recovery archive `/srv/backups/edge-stage1/edge-stage1-base-20260916T234611Z.tar.gz`, SHA256 `37486e763ddac4c5ef3a92a35c3dad49787d75ffd8b97499073c79af617cc566`;
-- authoritative migration-preservation archive `/tmp/edge-migration-preservation-20260916T141048Z.tar.gz`, SHA256 `0203e5845f57bc1d04b384cef2b26a45fbff855c341e1edf1193034c34de9fdf`, retained for later legacy-reference work.
+- historical migration-preservation archive identity: `/tmp/edge-migration-preservation-20260916T141048Z.tar.gz`, SHA256 `0203e5845f57bc1d04b384cef2b26a45fbff855c341e1edf1193034c34de9fdf`. The 2026-09-19 read-only audit found the temporary path absent, so this is not a currently available recovery artifact. The sanitized `migration-reference/` remains in Git.
 
 ## Stage 4 services — Hermes / Mattermost / n8n integration
 
@@ -311,4 +311,3 @@ Stage 02.5 — COMPLETE / ACCEPTED.
 Stage 3 — COMPLETE / ACCEPTED.  
 
 `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS`. Final Stage 3 record: `STAGE_03_ACCEPTANCE_2026-09-18.md`. Stage 4 — Edge Hermes Agent Runtime is COMPLETE / ACCEPTED with `STAGE4_FINAL_ACCEPTANCE=PASS`; final record: `STAGE_04_FINAL_ACCEPTANCE_2026-09-18.md`.
-

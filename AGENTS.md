@@ -18,13 +18,13 @@ Read, in this order when relevant:
 
 ## Current checkpoint invariant
 
-Current canonical work is:
+Current accepted checkpoint is:
 
-`04.3 — Edge Hermes Stage 4 Recovery, Completion & Final Acceptance`
+`04.3 — Edge Hermes Stage 4 Recovery, Completion & Final Acceptance` — COMPLETE / ACCEPTED.
 
 Stage 0, Stage 1, Stage 2, Stage 02.5, Stage 3 and Stage 4 are complete and accepted. `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS`; `STAGE4_FINAL_ACCEPTANCE=PASS`.
 
-Stage 5 is the next finite infrastructure stage and has not started. Use `CURRENT_STATE.md` for confirmed runtime, `IMPLEMENTATION_PHASES.md` for the authoritative roadmap/substage scope, and the latest applicable ACCEPTED entries/records for supersession.
+Next canonical work is `05 — Edge Knowledge Replication & Data Integration`; it has not started. Use `CURRENT_STATE.md` for confirmed runtime, `IMPLEMENTATION_PHASES.md` for the authoritative roadmap/substage scope, and the latest applicable ACCEPTED entries/records for supersession.
 
 Do not duplicate mutable stage chronology in this file. `AGENTS.md` should contain durable cross-agent rules; volatile progress belongs in `CURRENT_STATE.md` and `IMPLEMENTATION_PHASES.md`.
 

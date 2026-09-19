@@ -392,7 +392,7 @@ At minimum audit:
 - actual RO/RW consumers on `edge`;
 - whether a full replica or bounded subset is justified.
 
-If Home PVE canonical migration is not accepted at Stage 5 entry, **stop before mutation and reconcile the dependency**. Do not invent a parallel Cloud canonical/sync architecture.
+If the fresh entry audit cannot confirm the accepted PVE canonical runtime and healthy PVE ↔ `ai-node` synchronization, **stop before mutation and reconcile the dependency**. Do not invent a parallel Cloud canonical/sync architecture.
 
 ### Implementation principle
 
