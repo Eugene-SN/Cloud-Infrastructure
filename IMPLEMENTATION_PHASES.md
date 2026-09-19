@@ -366,14 +366,15 @@ Data topology remains PVE ↔ ai-node plus PVE ↔ edge.
 
 Purpose: make the canonical PVE Knowledge node the single server-side full Obsidian application authority while keeping vault storage independent of the application LXC.
 
-Accepted initial LXC target:
+Accepted LXC target after the runtime packaging gate:
 
 - 1 vCPU;
 - 1024 MiB RAM;
 - 512 MiB swap limit;
-- ~4 GiB rootfs;
+- 8 GiB rootfs;
 - onboot enabled;
-- canonical vault remains on `pve/knowledge` and is bind-mounted RW from `/srv/knowledge/obsidian`.
+- canonical vault remains on `pve/knowledge` and is bind-mounted RW from `/srv/knowledge/obsidian`;
+- LinuxServer Obsidian/Selkies inside the LXC is the selected runtime packaging.
 
 PVE host swap remains at the existing 8 GiB unless post-deployment evidence demonstrates actual memory pressure; no speculative swap expansion is part of 05.2.
 
