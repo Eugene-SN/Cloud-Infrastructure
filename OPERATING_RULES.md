@@ -279,7 +279,7 @@ Preserve the final Stage 4 records and do not repeat accepted E2E tests without 
 
 ## Data/knowledge sequencing
 
-Detailed target record: `STAGE_05_KNOWLEDGE_ARCHITECTURE_ACCEPTANCE_2026-09-19.md`.
+Detailed target record: `STAGE_05_1_KNOWLEDGE_RECONCILIATION_TARGET_ARCHITECTURE_ACCEPTANCE_2026-09-19.md`.
 
 - Home Infrastructure owns the accepted PVE canonical Knowledge authority at `/srv/knowledge/obsidian`, the PVE Syncthing hub and canonical backup/restore boundary.
 - Personal Agents Infrastructure owns the `ai-node` active RW replica at `/srv/ai-data/knowledge/obsidian` and local AI/application consumers/producers.
