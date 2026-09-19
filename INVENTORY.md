@@ -203,10 +203,11 @@ Fresh PVE Obsidian-readiness inventory:
 
 Accepted target inventory:
 
-### PVE / new Obsidian LXC
+### PVE / CT210 `obsidian`
 
 - PVE remains canonical RW Knowledge authority, Syncthing hub and primary durable recovery authority;
-- add one dedicated lightweight LXC for the full server-side Obsidian runtime;
+- CT210 `obsidian` exists and is running as the dedicated lightweight LXC for the full server-side Obsidian runtime;
+- guest OS Debian 13.6; static IP `192.168.1.15/24`; gateway `192.168.1.254`; DNS `192.168.1.1`; search domain `lan`;
 - target LXC: 1 vCPU, 1024 MiB RAM, 512 MiB swap, 8 GiB rootfs, onboot;
 - canonical vault remains outside rootfs and is bind-mounted RW from `/srv/knowledge/obsidian`;
 - runtime provides File Recovery, index/metadata, CLI/core-plugin baseline and private `obsidian.lan` WebUI;
