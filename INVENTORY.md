@@ -179,35 +179,54 @@ Detailed record: `STAGE_02_5_CONNECTIVITY_SELECTION_ACCEPTANCE_2026-09-17.md`.
 
 ## Stage 5 knowledge/data boundary
 
-Status: **TARGET ARCHITECTURE ACCEPTED; ENTRY AUDIT COMPLETE; EDGE DEPLOYMENT NOT STARTED**.
+Status: **05.1 COMPLETE / ACCEPTED; 05.2 NEXT; 05.3 PLANNED**.
 
-Detailed record: `STAGE_05_1_KNOWLEDGE_RECONCILIATION_TARGET_ARCHITECTURE_ACCEPTANCE_2026-09-19.md`.
+Authoritative record: `STAGE_05_1_FINAL_KNOWLEDGE_RUNTIME_ARCHITECTURE_ACCEPTANCE_2026-09-19.md`.
 
 Confirmed current inventory:
 
-- PVE canonical vault `/srv/knowledge/obsidian`, Syncthing `2.1.5`, folder `knowledge-obsidian`, existing ai-node peer;
-- ai-node active RW replica `/srv/ai-data/knowledge/obsidian`, Syncthing `2.1.5`, current n8n RW consumer;
+- PVE canonical vault `/srv/knowledge/obsidian` on dedicated `pve/knowledge` 32 GiB ext4;
+- PVE Syncthing `2.1.5`, folder `knowledge-obsidian`, existing ai-node peer;
+- ai-node active RW replica `/srv/ai-data/knowledge/obsidian`, current n8n RW consumer;
 - CT220 PVE canonical RO consumer;
 - CT208 accepted canonical Knowledge backup/restore;
 - edge has no Syncthing or `/srv/knowledge` tree yet;
-- edge -> PVE and edge -> ai-node TCP/22000 reachability passes over the accepted NetBird/Home route;
-- edge Hermes runs as `core` UID/GID `1000:1000`;
-- edge n8n runs as container UID/GID `1000:1000`;
-- no edge public Syncthing listeners/firewall rules.
+- edge -> PVE/ai-node TCP/22000 reachability passes over the accepted private route.
+
+Fresh PVE Obsidian-readiness inventory:
+
+- CPU: Intel Core i3-N305, 8 cores;
+- RAM: ~15 GiB total, ~6.5 GiB available;
+- host swap: 8 GiB total, ~5.6 GiB free;
+- PVE manager `9.2.20`;
+- no host swap expansion planned without measured post-deployment pressure.
 
 Accepted target inventory:
 
-- PVE = canonical RW data/recovery authority and Syncthing hub;
-- ai-node = active RW PAI/application replica;
-- edge = active RW Cloud/agent replica at `/srv/knowledge/obsidian`;
-- edge path ownership: `/srv/knowledge core:core 0755`, replica `core:core 2775`;
-- edge n8n target bind: `/home/node/knowledge-canonical`;
-- edge Hermes/Codex/Antigravity direct host-path consumers;
-- no edge Obsidian runtime/WebUI;
-- future external/iOS data-access endpoint role belongs to edge, exact client mechanism unresolved;
-- future private Obsidian WebUI direction belongs to ai-node, potentially `obsidian.lan`.
+### PVE / new Obsidian LXC
 
-Stage 05.2 deploys edge and may perform the narrowly required PVE changes for edge↔PVE Syncthing integration, including edge Device ID registration/folder sharing. ai-node and OpenClaw application architecture are preserved; future ai-node Obsidian WebUI and external iOS/macOS/Windows client-access implementation are outside Stage 5 runtime scope.
+- PVE remains canonical RW Knowledge authority, Syncthing hub and primary durable recovery authority;
+- add one dedicated lightweight LXC for the full server-side Obsidian runtime;
+- target LXC: 1 vCPU, 1024 MiB RAM, 512 MiB swap, ~4 GiB rootfs, onboot;
+- canonical vault remains outside rootfs and is bind-mounted RW from `/srv/knowledge/obsidian`;
+- runtime provides File Recovery, index/metadata, CLI/core-plugin baseline and private `obsidian.lan` WebUI;
+- packaging method chosen in 05.2 between native Obsidian+Selkies and LinuxServer Obsidian/Selkies based on simplicity/supportability.
+
+### ai-node
+
+- active RW PAI/application replica;
+- n8n/OCR/RAG/AI consumers;
+- no server-side Obsidian runtime/WebUI by default.
+
+### edge
+
+- future active RW Cloud/agent replica at `/srv/knowledge/obsidian`;
+- target ownership `/srv/knowledge core:core 0755`, replica `core:core 2775`;
+- edge n8n target bind `/home/node/knowledge-canonical`;
+- Hermes/Codex/Antigravity direct host-path consumers;
+- no edge Obsidian WebUI;
+- no edge Obsidian runtime in Stage 5;
+- future iOS/macOS/Windows/Android client-access endpoint role remains accepted, exact mechanism unresolved and not deployed in Stage 5.
 
 
 # Deployment stage inventory
@@ -216,8 +235,9 @@ Stage 05.2 deploys edge and may perform the narrowly required PVE changes for ed
 |---|---|---|
 | 3 | Cross-site Connectivity Foundation | COMPLETE / ACCEPTED; `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS` |
 | 4 | Hermes Agent Runtime | COMPLETE / ACCEPTED; `STAGE4_FINAL_ACCEPTANCE=PASS` |
-| 05.1 | Cross-project Knowledge Reconciliation & Target Architecture | COMPLETE / ACCEPTED | 
-| 05.2 | Edge Knowledge Replication & Data Integration | IMPLEMENTATION NOT STARTED |
+| 05.1 | Cross-project Knowledge Reconciliation & Target Architecture | COMPLETE / ACCEPTED |
+| 05.2 | PVE Canonical Obsidian Runtime & WebUI | NEXT / IMPLEMENTATION NOT STARTED |
+| 05.3 | Edge Knowledge Replication & Data Integration | PLANNED / IMPLEMENTATION NOT STARTED |
 | 6 | Backrest & Recovery | PRODUCT DIRECTION ACCEPTED; topology research pending |
 | 7 | Maintenance & Update | Semaphore accepted; deploy only after Stage 6 restore acceptance |
 | 8 | Monitoring, Heartbeats & Alerts | REQUIRED / PRODUCT UNRESOLVED |
