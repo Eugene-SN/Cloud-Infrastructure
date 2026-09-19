@@ -299,7 +299,7 @@ Custom plugins, source patches, shim services, direct DB coupling, bespoke bridg
 
 **Status: COMPLETE / ACCEPTED.**
 
-Bounded integrated acceptance reused prior PASS evidence and verified current boundaries: gateway/Dashboard persistence, vLLM, Codex, current Antigravity `1.2.6`, Dashboard/OIDC/TLS, Mattermost, n8n, private API, listeners and configuration semantics.
+Bounded integrated acceptance reused prior PASS evidence and verified the then-current boundaries: gateway/Dashboard persistence, vLLM, Codex, Antigravity `1.2.6`, Dashboard/OIDC/TLS, Mattermost, n8n, private API, listeners and configuration semantics. Current Antigravity runtime is `1.2.7` after a 2026-09-19 post-acceptance reconciliation; this does not rewrite the historical Stage 4G evidence.
 
 A Dashboard-driven global model switch was detected as a real regression signal. The accepted Qwen3.8/custom-vLLM settings were restored with native Hermes commands, native-validated and re-proven through n8n E2E. Current config SHA256: `fe2f0fead4781ed28d0c4bf61720bdc52a6b31a41040a477afe6351b5df2f824`.
 
