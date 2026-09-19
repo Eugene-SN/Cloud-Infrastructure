@@ -203,19 +203,17 @@ Fresh PVE Obsidian-readiness inventory:
 
 Accepted target inventory:
 
-### PVE / CT210 `obsidian`
+### PVE / CT210 `obsidian` — production target, currently absent
 
 - PVE remains canonical RW Knowledge authority, Syncthing hub and primary durable recovery authority;
-- CT210 `obsidian` exists and is running as the dedicated lightweight LXC for the full server-side Obsidian runtime;
-- guest OS Debian 13.6; static IP `192.168.1.15/24`; gateway `192.168.1.254`; DNS `192.168.1.1`; search domain `lan`;
-- Docker CE `29.8.1`, containerd `2.3.5`, Compose `5.5.1` installed and accepted in smoke testing;
-- LinuxServer Obsidian/Selkies smoke runtime accepted on TCP/3001 with image digest `sha256:c6c86336a2cf57506b0db2beb09ef4a50170808820a59c20063e669d12122dd4`;
-- canonical vault is not yet mounted; 8 GiB rootfs was measured at 87% used and superseded by a 16 GiB rootfs; post-resize use is ~44% with ~8.5 GiB free;
-- CT stop/start lifecycle verified Docker and Obsidian/Selkies automatic recovery with `restart: unless-stopped` and HTTPS recovery;
-- target LXC: 1 vCPU, 1024 MiB RAM, 512 MiB swap, 8 GiB rootfs, onboot;
+- the comparative CT210 used for Stage 05.2 runtime evaluation was fully destroyed on 2026-09-19; its config and experimental rootfs are absent, and the canonical vault was never mounted or mutated by that experiment;
+- production CT210 has not yet been deployed;
+- accepted production network identity remains CT210 `obsidian`, static `192.168.1.15/24`, gateway `192.168.1.254`, DNS `192.168.1.1`, search domain `lan`;
+- accepted production LXC envelope: 1 vCPU, 512 MiB RAM, 256 MiB swap, 8 GiB rootfs, onboot;
 - canonical vault remains outside rootfs and is bind-mounted RW from `/srv/knowledge/obsidian`;
-- runtime provides File Recovery, index/metadata, CLI/core-plugin baseline and private `obsidian.lan` WebUI;
-- selected packaging: LinuxServer Obsidian/Selkies inside the dedicated LXC.
+- selected runtime packaging: current stable Ignis in the dedicated LXC;
+- Ignis acceptance on an isolated test vault passed filesystem bridge, external-change visibility, File Recovery baseline, `ob`/Headless Sync presence and restart persistence;
+- runtime role is private `obsidian.lan` WebUI plus required Obsidian-aware File Recovery/index/headless bridge capabilities; Syncthing and Restic remain independent infrastructure layers.
 
 ### ai-node
 
