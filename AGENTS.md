@@ -181,17 +181,19 @@ Do not implement user-specific workflows as part of Stage 4 infrastructure accep
 
 The permanent assumption that `ai-node:/srv/ai-data/knowledge/obsidian` must remain canonical is superseded for future architecture.
 
-Home Infrastructure records `KNOWLEDGE_FABRIC_CANONICAL_CUTOVER=PASS` on 2026-09-18: PVE `/srv/knowledge/obsidian` is canonical and `ai-node:/srv/ai-data/knowledge/obsidian` is an active RW Syncthing replica. This is accepted cross-project evidence; a fresh Home/PAI runtime audit remains mandatory before Cloud Stage 5 deployment.
+Home Infrastructure records `KNOWLEDGE_FABRIC_CANONICAL_CUTOVER=PASS` on 2026-09-18: PVE `/srv/knowledge/obsidian` is canonical and `ai-node:/srv/ai-data/knowledge/obsidian` is an active RW Syncthing replica. The expanded Cloud Stage 5 cross-project entry audit completed on 2026-09-19 with PVE, ai-node and edge entry gates PASS.
 
-Future ownership boundary:
+Future ownership/role boundary:
 
-- Home Infrastructure owns the PVE 24/7 canonical knowledge foundation and server-side synchronization mechanism;
-- Personal Agents Infrastructure owns the `ai-node` active RW replica and local AI consumers/producers after cutover;
-- Cloud Infrastructure owns only the `edge` active RW replica and Cloud-side integration.
+- Home Infrastructure owns the PVE canonical Knowledge authority, Syncthing hub and canonical backup/restore boundary;
+- Personal Agents Infrastructure owns the `ai-node` active RW replica and local AI/application consumers/producers;
+- Cloud Infrastructure owns the `edge` active RW replica and Cloud-side consumers/producers.
 
-Stage 5 is therefore an integration stage. It begins with a fresh Home/PAI/Cloud read-only audit and reuses the Home-accepted synchronization mechanism by default. Do not invent a second primary synchronization architecture for the same knowledge tree without a concrete incompatibility and explicit superseding decision.
+Accepted topology is PVE ↔ ai-node plus PVE ↔ edge. Do not add direct edge ↔ ai-node Syncthing merely for nominal full-mesh symmetry because the current edge -> Home path itself depends on CT300 on PVE.
 
-MacBook/iPhone/iPad Obsidian synchronization is outside Cloud Infrastructure scope.
+Cloud Stage 5 mutates **edge only**; PVE/ai-node remain dependency and non-regression boundaries. PVE registration/sharing of the future edge Syncthing Device ID is a separate Home prerequisite unless explicitly re-scoped. Reuse Syncthing; do not invent a second primary server-side synchronization engine without a concrete incompatibility and explicit superseding decision.
+
+Future external/iOS client data access is intended to terminate on edge through a separately selected client-facing mechanism without public Syncthing exposure. A future private Obsidian WebUI belongs on ai-node, not edge.
 
 ## Lifecycle ordering invariants
 
