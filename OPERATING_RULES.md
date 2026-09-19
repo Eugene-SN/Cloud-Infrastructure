@@ -42,20 +42,21 @@ Rules:
 
 Completed canonical stages:
 
-- `00 — Cloud Infrastructure Architecture Discovery & Target Design` — Stage 0 — COMPLETE / ACCEPTED;
-- `01 — Edge Clean Rebuild & Base Platform Deployment` — Stage 1 — COMPLETE / ACCEPTED;
-- `02 — Edge Core Applications` — Stage 2 — COMPLETE / ACCEPTED;
+- `00 — Cloud Infrastructure Architecture Discovery & Target Design` — COMPLETE / ACCEPTED;
+- `01 — Edge Clean Rebuild & Base Platform Deployment` — COMPLETE / ACCEPTED;
+- `02 — Edge Core Applications` — COMPLETE / ACCEPTED;
 - `02.5 — Remaining Functional Scope Reconciliation & Research` — COMPLETE / ACCEPTED / RESEARCH-ONLY;
-- `03 — Edge Cross-site Connectivity Foundation` — Stage 3 — COMPLETE / ACCEPTED with `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS`.
+- `03 — Edge Cross-site Connectivity Foundation` — COMPLETE / ACCEPTED;
+- `04 — Edge Hermes Agent Runtime` — COMPLETE / ACCEPTED;
+- `05 — Knowledge Fabric Runtime Deployment` — COMPLETE / ACCEPTED, including 05.1/05.2/05.3.
 
 Current accepted checkpoint:
 
-- `05.1 — Cross-project Knowledge Reconciliation & Target Architecture` — COMPLETE / ACCEPTED; `STAGE05_1_FINAL_KNOWLEDGE_RUNTIME_ARCHITECTURE=PASS`.
+- `STAGE05_FINAL_ACCEPTANCE=PASS`;
+- final Stage 5 record: `STAGE_05_3_FINAL_ACCEPTANCE_2026-09-20.md`.
 
 Remaining finite infrastructure roadmap:
 
-- `05.2 — PVE Canonical Obsidian Runtime & WebUI`;
-- `05.3 — Edge Knowledge Replication & Data Integration`;
 - `06 — Edge Backrest & Recovery`;
 - `07 — Edge Maintenance & Update` — Semaphore/update workflow plus separate Codex `update.escloud.us` substage;
 - `08 — Edge Monitoring, Heartbeats & Alerts`;
@@ -182,15 +183,15 @@ A completed subtask is not permission to leave accepted stage scope incomplete.
 
 Current facts:
 
-1. Stage 0 preservation/recovery is complete.
-2. Stage 1 clean rebuild/base platform is complete and accepted.
-3. Stage 2 Core Applications is complete and accepted.
-4. Stage 02.5 research reconciliation is complete and accepted.
-5. Stage 3 Cross-site Connectivity Foundation is complete and accepted.
-6. `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS`.
-7. Stage 4 is COMPLETE / ACCEPTED with `STAGE4_FINAL_ACCEPTANCE=PASS`; Stage 5 is the next finite infrastructure stage and has not started.
-8. Reuse the accepted Stage 3 transport; do not reopen NetBird/routing choices without a concrete incompatibility.
-9. The Stage 1 Docker `live-restore=true` setting is superseded; current accepted runtime is `live-restore=false`.
+1. Stage 0 through Stage 5 are complete and accepted.
+2. `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS`.
+3. `STAGE4_FINAL_ACCEPTANCE=PASS`.
+4. `STAGE05_2_PVE_CANONICAL_OBSIDIAN_RUNTIME=PASS`.
+5. `STAGE05_3_EDGE_KNOWLEDGE_REPLICATION_DATA_INTEGRATION=PASS`.
+6. `STAGE05_FINAL_ACCEPTANCE=PASS`.
+7. The next finite infrastructure stage is Stage 6 — Edge Backrest & Recovery.
+8. Reuse the accepted Stage 3 transport and Stage 5 Knowledge topology; do not reopen them without a concrete incompatibility.
+9. The Stage 1 Docker `live-restore=true` setting remains superseded; current accepted runtime is `live-restore=false`.
 
 # Stage 3 — Cross-site Connectivity contract
 
@@ -280,24 +281,27 @@ Preserve the final Stage 4 records and do not repeat accepted E2E tests without 
 
 ## Data/knowledge sequencing
 
-Latest target record: `STAGE_05_1_FINAL_KNOWLEDGE_RUNTIME_ARCHITECTURE_ACCEPTANCE_2026-09-19.md`.
+Stage 5 is COMPLETE / ACCEPTED.
 
-- PVE owns canonical Knowledge at `/srv/knowledge/obsidian`, the Syncthing hub, primary Home Knowledge recovery authority and the single Ignis-based server-side Obsidian-aware runtime.
-- ai-node owns the active RW PAI/application replica at `/srv/ai-data/knowledge/obsidian`; no server-side Obsidian runtime/WebUI is planned there by default.
-- edge owns the future active RW Cloud/agent replica at `/srv/knowledge/obsidian`; no edge Obsidian runtime/WebUI is deployed in Stage 5.
-- Accepted data topology is PVE ↔ ai-node plus PVE ↔ edge; no direct edge ↔ ai-node Syncthing peer is required under the current CT300/PVE network dependency.
-- Stage 5 is split into:
-  - `05.1` architecture/reconciliation — COMPLETE / ACCEPTED;
-  - `05.2` PVE Canonical Obsidian Runtime & WebUI — NEXT;
-  - `05.3` Edge Knowledge Replication & Data Integration — PLANNED.
-- 05.2 target LXC: 1 vCPU, 512 MiB RAM, 256 MiB swap, 8 GiB rootfs, onboot; canonical vault remains outside the rootfs and is RW bind-mounted from `/srv/knowledge/obsidian`.
-- Existing PVE host swap is 8 GiB with ~5.6 GiB free at the readiness audit; do not expand host swap without measured need.
-- 05.2 runtime packaging is accepted as Ignis inside the dedicated LXC. Treat the Ignis image as the normal update unit and use the Obsidian version supported by that Ignis release; do not independently advance Obsidian ahead of Ignis without a concrete compatibility reason.
-- `obsidian.lan` is private Home LAN + NetBird-routed access only; no public Internet Obsidian WebUI.
-- 05.3 reuses Syncthing and performs required PVE↔edge integration, edge consumer integration and failure/conflict/reboot acceptance.
-- Future public iOS/macOS/Windows/Android client access uses edge through a separately selected client-facing mechanism; document the direction now, but do not implement it in Stage 5 or expose Syncthing publicly for this purpose.
-- OpenClaw keeps its current PVE canonical RO relationship; do not redesign it as part of Stage 5.
+Authoritative final records:
 
+- `STAGE_05_1_FINAL_KNOWLEDGE_RUNTIME_ARCHITECTURE_ACCEPTANCE_2026-09-19.md`;
+- `STAGE_05_2_FINAL_ACCEPTANCE_2026-09-19.md`;
+- `STAGE_05_3_FINAL_ACCEPTANCE_2026-09-20.md`.
+
+Accepted runtime:
+
+- PVE owns authoritative Knowledge at `/srv/knowledge/obsidian` on the dedicated `pve/knowledge` filesystem, remains the Syncthing hub/recovery authority, and hosts the single Ignis-based server-side Obsidian runtime through CT210;
+- ai-node owns the active RW PAI/application replica at `/srv/ai-data/knowledge/obsidian`;
+- edge owns the active RW Cloud/agent replica at `/srv/knowledge/obsidian`;
+- topology is PVE ↔ ai-node plus PVE ↔ edge; no direct edge ↔ ai-node Syncthing peer;
+- edge Syncthing runs as `syncthing@core.service`, is reboot-persistent, and exposes only loopback `127.0.0.1:22000` / `127.0.0.1:8384`;
+- edge n8n binds `/srv/knowledge/obsidian` at the same container path RW;
+- Hermes/Codex/Antigravity use the local edge path directly;
+- propagation, outage/reconnect, conflict preservation and reboot recovery are accepted;
+- no public Syncthing and no edge Obsidian runtime/WebUI were added;
+- OpenClaw keeps its existing PVE read-only relationship;
+- future public client access through edge remains outside Stage 5 and requires a separately selected mechanism.
 
 ## Backup/update sequencing
 
