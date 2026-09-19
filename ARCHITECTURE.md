@@ -322,7 +322,7 @@ The PVE Obsidian runtime provides:
 
 `obsidian.lan` is private to Home LAN and NetBird-routed Home clients; no public Internet Obsidian UI is part of Stage 5.
 
-Runtime packaging inside the LXC is a Stage 05.2 design gate. Native Linux Obsidian plus native Selkies is the preferred hypothesis only if it proves simpler/easier to maintain than the integrated LinuxServer Obsidian/Selkies container. Do not introduce a full desktop environment merely to host Obsidian.
+Runtime packaging inside the LXC is resolved: LinuxServer Obsidian/Selkies is the accepted implementation. It provides the integrated browser/session stack and a single container lifecycle/update path, avoiding custom native Obsidian + native Selkies session plumbing. No full desktop environment is introduced.
 
 Fresh PVE resource evidence from `PVE_OBSIDIAN_RESOURCE_READINESS_AUDIT=PASS`:
 
