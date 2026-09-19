@@ -279,20 +279,24 @@ Preserve the final Stage 4 records and do not repeat accepted E2E tests without 
 
 ## Data/knowledge sequencing
 
-Detailed target record: `STAGE_05_1_KNOWLEDGE_RECONCILIATION_TARGET_ARCHITECTURE_ACCEPTANCE_2026-09-19.md`.
+Latest target record: `STAGE_05_1_FINAL_KNOWLEDGE_RUNTIME_ARCHITECTURE_ACCEPTANCE_2026-09-19.md`.
 
-- Home Infrastructure owns the accepted PVE canonical Knowledge authority at `/srv/knowledge/obsidian`, the PVE Syncthing hub and canonical backup/restore boundary.
-- Personal Agents Infrastructure owns the `ai-node` active RW replica at `/srv/ai-data/knowledge/obsidian` and local AI/application consumers/producers.
-- Cloud Infrastructure owns the `edge` active RW replica target at `/srv/knowledge/obsidian` and Cloud-side consumers/producers.
-- Accepted data topology is PVE ↔ ai-node plus PVE ↔ edge; a direct edge ↔ ai-node Syncthing peer is not required under the current CT300/PVE network dependency.
-- The 2026-09-19 Stage 5 entry audit has already confirmed the live PVE/ai-node fabric and edge prerequisites; do not rerun broad entry audits without a concrete regression signal.
-- Stage 5 is split into `05.1` research/architecture and `05.2` implementation. 05.2 deploys edge and may inspect/change PVE where required for edge↔PVE Syncthing integration, including edge Device ID authorization/folder sharing. ai-node remains a non-redesign/non-regression boundary; do not deploy its future Obsidian WebUI or redesign OpenClaw in Stage 5.
-- Reuse the Home Syncthing mechanism; do not add another primary server-side synchronization engine without concrete incompatibility and explicit superseding acceptance.
-- Edge target ownership is `/srv/knowledge core:core 0755` and `/srv/knowledge/obsidian core:core 2775`; Syncthing runs under `core`.
-- Future public iOS/macOS/Windows client data access is intended to use edge through a separately selected client-facing mechanism; document this direction now, but do not implement the client-access layer in Stage 5 or expose Syncthing publicly for this purpose.
-- A future private Obsidian WebUI belongs on ai-node (`obsidian.lan` direction), not on resource-sensitive edge.
-- PVE Obsidian runtime is optional/not established; do not install it merely for symmetry.
-- OpenClaw keeps its current PVE canonical RO relationship unless a later accepted use case requires otherwise.
+- PVE owns canonical Knowledge at `/srv/knowledge/obsidian`, the Syncthing hub, primary Home Knowledge recovery authority and the single full server-side Obsidian runtime.
+- ai-node owns the active RW PAI/application replica at `/srv/ai-data/knowledge/obsidian`; no server-side Obsidian runtime/WebUI is planned there by default.
+- edge owns the future active RW Cloud/agent replica at `/srv/knowledge/obsidian`; no edge Obsidian runtime/WebUI is deployed in Stage 5.
+- Accepted data topology is PVE ↔ ai-node plus PVE ↔ edge; no direct edge ↔ ai-node Syncthing peer is required under the current CT300/PVE network dependency.
+- Stage 5 is split into:
+  - `05.1` architecture/reconciliation — COMPLETE / ACCEPTED;
+  - `05.2` PVE Canonical Obsidian Runtime & WebUI — NEXT;
+  - `05.3` Edge Knowledge Replication & Data Integration — PLANNED.
+- 05.2 target LXC: 1 vCPU, 1024 MiB RAM, 512 MiB swap, ~4 GiB rootfs, onboot; canonical vault remains outside the rootfs and is RW bind-mounted from `/srv/knowledge/obsidian`.
+- Existing PVE host swap is 8 GiB with ~5.6 GiB free at the readiness audit; do not expand host swap without measured need.
+- 05.2 runtime packaging remains an implementation gate: native official Obsidian + native Selkies is preferred only if simpler/easier to maintain than LinuxServer Obsidian/Selkies in the dedicated LXC.
+- `obsidian.lan` is private Home LAN + NetBird-routed access only; no public Internet Obsidian WebUI.
+- 05.3 reuses Syncthing and performs required PVE↔edge integration, edge consumer integration and failure/conflict/reboot acceptance.
+- Future public iOS/macOS/Windows/Android client access uses edge through a separately selected client-facing mechanism; document the direction now, but do not implement it in Stage 5 or expose Syncthing publicly for this purpose.
+- OpenClaw keeps its current PVE canonical RO relationship; do not redesign it as part of Stage 5.
+
 
 ## Backup/update sequencing
 
