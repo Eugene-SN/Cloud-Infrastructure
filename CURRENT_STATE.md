@@ -189,7 +189,7 @@ Current SAN set includes `escloud.us`, `app.escloud.us`, `auth.escloud.us`, `bac
 
 ### Antigravity CLI
 
-- current accepted version `1.2.6` (Stage 4G); Stage 2/4B accepted `1.2.5` historically;
+- current runtime version `1.2.7`; Stage 4G accepted `1.2.6`, and Stage 2/4B accepted `1.2.5` historically;
 - fresh Google OAuth;
 - Remote Control instance `edge`;
 - persistent user service accepted.
@@ -226,17 +226,17 @@ Fresh expanded read-only audit on 2026-09-18 confirms the following current runt
 - system toolchain/browser normalization accepted, including managed Chromium and `cua-driver 0.28.2`;
 - `hermes-gateway.service` is enabled and currently active under `core`; current `NRestarts=0`;
 - Mattermost environment is configured and its token validates successfully as bot `hermes`;
-- standalone Codex CLI `0.154.0` and current Antigravity CLI `1.2.6` remain available to `core`;
+- standalone Codex CLI `0.154.0` and current Antigravity CLI `1.2.7` remain available to `core`;
 - Web Search/Extract, Edge TTS and Vision functional probes are PASS; CUA is accepted as `NOT_APPLICABLE_HEADLESS_EDGE`; Image Generation remains configured but is non-blocking for Stage 4 acceptance; fresh core Qwen3.8/vLLM regression is accepted with `STAGE4A_CORE_QWEN_VLLM_REGRESSION=PASS`.
 - Stage 4B executor read-only audit is accepted: `STAGE4B_EXECUTOR_READONLY_AUDIT=PASS`.
 - Actual Hermes local terminal child context is clean for standalone executors: cwd `/home/core`, `HOME=/home/core`, `HERMES_HOME=/home/core/.hermes`, core local bin on PATH, and no `OPENAI_BASE_URL`, `OPENAI_API_KEY` or `CODEX_*` environment override.
 - Codex CLI `0.154.0` exposes native headless `codex exec` capabilities including JSON/ephemeral/sandbox/skip-git/output-last-message/model controls and uses the existing standalone OAuth state with no custom provider/MCP override.
-- At Stage 4B acceptance, Antigravity CLI `1.2.5` raw help confirmed native headless print mode plus JSON/stream-JSON, timeout, model, effort, sandbox/permission and conversation controls; current `1.2.6` later passed bounded Stage 4G E2E.
+- At Stage 4B acceptance, Antigravity CLI `1.2.5` raw help confirmed native headless print mode plus JSON/stream-JSON, timeout, model, effort, sandbox/permission and conversation controls; `1.2.6` later passed bounded Stage 4G E2E, and current `1.2.7` preserves the accepted CLI contract in the 2026-09-19 post-acceptance reconciliation.
 - Accepted Stage 4B target: foreground non-PTY one-shots by default (`codex exec`; `agy -p/--print` with structured output), background only for long/parallel jobs, PTY only for interactive TUI.
 - Trusted-executor policy is accepted: no blanket sandbox/container/workspace-only/network restriction under `core`; critical high-impact mutations require operator approval at the Hermes/orchestration instruction layer before delegation, while ordinary non-critical work should remain frictionless.
 - Stage 4B direct executor integration is COMPLETE / ACCEPTED: `STAGE4B_DIRECT_EXECUTOR_INTEGRATION=PASS`; final record `STAGE_04B_FINAL_ACCEPTANCE_2026-09-18.md`.
 - Codex CLI `0.154.0`: real foreground non-PTY `codex exec` delegation accepted; random repository context was read by Codex and consumed by Hermes; post-test recovery/non-regression PASS.
-- Stage 4B accepted Antigravity CLI `1.2.5` with real foreground non-PTY `agy -p --output-format json`; current `1.2.6` re-passed the same integration boundary through n8n/Hermes in Stage 4G.
+- Stage 4B accepted Antigravity CLI `1.2.5` with real foreground non-PTY `agy -p --output-format json`; `1.2.6` re-passed the same integration boundary through n8n/Hermes in Stage 4G. Current `1.2.7` is a post-acceptance runtime update; its version/CLI contract were reconciled on 2026-09-19 without reopening historical Stage 4 E2E.
 - Hermes `stream-json` Tirith warning contamination remains a known CLI constraint; the accepted Stage 4F interface uses native HTTP JSON and is unaffected.
 - Dashboard/OIDC, private n8n machine interface, bounded integrated acceptance and macOS Remote Gateway are COMPLETE / ACCEPTED.
 
@@ -336,6 +336,14 @@ Stage 4 is **COMPLETE / ACCEPTED** with `STAGE4_FINAL_ACCEPTANCE=PASS`.
 - Acceptance record: `STAGE_04G_SERVER_INTEGRATED_ACCEPTANCE_2026-09-18.md`.
 
 Root recovery snapshots remain under `/srv/backups/edge-stage4c`, `/srv/backups/edge-stage4f` and `/srv/backups/edge-stage4f-network`.
+
+### Post-acceptance runtime reconciliation — 2026-09-19
+
+- Fresh read-only boundary reconciliation passed with `STAGE4_FINAL_BOUNDARY_RECONCILIATION=PASS`.
+- Current Antigravity CLI is `1.2.7`; historical Stage 4G acceptance on `1.2.6` remains valid and unchanged.
+- Hermes Gateway/Dashboard services are active/enabled; Dashboard self-hosted OIDC, PKCE/S256, loopback `127.0.0.1:9119`, private API `172.19.0.1:8642`, stable Docker bridge `n8n-hermes`, n8n workflow/credential inventory, UFW boundary and Mattermost/foundation non-regression all passed.
+- Two attempted Antigravity smoke verifiers were classified as assistant test-harness defects (temporary-directory traversal and job-control/timeout behavior), not production regressions. No production mutation or service restart occurred.
+- Stage 4 remains COMPLETE / ACCEPTED with `STAGE4_FINAL_ACCEPTANCE=PASS`; Stage 5 entry is eligible after this repository reconciliation.
 
 ## Current next step
 
