@@ -117,7 +117,7 @@ Accepted 05.2 LXC envelope after the runtime packaging gate: 1 vCPU, 1024 MiB RA
 
 05.2 runtime packaging is **SELECTED / ACCEPTED**: LinuxServer Obsidian/Selkies inside the dedicated LXC. The native official Obsidian + native Selkies alternative was evaluated and rejected for this deployment because it requires more custom display/session lifecycle plumbing and a less unified update path.
 
-Current 05.2 runtime checkpoint: CT210 `obsidian` is created and running on PVE with Debian 13.6, 1 vCPU, 1024 MiB RAM, 512 MiB swap, 8 GiB rootfs, `onboot=1`, static `192.168.1.15/24`, gateway `192.168.1.254`, DNS `192.168.1.1`, search domain `lan`. Base network/private/public DNS acceptance passed. The canonical vault is not yet mounted and Docker/Obsidian are not yet installed.
+Current 05.2 runtime checkpoint: CT210 `obsidian` is created and running on PVE with Debian 13.6, 1 vCPU, 1024 MiB RAM, 512 MiB swap, 8 GiB rootfs, `onboot=1`, static `192.168.1.15/24`, gateway `192.168.1.254`, DNS `192.168.1.1`, search domain `lan`. Base network/private/public DNS acceptance passed. Docker CE `29.8.1`, containerd `2.3.5` and Compose `5.5.1` are installed. LinuxServer Obsidian/Selkies minimal smoke acceptance passed with image digest `sha256:c6c86336a2cf57506b0db2beb09ef4a50170808820a59c20063e669d12122dd4`, HTTPS on TCP/3001, restart count 0 and no canonical-vault mount. Measured rootfs use is 6.4 GiB of 7.8 GiB (87%, ~997 MiB free), so the previously accepted 8 GiB rootfs is operationally too tight for normal image-update headroom and must be resized before canonical-vault integration.
 
 Future external client-access implementation through edge is accepted architecture but explicitly outside Stage 5. Edge Obsidian runtime remains conditional future work.
 
