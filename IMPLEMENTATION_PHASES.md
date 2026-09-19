@@ -1,6 +1,6 @@
 # Cloud Infrastructure — Accepted Implementation Phases
 
-**Status:** Stage 0–4 COMPLETE / ACCEPTED. Stage 5 target architecture is ACCEPTED and its expanded entry audit is COMPLETE; runtime implementation has not started.
+**Status:** Stage 0–4 COMPLETE / ACCEPTED. Stage 05.1 is COMPLETE / ACCEPTED; Stage 05.2 runtime implementation has not started.
 
 This document is the canonical stage chronology for Cloud Infrastructure / `edge`.
 
@@ -365,13 +365,18 @@ The target Knowledge Fabric is intentionally PVE-centered:
 
 Data topology is PVE ↔ ai-node and PVE ↔ edge. A direct edge ↔ ai-node Syncthing peer is not part of the accepted target because current edge -> Home/PAI reachability itself depends on CT300 hosted on PVE.
 
-### Stage 5 mutation scope
+### Stage 5 branch and mutation scope
 
-Cloud Stage 5 configures **edge only**.
+Stage 5 is deliberately split into exactly two work branches:
 
-PVE and ai-node are dependency/reference/non-regression boundaries. Their full target roles are documented so later Home/PAI work can be reconciled to the same architecture, but Cloud Stage 5 must not reconfigure them implicitly.
+- **05.1 — Cross-project Knowledge Reconciliation & Target Architecture** — COMPLETE / ACCEPTED; read-only reconciliation, architecture and planning;
+- **05.2 — Edge Knowledge Replication & Data Integration** — all runtime deployment, integration, verification and final Stage 5 acceptance.
 
-Important external gate: the audited PVE Syncthing config does not yet contain edge. Registering/authorizing edge Device ID and sharing `knowledge-obsidian` on PVE is therefore a required Home Infrastructure prerequisite (or requires a later explicit scope exception). Stage 5 must stop at that boundary if it is not satisfied.
+05.2 deploys edge and may also inspect/change PVE where required for the planned edge↔PVE Syncthing integration, including edge Device ID registration and folder sharing. These are part of Stage 5 integration, not an external project prerequisite.
+
+ai-node remains an existing dependency/reference/non-regression node: do not redesign it or deploy the future Obsidian WebUI in Stage 5. OpenClaw behavior/current PVE Knowledge integration is likewise preserved.
+
+Future external iOS/macOS/Windows client access through edge is documented in the architecture but is not implemented in 05.2.
 
 ### Accepted edge deployment contract
 
@@ -415,7 +420,7 @@ When the cross-project PVE peer-authorization prerequisite is satisfied, final S
 12. all synthetic test artifacts are removed;
 13. canonical repository state is updated and read back.
 
-Detailed substage sequencing remains to be approved by the operator before implementation. Runtime work is intended to continue in branch/chat `05.2 — Edge Knowledge Replication & Data Integration` only after that plan is accepted.
+Detailed 05.2 substage sequencing remains to be approved by the operator before implementation. After approval, all Stage 5 runtime work continues in `05.2 — Edge Knowledge Replication & Data Integration`; no additional Stage 5 project branch is planned.
 
 
 ## Stage 6 — Edge Backrest & Recovery
