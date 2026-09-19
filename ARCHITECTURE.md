@@ -436,18 +436,15 @@ User-specific automation workflows remain outside infrastructure acceptance.
 
 ## Stage 5 — Edge Knowledge Replication & Data Integration
 
-Integration stage against the accepted Home/PAI knowledge contract.
+**ARCHITECTURE ACCEPTED / ENTRY AUDIT COMPLETE / IMPLEMENTATION NOT STARTED.**
 
-Sequence:
+Detailed record: `STAGE_05_KNOWLEDGE_ARCHITECTURE_ACCEPTANCE_2026-09-19.md`.
 
-1. expanded cross-project read-only audit;
-2. reuse Home sync mechanism by default;
-3. add `edge` active RW replica/producer;
-4. expose minimum local paths to n8n/Hermes/tools;
-5. verify bidirectional propagation, conflict behavior, peer outage/reconciliation and reboot persistence;
-6. verify Home/PAI/Cloud non-regression.
+Cloud Stage 5 configures edge only. Its runtime target is an active RW Syncthing replica at `/srv/knowledge/obsidian`, integrated with Hermes, n8n, Codex and Antigravity. PVE and ai-node remain cross-project dependency/non-regression boundaries.
 
-Apple-device integration is out of scope.
+The accepted data topology is PVE ↔ ai-node plus PVE ↔ edge. The required PVE-side authorization/share for the future edge Syncthing Device ID is a Home Infrastructure prerequisite unless explicitly re-scoped.
+
+Future external/iOS client data access through edge and a future private ai-node Obsidian WebUI are accepted architectural directions but are not automatically part of current Stage 5 core deployment.
 
 ## Stage 6 — Backrest & Recovery
 
