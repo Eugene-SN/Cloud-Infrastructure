@@ -1,6 +1,6 @@
 # Cloud Infrastructure — Accepted Implementation Phases
 
-**Status:** Stage 0–4 COMPLETE / ACCEPTED. Stage 5 is the next finite infrastructure stage.
+**Status:** Stage 0–4 COMPLETE / ACCEPTED. Stage 5 target architecture is ACCEPTED and its expanded entry audit is COMPLETE; runtime implementation has not started.
 
 This document is the canonical stage chronology for Cloud Infrastructure / `edge`.
 
