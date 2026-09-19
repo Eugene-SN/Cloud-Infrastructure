@@ -290,7 +290,7 @@ Latest target record: `STAGE_05_1_FINAL_KNOWLEDGE_RUNTIME_ARCHITECTURE_ACCEPTANC
   - `05.1` architecture/reconciliation — COMPLETE / ACCEPTED;
   - `05.2` PVE Canonical Obsidian Runtime & WebUI — NEXT;
   - `05.3` Edge Knowledge Replication & Data Integration — PLANNED.
-- 05.2 target LXC: 1 vCPU, 1024 MiB RAM, 512 MiB swap, 8 GiB rootfs, onboot; canonical vault remains outside the rootfs and is RW bind-mounted from `/srv/knowledge/obsidian`.
+- 05.2 target LXC: 1 vCPU, 1024 MiB RAM, 512 MiB swap, 16 GiB rootfs, onboot; canonical vault remains outside the rootfs and is RW bind-mounted from `/srv/knowledge/obsidian`.
 - Existing PVE host swap is 8 GiB with ~5.6 GiB free at the readiness audit; do not expand host swap without measured need.
 - 05.2 runtime packaging is accepted as LinuxServer Obsidian/Selkies inside the dedicated LXC; do not replace it with native Obsidian + native Selkies without a concrete incompatibility or an explicit new decision.
 - `obsidian.lan` is private Home LAN + NetBird-routed access only; no public Internet Obsidian WebUI.
