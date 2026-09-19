@@ -279,14 +279,20 @@ Preserve the final Stage 4 records and do not repeat accepted E2E tests without 
 
 ## Data/knowledge sequencing
 
-Stage 5 is **Edge Knowledge Replication & Data Integration** and is owned as an integration stage, not a second knowledge-platform design project.
+Detailed target record: `STAGE_05_KNOWLEDGE_ARCHITECTURE_ACCEPTANCE_2026-09-19.md`.
 
-- Home Infrastructure owns the accepted PVE canonical knowledge foundation at `/srv/knowledge/obsidian`.
-- Personal Agents Infrastructure owns the `ai-node` active replica and local AI consumers/producers after Home cutover.
-- Cloud Infrastructure owns only the `edge` active RW replica and Cloud-side consumers/producers.
-- Home accepted PVE canonical cutover on 2026-09-18; `ai-node:/srv/ai-data/knowledge/obsidian` is now an active RW replica according to that record. Revalidate the live cross-project state at Stage 5 entry.
-- Stage 5 begins with a fresh cross-project read-only audit and reuses the Home-accepted server-side synchronization mechanism by default.
-- MacBook/iPhone/iPad Obsidian synchronization is outside Cloud Infrastructure scope.
+- Home Infrastructure owns the accepted PVE canonical Knowledge authority at `/srv/knowledge/obsidian`, the PVE Syncthing hub and canonical backup/restore boundary.
+- Personal Agents Infrastructure owns the `ai-node` active RW replica at `/srv/ai-data/knowledge/obsidian` and local AI/application consumers/producers.
+- Cloud Infrastructure owns the `edge` active RW replica target at `/srv/knowledge/obsidian` and Cloud-side consumers/producers.
+- Accepted data topology is PVE ↔ ai-node plus PVE ↔ edge; a direct edge ↔ ai-node Syncthing peer is not required under the current CT300/PVE network dependency.
+- The 2026-09-19 Stage 5 entry audit has already confirmed the live PVE/ai-node fabric and edge prerequisites; do not rerun broad entry audits without a concrete regression signal.
+- Cloud Stage 5 mutates **edge only**. PVE/ai-node are reference/non-regression boundaries; PVE authorization of the new edge Syncthing Device ID/share is a separate Home prerequisite unless explicitly re-scoped.
+- Reuse the Home Syncthing mechanism; do not add another primary server-side synchronization engine without concrete incompatibility and explicit superseding acceptance.
+- Edge target ownership is `/srv/knowledge core:core 0755` and `/srv/knowledge/obsidian core:core 2775`; Syncthing runs under `core`.
+- Future public/mobile client data access is intended to use edge through a separately selected client-facing mechanism; do not expose Syncthing publicly for this purpose.
+- A future private Obsidian WebUI belongs on ai-node (`obsidian.lan` direction), not on resource-sensitive edge.
+- PVE Obsidian runtime is optional/not established; do not install it merely for symmetry.
+- OpenClaw keeps its current PVE canonical RO relationship unless a later accepted use case requires otherwise.
 
 ## Backup/update sequencing
 
