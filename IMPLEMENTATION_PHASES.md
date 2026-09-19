@@ -383,11 +383,8 @@ PVE host swap remains at the existing 8 GiB unless post-deployment evidence demo
 1. targeted pre-mutation verification and rollback/recovery path;
 2. create the dedicated LXC with the accepted resource envelope;
 3. bind the existing canonical vault RW into the LXC without copying it into rootfs;
-4. run a deployment-method gate:
-   - official native Obsidian Linux package/AppImage + native Selkies/session lifecycle;
-   - LinuxServer Obsidian/Selkies container inside the dedicated LXC;
-   select the simpler, better-supported stable path;
-5. deploy current stable full Obsidian runtime;
+4. use the accepted LinuxServer Obsidian/Selkies runtime packaging; the native Obsidian + native Selkies comparison gate is complete;
+5. deploy the current stable LinuxServer Obsidian image and full Obsidian runtime;
 6. persist application/config state independently from the vault;
 7. open the canonical vault and verify normal indexing;
 8. enable/verify File Recovery;
