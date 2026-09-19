@@ -364,17 +364,17 @@ Data topology remains PVE ↔ ai-node plus PVE ↔ edge.
 
 ### 05.2 — PVE Canonical Obsidian Runtime & WebUI
 
-Purpose: make the canonical PVE Knowledge node the single server-side full Obsidian application authority while keeping vault storage independent of the application LXC.
+Purpose: make the canonical PVE Knowledge node the single server-side Obsidian-aware application authority while keeping vault storage independent of the application LXC.
 
 Accepted LXC target after the runtime packaging gate:
 
 - 1 vCPU;
-- 1024 MiB RAM;
-- 512 MiB swap limit;
-- 16 GiB rootfs;
+- 512 MiB RAM;
+- 256 MiB swap limit;
+- 8 GiB rootfs;
 - onboot enabled;
 - canonical vault remains on `pve/knowledge` and is bind-mounted RW from `/srv/knowledge/obsidian`;
-- LinuxServer Obsidian/Selkies inside the LXC is the selected runtime packaging.
+- Ignis inside the LXC is the selected runtime packaging.
 
 PVE host swap remains at the existing 8 GiB unless post-deployment evidence demonstrates actual memory pressure; no speculative swap expansion is part of 05.2.
 
@@ -383,14 +383,14 @@ PVE host swap remains at the existing 8 GiB unless post-deployment evidence demo
 1. targeted pre-mutation verification and rollback/recovery path;
 2. create the dedicated LXC with the accepted resource envelope;
 3. bind the existing canonical vault RW into the LXC without copying it into rootfs;
-4. use the accepted LinuxServer Obsidian/Selkies runtime packaging; the native Obsidian + native Selkies comparison gate is complete;
-5. deploy the current stable LinuxServer Obsidian image and full Obsidian runtime;
+4. use the accepted Ignis runtime packaging; the LinuxServer/Selkies and native Obsidian + Selkies comparative experiment is complete;
+5. deploy the current stable Ignis image and use the Obsidian version supported by that Ignis release;
 6. persist application/config state independently from the vault;
 7. open the canonical vault and verify normal indexing;
 8. enable/verify File Recovery;
-9. verify Obsidian CLI/core-plugin baseline where supported;
+9. verify the Ignis headless bridge (`ob` / Headless Sync) and required core-plugin baseline;
 10. publish private WebUI as `obsidian.lan` for Home LAN and NetBird-routed Home clients only;
-11. verify idle, active-WebUI and reindex resource consumption against the 1 GiB LXC limit;
+11. verify idle, active-WebUI and reindex resource consumption against the 512 MiB LXC limit;
 12. verify reboot persistence;
 13. verify no regression to PVE Syncthing, CT208 Backrest/Restic, CT220/OpenClaw, VM100/critical Home guests;
 14. clean temporary artifacts and persist 05.2 acceptance/read-back.
