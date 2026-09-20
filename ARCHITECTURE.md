@@ -557,3 +557,20 @@ Additional accepted directions:
 5. `IMPLEMENTATION_PHASES.md` and stage-specific records;
 6. `FUNCTIONAL_SCAFFOLD_DRAFT.md` for capability intent;
 7. `migration-reference/` and historical baseline for legacy evidence only.
+
+## Accepted Stage 6 backup topology
+
+Stage 6 general backup architecture is intentionally simple:
+
+- one broad general Backrest/Restic plan for the edge root filesystem;
+- persistent `/srv` application/user state is part of that same plan;
+- no separate broad system/data plans;
+- local edge repository = short rollback tier;
+- successful general snapshots are tier-copied to CT208/D5 through append-only rest-server;
+- D5 general history is capped at approximately six months; exact bucket counts are defined in the retention substage;
+- no recurring Restic full/bare-metal chain for the VPS;
+- one provider-panel golden backup/snapshot is created manually after final infrastructure acceptance;
+- Knowledge is the only independent backup chain: `/srv/knowledge`, local-only, no D5 replication, scheduled at 04:00/10:00/16:00/22:00 local to preserve the accepted 2-hour offset from ai-node;
+- live-database consistency is handled as part of the single general-plan capture workflow rather than by splitting scope into more plans.
+
+Exact exclusions, staging/consistency hooks, local retention and D5 bucket counts remain Stage 6 implementation-contract details and must be confirmed before mutation.
