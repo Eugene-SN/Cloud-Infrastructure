@@ -1072,3 +1072,25 @@ Authoritative record:
 - `STAGE05_FINAL_ACCEPTANCE=PASS`
 
 **Supersedes:** the prior planned/not-started status for 05.3 and the earlier planned edge n8n alias `/home/node/knowledge-canonical`. It does not rewrite historical Stage 05.1/05.2 acceptance evidence.
+
+## 2026-09-20T19:20:00+03:00 — Stage 6 edge backup scope simplified to one general DR chain
+
+**Status:** ACCEPTED
+
+**Context:** Edge is a single personal VPS where the highest-value recovery need is current user/application state plus rollback after failed service/system updates. Splitting general protection into separate broad system and broad data plans adds operational complexity without a demonstrated recovery benefit.
+
+**Decision:**
+
+- use one general Backrest/Restic backup plan for the edge VPS, covering the root filesystem broadly rather than maintaining separate system/data plans;
+- include persistent application/user state under `/srv` in that same general plan; exact exclusions remain limited to non-recoverable/runtime/transient content and the local Restic repository itself;
+- use a short local retention tier on edge and replicate successful general snapshots to CT208/D5 through the accepted append-only rest-server path;
+- D5 general-backup history must not exceed approximately six months; exact daily/weekly/monthly bucket counts are finalized in the retention substage;
+- local edge history must be materially shorter than D5 and exists primarily for fast rollback / temporary Home-D5 unavailability;
+- do not create a periodic Restic full/bare-metal backup chain for edge;
+- after final edge infrastructure acceptance, the operator will create one manual provider-panel golden backup/snapshot outside Backrest as the clean post-build baseline;
+- keep Knowledge as the sole separate backup chain: whole `/srv/knowledge`, local-only on edge, no D5 tier-copy, using the already accepted 2-hour stagger relative to ai-node (`04:00/10:00/16:00/22:00` local while ai-node uses `02:00/08:00/14:00/20:00`);
+- Knowledge remains independent because it has a distinct high-frequency history/recovery purpose.
+
+**Constraints:** Do not duplicate general edge data in separate system/data Restic plans. Do not introduce a VPS full-image/full-Restic chain unless a new concrete recovery requirement appears. Application-consistent handling for live databases is still required inside the single general plan and is designed separately.
+
+**Supersedes:** proposals to split edge general protection into separate `edge-system` and `edge-data` plans, and proposals for a recurring edge full/bare-metal Restic chain.
