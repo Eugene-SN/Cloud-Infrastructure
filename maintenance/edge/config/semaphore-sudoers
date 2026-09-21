@@ -1,0 +1,7 @@
+semaphore ALL=(root) NOPASSWD: /opt/edge-maintenance/scripts/maintenance-versions-collector
+semaphore ALL=(root) NOPASSWD: /opt/edge-maintenance/scripts/maintenance-targets-refresh
+semaphore ALL=(root) NOPASSWD: /opt/edge-maintenance/scripts/maintenance-refresh
+semaphore ALL=(root) NOPASSWD: /opt/edge-maintenance/scripts/manual-update *
+semaphore ALL=(root) NOPASSWD: /opt/edge-maintenance/scripts/master-batch-update
+semaphore ALL=(root) NOPASSWD: /opt/edge-maintenance/scripts/master-post-scan-validate
+semaphore ALL=(root) NOPASSWD: /opt/edge-maintenance/scripts/master-health-validate

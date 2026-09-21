@@ -59,5 +59,27 @@ Edge post-acceptance requires:
 - SQLite integrity for n8n and Authelia;
 - valid nginx configuration and clean `dpkg --audit`.
 
+The Semaphore sudo allowlist includes both final validators. Digest-pinned
+Compose updates use `--force-recreate`; retagging a movable track alone does not
+prove that the running container switched to the accepted image digest.
+
 Master remains a manual-only action initiated from `update.escloud.us`; no
 timer, scheduler or autonomous update path is introduced.
+
+## First Edge runtime reconciliation
+
+Operator-triggered Task 11 executed six planned drivers and recorded
+`FAILED=0`, but correctly failed final acceptance. The run exposed two Edge
+integration defects rather than service update failures:
+
+- the Semaphore sudo allowlist did not yet include the two new final validator
+  commands, so both returned sudo RC 1 inside Ansible even though the direct
+  root health validator passed;
+- the PostgreSQL digest was pulled and retagged, but Compose did not recreate
+  the unchanged `18-alpine` service, leaving the old running image digest and a
+  post-scan `UPDATE_AVAILABLE` result.
+
+The reconciled contract installs the canonical expanded sudo allowlist and uses
+`docker compose up --force-recreate` after every accepted digest pin. The first
+run is not an accepted Master result; a subsequent operator-triggered task must
+prove the corrected post-scan and health gates.

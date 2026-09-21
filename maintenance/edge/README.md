@@ -26,6 +26,12 @@ remains individual-only because restarting the orchestrator from its own batch
 would interrupt acceptance. A pending reboot blocks dispatch and also prevents a
 completed batch from being reported as accepted.
 
+The canonical Semaphore sudo allowlist is `config/semaphore-sudoers`. It must be
+installed as `/etc/sudoers.d/91-semaphore-edge-maintenance`; Master post-scan and
+health validators are part of the required command set. Compose drivers always
+force service recreation after pinning the exact scanned digest so a movable tag
+cannot leave the previous image running.
+
 The first operator-initiated run of each driver is its runtime acceptance:
 review the displayed version, backup/rollback and health checks, then launch it
 from `update.escloud.us`. No other launch surface is supported.

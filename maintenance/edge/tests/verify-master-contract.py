@@ -8,9 +8,15 @@ import subprocess
 
 root = pathlib.Path(__file__).resolve().parents[1]
 manifest = json.loads((root / "config/update-units.json").read_text())
+sudoers = (root / "config/semaphore-sudoers").read_text()
 master = runpy.run_path(root / "scripts/master-batch-update")
 post = runpy.run_path(root / "scripts/master-post-scan-validate")
 now = dt.datetime.now(dt.timezone.utc)
+
+assert "/opt/edge-maintenance/scripts/master-post-scan-validate" in sudoers
+assert "/opt/edge-maintenance/scripts/master-health-validate" in sudoers
+manual_source = (root / "scripts/manual-update").read_text()
+assert '["up", "-d", "--wait", "--force-recreate", unit["service"]]' in manual_source
 
 
 def fixture(status="CURRENT"):

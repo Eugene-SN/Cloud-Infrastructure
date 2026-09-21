@@ -47,7 +47,11 @@
           - "MASTER_BATCH_DRIVER_RC={{ master_batch_run.rc }}"
           - "MASTER_BATCH_POST_REFRESH_RC={{ master_post_refresh.rc }}"
           - "MASTER_BATCH_POST_SCAN_RC={{ master_post_scan_gate.rc }}"
+          - "MASTER_BATCH_POST_SCAN_STDOUT={{ master_post_scan_gate.stdout | default('') }}"
+          - "MASTER_BATCH_POST_SCAN_STDERR={{ master_post_scan_gate.stderr | default('') }}"
           - "MASTER_BATCH_HEALTH_RC={{ master_health_gate.rc }}"
+          - "MASTER_BATCH_HEALTH_STDOUT={{ master_health_gate.stdout | default('') }}"
+          - "MASTER_BATCH_HEALTH_STDERR={{ master_health_gate.stderr | default('') }}"
 
     - name: Mark Master Batch failed when any execution or acceptance gate failed
       ansible.builtin.fail:
