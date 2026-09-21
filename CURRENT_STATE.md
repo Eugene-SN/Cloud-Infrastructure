@@ -381,13 +381,19 @@ Current accepted/deployed state:
   - no D5 copy;
   - `EDGE_KNOWLEDGE_14D_FINAL_ACCEPTANCE=PASS`;
 - expanded edge and ai-node backup audits passed;
-- exact Stage 6 general-backup/deployment contract is accepted in `STAGE_06_6_DEPLOYMENT_CONTRACT_2026-09-21.md`;
-- edge general target is one `edge-state` plan, schedule `01/07/13/19`, local rolling `7d`, successful append-only D5 copy, and D5 daily30/weekly8/monthly6/yearly0;
-- application-consistent staging is required before the general plan is accepted;
+- Stage 6.6 deployment contract is accepted in `STAGE_06_6_DEPLOYMENT_CONTRACT_2026-09-21.md`;
+- **Stage 6.7 production general-plan deployment is COMPLETE / ACCEPTED** with `STAGE06_7_FINAL_ACCEPTANCE=PASS`;
+- edge `edge-state`: schedule `01/07/13/19`, local rolling `7d`, grouping `host,tags`, application-consistent staging, successful append-only D5 copy, D5 daily30/weekly8/monthly6/yearly0;
+- accepted edge local/D5 snapshots for first production verification: `6e8747d3...` -> `0ff42011...`;
+- ai-node bounded corrections are deployed and accepted: tier grouping `host,tags`, self-contained n8n SQLite staging, Docker/containerd full-backup exclusions, local full keep-last-2 after successful D5 copy, and corrected restore mount directories;
+- controlled ai-node-ai-state local/D5 verification passed: `6be74a98...` -> `ea798442...`;
+- dedicated Knowledge policies remain unchanged;
 - no recurring edge full/bare-metal Restic chain is planned;
 - a separate CloudCLI runtime drift remains known: `cloudcli.service` is restart-looping because `/srv/ai-workspace` is absent. It is not classified as a Backrest deployment failure and must be reconciled before final Stage 6 non-regression acceptance.
 
+Acceptance record: `STAGE_06_7_FINAL_ACCEPTANCE_2026-09-21.md`.
+
 ## Current next step
 
-Proceed with Stage 6.6 implementation preflight and then bounded Stage 6 deployment: exact consistency-wrapper inputs, CT208 edge repository contract, edge general plan/tier-copy, accepted ai-node corrections, and finally isolated real restore acceptance.
+Proceed with **Stage 6.8 — Isolated Restore & Application Recovery Acceptance**. A real isolated restore/application-usability path remains mandatory before Stage 6 final acceptance.
 
