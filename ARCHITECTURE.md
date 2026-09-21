@@ -511,6 +511,8 @@ Do not create an independent edge maintenance framework unless a concrete incomp
 
 Stage 7A is COMPLETE / ACCEPTED: the Home-derived framework is proven on edge in read-only mode, including the copied dashboard/status contract, Semaphore project/repository/inventory/environment/template model, canonical GitHub refresh playbook, local collector/cache refresh and full dashboard-triggered E2E. Stage 7B adds and accepts real edge component update drivers and Master Batch behavior; Stage 7A's read-only action boundary remains authoritative until each Stage 7B driver is explicitly accepted.
 
+Stage 7B has a strict manual-execution boundary. `update.escloud.us` is the sole operator surface allowed to initiate a real update. Semaphore is the execution backend, not an autonomous updater. No update timer, cron job, systemd update service, background updater, unattended/scheduled update job or equivalent automatic launch mechanism is permitted. A new driver becomes eligible for acceptance only after it is exposed in `update.escloud.us` and the operator manually initiates and verifies its update from that page.
+
 ## Stage 8 — Monitoring, Heartbeats & Alerts
 
 Production monitoring is intentionally late-stage so it covers actual stable inventory/connectivity/backup/update layers.
