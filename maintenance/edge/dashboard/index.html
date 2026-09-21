@@ -1512,7 +1512,7 @@
 
     function sanitizeSummary(availStr, count) {
       if (typeof count === "number" && count > 0) {
-        return `${count} ${count === 1 ? 'package available' : 'packages available'}`;
+        return `${count} ${count === 1 ? 'package' : 'packages'}`;
       }
       if (!availStr || availStr.includes("пак") || availStr.includes("0")) {
         return "0 packages";
@@ -1711,9 +1711,9 @@
             );
 
           const badgeText =
-            maintenanceStatusLabel(
-              r.status
-            );
+            r.type === "DOCKER" && r.update_reason === "IMAGE_DIGEST_UPDATE"
+              ? "Image Refresh Available"
+              : maintenanceStatusLabel(r.status);
 
           const ip =
             r.ip_address

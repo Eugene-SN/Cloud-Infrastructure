@@ -80,3 +80,25 @@ backup review before their gates can be opened. Master Batch is accepted only
 after every included per-unit driver is accepted.
 
 No production component update was executed by this checkpoint.
+
+## Operator-requested action-surface correction
+
+The subsequent operator review found that the acceptance-pending presentation
+did not expose the individual buttons needed to perform those manual acceptance
+runs and that Docker track/digest data made the tables inconsistent with
+CT1000. The deployed correction now uses the same columns in all four groups:
+`SCOPE`, `SERVICE NAME`, `IP ADDRESS`, `INSTALLED`, `LATEST STABLE`, `STATUS`,
+and `ACTION`.
+
+All 16 individual template IDs (`2..17`) are connected. A button is enabled
+only for a unit whose current status is `UPDATE_AVAILABLE`; current units show
+`No update available`. Docker digest/tag data remains in the machine-readable
+model but is no longer a visible table column. Exact stable application
+versions are used where available, including Stalwart `0.16.23`; digest-only
+PostgreSQL refreshes remain explicitly distinguishable in status without
+inventing a new application version.
+
+The root allowlist is `/etc/edge-maintenance/manual-driver-enablement.json` and
+contains exactly the 16 fixed targets. Master Batch remains disabled
+(`master=false`, `master_template_id=null`) pending individual acceptance.
+This correction enabled controls only; it executed no update task.

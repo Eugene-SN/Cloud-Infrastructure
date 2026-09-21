@@ -170,12 +170,12 @@ Stage 7 retired-hostname cleanup record: `STAGE_07_OPS_HOSTNAME_RETIREMENT_2026-
 Stage 7B implementation checkpoint (not production acceptance):
 - the repository and edge runtime now contain maintained dashboard, schema-v3 status/target renderers, a fixed 16-unit driver manifest, 16 per-unit playbooks, one Master Batch playbook and fail-closed dispatchers;
 - Semaphore project 1 contains Refresh plus 16 `[LOCKED]` per-unit templates (IDs `2..17`) and one `[LOCKED]` Master Batch template (ID `18`);
-- dashboard `actions.json` remains `read_only=true`, all 16 component `template_id` values remain null, `master_template_id` remains null and every driver is `acceptance_pending`;
-- `/etc/edge-maintenance/driver-acceptance.json` is intentionally absent, so direct Semaphore launches also fail closed before mutation;
+- dashboard `actions.json` is now in explicit manual-acceptance mode: `read_only=false`, component template IDs `2..17`, and all 16 individual drivers are selectable only when their status is `UPDATE_AVAILABLE`;
+- `/etc/edge-maintenance/manual-driver-enablement.json` enables exactly the 16 fixed individual targets; unknown targets still fail closed; `master=false` and `master_template_id=null` keep Master Batch disabled;
 - Docker application version, configured image track, running digest, remote digest and update reason are separate fields; current runtime probes report PostgreSQL `18.6`, Stalwart `0.16.22` and Mattermost `11.11.0` rather than their movable tags;
 - read-only verification passes exactly 16 update units / 23 monitored components / 8 non-actionable APT children; no update schedules, timers or cron launchers exist;
-- no update driver or Master Batch was executed and no production component was updated;
-- every candidate driver still requires separate manual acceptance from `update.escloud.us`; Stage 7B and Stage 7 remain IN PROGRESS.
+- no update driver or Master Batch has been executed and no production component was updated by the implementation task;
+- the first operator-triggered individual run from `update.escloud.us` is the runtime acceptance for that driver; Stage 7B and Stage 7 remain IN PROGRESS.
 
 Implementation/deployment checkpoint: `STAGE_07B_DRIVER_SCAFFOLD_DEPLOYMENT_2026-09-21.md`.
 

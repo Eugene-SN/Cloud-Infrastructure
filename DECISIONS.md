@@ -1358,11 +1358,11 @@ Authoritative record:
 
 **Decision:**
 - maintain exactly 16 fixed update-unit driver entries and expose one Semaphore template for each unit plus a separate Master Batch template;
-- label all unaccepted Semaphore templates `[LOCKED]` and keep all dashboard action IDs null while acceptance is pending;
-- enforce the boundary again below the UI: a root dispatcher reads `/etc/edge-maintenance/driver-acceptance.json`, rejects an absent/malformed registry and requires an explicit Boolean acceptance for the exact fixed target;
+- expose each implemented individual Semaphore template through the dashboard for its operator-triggered manual acceptance run; keep actions disabled automatically when no update is available;
+- enforce a fixed allowlist again below the UI: a root dispatcher reads `/etc/edge-maintenance/manual-driver-enablement.json`, rejects an absent/malformed registry and requires an explicit Boolean enablement for the exact target;
 - keep a separate `master` gate for Master Batch, validate a maximum five-minute status-cache age, execute the fixed plan sequentially, isolate/report target failures and refresh status after the run;
 - represent Docker runtime/application version independently from repository, track/tag and running/remote digest; a digest-only change is `IMAGE_DIGEST_UPDATE`, never a fabricated version transition;
 - retain the eight APT-managed components exclusively as non-actionable details of `APT_EDGE`;
 - create no timer, schedule, cron entry, updater daemon or alternative launch surface.
 
-**Current boundary:** candidate code and locked templates are deployed, but no per-driver runtime acceptance has occurred. This decision does not authorize or claim any production update.
+**Current boundary:** all 16 individual buttons are connected for manual use from `update.escloud.us`, but no per-driver runtime acceptance has occurred. Master Batch remains locked until individual acceptance is complete. This decision does not claim any production update.
