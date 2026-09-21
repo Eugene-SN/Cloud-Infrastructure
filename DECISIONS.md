@@ -1304,3 +1304,27 @@ Authoritative record:
 
 **Supersedes:** the Stage 7A provisional maintenance row model in which every monitored component was also represented as a peer maintenance target.
 
+## 2026-09-21 — Single update.escloud.us origin for maintenance dashboard and Semaphore UI
+
+**Status:** ACCEPTED
+
+**Context:** The copied maintenance dashboard contained a Semaphore button pointing to `https://ops.escloud.us`, but no nginx vhost had ever activated that candidate hostname. Requests therefore fell through to the default `escloud.us` static site. The operator requires the Home-equivalent behavior: keep the maintenance dashboard as the default update surface while allowing direct inspection of Semaphore task history, templates and live task output from its button. A separate `ops` name does not describe this Stage 7 function clearly and adds no required isolation.
+
+**Decision:**
+- use `https://update.escloud.us` as the single authenticated Stage 7 operator origin;
+- retain `/ -> /status/` and serve the custom maintenance dashboard under `/status/`;
+- make the dashboard's Semaphore button open `/project/1/history`;
+- proxy Semaphore SPA routes and assets on the remaining same-origin paths to its loopback listener `127.0.0.1:3000`;
+- retain Semaphore API and live-task WebSocket routes at `/api/` and `/api/ws`;
+- set Semaphore `web_host` to `https://update.escloud.us/`;
+- do not activate a separate Semaphore vhost at `ops.escloud.us`;
+- keep `127.0.0.1:3000` and `127.0.0.1:18070` private, with no new UFW exposure;
+- retain the Stage 7 manual-execution rule and prohibition on autonomous update schedules/background launchers.
+
+**Verification:** Root navigation still returns relative `/status/`; dashboard, Semaphore history and template routes return HTTP 200 internally; Semaphore emits the accepted public base URL; SPA assets load; authenticated project template/task APIs succeed; `/api/ws` upgrades with HTTP 101; public HTTP preserves paths when redirecting to HTTPS; Authelia preserves `/project/1/history` in its return URL; nginx and Semaphore are active with zero failed restarts; task history and templates remain intact.
+
+**Acceptance marker:** `STAGE07_SEMAPHORE_SAME_ORIGIN_UI=PASS`.
+
+**Evidence:** `STAGE_07_SEMAPHORE_SAME_ORIGIN_UI_2026-09-21.md`.
+
+**Supersedes:** the planned `ops.escloud.us` Semaphore UI endpoint and any dashboard link targeting it.

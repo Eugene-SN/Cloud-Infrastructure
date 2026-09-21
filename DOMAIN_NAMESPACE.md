@@ -18,14 +18,13 @@ This file defines the intended `escloud.us` hostname allocation for Cloud Infras
 | `mail.escloud.us` | Stalwart APIs/admin/JMAP plus Bulwark webmail | ACTIVE |
 | `hermes.escloud.us` | Hermes Dashboard and Desktop Remote Gateway | ACTIVE; native self-hosted OIDC through Authelia; loopback backend |
 | `chat.escloud.us` | Mattermost collaboration/control | ACTIVE; Mattermost-native authentication; no Authelia proxy auth |
-| `update.escloud.us` | dedicated maintenance/update page | ACTIVE; Xray/nginx/Authelia ingress; loopback backend `127.0.0.1:18070` |
+| `update.escloud.us` | maintenance dashboard and Semaphore UI | ACTIVE; Xray/nginx/Authelia ingress; `/status/` dashboard plus `/project/1/history` Semaphore UI; loopback backends only |
 
 ## Accepted future functional names
 
 | FQDN | Intended role | Dependency placement |
 |---|---|---|
 | `backup.escloud.us` | Backrest backup-management UI | late lifecycle after main service inventory stabilizes |
-| `ops.escloud.us` | Semaphore operational execution UI | after Backrest restore capability is accepted |
 | `app.escloud.us` | final private Cloud Infrastructure portal/dashboard | separate Codex substage after production monitoring/status sources and final service inventory are known |
 | `cloud.escloud.us` | future file-access/web file-management layer | after `edge ↔ ai-node ↔ PVE/Home` connectivity if the selected implementation requires that relationship |
 | `sync.escloud.us` | future synchronization layer | after cross-site connectivity; exact implementation unresolved |
@@ -38,13 +37,14 @@ This file defines the intended `escloud.us` hostname allocation for Cloud Infras
 
 Reserved names do not authorize premature service deployment.
 
-## Retired legacy name
+## Retired / unused names
 
 | FQDN | Historical role | Disposition |
 |---|---|---|
 | `go.escloud.us` | n8n | RETIRED after accepted migration to `n8n.escloud.us` |
+| `ops.escloud.us` | prepared candidate for a separate Semaphore UI | UNUSED; no application vhost or accepted functional role; Semaphore UI is under `update.escloud.us` |
 
-Do not preserve `go.escloud.us` indefinitely as an alias unless a concrete compatibility requirement appears.
+Do not preserve retired or unused names indefinitely unless a concrete compatibility requirement appears. The existing `ops.escloud.us` DNS/certificate entry is cleanup residue, not an active endpoint.
 
 ## DNS contract
 
@@ -76,7 +76,6 @@ The intended namespace includes:
 - `hermes.escloud.us`
 - `mail.escloud.us`
 - `n8n.escloud.us`
-- `ops.escloud.us`
 - `sync.escloud.us`
 - `update.escloud.us`
 
@@ -92,7 +91,6 @@ Protected application names are expected to include, when corresponding services
 - `n8n.escloud.us`;
 - `code.escloud.us`;
 - `backup.escloud.us`;
-- `ops.escloud.us`;
 - `update.escloud.us`;
 - future/reserved `docs.escloud.us`, `cloud.escloud.us`, and `sync.escloud.us` where appropriate.
 
@@ -102,17 +100,16 @@ Protected application names are expected to include, when corresponding services
 
 ## UI role separation
 
-`app.escloud.us`, `ops.escloud.us` and `update.escloud.us` have intentionally distinct responsibilities:
+`app.escloud.us` and `update.escloud.us` have intentionally distinct responsibilities:
 
 - `app.escloud.us` — navigation plus concise monitoring/status dashboard for the finished Cloud Infrastructure;
-- `ops.escloud.us` — Semaphore's operational execution interface;
-- `update.escloud.us` — dedicated custom maintenance/update page, developed separately with Codex against the real update backend contract.
+- `update.escloud.us` — the complete Stage 7 operator origin: custom maintenance dashboard at `/status/` and full Semaphore UI at `/project/1/history`.
 
 Do not collapse detailed maintenance/update controls into `app.escloud.us` merely for UI consolidation.
 
 ## Naming principles
 
-- Prefer stable functional names for infrastructure-facing services where that avoids unnecessary coupling to a product name (`ops`, `backup`, `update`).
+- Prefer stable functional names for infrastructure-facing services where that avoids unnecessary coupling to a product name (`backup`, `update`).
 - Use `n8n.escloud.us` because n8n is an explicitly accepted product and the legacy `go` name is opaque.
 - Do not create hostnames or placeholders merely because they existed historically.
 - Reserved names are kept only where a concrete future functional role has been identified.

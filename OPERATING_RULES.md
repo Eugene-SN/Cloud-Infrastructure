@@ -310,8 +310,8 @@ Accepted runtime:
 - A usable Stage 6 backup/restore path must be accepted before Stage 7 Semaphore/update testing.
 - Semaphore and maintenance/update workflow are developed/tested together.
 - Existing PVE/Home update tooling is an engineering reference to audit/adapt, not copy blindly.
-- `ops.escloud.us` remains Semaphore's operational execution UI.
-- `update.escloud.us` is a dedicated custom maintenance/update page built in a separate Codex substage only after the backend/status/control contract is known.
+- `update.escloud.us` is the single Stage 7 operator origin: `/status/` serves the custom maintenance/update page and `/project/1/history` opens the full Semaphore UI for task/template inspection and live logs.
+- Do not create a separate Semaphore application endpoint at `ops.escloud.us`; keep Semaphore itself loopback-only and publish both Stage 7 interfaces through the accepted `update.escloud.us` ingress.
 
 ## Monitoring sequencing
 

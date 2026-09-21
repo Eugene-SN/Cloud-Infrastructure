@@ -27,6 +27,7 @@
 `STAGE4_FINAL_ACCEPTANCE=PASS` on 2026-09-18.
 `STAGE07A_READONLY_DASHBOARD_SEMAPHORE_E2E=PASS` on 2026-09-21.
 `STAGE07_UPDATE_ROOT_REDIRECT_FIX=PASS` on 2026-09-21.
+`STAGE07_SEMAPHORE_SAME_ORIGIN_UI=PASS` on 2026-09-21.
 
 `STAGE4F_STABLE_DOCKER_BRIDGE_HARDENING=PASS` on 2026-09-19.
 
@@ -147,6 +148,8 @@ Stage 7A is COMPLETE / ACCEPTED. Current accepted edge maintenance foundation:
 - adapted Home dashboard/status baseline on loopback `127.0.0.1:18070`;
 - public `https://update.escloud.us/` ingress through the existing Xray -> nginx -> Authelia path; the backend port remains loopback-only and is not published by UFW;
 - the backend root redirect is relative (`Location: /status/`), so the internal port is never exposed in the browser URL;
+- the same public origin exposes the full Semaphore UI at `https://update.escloud.us/project/1/history`; the dashboard's Semaphore button opens that route, and Semaphore's public `web_host` is `https://update.escloud.us/`;
+- Semaphore API and WebSocket traffic remain on `/api/` and `/api/ws`; verified WebSocket upgrade returns HTTP 101 for live task output;
 - 23 component version rows and 24 maintenance rows including aggregate `APT_EDGE`;
 - Hysteria2 `app/vX.Y.Z` release-tag normalization corrected; current Hysteria2 status is `CURRENT`;
 - `CHECK_FAILED=0`;
@@ -158,6 +161,8 @@ Stage 7A is COMPLETE / ACCEPTED. Current accepted edge maintenance foundation:
 Authoritative Stage 7A record: `STAGE_07A_READONLY_FRAMEWORK_DEPLOYMENT_2026-09-21.md`.
 
 Stage 7 public-ingress redirect correction record: `STAGE_07_UPDATE_INGRESS_REDIRECT_FIX_2026-09-21.md`.
+
+Stage 7 same-origin Semaphore UI record: `STAGE_07_SEMAPHORE_SAME_ORIGIN_UI_2026-09-21.md`.
 
 ## Host / foundation
 
@@ -211,13 +216,13 @@ Acceptance record: `EDGE_REBOOT_LIFECYCLE_FIX_ACCEPTANCE_2026-09-18.md`.
 - fresh operator/auth state;
 - public `auth.escloud.us` accepted.
 
-Protected private web namespace includes `n8n`, `code`, future `app`, `backup`, `ops`, `update`, `docs`, `cloud` and `sync`. `mail.escloud.us` intentionally uses native mail-stack authentication. Stage 4D also accepts `chat.escloud.us` as an explicit native-client exception: Mattermost uses Mattermost-native authentication without Authelia.
+Protected private web namespace includes `n8n`, `code`, future `app`, `backup`, `update`, `docs`, `cloud` and `sync`. `mail.escloud.us` intentionally uses native mail-stack authentication. Stage 4D also accepts `chat.escloud.us` as an explicit native-client exception: Mattermost uses Mattermost-native authentication without Authelia.
 
 ## TLS
 
 Shared Certbot lineage: `/etc/letsencrypt/live/escloud.us`.
 
-Current SAN set includes `escloud.us`, `app.escloud.us`, `auth.escloud.us`, `backup.escloud.us`, `chat.escloud.us`, `cloud.escloud.us`, `code.escloud.us`, `docs.escloud.us`, `hermes.escloud.us`, `mail.escloud.us`, `n8n.escloud.us`, `ops.escloud.us`, `sync.escloud.us` and `update.escloud.us`. `update.escloud.us` has active HTTPS ingress through Authelia; its application backend remains loopback-only at `127.0.0.1:18070`.
+Current SAN set includes `escloud.us`, `app.escloud.us`, `auth.escloud.us`, `backup.escloud.us`, `chat.escloud.us`, `cloud.escloud.us`, `code.escloud.us`, `docs.escloud.us`, `hermes.escloud.us`, `mail.escloud.us`, `n8n.escloud.us`, `ops.escloud.us`, `sync.escloud.us` and `update.escloud.us`. `update.escloud.us` has active HTTPS ingress through Authelia for both the maintenance dashboard and Semaphore UI. `ops.escloud.us` remains in the current certificate but has no application vhost or accepted functional role.
 
 ## Stage 2 applications
 
