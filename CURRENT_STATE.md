@@ -13,7 +13,9 @@
 **Stage 05.3 — Edge Knowledge Replication & Data Integration — COMPLETE / ACCEPTED**  
 **Stage 5 — Knowledge Fabric Runtime Deployment — COMPLETE / ACCEPTED**
 **Stage 6 — Edge Backrest & Recovery — COMPLETE / ACCEPTED**  
-**Stage 7 — Edge Maintenance & Update — IN PROGRESS**
+**Stage 7 — Edge Maintenance & Update — IN PROGRESS**  
+**Stage 7A — Home Maintenance Framework Port — COMPLETE / ACCEPTED**  
+**Stage 7B — Edge Update Drivers & Recovery — NEXT**
 
 `EDGE_STAGE2_FINAL_INTEGRATED_ACCEPTANCE=PASS` on 2026-09-17.  
 `CLOUD_STAGE_02_5_FINAL_SCOPE_ACCEPTANCE=PASS` on 2026-09-18.  
@@ -23,6 +25,7 @@
 `STAGE05_3_EDGE_KNOWLEDGE_REPLICATION_DATA_INTEGRATION=PASS` on 2026-09-20.  
 `STAGE05_FINAL_ACCEPTANCE=PASS` on 2026-09-20.  
 `STAGE4_FINAL_ACCEPTANCE=PASS` on 2026-09-18.
+`STAGE07A_READONLY_DASHBOARD_SEMAPHORE_E2E=PASS` on 2026-09-21.
 
 `STAGE4F_STABLE_DOCKER_BRIDGE_HARDENING=PASS` on 2026-09-19.
 
@@ -130,6 +133,25 @@ Stage 5 is complete and accepted. The next finite infrastructure stage is Stage 
 Backrest-before-Semaphore remains mandatory as a Stage sequencing and deployment/testing safety prerequisite: verified backup/restore must exist before maintenance tooling is deployed and exercised. It does not imply an automatic Backrest run before every production update. Per-update backups are component-specific only where justified by the actual update/recovery path. Monitoring remains late-stage so it is built once against the substantially complete inventory. `update.escloud.us` and `app.escloud.us` remain separate UI responsibilities.
 
 Stage 7 accepted target direction: Edge Maintenance is derived from the accepted Home Maintenance implementation on CT1000. Preserve the proven Semaphore + Ansible/native-script architecture, version/status cache model, fixed-target dispatch, per-component update-driver pattern, post-update refresh/acceptance flow and dashboard where applicable. Replace Home/PVE-specific inventory, VMID/PCT/QGA logic, collectors and drivers with edge-specific equivalents. `update.escloud.us` begins as an adapted copy of the existing Home Maintenance dashboard source rather than a greenfield frontend.
+
+Stage 7A is COMPLETE / ACCEPTED. Current accepted edge maintenance foundation:
+- Semaphore Community `2.19.12-012ed06-1788086239`, host-native, `semaphore.service` active/enabled as `semaphore:semaphore`;
+- Semaphore listener `127.0.0.1:3000` only;
+- project ID `1`: `Edge Maintenance`;
+- repository ID `1`: canonical `https://github.com/Eugene-SN/Cloud-Infrastructure.git`, branch `main`;
+- inventory ID `1`: `Edge Localhost`;
+- environment ID `1`: `Edge Read-only`;
+- refresh template ID `1`: `01. Refresh — Edge Maintenance Status`, playbook `maintenance/edge/playbooks/semaphore-refresh.yml`;
+- adapted Home dashboard/status baseline on loopback `127.0.0.1:18070`; no public Stage 7 ingress yet;
+- 23 component version rows and 24 maintenance rows including aggregate `APT_EDGE`;
+- Hysteria2 `app/vX.Y.Z` release-tag normalization corrected; current Hysteria2 status is `CURRENT`;
+- `CHECK_FAILED=0`;
+- dashboard action contract remains read-only: refresh enabled, update template count `0`, Master Batch disabled, automatic updates disabled;
+- dashboard → Semaphore → canonical GitHub playbook → local collector/cache → dashboard E2E passed;
+- no real production component update was executed during Stage 7A;
+- bounded production non-regression passed after E2E.
+
+Authoritative Stage 7A record: `STAGE_07A_READONLY_FRAMEWORK_DEPLOYMENT_2026-09-21.md`.
 
 ## Host / foundation
 
