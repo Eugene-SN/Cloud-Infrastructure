@@ -1,0 +1,41 @@
+---
+# Stage 7A read-only Semaphore entrypoint.
+# Production update mutations are intentionally absent from this playbook.
+
+- name: Refresh Edge Maintenance read-only status
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+    - name: Run read-only edge version collector
+      ansible.builtin.command:
+        argv:
+          - sudo
+          - -n
+          - /opt/edge-maintenance/scripts/maintenance-versions-collector
+      register: version_monitor
+      changed_when: false
+
+    - name: Render component status cache
+      ansible.builtin.command:
+        cmd: /usr/local/bin/maintenance-status-render
+        stdin: "{{ version_monitor.stdout }}"
+      register: dashboard_render
+      changed_when: false
+
+    - name: Build read-only maintenance target cache
+      ansible.builtin.command:
+        argv:
+          - sudo
+          - -n
+          - /opt/edge-maintenance/scripts/maintenance-targets-refresh
+      register: maintenance_refresh
+      changed_when: false
+
+    - name: Report Stage 7A read-only boundary
+      ansible.builtin.debug:
+        msg:
+          - "REAL_UPDATE_EXECUTED=NO"
+          - "AUTO_UPDATE_ENABLED=NO"
+          - "READ_ONLY_REFRESH=PASS"
