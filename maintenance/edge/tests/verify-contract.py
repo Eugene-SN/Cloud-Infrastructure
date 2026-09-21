@@ -1,12 +1,17 @@
 #!/usr/bin/env python3
+import copy
 import json
 import pathlib
+import runpy
 import sys
 
 root = pathlib.Path(__file__).resolve().parents[1]
 maintenance = json.loads(pathlib.Path(sys.argv[1]).read_text())
-actions = json.loads((root / "dashboard/actions.json").read_text())
 manifest = json.loads((root / "config/update-units.json").read_text())
+templates = json.loads((root / "config/semaphore-templates.json").read_text())
+enablement = json.loads((root / "config/manual-driver-enablement.example.json").read_text())
+renderer = runpy.run_path(root / "scripts/maintenance-actions-render")
+actions = renderer["build_actions"](manifest, templates, enablement)
 
 rows = maintenance["rows"]
 assert maintenance["schema"] == 3
@@ -42,8 +47,27 @@ assert actions["stop_on_error"] is True
 assert sorted(item["template_id"] for item in actions["components"].values()) == list(range(2, 18))
 assert all(item["driver_state"] == "executable" for item in actions["components"].values())
 assert set(actions["components"]) == {u["id"] for u in manifest["units"]}
+assert not (root / "dashboard/actions.json").exists()
 assert len(manifest["master_order"]) == 16
 assert set(manifest["master_order"]) == {u["id"] for u in manifest["units"]}
 assert manifest["master_order"][-1] == "APT_EDGE"
 assert next(u for u in manifest["units"] if u["id"] == "SEMAPHORE")["master_policy"] == "individual_only"
+
+locked_enablement = copy.deepcopy(enablement)
+locked_enablement["master"] = False
+locked_enablement["enabled"]["N8N"] = False
+locked_actions = renderer["build_actions"](manifest, templates, locked_enablement)
+assert locked_actions["master_template_id"] is None
+assert locked_actions["master_driver_state"] == "acceptance_pending"
+assert locked_actions["components"]["N8N"]["template_id"] is None
+assert locked_actions["components"]["N8N"]["driver_state"] == "acceptance_pending"
+
+broken_enablement = copy.deepcopy(enablement)
+del broken_enablement["enabled"]["CODEX"]
+try:
+    renderer["build_actions"](manifest, templates, broken_enablement)
+except RuntimeError:
+    pass
+else:
+    raise AssertionError("actions renderer accepted a missing enablement target")
 print("EDGE_MAINTENANCE_CONTRACT=PASS")

@@ -13,6 +13,13 @@ timer, unattended updater, or background update daemon.
   running digest, remote digest, and update reason as distinct fields.
 - `update.escloud.us` is the only operator launch surface.
 
+`/var/www/maintenance-status/actions.json` is a generated runtime artifact, not
+a second configuration source. `scripts/maintenance-actions-render` joins the
+canonical update-unit definition, Semaphore template mapping and root-owned
+manual enablement registry, validates their exact 16-target agreement and
+atomically replaces the artifact on every Refresh. No `actions.json` copy is
+kept under `/opt/edge-maintenance/dashboard`.
+
 ## Safety boundary
 
 Individual templates are exposed only through the manual dashboard controls.

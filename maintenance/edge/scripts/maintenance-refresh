@@ -3,4 +3,5 @@ set -euo pipefail
 /opt/edge-maintenance/scripts/maintenance-versions-collector |
   /usr/local/bin/maintenance-status-render
 /opt/edge-maintenance/scripts/maintenance-targets-refresh
+/opt/edge-maintenance/scripts/maintenance-actions-render
 echo 'READ_ONLY_REFRESH=PASS'

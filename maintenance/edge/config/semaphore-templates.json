@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "project_id": 1,
+  "refresh_template_id": 1,
+  "master_template_id": 18,
+  "components": {
+    "APT_EDGE": {"template_id": 2, "label": "Update System Packages (APT)"},
+    "XRAY": {"template_id": 3, "label": "Update Xray"},
+    "HYSTERIA2": {"template_id": 4, "label": "Update Hysteria2"},
+    "BACKREST": {"template_id": 5, "label": "Update Backrest"},
+    "RESTIC": {"template_id": 6, "label": "Update Restic"},
+    "SEMAPHORE": {"template_id": 7, "label": "Update Semaphore"},
+    "N8N": {"template_id": 8, "label": "Update n8n"},
+    "AUTHELIA": {"template_id": 9, "label": "Update Authelia"},
+    "MATTERMOST": {"template_id": 10, "label": "Update Mattermost"},
+    "POSTGRESQL": {"template_id": 11, "label": "Update PostgreSQL"},
+    "STALWART": {"template_id": 12, "label": "Update Stalwart"},
+    "BULWARK": {"template_id": 13, "label": "Update Bulwark"},
+    "HERMES": {"template_id": 14, "label": "Update Hermes Agent"},
+    "CLOUDCLI": {"template_id": 15, "label": "Update CloudCLI"},
+    "CODEX": {"template_id": 16, "label": "Update Codex CLI"},
+    "ANTIGRAVITY": {"template_id": 17, "label": "Update Antigravity CLI"}
+  }
+}

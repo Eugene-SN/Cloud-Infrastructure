@@ -1,0 +1,132 @@
+#!/usr/bin/env python3
+"""Render the single Edge dashboard action contract from canonical inputs."""
+
+import json
+import os
+import pathlib
+import tempfile
+
+BASE = pathlib.Path(os.environ.get("EDGE_MAINTENANCE_BASE", "/opt/edge-maintenance"))
+ENABLEMENT = pathlib.Path(
+    os.environ.get(
+        "EDGE_MAINTENANCE_ENABLEMENT",
+        "/etc/edge-maintenance/manual-driver-enablement.json",
+    )
+)
+OUTPUT = pathlib.Path(
+    os.environ.get(
+        "EDGE_MAINTENANCE_ACTIONS_OUTPUT",
+        "/var/www/maintenance-status/actions.json",
+    )
+)
+
+
+def load(path):
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def build_actions(manifest, templates, enablement):
+    if manifest.get("schema") != 1 or manifest.get("manual_only") is not True:
+        raise RuntimeError("invalid update-unit contract")
+    if templates.get("schema") != 1:
+        raise RuntimeError("invalid Semaphore template mapping")
+    if enablement.get("schema") != 1:
+        raise RuntimeError("invalid manual driver enablement registry")
+
+    units = manifest.get("units", [])
+    unit_index = {unit.get("id"): unit for unit in units}
+    template_map = templates.get("components", {})
+    enabled_map = enablement.get("enabled", {})
+    expected = set(unit_index)
+    if (
+        len(units) != 16
+        or len(unit_index) != 16
+        or set(template_map) != expected
+        or set(enabled_map) != expected
+    ):
+        raise RuntimeError("action inputs do not define the same exact 16 targets")
+
+    template_ids = [item.get("template_id") for item in template_map.values()]
+    if sorted(template_ids) != list(range(2, 18)):
+        raise RuntimeError("component template IDs must be unique and exactly 2..17")
+    if templates.get("refresh_template_id") != 1:
+        raise RuntimeError("refresh template mapping must be ID 1")
+    if templates.get("master_template_id") != 18:
+        raise RuntimeError("Master template mapping must be ID 18")
+
+    managed_by = {
+        "apt": "apt",
+        "compose": "docker",
+        "user_cli": "user_or_git",
+        "maintctl": "native",
+        "github_binary": "native",
+    }
+    components = {}
+    for unit in units:
+        target = unit["id"]
+        mapping = template_map[target]
+        enabled = enabled_map[target] is True
+        components[target] = {
+            "template_id": mapping["template_id"] if enabled else None,
+            "label": mapping["label"],
+            "group": unit["group"],
+            "managed_by": managed_by[unit["driver"]],
+            "driver_state": "executable" if enabled else "acceptance_pending",
+            "disabled_reason": "" if enabled else "Manual driver acceptance pending",
+        }
+
+    master_enabled = enablement.get("master") is True
+    return {
+        "schema": 8,
+        "target_model": "update_units_v3",
+        "project_id": templates["project_id"],
+        "master_template_id": templates["master_template_id"] if master_enabled else None,
+        "refresh_template_id": templates["refresh_template_id"],
+        "execution_mode": "manual_only",
+        "stop_on_error": True,
+        "auto_update": False,
+        "read_only": False,
+        "components": components,
+        "master_driver_state": "executable" if master_enabled else "acceptance_pending",
+        "manual_acceptance_mode": True,
+    }
+
+
+def atomic_write(path, data):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    handle = tempfile.NamedTemporaryFile(
+        mode="w",
+        encoding="utf-8",
+        dir=path.parent,
+        prefix=f".{path.name}.",
+        delete=False,
+    )
+    temporary = pathlib.Path(handle.name)
+    try:
+        with handle:
+            json.dump(data, handle, indent=2)
+            handle.write("\n")
+            handle.flush()
+            os.fsync(handle.fileno())
+        temporary.chmod(0o644)
+        os.replace(temporary, path)
+    except Exception:
+        temporary.unlink(missing_ok=True)
+        raise
+
+
+def main():
+    manifest = load(BASE / "config/update-units.json")
+    templates = load(BASE / "config/semaphore-templates.json")
+    enablement = load(ENABLEMENT)
+    actions = build_actions(manifest, templates, enablement)
+    atomic_write(OUTPUT, actions)
+    print(
+        "ACTIONS_RENDER=PASS|TARGETS=16|"
+        f"MASTER={'ENABLED' if actions['master_template_id'] else 'DISABLED'}|"
+        "AUTO_UPDATE=NO"
+    )
+
+
+if __name__ == "__main__":
+    main()
