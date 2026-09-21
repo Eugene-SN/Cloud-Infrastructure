@@ -15,7 +15,7 @@
 **Stage 6 — Edge Backrest & Recovery — COMPLETE / ACCEPTED**  
 **Stage 7 — Edge Maintenance & Update — IN PROGRESS**  
 **Stage 7A — Home Maintenance Framework Port — COMPLETE / ACCEPTED**  
-**Stage 7B — Edge Update Drivers & Recovery — NEXT**
+**Stage 7B — Edge Update Drivers & Recovery — IN PROGRESS**
 
 `EDGE_STAGE2_FINAL_INTEGRATED_ACCEPTANCE=PASS` on 2026-09-17.  
 `CLOUD_STAGE_02_5_FINAL_SCOPE_ACCEPTANCE=PASS` on 2026-09-18.  
