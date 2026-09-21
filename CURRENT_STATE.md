@@ -383,6 +383,7 @@ Current accepted/deployed state:
 - expanded edge and ai-node backup audits passed;
 - Stage 6.6 deployment contract is accepted in `STAGE_06_6_DEPLOYMENT_CONTRACT_2026-09-21.md`;
 - **Stage 6.7 production general-plan deployment is COMPLETE / ACCEPTED** with `STAGE06_7_FINAL_ACCEPTANCE=PASS`;
+- **Stage 6.8 isolated restore/application recovery is COMPLETE / ACCEPTED** with `STAGE06_8_FINAL_ACCEPTANCE=PASS`; real D5 restores and application usability were verified on edge and ai-node without production overwrite;
 - edge `edge-state`: schedule `01/07/13/19`, local rolling `7d`, grouping `host,tags`, application-consistent staging, successful append-only D5 copy, D5 daily30/weekly8/monthly6/yearly0;
 - accepted edge local/D5 snapshots for first production verification: `6e8747d3...` -> `0ff42011...`;
 - ai-node bounded corrections are deployed and accepted: tier grouping `host,tags`, self-contained n8n SQLite staging, Docker/containerd full-backup exclusions, local full keep-last-2 after successful D5 copy, and corrected restore mount directories;
@@ -395,5 +396,5 @@ Acceptance record: `STAGE_06_7_FINAL_ACCEPTANCE_2026-09-21.md`.
 
 ## Current next step
 
-Proceed with **Stage 6.8 — Isolated Restore & Application Recovery Acceptance**. A real isolated restore/application-usability path remains mandatory before Stage 6 final acceptance.
+Proceed with **Stage 6.9 — Final Stage 6 Non-Regression & Acceptance**. Remaining work is final cleanup/persistence/non-regression plus reconciliation of the known CloudCLI `CHDIR` drift before `STAGE06_FINAL_ACCEPTANCE=PASS`.
 
