@@ -403,8 +403,8 @@ Current substage state:
 - 6.3/6.4/6.5 topology, consistency direction and retention policy: ACCEPTED;
 - 6.6 deployment contract: ACCEPTED;
 - 6.7 production general-plan deployment: COMPLETE / ACCEPTED (`STAGE06_7_FINAL_ACCEPTANCE=PASS`);
-- 6.8 isolated restore/application usability: NEXT / REQUIRED;
-- 6.9 final Stage 6 non-regression/persistence: REQUIRED.
+- 6.8 isolated restore/application usability: COMPLETE / ACCEPTED (`STAGE06_8_FINAL_ACCEPTANCE=PASS`);
+- 6.9 final Stage 6 non-regression/persistence: NEXT / REQUIRED.
 
 Accepted implementation contract:
 
@@ -422,6 +422,8 @@ Accepted implementation contract:
 The same Stage 6 workstream also applies the accepted bounded ai-node backup corrections recorded in the deployment contract. These corrections do not redesign the existing ai-node D5 State/Full retention policies.
 
 Stage 6.7 final acceptance record: `STAGE_06_7_FINAL_ACCEPTANCE_2026-09-21.md`. Accepted runtime includes production `edge-state` local+D5 backup flow and the bounded ai-node corrections with controlled `ai-node-ai-state` local-to-D5 verification.
+
+Stage 6.8 final acceptance record: `STAGE_06_8_FINAL_ACCEPTANCE_2026-09-21.md`. Real D5 restores and application usability were verified for edge and ai-node without production overwrite.
 
 ## Stage 7 — Edge Maintenance & Update
 
