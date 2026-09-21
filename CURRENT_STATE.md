@@ -12,6 +12,7 @@
 **Stage 05.2 — PVE Canonical Obsidian Runtime & WebUI — COMPLETE / ACCEPTED**  
 **Stage 05.3 — Edge Knowledge Replication & Data Integration — COMPLETE / ACCEPTED**  
 **Stage 5 — Knowledge Fabric Runtime Deployment — COMPLETE / ACCEPTED**
+**Stage 6 — Edge Backrest & Recovery — COMPLETE / ACCEPTED**
 
 `EDGE_STAGE2_FINAL_INTEGRATED_ACCEPTANCE=PASS` on 2026-09-17.  
 `CLOUD_STAGE_02_5_FINAL_SCOPE_ACCEPTANCE=PASS` on 2026-09-18.  
@@ -368,7 +369,7 @@ Root recovery snapshots remain under `/srv/backups/edge-stage4c`, `/srv/backups/
 - Two attempted Antigravity smoke verifiers were classified as assistant test-harness defects (temporary-directory traversal and job-control/timeout behavior), not production regressions. No production mutation or service restart occurred.
 - Stage 4 remains COMPLETE / ACCEPTED with `STAGE4_FINAL_ACCEPTANCE=PASS`; Stage 5 entry is eligible after this repository reconciliation.
 
-## Stage 6 — Edge Backrest & Recovery — IN PROGRESS
+## Stage 6 — Edge Backrest & Recovery — COMPLETE / ACCEPTED
 
 Current accepted/deployed state:
 
@@ -393,8 +394,9 @@ Current accepted/deployed state:
 - a separate CloudCLI runtime drift remains known: `cloudcli.service` is restart-looping because `/srv/ai-workspace` is absent. It is not classified as a Backrest deployment failure and must be reconciled before final Stage 6 non-regression acceptance.
 
 Acceptance record: `STAGE_06_7_FINAL_ACCEPTANCE_2026-09-21.md`.
+Final Stage 6 acceptance record: `STAGE_06_FINAL_ACCEPTANCE_2026-09-21.md`.
 
 ## Current next step
 
-Proceed with **Stage 6.9 — Final Stage 6 Non-Regression & Acceptance**. Remaining work is final cleanup/persistence/non-regression plus reconciliation of the known CloudCLI `CHDIR` drift before `STAGE06_FINAL_ACCEPTANCE=PASS`.
+Stage 6 is COMPLETE / ACCEPTED. Next finite infrastructure stage: **Stage 7 — Edge Maintenance & Update**.
 
