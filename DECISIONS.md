@@ -1244,3 +1244,21 @@ Authoritative record:
 
 **Supersedes:** Stage 7A deployment-checkpoint state that kept the substage IN PROGRESS pending dashboard/Semaphore E2E.
 
+## 2026-09-21 — Stage 7 manual update execution through update.escloud.us only
+
+**Status:** ACCEPTED
+
+**Context:** The operator requires direct manual review and initiation of every real update through the deployed maintenance page. Automatic or background update execution would prevent that verification workflow.
+
+**Decision:**
+- `update.escloud.us` is the only operator surface permitted to initiate a real Stage 7 update;
+- Semaphore remains the backend execution/orchestration engine only;
+- do not create or enable update timers, cron jobs, systemd update services, background update daemons, unattended updates, scheduled update jobs, or equivalent autonomous launch mechanisms;
+- the rule applies to individual component updates, Master Batch, and Stage 7B acceptance tests;
+- each new driver is first exposed in `update.escloud.us`; the operator inspects the presented state/version and manually starts the test update from the page;
+- read-only version/status refresh is allowed as part of the page workflow but must not automatically chain into a real update.
+
+**Constraint:** No Stage 7B implementation step may execute a production update on behalf of the operator outside the maintenance page.
+
+**Supersedes:** any wording that treated `auto_update=false` merely as a default that could still allow scheduled/background/manual-outside-UI update execution during Stage 7B.
+
