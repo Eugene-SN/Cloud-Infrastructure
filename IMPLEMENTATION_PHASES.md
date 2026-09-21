@@ -388,18 +388,38 @@ External client access through edge remains a future separately selected mechani
 
 `06 — Edge Backrest & Recovery`
 
-Deploy/configure Backrest + Restic against the substantially complete server. Define backup scope/exclusions, repository/off-site topology, retention/schedules, recovery procedures and verified restore acceptance.
+**Status: IN PROGRESS.**
 
-A usable restore path is mandatory before Stage 7 update testing.
+A usable isolated restore path remains mandatory before Stage 7.
 
-Planning checklist:
-- inventory persistent state and restore ordering for mail, n8n credentials/workflows, Mattermost/PostgreSQL, Hermes, auth/TLS and host configuration;
-- decide application-consistent capture, exclusions, off-host recovery topology and protected key recovery;
-- retain the accepted independent edge Knowledge backup role: whole vault, no D5 tier-copy for that dedicated chain; planned windows 04:00/10:00/16:00/22:00 local, unchanged-snapshot skipping and monthly check/prune;
-- reconcile the optional reduced non-canonical history (approximately three months) before activation; do not copy PVE's canonical one-year policy automatically;
-- verify actual restore into an isolated destination, including application usability and access to required recovery keys.
+Accepted Stage 6 deployment contract:
 
-Cloud-wide off-site disaster recovery is distinct from the dedicated local Knowledge chain. Same-host checkpoints alone do not close this stage.
+`STAGE_06_6_DEPLOYMENT_CONTRACT_2026-09-21.md`
+
+Current substage state:
+
+- 6.1/6.2 expanded runtime and scope reconciliation: COMPLETE;
+- dedicated edge Knowledge backup: DEPLOYED / ACCEPTED;
+- 6.3/6.4/6.5 topology, consistency direction and retention policy: ACCEPTED;
+- 6.6 deployment contract: ACCEPTED;
+- 6.7 production general-plan deployment: NEXT;
+- 6.8 isolated restore/application usability: REQUIRED;
+- 6.9 final Stage 6 non-regression/persistence: REQUIRED.
+
+Accepted implementation contract:
+
+- one edge general plan `edge-state`;
+- broad persistent roots with targeted exclusions rather than enumerating every application directory;
+- schedule `01/07/13/19`;
+- local all-snapshots-within-`7d` retention grouped by `host,tags`;
+- successful copy to CT208/D5 append-only rest-server before local retention;
+- D5 retention owned by CT208: daily30, weekly8, monthly6, yearly0;
+- self-recovering application-consistency staging for live transactional state;
+- no recurring full/bare-metal edge Restic chain;
+- one provider golden VPS snapshot only after final infrastructure acceptance;
+- dedicated Knowledge remains independent at `04/10/16/22`, local rolling `14d`, no D5.
+
+The same Stage 6 workstream also applies the accepted bounded ai-node backup corrections recorded in the deployment contract. These corrections do not redesign the existing ai-node D5 State/Full retention policies.
 
 ## Stage 7 — Edge Maintenance & Update
 
