@@ -26,6 +26,7 @@
 `STAGE05_FINAL_ACCEPTANCE=PASS` on 2026-09-20.  
 `STAGE4_FINAL_ACCEPTANCE=PASS` on 2026-09-18.
 `STAGE07A_READONLY_DASHBOARD_SEMAPHORE_E2E=PASS` on 2026-09-21.
+`STAGE07_UPDATE_ROOT_REDIRECT_FIX=PASS` on 2026-09-21.
 
 `STAGE4F_STABLE_DOCKER_BRIDGE_HARDENING=PASS` on 2026-09-19.
 
@@ -121,14 +122,13 @@ Acceptance markers:
 
 ## Final remaining roadmap
 
-Stage 5 is complete and accepted. The next finite infrastructure stage is Stage 6.
+Stages 5 and 6 are complete and accepted. The current finite infrastructure stage is Stage 7.
 
-1. **Stage 6 — Edge Backrest & Recovery**;
-2. **Stage 7 — Edge Maintenance & Update**, including separate Codex `update.escloud.us` substage;
-3. **Stage 8 — Edge Monitoring, Heartbeats & Alerts**;
-4. **Stage 9 — Edge Cloud Portal**, including separate Codex `app.escloud.us` substage;
-5. **Stage 10 — Edge Final Integrated Infrastructure Acceptance**;
-6. post-infrastructure **Automation & User Workflows** as a continuous workstream.
+1. **Stage 7 — Edge Maintenance & Update**, including separate Codex `update.escloud.us` substage;
+2. **Stage 8 — Edge Monitoring, Heartbeats & Alerts**;
+3. **Stage 9 — Edge Cloud Portal**, including separate Codex `app.escloud.us` substage;
+4. **Stage 10 — Edge Final Integrated Infrastructure Acceptance**;
+5. post-infrastructure **Automation & User Workflows** as a continuous workstream.
 
 Backrest-before-Semaphore remains mandatory as a Stage sequencing and deployment/testing safety prerequisite: verified backup/restore must exist before maintenance tooling is deployed and exercised. It does not imply an automatic Backrest run before every production update. Per-update backups are component-specific only where justified by the actual update/recovery path. Monitoring remains late-stage so it is built once against the substantially complete inventory. `update.escloud.us` and `app.escloud.us` remain separate UI responsibilities.
 
@@ -144,7 +144,9 @@ Stage 7A is COMPLETE / ACCEPTED. Current accepted edge maintenance foundation:
 - inventory ID `1`: `Edge Localhost`;
 - environment ID `1`: `Edge Read-only`;
 - refresh template ID `1`: `01. Refresh — Edge Maintenance Status`, playbook `maintenance/edge/playbooks/semaphore-refresh.yml`;
-- adapted Home dashboard/status baseline on loopback `127.0.0.1:18070`; no public Stage 7 ingress yet;
+- adapted Home dashboard/status baseline on loopback `127.0.0.1:18070`;
+- public `https://update.escloud.us/` ingress through the existing Xray -> nginx -> Authelia path; the backend port remains loopback-only and is not published by UFW;
+- the backend root redirect is relative (`Location: /status/`), so the internal port is never exposed in the browser URL;
 - 23 component version rows and 24 maintenance rows including aggregate `APT_EDGE`;
 - Hysteria2 `app/vX.Y.Z` release-tag normalization corrected; current Hysteria2 status is `CURRENT`;
 - `CHECK_FAILED=0`;
@@ -154,6 +156,8 @@ Stage 7A is COMPLETE / ACCEPTED. Current accepted edge maintenance foundation:
 - bounded production non-regression passed after E2E.
 
 Authoritative Stage 7A record: `STAGE_07A_READONLY_FRAMEWORK_DEPLOYMENT_2026-09-21.md`.
+
+Stage 7 public-ingress redirect correction record: `STAGE_07_UPDATE_INGRESS_REDIRECT_FIX_2026-09-21.md`.
 
 ## Host / foundation
 
@@ -213,7 +217,7 @@ Protected private web namespace includes `n8n`, `code`, future `app`, `backup`, 
 
 Shared Certbot lineage: `/etc/letsencrypt/live/escloud.us`.
 
-Current SAN set includes `escloud.us`, `app.escloud.us`, `auth.escloud.us`, `backup.escloud.us`, `chat.escloud.us`, `cloud.escloud.us`, `code.escloud.us`, `docs.escloud.us`, `hermes.escloud.us`, `mail.escloud.us`, `n8n.escloud.us`, `ops.escloud.us` and `sync.escloud.us`. `update.escloud.us` has been created in DNS for the future maintenance/update page; certificate/ingress activation remains deferred to Stage 7.
+Current SAN set includes `escloud.us`, `app.escloud.us`, `auth.escloud.us`, `backup.escloud.us`, `chat.escloud.us`, `cloud.escloud.us`, `code.escloud.us`, `docs.escloud.us`, `hermes.escloud.us`, `mail.escloud.us`, `n8n.escloud.us`, `ops.escloud.us`, `sync.escloud.us` and `update.escloud.us`. `update.escloud.us` has active HTTPS ingress through Authelia; its application backend remains loopback-only at `127.0.0.1:18070`.
 
 ## Stage 2 applications
 
@@ -426,4 +430,3 @@ Final Stage 6 acceptance record: `STAGE_06_FINAL_ACCEPTANCE_2026-09-21.md`.
 ## Current next step
 
 Stage 6 is COMPLETE / ACCEPTED. Next finite infrastructure stage: **Stage 7 — Edge Maintenance & Update**.
-

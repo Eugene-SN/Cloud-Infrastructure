@@ -1262,3 +1262,24 @@ Authoritative record:
 
 **Supersedes:** any wording that treated `auto_update=false` merely as a default that could still allow scheduled/background/manual-outside-UI update execution during Stage 7B.
 
+## 2026-09-21 — update.escloud.us public ingress and origin-relative redirects
+
+**Status:** ACCEPTED
+
+**Context:** Public HTTPS ingress for `update.escloud.us` was activated after the Stage 7A loopback-only acceptance boundary. The internal dashboard nginx listens on `127.0.0.1:18070`, while the public nginx proxies authenticated traffic to it. Its root handler returned `302 /status/`; with nginx `absolute_redirect` enabled by default, the internal server serialized that relative target as `http://update.escloud.us:18070/status/`. The public proxy passed the `Location` header through, exposing a private loopback port in the browser and producing an unreachable URL.
+
+**Decision:**
+- the canonical operator URL is `https://update.escloud.us/`;
+- retain the existing public Xray -> host nginx -> Authelia -> loopback dashboard route;
+- retain `127.0.0.1:18070` as a private backend only, with no TCP/18070 UFW opening;
+- configure the internal root handler with location-scoped `absolute_redirect off` and return `302 /status/`;
+- require origin-relative redirects from this backend so its internal scheme and port cannot appear in public browser URLs;
+- keep the Stage 7B manual-update execution boundary unchanged.
+
+**Verification:** The internal root response now contains exactly `Location: /status/`; `/status/` returns HTTP 200; public HTTP redirects to HTTPS; public HTTPS redirects unauthenticated clients to Authelia; TCP/18070 remains bound only to loopback and unreachable publicly; nginx configuration validation and service-health checks pass.
+
+**Acceptance marker:** `STAGE07_UPDATE_ROOT_REDIRECT_FIX=PASS`.
+
+**Evidence:** `STAGE_07_UPDATE_INGRESS_REDIRECT_FIX_2026-09-21.md`.
+
+**Supersedes:** only the current-runtime implication that public `update.escloud.us` ingress remained deferred after the Stage 7A boundary. The Stage 7A acceptance record remains historically accurate.

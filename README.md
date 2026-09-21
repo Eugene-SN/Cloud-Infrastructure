@@ -4,11 +4,11 @@ Public/cloud-facing infrastructure for the `edge.escloud.us` VPS, integrated wit
 
 ## Current checkpoint
 
-- Stages 0, 1, 2, 02.5, 3 and 4 are COMPLETE / ACCEPTED.
+- Stages 0, 1, 2, 02.5, 3, 4, 5 and 6 are COMPLETE / ACCEPTED.
 - Final Hermes marker: `STAGE4_FINAL_ACCEPTANCE=PASS`.
 - Stage 4F Docker-network identity hardening is accepted; n8n reaches Hermes through stable bridge `n8n-hermes`.
-- Stage 5 — Edge Knowledge Replication & Data Integration — is the next finite infrastructure stage and has not started.
-- Stages 6–10 cover recovery, maintenance/update, monitoring/alerts, the Cloud portal and final integrated acceptance.
+- Stage 7 — Edge Maintenance & Update — is IN PROGRESS; Stage 7A is COMPLETE / ACCEPTED and Stage 7B is IN PROGRESS.
+- Stages 8–10 cover monitoring/alerts, the Cloud portal and final integrated acceptance.
 
 See [CURRENT_STATE.md](CURRENT_STATE.md) for accepted runtime facts and [IMPLEMENTATION_PHASES.md](IMPLEMENTATION_PHASES.md) for the dependency-ordered roadmap.
 

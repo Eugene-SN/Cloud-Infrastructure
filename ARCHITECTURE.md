@@ -513,6 +513,8 @@ Stage 7A is COMPLETE / ACCEPTED: the Home-derived framework is proven on edge in
 
 Stage 7B has a strict manual-execution boundary. `update.escloud.us` is the sole operator surface allowed to initiate a real update. Semaphore is the execution backend, not an autonomous updater. No update timer, cron job, systemd update service, background updater, unattended/scheduled update job or equivalent automatic launch mechanism is permitted. A new driver becomes eligible for acceptance only after it is exposed in `update.escloud.us` and the operator manually initiates and verifies its update from that page.
 
+The accepted operator ingress is `https://update.escloud.us/` through the existing Xray -> host nginx -> Authelia chain. The dashboard backend remains private at `127.0.0.1:18070`; TCP/18070 is not a public listener or firewall opening. Redirects emitted by that loopback server must remain origin-relative, including the root redirect to `/status/`, so internal scheme/port details cannot leak through the reverse proxy.
+
 ## Stage 8 — Monitoring, Heartbeats & Alerts
 
 Production monitoring is intentionally late-stage so it covers actual stable inventory/connectivity/backup/update layers.
@@ -583,4 +585,3 @@ Stage 6 general backup architecture is intentionally simple and is now fully spe
 - Knowledge remains the only independent backup chain: `/srv/knowledge`, schedule `04/10/16/22`, rolling local `14d`, no D5 replication.
 
 The rejected rolling-180d D5 policy is not part of the architecture. Restore acceptance must exercise isolated application usability, not only repository integrity.
-

@@ -107,7 +107,7 @@ Final record: `STAGE_03_ACCEPTANCE_2026-09-18.md`.
 - `mail.escloud.us` — live Stalwart + Bulwark;
 - `backup.escloud.us` — future Backrest management UI;
 - `ops.escloud.us` — future Semaphore operational execution UI;
-- `update.escloud.us` — future dedicated custom maintenance/update page; Cloudflare record already exists; dedicated Codex substage after backend contract;
+- `update.escloud.us` — LIVE dedicated maintenance/update page through Xray, host nginx and Authelia; application backend remains loopback-only at `127.0.0.1:18070`;
 - `app.escloud.us` — future final Cloud Infrastructure portal/dashboard; dedicated Codex substage after monitoring/status sources;
 - `docs.escloud.us` — reserved;
 - `hermes.escloud.us` — LIVE accepted Hermes Dashboard/Remote Gateway; native self-hosted OIDC through Authelia; backend loopback-only;

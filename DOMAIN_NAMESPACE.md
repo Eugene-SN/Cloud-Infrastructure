@@ -18,6 +18,7 @@ This file defines the intended `escloud.us` hostname allocation for Cloud Infras
 | `mail.escloud.us` | Stalwart APIs/admin/JMAP plus Bulwark webmail | ACTIVE |
 | `hermes.escloud.us` | Hermes Dashboard and Desktop Remote Gateway | ACTIVE; native self-hosted OIDC through Authelia; loopback backend |
 | `chat.escloud.us` | Mattermost collaboration/control | ACTIVE; Mattermost-native authentication; no Authelia proxy auth |
+| `update.escloud.us` | dedicated maintenance/update page | ACTIVE; Xray/nginx/Authelia ingress; loopback backend `127.0.0.1:18070` |
 
 ## Accepted future functional names
 
@@ -25,7 +26,6 @@ This file defines the intended `escloud.us` hostname allocation for Cloud Infras
 |---|---|---|
 | `backup.escloud.us` | Backrest backup-management UI | late lifecycle after main service inventory stabilizes |
 | `ops.escloud.us` | Semaphore operational execution UI | after Backrest restore capability is accepted |
-| `update.escloud.us` | dedicated custom maintenance/update page | separate Codex substage after Semaphore/update backend contract is known; Cloudflare record already created by the user |
 | `app.escloud.us` | final private Cloud Infrastructure portal/dashboard | separate Codex substage after production monitoring/status sources and final service inventory are known |
 | `cloud.escloud.us` | future file-access/web file-management layer | after `edge ↔ ai-node ↔ PVE/Home` connectivity if the selected implementation requires that relationship |
 | `sync.escloud.us` | future synchronization layer | after cross-site connectivity; exact implementation unresolved |
@@ -59,9 +59,9 @@ Application/service A records point to the current public IPv4 of `edge`, `45.92
 
 ## TLS application certificate target
 
-The current shared application certificate lineage covers the accepted current application namespace except where a future hostname has not yet been activated.
+The current shared application certificate lineage covers the accepted current application namespace except where a future hostname has not yet been activated. `update.escloud.us` is active in the shared certificate and public ingress.
 
-Future deployment stages should add a hostname to the certificate only when the corresponding service/page is actually being deployed. In particular, `update.escloud.us` is a future maintenance/update endpoint and should not be treated as live merely because its Cloudflare DNS record already exists.
+Future deployment stages should add a hostname to the certificate only when the corresponding service/page is actually being deployed. DNS existence alone remains insufficient evidence of activation for the remaining future names.
 
 The intended namespace includes:
 

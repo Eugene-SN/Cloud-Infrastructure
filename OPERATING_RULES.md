@@ -183,13 +183,13 @@ A completed subtask is not permission to leave accepted stage scope incomplete.
 
 Current facts:
 
-1. Stage 0 through Stage 5 are complete and accepted.
+1. Stage 0 through Stage 6 are complete and accepted; Stage 7A is complete and accepted, and Stage 7B is in progress.
 2. `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS`.
 3. `STAGE4_FINAL_ACCEPTANCE=PASS`.
 4. `STAGE05_2_PVE_CANONICAL_OBSIDIAN_RUNTIME=PASS`.
 5. `STAGE05_3_EDGE_KNOWLEDGE_REPLICATION_DATA_INTEGRATION=PASS`.
 6. `STAGE05_FINAL_ACCEPTANCE=PASS`.
-7. The next finite infrastructure stage is Stage 6 — Edge Backrest & Recovery.
+7. The current finite infrastructure stage is Stage 7 — Edge Maintenance & Update.
 8. Reuse the accepted Stage 3 transport and Stage 5 Knowledge topology; do not reopen them without a concrete incompatibility.
 9. The Stage 1 Docker `live-restore=true` setting remains superseded; current accepted runtime is `live-restore=false`.
 

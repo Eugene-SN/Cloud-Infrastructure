@@ -1,6 +1,6 @@
 # Cloud Infrastructure — Accepted Implementation Phases
 
-**Status:** Stage 0–4 COMPLETE / ACCEPTED. Stage 05.1 and Stage 05.2 are COMPLETE / ACCEPTED; Stage 05.3 is NEXT.
+**Status:** Stages 0–6 COMPLETE / ACCEPTED. Stage 7 is IN PROGRESS; Stage 7A is COMPLETE / ACCEPTED and Stage 7B is IN PROGRESS.
 
 This document is the canonical stage chronology for Cloud Infrastructure / `edge`.
 
@@ -380,7 +380,7 @@ Authoritative records:
 
 External client access through edge remains a future separately selected mechanism outside Stage 5.
 
-**Next stage: Stage 6 — Edge Backrest & Recovery.**
+Stage 5 completion advanced the workstream to Stage 6, which is now COMPLETE / ACCEPTED.
 
 ## Stage 6 — Edge Backrest & Recovery
 
@@ -515,11 +515,14 @@ Stage 2: **COMPLETE / ACCEPTED**.
 Stage 02.5: **COMPLETE / ACCEPTED**.  
 Stage 3: **COMPLETE / ACCEPTED**.  
 Stage 4: **COMPLETE / ACCEPTED**. `STAGE4_FINAL_ACCEPTANCE=PASS`.
+Stage 5: **COMPLETE / ACCEPTED**. `STAGE05_FINAL_ACCEPTANCE=PASS`.
+Stage 6: **COMPLETE / ACCEPTED**. `STAGE06_FINAL_ACCEPTANCE=PASS`.
+Stage 7: **IN PROGRESS**. Stage 7A is COMPLETE / ACCEPTED; Stage 7B is IN PROGRESS.
 
 Current accepted checkpoint on `main`:
 
-`04.3 — Edge Hermes Stage 4 Recovery, Completion & Final Acceptance`
+`Stage 7A — Home Maintenance Framework Port — COMPLETE / ACCEPTED`
 
-## Next finite infrastructure stage
+## Current finite infrastructure stage
 
-Stage 4 is fully accepted and merged into `main` at `c4d402175ea1a049f20a93ab77daa0b068071277`; the 2026-09-19 Stage 4F network hardening is the latest accepted follow-up. Stage 5 may now begin only through its mandatory expanded read-only entry audit.
+Stage 7 — Edge Maintenance & Update — is in progress. Continue with Stage 7B under the accepted manual-execution boundary; every real update must be initiated by the operator from `update.escloud.us`.
