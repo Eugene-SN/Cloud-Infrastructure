@@ -94,6 +94,29 @@ except Exception:
 PY
 }
 
+github_project_version() {
+    repo="$1"
+    ref="$2"
+    python3 - "$repo" "$ref" <<'PY'
+import sys, tomllib, urllib.request
+repo, ref = sys.argv[1:]
+if not ref:
+    raise SystemExit(0)
+req = urllib.request.Request(
+    f"https://raw.githubusercontent.com/{repo}/{ref}/pyproject.toml",
+    headers={"User-Agent": "Edge-Maintenance"},
+)
+try:
+    with urllib.request.urlopen(req, timeout=10) as response:
+        project = tomllib.loads(response.read().decode("utf-8")).get("project", {})
+    version = str(project.get("version") or "").strip()
+    if version:
+        print("v" + version.lstrip("v"))
+except Exception:
+    pass
+PY
+}
+
 npm_latest() {
     package="$1"
     python3 - "$package" <<'PY'
@@ -361,26 +384,34 @@ emit_docker_component BULWARK bulwark ghcr.io/bulwarkmail/webmail:1.9.2 ghcr.io/
 
 echo
 echo "--- GIT / USER TOOLS ---"
-hermes_installed="$(
+hermes_installed_ref="$(
     git -c safe.directory=/home/core/.hermes/hermes-agent \
-      -C /home/core/.hermes/hermes-agent rev-parse --short=12 HEAD 2>/dev/null ||
+      -C /home/core/.hermes/hermes-agent rev-parse HEAD 2>/dev/null ||
     true
 )"
-hermes_remote="$(
+hermes_remote_ref="$(
     git -c safe.directory=/home/core/.hermes/hermes-agent \
       -C /home/core/.hermes/hermes-agent ls-remote origin refs/heads/main 2>/dev/null |
-    awk 'NR==1 {print substr($1,1,12)}' ||
+    awk 'NR==1 {print $1}' ||
     true
 )"
-if test -z "$hermes_installed" || test -z "$hermes_remote"; then
+hermes_installed="$(
+    runuser -u core -- /home/core/.local/bin/hermes --version 2>/dev/null |
+    sed -n 's/^Hermes Agent v\([0-9][0-9.]*\).*/v\1/p' |
+    head -n1 ||
+    true
+)"
+hermes_remote="$(github_project_version NousResearch/hermes-agent "$hermes_remote_ref")"
+if test -z "$hermes_installed_ref" || test -z "$hermes_remote_ref" || \
+   test -z "$hermes_installed" || test -z "$hermes_remote"; then
     hermes_status="STABLE_UNRESOLVED"
-elif test "$hermes_installed" = "$hermes_remote"; then
+elif test "$hermes_installed_ref" = "$hermes_remote_ref"; then
     hermes_status="CURRENT"
 else
     hermes_status="UPDATE_AVAILABLE"
 fi
 printf '%s\n' \
-  "VERSION|SCOPE=EDGE|COMPONENT=HERMES|INSTALLED=${hermes_installed:-UNRESOLVED}|STABLE=${hermes_remote:-UNRESOLVED}|STATUS=${hermes_status}|SOURCE=GIT_ORIGIN_MAIN"
+  "VERSION|SCOPE=EDGE|COMPONENT=HERMES|INSTALLED=${hermes_installed:-UNRESOLVED}|STABLE=${hermes_remote:-UNRESOLVED}|INSTALLED_REF=${hermes_installed_ref:-UNRESOLVED}|STABLE_REF=${hermes_remote_ref:-UNRESOLVED}|STATUS=${hermes_status}|SOURCE=GIT_ORIGIN_MAIN"
 
 cloud_installed="$(
     runuser -u core -- /home/core/.local/bin/cloudcli --version 2>/dev/null |

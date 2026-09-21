@@ -100,6 +100,11 @@ PostgreSQL refreshes use the standard `Update Available` status without
 inventing a new application version. The digest reason remains available in
 the machine-readable model and technical tooltip.
 
+Git-managed Hermes uses the same separation: the dashboard renders normalized
+release versions such as `v0.21.3`, while installed and upstream Git refs remain
+machine-readable and determine whether a same-version code refresh is
+available. A ref-only change never appears as a fabricated version transition.
+
 The root allowlist is `/etc/edge-maintenance/manual-driver-enablement.json` and
 contains exactly the 16 fixed targets. Master Batch remains disabled
 (`master=false`, `master_template_id=null`) pending individual acceptance.

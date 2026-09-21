@@ -432,6 +432,12 @@ def independent_target(
             "update_reason": str(source.get("UPDATE_REASON", "CHECK_FAILED")) if source else "CHECK_FAILED",
         })
 
+    if component == "HERMES":
+        result.update({
+            "installed_ref": str(source.get("INSTALLED_REF", "—")) if source else "—",
+            "available_ref": str(source.get("STABLE_REF", "—")) if source else "—",
+        })
+
     return result
 
 
