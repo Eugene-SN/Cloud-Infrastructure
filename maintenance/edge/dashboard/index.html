@@ -624,14 +624,13 @@
 
     /* COLUMN WIDTHS */
     .col-chk { width: 4%; min-width: 38px; text-align: center; }
-    .col-scope { width: 8%; min-width: 82px; text-align: center; }
-    .col-name { width: 24%; min-width: 190px; text-align: left; }
-    .col-ip { width: 12%; min-width: 115px; text-align: center; font-variant-numeric: tabular-nums; }
-    .col-ver { width: 13%; min-width: 130px; text-align: center; }
-    .col-stable { width: 13%; min-width: 130px; text-align: center; }
+    .col-scope { width: 9%; min-width: 82px; text-align: center; }
+    .col-name { width: 29%; min-width: 220px; text-align: left; }
+    .col-ver { width: 15%; min-width: 130px; text-align: center; }
+    .col-stable { width: 15%; min-width: 130px; text-align: center; }
     .col-pkg-summary { width: 26%; min-width: 260px; text-align: center; }
-    .col-status { width: 14%; min-width: 130px; text-align: center; }
-    .col-act { width: 12%; min-width: 125px; text-align: center; }
+    .col-status { width: 15%; min-width: 130px; text-align: center; }
+    .col-act { width: 13%; min-width: 125px; text-align: center; }
 
     .node-scope-chip {
       display: inline-flex;
@@ -658,12 +657,6 @@
       font-size: .67rem;
       color: var(--ink-faint);
       margin-top: 1px;
-    }
-
-    .ip-tag {
-      font-family: "SFMono-Regular", Consolas, monospace;
-      font-size: .72rem;
-      color: var(--ink-soft);
     }
 
     .mono-version {
@@ -1194,7 +1187,6 @@
                 <th class="col-chk"><input type="checkbox" class="chk-box" onchange="toggleSelectAll('apt', this.checked)"></th>
                 <th class="col-scope">Scope</th>
                 <th class="col-name">Service Name</th>
-                <th class="col-ip">IP Address</th>
                 <th class="col-ver">Installed</th>
                 <th class="col-stable">Latest Stable</th>
                 <th class="col-status">Status</th>
@@ -1224,7 +1216,6 @@
                 <th class="col-chk"><input type="checkbox" class="chk-box" onchange="toggleSelectAll('native', this.checked)"></th>
                 <th class="col-scope">Scope</th>
                 <th class="col-name">Service Name</th>
-                <th class="col-ip">IP Address</th>
                 <th class="col-ver">Installed</th>
                 <th class="col-stable">Latest Stable</th>
                 <th class="col-status">Status</th>
@@ -1252,7 +1243,6 @@
                 <th class="col-chk"><input type="checkbox" class="chk-box" onchange="toggleSelectAll('docker', this.checked)"></th>
                 <th class="col-scope">Scope</th>
                 <th class="col-name">Service Name</th>
-                <th class="col-ip">IP Address</th>
                 <th class="col-ver">Installed</th>
                 <th class="col-stable">Latest Stable</th>
                 <th class="col-status">Status</th>
@@ -1280,7 +1270,6 @@
                 <th class="col-chk"><input type="checkbox" class="chk-box" onchange="toggleSelectAll('cli', this.checked)"></th>
                 <th class="col-scope">Scope</th>
                 <th class="col-name">Service Name</th>
-                <th class="col-ip">IP Address</th>
                 <th class="col-ver">Installed</th>
                 <th class="col-stable">Latest Stable</th>
                 <th class="col-status">Status</th>
@@ -1314,10 +1303,6 @@
   </div>
 
   <script>
-    const NODE_IPS = {
-      "EDGE": "45.92.156.17"
-    };
-
     let maintenanceData = null;
     let actionsConfig = null;
     let currentFilter = "all";
@@ -1499,7 +1484,7 @@
               ).join(" ")
             : "";
 
-          const matchStr = `${r.scope} ${r.component} ${r.label} ${r.ip_address || ""} ${r.managed_by || ""} ${monitored}`.toLowerCase();
+          const matchStr = `${r.scope} ${r.component} ${r.label} ${r.managed_by || ""} ${monitored}`.toLowerCase();
 
           if (!matchStr.includes(searchQuery)) {
             return false;
@@ -1625,11 +1610,6 @@
             displayStatus
           );
 
-        const ip =
-          r.ip_address
-          || NODE_IPS[r.scope]
-          || "—";
-
         const templateId =
           actionsConfig
           && actionsConfig.components
@@ -1682,7 +1662,6 @@
             <div class="service-title">${r.label || r.component}</div>
             <div class="service-sub">${monitored.length} monitored APT components</div>
           </td>
-          <td class="col-ip"><span class="ip-tag">${ip}</span></td>
           <td class="col-ver"><span class="mono-version">${r.current || "System / APT"}</span></td>
           <td class="col-stable"><span class="mono-version ${hasUpdate ? "is-upgrade" : ""}" onclick="showPkgModal('${r.action_key}')" style="cursor:pointer" data-tooltip="${tipText.replace(/"/g, "&quot;")}">${summaryText}</span></td>
           <td class="col-status"><span class="status-badge ${badgeClass}"><span class="status-badge-dot"></span>${badgeText}</span></td>
@@ -1711,14 +1690,7 @@
             );
 
           const badgeText =
-            r.type === "DOCKER" && r.update_reason === "IMAGE_DIGEST_UPDATE"
-              ? "Image Refresh Available"
-              : maintenanceStatusLabel(r.status);
-
-          const ip =
-            r.ip_address
-            || NODE_IPS[r.scope]
-            || "—";
+            maintenanceStatusLabel(r.status);
 
           const templateId =
             actionsConfig
@@ -1751,7 +1723,6 @@
               <div class="service-title">${r.label || r.component}</div>
               <div class="service-sub">${lifecycle}</div>
             </td>
-            <td class="col-ip"><span class="ip-tag">${ip}</span></td>
             <td class="col-ver"><span class="mono-version">${applicationDisplay}</span></td>
             <td class="col-stable" title="${dockerTechnical.replace(/"/g, "&quot;")}"><span class="mono-version ${hasUpdate ? "is-upgrade" : ""}">${latestDisplay}</span></td>
             <td class="col-status"><span class="status-badge ${badgeClass}"><span class="status-badge-dot"></span>${badgeText}</span></td>

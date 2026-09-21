@@ -87,16 +87,18 @@ The subsequent operator review found that the acceptance-pending presentation
 did not expose the individual buttons needed to perform those manual acceptance
 runs and that Docker track/digest data made the tables inconsistent with
 CT1000. The deployed correction now uses the same columns in all four groups:
-`SCOPE`, `SERVICE NAME`, `IP ADDRESS`, `INSTALLED`, `LATEST STABLE`, `STATUS`,
-and `ACTION`.
+`SCOPE`, `SERVICE NAME`, `INSTALLED`, `LATEST STABLE`, `STATUS`, and `ACTION`.
+The single edge node address remains in the page header and is not repeated in
+every service row.
 
 All 16 individual template IDs (`2..17`) are connected. A button is enabled
 only for a unit whose current status is `UPDATE_AVAILABLE`; current units show
 `No update available`. Docker digest/tag data remains in the machine-readable
 model but is no longer a visible table column. Exact stable application
 versions are used where available, including Stalwart `0.16.23`; digest-only
-PostgreSQL refreshes remain explicitly distinguishable in status without
-inventing a new application version.
+PostgreSQL refreshes use the standard `Update Available` status without
+inventing a new application version. The digest reason remains available in
+the machine-readable model and technical tooltip.
 
 The root allowlist is `/etc/edge-maintenance/manual-driver-enablement.json` and
 contains exactly the 16 fixed targets. Master Batch remains disabled
