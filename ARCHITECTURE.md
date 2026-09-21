@@ -499,7 +499,7 @@ External iOS/macOS/Windows/Android client-access implementation through edge rem
 
 ## Stage 6 — Backrest & Recovery
 
-Backrest using Restic remains the accepted Cloud backup-management direction. Restore acceptance precedes update testing.
+Backrest using Restic remains the accepted Cloud backup-management direction. Restore acceptance precedes Stage 7 deployment/update testing so recovery capability is available if maintenance implementation or testing causes damage. This sequencing does not make Backrest a mandatory precondition of every routine production update; per-update backup behavior is component-specific and must be justified by the supported update/recovery path.
 
 ## Stage 7 — Maintenance & Update
 
