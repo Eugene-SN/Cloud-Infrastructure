@@ -560,17 +560,19 @@ Additional accepted directions:
 
 ## Accepted Stage 6 backup topology
 
-Stage 6 general backup architecture is intentionally simple:
+Stage 6 general backup architecture is intentionally simple and is now fully specified by `STAGE_06_6_DEPLOYMENT_CONTRACT_2026-09-21.md`:
 
-- one broad general Backrest/Restic plan for the edge root filesystem;
-- persistent `/srv` application/user state is part of that same plan;
-- no separate broad system/data plans;
-- local edge repository = short rollback tier;
-- successful general snapshots are tier-copied to CT208/D5 through append-only rest-server;
-- D5 general history is capped at approximately six months; exact bucket counts are defined in the retention substage;
+- one general plan `edge-state`; no separate broad system/data plans;
+- sources: `/etc`, `/home/core`, `/root`, `/opt`, `/srv`, `/usr/local`, `/var/lib`, `/var/spool`, `/var/www`;
+- schedule: `01:00/07:00/13:00/19:00` local;
+- local edge repo = short rollback tier with all snapshots within `7d`, grouped by `host,tags`;
+- successful snapshots are tier-copied to CT208/D5 through append-only rest-server before local retention is applied;
+- CT208 owns D5 retention/prune: daily30, weekly8, monthly6, yearly0, grouped by `host,tags`;
+- exclude the local backup repo, dedicated Knowledge, Docker/containerd layers and selected rebuildable caches; retain `/srv/backups`;
+- live transactional application state is captured through a self-recovering consistency-staging wrapper; Mattermost uses a staged PostgreSQL dump and quiesced app state, mail uses a brief quiesced staged copy, and SQLite-backed services receive consistent snapshots;
 - no recurring Restic full/bare-metal chain for the VPS;
-- one provider-panel golden backup/snapshot is created manually after final infrastructure acceptance;
-- Knowledge is the only independent backup chain: `/srv/knowledge`, local-only, no D5 replication, scheduled at 04:00/10:00/16:00/22:00 local to preserve the accepted 2-hour offset from ai-node;
-- live-database consistency is handled as part of the single general-plan capture workflow rather than by splitting scope into more plans.
+- one provider-panel golden backup/snapshot is created manually only after final infrastructure acceptance;
+- Knowledge remains the only independent backup chain: `/srv/knowledge`, schedule `04/10/16/22`, rolling local `14d`, no D5 replication.
 
-Exact exclusions, staging/consistency hooks, local retention and D5 bucket counts remain Stage 6 implementation-contract details and must be confirmed before mutation.
+The rejected rolling-180d D5 policy is not part of the architecture. Restore acceptance must exercise isolated application usability, not only repository integrity.
+
