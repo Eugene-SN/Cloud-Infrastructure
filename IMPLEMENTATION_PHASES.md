@@ -456,11 +456,13 @@ Stage decomposition:
 Acceptance planning: define each edge component's supported update path, health checks, failure reporting and rollback/recovery. Stage 6 precedes Stage 7 so a verified backup/restore capability exists before maintenance tooling is deployed and tested; this is a deployment/testing safety prerequisite, not a requirement to run Backrest before every production update. Add a per-update backup step only where a specific component/update path materially requires it. Verify one controlled update/recovery scenario after Stage 6.
 
 Current Stage 7B checkpoint: the CT1000-derived 16-target Master Batch is
-deployed and exposed as Semaphore template 18 after source-contract, syntax,
-driver-preflight, fresh live plan-only and health validation. Semaphore update is
-individual-only, APT is last, and post-scan/no-reboot/health gates are mandatory.
-The first real Master run remains an operator action from `update.escloud.us` and
-is not yet accepted.
+deployed as Semaphore template 18 and has completed operator-triggered runtime
+acceptance. Task 12 finished successfully with one PostgreSQL driver execution,
+15 CURRENT skips, a clean 16/16 post-scan, no pending reboot, and all final
+health gates PASS. Stage 7B remains IN PROGRESS pending reconciliation of the
+host-level unattended-upgrade path with the accepted manual-only
+`update.escloud.us` execution rule and normalization of the stale runtime
+dashboard action-contract copy.
 
 ## Stage 8 — Edge Monitoring, Heartbeats & Alerts
 
