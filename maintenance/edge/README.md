@@ -15,13 +15,11 @@ timer, unattended updater, or background update daemon.
 
 ## Safety boundary
 
-The candidate templates and all drivers may be installed while the dashboard
-remains read-only. Execution is fail-closed: `/etc/edge-maintenance/driver-acceptance.json`
-must explicitly accept each unit, and Master Batch has a separate `master`
-gate. The shipped example accepts nothing. Creating templates does not accept
-drivers and must not change `actions.json` template IDs.
+Individual templates are exposed only through the manual dashboard controls.
+Execution remains fail-closed: `/etc/edge-maintenance/manual-driver-enablement.json`
+must explicitly enable each fixed unit. Master Batch has a separate `master`
+gate and remains disabled until individual runtime acceptance is complete.
 
-Before any driver is accepted, run its `manual-update TARGET --preflight`,
-review backup/rollback and health checks, then perform a separately authorized
-manual runtime acceptance. Production updates are not part of source or
-read-only deployment verification.
+The first operator-initiated run of each driver is its runtime acceptance:
+review the displayed version, backup/rollback and health checks, then launch it
+from `update.escloud.us`. No other launch surface is supported.

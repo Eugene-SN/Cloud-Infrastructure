@@ -1182,7 +1182,7 @@
     <!-- TABLE 1: SYSTEM APT TARGETS -->
     <section class="group" id="aptGroup" style="margin-bottom: 28px;">
       <div class="group-header">
-        <h2 class="group-title">System Base Packages (APT)</h2>
+        <h2 class="group-title">System Packages</h2>
         <span class="group-note" id="aptCount">1 host</span>
       </div>
 
@@ -1193,9 +1193,10 @@
               <tr>
                 <th class="col-chk"><input type="checkbox" class="chk-box" onchange="toggleSelectAll('apt', this.checked)"></th>
                 <th class="col-scope">Scope</th>
-                <th class="col-name">Target Node</th>
+                <th class="col-name">Service Name</th>
                 <th class="col-ip">IP Address</th>
-                <th class="col-pkg-summary">Package Summary</th>
+                <th class="col-ver">Installed</th>
+                <th class="col-stable">Latest Stable</th>
                 <th class="col-status">Status</th>
                 <th class="col-act">Action</th>
               </tr>
@@ -1222,7 +1223,7 @@
               <tr>
                 <th class="col-chk"><input type="checkbox" class="chk-box" onchange="toggleSelectAll('native', this.checked)"></th>
                 <th class="col-scope">Scope</th>
-                <th class="col-name">Application</th>
+                <th class="col-name">Service Name</th>
                 <th class="col-ip">IP Address</th>
                 <th class="col-ver">Installed</th>
                 <th class="col-stable">Latest Stable</th>
@@ -1250,10 +1251,10 @@
               <tr>
                 <th class="col-chk"><input type="checkbox" class="chk-box" onchange="toggleSelectAll('docker', this.checked)"></th>
                 <th class="col-scope">Scope</th>
-                <th class="col-name">Application</th>
+                <th class="col-name">Service Name</th>
                 <th class="col-ip">IP Address</th>
-                <th class="col-ver">Application Version</th>
-                <th class="col-stable">Image Track / Digest</th>
+                <th class="col-ver">Installed</th>
+                <th class="col-stable">Latest Stable</th>
                 <th class="col-status">Status</th>
                 <th class="col-act">Action</th>
               </tr>
@@ -1278,7 +1279,7 @@
               <tr>
                 <th class="col-chk"><input type="checkbox" class="chk-box" onchange="toggleSelectAll('cli', this.checked)"></th>
                 <th class="col-scope">Scope</th>
-                <th class="col-name">Application</th>
+                <th class="col-name">Service Name</th>
                 <th class="col-ip">IP Address</th>
                 <th class="col-ver">Installed</th>
                 <th class="col-stable">Latest Stable</th>
@@ -1677,22 +1678,17 @@
         return `<tr id="row-${r.action_key}" class="${hasUpdate ? "has-update" : ""}">
           <td class="col-chk"><input type="checkbox" class="chk-box" ${isChecked ? "checked" : ""} ${availability.executable ? "" : "disabled"} title="${availability.label}" onchange="toggleRowSelect('${r.action_key}', this.checked)"></td>
           <td class="col-scope"><span class="node-scope-chip">${r.scope}</span></td>
-          <td class="col-name" title="${r.label || r.component}">
+          <td class="col-name" title="${r.label || r.component}" onclick="showPkgModal('${r.action_key}')" style="cursor:pointer">
             <div class="service-title">${r.label || r.component}</div>
             <div class="service-sub">${monitored.length} monitored APT components</div>
           </td>
           <td class="col-ip"><span class="ip-tag">${ip}</span></td>
-          <td class="col-pkg-summary">
-            <div class="pkg-summary-box" onclick="showPkgModal('${r.action_key}')" data-tooltip="${tipText.replace(/"/g, "&quot;")}">
-              <span class="pkg-summary-tag ${hasUpdate ? "is-upgrade" : ""}">
-                ${summaryText}
-              </span>
-            </div>
-          </td>
+          <td class="col-ver"><span class="mono-version">${r.current || "System / APT"}</span></td>
+          <td class="col-stable"><span class="mono-version ${hasUpdate ? "is-upgrade" : ""}" onclick="showPkgModal('${r.action_key}')" style="cursor:pointer" data-tooltip="${tipText.replace(/"/g, "&quot;")}">${summaryText}</span></td>
           <td class="col-status"><span class="status-badge ${badgeClass}"><span class="status-badge-dot"></span>${badgeText}</span></td>
           <td class="col-act">
             <button class="action action-sm action-btn-center ${availability.executable ? "action-primary" : ""}" onclick="runSingle('${r.action_key}')" title="${availability.label}" ${isBusy || !availability.executable ? "disabled" : ""}>
-              ${availability.executable ? "Update APT" : availability.label}
+              ${availability.executable ? "Update" : availability.label}
             </button>
           </td>
         </tr>`;
@@ -1732,11 +1728,14 @@
               : null;
 
           const availability = actionState(r);
-          const digestShort = value => value && value !== "-" && value !== "—" ? value.replace("sha256:", "").slice(0, 12) : "unavailable";
           const applicationDisplay = r.type === "DOCKER" ? (r.application_version || "—") : (r.current || "—");
-          const availableDisplay = r.type === "DOCKER"
-            ? `<span class="mono-version">${r.image_repository || "—"}:${r.image_track || "—"}</span><div class="service-sub">running ${digestShort(r.running_image_digest)} · remote ${digestShort(r.remote_image_digest)} · ${String(r.update_reason || "CHECK_FAILED").replaceAll("_", " ")}</div>`
-            : `<span class="mono-version ${hasUpdate ? "is-upgrade" : ""}">${r.available || "—"}</span>`;
+          const dockerLatest = r.available_application_version && r.available_application_version !== "-"
+            ? r.available_application_version
+            : (r.update_reason === "CURRENT" ? applicationDisplay : `New ${r.image_track || "tracked"} image`);
+          const latestDisplay = r.type === "DOCKER" ? dockerLatest : (r.available || "—");
+          const dockerTechnical = r.type === "DOCKER"
+            ? `${r.image_repository || ""}:${r.image_track || ""}\nrunning: ${r.running_image_digest || "unavailable"}\nremote: ${r.remote_image_digest || "unavailable"}\nreason: ${r.update_reason || "CHECK_FAILED"}`
+            : "";
 
           const lifecycle =
             r.type === "DOCKER"
@@ -1753,8 +1752,8 @@
               <div class="service-sub">${lifecycle}</div>
             </td>
             <td class="col-ip"><span class="ip-tag">${ip}</span></td>
-            <td class="col-ver"><span class="mono-version">${applicationDisplay}</span>${r.type === "DOCKER" && r.available_application_version && r.available_application_version !== "-" && r.available_application_version !== applicationDisplay ? `<div class="service-sub">available ${r.available_application_version}</div>` : ""}</td>
-            <td class="col-stable">${availableDisplay}</td>
+            <td class="col-ver"><span class="mono-version">${applicationDisplay}</span></td>
+            <td class="col-stable" title="${dockerTechnical.replace(/"/g, "&quot;")}"><span class="mono-version ${hasUpdate ? "is-upgrade" : ""}">${latestDisplay}</span></td>
             <td class="col-status"><span class="status-badge ${badgeClass}"><span class="status-badge-dot"></span>${badgeText}</span></td>
             <td class="col-act">
               <button class="action action-sm action-btn-center ${availability.executable ? "action-primary" : ""}" onclick="runSingle('${r.action_key}')" title="${availability.label}" ${isBusy || !availability.executable ? "disabled" : ""}>

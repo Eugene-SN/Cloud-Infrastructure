@@ -67,6 +67,33 @@ except Exception:
 PY
 }
 
+github_latest_series() {
+    repo="$1"
+    series="$2"
+    python3 - "$repo" "$series" <<'PY'
+import json, re, sys, urllib.request
+repo, series = sys.argv[1:]
+req = urllib.request.Request(
+    f"https://api.github.com/repos/{repo}/releases?per_page=100",
+    headers={"Accept": "application/vnd.github+json", "User-Agent": "Edge-Maintenance"},
+)
+try:
+    with urllib.request.urlopen(req, timeout=10) as response:
+        releases = json.load(response)
+    versions = []
+    for release in releases:
+        tag = str(release.get("tag_name") or "").lstrip("v")
+        if release.get("draft") or release.get("prerelease") or not tag.startswith(series + "."):
+            continue
+        if re.fullmatch(r"[0-9]+(?:\.[0-9]+)+", tag):
+            versions.append(tuple(map(int, tag.split("."))))
+    if versions:
+        print(".".join(map(str, max(versions))))
+except Exception:
+    pass
+PY
+}
+
 npm_latest() {
     package="$1"
     python3 - "$package" <<'PY'
@@ -248,12 +275,20 @@ emit_docker_component() {
     test -n "$installed" && test "$installed" != "<no value>" || installed="-"
     test -n "$remote_version" || remote_version="-"
 
+    if test "$component" = "STALWART"; then
+        remote_version="$(github_latest_series stalwartlabs/stalwart 0.16)"
+        test -n "$remote_version" || remote_version="-"
+    fi
+
     if test -z "$local_digest" || test -z "$remote_digest"; then
         status="STABLE_UNRESOLVED"
         update_reason="CHECK_FAILED"
     elif test "$local_digest" = "$remote_digest"; then
         status="CURRENT"
         update_reason="CURRENT"
+        if test "$remote_version" = "-"; then
+            remote_version="$installed"
+        fi
     else
         status="UPDATE_AVAILABLE"
         if test "$installed" != "-" && test "$remote_version" != "-" && \

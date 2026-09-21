@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Sequential, failure-isolated master runner. Locked until separately accepted."""
+"""Sequential, failure-isolated master runner. Separately gated."""
 
 import json
 import pathlib
@@ -7,12 +7,12 @@ import subprocess
 import sys
 
 BASE = pathlib.Path("/opt/edge-maintenance")
-ACCEPTANCE = pathlib.Path("/etc/edge-maintenance/driver-acceptance.json")
+ENABLEMENT = pathlib.Path("/etc/edge-maintenance/manual-driver-enablement.json")
 
 
 def main():
-    acceptance = json.loads(ACCEPTANCE.read_text()) if ACCEPTANCE.is_file() else {}
-    if acceptance.get("schema") != 1 or acceptance.get("master") is not True:
+    enablement = json.loads(ENABLEMENT.read_text()) if ENABLEMENT.is_file() else {}
+    if enablement.get("schema") != 1 or enablement.get("master") is not True:
         raise RuntimeError("Master Batch acceptance pending")
     manifest = json.loads((BASE / "config/update-units.json").read_text())
     subprocess.run([str(BASE / "scripts/maintenance-refresh")], check=True)

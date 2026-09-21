@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fail-closed manual update dispatcher for one accepted Edge update unit."""
+"""Fail-closed dispatcher for one operator-triggered Edge update unit."""
 
 import argparse
 import datetime as dt
@@ -11,7 +11,7 @@ import subprocess
 import sys
 
 MANIFEST = pathlib.Path("/opt/edge-maintenance/config/update-units.json")
-ACCEPTANCE = pathlib.Path("/etc/edge-maintenance/driver-acceptance.json")
+ENABLEMENT = pathlib.Path("/etc/edge-maintenance/manual-driver-enablement.json")
 CACHE = pathlib.Path("/var/www/maintenance-status/maintenance.json")
 CORE_UID = 1000
 
@@ -50,12 +50,12 @@ def preflight(unit):
     print(f"DRIVER_PREFLIGHT={unit['id']}:PASS")
 
 
-def require_acceptance(target):
-    if not ACCEPTANCE.is_file():
-        raise RuntimeError("acceptance registry absent; driver is locked")
-    acceptance = load(ACCEPTANCE)
-    if acceptance.get("schema") != 1 or acceptance.get("accepted", {}).get(target) is not True:
-        raise RuntimeError(f"driver acceptance pending: {target}")
+def require_enablement(target):
+    if not ENABLEMENT.is_file():
+        raise RuntimeError("manual driver enablement registry absent; driver is locked")
+    enablement = load(ENABLEMENT)
+    if enablement.get("schema") != 1 or enablement.get("enabled", {}).get(target) is not True:
+        raise RuntimeError(f"manual driver is disabled: {target}")
 
 
 def require_fresh_update(target, max_age):
@@ -119,7 +119,7 @@ def main():
     if args.preflight:
         print("REAL_UPDATE_EXECUTED=NO")
         return
-    require_acceptance(args.target)
+    require_enablement(args.target)
     require_fresh_update(args.target, manifest["cache_max_age_seconds"])
     execute(unit)
     print(f"UPDATE_RESULT={args.target}:SUCCESS")

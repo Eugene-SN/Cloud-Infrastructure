@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "master": false,
+  "enabled": {
+    "APT_EDGE": true,
+    "XRAY": true,
+    "HYSTERIA2": true,
+    "BACKREST": true,
+    "RESTIC": true,
+    "SEMAPHORE": true,
+    "N8N": true,
+    "AUTHELIA": true,
+    "MATTERMOST": true,
+    "POSTGRESQL": true,
+    "STALWART": true,
+    "BULWARK": true,
+    "HERMES": true,
+    "CLOUDCLI": true,
+    "CODEX": true,
+    "ANTIGRAVITY": true
+  }
+}

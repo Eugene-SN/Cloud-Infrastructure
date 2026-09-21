@@ -34,9 +34,10 @@ assert next(r for r in docker if r["component"] == "STALWART")["application_vers
 assert next(r for r in docker if r["component"] == "MATTERMOST")["application_version"] != "latest"
 
 assert actions["schema"] == 8
-assert actions["read_only"] is True
+assert actions["read_only"] is False
+assert actions["manual_acceptance_mode"] is True
 assert actions["master_template_id"] is None
-assert all(item["template_id"] is None for item in actions["components"].values())
-assert all(item["driver_state"] == "acceptance_pending" for item in actions["components"].values())
+assert sorted(item["template_id"] for item in actions["components"].values()) == list(range(2, 18))
+assert all(item["driver_state"] == "executable" for item in actions["components"].values())
 assert set(actions["components"]) == {u["id"] for u in manifest["units"]}
 print("EDGE_MAINTENANCE_CONTRACT=PASS")
