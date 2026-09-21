@@ -368,10 +368,26 @@ Root recovery snapshots remain under `/srv/backups/edge-stage4c`, `/srv/backups/
 - Two attempted Antigravity smoke verifiers were classified as assistant test-harness defects (temporary-directory traversal and job-control/timeout behavior), not production regressions. No production mutation or service restart occurred.
 - Stage 4 remains COMPLETE / ACCEPTED with `STAGE4_FINAL_ACCEPTANCE=PASS`; Stage 5 entry is eligible after this repository reconciliation.
 
+## Stage 6 — Edge Backrest & Recovery — IN PROGRESS
+
+Current accepted/deployed state:
+
+- Backrest `1.14.1` and Restic `0.19.1` are active on edge;
+- dedicated edge Knowledge repo/plan is deployed and accepted:
+  - source `/srv/knowledge`;
+  - schedule `04/10/16/22`;
+  - rolling local `14d`;
+  - grouping `host,tags`;
+  - no D5 copy;
+  - `EDGE_KNOWLEDGE_14D_FINAL_ACCEPTANCE=PASS`;
+- expanded edge and ai-node backup audits passed;
+- exact Stage 6 general-backup/deployment contract is accepted in `STAGE_06_6_DEPLOYMENT_CONTRACT_2026-09-21.md`;
+- edge general target is one `edge-state` plan, schedule `01/07/13/19`, local rolling `7d`, successful append-only D5 copy, and D5 daily30/weekly8/monthly6/yearly0;
+- application-consistent staging is required before the general plan is accepted;
+- no recurring edge full/bare-metal Restic chain is planned;
+- a separate CloudCLI runtime drift remains known: `cloudcli.service` is restart-looping because `/srv/ai-workspace` is absent. It is not classified as a Backrest deployment failure and must be reconciled before final Stage 6 non-regression acceptance.
+
 ## Current next step
 
-Stage 05.1 is complete and accepted under the final runtime architecture. The immediate next branch is `05.2 — PVE Canonical Obsidian Runtime & WebUI`. After 05.2 acceptance, edge deployment continues separately in `05.3 — Edge Knowledge Replication & Data Integration`. External iOS/macOS/Windows/Android client-access implementation remains future work.
+Proceed with Stage 6.6 implementation preflight and then bounded Stage 6 deployment: exact consistency-wrapper inputs, CT208 edge repository contract, edge general plan/tier-copy, accepted ai-node corrections, and finally isolated real restore acceptance.
 
-Image Generation is non-blocking for Stage 4 and must not divert the critical path; any later image-quality acceptance is human/visual. Do not add a desktop stack solely to make CUA applicable on the headless `edge`.
-
-Do not reopen Stage 3 transport or reinstall already accepted Stage 4 components without a concrete incompatibility.
