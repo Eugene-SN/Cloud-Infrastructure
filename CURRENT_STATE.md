@@ -449,4 +449,25 @@ Final Stage 6 acceptance record: `STAGE_06_FINAL_ACCEPTANCE_2026-09-21.md`.
 
 ## Current next step
 
-Stage 6 is COMPLETE / ACCEPTED. Next finite infrastructure stage: **Stage 7 — Edge Maintenance & Update**.
+Stage 7 is IN PROGRESS. Stage 7A is COMPLETE / ACCEPTED; Stage 7B remains in
+controlled runtime acceptance.
+
+Current Stage 7B Master Batch candidate:
+
+- canonical source revision `54027cd40435415531c2efd537045111d83ea232`;
+- Semaphore template ID `18`, `90. Master Batch — Edge Maintenance`, with zero
+  runs at activation;
+- exactly 16 fixed update units and 23 monitored components;
+- fixed order with `APT_EDGE` last;
+- Semaphore self-update is individual-only and blocks Master before mutation
+  when an update is pending;
+- fresh-cache, exact-target, summary and no-pending-reboot precheck;
+- sequential dispatch with `CURRENT` skips and isolated target-failure capture;
+- mandatory post-scan, no-pending-reboot, service/container/data-health gates;
+- manual-only launch from `update.escloud.us`; no schedule or automatic launcher.
+
+Activation verification performed no production update. The fresh read-only scan
+reported `CURRENT=10`, `UPDATE_AVAILABLE=6`, `CHECK_FAILED=0`,
+`REBOOT_REQUIRED=0`; `MASTER_PLAN_ONLY=PASS` and `MASTER_HEALTH_GATE=PASS`.
+The first operator-triggered Master run and its post-run evidence are still
+required before runtime acceptance may be claimed.

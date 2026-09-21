@@ -1366,3 +1366,46 @@ Authoritative record:
 - create no timer, schedule, cron entry, updater daemon or alternative launch surface.
 
 **Current boundary:** all 16 individual buttons are connected for manual use from `update.escloud.us`, but no per-driver runtime acceptance has occurred. Master Batch remains locked until individual acceptance is complete. This decision does not claim any production update.
+
+## 2026-09-21 — Stage 7B CT1000-derived Master Batch activation
+
+**Status:** ACCEPTED DESIGN / DEPLOYED; OPERATOR RUNTIME ACCEPTANCE PENDING
+
+**Context:** A read-only audit of the live CT1000 implementation and its complete
+successful and failed task history established the working Master lifecycle. The
+earlier minimal Edge draft was not used as the acceptance basis. Edge requires
+the same pre-scan, fixed plan, failure isolation, complete post-scan and final
+acceptance-gate behavior, adapted to a single node and 16 update units.
+
+**Decision:**
+- activate Semaphore template ID `18` as the manual-only Edge Master Batch;
+- validate a fresh, exact 16-target cache and reject unresolved/check-failed,
+  summary-drift or pending-reboot state before any mutation;
+- traverse all targets in a fixed order, record `CURRENT` as
+  `SKIPPED_CURRENT`, continue after isolated driver failures and place
+  `APT_EDGE` last;
+- preserve the accepted cache timestamp for the complete plan and reject a
+  concurrent cache replacement between targets;
+- keep Semaphore self-update individual-only because its systemd
+  `KillMode=control-group` lifecycle can interrupt its own Ansible task;
+- require a complete post-scan with all 16 targets current, no check failures
+  and no pending reboot, plus systemd, Compose, PostgreSQL, SQLite, nginx and
+  dpkg health gates before reporting success;
+- provide a read-only `--plan-only` validation path which bypasses the Master
+  enablement gate but cannot execute a driver;
+- retain `update.escloud.us` as the only launch surface and create no automatic
+  or scheduled update path.
+
+**Verification before activation:** all 16 driver preflights passed; synthetic
+contract tests rejected stale, unresolved, missing-target, Semaphore-update and
+pending-reboot plans; Ansible syntax passed; a fresh live scan produced 16
+resolved targets with six updates; `MASTER_PLAN_ONLY=PASS` and
+`MASTER_HEALTH_GATE=PASS`; template 18 still had zero task runs. No update was
+executed by this activation.
+
+**Evidence:** `STAGE_07B_MASTER_BATCH_CT1000_AUDIT_2026-09-21.md` and canonical
+revision `54027cd40435415531c2efd537045111d83ea232`.
+
+**Current boundary:** implementation and safe activation are complete, but the
+first operator-triggered Master task and its resulting update/recovery evidence
+remain required for runtime acceptance. Stage 7B remains IN PROGRESS.
