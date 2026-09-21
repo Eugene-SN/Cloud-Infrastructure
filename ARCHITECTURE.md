@@ -509,7 +509,7 @@ Do not create an independent edge maintenance framework unless a concrete incomp
 
 `update.escloud.us` starts from an adapted copy of the existing Home Maintenance dashboard source and status/action contract. Stage 7C refines that copied UI for Cloud/edge targets; it is not a greenfield frontend build. `update.escloud.us` remains separate from `app.escloud.us`.
 
-Stage 7A first proves the ported framework in read-only version/status mode. Stage 7B adds and accepts real edge component update drivers and Master Batch behavior.
+Stage 7A is COMPLETE / ACCEPTED: the Home-derived framework is proven on edge in read-only mode, including the copied dashboard/status contract, Semaphore project/repository/inventory/environment/template model, canonical GitHub refresh playbook, local collector/cache refresh and full dashboard-triggered E2E. Stage 7B adds and accepts real edge component update drivers and Master Batch behavior; Stage 7A's read-only action boundary remains authoritative until each Stage 7B driver is explicitly accepted.
 
 ## Stage 8 — Monitoring, Heartbeats & Alerts
 
