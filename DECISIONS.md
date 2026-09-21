@@ -1162,3 +1162,23 @@ Authoritative record:
 
 **Supersedes:** no accepted topology or retention decision.
 
+## 2026-09-21T11:15:00+03:00 — Stage 06 final acceptance
+
+**Status:** ACCEPTED
+
+**Context:** Stage 06.7 deployed and verified the production backup chains; Stage 06.8 proved real isolated D5 restores and application usability; Stage 06.9 completed final cleanup and non-regression. The pre-existing CloudCLI CHDIR drift was also reconciled before final acceptance.
+
+**Decision:**
+
+- Stage 6 — Edge Backrest & Recovery is COMPLETE / ACCEPTED;
+- final marker: `STAGE06_FINAL_ACCEPTANCE=PASS`;
+- retain the accepted edge Knowledge, edge-state, CT208/D5, and bounded ai-node backup contracts;
+- accept the tested restore paths as the Stage 6 recovery baseline;
+- retain the existing CloudCLI systemd unit contract and restored `/srv/ai-workspace` root;
+- no Stage 6 reboot acceptance is required;
+- proceed to Stage 7 — Edge Maintenance & Update.
+
+**Evidence:** `STAGE_06_FINAL_ACCEPTANCE_2026-09-21.md`.
+
+**Supersedes:** the Stage 6 IN PROGRESS state only; no accepted topology is superseded.
+
