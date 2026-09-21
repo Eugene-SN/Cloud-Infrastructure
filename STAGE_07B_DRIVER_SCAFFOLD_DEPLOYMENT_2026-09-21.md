@@ -116,6 +116,11 @@ updated component only. This prevents a floating image tag that advances
 between Scan and Pull from leaving a successful update displayed against an
 older cached registry version or digest.
 
+Compose drivers pull the exact registry digest captured by the fresh Scan,
+verify that its repository/tag matches the configured Compose service, tag the
+pinned image locally and only then recreate that one service. A floating tag
+cannot advance the accepted update between operator review and execution.
+
 The root allowlist is `/etc/edge-maintenance/manual-driver-enablement.json` and
 contains exactly the 16 fixed targets. Master Batch remains disabled
 (`master=false`, `master_template_id=null`) pending individual acceptance.

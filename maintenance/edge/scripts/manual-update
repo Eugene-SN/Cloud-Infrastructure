@@ -30,6 +30,13 @@ def run(argv, **kwargs):
     subprocess.run(argv, check=True, **kwargs)
 
 
+def normalized_image_reference(reference):
+    for prefix in ("docker.io/", "index.docker.io/"):
+        if reference.startswith(prefix):
+            return reference[len(prefix):]
+    return reference
+
+
 def preflight(unit):
     driver = unit["driver"]
     if driver == "compose":
@@ -69,9 +76,10 @@ def require_fresh_update(target, max_age):
         raise RuntimeError("target absent from maintenance cache")
     if row.get("status") != "UPDATE_AVAILABLE":
         raise RuntimeError(f"target is not actionable: {row.get('status')}")
+    return row
 
 
-def execute(unit):
+def execute(unit, status_row):
     driver = unit["driver"]
     if driver == "apt":
         env = dict(os.environ, DEBIAN_FRONTEND="noninteractive")
@@ -89,12 +97,37 @@ def execute(unit):
     elif driver == "compose":
         directory = pathlib.Path(unit["directory"])
         compose = ["docker", "compose", *sum((["-f", f] for f in unit["files"]), [])]
+        repository = str(status_row.get("image_repository") or "")
+        track = str(status_row.get("image_track") or "")
+        digest = str(status_row.get("remote_image_digest") or "")
+        if not repository or not track or not digest.startswith("sha256:"):
+            raise RuntimeError("fresh registry image identity is incomplete")
+        image = f"{repository}:{track}"
+        pinned = f"{repository}@{digest}"
+        config = subprocess.run(
+            compose + ["config", "--format", "json"],
+            cwd=directory,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        configured = str(
+            json.loads(config.stdout)
+            .get("services", {})
+            .get(unit["service"], {})
+            .get("image", "")
+        )
+        if normalized_image_reference(configured) != normalized_image_reference(image):
+            raise RuntimeError(
+                f"compose image mismatch: expected {image}, configured {configured or 'absent'}"
+            )
         if unit["id"] == "POSTGRESQL":
             backup = pathlib.Path("/var/backups/edge-maintenance") / ("postgres-" + dt.datetime.now().strftime("%Y%m%d-%H%M%S") + ".sql")
             backup.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
             with backup.open("wb") as handle:
                 subprocess.run(compose + ["exec", "-T", unit["service"], "pg_dumpall", "-U", "mmuser"], cwd=directory, check=True, stdout=handle)
-        run(compose + ["pull", unit["service"]], cwd=directory)
+        run(["docker", "pull", pinned])
+        run(["docker", "tag", pinned, image])
         run(compose + ["up", "-d", "--wait", unit["service"]], cwd=directory)
     elif driver == "user_cli":
         run(["runuser", "-u", "core", "--", unit["binary"], *unit["arguments"]])
@@ -120,8 +153,8 @@ def main():
         print("REAL_UPDATE_EXECUTED=NO")
         return
     require_enablement(args.target)
-    require_fresh_update(args.target, manifest["cache_max_age_seconds"])
-    execute(unit)
+    status_row = require_fresh_update(args.target, manifest["cache_max_age_seconds"])
+    execute(unit, status_row)
     print(f"UPDATE_RESULT={args.target}:SUCCESS")
 
 
