@@ -311,7 +311,7 @@ Accepted runtime:
 - Semaphore and maintenance/update workflow are developed/tested together.
 - Existing PVE/Home update tooling is an engineering reference to audit/adapt, not copy blindly.
 - `update.escloud.us` is the single Stage 7 operator origin: `/status/` serves the custom maintenance/update page and `/project/1/history` opens the full Semaphore UI for task/template inspection and live logs.
-- Do not create a separate Semaphore application endpoint at `ops.escloud.us`; keep Semaphore itself loopback-only and publish both Stage 7 interfaces through the accepted `update.escloud.us` ingress.
+- Do not reintroduce the retired `ops.escloud.us` name into edge configuration, certificates, recovery material or automation; keep Semaphore itself loopback-only and publish both Stage 7 interfaces through the accepted `update.escloud.us` ingress.
 
 ## Monitoring sequencing
 

@@ -42,9 +42,9 @@ Reserved names do not authorize premature service deployment.
 | FQDN | Historical role | Disposition |
 |---|---|---|
 | `go.escloud.us` | n8n | RETIRED after accepted migration to `n8n.escloud.us` |
-| `ops.escloud.us` | prepared candidate for a separate Semaphore UI | UNUSED; no application vhost or accepted functional role; Semaphore UI is under `update.escloud.us` |
+| `ops.escloud.us` | prepared candidate for a separate Semaphore UI | RETIRED from edge on 2026-09-21; operator will remove the remaining Cloudflare DNS record manually |
 
-Do not preserve retired or unused names indefinitely unless a concrete compatibility requirement appears. The existing `ops.escloud.us` DNS/certificate entry is cleanup residue, not an active endpoint.
+Do not preserve retired or unused names indefinitely unless a concrete compatibility requirement appears. The former `ops.escloud.us` name has no edge vhost, Authelia rule, certificate SAN, automation entry or recovery copy; its external Cloudflare DNS record is pending operator deletion.
 
 ## DNS contract
 
@@ -79,7 +79,7 @@ The intended namespace includes:
 - `sync.escloud.us`
 - `update.escloud.us`
 
-`go.escloud.us` remains outside the target namespace.
+`go.escloud.us` and `ops.escloud.us` remain outside the target namespace.
 
 ## Authentication namespace
 

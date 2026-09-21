@@ -28,6 +28,7 @@
 `STAGE07A_READONLY_DASHBOARD_SEMAPHORE_E2E=PASS` on 2026-09-21.
 `STAGE07_UPDATE_ROOT_REDIRECT_FIX=PASS` on 2026-09-21.
 `STAGE07_SEMAPHORE_SAME_ORIGIN_UI=PASS` on 2026-09-21.
+`STAGE07_OPS_HOSTNAME_RETIREMENT=PASS` on 2026-09-21.
 
 `STAGE4F_STABLE_DOCKER_BRIDGE_HARDENING=PASS` on 2026-09-19.
 
@@ -164,6 +165,8 @@ Stage 7 public-ingress redirect correction record: `STAGE_07_UPDATE_INGRESS_REDI
 
 Stage 7 same-origin Semaphore UI record: `STAGE_07_SEMAPHORE_SAME_ORIGIN_UI_2026-09-21.md`.
 
+Stage 7 retired-hostname cleanup record: `STAGE_07_OPS_HOSTNAME_RETIREMENT_2026-09-21.md`.
+
 ## Host / foundation
 
 - logical node/FQDN: `edge.escloud.us`;
@@ -222,7 +225,7 @@ Protected private web namespace includes `n8n`, `code`, future `app`, `backup`, 
 
 Shared Certbot lineage: `/etc/letsencrypt/live/escloud.us`.
 
-Current SAN set includes `escloud.us`, `app.escloud.us`, `auth.escloud.us`, `backup.escloud.us`, `chat.escloud.us`, `cloud.escloud.us`, `code.escloud.us`, `docs.escloud.us`, `hermes.escloud.us`, `mail.escloud.us`, `n8n.escloud.us`, `ops.escloud.us`, `sync.escloud.us` and `update.escloud.us`. `update.escloud.us` has active HTTPS ingress through Authelia for both the maintenance dashboard and Semaphore UI. `ops.escloud.us` remains in the current certificate but has no application vhost or accepted functional role.
+Current SAN set includes `escloud.us`, `app.escloud.us`, `auth.escloud.us`, `backup.escloud.us`, `chat.escloud.us`, `cloud.escloud.us`, `code.escloud.us`, `docs.escloud.us`, `hermes.escloud.us`, `mail.escloud.us`, `n8n.escloud.us`, `sync.escloud.us` and `update.escloud.us`. `update.escloud.us` has active HTTPS ingress through Authelia for both the maintenance dashboard and Semaphore UI. The former `ops.escloud.us` candidate is fully retired from edge runtime/configuration/certificate state; only operator-owned Cloudflare DNS deletion remains.
 
 ## Stage 2 applications
 

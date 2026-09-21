@@ -515,7 +515,7 @@ Stage 7B has a strict manual-execution boundary. `update.escloud.us` is the sole
 
 The accepted operator ingress is `https://update.escloud.us/` through the existing Xray -> host nginx -> Authelia chain. The dashboard backend remains private at `127.0.0.1:18070`; TCP/18070 is not a public listener or firewall opening. Redirects emitted by that loopback server must remain origin-relative, including the root redirect to `/status/`, so internal scheme/port details cannot leak through the reverse proxy.
 
-The maintenance dashboard and full Semaphore UI share this origin, matching the accepted Home pattern. `/` redirects to `/status/`; `/status/` serves the maintenance dashboard; the dashboard's Semaphore button opens `/project/1/history`; Semaphore SPA routes and static assets are proxied to `127.0.0.1:3000`; `/api/` and `/api/ws` retain the Semaphore API and live-task WebSocket contract. Semaphore `web_host` is `https://update.escloud.us/`. A separate `ops.escloud.us` application endpoint is not part of the accepted architecture.
+The maintenance dashboard and full Semaphore UI share this origin, matching the accepted Home pattern. `/` redirects to `/status/`; `/status/` serves the maintenance dashboard; the dashboard's Semaphore button opens `/project/1/history`; Semaphore SPA routes and static assets are proxied to `127.0.0.1:3000`; `/api/` and `/api/ws` retain the Semaphore API and live-task WebSocket contract. Semaphore `web_host` is `https://update.escloud.us/`. The former `ops.escloud.us` candidate was fully retired from edge on 2026-09-21; its remaining Cloudflare DNS record is operator-owned cleanup.
 
 ## Stage 8 — Monitoring, Heartbeats & Alerts
 

@@ -1328,3 +1328,24 @@ Authoritative record:
 **Evidence:** `STAGE_07_SEMAPHORE_SAME_ORIGIN_UI_2026-09-21.md`.
 
 **Supersedes:** the planned `ops.escloud.us` Semaphore UI endpoint and any dashboard link targeting it.
+
+## 2026-09-21 — Full edge retirement of the former Semaphore candidate hostname
+
+**Status:** ACCEPTED
+
+**Context:** After Semaphore moved under the single `update.escloud.us` origin, the former candidate name still existed in the shared certificate, Authelia policy, certificate-domain state, `maintctl` fallback lists and historical edge recovery material. Leaving those entries in place could reintroduce the retired name during renewal or recovery. The operator will remove the Cloudflare DNS record separately.
+
+**Decision:**
+- remove the former hostname from Authelia, the canonical certificate-domain state and both `maintctl` fallback lists;
+- keep every active SAN, including `hermes.escloud.us` and `update.escloud.us`, in both file-driven and fallback renewal paths;
+- reissue the shared `escloud.us` lineage with the 13 active application SANs and remove superseded certificate archive versions containing the retired SAN;
+- remove the obsolete Stage 4 recovery archive and refresh Stage 7 dashboard recovery copies so no edge recovery path restores the old target;
+- leave Cloudflare DNS deletion to the operator and make no Cloudflare mutation from edge.
+
+**Verification:** Authelia native configuration validation passed and the container returned healthy; all 13 retained names passed SAN and ACME webroot checks; Certbot staging renewal succeeded after archive cleanup; nginx configuration passed and reloaded; nginx, Semaphore, Xray, Hysteria2, Authelia and `certbot.timer` remained healthy; retained edge certificates contain no retired SAN; targeted infrastructure configuration and recovery scans contain no former hostname reference.
+
+**Acceptance marker:** `STAGE07_OPS_HOSTNAME_RETIREMENT=PASS`.
+
+**Evidence:** `STAGE_07_OPS_HOSTNAME_RETIREMENT_2026-09-21.md`.
+
+**Supersedes:** the residual certificate/DNS-cleanup state recorded immediately after same-origin Semaphore acceptance. The historical reason for the candidate name remains documented; current edge architecture contains no such endpoint.

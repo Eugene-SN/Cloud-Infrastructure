@@ -42,6 +42,8 @@ Before mutation, nginx configuration, Semaphore configuration, both dashboard co
 
 The checkpoint has a verified SHA-256 manifest. No task was active before any Semaphore restart.
 
+After the former separate hostname was retired from edge, the two dashboard files in this checkpoint were refreshed to the accepted same-origin version and `SHA256SUMS` was regenerated. The checkpoint can no longer restore the obsolete external button target.
+
 ## Verification
 
 - `nginx -t`: PASS;
