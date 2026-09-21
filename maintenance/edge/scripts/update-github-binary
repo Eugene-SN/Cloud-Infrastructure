@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Candidate native-binary driver. manual-update enforces per-target acceptance first.
+target="${1:-}"
+case "$target" in
+  BACKREST) repo=garethgeorge/backrest; binary=backrest; asset_template='backrest_VERSION_Linux_x86_64.tar.gz'; checksum_template='backrest_VERSION_checksums.txt'; service=backrest ;;
+  RESTIC) repo=restic/restic; binary=restic; asset_template='restic_VERSION_linux_amd64.bz2'; checksum_template='SHA256SUMS'; service='' ;;
+  SEMAPHORE) repo=semaphoreui/semaphore; binary=semaphore; asset_template='semaphore_VERSION_linux_amd64.tar.gz'; checksum_template='semaphore_VERSION_checksums.txt'; service=semaphore ;;
+  *) echo "unsupported native target: $target" >&2; exit 2 ;;
+esac
+
+release_json="$(curl -fsSL --retry 3 --connect-timeout 15 --max-time 60 \
+  -H 'Accept: application/vnd.github+json' -H 'User-Agent: Edge-Maintenance' \
+  "https://api.github.com/repos/${repo}/releases/latest")"
+tag="$(jq -r '.tag_name' <<<"$release_json")"
+version="${tag#v}"
+asset="${asset_template//VERSION/$version}"
+checksums="${checksum_template//VERSION/$version}"
+asset_url="$(jq -r --arg n "$asset" '.assets[]|select(.name==$n)|.browser_download_url' <<<"$release_json")"
+sum_url="$(jq -r --arg n "$checksums" '.assets[]|select(.name==$n)|.browser_download_url' <<<"$release_json")"
+test -n "$asset_url" && test "$asset_url" != null
+test -n "$sum_url" && test "$sum_url" != null
+
+work="$(mktemp -d /var/tmp/edge-native-update.XXXXXX)"
+trap 'rm -rf "$work"' EXIT
+curl -fL --retry 3 --connect-timeout 15 --max-time 300 -o "$work/$asset" "$asset_url"
+curl -fL --retry 3 --connect-timeout 15 --max-time 60 -o "$work/$checksums" "$sum_url"
+expected="$(awk -v n="$asset" '$2==n || $2=="*"n {print $1; exit}' "$work/$checksums")"
+actual="$(sha256sum "$work/$asset" | awk '{print $1}')"
+test -n "$expected" && test "$expected" = "$actual"
+
+case "$asset" in
+  *.tar.gz) tar -xzf "$work/$asset" -C "$work" ;;
+  *.bz2) bzip2 -dk "$work/$asset" ;;
+esac
+candidate="$(find "$work" -type f -name "$binary" -perm -u+x -print -quit)"
+if test -z "$candidate" && test -f "${work}/${asset%.bz2}"; then candidate="${work}/${asset%.bz2}"; fi
+test -n "$candidate" && chmod 0755 "$candidate"
+"$candidate" version >/dev/null 2>&1 || "$candidate" --version >/dev/null
+
+backup="/var/backups/edge-maintenance/${binary}-$(date -u +%Y%m%d-%H%M%S)"
+install -d -o root -g root -m 0700 /var/backups/edge-maintenance
+cp -a "/usr/local/bin/$binary" "$backup"
+if test -n "$service"; then systemctl stop "$service"; fi
+install -o root -g root -m 0755 "$candidate" "/usr/local/bin/$binary"
+if test -n "$service"; then
+  if ! systemctl start "$service" || ! systemctl is-active --quiet "$service"; then
+    install -o root -g root -m 0755 "$backup" "/usr/local/bin/$binary"
+    systemctl start "$service"
+    exit 1
+  fi
+fi
+echo "NATIVE_UPDATE_RESULT=${target}:SUCCESS"
+echo "BACKUP=${backup}"

@@ -1,0 +1,777 @@
+#!/usr/bin/env python3
+
+import datetime
+import json
+import os
+import pathlib
+import subprocess
+import tempfile
+
+STATUS_FILE = pathlib.Path(os.environ.get(
+    "EDGE_MAINTENANCE_STATUS_FILE",
+    "/var/www/maintenance-status/status.json",
+))
+
+OUTPUT_FILE = pathlib.Path(os.environ.get(
+    "EDGE_MAINTENANCE_OUTPUT_FILE",
+    "/var/www/maintenance-status/maintenance.json",
+))
+
+EDGE_IP = "45.92.156.17"
+
+APT_COMPONENTS = [
+    ("NGINX", "nginx"),
+    ("CERTBOT", "Certbot"),
+    ("UFW", "UFW"),
+    ("DOCKER_ENGINE", "Docker Engine"),
+    ("DOCKER_COMPOSE", "Docker Compose"),
+    ("CONTAINERD", "containerd"),
+    ("NETBIRD", "NetBird"),
+    ("SYNCTHING", "Syncthing"),
+]
+
+NATIVE_COMPONENTS = [
+    ("XRAY", "Xray"),
+    ("HYSTERIA2", "Hysteria2"),
+    ("BACKREST", "Backrest"),
+    ("RESTIC", "Restic"),
+    ("SEMAPHORE", "Semaphore"),
+]
+
+DOCKER_COMPONENTS = [
+    ("N8N", "n8n"),
+    ("AUTHELIA", "Authelia"),
+    ("MATTERMOST", "Mattermost"),
+    ("POSTGRESQL", "PostgreSQL"),
+    ("STALWART", "Stalwart"),
+    ("BULWARK", "Bulwark"),
+]
+
+CLI_COMPONENTS = [
+    ("HERMES", "Hermes Agent"),
+    ("CLOUDCLI", "CloudCLI"),
+    ("CODEX", "Codex CLI"),
+    ("ANTIGRAVITY", "Antigravity CLI"),
+]
+
+
+def apt_probe():
+    with tempfile.TemporaryDirectory(
+        prefix="edge-maintenance-apt-probe.",
+        dir="/tmp",
+    ) as root:
+        lists = os.path.join(
+            root,
+            "lists",
+        )
+
+        cache = os.path.join(
+            root,
+            "cache",
+        )
+
+        os.makedirs(
+            os.path.join(
+                lists,
+                "partial",
+            ),
+            exist_ok=True,
+        )
+
+        os.makedirs(
+            os.path.join(
+                cache,
+                "archives",
+                "partial",
+            ),
+            exist_ok=True,
+        )
+
+        opts = [
+            "-o",
+            f"Dir::State::Lists={lists}",
+            "-o",
+            f"Dir::Cache={cache}",
+        ]
+
+        update = subprocess.run(
+            [
+                "apt-get",
+                *opts,
+                "-o",
+                "APT::Update::Error-Mode=any",
+                "-qq",
+                "update",
+            ],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
+
+        if update.returncode != 0:
+            return {
+                "count": -1,
+                "remove_count": -1,
+                "packages": [],
+                "reboot_required":
+                    pathlib.Path(
+                        "/var/run/reboot-required"
+                    ).exists(),
+                "error":
+                    "metadata_refresh_failed",
+            }
+
+        simulation = subprocess.run(
+            [
+                "apt-get",
+                *opts,
+                "-s",
+                "upgrade",
+            ],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+        )
+
+        if simulation.returncode != 0:
+            return {
+                "count": -1,
+                "remove_count": -1,
+                "packages": [],
+                "reboot_required":
+                    pathlib.Path(
+                        "/var/run/reboot-required"
+                    ).exists(),
+                "error":
+                    "simulation_failed",
+            }
+
+        installs = []
+        removals = 0
+
+        for line in simulation.stdout.splitlines():
+            if line.startswith("Inst "):
+                parts = line.split()
+
+                if len(parts) > 1:
+                    installs.append(
+                        parts[1]
+                    )
+
+            elif line.startswith("Remv "):
+                removals += 1
+
+        reboot = pathlib.Path(
+            "/var/run/reboot-required"
+        ).exists()
+
+        running_kernel = subprocess.run(
+            [
+                "uname",
+                "-r",
+            ],
+            capture_output=True,
+            text=True,
+        ).stdout.strip()
+
+        dpkg = subprocess.run(
+            [
+                "dpkg-query",
+                "-W",
+                "-f=${Package}\t${db:Status-Abbrev}\n",
+                "linux-image-[0-9]*-generic",
+            ],
+            capture_output=True,
+            text=True,
+        )
+
+        installed_kernels = []
+
+        for line in dpkg.stdout.splitlines():
+            parts = line.split("\t")
+
+            if (
+                len(parts) != 2
+                or not parts[1].startswith("ii")
+            ):
+                continue
+
+            name = parts[0]
+
+            if name.startswith(
+                "linux-image-"
+            ):
+                installed_kernels.append(
+                    name[
+                        len("linux-image-"):
+                    ]
+                )
+
+        if installed_kernels:
+            def version_key(value):
+                return [
+                    int(part)
+                    if part.isdigit()
+                    else part
+                    for part
+                    in value.replace(
+                        "-",
+                        ".",
+                    ).split(".")
+                ]
+
+            try:
+                newest = sorted(
+                    installed_kernels,
+                    key=version_key,
+                )[-1]
+
+                if (
+                    newest
+                    and newest
+                    != running_kernel
+                ):
+                    reboot = True
+
+            except Exception:
+                pass
+
+        return {
+            "count":
+                len(installs),
+            "remove_count":
+                removals,
+            "packages":
+                installs,
+            "reboot_required":
+                reboot,
+            "error":
+                "",
+        }
+
+
+status_data = json.loads(
+    STATUS_FILE.read_text(
+        encoding="utf-8",
+    )
+)
+
+status_rows = {
+    str(
+        row.get(
+            "COMPONENT",
+            "",
+        )
+    ): row
+    for row
+    in status_data.get(
+        "rows",
+        [],
+    )
+}
+
+
+def monitored_component(
+    component,
+    label,
+):
+    source = status_rows.get(
+        component
+    )
+
+    if source is None:
+        return {
+            "component":
+                component,
+            "label":
+                label,
+            "current":
+                "—",
+            "available":
+                "—",
+            "status":
+                "CHECK_FAILED",
+            "source":
+                "version row missing",
+            "managed_by":
+                "apt",
+            "actionable":
+                False,
+            "update_target":
+                "APT_EDGE",
+        }
+
+    return {
+        "component":
+            component,
+        "label":
+            label,
+        "current":
+            str(
+                source.get(
+                    "INSTALLED",
+                    "—",
+                )
+            ),
+        "available":
+            str(
+                source.get(
+                    "STABLE",
+                    "—",
+                )
+            ),
+        "status":
+            str(
+                source.get(
+                    "STATUS",
+                    "UNKNOWN",
+                )
+            ),
+        "source":
+            str(
+                source.get(
+                    "SOURCE",
+                    "",
+                )
+            ),
+        "managed_by":
+            "apt",
+        "actionable":
+            False,
+        "update_target":
+            "APT_EDGE",
+    }
+
+
+def independent_target(
+    component,
+    label,
+    target_type,
+    group,
+    managed_by,
+):
+    source = status_rows.get(
+        component
+    )
+
+    if source is None:
+        current = "—"
+        available = "—"
+        status = "CHECK_FAILED"
+        source_name = (
+            "version row missing"
+        )
+
+    else:
+        current = str(
+            source.get(
+                "INSTALLED",
+                "—",
+            )
+        )
+
+        available = str(
+            source.get(
+                "STABLE",
+                "—",
+            )
+        )
+
+        status = str(
+            source.get(
+                "STATUS",
+                "UNKNOWN",
+            )
+        )
+
+        source_name = str(
+            source.get(
+                "SOURCE",
+                "",
+            )
+        )
+
+    result = {
+        "scope":
+            "EDGE",
+        "component":
+            component,
+        "label":
+            label,
+        "ip_address":
+            EDGE_IP,
+        "type":
+            target_type,
+        "group":
+            group,
+        "managed_by":
+            managed_by,
+        "current":
+            current,
+        "available":
+            available,
+        "status":
+            status,
+        "source":
+            source_name,
+        "action_key":
+            component,
+        "update_target":
+            component,
+        "actionable": True,
+    }
+
+    if target_type == "DOCKER":
+        result.update({
+            "application_version": str(source.get("APPLICATION_VERSION", "—")) if source else "—",
+            "available_application_version": str(source.get("AVAILABLE_VERSION", "—")) if source else "—",
+            "image_repository": str(source.get("IMAGE_REPOSITORY", "—")) if source else "—",
+            "image_track": str(source.get("IMAGE_TAG", "—")) if source else "—",
+            "running_image_digest": str(source.get("RUNNING_DIGEST", "—")) if source else "—",
+            "remote_image_digest": str(source.get("REMOTE_DIGEST", "—")) if source else "—",
+            "update_reason": str(source.get("UPDATE_REASON", "CHECK_FAILED")) if source else "CHECK_FAILED",
+        })
+
+    return result
+
+
+apt = apt_probe()
+
+if apt["count"] < 0:
+    apt_status = (
+        "CHECK_FAILED"
+    )
+
+elif apt["count"] > 0:
+    apt_status = (
+        "UPDATE_AVAILABLE"
+    )
+
+else:
+    apt_status = (
+        "CURRENT"
+    )
+
+
+apt_children = [
+    monitored_component(
+        component,
+        label,
+    )
+    for component, label
+    in APT_COMPONENTS
+]
+
+
+rows = [
+    {
+        "scope":
+            "EDGE",
+        "component":
+            "APT_EDGE",
+        "label":
+            "System Packages",
+        "ip_address":
+            EDGE_IP,
+        "type":
+            "APT",
+        "group":
+            "system",
+        "managed_by":
+            "apt",
+        "current":
+            "System / APT",
+        "available":
+            (
+                f'{apt["count"]} packages'
+                if apt["count"] >= 0
+                else "Error"
+            ),
+        "update_count":
+            apt["count"],
+        "remove_count":
+            apt["remove_count"],
+        "reboot_required":
+            apt["reboot_required"],
+        "packages":
+            apt["packages"],
+        "monitored_components":
+            apt_children,
+        "status":
+            apt_status,
+        "source":
+            (
+                "APT fresh metadata"
+                if not apt["error"]
+                else apt["error"]
+            ),
+        "action_key":
+            "APT_EDGE",
+        "update_target":
+            "APT_EDGE",
+        "actionable":
+            True,
+    }
+]
+
+
+for component, label in NATIVE_COMPONENTS:
+    rows.append(
+        independent_target(
+            component,
+            label,
+            "NATIVE",
+            "native",
+            "native",
+        )
+    )
+
+
+for component, label in DOCKER_COMPONENTS:
+    rows.append(
+        independent_target(
+            component,
+            label,
+            "DOCKER",
+            "docker",
+            "docker",
+        )
+    )
+
+
+for component, label in CLI_COMPONENTS:
+    rows.append(
+        independent_target(
+            component,
+            label,
+            "CLI",
+            "cli",
+            "user_or_git",
+        )
+    )
+
+
+summary = {
+    "TOTAL":
+        len(rows),
+    "ACTIONABLE_TARGETS":
+        len(rows),
+    "MONITORED_COMPONENTS":
+        len(status_rows),
+    "APT_MANAGED_COMPONENTS":
+        len(APT_COMPONENTS),
+    "CURRENT":
+        sum(
+            1
+            for row in rows
+            if row["status"]
+            == "CURRENT"
+        ),
+    "UPDATE_AVAILABLE":
+        sum(
+            1
+            for row in rows
+            if row["status"]
+            == "UPDATE_AVAILABLE"
+        ),
+    "CHECK_FAILED":
+        sum(
+            1
+            for row in rows
+            if row["status"]
+            == "CHECK_FAILED"
+        ),
+    "REBOOT_REQUIRED":
+        sum(
+            1
+            for row in rows
+            if row.get(
+                "reboot_required"
+            ) is True
+        ),
+    "SYSTEM_TARGETS":
+        sum(
+            1
+            for row in rows
+            if row["type"]
+            == "APT"
+        ),
+    "APT_TARGETS":
+        sum(
+            1
+            for row in rows
+            if row["type"]
+            == "APT"
+        ),
+    "NATIVE_TARGETS":
+        sum(
+            1
+            for row in rows
+            if row["type"]
+            == "NATIVE"
+        ),
+    "DOCKER_TARGETS":
+        sum(
+            1
+            for row in rows
+            if row["type"]
+            == "DOCKER"
+        ),
+    "CLI_TARGETS":
+        sum(
+            1
+            for row in rows
+            if row["type"]
+            == "CLI"
+        ),
+}
+
+
+payload = {
+    "schema":
+        3,
+    "target_model":
+        "update_units_v3",
+    "generated_at":
+        datetime.datetime.now(
+            datetime.timezone.utc
+        ).isoformat(),
+    "apt_probe":
+        "fresh_metadata_isolated_tmp",
+    "summary":
+        summary,
+    "rows":
+        rows,
+}
+
+
+fd, temporary = tempfile.mkstemp(
+    prefix=".maintenance.",
+    suffix=".json",
+    dir=str(
+        OUTPUT_FILE.parent
+    ),
+)
+
+try:
+    with os.fdopen(
+        fd,
+        "w",
+        encoding="utf-8",
+    ) as handle:
+        json.dump(
+            payload,
+            handle,
+            ensure_ascii=False,
+            indent=2,
+        )
+
+        handle.write("\n")
+
+    os.chmod(
+        temporary,
+        0o644,
+    )
+
+    os.replace(
+        temporary,
+        OUTPUT_FILE,
+    )
+
+finally:
+    if os.path.exists(
+        temporary
+    ):
+        os.unlink(
+            temporary
+        )
+
+
+print(
+    "TARGET_MODEL=update_units_v3"
+)
+
+print(
+    "ACTIONABLE_TARGET_COUNT="
+    + str(
+        summary[
+            "ACTIONABLE_TARGETS"
+        ]
+    )
+)
+
+print(
+    "MONITORED_COMPONENT_COUNT="
+    + str(
+        summary[
+            "MONITORED_COMPONENTS"
+        ]
+    )
+)
+
+print(
+    "APT_MANAGED_COMPONENT_COUNT="
+    + str(
+        summary[
+            "APT_MANAGED_COMPONENTS"
+        ]
+    )
+)
+
+print(
+    "SYSTEM_TARGET_COUNT="
+    + str(
+        summary[
+            "SYSTEM_TARGETS"
+        ]
+    )
+)
+
+print(
+    "NATIVE_TARGET_COUNT="
+    + str(
+        summary[
+            "NATIVE_TARGETS"
+        ]
+    )
+)
+
+print(
+    "DOCKER_TARGET_COUNT="
+    + str(
+        summary[
+            "DOCKER_TARGETS"
+        ]
+    )
+)
+
+print(
+    "CLI_TARGET_COUNT="
+    + str(
+        summary[
+            "CLI_TARGETS"
+        ]
+    )
+)
+
+print(
+    "UPDATE_AVAILABLE_COUNT="
+    + str(
+        summary[
+            "UPDATE_AVAILABLE"
+        ]
+    )
+)
+
+print(
+    "CHECK_FAILED_COUNT="
+    + str(
+        summary[
+            "CHECK_FAILED"
+        ]
+    )
+)
+
+print(
+    "MAINTENANCE_TARGETS_RENDER=PASS"
+)

@@ -1,0 +1,404 @@
+#!/usr/bin/env bash
+set -u
+
+normalize() {
+    printf '%s' "$1" | tr '\r\n|' '   '
+}
+
+semver_status() {
+    installed="${1#v}"
+    stable="${2#v}"
+
+    installed="${installed#rust-v}"
+    stable="${stable#rust-v}"
+
+    if test -z "$installed" || test -z "$stable" ||
+       test "$installed" = "UNRESOLVED" || test "$stable" = "UNRESOLVED"; then
+        printf 'STABLE_UNRESOLVED'
+        return
+    fi
+
+    if dpkg --compare-versions "$installed" eq "$stable"; then
+        printf 'CURRENT'
+    elif dpkg --compare-versions "$installed" lt "$stable"; then
+        printf 'UPDATE_AVAILABLE'
+    else
+        printf 'INSTALLED_NEWER_THAN_STABLE'
+    fi
+}
+
+apt_status() {
+    installed="$1"
+    stable="$2"
+
+    if test -z "$installed" || test "$installed" = "-"; then
+        printf 'NOT_INSTALLED'
+    elif test -z "$stable" || test "$stable" = "(none)" || test "$stable" = "-"; then
+        printf 'STABLE_UNRESOLVED'
+    elif dpkg --compare-versions "$installed" eq "$stable"; then
+        printf 'CURRENT'
+    elif dpkg --compare-versions "$installed" lt "$stable"; then
+        printf 'UPDATE_AVAILABLE'
+    else
+        printf 'INSTALLED_NEWER_THAN_STABLE'
+    fi
+}
+
+github_latest() {
+    repo="$1"
+    python3 - "$repo" <<'PY'
+import json, sys, urllib.request
+repo = sys.argv[1]
+req = urllib.request.Request(
+    f"https://api.github.com/repos/{repo}/releases/latest",
+    headers={
+        "Accept": "application/vnd.github+json",
+        "User-Agent": "Edge-Maintenance",
+    },
+)
+try:
+    with urllib.request.urlopen(req, timeout=10) as r:
+        data = json.load(r)
+    if data.get("draft") or data.get("prerelease"):
+        raise SystemExit(0)
+    print(str(data.get("tag_name") or "").strip())
+except Exception:
+    pass
+PY
+}
+
+npm_latest() {
+    package="$1"
+    python3 - "$package" <<'PY'
+import json, sys, urllib.parse, urllib.request
+pkg = sys.argv[1]
+url = "https://registry.npmjs.org/" + urllib.parse.quote(pkg, safe="") + "/latest"
+try:
+    req = urllib.request.Request(url, headers={"User-Agent": "Edge-Maintenance"})
+    with urllib.request.urlopen(req, timeout=10) as r:
+        data = json.load(r)
+    print(str(data.get("version") or "").strip())
+except Exception:
+    pass
+PY
+}
+
+emit_apt_component() {
+    component="$1"
+    package="$2"
+    installed="$(dpkg-query -W -f='${Version}' "$package" 2>/dev/null || true)"
+    stable="$(apt-cache policy "$package" 2>/dev/null | awk '$1 == "Candidate:" {print $2; exit}')"
+    test -n "$installed" || installed="-"
+    test -n "$stable" || stable="-"
+    status="$(apt_status "$installed" "$stable")"
+    printf '%s\n' \
+      "VERSION|SCOPE=EDGE|COMPONENT=${component}|INSTALLED=$(normalize "$installed")|STABLE=$(normalize "$stable")|STATUS=${status}|SOURCE=APT_LOCAL_METADATA"
+}
+
+emit_github_binary() {
+    component="$1"
+    installed="$2"
+    repo="$3"
+    stable="$(github_latest "$repo")"
+
+    # Hysteria release tags use app/vX.Y.Z.
+    # app/ is a release namespace, not part of the application version.
+    if [ "$component" = "HYSTERIA2" ]; then
+        stable="${stable#app/}"
+    fi
+
+    status="$(semver_status "$installed" "$stable")"
+    printf '%s\n' \
+      "VERSION|SCOPE=EDGE|COMPONENT=${component}|INSTALLED=$(normalize "${installed:-UNRESOLVED}")|STABLE=$(normalize "${stable:-UNRESOLVED}")|STATUS=${status}|SOURCE=GITHUB_RELEASES_LATEST"
+}
+
+docker_runtime_version() {
+    component="$1"
+    container="$2"
+    case "$component" in
+        N8N)
+            docker exec "$container" n8n --version 2>/dev/null | head -n1
+            ;;
+        AUTHELIA)
+            docker exec "$container" authelia --version 2>/dev/null |
+              sed -n 's/.*v\([0-9][0-9.]*\).*/\1/p' | head -n1
+            ;;
+        MATTERMOST)
+            docker exec "$container" mattermost version 2>/dev/null |
+              sed -n 's/^Version:[[:space:]]*//p' | head -n1
+            ;;
+        POSTGRESQL)
+            docker exec "$container" postgres --version 2>/dev/null |
+              awk '{print $NF; exit}'
+            ;;
+        STALWART)
+            docker exec "$container" stalwart --version 2>/dev/null |
+              grep -o '[0-9][0-9.]*' | head -n1
+            ;;
+        BULWARK)
+            image_id="$(docker inspect "$container" --format '{{.Image}}' 2>/dev/null || true)"
+            docker image inspect "$image_id" \
+              --format '{{index .Config.Labels "org.opencontainers.image.version"}}' \
+              2>/dev/null | sed '/^<no value>$/d'
+            ;;
+    esac
+}
+
+docker_local_digest() {
+    container="$1"
+    repository="$2"
+    image_id="$(docker inspect "$container" --format '{{.Image}}' 2>/dev/null || true)"
+    test -n "$image_id" || return 0
+
+    digest="$(docker image inspect "$image_id" --format '{{.Descriptor.digest}}' 2>/dev/null || true)"
+    if test -n "$digest" && test "$digest" != '<no value>'; then
+        printf '%s' "$digest"
+        return
+    fi
+    docker image inspect "$image_id" --format '{{range .RepoDigests}}{{println .}}{{end}}' 2>/dev/null |
+      sed -n "s#^${repository}@##p" | head -n1
+}
+
+docker_remote_snapshot() {
+    image="$1"
+    component="$2"
+
+    raw="$(
+        docker buildx imagetools inspect "$image" \
+          --format '{{json .Manifest.Digest}} {{json .Image}}' \
+          2>/dev/null || true
+    )"
+
+    printf '%s' "$raw" | python3 -c '
+import json, sys
+component=sys.argv[1]
+raw=sys.stdin.read().strip()
+if not raw:
+    raise SystemExit(0)
+try:
+    dec=json.JSONDecoder()
+    digest,pos=dec.raw_decode(raw)
+    while pos < len(raw) and raw[pos].isspace():
+        pos += 1
+    image,pos=dec.raw_decode(raw,pos)
+except Exception:
+    raise SystemExit(0)
+versions=[]
+def walk(obj):
+    if isinstance(obj,dict):
+        cfg=obj.get("config")
+        if isinstance(cfg,dict):
+            labels=cfg.get("Labels") or cfg.get("labels") or {}
+            if isinstance(labels,dict):
+                value=labels.get("org.opencontainers.image.version")
+                if value:
+                    value=str(value).strip()
+                    if value and value not in versions:
+                        versions.append(value)
+                build=labels.get("build_version")
+                if build and not versions:
+                    import re
+                    m=re.search(r"version:-\s*([^\s]+)",str(build))
+                    if m:
+                        versions.append(m.group(1))
+            if component == "POSTGRESQL":
+                for item in cfg.get("Env") or cfg.get("env") or []:
+                    if str(item).startswith("PG_VERSION="):
+                        versions.insert(0, str(item).split("=",1)[1])
+        for v in obj.values():
+            walk(v)
+    elif isinstance(obj,list):
+        for v in obj:
+            walk(v)
+walk(image)
+if isinstance(digest,str) and digest.startswith("sha256:"):
+    if component == "STALWART":
+        versions.clear()
+    print(digest + "|" + (versions[0] if versions else ""))
+' "$component"
+}
+
+emit_docker_component() {
+    component="$1"
+    container="$2"
+    image="$3"
+    repository="$4"
+    fallback="$5"
+
+    running="$(docker inspect "$container" --format '{{.State.Running}}' 2>/dev/null || true)"
+    if test "$running" != "true"; then
+        printf '%s\n' \
+          "VERSION|SCOPE=EDGE|COMPONENT=${component}|INSTALLED=-|STABLE=-|APPLICATION_VERSION=-|AVAILABLE_VERSION=-|IMAGE_REPOSITORY=${repository}|IMAGE_TAG=${fallback}|RUNNING_DIGEST=-|REMOTE_DIGEST=-|UPDATE_REASON=CHECK_FAILED|STATUS=NOT_INSTALLED|SOURCE=DOCKER_RUNTIME_AND_REGISTRY"
+        return
+    fi
+
+    installed="$(docker_runtime_version "$component" "$container")"
+    local_digest="$(docker_local_digest "$container" "$repository")"
+    remote="$(docker_remote_snapshot "$image" "$component")"
+
+    remote_digest=""
+    remote_version=""
+    case "$remote" in
+        *'|'*)
+            remote_digest="${remote%%|*}"
+            remote_version="${remote#*|}"
+            ;;
+    esac
+
+    test -n "$installed" && test "$installed" != "<no value>" || installed="-"
+    test -n "$remote_version" || remote_version="-"
+
+    if test -z "$local_digest" || test -z "$remote_digest"; then
+        status="STABLE_UNRESOLVED"
+        update_reason="CHECK_FAILED"
+    elif test "$local_digest" = "$remote_digest"; then
+        status="CURRENT"
+        update_reason="CURRENT"
+    else
+        status="UPDATE_AVAILABLE"
+        if test "$installed" != "-" && test "$remote_version" != "-" && \
+           test "${installed#v}" != "${remote_version#v}"; then
+            update_reason="VERSION_UPDATE"
+        else
+            update_reason="IMAGE_DIGEST_UPDATE"
+        fi
+    fi
+
+    printf '%s\n' \
+      "VERSION|SCOPE=EDGE|COMPONENT=${component}|INSTALLED=$(normalize "$installed")|STABLE=$(normalize "$remote_version")|APPLICATION_VERSION=$(normalize "$installed")|AVAILABLE_VERSION=$(normalize "$remote_version")|IMAGE_REPOSITORY=${repository}|IMAGE_TAG=${fallback}|RUNNING_DIGEST=${local_digest:--}|REMOTE_DIGEST=${remote_digest:--}|UPDATE_REASON=${update_reason}|STATUS=${status}|SOURCE=DOCKER_RUNTIME_AND_REGISTRY"
+}
+
+echo "VERSION_MONITOR_SCHEMA=3"
+echo "VERSION_MONITOR_MODE=READ_ONLY"
+echo "STABLE_POLICY=STABLE_ONLY"
+echo "APT_METADATA_REFRESHED=NO"
+
+echo
+echo "--- APT-MANAGED COMPONENTS ---"
+emit_apt_component NGINX nginx
+emit_apt_component CERTBOT certbot
+emit_apt_component UFW ufw
+emit_apt_component DOCKER_ENGINE docker-ce
+emit_apt_component DOCKER_COMPOSE docker-compose-plugin
+emit_apt_component CONTAINERD containerd.io
+emit_apt_component NETBIRD netbird
+emit_apt_component SYNCTHING syncthing
+
+echo
+echo "--- NATIVE BINARIES ---"
+xray_installed="$(
+    /usr/local/bin/xray version 2>/dev/null |
+    awk 'NR==1 {print $2; exit}' ||
+    true
+)"
+emit_github_binary XRAY "$xray_installed" XTLS/Xray-core
+
+hy_installed="$(
+    /usr/local/bin/hysteria version 2>/dev/null |
+    awk '$1=="Version:" {print $2; exit}' ||
+    true
+)"
+emit_github_binary HYSTERIA2 "$hy_installed" apernet/hysteria
+
+backrest_installed="$(
+    /usr/local/bin/backrest -version 2>/dev/null |
+    sed -n 's/.*version: *\([0-9][0-9.]*\).*/v\1/p' |
+    head -n1 ||
+    true
+)"
+emit_github_binary BACKREST "$backrest_installed" garethgeorge/backrest
+
+restic_installed="$(
+    /usr/local/bin/restic version 2>/dev/null |
+    awk 'NR==1 {print $2; exit}' ||
+    true
+)"
+emit_github_binary RESTIC "$restic_installed" restic/restic
+
+echo
+echo "--- DOCKER APPLICATIONS ---"
+emit_docker_component N8N n8n docker.n8n.io/n8nio/n8n:stable docker.n8n.io/n8nio/n8n stable
+emit_docker_component AUTHELIA authelia authelia/authelia:latest authelia/authelia latest
+emit_docker_component MATTERMOST mattermost-mattermost-1 mattermost/mattermost-team-edition:latest mattermost/mattermost-team-edition latest
+emit_docker_component POSTGRESQL mattermost-postgres-1 postgres:18-alpine postgres 18-alpine
+emit_docker_component STALWART stalwart stalwartlabs/stalwart:v0.16 stalwartlabs/stalwart v0.16
+emit_docker_component BULWARK bulwark ghcr.io/bulwarkmail/webmail:1.9.2 ghcr.io/bulwarkmail/webmail 1.9.2
+
+echo
+echo "--- GIT / USER TOOLS ---"
+hermes_installed="$(
+    git -c safe.directory=/home/core/.hermes/hermes-agent \
+      -C /home/core/.hermes/hermes-agent rev-parse --short=12 HEAD 2>/dev/null ||
+    true
+)"
+hermes_remote="$(
+    git -c safe.directory=/home/core/.hermes/hermes-agent \
+      -C /home/core/.hermes/hermes-agent ls-remote origin refs/heads/main 2>/dev/null |
+    awk 'NR==1 {print substr($1,1,12)}' ||
+    true
+)"
+if test -z "$hermes_installed" || test -z "$hermes_remote"; then
+    hermes_status="STABLE_UNRESOLVED"
+elif test "$hermes_installed" = "$hermes_remote"; then
+    hermes_status="CURRENT"
+else
+    hermes_status="UPDATE_AVAILABLE"
+fi
+printf '%s\n' \
+  "VERSION|SCOPE=EDGE|COMPONENT=HERMES|INSTALLED=${hermes_installed:-UNRESOLVED}|STABLE=${hermes_remote:-UNRESOLVED}|STATUS=${hermes_status}|SOURCE=GIT_ORIGIN_MAIN"
+
+cloud_installed="$(
+    runuser -u core -- /home/core/.local/bin/cloudcli --version 2>/dev/null |
+    tail -n1 |
+    grep -o '[0-9][0-9.]*' |
+    head -n1 ||
+    true
+)"
+cloud_stable="$(npm_latest '@cloudcli-ai/cloudcli')"
+cloud_status="$(semver_status "$cloud_installed" "$cloud_stable")"
+printf '%s\n' \
+  "VERSION|SCOPE=EDGE|COMPONENT=CLOUDCLI|INSTALLED=${cloud_installed:-UNRESOLVED}|STABLE=${cloud_stable:-UNRESOLVED}|STATUS=${cloud_status}|SOURCE=NPM_LATEST"
+
+codex_installed="$(
+    runuser -u core -- /home/core/.local/bin/codex --version 2>/dev/null |
+    grep -o '[0-9][0-9.]*' |
+    head -n1 ||
+    true
+)"
+codex_stable="$(npm_latest '@openai/codex')"
+codex_status="$(semver_status "$codex_installed" "$codex_stable")"
+printf '%s\n' \
+  "VERSION|SCOPE=EDGE|COMPONENT=CODEX|INSTALLED=${codex_installed:-UNRESOLVED}|STABLE=${codex_stable:-UNRESOLVED}|STATUS=${codex_status}|SOURCE=NPM_LATEST"
+
+agy_installed="$(
+    runuser -u core -- /home/core/.local/bin/agy --version 2>/dev/null |
+    grep -o '[0-9][0-9.]*' |
+    head -n1 ||
+    true
+)"
+agy_stable="$(github_latest google-antigravity/antigravity-cli)"
+agy_status="$(semver_status "$agy_installed" "$agy_stable")"
+printf '%s\n' \
+  "VERSION|SCOPE=EDGE|COMPONENT=ANTIGRAVITY|INSTALLED=${agy_installed:-UNRESOLVED}|STABLE=${agy_stable:-UNRESOLVED}|STATUS=${agy_status}|SOURCE=GITHUB_RELEASES_LATEST"
+
+sem_installed="$(
+    /usr/local/bin/semaphore version 2>/dev/null |
+    grep -o '[0-9][0-9.]*' |
+    head -n1 ||
+    true
+)"
+sem_stable="$(github_latest semaphoreui/semaphore)"
+sem_status="$(semver_status "$sem_installed" "$sem_stable")"
+printf '%s\n' \
+  "VERSION|SCOPE=EDGE|COMPONENT=SEMAPHORE|INSTALLED=${sem_installed:-UNRESOLVED}|STABLE=${sem_stable:-UNRESOLVED}|STATUS=${sem_status}|SOURCE=GITHUB_RELEASES_LATEST"
+
+echo
+echo "REAL_UPDATE_EXECUTED=NO"
+echo "APT_UPDATE_EXECUTED=NO"
+echo "PACKAGE_UPDATE_EXECUTED=NO"
+echo "DOCKER_PULL_EXECUTED=NO"
+echo "GIT_FETCH_EXECUTED=NO"
+echo "GIT_PULL_EXECUTED=NO"
+echo "SERVICE_RESTART_EXECUTED=NO"
+echo "TARGET_FILES_MODIFIED=0"
+echo "VERSION_MONITOR=PASS"

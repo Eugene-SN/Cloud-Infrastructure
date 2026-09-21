@@ -1,0 +1,38 @@
+#!/usr/bin/env python3
+"""Sequential, failure-isolated master runner. Locked until separately accepted."""
+
+import json
+import pathlib
+import subprocess
+import sys
+
+BASE = pathlib.Path("/opt/edge-maintenance")
+ACCEPTANCE = pathlib.Path("/etc/edge-maintenance/driver-acceptance.json")
+
+
+def main():
+    acceptance = json.loads(ACCEPTANCE.read_text()) if ACCEPTANCE.is_file() else {}
+    if acceptance.get("schema") != 1 or acceptance.get("master") is not True:
+        raise RuntimeError("Master Batch acceptance pending")
+    manifest = json.loads((BASE / "config/update-units.json").read_text())
+    subprocess.run([str(BASE / "scripts/maintenance-refresh")], check=True)
+    results = []
+    for unit in manifest["units"]:
+        target = unit["id"]
+        print(f"MASTER_TARGET_BEGIN={target}", flush=True)
+        result = subprocess.run([str(BASE / "scripts/manual-update"), target])
+        state = "SUCCESS" if result.returncode == 0 else "FAILED"
+        results.append((target, state))
+        print(f"MASTER_TARGET_RESULT={target}:{state}", flush=True)
+    subprocess.run([str(BASE / "scripts/maintenance-refresh")], check=True)
+    failed = [target for target, state in results if state == "FAILED"]
+    print(f"MASTER_SUMMARY=total:{len(results)},failed:{len(failed)}")
+    return 1 if failed else 0
+
+
+if __name__ == "__main__":
+    try:
+        raise SystemExit(main())
+    except Exception as exc:
+        print(f"MASTER_RESULT=FAILED:{exc}", file=sys.stderr)
+        raise SystemExit(1)

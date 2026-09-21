@@ -1,0 +1,10 @@
+---
+- name: Manual Edge Master Batch
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  tasks:
+    - name: Execute accepted fixed-plan batch
+      ansible.builtin.command:
+        argv: [sudo, -n, /opt/edge-maintenance/scripts/master-batch-update]
+      changed_when: true

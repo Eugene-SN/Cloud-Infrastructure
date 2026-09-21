@@ -1,0 +1,133 @@
+#!/usr/bin/env python3
+"""Fail-closed manual update dispatcher for one accepted Edge update unit."""
+
+import argparse
+import datetime as dt
+import json
+import os
+import pathlib
+import shutil
+import subprocess
+import sys
+
+MANIFEST = pathlib.Path("/opt/edge-maintenance/config/update-units.json")
+ACCEPTANCE = pathlib.Path("/etc/edge-maintenance/driver-acceptance.json")
+CACHE = pathlib.Path("/var/www/maintenance-status/maintenance.json")
+CORE_UID = 1000
+
+
+def load(path):
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def units():
+    data = load(MANIFEST)
+    return data, {unit["id"]: unit for unit in data["units"]}
+
+
+def run(argv, **kwargs):
+    print("RUN=" + " ".join(argv), flush=True)
+    subprocess.run(argv, check=True, **kwargs)
+
+
+def preflight(unit):
+    driver = unit["driver"]
+    if driver == "compose":
+        directory = pathlib.Path(unit["directory"])
+        for item in unit["files"]:
+            if not (directory / item).is_file():
+                raise RuntimeError(f"missing compose file: {directory / item}")
+        run(["docker", "compose", *sum((["-f", f] for f in unit["files"]), []), "config", "--quiet"], cwd=directory)
+    elif driver == "user_cli":
+        if not pathlib.Path(unit["binary"]).is_file():
+            raise RuntimeError(f"missing CLI: {unit['binary']}")
+    elif driver == "maintctl" and not pathlib.Path("/usr/local/bin/maintctl").is_file():
+        raise RuntimeError("missing maintctl")
+    elif driver == "github_binary" and not pathlib.Path(f"/usr/local/bin/{unit['id'].lower()}").is_file():
+        raise RuntimeError("missing installed binary")
+    elif driver == "apt" and not shutil.which("apt-get"):
+        raise RuntimeError("missing apt-get")
+    print(f"DRIVER_PREFLIGHT={unit['id']}:PASS")
+
+
+def require_acceptance(target):
+    if not ACCEPTANCE.is_file():
+        raise RuntimeError("acceptance registry absent; driver is locked")
+    acceptance = load(ACCEPTANCE)
+    if acceptance.get("schema") != 1 or acceptance.get("accepted", {}).get(target) is not True:
+        raise RuntimeError(f"driver acceptance pending: {target}")
+
+
+def require_fresh_update(target, max_age):
+    data = load(CACHE)
+    stamp = dt.datetime.fromisoformat(data["generated_at"].replace("Z", "+00:00"))
+    age = (dt.datetime.now(dt.timezone.utc) - stamp).total_seconds()
+    if age > max_age:
+        raise RuntimeError(f"maintenance cache is stale ({int(age)}s)")
+    row = next((row for row in data.get("rows", []) if row.get("component") == target), None)
+    if not row:
+        raise RuntimeError("target absent from maintenance cache")
+    if row.get("status") != "UPDATE_AVAILABLE":
+        raise RuntimeError(f"target is not actionable: {row.get('status')}")
+
+
+def execute(unit):
+    driver = unit["driver"]
+    if driver == "apt":
+        env = dict(os.environ, DEBIAN_FRONTEND="noninteractive")
+        run(["apt-get", "update"], env=env)
+        run(["apt-get", "-y", "upgrade"], env=env)
+        run(["dpkg", "--audit"])
+    elif driver == "maintctl":
+        run(["/usr/local/bin/maintctl", "update", unit["argument"], "latest"])
+    elif driver == "github_binary":
+        command = ["/opt/edge-maintenance/scripts/update-github-binary", unit["id"]]
+        if unit["id"] == "SEMAPHORE":
+            run(["systemd-run", "--wait", "--collect", "--unit=edge-maintenance-semaphore-update", *command])
+        else:
+            run(command)
+    elif driver == "compose":
+        directory = pathlib.Path(unit["directory"])
+        compose = ["docker", "compose", *sum((["-f", f] for f in unit["files"]), [])]
+        if unit["id"] == "POSTGRESQL":
+            backup = pathlib.Path("/var/backups/edge-maintenance") / ("postgres-" + dt.datetime.now().strftime("%Y%m%d-%H%M%S") + ".sql")
+            backup.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+            with backup.open("wb") as handle:
+                subprocess.run(compose + ["exec", "-T", unit["service"], "pg_dumpall", "-U", "mmuser"], cwd=directory, check=True, stdout=handle)
+        run(compose + ["pull", unit["service"]], cwd=directory)
+        run(compose + ["up", "-d", "--wait", unit["service"]], cwd=directory)
+    elif driver == "user_cli":
+        run(["runuser", "-u", "core", "--", unit["binary"], *unit["arguments"]])
+        for service in unit.get("services", []):
+            run(["runuser", "-u", "core", "--", "env", f"XDG_RUNTIME_DIR=/run/user/{CORE_UID}", "systemctl", "--user", "restart", service])
+        if unit.get("system_service"):
+            run(["systemctl", "restart", unit["system_service"]])
+    else:
+        raise RuntimeError(f"unsupported driver: {driver}")
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("target")
+    parser.add_argument("--preflight", action="store_true")
+    args = parser.parse_args()
+    manifest, index = units()
+    if args.target not in index:
+        raise RuntimeError("target is not in the fixed allowlist")
+    unit = index[args.target]
+    preflight(unit)
+    if args.preflight:
+        print("REAL_UPDATE_EXECUTED=NO")
+        return
+    require_acceptance(args.target)
+    require_fresh_update(args.target, manifest["cache_max_age_seconds"])
+    execute(unit)
+    print(f"UPDATE_RESULT={args.target}:SUCCESS")
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except Exception as exc:
+        print(f"UPDATE_RESULT=FAILED:{exc}", file=sys.stderr)
+        raise SystemExit(1)

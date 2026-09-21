@@ -1,0 +1,142 @@
+{
+  "schema": 8,
+  "target_model": "update_units_v3",
+  "project_id": 1,
+  "master_template_id": null,
+  "refresh_template_id": 1,
+  "execution_mode": "manual_only",
+  "stop_on_error": true,
+  "auto_update": false,
+  "read_only": true,
+  "components": {
+    "APT_EDGE": {
+      "template_id": null,
+      "label": "Update System Packages (APT)",
+      "group": "system",
+      "managed_by": "apt",
+      "driver_state": "acceptance_pending",
+      "disabled_reason": "Driver implemented; manual acceptance is pending"
+    },
+    "XRAY": {
+      "template_id": null,
+      "label": "Update Xray",
+      "group": "native",
+      "managed_by": "native",
+      "driver_state": "acceptance_pending",
+      "disabled_reason": "Driver implemented; manual acceptance is pending"
+    },
+    "HYSTERIA2": {
+      "template_id": null,
+      "label": "Update Hysteria2",
+      "group": "native",
+      "managed_by": "native",
+      "driver_state": "acceptance_pending",
+      "disabled_reason": "Driver implemented; manual acceptance is pending"
+    },
+    "BACKREST": {
+      "template_id": null,
+      "label": "Update Backrest",
+      "group": "native",
+      "managed_by": "native",
+      "driver_state": "acceptance_pending",
+      "disabled_reason": "Driver implemented; manual acceptance is pending"
+    },
+    "RESTIC": {
+      "template_id": null,
+      "label": "Update Restic",
+      "group": "native",
+      "managed_by": "native",
+      "driver_state": "acceptance_pending",
+      "disabled_reason": "Driver implemented; manual acceptance is pending"
+    },
+    "SEMAPHORE": {
+      "template_id": null,
+      "label": "Update Semaphore",
+      "group": "native",
+      "managed_by": "native",
+      "driver_state": "acceptance_pending",
+      "disabled_reason": "Driver implemented; manual acceptance is pending"
+    },
+    "N8N": {
+      "template_id": null,
+      "label": "Update n8n",
+      "group": "docker",
+      "managed_by": "docker",
+      "driver_state": "acceptance_pending",
+      "disabled_reason": "Driver implemented; manual acceptance is pending"
+    },
+    "AUTHELIA": {
+      "template_id": null,
+      "label": "Update Authelia",
+      "group": "docker",
+      "managed_by": "docker",
+      "driver_state": "acceptance_pending",
+      "disabled_reason": "Driver implemented; manual acceptance is pending"
+    },
+    "MATTERMOST": {
+      "template_id": null,
+      "label": "Update Mattermost",
+      "group": "docker",
+      "managed_by": "docker",
+      "driver_state": "acceptance_pending",
+      "disabled_reason": "Driver implemented; manual acceptance is pending"
+    },
+    "POSTGRESQL": {
+      "template_id": null,
+      "label": "Update PostgreSQL",
+      "group": "docker",
+      "managed_by": "docker",
+      "driver_state": "acceptance_pending",
+      "disabled_reason": "Driver implemented; manual acceptance is pending"
+    },
+    "STALWART": {
+      "template_id": null,
+      "label": "Update Stalwart",
+      "group": "docker",
+      "managed_by": "docker",
+      "driver_state": "acceptance_pending",
+      "disabled_reason": "Driver implemented; manual acceptance is pending"
+    },
+    "BULWARK": {
+      "template_id": null,
+      "label": "Update Bulwark",
+      "group": "docker",
+      "managed_by": "docker",
+      "driver_state": "acceptance_pending",
+      "disabled_reason": "Driver implemented; manual acceptance is pending"
+    },
+    "HERMES": {
+      "template_id": null,
+      "label": "Update Hermes Agent",
+      "group": "cli",
+      "managed_by": "user_or_git",
+      "driver_state": "acceptance_pending",
+      "disabled_reason": "Driver implemented; manual acceptance is pending"
+    },
+    "CLOUDCLI": {
+      "template_id": null,
+      "label": "Update CloudCLI",
+      "group": "cli",
+      "managed_by": "user_or_git",
+      "driver_state": "acceptance_pending",
+      "disabled_reason": "Driver implemented; manual acceptance is pending"
+    },
+    "CODEX": {
+      "template_id": null,
+      "label": "Update Codex CLI",
+      "group": "cli",
+      "managed_by": "user_or_git",
+      "driver_state": "acceptance_pending",
+      "disabled_reason": "Driver implemented; manual acceptance is pending"
+    },
+    "ANTIGRAVITY": {
+      "template_id": null,
+      "label": "Update Antigravity CLI",
+      "group": "cli",
+      "managed_by": "user_or_git",
+      "driver_state": "acceptance_pending",
+      "disabled_reason": "Driver implemented; manual acceptance is pending"
+    }
+  },
+  "master_driver_state": "acceptance_pending"
+}

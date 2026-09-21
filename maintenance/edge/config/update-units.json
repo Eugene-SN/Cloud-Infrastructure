@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "cache_max_age_seconds": 300,
+  "manual_only": true,
+  "launch_surface": "update.escloud.us",
+  "units": [
+    {"id":"APT_EDGE","group":"system","driver":"apt"},
+    {"id":"XRAY","group":"native","driver":"maintctl","argument":"xray"},
+    {"id":"HYSTERIA2","group":"native","driver":"maintctl","argument":"hy2"},
+    {"id":"BACKREST","group":"native","driver":"github_binary","repository":"garethgeorge/backrest","service":"backrest"},
+    {"id":"RESTIC","group":"native","driver":"github_binary","repository":"restic/restic"},
+    {"id":"SEMAPHORE","group":"native","driver":"github_binary","repository":"semaphoreui/semaphore","service":"semaphore"},
+    {"id":"N8N","group":"docker","driver":"compose","directory":"/opt/n8n","files":["compose.yaml"],"service":"n8n"},
+    {"id":"AUTHELIA","group":"docker","driver":"compose","directory":"/opt/authelia","files":["compose.yaml"],"service":"authelia"},
+    {"id":"MATTERMOST","group":"docker","driver":"compose","directory":"/opt/mattermost","files":["docker-compose.yml","docker-compose.edge.yml"],"service":"mattermost"},
+    {"id":"POSTGRESQL","group":"docker","driver":"compose","directory":"/opt/mattermost","files":["docker-compose.yml","docker-compose.edge.yml"],"service":"postgres"},
+    {"id":"STALWART","group":"docker","driver":"compose","directory":"/opt/mail-stack","files":["compose.yaml"],"service":"stalwart"},
+    {"id":"BULWARK","group":"docker","driver":"compose","directory":"/opt/mail-stack","files":["compose.yaml"],"service":"bulwark"},
+    {"id":"HERMES","group":"cli","driver":"user_cli","binary":"/home/core/.local/bin/hermes","arguments":["update"],"services":["hermes-gateway.service","hermes-dashboard.service"]},
+    {"id":"CLOUDCLI","group":"cli","driver":"user_cli","binary":"/home/core/.local/bin/cloudcli","arguments":["update"],"system_service":"cloudcli.service"},
+    {"id":"CODEX","group":"cli","driver":"user_cli","binary":"/home/core/.local/bin/codex","arguments":["update"]},
+    {"id":"ANTIGRAVITY","group":"cli","driver":"user_cli","binary":"/home/core/.local/bin/agy","arguments":["update"],"services":["antigravity-cli-daemon.service"]}
+  ]
+}

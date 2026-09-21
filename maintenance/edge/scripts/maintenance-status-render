@@ -1,0 +1,213 @@
+#!/usr/bin/env python3
+
+import datetime
+import json
+import os
+import sys
+import tempfile
+
+
+OUTPUT = os.environ.get(
+    "EDGE_MAINTENANCE_STATUS_FILE",
+    "/var/www/maintenance-status/status.json",
+)
+
+
+def parse_row(line):
+    pos = line.find("VERSION|")
+
+    if pos < 0:
+        return None
+
+    line = line[pos:].strip()
+
+    if line.endswith('",'):
+        line = line[:-2]
+
+    if line.endswith('"'):
+        line = line[:-1]
+
+    result = {}
+
+    for token in line.split("|")[1:]:
+
+        if "=" not in token:
+            continue
+
+        key, value = token.split(
+            "=",
+            1,
+        )
+
+        result[key] = value
+
+    if not result.get("COMPONENT"):
+        return None
+
+    return result
+
+
+rows = []
+
+for line in sys.stdin.read().splitlines():
+
+    parsed = parse_row(line)
+
+    if parsed is not None:
+        rows.append(parsed)
+
+
+deduplicated = {}
+
+for row in rows:
+
+    key = (
+        row.get("SCOPE", ""),
+        row.get("COMPONENT", ""),
+    )
+
+    deduplicated[key] = row
+
+
+rows = sorted(
+    deduplicated.values(),
+    key=lambda row: (
+        row.get("SCOPE", ""),
+        row.get("COMPONENT", ""),
+    ),
+)
+
+
+summary = {
+    "TOTAL": len(rows),
+    "CURRENT": 0,
+    "UPDATE_AVAILABLE": 0,
+    "UNRESOLVED": 0,
+    "LOCAL_UNVERSIONED": 0,
+    "OTHER": 0,
+}
+
+
+for row in rows:
+
+    status = row.get(
+        "STATUS",
+        "UNKNOWN",
+    )
+
+    if status == "CURRENT":
+        summary["CURRENT"] += 1
+
+    elif status == "UPDATE_AVAILABLE":
+        summary["UPDATE_AVAILABLE"] += 1
+
+    elif (
+        "UNRESOLVED" in status
+        or "NEEDS_" in status
+        or status == "STABLE_UNKNOWN"
+    ):
+        summary["UNRESOLVED"] += 1
+
+    elif status == "LOCAL_UNVERSIONED":
+        summary["LOCAL_UNVERSIONED"] += 1
+
+    else:
+        summary["OTHER"] += 1
+
+
+document = {
+    "schema": 3,
+    "generated_at":
+        datetime.datetime.now(
+            datetime.timezone.utc
+        ).isoformat(),
+    "summary": summary,
+    "rows": rows,
+}
+
+
+directory = os.path.dirname(
+    OUTPUT
+)
+
+fd, temporary = tempfile.mkstemp(
+    prefix=".status.",
+    suffix=".json",
+    dir=directory,
+)
+
+try:
+
+    with os.fdopen(
+        fd,
+        "w",
+        encoding="utf-8",
+    ) as handle:
+
+        json.dump(
+            document,
+            handle,
+            ensure_ascii=False,
+            indent=2,
+        )
+
+        handle.write("\n")
+
+    os.chmod(
+        temporary,
+        0o644,
+    )
+
+    os.replace(
+        temporary,
+        OUTPUT,
+    )
+
+finally:
+
+    if os.path.exists(
+        temporary
+    ):
+        os.unlink(
+            temporary
+        )
+
+
+print(
+    "DASHBOARD_RENDER=PASS"
+)
+
+print(
+    "DASHBOARD_ROW_COUNT="
+    + str(
+        summary["TOTAL"]
+    )
+)
+
+print(
+    "DASHBOARD_CURRENT_COUNT="
+    + str(
+        summary["CURRENT"]
+    )
+)
+
+print(
+    "DASHBOARD_UPDATE_AVAILABLE_COUNT="
+    + str(
+        summary["UPDATE_AVAILABLE"]
+    )
+)
+
+print(
+    "DASHBOARD_UNRESOLVED_COUNT="
+    + str(
+        summary["UNRESOLVED"]
+    )
+)
+
+print(
+    "DASHBOARD_LOCAL_UNVERSIONED_COUNT="
+    + str(
+        summary["LOCAL_UNVERSIONED"]
+    )
+)
