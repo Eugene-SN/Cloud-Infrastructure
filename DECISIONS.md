@@ -1196,3 +1196,28 @@ Authoritative record:
 
 **Supersedes:** any Stage 7 wording that described a universal mandatory pre-update Backrest gate.
 
+## 2026-09-21 — Stage 7 Home Maintenance framework reuse and dashboard port
+
+**Status:** ACCEPTED
+
+**Context:** The Stage 7 runtime/contract audit of Home CT1000 proved that Home Maintenance is already a mature, modular implementation rather than a thin Semaphore wrapper. It contains a reusable version/status collector and cache, fixed-target dispatch, per-component update drivers, Master Batch orchestration, post-update refresh/acceptance and an operational dashboard. Reimplementing those mechanisms independently on edge would add duplication and regression risk without a demonstrated benefit.
+
+**Decision:**
+- derive Edge Maintenance from the accepted live Home Maintenance implementation at CT1000 `/opt/maintenance-repo`;
+- preserve its architecture, Semaphore workflow, status/cache model, fixed-target dispatch, per-component driver pattern, post-update refresh/acceptance flow and dashboard wherever applicable;
+- replace Home/PVE-specific inventory, VMID/PCT/QGA logic, target definitions, collectors and update drivers with edge-specific equivalents;
+- do not copy Home credentials, SSH keys or controller-specific runtime state;
+- retain automatic real updates disabled by default unless a later explicit decision changes that policy;
+- begin `update.escloud.us` as an adapted copy of the existing Home Maintenance dashboard implementation and status/action contract instead of building a new frontend from scratch;
+- Stage 7C is therefore an adaptation/refinement substage for the copied dashboard, not a greenfield UI build;
+- do not introduce a second independent maintenance framework or dashboard without a demonstrated incompatibility with the accepted Home-derived design.
+
+**Stage decomposition:**
+- Stage 7A — Home Maintenance Framework Port: Semaphore + framework + read-only edge version/status model + copied dashboard baseline;
+- Stage 7B — Edge Update Drivers & Recovery: edge-specific update adapters, health/failure/recovery handling, individual manual updates and Master Batch acceptance;
+- Stage 7C — Codex: adapt/refine the copied dashboard for `update.escloud.us`.
+
+**Constraints:** The separate accepted Stage 7 backup-sequencing decision remains in force: Stage 6 exists as deployment/testing recovery protection, not as a universal mandatory pre-update Backrest gate.
+
+**Supersedes:** prior Stage 7 wording that implied an independent new maintenance framework or a greenfield `update.escloud.us` frontend.
+
