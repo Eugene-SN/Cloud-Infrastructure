@@ -1118,3 +1118,26 @@ Authoritative record:
 
 **Supersedes:** only the unresolved Stage 6 retention/consistency details and the rejected rolling-180d D5 edge proposal. The previously accepted one-general-plan edge topology remains in force.
 
+## 2026-09-21T10:45:00+03:00 — Stage 06.7 production backup deployment accepted
+
+**Status:** ACCEPTED
+
+**Context:** Stage 06.6 defined the exact deployment contract. Stage 06.7 then deployed and verified the production edge general plan, CT208/D5 append-only copy path, consistency staging, and the previously accepted bounded ai-node corrections. Two verifier defects were encountered during acceptance (source/destination Restic snapshot IDs differ after `restic copy`; and a premature Backrest restart interrupted an ai-node success hook). Both were reconciled without redesigning the accepted architecture.
+
+**Decision:**
+
+- accept `edge-state` production backup runtime at schedule `01/07/13/19`, local rolling `7d`, grouping `host,tags`, with application-consistent staging and successful append-only D5 copy;
+- accept D5 State retention daily30/weekly8/monthly6/yearly0 under CT208 maintenance;
+- accept ai-node tier-copy grouping `host,tags`;
+- accept self-contained n8n SQLite staging with `journal_mode=delete` and no WAL/SHM dependency;
+- accept full-system Docker/containerd exclusions;
+- accept local full `keep-last 2` only after successful D5 copy, grouped by `host,tags`;
+- accept reconciled full-restore external mount directories;
+- keep dedicated Knowledge policies unchanged;
+- Stage 06.7 is COMPLETE / ACCEPTED with `STAGE06_7_FINAL_ACCEPTANCE=PASS`;
+- Stage 06.8 isolated restore/application usability remains mandatory before final Stage 6 acceptance.
+
+**Evidence:** `STAGE_06_7_FINAL_ACCEPTANCE_2026-09-21.md`.
+
+**Supersedes:** no accepted topology. This closes the implementation status left open by the Stage 06.6 deployment contract.
+
