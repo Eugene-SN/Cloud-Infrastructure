@@ -2,9 +2,9 @@
 
 ## Status
 
-**DEPLOYMENT CHECKPOINT: PASS**
+**COMPLETE / ACCEPTED**
 
-Stage 7A remains **IN PROGRESS**. This checkpoint accepts the local read-only framework deployment, but does not yet accept the final dashboard -> Semaphore -> refresh E2E contract and does not enable any real update action.
+Final acceptance marker: `STAGE07A_READONLY_DASHBOARD_SEMAPHORE_E2E=PASS`.
 
 ## Deployment evidence
 
@@ -60,7 +60,7 @@ The first live refresh produced:
 - CHECK_FAILED: 0;
 - reboot-required: 0.
 
-A specific collector normalization defect was found after deployment: installed Hysteria2 `2.12.3` is compared against upstream release tag `app/v2.12.3`, causing a false `UPDATE_AVAILABLE`. This is a Stage 7A collector defect, not an actual Hysteria update. It must be corrected before final Stage 7A acceptance.
+The initial collector exposed a Hysteria2 normalization defect: installed `2.12.3` was compared against upstream tag `app/v2.12.3`. The collector now strips the upstream `app/` namespace for Hysteria2; final accepted state is `CURRENT=v2.12.3`, `AVAILABLE=v2.12.3`, `STATUS=CURRENT`.
 
 Other observed actionable rows are retained pending component-specific Stage 7B handling. A movable Docker tag may legitimately report an update when its remote digest changes even if the visible tag string is unchanged.
 
@@ -89,10 +89,36 @@ At checkpoint acceptance:
 
 `PRODUCTION_NON_REGRESSION_GATE=PASS`
 
+## Final accepted E2E
+
+Final accepted control path:
+
+```text
+adapted Home dashboard
+  -> loopback nginx API proxy
+  -> Semaphore project 1 / Refresh template 1
+  -> canonical Cloud-Infrastructure GitHub repository
+  -> maintenance/edge/playbooks/semaphore-refresh.yml
+  -> local read-only edge collectors
+  -> status.json / maintenance.json
+  -> dashboard
+```
+
+Final runtime contract:
+
+- Semaphore repository: `https://github.com/Eugene-SN/Cloud-Infrastructure.git`, branch `main`;
+- refresh template: ID `1`, `01. Refresh — Edge Maintenance Status`;
+- dashboard loopback endpoint: `127.0.0.1:18070`;
+- public ingress: not configured;
+- update template count: `0`;
+- Master Batch: disabled;
+- automatic updates: disabled;
+- real component updates executed by Stage 7A: none;
+- final maintenance summary: `TOTAL=24`, `CURRENT=17`, `UPDATE_AVAILABLE=7`, `CHECK_FAILED=0`, `REBOOT_REQUIRED=0`;
+- production non-regression: PASS.
+
+The dashboard-triggered Semaphore task completed successfully and advanced the generated status timestamp, proving the complete read-only E2E contract.
+
 ## Next finite work
 
-1. Correct only the Hysteria2 release-tag normalization and re-run the read-only refresh.
-2. Create one Semaphore `Edge Maintenance` project with one read-only Refresh template.
-3. Link the copied dashboard action contract to that project/template while keeping all update actions disabled.
-4. Verify dashboard -> Semaphore -> refresh -> JSON -> dashboard E2E.
-5. Only then consider Stage 7A COMPLETE / ACCEPTED and proceed to Stage 7B update drivers.
+Proceed to **Stage 7B — Edge Update Drivers & Recovery**. Preserve the accepted Stage 7A read-only boundary until each concrete component driver and its health/recovery contract are implemented and accepted.
