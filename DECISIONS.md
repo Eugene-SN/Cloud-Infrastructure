@@ -1141,3 +1141,24 @@ Authoritative record:
 
 **Supersedes:** no accepted topology. This closes the implementation status left open by the Stage 06.6 deployment contract.
 
+## 2026-09-21T11:10:00+03:00 — Stage 06.8 isolated restore and application recovery accepted
+
+**Status:** ACCEPTED
+
+**Context:** Stage 06.8 exercised real D5 restore paths for the accepted Stage 6 backup design in isolated temporary environments without overwriting production.
+
+**Decision:**
+
+- accept the edge D5 filesystem restore and restored transactional/application state as usable;
+- accept Mattermost PostgreSQL dump restore and restored application boot against the recovered database;
+- accept restored n8n, Authelia, Stalwart and Bulwark application boot/usability on edge;
+- accept integrity of the 24 staged agent SQLite overlays;
+- accept ai-node n8n D5 restore, self-contained SQLite state and isolated application boot;
+- classify the PostgreSQL 18 temporary mount failure encountered during testing as a test-harness defect, not a backup/restore defect;
+- Stage 06.8 is COMPLETE / ACCEPTED with `STAGE06_8_FINAL_ACCEPTANCE=PASS`;
+- proceed to Stage 06.9 final Stage 6 non-regression/persistence/cleanup acceptance.
+
+**Evidence:** `STAGE_06_8_FINAL_ACCEPTANCE_2026-09-21.md`.
+
+**Supersedes:** no accepted topology or retention decision.
+
