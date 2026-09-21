@@ -1094,3 +1094,27 @@ Authoritative record:
 **Constraints:** Do not duplicate general edge data in separate system/data Restic plans. Do not introduce a VPS full-image/full-Restic chain unless a new concrete recovery requirement appears. Application-consistent handling for live databases is still required inside the single general plan and is designed separately.
 
 **Supersedes:** proposals to split edge general protection into separate `edge-system` and `edge-data` plans, and proposals for a recurring edge full/bare-metal Restic chain.
+
+---
+
+## 2026-09-21T09:09:00+03:00 — Stage 6 deployment contract and D5 retention normalization
+
+**Status:** ACCEPTED
+
+**Context:** Expanded read-only audits of edge and ai-node confirmed the final persistent-state inventory, live database classes, current Backrest/Restic topology and the unnecessary cost of backing up reproducible container layers. The operator rejected a rolling 180-day D5 archive for edge because hundreds of equal-granularity restore points are operationally hard to navigate and requested the same day/week/month model already used for ai-node State.
+
+**Decision:**
+
+- edge dedicated Knowledge is deployed and accepted at `/srv/knowledge`, schedule `04/10/16/22`, rolling local `14d`, no D5;
+- edge general backup uses one plan `edge-state`, broad persistent roots, schedule `01/07/13/19`, local rolling `7d`, grouping `host,tags`;
+- successful edge-state snapshots are copied to CT208/D5 over the existing append-only rest-server path;
+- CT208 owns D5 forget/prune with State-class retention: daily30, weekly8, monthly6, yearly0, grouped by `host,tags`;
+- exclude backup/self-reference, dedicated Knowledge, Docker/containerd layers and selected rebuildable caches; keep `/srv/backups`;
+- use application-consistent staging for n8n, Authelia, Mattermost/PostgreSQL, Stalwart/Bulwark and known agent SQLite stores;
+- no recurring edge full/bare-metal Restic chain; one provider-panel golden VPS snapshot is created only after final infrastructure acceptance;
+- apply the accepted ai-node corrections documented in `STAGE_06_6_DEPLOYMENT_CONTRACT_2026-09-21.md` without redesigning its established D5 bucket policies.
+
+**Detailed contract:** `STAGE_06_6_DEPLOYMENT_CONTRACT_2026-09-21.md`.
+
+**Supersedes:** only the unresolved Stage 6 retention/consistency details and the rejected rolling-180d D5 edge proposal. The previously accepted one-general-plan edge topology remains in force.
+
