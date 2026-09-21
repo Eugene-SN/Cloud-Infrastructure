@@ -429,6 +429,8 @@ Stage 6 final acceptance record: `STAGE_06_FINAL_ACCEPTANCE_2026-09-21.md`. Stag
 
 ## Stage 7 — Edge Maintenance & Update
 
+**Status:** IN PROGRESS.
+
 ### Stage label
 
 `07 — Edge Maintenance & Update`
