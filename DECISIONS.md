@@ -1182,3 +1182,17 @@ Authoritative record:
 
 **Supersedes:** the Stage 6 IN PROGRESS state only; no accepted topology is superseded.
 
+## 2026-09-21 — Stage 7 backup sequencing clarification
+
+**Status:** ACCEPTED
+
+**Context:** Stage 6 was intentionally completed before Stage 7 so a verified backup/restore capability would already exist while Semaphore and the maintenance/update workflow are being deployed, modified and tested.
+
+**Decision:**
+- Stage 6 -> Stage 7 ordering is a deployment/testing safety dependency.
+- Do not interpret this ordering as a requirement to invoke Backrest before every routine production update.
+- A per-update backup step is component-specific and is added only when the concrete supported update/recovery path justifies it.
+- Stage 7 still requires component-specific update paths, health checks, failure reporting and recovery/rollback handling, but not a universal runtime backup gate.
+
+**Supersedes:** any Stage 7 wording that described a universal mandatory pre-update Backrest gate.
+
