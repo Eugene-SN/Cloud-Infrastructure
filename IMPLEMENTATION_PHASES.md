@@ -433,15 +433,25 @@ Stage 6 final acceptance record: `STAGE_06_FINAL_ACCEPTANCE_2026-09-21.md`. Stag
 
 `07 — Edge Maintenance & Update`
 
-Deploy Semaphore and the maintenance/update workflow after Backrest acceptance. Audit/adapt the existing PVE/Home updater; do not copy PVE-specific implementation blindly.
+Port and adapt the accepted Home Maintenance implementation from CT1000 rather than designing an independent maintenance framework. Preserve its proven architecture, Semaphore workflow, version/status model, fixed-target dispatch, per-component driver pattern, post-update refresh/acceptance model and dashboard wherever applicable. Replace only Home/PVE-specific inventory, VMID/PCT/QGA logic, collectors and update drivers with edge-specific equivalents.
 
-Dedicated Codex substage:
+Authoritative implementation principle:
 
-**Stage 7C — Codex: build `update.escloud.us`**
+- use the live CT1000 `/opt/maintenance-repo` implementation as the Stage 7 source baseline;
+- do not copy Home credentials, PVE inventory or Home-specific target definitions;
+- keep automatic real updates disabled by default;
+- retain component-specific supported update paths and health checks rather than introducing a generic one-size-fits-all updater;
+- do not create a second independent maintenance framework without a demonstrated incompatibility.
 
-This begins only after the real Semaphore/update backend, status model and control contract are known. `update.escloud.us` remains separate from `app.escloud.us`.
+Stage decomposition:
 
-Acceptance planning: define each component's supported update path, health checks, failure reporting and rollback/recovery. Stage 6 precedes Stage 7 so a verified backup/restore capability exists before maintenance tooling is deployed and tested; this is a deployment/testing safety prerequisite, not a requirement to run Backrest before every production update. Add a per-update backup step only where a specific component/update path materially requires it. Verify one controlled update/recovery scenario after Stage 6, then build the UI against that tested contract.
+- **Stage 7A — Home Maintenance Framework Port:** deploy Semaphore and port/adapt the framework, state/cache model and existing dashboard sources to edge; first acceptance is read-only version/status collection with no production update mutation.
+- **Stage 7B — Edge Update Drivers & Recovery:** replace Home-specific targets with edge-specific collectors/drivers, implement individual manual updates, Master Batch behavior, health/failure/recovery handling and controlled update/recovery acceptance.
+- **Stage 7C — Codex: adapt `update.escloud.us`:** begin from the copied Home Maintenance dashboard implementation and refine it for Cloud/edge targets and presentation. This is an adaptation/refinement substage, not a greenfield frontend build.
+
+`update.escloud.us` remains separate from `app.escloud.us`.
+
+Acceptance planning: define each edge component's supported update path, health checks, failure reporting and rollback/recovery. Stage 6 precedes Stage 7 so a verified backup/restore capability exists before maintenance tooling is deployed and tested; this is a deployment/testing safety prerequisite, not a requirement to run Backrest before every production update. Add a per-update backup step only where a specific component/update path materially requires it. Verify one controlled update/recovery scenario after Stage 6.
 
 ## Stage 8 — Edge Monitoring, Heartbeats & Alerts
 
