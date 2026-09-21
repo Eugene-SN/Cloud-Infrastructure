@@ -111,6 +111,11 @@ therefore do not consume Docker Hub's anonymous pull quota and cannot starve a
 subsequent manual image pull; local runtime versions and digests are still read
 on every refresh.
 
+The automatic refresh after an individual driver bypasses that cache for the
+updated component only. This prevents a floating image tag that advances
+between Scan and Pull from leaving a successful update displayed against an
+older cached registry version or digest.
+
 The root allowlist is `/etc/edge-maintenance/manual-driver-enablement.json` and
 contains exactly the 16 fixed targets. Master Batch remains disabled
 (`master=false`, `master_template_id=null`) pending individual acceptance.

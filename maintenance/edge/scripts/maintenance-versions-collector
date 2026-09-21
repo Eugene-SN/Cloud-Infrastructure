@@ -238,10 +238,13 @@ docker_remote_snapshot() {
     image="$1"
     component="$2"
 
-    cached="$(docker_cached_remote_snapshot "$component" 1800)"
-    if test -n "$cached"; then
-        printf '%s' "$cached"
-        return
+    force_component="${EDGE_MAINTENANCE_FORCE_REGISTRY_COMPONENT:-}"
+    if test "$component" != "$force_component"; then
+        cached="$(docker_cached_remote_snapshot "$component" 1800)"
+        if test -n "$cached"; then
+            printf '%s' "$cached"
+            return
+        fi
     fi
 
     raw="$(
