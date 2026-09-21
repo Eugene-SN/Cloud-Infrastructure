@@ -79,6 +79,21 @@ def require_fresh_update(target, max_age):
     return row
 
 
+def require_master_update(target, generated_at):
+    enablement = load(ENABLEMENT) if ENABLEMENT.is_file() else {}
+    if enablement.get("schema") != 1 or enablement.get("master") is not True:
+        raise RuntimeError("Master Batch acceptance pending")
+    data = load(CACHE)
+    if data.get("generated_at") != generated_at:
+        raise RuntimeError("maintenance cache changed after Master plan acceptance")
+    row = next((row for row in data.get("rows", []) if row.get("component") == target), None)
+    if not row:
+        raise RuntimeError("target absent from accepted Master cache")
+    if row.get("status") != "UPDATE_AVAILABLE":
+        raise RuntimeError(f"Master target is not actionable: {row.get('status')}")
+    return row
+
+
 def execute(unit, status_row):
     driver = unit["driver"]
     if driver == "apt":
@@ -143,6 +158,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("target")
     parser.add_argument("--preflight", action="store_true")
+    parser.add_argument("--master-batch-generated-at")
     args = parser.parse_args()
     manifest, index = units()
     if args.target not in index:
@@ -153,7 +169,12 @@ def main():
         print("REAL_UPDATE_EXECUTED=NO")
         return
     require_enablement(args.target)
-    status_row = require_fresh_update(args.target, manifest["cache_max_age_seconds"])
+    if args.master_batch_generated_at:
+        if unit.get("master_policy") == "individual_only":
+            raise RuntimeError(f"Master target requires individual update: {args.target}")
+        status_row = require_master_update(args.target, args.master_batch_generated_at)
+    else:
+        status_row = require_fresh_update(args.target, manifest["cache_max_age_seconds"])
     execute(unit, status_row)
     print(f"UPDATE_RESULT={args.target}:SUCCESS")
 

@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
-"""Sequential, failure-isolated master runner. Separately gated."""
+"""Cache-aware, failure-isolated Edge Master Batch dispatcher."""
 
+import argparse
+import datetime as dt
 import json
 import pathlib
 import subprocess
@@ -8,25 +10,175 @@ import sys
 
 BASE = pathlib.Path("/opt/edge-maintenance")
 ENABLEMENT = pathlib.Path("/etc/edge-maintenance/manual-driver-enablement.json")
+CACHE = pathlib.Path("/var/www/maintenance-status/maintenance.json")
+
+
+def load(path):
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def validate_plan(manifest, cache, now=None):
+    now = now or dt.datetime.now(dt.timezone.utc)
+    if cache.get("schema") != 3 or cache.get("target_model") != "update_units_v3":
+        raise RuntimeError("MASTER_CACHE_PRECHECK_GATE=FAIL|REASON=CACHE_CONTRACT")
+    try:
+        stamp = dt.datetime.fromisoformat(cache["generated_at"].replace("Z", "+00:00"))
+    except (KeyError, TypeError, ValueError) as exc:
+        raise RuntimeError("MASTER_CACHE_PRECHECK_GATE=FAIL|REASON=CACHE_TIMESTAMP") from exc
+    age = int((now - stamp).total_seconds())
+    maximum = int(manifest["cache_max_age_seconds"])
+    print(
+        f"MASTER_CACHE_PRECHECK|GENERATED_AT={cache['generated_at']}|"
+        f"AGE_SECONDS={age}|MAX_AGE_SECONDS={maximum}",
+        flush=True,
+    )
+    if age < 0 or age > maximum:
+        raise RuntimeError(
+            f"MASTER_CACHE_PRECHECK_GATE=FAIL|REASON=CACHE_STALE|DETAIL={age}"
+        )
+
+    units = manifest.get("units", [])
+    index = {unit.get("id"): unit for unit in units}
+    order = manifest.get("master_order", [])
+    expected = set(index)
+    if len(units) != 16 or len(index) != 16 or len(order) != 16 or set(order) != expected:
+        raise RuntimeError(
+            "MASTER_CACHE_PRECHECK_GATE=FAIL|REASON=MASTER_TARGET_SET|"
+            f"DETAIL=units:{len(units)},unique:{len(index)},order:{len(order)}"
+        )
+
+    rows = cache.get("rows", [])
+    row_index = {row.get("component"): row for row in rows}
+    if len(rows) != 16 or len(row_index) != 16 or set(row_index) != expected:
+        missing = sorted(expected - set(row_index))
+        extra = sorted(set(row_index) - expected)
+        raise RuntimeError(
+            "MASTER_CACHE_PRECHECK_GATE=FAIL|REASON=CACHE_TARGET_SET|"
+            f"DETAIL=rows:{len(rows)},missing:{','.join(missing) or 'none'},"
+            f"extra:{','.join(extra) or 'none'}"
+        )
+
+    current = 0
+    available = 0
+    for target in order:
+        row = row_index[target]
+        status = row.get("status")
+        print(f"PLAN|{target}|{status}", flush=True)
+        if row.get("actionable") is not True:
+            raise RuntimeError(
+                f"MASTER_CACHE_PRECHECK_GATE=FAIL|REASON=TARGET_NOT_ACTIONABLE|DETAIL={target}"
+            )
+        if status == "CURRENT":
+            current += 1
+        elif status == "UPDATE_AVAILABLE":
+            available += 1
+            if index[target].get("master_policy") == "individual_only":
+                raise RuntimeError(
+                    "MASTER_CACHE_PRECHECK_GATE=FAIL|"
+                    f"REASON=INDIVIDUAL_UPDATE_REQUIRED|DETAIL={target}"
+                )
+        else:
+            raise RuntimeError(
+                "MASTER_CACHE_PRECHECK_GATE=FAIL|REASON=NONACTIONABLE_STATUS|"
+                f"DETAIL={target}:{status}"
+            )
+
+    summary = cache.get("summary", {})
+    if (
+        summary.get("TOTAL") != 16
+        or summary.get("CURRENT") != current
+        or summary.get("UPDATE_AVAILABLE") != available
+        or summary.get("CHECK_FAILED") != 0
+    ):
+        raise RuntimeError(
+            "MASTER_CACHE_PRECHECK_GATE=FAIL|REASON=CACHE_SUMMARY_MISMATCH|"
+            f"DETAIL=current:{current},updates:{available}"
+        )
+    if summary.get("REBOOT_REQUIRED") != 0:
+        raise RuntimeError(
+            "MASTER_CACHE_PRECHECK_GATE=FAIL|REASON=REBOOT_REQUIRED|"
+            f"DETAIL={summary.get('REBOOT_REQUIRED')}"
+        )
+    print(
+        f"MASTER_CACHE_PRECHECK_GATE=PASS|TOTAL=16|CURRENT={current}|"
+        f"UPDATE_AVAILABLE={available}",
+        flush=True,
+    )
+    return order, index, row_index, cache["generated_at"]
 
 
 def main():
-    enablement = json.loads(ENABLEMENT.read_text()) if ENABLEMENT.is_file() else {}
-    if enablement.get("schema") != 1 or enablement.get("master") is not True:
-        raise RuntimeError("Master Batch acceptance pending")
-    manifest = json.loads((BASE / "config/update-units.json").read_text())
-    subprocess.run([str(BASE / "scripts/maintenance-refresh")], check=True)
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--plan-only",
+        action="store_true",
+        help="validate the current cache and print the fixed plan without updates",
+    )
+    args = parser.parse_args()
+    if not args.plan_only:
+        enablement = load(ENABLEMENT) if ENABLEMENT.is_file() else {}
+        if enablement.get("schema") != 1 or enablement.get("master") is not True:
+            raise RuntimeError("Master Batch acceptance pending")
+    manifest = load(BASE / "config/update-units.json")
+    order, units, rows, generated_at = validate_plan(manifest, load(CACHE))
+    if args.plan_only:
+        updates = sum(rows[target]["status"] == "UPDATE_AVAILABLE" for target in order)
+        print(
+            f"MASTER_PLAN_ONLY=PASS|TOTAL={len(order)}|"
+            f"CURRENT={len(order) - updates}|UPDATE_AVAILABLE={updates}|"
+            "REAL_UPDATE_EXECUTED=NO",
+            flush=True,
+        )
+        return 0
     results = []
-    for unit in manifest["units"]:
-        target = unit["id"]
-        print(f"MASTER_TARGET_BEGIN={target}", flush=True)
-        result = subprocess.run([str(BASE / "scripts/manual-update"), target])
-        state = "SUCCESS" if result.returncode == 0 else "FAILED"
-        results.append((target, state))
-        print(f"MASTER_TARGET_RESULT={target}:{state}", flush=True)
-    subprocess.run([str(BASE / "scripts/maintenance-refresh")], check=True)
-    failed = [target for target, state in results if state == "FAILED"]
-    print(f"MASTER_SUMMARY=total:{len(results)},failed:{len(failed)}")
+    run_count = 0
+    skipped_count = 0
+    total = len(order)
+    for position, target in enumerate(order, 1):
+        driver = units[target]["driver"]
+        print(
+            f"MASTER_TARGET_BEGIN|INDEX={position}|TOTAL={total}|"
+            f"DRIVER={driver}|TARGET={target}",
+            flush=True,
+        )
+        if rows[target]["status"] == "CURRENT":
+            skipped_count += 1
+            results.append((target, True))
+            print(
+                f"MASTER_TARGET_RESULT|INDEX={position}|TARGET={target}|"
+                "RESULT=SUCCESS|RC=0|ACTION=SKIPPED_CURRENT",
+                flush=True,
+            )
+            continue
+        run_count += 1
+        result = subprocess.run(
+            [
+                str(BASE / "scripts/manual-update"),
+                target,
+                "--master-batch-generated-at",
+                generated_at,
+            ]
+        )
+        success = result.returncode == 0
+        results.append((target, success))
+        outcome = "SUCCESS" if success else "FAILED_CONTINUED"
+        print(
+            f"MASTER_TARGET_RESULT|INDEX={position}|TARGET={target}|"
+            f"RESULT={outcome}|RC={result.returncode}|ACTION=DRIVER_EXECUTED",
+            flush=True,
+        )
+
+    failed = [target for target, success in results if not success]
+    print(
+        f"MASTER_BATCH_SUMMARY|TOTAL={total}|SUCCESS={total - len(failed)}|"
+        f"FAILED={len(failed)}|FAILED_TARGETS={','.join(failed) or 'NONE'}",
+        flush=True,
+    )
+    print(
+        f"MASTER_BATCH_DISPATCH_SUMMARY|TOTAL={total}|RUN={run_count}|"
+        f"SKIPPED_CURRENT={skipped_count}|FAILED={len(failed)}",
+        flush=True,
+    )
     return 1 if failed else 0
 
 

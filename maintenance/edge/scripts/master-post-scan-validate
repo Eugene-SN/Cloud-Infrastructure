@@ -1,0 +1,69 @@
+#!/usr/bin/env python3
+"""Validate the refreshed maintenance cache after an Edge Master Batch."""
+
+import datetime as dt
+import json
+import pathlib
+import sys
+
+MANIFEST = pathlib.Path("/opt/edge-maintenance/config/update-units.json")
+CACHE = pathlib.Path("/var/www/maintenance-status/maintenance.json")
+
+
+def validate(manifest, cache, now=None):
+    now = now or dt.datetime.now(dt.timezone.utc)
+    expected = {unit["id"] for unit in manifest.get("units", [])}
+    rows = cache.get("rows", [])
+    index = {row.get("component"): row for row in rows}
+    if (
+        cache.get("schema") != 3
+        or cache.get("target_model") != "update_units_v3"
+        or len(expected) != 16
+        or len(rows) != 16
+        or len(index) != 16
+        or set(index) != expected
+    ):
+        return False, "CACHE_TARGET_CONTRACT"
+    try:
+        stamp = dt.datetime.fromisoformat(cache["generated_at"].replace("Z", "+00:00"))
+        age = int((now - stamp).total_seconds())
+    except (KeyError, TypeError, ValueError):
+        return False, "CACHE_TIMESTAMP"
+    if age < 0 or age > int(manifest["cache_max_age_seconds"]):
+        return False, f"CACHE_STALE:{age}"
+    noncurrent = [
+        f"{target}:{index[target].get('status')}"
+        for target in sorted(expected)
+        if index[target].get("status") != "CURRENT"
+    ]
+    if noncurrent:
+        return False, "NONCURRENT_ROWS_REMAIN:" + ",".join(noncurrent)
+    summary = cache.get("summary", {})
+    if summary.get("REBOOT_REQUIRED") != 0:
+        return False, f"REBOOT_REQUIRED:{summary.get('REBOOT_REQUIRED')}"
+    if (
+        summary.get("TOTAL") != 16
+        or summary.get("CURRENT") != 16
+        or summary.get("UPDATE_AVAILABLE") != 0
+        or summary.get("CHECK_FAILED") != 0
+    ):
+        return False, "CACHE_SUMMARY_MISMATCH"
+    return True, "TOTAL=16|CURRENT=16|UPDATE_AVAILABLE=0|CHECK_FAILED=0|REBOOT_REQUIRED=0"
+
+
+def main():
+    manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
+    cache = json.loads(CACHE.read_text(encoding="utf-8"))
+    success, detail = validate(manifest, cache)
+    state = "PASS" if success else "FAIL"
+    reason = detail if success else f"REASON={detail}"
+    print(f"MASTER_POST_SCAN_GATE={state}|{reason}")
+    return 0 if success else 2
+
+
+if __name__ == "__main__":
+    try:
+        raise SystemExit(main())
+    except Exception as exc:
+        print(f"MASTER_POST_SCAN_GATE=FAIL|REASON={exc}", file=sys.stderr)
+        raise SystemExit(2)

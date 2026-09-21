@@ -18,7 +18,13 @@ timer, unattended updater, or background update daemon.
 Individual templates are exposed only through the manual dashboard controls.
 Execution remains fail-closed: `/etc/edge-maintenance/manual-driver-enablement.json`
 must explicitly enable each fixed unit. Master Batch has a separate `master`
-gate and remains disabled until individual runtime acceptance is complete.
+gate. Its single Semaphore task performs a fresh pre-scan, validates the exact
+16-target cache, skips current targets, executes available targets sequentially,
+continues after isolated driver failures, runs a complete post-scan and requires
+both status and health acceptance before reporting success. Semaphore self-update
+remains individual-only because restarting the orchestrator from its own batch
+would interrupt acceptance. A pending reboot blocks dispatch and also prevents a
+completed batch from being reported as accepted.
 
 The first operator-initiated run of each driver is its runtime acceptance:
 review the displayed version, backup/rollback and health checks, then launch it

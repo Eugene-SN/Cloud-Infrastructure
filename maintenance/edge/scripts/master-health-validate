@@ -1,0 +1,139 @@
+#!/usr/bin/env python3
+"""Bounded service and data-health checks after an Edge Master Batch."""
+
+import json
+import pathlib
+import sqlite3
+import subprocess
+import sys
+import time
+
+MANIFEST = pathlib.Path("/opt/edge-maintenance/config/update-units.json")
+CORE_UID = 1000
+SYSTEM_SERVICES = (
+    "nginx.service",
+    "xray.service",
+    "hysteria-server.service",
+    "backrest.service",
+    "semaphore.service",
+    "netbird.service",
+    "docker.service",
+    "containerd.service",
+    "cloudcli.service",
+    "syncthing@core.service",
+)
+USER_SERVICES = (
+    "hermes-gateway.service",
+    "hermes-dashboard.service",
+    "antigravity-cli-daemon.service",
+)
+SQLITE_DATABASES = (
+    "/srv/n8n/database.sqlite",
+    "/srv/authelia/data/db.sqlite3",
+)
+
+
+def command(argv, cwd=None):
+    return subprocess.run(argv, cwd=cwd, capture_output=True, text=True)
+
+
+def wait_for(check, attempts=15, interval=2):
+    for attempt in range(attempts):
+        if check():
+            return True
+        if attempt + 1 < attempts:
+            time.sleep(interval)
+    return False
+
+
+def main():
+    failures = []
+    failed_units = command(["systemctl", "--failed", "--no-legend"])
+    if failed_units.returncode != 0 or failed_units.stdout.strip():
+        failures.append("SYSTEMD_FAILED_UNITS")
+    for service in SYSTEM_SERVICES:
+        if not wait_for(
+            lambda service=service: command(
+                ["systemctl", "is-active", "--quiet", service]
+            ).returncode == 0
+        ):
+            failures.append(f"SYSTEM_SERVICE:{service}")
+    for service in USER_SERVICES:
+        if not wait_for(
+            lambda service=service: command(
+                [
+                    "runuser", "-u", "core", "--", "env",
+                    f"XDG_RUNTIME_DIR=/run/user/{CORE_UID}",
+                    "systemctl", "--user", "is-active", "--quiet", service,
+                ]
+            ).returncode == 0
+        ):
+            failures.append(f"USER_SERVICE:{service}")
+    if command(["nginx", "-t"]).returncode != 0:
+        failures.append("NGINX_CONFIG")
+    audit = command(["dpkg", "--audit"])
+    if audit.returncode != 0 or audit.stdout.strip() or audit.stderr.strip():
+        failures.append("DPKG_AUDIT")
+
+    manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
+    for unit in manifest["units"]:
+        if unit["driver"] != "compose":
+            continue
+        compose = ["docker", "compose"]
+        for filename in unit["files"]:
+            compose.extend(["-f", filename])
+        container = command(
+            compose + ["ps", "-q", unit["service"]],
+            cwd=unit["directory"],
+        ).stdout.strip()
+        if not container:
+            failures.append(f"CONTAINER_ABSENT:{unit['id']}")
+            continue
+        def container_ready(container=container):
+            state = command(["docker", "inspect", container]).stdout
+            try:
+                status = json.loads(state)[0]["State"]
+            except (json.JSONDecodeError, IndexError, KeyError):
+                return False
+            health = status.get("Health", {}).get("Status")
+            return status.get("Running") is True and (not health or health == "healthy")
+
+        if not wait_for(container_ready):
+            failures.append(f"CONTAINER_NOT_READY:{unit['id']}")
+
+    postgres = command(
+        [
+            "docker", "compose", "-f", "docker-compose.yml", "-f",
+            "docker-compose.edge.yml", "exec", "-T", "postgres",
+            "pg_isready", "-U", "mmuser",
+        ],
+        cwd="/opt/mattermost",
+    )
+    if postgres.returncode != 0:
+        failures.append("POSTGRES_READINESS")
+    for database in SQLITE_DATABASES:
+        try:
+            connection = sqlite3.connect(f"file:{database}?mode=ro", uri=True)
+            result = connection.execute("pragma quick_check").fetchone()[0]
+            connection.close()
+            if result != "ok":
+                failures.append(f"SQLITE_INTEGRITY:{database}")
+        except (sqlite3.Error, OSError):
+            failures.append(f"SQLITE_CHECK:{database}")
+
+    if failures:
+        print("MASTER_HEALTH_GATE=FAIL|DETAIL=" + ",".join(failures))
+        return 3
+    print(
+        "MASTER_HEALTH_GATE=PASS|SYSTEM_SERVICES=10|USER_SERVICES=3|"
+        "DOCKER_TARGETS=6|SQLITE_DATABASES=2|POSTGRES_READINESS=PASS"
+    )
+    return 0
+
+
+if __name__ == "__main__":
+    try:
+        raise SystemExit(main())
+    except Exception as exc:
+        print(f"MASTER_HEALTH_GATE=FAIL|REASON={exc}", file=sys.stderr)
+        raise SystemExit(3)

@@ -4,7 +4,62 @@
   connection: local
   gather_facts: false
   tasks:
-    - name: Execute accepted fixed-plan batch
+    - name: Refresh maintenance cache before Master planning
+      ansible.builtin.command:
+        argv: [sudo, -n, /opt/edge-maintenance/scripts/maintenance-refresh]
+      changed_when: false
+
+    - name: Execute cache-aware failure-isolated Master Batch
       ansible.builtin.command:
         argv: [sudo, -n, /opt/edge-maintenance/scripts/master-batch-update]
-      changed_when: true
+      register: master_batch_run
+      changed_when: "'ACTION=DRIVER_EXECUTED' in master_batch_run.stdout"
+      failed_when: false
+
+    - name: Show complete Master Batch output
+      ansible.builtin.debug:
+        var: master_batch_run.stdout_lines
+
+    - name: Refresh maintenance cache after all Master targets
+      ansible.builtin.command:
+        argv: [sudo, -n, /opt/edge-maintenance/scripts/maintenance-refresh]
+      register: master_post_refresh
+      changed_when: false
+      failed_when: false
+
+    - name: Validate refreshed maintenance state
+      ansible.builtin.command:
+        argv: [sudo, -n, /opt/edge-maintenance/scripts/master-post-scan-validate]
+      register: master_post_scan_gate
+      changed_when: false
+      failed_when: false
+
+    - name: Validate Edge service and data health
+      ansible.builtin.command:
+        argv: [sudo, -n, /opt/edge-maintenance/scripts/master-health-validate]
+      register: master_health_gate
+      changed_when: false
+      failed_when: false
+
+    - name: Show final Master Batch result inputs
+      ansible.builtin.debug:
+        msg:
+          - "MASTER_BATCH_DRIVER_RC={{ master_batch_run.rc }}"
+          - "MASTER_BATCH_POST_REFRESH_RC={{ master_post_refresh.rc }}"
+          - "MASTER_BATCH_POST_SCAN_RC={{ master_post_scan_gate.rc }}"
+          - "MASTER_BATCH_HEALTH_RC={{ master_health_gate.rc }}"
+
+    - name: Mark Master Batch failed when any execution or acceptance gate failed
+      ansible.builtin.fail:
+        msg: >-
+          Master Batch did not reach a clean accepted state. Review
+          MASTER_BATCH_SUMMARY, MASTER_POST_SCAN_GATE and MASTER_HEALTH_GATE.
+      when: >-
+        master_batch_run.rc != 0 or
+        master_post_refresh.rc != 0 or
+        master_post_scan_gate.rc != 0 or
+        master_health_gate.rc != 0
+
+    - name: Confirm complete Master Batch success
+      ansible.builtin.debug:
+        msg: MASTER_BATCH_RESULT=SUCCESS

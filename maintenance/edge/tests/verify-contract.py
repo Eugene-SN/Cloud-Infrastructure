@@ -36,8 +36,14 @@ assert next(r for r in docker if r["component"] == "MATTERMOST")["application_ve
 assert actions["schema"] == 8
 assert actions["read_only"] is False
 assert actions["manual_acceptance_mode"] is True
-assert actions["master_template_id"] is None
+assert actions["master_template_id"] == 18
+assert actions["master_driver_state"] == "executable"
+assert actions["stop_on_error"] is True
 assert sorted(item["template_id"] for item in actions["components"].values()) == list(range(2, 18))
 assert all(item["driver_state"] == "executable" for item in actions["components"].values())
 assert set(actions["components"]) == {u["id"] for u in manifest["units"]}
+assert len(manifest["master_order"]) == 16
+assert set(manifest["master_order"]) == {u["id"] for u in manifest["units"]}
+assert manifest["master_order"][-1] == "APT_EDGE"
+assert next(u for u in manifest["units"] if u["id"] == "SEMAPHORE")["master_policy"] == "individual_only"
 print("EDGE_MAINTENANCE_CONTRACT=PASS")

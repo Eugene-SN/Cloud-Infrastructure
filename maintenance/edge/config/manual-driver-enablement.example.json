@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "master": false,
+  "master": true,
   "enabled": {
     "APT_EDGE": true,
     "XRAY": true,

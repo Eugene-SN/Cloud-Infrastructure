@@ -122,6 +122,9 @@ pinned image locally and only then recreate that one service. A floating tag
 cannot advance the accepted update between operator review and execution.
 
 The root allowlist is `/etc/edge-maintenance/manual-driver-enablement.json` and
-contains exactly the 16 fixed targets. Master Batch remains disabled
-(`master=false`, `master_template_id=null`) pending individual acceptance.
+contains exactly the 16 fixed targets. The CT1000 Master Batch audit is recorded
+in `STAGE_07B_MASTER_BATCH_CT1000_AUDIT_2026-09-21.md`. The adapted Edge batch
+uses Semaphore template 18, an exact fresh-cache precheck, fixed ordered
+failure-isolated dispatch, full post-scan and status/health acceptance gates.
+Semaphore self-update is individual-only and APT_EDGE is last in the fixed plan.
 This correction enabled controls only; it executed no update task.

@@ -2,7 +2,7 @@
   "schema": 8,
   "target_model": "update_units_v3",
   "project_id": 1,
-  "master_template_id": null,
+  "master_template_id": 18,
   "refresh_template_id": 1,
   "execution_mode": "manual_only",
   "stop_on_error": true,
@@ -138,6 +138,6 @@
       "disabled_reason": ""
     }
   },
-  "master_driver_state": "acceptance_pending",
+  "master_driver_state": "executable",
   "manual_acceptance_mode": true
 }

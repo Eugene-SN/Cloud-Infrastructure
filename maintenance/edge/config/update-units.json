@@ -3,13 +3,19 @@
   "cache_max_age_seconds": 300,
   "manual_only": true,
   "launch_surface": "update.escloud.us",
+  "master_order": [
+    "XRAY", "HYSTERIA2", "BACKREST", "RESTIC",
+    "N8N", "AUTHELIA", "MATTERMOST", "POSTGRESQL", "STALWART", "BULWARK",
+    "HERMES", "CLOUDCLI", "CODEX", "ANTIGRAVITY",
+    "SEMAPHORE", "APT_EDGE"
+  ],
   "units": [
     {"id":"APT_EDGE","group":"system","driver":"apt"},
     {"id":"XRAY","group":"native","driver":"maintctl","argument":"xray"},
     {"id":"HYSTERIA2","group":"native","driver":"maintctl","argument":"hy2"},
     {"id":"BACKREST","group":"native","driver":"github_binary","repository":"garethgeorge/backrest","service":"backrest"},
     {"id":"RESTIC","group":"native","driver":"github_binary","repository":"restic/restic"},
-    {"id":"SEMAPHORE","group":"native","driver":"github_binary","repository":"semaphoreui/semaphore","service":"semaphore"},
+    {"id":"SEMAPHORE","group":"native","driver":"github_binary","repository":"semaphoreui/semaphore","service":"semaphore","master_policy":"individual_only"},
     {"id":"N8N","group":"docker","driver":"compose","directory":"/opt/n8n","files":["compose.yaml"],"service":"n8n"},
     {"id":"AUTHELIA","group":"docker","driver":"compose","directory":"/opt/authelia","files":["compose.yaml"],"service":"authelia"},
     {"id":"MATTERMOST","group":"docker","driver":"compose","directory":"/opt/mattermost","files":["docker-compose.yml","docker-compose.edge.yml"],"service":"mattermost"},
