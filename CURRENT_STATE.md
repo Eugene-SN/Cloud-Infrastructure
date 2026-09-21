@@ -134,6 +134,8 @@ Backrest-before-Semaphore remains mandatory as a Stage sequencing and deployment
 
 Stage 7 accepted target direction: Edge Maintenance is derived from the accepted Home Maintenance implementation on CT1000. Preserve the proven Semaphore + Ansible/native-script architecture, version/status cache model, fixed-target dispatch, per-component update-driver pattern, post-update refresh/acceptance flow and dashboard where applicable. Replace Home/PVE-specific inventory, VMID/PCT/QGA logic, collectors and drivers with edge-specific equivalents. `update.escloud.us` begins as an adapted copy of the existing Home Maintenance dashboard source rather than a greenfield frontend.
 
+Stage 7B manual-execution requirement: every real update is operator-initiated manually from `update.escloud.us` only. Do not create or enable update timers, cron jobs, systemd update services, background update daemons, unattended update jobs, scheduled update execution, or any equivalent path that can start a real update without an explicit user action in the page. This also applies to Stage 7B acceptance testing: a newly implemented driver is exposed in `update.escloud.us`, the user inspects it and manually starts the test update there. Semaphore remains the backend executor only.
+
 Stage 7A is COMPLETE / ACCEPTED. Current accepted edge maintenance foundation:
 - Semaphore Community `2.19.12-012ed06-1788086239`, host-native, `semaphore.service` active/enabled as `semaphore:semaphore`;
 - Semaphore listener `127.0.0.1:3000` only;
