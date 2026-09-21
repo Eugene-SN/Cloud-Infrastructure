@@ -441,7 +441,7 @@ Dedicated Codex substage:
 
 This begins only after the real Semaphore/update backend, status model and control contract are known. `update.escloud.us` remains separate from `app.escloud.us`.
 
-Acceptance planning: define each component's supported update path, pre-update backup gate, health checks, failure reporting and rollback/recovery. Verify one controlled update/recovery scenario after Stage 6, then build the UI against that tested contract.
+Acceptance planning: define each component's supported update path, health checks, failure reporting and rollback/recovery. Stage 6 precedes Stage 7 so a verified backup/restore capability exists before maintenance tooling is deployed and tested; this is a deployment/testing safety prerequisite, not a requirement to run Backrest before every production update. Add a per-update backup step only where a specific component/update path materially requires it. Verify one controlled update/recovery scenario after Stage 6, then build the UI against that tested contract.
 
 ## Stage 8 — Edge Monitoring, Heartbeats & Alerts
 
