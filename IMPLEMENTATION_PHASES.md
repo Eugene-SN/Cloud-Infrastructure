@@ -1,6 +1,6 @@
 # Cloud Infrastructure — Accepted Implementation Phases
 
-**Status:** Stages 0–6 COMPLETE / ACCEPTED. Stage 7 is IN PROGRESS; Stage 7A is COMPLETE / ACCEPTED and Stage 7B is IN PROGRESS.
+**Status:** Stages 0–6 COMPLETE / ACCEPTED. Stage 7 is IN PROGRESS; Stage 7A and Stage 7B are COMPLETE / ACCEPTED, and Stage 7C closure is next.
 
 This document is the canonical stage chronology for Cloud Infrastructure / `edge`.
 
@@ -448,22 +448,22 @@ Authoritative implementation principle:
 Stage decomposition:
 
 - **Stage 7A — Home Maintenance Framework Port — COMPLETE / ACCEPTED:** Semaphore, Home-derived read-only framework/state cache and copied dashboard baseline are deployed and accepted. The dashboard → Semaphore → canonical GitHub refresh playbook → local collector/cache → dashboard E2E passed with no production update mutation.
-- **Stage 7B — Edge Update Drivers & Recovery — IN PROGRESS:** replace the read-only action surface with accepted edge-specific update drivers, implement individual manual updates, Master Batch behavior, health/failure/recovery handling and controlled update/recovery acceptance. Every real update, including acceptance-test execution, must be started manually by the operator from `update.escloud.us`; no timers, cron, systemd update services, background update daemons, unattended/scheduled update jobs or other autonomous launch path are permitted.
+- **Stage 7B — Edge Update Drivers & Recovery — COMPLETE / ACCEPTED:** the edge-specific individual drivers, Master Batch behavior, health/failure/recovery handling, generated action contract and controlled update acceptance are deployed. Every real update remains operator-initiated from `update.escloud.us`; canonical APT policy and masked systemd paths enforce the absence of unattended/scheduled package updates.
 - **Stage 7C — Codex: adapt `update.escloud.us`:** begin from the copied Home Maintenance dashboard implementation and refine it for Cloud/edge targets and presentation. This is an adaptation/refinement substage, not a greenfield frontend build.
 
 `update.escloud.us` remains separate from `app.escloud.us`. It is the single Stage 7 operator origin: `/status/` is the custom maintenance dashboard and `/project/1/history` is the full Semaphore UI. The former `ops.escloud.us` candidate has been removed from edge; its Cloudflare DNS record is pending manual operator deletion.
 
 Acceptance planning: define each edge component's supported update path, health checks, failure reporting and rollback/recovery. Stage 6 precedes Stage 7 so a verified backup/restore capability exists before maintenance tooling is deployed and tested; this is a deployment/testing safety prerequisite, not a requirement to run Backrest before every production update. Add a per-update backup step only where a specific component/update path materially requires it. Verify one controlled update/recovery scenario after Stage 6.
 
-Current Stage 7B checkpoint: the CT1000-derived 16-target Master Batch is
-deployed as Semaphore template 18 and has completed operator-triggered runtime
-acceptance. Task 12 finished successfully with one PostgreSQL driver execution,
-15 CURRENT skips, a clean 16/16 post-scan, no pending reboot, and all final
-health gates PASS. Stage 7B remains IN PROGRESS pending reconciliation of the
-host-level unattended-upgrade path with the accepted manual-only
-`update.escloud.us` execution rule. The stale runtime dashboard action-contract
-copy is resolved: one atomic artifact is generated on every Refresh from the
-canonical unit, template-mapping and enablement inputs.
+Final Stage 7B checkpoint: the CT1000-derived 16-target Master Batch is deployed
+as Semaphore template 18 and completed operator-triggered runtime acceptance.
+Task 12 finished successfully with one PostgreSQL driver execution, 15 CURRENT
+skips, a clean 16/16 post-scan, no pending reboot, and all final health gates
+PASS. The host unattended-upgrade path is disabled by a canonical APT override
+and masked/inactive systemd units. One atomic action artifact is generated on
+every Refresh from the canonical unit, template-mapping and enablement inputs.
+Inactive deployment duplicates and update residue were removed, followed by a
+passing Refresh, contract suite and Master health gate.
 
 ## Stage 8 — Edge Monitoring, Heartbeats & Alerts
 
@@ -527,7 +527,7 @@ Stage 3: **COMPLETE / ACCEPTED**.
 Stage 4: **COMPLETE / ACCEPTED**. `STAGE4_FINAL_ACCEPTANCE=PASS`.
 Stage 5: **COMPLETE / ACCEPTED**. `STAGE05_FINAL_ACCEPTANCE=PASS`.
 Stage 6: **COMPLETE / ACCEPTED**. `STAGE06_FINAL_ACCEPTANCE=PASS`.
-Stage 7: **IN PROGRESS**. Stage 7A is COMPLETE / ACCEPTED; Stage 7B is IN PROGRESS.
+Stage 7: **IN PROGRESS**. Stage 7A and Stage 7B are COMPLETE / ACCEPTED; Stage 7C closure is next.
 
 Current accepted checkpoint on `main`:
 
@@ -535,4 +535,4 @@ Current accepted checkpoint on `main`:
 
 ## Current finite infrastructure stage
 
-Stage 7 — Edge Maintenance & Update — is in progress. Continue with Stage 7B under the accepted manual-execution boundary; every real update must be initiated by the operator from `update.escloud.us`.
+Stage 7 — Edge Maintenance & Update — is in progress. Continue with formal Stage 7C dashboard-adaptation closure under the accepted manual-execution boundary; every real update must be initiated by the operator from `update.escloud.us`.

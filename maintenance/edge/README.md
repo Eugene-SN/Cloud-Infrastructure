@@ -20,6 +20,10 @@ manual enablement registry, validates their exact 16-target agreement and
 atomically replaces the artifact on every Refresh. No `actions.json` copy is
 kept under `/opt/edge-maintenance/dashboard`.
 
+`playbooks/semaphore-refresh.yml` delegates to the same canonical
+`/opt/edge-maintenance/scripts/maintenance-refresh` pipeline used by direct
+runtime refreshes; it does not maintain a second orchestration sequence.
+
 ## Safety boundary
 
 Individual templates are exposed only through the manual dashboard controls.
@@ -38,6 +42,14 @@ installed as `/etc/sudoers.d/91-semaphore-edge-maintenance`; Master post-scan an
 health validators are part of the required command set. Compose drivers always
 force service recreation after pinning the exact scanned digest so a movable tag
 cannot leave the previous image running.
+
+Host package updates follow the same manual-only boundary. Install
+`config/apt-periodic-manual-only.conf` as
+`/etc/apt/apt.conf.d/99-edge-maintenance-manual-only` and mask
+`apt-daily.timer`, `apt-daily.service`, `apt-daily-upgrade.timer`,
+`apt-daily-upgrade.service` and `unattended-upgrades.service`. This disables
+autonomous metadata refresh and package installation without affecting the
+explicit `apt-get` calls made by the `APT_EDGE` driver.
 
 The first operator-initiated run of each driver is its runtime acceptance:
 review the displayed version, backup/rollback and health checks, then launch it

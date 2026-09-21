@@ -12,6 +12,9 @@ templates = json.loads((root / "config/semaphore-templates.json").read_text())
 enablement = json.loads((root / "config/manual-driver-enablement.example.json").read_text())
 renderer = runpy.run_path(root / "scripts/maintenance-actions-render")
 actions = renderer["build_actions"](manifest, templates, enablement)
+refresh_source = (root / "scripts/maintenance-refresh").read_text()
+semaphore_refresh_source = (root / "playbooks/semaphore-refresh.yml").read_text()
+apt_policy = (root / "config/apt-periodic-manual-only.conf").read_text()
 
 rows = maintenance["rows"]
 assert maintenance["schema"] == 3
@@ -48,6 +51,20 @@ assert sorted(item["template_id"] for item in actions["components"].values()) ==
 assert all(item["driver_state"] == "executable" for item in actions["components"].values())
 assert set(actions["components"]) == {u["id"] for u in manifest["units"]}
 assert not (root / "dashboard/actions.json").exists()
+assert "/opt/edge-maintenance/scripts/maintenance-status-render" in refresh_source
+assert "/usr/local/bin/maintenance-status-render" not in refresh_source
+assert "/opt/edge-maintenance/scripts/maintenance-refresh" in semaphore_refresh_source
+assert "/opt/edge-maintenance/scripts/maintenance-status-render" not in semaphore_refresh_source
+assert "/opt/edge-maintenance/scripts/maintenance-targets-refresh" not in semaphore_refresh_source
+assert "/usr/local/bin/maintenance-status-render" not in semaphore_refresh_source
+for apt_key in (
+    "Enable",
+    "Update-Package-Lists",
+    "Download-Upgradeable-Packages",
+    "AutocleanInterval",
+    "Unattended-Upgrade",
+):
+    assert f'APT::Periodic::{apt_key} "0";' in apt_policy
 assert len(manifest["master_order"]) == 16
 assert set(manifest["master_order"]) == {u["id"] for u in manifest["units"]}
 assert manifest["master_order"][-1] == "APT_EDGE"

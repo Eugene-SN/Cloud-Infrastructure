@@ -22,9 +22,9 @@ Current accepted checkpoint:
 
 `Stage 7 — Edge Maintenance & Update — IN PROGRESS`.
 
-Stage 0 through Stage 6 are complete and accepted. Stage 7A is complete and accepted; Stage 7B is in progress. Current markers include `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS`, `STAGE4_FINAL_ACCEPTANCE=PASS`, `STAGE05_FINAL_ACCEPTANCE=PASS`, `STAGE06_FINAL_ACCEPTANCE=PASS`, `STAGE07A_READONLY_DASHBOARD_SEMAPHORE_E2E=PASS`, and `STAGE07_UPDATE_ROOT_REDIRECT_FIX=PASS`.
+Stage 0 through Stage 6 are complete and accepted. Stage 7A and Stage 7B are complete and accepted; Stage 7 remains in progress pending Stage 7C closure. Current markers include `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS`, `STAGE4_FINAL_ACCEPTANCE=PASS`, `STAGE05_FINAL_ACCEPTANCE=PASS`, `STAGE06_FINAL_ACCEPTANCE=PASS`, `STAGE07A_READONLY_DASHBOARD_SEMAPHORE_E2E=PASS`, `STAGE07B_MANUAL_ONLY_CLEANUP=PASS`, and `STAGE07_UPDATE_ROOT_REDIRECT_FIX=PASS`.
 
-Current canonical work is `Stage 7B — Edge Update Drivers & Recovery`. Use `CURRENT_STATE.md` for confirmed runtime, `IMPLEMENTATION_PHASES.md` for the authoritative roadmap/substage scope, and the latest applicable ACCEPTED entries/records for supersession.
+Current canonical work is `Stage 7C — Codex: adapt update.escloud.us`. Use `CURRENT_STATE.md` for confirmed runtime, `IMPLEMENTATION_PHASES.md` for the authoritative roadmap/substage scope, and the latest applicable ACCEPTED entries/records for supersession.
 
 Do not duplicate mutable stage chronology in this file. `AGENTS.md` should contain durable cross-agent rules; volatile progress belongs in `CURRENT_STATE.md` and `IMPLEMENTATION_PHASES.md`.
 

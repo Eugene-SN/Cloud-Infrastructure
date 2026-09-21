@@ -8,28 +8,12 @@
   gather_facts: false
 
   tasks:
-    - name: Run read-only edge version collector
+    - name: Run canonical read-only maintenance refresh pipeline
       ansible.builtin.command:
         argv:
           - sudo
           - -n
-          - /opt/edge-maintenance/scripts/maintenance-versions-collector
-      register: version_monitor
-      changed_when: false
-
-    - name: Render component status cache
-      ansible.builtin.command:
-        cmd: /usr/local/bin/maintenance-status-render
-        stdin: "{{ version_monitor.stdout }}"
-      register: dashboard_render
-      changed_when: false
-
-    - name: Build read-only maintenance target cache
-      ansible.builtin.command:
-        argv:
-          - sudo
-          - -n
-          - /opt/edge-maintenance/scripts/maintenance-targets-refresh
+          - /opt/edge-maintenance/scripts/maintenance-refresh
       register: maintenance_refresh
       changed_when: false
 

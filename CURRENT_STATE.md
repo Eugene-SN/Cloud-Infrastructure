@@ -15,7 +15,7 @@
 **Stage 6 — Edge Backrest & Recovery — COMPLETE / ACCEPTED**  
 **Stage 7 — Edge Maintenance & Update — IN PROGRESS**  
 **Stage 7A — Home Maintenance Framework Port — COMPLETE / ACCEPTED**  
-**Stage 7B — Edge Update Drivers & Recovery — IN PROGRESS**
+**Stage 7B — Edge Update Drivers & Recovery — COMPLETE / ACCEPTED**
 
 `EDGE_STAGE2_FINAL_INTEGRATED_ACCEPTANCE=PASS` on 2026-09-17.  
 `CLOUD_STAGE_02_5_FINAL_SCOPE_ACCEPTANCE=PASS` on 2026-09-18.  
@@ -29,6 +29,7 @@
 `STAGE07_UPDATE_ROOT_REDIRECT_FIX=PASS` on 2026-09-21.
 `STAGE07_SEMAPHORE_SAME_ORIGIN_UI=PASS` on 2026-09-21.
 `STAGE07_OPS_HOSTNAME_RETIREMENT=PASS` on 2026-09-21.
+`STAGE07B_MANUAL_ONLY_CLEANUP=PASS` on 2026-09-21.
 
 `STAGE4F_STABLE_DOCKER_BRIDGE_HARDENING=PASS` on 2026-09-19.
 
@@ -167,15 +168,15 @@ Stage 7 same-origin Semaphore UI record: `STAGE_07_SEMAPHORE_SAME_ORIGIN_UI_2026
 
 Stage 7 retired-hostname cleanup record: `STAGE_07_OPS_HOSTNAME_RETIREMENT_2026-09-21.md`.
 
-Stage 7B implementation checkpoint (not production acceptance):
+Stage 7B accepted deployment:
 - the repository and edge runtime now contain maintained dashboard, schema-v3 status/target renderers, a fixed 16-unit driver manifest, 16 per-unit playbooks, one Master Batch playbook and fail-closed dispatchers;
-- Semaphore project 1 contains Refresh plus 16 `[LOCKED]` per-unit templates (IDs `2..17`) and one `[LOCKED]` Master Batch template (ID `18`);
-- dashboard `actions.json` is now in explicit manual-acceptance mode: `read_only=false`, component template IDs `2..17`, and all 16 individual drivers are selectable only when their status is `UPDATE_AVAILABLE`;
-- `/etc/edge-maintenance/manual-driver-enablement.json` enables exactly the 16 fixed individual targets; unknown targets still fail closed; `master=false` and `master_template_id=null` keep Master Batch disabled;
+- Semaphore project 1 contains Refresh plus 16 executable per-unit templates (IDs `2..17`) and executable manual Master Batch template `18`;
+- generated dashboard `actions.json` has `read_only=false`, component template IDs `2..17`, executable Master template `18`, and exposes an action only when the corresponding status permits it;
+- `/etc/edge-maintenance/manual-driver-enablement.json` enables exactly the 16 fixed individual targets and Master; unknown or incomplete target sets still fail closed;
 - Docker application version, configured image track, running digest, remote digest and update reason are separate fields; current runtime probes report PostgreSQL `18.6`, Stalwart `0.16.22` and Mattermost `11.11.0` rather than their movable tags;
-- read-only verification passes exactly 16 update units / 23 monitored components / 8 non-actionable APT children; no update schedules, timers or cron launchers exist;
-- no update driver or Master Batch has been executed and no production component was updated by the implementation task;
-- the first operator-triggered individual run from `update.escloud.us` is the runtime acceptance for that driver; Stage 7B and Stage 7 remain IN PROGRESS.
+- read-only verification passes exactly 16 update units / 23 monitored components / 8 non-actionable APT children; no Semaphore schedules or autonomous APT/update launchers exist;
+- operator-triggered Master Batch Task 12 completed runtime acceptance with exact-plan dispatch, clean post-scan and full health gates;
+- the first operator-triggered individual run from `update.escloud.us` remains the runtime acceptance for a driver that has not yet encountered a real available update; this does not reopen the accepted Stage 7B framework.
 
 Implementation/deployment checkpoint: `STAGE_07B_DRIVER_SCAFFOLD_DEPLOYMENT_2026-09-21.md`.
 
@@ -442,15 +443,15 @@ Current accepted/deployed state:
 - controlled ai-node-ai-state local/D5 verification passed: `6be74a98...` -> `ea798442...`;
 - dedicated Knowledge policies remain unchanged;
 - no recurring edge full/bare-metal Restic chain is planned;
-- a separate CloudCLI runtime drift remains known: `cloudcli.service` is restart-looping because `/srv/ai-workspace` is absent. It is not classified as a Backrest deployment failure and must be reconciled before final Stage 6 non-regression acceptance.
+- the former CloudCLI workspace drift is resolved: `/srv/ai-workspace` exists as `core:core 0755`, and the system `cloudcli.service` is enabled, active/running with `NRestarts=0`.
 
 Acceptance record: `STAGE_06_7_FINAL_ACCEPTANCE_2026-09-21.md`.
 Final Stage 6 acceptance record: `STAGE_06_FINAL_ACCEPTANCE_2026-09-21.md`.
 
 ## Current next step
 
-Stage 7 is IN PROGRESS. Stage 7A is COMPLETE / ACCEPTED; Stage 7B remains in
-controlled runtime acceptance.
+Stage 7 is IN PROGRESS. Stage 7A and Stage 7B are COMPLETE / ACCEPTED; Stage 7C
+formal dashboard-adaptation closure is next.
 
 Current Stage 7B runtime checkpoint:
 
@@ -458,9 +459,19 @@ Current Stage 7B runtime checkpoint:
 - Semaphore individual templates: IDs `2–17`; manual Master Batch: template `18`;
 - Master Batch runtime acceptance is complete: operator-triggered Task 12 finished `success`, executed the single pending PostgreSQL update, skipped 15 CURRENT targets, and ended with `MASTER_POST_SCAN_GATE=PASS`, `CURRENT=16`, `UPDATE_AVAILABLE=0`, `CHECK_FAILED=0`, `REBOOT_REQUIRED=0`, plus `MASTER_HEALTH_GATE=PASS`;
 - no Semaphore schedules exist; the accepted Stage 7 launch surface remains `update.escloud.us`;
-- Stage 7B is still IN PROGRESS because host-level Ubuntu unattended upgrades are enabled and logs prove autonomous package upgrades occurred outside the maintenance page, violating the accepted manual-only update rule;
+- autonomous APT execution is closed: a canonical late-sorting APT policy sets every periodic action to `0`, and `apt-daily*` plus `unattended-upgrades.service` are masked/inactive; explicit Maintenance `APT_EDGE` execution remains available;
 - the former stale `/opt/edge-maintenance/dashboard/actions.json` copy is removed;
   `/var/www/maintenance-status/actions.json` is now the only runtime artifact and
   is atomically generated on every Refresh from `update-units.json`, the exact
   Semaphore template mapping and the root-owned manual enablement registry;
 - individual drivers that have never performed a real update still require their own runtime acceptance when an update is actually available.
+
+Stage 7B final cleanup removed inactive `/opt` deployment payload, the duplicate
+status renderer, test artifacts, bytecode caches, one anonymous Docker volume
+and all unused Docker images. Docker reclaimed approximately 2.39 GB. The old
+Stage 4 scratch worktree is retained only as a verified recovery archive under
+`/srv/backups`; Semaphore-managed checkouts and intentional rollback backups
+remain untouched. Final read-only Refresh, contract tests, nginx validation,
+service health and the Master health gate all pass.
+
+Acceptance record: `STAGE_07B_MANUAL_ONLY_CLEANUP_ACCEPTANCE_2026-09-21.md`.
