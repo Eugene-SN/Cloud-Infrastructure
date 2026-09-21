@@ -105,6 +105,12 @@ release versions such as `v0.21.3`, while installed and upstream Git refs remain
 machine-readable and determine whether a same-version code refresh is
 available. A ref-only change never appears as a fabricated version transition.
 
+Docker registry snapshots reuse the last successful result for 30 minutes and
+fall back to it when a registry probe fails. Repeated operator Refresh actions
+therefore do not consume Docker Hub's anonymous pull quota and cannot starve a
+subsequent manual image pull; local runtime versions and digests are still read
+on every refresh.
+
 The root allowlist is `/etc/edge-maintenance/manual-driver-enablement.json` and
 contains exactly the 16 fixed targets. Master Batch remains disabled
 (`master=false`, `master_template_id=null`) pending individual acceptance.

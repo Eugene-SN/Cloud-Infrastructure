@@ -209,9 +209,40 @@ docker_local_digest() {
       sed -n "s#^${repository}@##p" | head -n1
 }
 
+docker_cached_remote_snapshot() {
+    component="$1"
+    max_age="$2"
+    cache="${EDGE_MAINTENANCE_STATUS_CACHE:-/var/www/maintenance-status/status.json}"
+
+    python3 - "$cache" "$component" "$max_age" <<'PY'
+import datetime, json, pathlib, sys
+path, component, max_age_raw = sys.argv[1:]
+try:
+    data = json.loads(pathlib.Path(path).read_text(encoding="utf-8"))
+    max_age = int(max_age_raw)
+    stamp = datetime.datetime.fromisoformat(str(data["generated_at"]).replace("Z", "+00:00"))
+    age = (datetime.datetime.now(datetime.timezone.utc) - stamp).total_seconds()
+    if max_age >= 0 and age > max_age:
+        raise SystemExit(0)
+    row = next(item for item in data.get("rows", []) if item.get("COMPONENT") == component)
+    digest = str(row.get("REMOTE_DIGEST") or "")
+    version = str(row.get("AVAILABLE_VERSION") or "")
+    if digest.startswith("sha256:"):
+        print(digest + "|" + ("" if version == "-" else version))
+except Exception:
+    pass
+PY
+}
+
 docker_remote_snapshot() {
     image="$1"
     component="$2"
+
+    cached="$(docker_cached_remote_snapshot "$component" 1800)"
+    if test -n "$cached"; then
+        printf '%s' "$cached"
+        return
+    fi
 
     raw="$(
         docker buildx imagetools inspect "$image" \
@@ -219,7 +250,7 @@ docker_remote_snapshot() {
           2>/dev/null || true
     )"
 
-    printf '%s' "$raw" | python3 -c '
+    snapshot="$(printf '%s' "$raw" | python3 -c '
 import json, sys
 component=sys.argv[1]
 raw=sys.stdin.read().strip()
@@ -265,7 +296,13 @@ if isinstance(digest,str) and digest.startswith("sha256:"):
     if component == "STALWART":
         versions.clear()
     print(digest + "|" + (versions[0] if versions else ""))
-' "$component"
+' "$component")"
+
+    if test -n "$snapshot"; then
+        printf '%s' "$snapshot"
+    else
+        docker_cached_remote_snapshot "$component" -1
+    fi
 }
 
 emit_docker_component() {
@@ -299,7 +336,10 @@ emit_docker_component() {
     test -n "$remote_version" || remote_version="-"
 
     if test "$component" = "STALWART"; then
-        remote_version="$(github_latest_series stalwartlabs/stalwart 0.16)"
+        stalwart_release="$(github_latest_series stalwartlabs/stalwart 0.16)"
+        if test -n "$stalwart_release"; then
+            remote_version="$stalwart_release"
+        fi
         test -n "$remote_version" || remote_version="-"
     fi
 
