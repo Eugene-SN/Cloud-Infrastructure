@@ -12,7 +12,8 @@
 **Stage 05.2 — PVE Canonical Obsidian Runtime & WebUI — COMPLETE / ACCEPTED**  
 **Stage 05.3 — Edge Knowledge Replication & Data Integration — COMPLETE / ACCEPTED**  
 **Stage 5 — Knowledge Fabric Runtime Deployment — COMPLETE / ACCEPTED**
-**Stage 6 — Edge Backrest & Recovery — COMPLETE / ACCEPTED**
+**Stage 6 — Edge Backrest & Recovery — COMPLETE / ACCEPTED**  
+**Stage 7 — Edge Maintenance & Update — IN PROGRESS**
 
 `EDGE_STAGE2_FINAL_INTEGRATED_ACCEPTANCE=PASS` on 2026-09-17.  
 `CLOUD_STAGE_02_5_FINAL_SCOPE_ACCEPTANCE=PASS` on 2026-09-18.  
