@@ -448,7 +448,7 @@ Authoritative implementation principle:
 Stage decomposition:
 
 - **Stage 7A — Home Maintenance Framework Port — COMPLETE / ACCEPTED:** Semaphore, Home-derived read-only framework/state cache and copied dashboard baseline are deployed and accepted. The dashboard → Semaphore → canonical GitHub refresh playbook → local collector/cache → dashboard E2E passed with no production update mutation.
-- **Stage 7B — Edge Update Drivers & Recovery — NEXT:** replace the read-only action surface with accepted edge-specific update drivers, implement individual manual updates, Master Batch behavior, health/failure/recovery handling and controlled update/recovery acceptance.
+- **Stage 7B — Edge Update Drivers & Recovery — NEXT:** replace the read-only action surface with accepted edge-specific update drivers, implement individual manual updates, Master Batch behavior, health/failure/recovery handling and controlled update/recovery acceptance. Every real update, including acceptance-test execution, must be started manually by the operator from `update.escloud.us`; no timers, cron, systemd update services, background update daemons, unattended/scheduled update jobs or other autonomous launch path are permitted.
 - **Stage 7C — Codex: adapt `update.escloud.us`:** begin from the copied Home Maintenance dashboard implementation and refine it for Cloud/edge targets and presentation. This is an adaptation/refinement substage, not a greenfield frontend build.
 
 `update.escloud.us` remains separate from `app.escloud.us`.
