@@ -452,22 +452,12 @@ Final Stage 6 acceptance record: `STAGE_06_FINAL_ACCEPTANCE_2026-09-21.md`.
 Stage 7 is IN PROGRESS. Stage 7A is COMPLETE / ACCEPTED; Stage 7B remains in
 controlled runtime acceptance.
 
-Current Stage 7B Master Batch candidate:
+Current Stage 7B runtime checkpoint:
 
-- canonical source revision `54027cd40435415531c2efd537045111d83ea232`;
-- Semaphore template ID `18`, `90. Master Batch — Edge Maintenance`, with zero
-  runs at activation;
-- exactly 16 fixed update units and 23 monitored components;
-- fixed order with `APT_EDGE` last;
-- Semaphore self-update is individual-only and blocks Master before mutation
-  when an update is pending;
-- fresh-cache, exact-target, summary and no-pending-reboot precheck;
-- sequential dispatch with `CURRENT` skips and isolated target-failure capture;
-- mandatory post-scan, no-pending-reboot, service/container/data-health gates;
-- manual-only launch from `update.escloud.us`; no schedule or automatic launcher.
-
-Activation verification performed no production update. The fresh read-only scan
-reported `CURRENT=10`, `UPDATE_AVAILABLE=6`, `CHECK_FAILED=0`,
-`REBOOT_REQUIRED=0`; `MASTER_PLAN_ONLY=PASS` and `MASTER_HEALTH_GATE=PASS`.
-The first operator-triggered Master run and its post-run evidence are still
-required before runtime acceptance may be claimed.
+- maintenance model: `update_units_v3`, exactly 16 update units / 23 monitored components;
+- Semaphore individual templates: IDs `2–17`; manual Master Batch: template `18`;
+- Master Batch runtime acceptance is complete: operator-triggered Task 12 finished `success`, executed the single pending PostgreSQL update, skipped 15 CURRENT targets, and ended with `MASTER_POST_SCAN_GATE=PASS`, `CURRENT=16`, `UPDATE_AVAILABLE=0`, `CHECK_FAILED=0`, `REBOOT_REQUIRED=0`, plus `MASTER_HEALTH_GATE=PASS`;
+- no Semaphore schedules exist; the accepted Stage 7 launch surface remains `update.escloud.us`;
+- Stage 7B is still IN PROGRESS because host-level Ubuntu unattended upgrades are enabled and logs prove autonomous package upgrades occurred outside the maintenance page, violating the accepted manual-only update rule;
+- runtime also contains a stale `/opt/edge-maintenance/dashboard/actions.json` copy while the deployed `/var/www/maintenance-status/actions.json` and canonical repository expose the accepted Master template;
+- individual drivers that have never performed a real update still require their own runtime acceptance when an update is actually available.
