@@ -503,7 +503,13 @@ Backrest using Restic remains the accepted Cloud backup-management direction. Re
 
 ## Stage 7 — Maintenance & Update
 
-Semaphore is the accepted operational execution product. `update.escloud.us` is a separate UI built in a dedicated Codex substage after the real backend contract exists.
+Semaphore remains the accepted operational execution product. The implementation baseline is the already accepted Home Maintenance runtime on CT1000: preserve its proven Semaphore + Ansible/native-script separation, version/status collection and cache, fixed-target dispatch, component-specific update drivers, post-update refresh/acceptance flow, and dashboard contract wherever applicable.
+
+Do not create an independent edge maintenance framework unless a concrete incompatibility is demonstrated. Port/adapt the live Home implementation, while replacing Home/PVE-specific inventory, VMID/PCT/QGA logic, target definitions, collectors and drivers with edge-specific equivalents. Home credentials and controller-specific state are not portable implementation content.
+
+`update.escloud.us` starts from an adapted copy of the existing Home Maintenance dashboard source and status/action contract. Stage 7C refines that copied UI for Cloud/edge targets; it is not a greenfield frontend build. `update.escloud.us` remains separate from `app.escloud.us`.
+
+Stage 7A first proves the ported framework in read-only version/status mode. Stage 7B adds and accepts real edge component update drivers and Master Batch behavior.
 
 ## Stage 8 — Monitoring, Heartbeats & Alerts
 
