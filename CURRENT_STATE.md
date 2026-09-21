@@ -167,6 +167,18 @@ Stage 7 same-origin Semaphore UI record: `STAGE_07_SEMAPHORE_SAME_ORIGIN_UI_2026
 
 Stage 7 retired-hostname cleanup record: `STAGE_07_OPS_HOSTNAME_RETIREMENT_2026-09-21.md`.
 
+Stage 7B implementation checkpoint (not production acceptance):
+- the repository and edge runtime now contain maintained dashboard, schema-v3 status/target renderers, a fixed 16-unit driver manifest, 16 per-unit playbooks, one Master Batch playbook and fail-closed dispatchers;
+- Semaphore project 1 contains Refresh plus 16 `[LOCKED]` per-unit templates (IDs `2..17`) and one `[LOCKED]` Master Batch template (ID `18`);
+- dashboard `actions.json` remains `read_only=true`, all 16 component `template_id` values remain null, `master_template_id` remains null and every driver is `acceptance_pending`;
+- `/etc/edge-maintenance/driver-acceptance.json` is intentionally absent, so direct Semaphore launches also fail closed before mutation;
+- Docker application version, configured image track, running digest, remote digest and update reason are separate fields; current runtime probes report PostgreSQL `18.6`, Stalwart `0.16.22` and Mattermost `11.11.0` rather than their movable tags;
+- read-only verification passes exactly 16 update units / 23 monitored components / 8 non-actionable APT children; no update schedules, timers or cron launchers exist;
+- no update driver or Master Batch was executed and no production component was updated;
+- every candidate driver still requires separate manual acceptance from `update.escloud.us`; Stage 7B and Stage 7 remain IN PROGRESS.
+
+Implementation/deployment checkpoint: `STAGE_07B_DRIVER_SCAFFOLD_DEPLOYMENT_2026-09-21.md`.
+
 ## Host / foundation
 
 - logical node/FQDN: `edge.escloud.us`;

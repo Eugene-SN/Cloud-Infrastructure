@@ -1349,3 +1349,20 @@ Authoritative record:
 **Evidence:** `STAGE_07_OPS_HOSTNAME_RETIREMENT_2026-09-21.md`.
 
 **Supersedes:** the residual certificate/DNS-cleanup state recorded immediately after same-origin Semaphore acceptance. The historical reason for the candidate name remains documented; current edge architecture contains no such endpoint.
+
+## 2026-09-21 — Stage 7B fail-closed driver and template lifecycle
+
+**Status:** ACCEPTED DESIGN / DEPLOYED CANDIDATES; RUNTIME DRIVER ACCEPTANCE PENDING
+
+**Context:** Edge Semaphore had only the read-only Refresh template. CT1000 demonstrates the required fixed-target, per-component template, fresh-cache, sequential batch and post-refresh pattern. Edge additionally needs to preserve the accepted rule that no real update runs before the operator manually accepts that exact driver through `update.escloud.us`.
+
+**Decision:**
+- maintain exactly 16 fixed update-unit driver entries and expose one Semaphore template for each unit plus a separate Master Batch template;
+- label all unaccepted Semaphore templates `[LOCKED]` and keep all dashboard action IDs null while acceptance is pending;
+- enforce the boundary again below the UI: a root dispatcher reads `/etc/edge-maintenance/driver-acceptance.json`, rejects an absent/malformed registry and requires an explicit Boolean acceptance for the exact fixed target;
+- keep a separate `master` gate for Master Batch, validate a maximum five-minute status-cache age, execute the fixed plan sequentially, isolate/report target failures and refresh status after the run;
+- represent Docker runtime/application version independently from repository, track/tag and running/remote digest; a digest-only change is `IMAGE_DIGEST_UPDATE`, never a fabricated version transition;
+- retain the eight APT-managed components exclusively as non-actionable details of `APT_EDGE`;
+- create no timer, schedule, cron entry, updater daemon or alternative launch surface.
+
+**Current boundary:** candidate code and locked templates are deployed, but no per-driver runtime acceptance has occurred. This decision does not authorize or claim any production update.
