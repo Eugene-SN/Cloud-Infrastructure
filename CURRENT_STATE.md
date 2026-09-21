@@ -13,9 +13,10 @@
 **Stage 05.3 — Edge Knowledge Replication & Data Integration — COMPLETE / ACCEPTED**  
 **Stage 5 — Knowledge Fabric Runtime Deployment — COMPLETE / ACCEPTED**
 **Stage 6 — Edge Backrest & Recovery — COMPLETE / ACCEPTED**  
-**Stage 7 — Edge Maintenance & Update — IN PROGRESS**  
+**Stage 7 — Edge Maintenance & Update — COMPLETE / ACCEPTED**  
 **Stage 7A — Home Maintenance Framework Port — COMPLETE / ACCEPTED**  
-**Stage 7B — Edge Update Drivers & Recovery — COMPLETE / ACCEPTED**
+**Stage 7B — Edge Update Drivers & Recovery — COMPLETE / ACCEPTED**  
+**Stage 7C — update.escloud.us Dashboard Adaptation — COMPLETE / ACCEPTED**
 
 `EDGE_STAGE2_FINAL_INTEGRATED_ACCEPTANCE=PASS` on 2026-09-17.  
 `CLOUD_STAGE_02_5_FINAL_SCOPE_ACCEPTANCE=PASS` on 2026-09-18.  
@@ -29,7 +30,8 @@
 `STAGE07_UPDATE_ROOT_REDIRECT_FIX=PASS` on 2026-09-21.
 `STAGE07_SEMAPHORE_SAME_ORIGIN_UI=PASS` on 2026-09-21.
 `STAGE07_OPS_HOSTNAME_RETIREMENT=PASS` on 2026-09-21.
-`STAGE07B_MANUAL_ONLY_CLEANUP=PASS` on 2026-09-21.
+`STAGE07B_MANUAL_ONLY_CLEANUP=PASS` on 2026-09-21.  
+`STAGE07_FINAL_ACCEPTANCE=PASS` on 2026-09-21.
 
 `STAGE4F_STABLE_DOCKER_BRIDGE_HARDENING=PASS` on 2026-09-19.
 
@@ -125,13 +127,12 @@ Acceptance markers:
 
 ## Final remaining roadmap
 
-Stages 5 and 6 are complete and accepted. The current finite infrastructure stage is Stage 7.
+Stages 5, 6 and 7 are complete and accepted. The current finite infrastructure stage is Stage 8.
 
-1. **Stage 7 — Edge Maintenance & Update**, including separate Codex `update.escloud.us` substage;
-2. **Stage 8 — Edge Monitoring, Heartbeats & Alerts**;
-3. **Stage 9 — Edge Cloud Portal**, including separate Codex `app.escloud.us` substage;
-4. **Stage 10 — Edge Final Integrated Infrastructure Acceptance**;
-5. post-infrastructure **Automation & User Workflows** as a continuous workstream.
+1. **Stage 8 — Edge Monitoring, Heartbeats & Alerts**;
+2. **Stage 9 — Edge Cloud Portal**, including separate Codex `app.escloud.us` substage;
+3. **Stage 10 — Edge Final Integrated Infrastructure Acceptance**;
+4. post-infrastructure **Automation & User Workflows** as a continuous workstream.
 
 Backrest-before-Semaphore remains mandatory as a Stage sequencing and deployment/testing safety prerequisite: verified backup/restore must exist before maintenance tooling is deployed and exercised. It does not imply an automatic Backrest run before every production update. Per-update backups are component-specific only where justified by the actual update/recovery path. Monitoring remains late-stage so it is built once against the substantially complete inventory. `update.escloud.us` and `app.escloud.us` remain separate UI responsibilities.
 
@@ -450,28 +451,32 @@ Final Stage 6 acceptance record: `STAGE_06_FINAL_ACCEPTANCE_2026-09-21.md`.
 
 ## Current next step
 
-Stage 7 is IN PROGRESS. Stage 7A and Stage 7B are COMPLETE / ACCEPTED; Stage 7C
-formal dashboard-adaptation closure is next.
+Stage 7 — Edge Maintenance & Update — is **COMPLETE / ACCEPTED** with
+`STAGE07_FINAL_ACCEPTANCE=PASS`.
 
-Current Stage 7B runtime checkpoint:
+Final Stage 7 acceptance reused the accepted Stage 7A and Stage 7B evidence and
+closed Stage 7C with a fresh integrated read-only audit. The accepted runtime
+contract is:
 
-- maintenance model: `update_units_v3`, exactly 16 update units / 23 monitored components;
-- Semaphore individual templates: IDs `2–17`; manual Master Batch: template `18`;
-- Master Batch runtime acceptance is complete: operator-triggered Task 12 finished `success`, executed the single pending PostgreSQL update, skipped 15 CURRENT targets, and ended with `MASTER_POST_SCAN_GATE=PASS`, `CURRENT=16`, `UPDATE_AVAILABLE=0`, `CHECK_FAILED=0`, `REBOOT_REQUIRED=0`, plus `MASTER_HEALTH_GATE=PASS`;
-- no Semaphore schedules exist; the accepted Stage 7 launch surface remains `update.escloud.us`;
-- autonomous APT execution is closed: a canonical late-sorting APT policy sets every periodic action to `0`, and `apt-daily*` plus `unattended-upgrades.service` are masked/inactive; explicit Maintenance `APT_EDGE` execution remains available;
-- the former stale `/opt/edge-maintenance/dashboard/actions.json` copy is removed;
-  `/var/www/maintenance-status/actions.json` is now the only runtime artifact and
-  is atomically generated on every Refresh from `update-units.json`, the exact
-  Semaphore template mapping and the root-owned manual enablement registry;
-- individual drivers that have never performed a real update still require their own runtime acceptance when an update is actually available.
+- maintenance model `update_units_v3`: exactly 16 actionable update units / 23 monitored components / 8 non-actionable APT children;
+- Refresh template ID `1`, individual update templates `2–17`, manual Master Batch template `18`;
+- every real update remains manually initiated from `update.escloud.us`; Semaphore has zero schedules, no project update timer/cron launcher exists, and all Ubuntu periodic/unattended APT paths are masked/inactive with effective periodic values `0`;
+- the dashboard uses one generated runtime action artifact and the four accepted groups: System Packages, Native Applications, Docker Applications, and CLI & Agent Applications;
+- normalized `core` execution context is verified for Hermes, CloudCLI, Codex and Antigravity with cwd `/home/core`; all four preflights pass;
+- the final fresh scan resolved all 16 targets with `CHECK_FAILED=0` and `REBOOT_REQUIRED=0`; Hermes alone is `UPDATE_AVAILABLE` because its active lazy-dependency drift is now detected fail-closed and remains an ordinary next manual WebUI update, not an acceptance failure;
+- Docker application-version / track / digest semantics remain valid;
+- operator-triggered Master Batch Task 12 remains accepted with clean post-scan and health gates;
+- public `update.escloud.us`, Authelia boundary, same-origin Semaphore API/UI, nginx, system/user services, Docker workloads and failed-unit gate all pass.
 
-Stage 7B final cleanup removed inactive `/opt` deployment payload, the duplicate
-status renderer, test artifacts, bytecode caches, one anonymous Docker volume
-and all unused Docker images. Docker reclaimed approximately 2.39 GB. The old
-Stage 4 scratch worktree is retained only as a verified recovery archive under
-`/srv/backups`; Semaphore-managed checkouts and intentional rollback backups
-remain untouched. Final read-only Refresh, contract tests, nginx validation,
-service health and the Master health gate all pass.
+Final acceptance record: `STAGE_07_FINAL_ACCEPTANCE_2026-09-21.md`.
 
-Acceptance record: `STAGE_07B_MANUAL_ONLY_CLEANUP_ACCEPTANCE_2026-09-21.md`.
+**Repository implementation-source note:** the final runtime audit proves the
+normalized `user_cli` execution behavior and Hermes fail-closed lazy-dependency
+behavior currently deployed on edge. The maintenance implementation source on
+the current repository snapshot still predates those two final Codex runtime
+changes. Treat the verified runtime as authoritative and do not redeploy the
+older repository copy over it until that source drift is reconciled. This does
+not reopen Stage 7 runtime acceptance.
+
+The next finite infrastructure stage is **Stage 8 — Edge Monitoring, Heartbeats
+& Alerts**.

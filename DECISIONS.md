@@ -1511,3 +1511,48 @@ recorded after Master Batch and generated-action acceptance. Stage 7B is now
 COMPLETE / ACCEPTED. Individual drivers that have not yet encountered a real
 available update retain their first-update runtime acceptance obligation without
 reopening the framework.
+
+## 2026-09-21 — Stage 7 final integrated acceptance
+
+**Status:** COMPLETE / ACCEPTED
+
+**Context:** Stage 7A and Stage 7B were already accepted. The final Stage 7
+closure reused that evidence and performed one bounded integrated read-only
+acceptance of the deployed Stage 7C dashboard and current maintenance runtime.
+
+**Decision:**
+- accept Stage 7 — Edge Maintenance & Update — as COMPLETE / ACCEPTED;
+- accept Stage 7C dashboard adaptation as complete;
+- retain `update.escloud.us` as the only operator launch surface for real updates;
+- retain the CT1000-derived Master Batch contract: fresh scan, fixed 16-target
+  plan, CURRENT skips, update only UPDATE_AVAILABLE targets, failure isolation,
+  APT_EDGE last, complete post-scan and final health gates;
+- retain the 16 update units / 23 monitored components model and generated
+  action contract;
+- retain strict manual-only APT/update execution with no Semaphore schedules,
+  timers, cron launchers, unattended updates or background updater path;
+- retain normalized `/home/core` execution context for all `user_cli` targets;
+- treat the current Hermes active lazy-dependency drift as an ordinary pending
+  manual update because it is now detected fail-closed rather than masked as
+  success.
+
+**Final verification:** the final integrated audit passed every gate with RC=0:
+effective APT periodic settings all `0`; five Ubuntu periodic/unattended units
+masked/inactive; Semaphore schedules `0`; no persistent project update
+launcher; exact 16 component templates plus Master ID `18`; one generated
+`actions.json`; all four `user_cli` execution-context checks and preflights
+passed; fresh Refresh produced 15 CURRENT + Hermes UPDATE_AVAILABLE,
+`CHECK_FAILED=0`, `REBOOT_REQUIRED=0`; Stage 7C dashboard/JavaScript,
+loopback/public ingress and same-origin nginx contracts passed; accepted Master
+Task 12 evidence remained present; Master health, all production system/user
+services, six Docker workloads and failed-systemd-unit gate passed.
+
+**Acceptance marker:** `STAGE07_FINAL_ACCEPTANCE=PASS`.
+
+**Repository source note:** the accepted runtime contains the final normalized
+`user_cli` and Hermes lazy-dependency hardening proven by runtime evidence. The
+current repository implementation-source snapshot predates those two final Codex
+runtime changes. The runtime is authoritative until that source copy is
+reconciled; the stale source must not be redeployed over the accepted runtime.
+
+**Next:** Stage 8 — Edge Monitoring, Heartbeats & Alerts.

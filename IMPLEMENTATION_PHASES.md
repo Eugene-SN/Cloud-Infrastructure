@@ -1,6 +1,6 @@
 # Cloud Infrastructure — Accepted Implementation Phases
 
-**Status:** Stages 0–6 COMPLETE / ACCEPTED. Stage 7 is IN PROGRESS; Stage 7A and Stage 7B are COMPLETE / ACCEPTED, and Stage 7C closure is next.
+**Status:** Stages 0–7 COMPLETE / ACCEPTED. Stage 8 is the current finite infrastructure stage.
 
 This document is the canonical stage chronology for Cloud Infrastructure / `edge`.
 
@@ -429,7 +429,7 @@ Stage 6 final acceptance record: `STAGE_06_FINAL_ACCEPTANCE_2026-09-21.md`. Stag
 
 ## Stage 7 — Edge Maintenance & Update
 
-**Status:** IN PROGRESS.
+**Status:** COMPLETE / ACCEPTED.
 
 ### Stage label
 
@@ -449,7 +449,7 @@ Stage decomposition:
 
 - **Stage 7A — Home Maintenance Framework Port — COMPLETE / ACCEPTED:** Semaphore, Home-derived read-only framework/state cache and copied dashboard baseline are deployed and accepted. The dashboard → Semaphore → canonical GitHub refresh playbook → local collector/cache → dashboard E2E passed with no production update mutation.
 - **Stage 7B — Edge Update Drivers & Recovery — COMPLETE / ACCEPTED:** the edge-specific individual drivers, Master Batch behavior, health/failure/recovery handling, generated action contract and controlled update acceptance are deployed. Every real update remains operator-initiated from `update.escloud.us`; canonical APT policy and masked systemd paths enforce the absence of unattended/scheduled package updates.
-- **Stage 7C — Codex: adapt `update.escloud.us`:** begin from the copied Home Maintenance dashboard implementation and refine it for Cloud/edge targets and presentation. This is an adaptation/refinement substage, not a greenfield frontend build.
+- **Stage 7C — Codex: adapt `update.escloud.us` — COMPLETE / ACCEPTED:** the Home-derived dashboard is adapted for the single edge node, four lifecycle groups, generated action contract, individual/selected/Master manual actions and same-origin Semaphore integration. Final integrated read-only acceptance passed.
 
 `update.escloud.us` remains separate from `app.escloud.us`. It is the single Stage 7 operator origin: `/status/` is the custom maintenance dashboard and `/project/1/history` is the full Semaphore UI. The former `ops.escloud.us` candidate has been removed from edge; its Cloudflare DNS record is pending manual operator deletion.
 
@@ -464,6 +464,13 @@ and masked/inactive systemd units. One atomic action artifact is generated on
 every Refresh from the canonical unit, template-mapping and enablement inputs.
 Inactive deployment duplicates and update residue were removed, followed by a
 passing Refresh, contract suite and Master health gate.
+
+Final Stage 7 acceptance: `STAGE07_FINAL_ACCEPTANCE=PASS`. The integrated
+read-only closure verified manual-only execution, zero autonomous launch paths,
+16/23 model integrity, normalized user CLI context, Stage 7C dashboard contract,
+Task 12 Master evidence, public ingress and production non-regression. Hermes
+remains one ordinary pending manual update because active lazy-dependency drift
+is detected fail-closed.
 
 ## Stage 8 — Edge Monitoring, Heartbeats & Alerts
 
@@ -527,12 +534,12 @@ Stage 3: **COMPLETE / ACCEPTED**.
 Stage 4: **COMPLETE / ACCEPTED**. `STAGE4_FINAL_ACCEPTANCE=PASS`.
 Stage 5: **COMPLETE / ACCEPTED**. `STAGE05_FINAL_ACCEPTANCE=PASS`.
 Stage 6: **COMPLETE / ACCEPTED**. `STAGE06_FINAL_ACCEPTANCE=PASS`.
-Stage 7: **IN PROGRESS**. Stage 7A and Stage 7B are COMPLETE / ACCEPTED; Stage 7C closure is next.
+Stage 7: **COMPLETE / ACCEPTED**. `STAGE07_FINAL_ACCEPTANCE=PASS`.
 
 Current accepted checkpoint on `main`:
 
-`Stage 7A — Home Maintenance Framework Port — COMPLETE / ACCEPTED`
+`Stage 7 — Edge Maintenance & Update — COMPLETE / ACCEPTED`
 
 ## Current finite infrastructure stage
 
-Stage 7 — Edge Maintenance & Update — is in progress. Continue with formal Stage 7C dashboard-adaptation closure under the accepted manual-execution boundary; every real update must be initiated by the operator from `update.escloud.us`.
+Stage 8 — Edge Monitoring, Heartbeats & Alerts — is next. Begin with a Stage 8 requirements/current-baseline review and preserve the accepted Stage 7 maintenance/manual-execution contract.
