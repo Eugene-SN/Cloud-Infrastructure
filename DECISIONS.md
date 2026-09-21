@@ -1221,3 +1221,26 @@ Authoritative record:
 
 **Supersedes:** prior Stage 7 wording that implied an independent new maintenance framework or a greenfield `update.escloud.us` frontend.
 
+## 2026-09-21 — Stage 7A read-only framework final acceptance
+
+**Status:** ACCEPTED
+
+**Context:** The Home-derived maintenance framework has completed deployment, recovery and full read-only E2E testing on edge.
+
+**Decision:**
+- Stage 7A — Home Maintenance Framework Port is COMPLETE / ACCEPTED.
+- Retain Semaphore as a host-native loopback service with project `Edge Maintenance`.
+- Semaphore repository uses the canonical `Eugene-SN/Cloud-Infrastructure` repository on branch `main`.
+- The accepted Refresh template is ID `1` and executes `maintenance/edge/playbooks/semaphore-refresh.yml`.
+- The adapted Home dashboard remains loopback-only at the Stage 7A boundary; public `update.escloud.us` ingress remains deferred.
+- The action surface remains read-only: Refresh is allowed; component update templates, Master Batch and automatic updates remain disabled until Stage 7B explicitly accepts them.
+- Hysteria2 upstream tag namespace `app/` is normalized before version comparison.
+- The Stage 7A E2E path dashboard -> Semaphore -> canonical GitHub playbook -> local collectors/cache -> dashboard is accepted.
+- Stage 7A executed no real component update and passed production non-regression.
+
+**Acceptance marker:** `STAGE07A_READONLY_DASHBOARD_SEMAPHORE_E2E=PASS`.
+
+**Next:** Stage 7B — Edge Update Drivers & Recovery.
+
+**Supersedes:** Stage 7A deployment-checkpoint state that kept the substage IN PROGRESS pending dashboard/Semaphore E2E.
+
