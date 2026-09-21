@@ -1283,3 +1283,24 @@ Authoritative record:
 **Evidence:** `STAGE_07_UPDATE_INGRESS_REDIRECT_FIX_2026-09-21.md`.
 
 **Supersedes:** only the current-runtime implication that public `update.escloud.us` ingress remained deferred after the Stage 7A boundary. The Stage 7A acceptance record remains historically accurate.
+
+## 2026-09-21 — Stage 7B actionable update-unit model
+
+**Status:** ACCEPTED
+
+**Context:** The Stage 7A status surface intentionally exposed all monitored component versions, but the first Stage 7B UI review showed that this conflated version inventory with independently executable update units. In particular, nginx, Certbot, UFW, Docker Engine, Docker Compose, containerd, NetBird and Syncthing are APT-managed on edge and must not appear as separate component update actions when they are updated through the same system APT lifecycle.
+
+**Decision:**
+- preserve the full per-component version inventory and collector coverage;
+- separate monitored components from actionable update targets in the Stage 7B maintenance data/action model;
+- represent APT-managed nginx, Certbot, UFW, Docker Engine, Docker Compose, containerd, NetBird and Syncthing as read-only monitored details of the single actionable `APT_EDGE` update unit;
+- use four operator-facing groups: System Packages, Native Applications, Docker Applications, and CLI & Agent Applications;
+- independent actionable units are `APT_EDGE`; Xray, Hysteria2, Backrest, Restic and Semaphore; n8n, Authelia, Mattermost, PostgreSQL, Stalwart and Bulwark; Hermes, CloudCLI, Codex CLI and Antigravity CLI;
+- Master Batch and individual action dispatch must operate on update units, never on APT child components;
+- retain the existing Stage 7B manual-execution requirement: no real update may execute except by explicit operator action from `update.escloud.us`;
+- while the read-only boundary is still active, all update template IDs remain disabled/null and Master Batch remains disabled.
+
+**Constraint:** Do not reduce collector/version visibility merely to simplify the UI. Simplify the actionable model, not the monitored inventory.
+
+**Supersedes:** the Stage 7A provisional maintenance row model in which every monitored component was also represented as a peer maintenance target.
+
