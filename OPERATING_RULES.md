@@ -457,6 +457,14 @@ Use `/tmp` for temporary test/audit artifacts and remove them after the task unl
 
 Avoid restart/reboot unless actually required.
 
+## Stage 7 manual update execution
+
+- All real component updates and Master Batch executions must be initiated manually by the operator from `update.escloud.us`.
+- Do not create or enable update timers, cron jobs, systemd update services, background update daemons, unattended updates, scheduled update jobs, or any equivalent autonomous trigger.
+- Stage 7B acceptance tests follow the same rule: expose the driver in `update.escloud.us`, let the operator inspect it, and execute the test only through the operator's manual page action.
+- Semaphore is the backend executor/orchestrator only; it must not independently schedule or launch real updates.
+- Read-only status/version refresh may be invoked by the page as needed; it must not imply or chain into a real update.
+
 ## Project-specific design constraints
 
 - Single-operator personal infrastructure; avoid enterprise complexity without demonstrated use.
