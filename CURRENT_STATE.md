@@ -126,7 +126,7 @@ Stage 5 is complete and accepted. The next finite infrastructure stage is Stage 
 5. **Stage 10 — Edge Final Integrated Infrastructure Acceptance**;
 6. post-infrastructure **Automation & User Workflows** as a continuous workstream.
 
-Backrest-before-Semaphore remains mandatory. Monitoring remains late-stage so it is built once against the substantially complete inventory. `update.escloud.us` and `app.escloud.us` remain separate UI responsibilities.
+Backrest-before-Semaphore remains mandatory as a Stage sequencing and deployment/testing safety prerequisite: verified backup/restore must exist before maintenance tooling is deployed and exercised. It does not imply an automatic Backrest run before every production update. Per-update backups are component-specific only where justified by the actual update/recovery path. Monitoring remains late-stage so it is built once against the substantially complete inventory. `update.escloud.us` and `app.escloud.us` remain separate UI responsibilities.
 
 ## Host / foundation
 
