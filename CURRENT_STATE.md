@@ -459,5 +459,8 @@ Current Stage 7B runtime checkpoint:
 - Master Batch runtime acceptance is complete: operator-triggered Task 12 finished `success`, executed the single pending PostgreSQL update, skipped 15 CURRENT targets, and ended with `MASTER_POST_SCAN_GATE=PASS`, `CURRENT=16`, `UPDATE_AVAILABLE=0`, `CHECK_FAILED=0`, `REBOOT_REQUIRED=0`, plus `MASTER_HEALTH_GATE=PASS`;
 - no Semaphore schedules exist; the accepted Stage 7 launch surface remains `update.escloud.us`;
 - Stage 7B is still IN PROGRESS because host-level Ubuntu unattended upgrades are enabled and logs prove autonomous package upgrades occurred outside the maintenance page, violating the accepted manual-only update rule;
-- runtime also contains a stale `/opt/edge-maintenance/dashboard/actions.json` copy while the deployed `/var/www/maintenance-status/actions.json` and canonical repository expose the accepted Master template;
+- the former stale `/opt/edge-maintenance/dashboard/actions.json` copy is removed;
+  `/var/www/maintenance-status/actions.json` is now the only runtime artifact and
+  is atomically generated on every Refresh from `update-units.json`, the exact
+  Semaphore template mapping and the root-owned manual enablement registry;
 - individual drivers that have never performed a real update still require their own runtime acceptance when an update is actually available.

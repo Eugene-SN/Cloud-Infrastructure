@@ -1431,3 +1431,37 @@ remain required for runtime acceptance. Stage 7B remains IN PROGRESS.
 **Remaining Stage 7B blockers:** This acceptance does not complete Stage 7B. Runtime audit subsequently found that Ubuntu unattended upgrades are still enabled and have performed real package upgrades outside `update.escloud.us`, which conflicts with the already ACCEPTED Stage 7 manual-only execution rule. Runtime also has a stale `/opt/edge-maintenance/dashboard/actions.json` copy whose Master fields differ from the deployed/canonical action contract. These must be reconciled before final Stage 7B acceptance. Individual drivers that have never actually executed an update are not retroactively considered runtime-accepted merely because Master Batch itself is accepted.
 
 **Supersedes:** only the `OPERATOR RUNTIME ACCEPTANCE PENDING` boundary of the earlier Stage 7B CT1000-derived Master Batch activation entry.
+
+## 2026-09-21 — Single generated Edge action contract
+
+**Status:** ACCEPTED / DEPLOYED
+
+**Context:** Runtime contained two `actions.json` copies with different Master
+states. Only `/var/www/maintenance-status/actions.json` was consumed by the
+dashboard; `/opt/edge-maintenance/dashboard/actions.json` was a stale deployment
+copy and was not an authoritative input.
+
+**Decision:**
+- retain exactly one runtime action artifact at
+  `/var/www/maintenance-status/actions.json`;
+- generate it from `/opt/edge-maintenance/config/update-units.json`, the
+  canonical `semaphore-templates.json` mapping and
+  `/etc/edge-maintenance/manual-driver-enablement.json`;
+- require exact agreement across all 16 target IDs and exact component template
+  IDs `2..17`, Refresh ID `1` and Master ID `18`;
+- derive executable/acceptance-pending state from the root enablement registry;
+- atomically replace the generated artifact on every maintenance Refresh;
+- keep no `actions.json` source or runtime copy below
+  `/opt/edge-maintenance/dashboard`.
+
+**Verification:** enabled and locked synthetic contracts passed; incomplete
+enablement was rejected; live Semaphore mapping matched all 18 templates; a
+real read-only Refresh replaced the artifact atomically without semantic drift;
+the dashboard endpoint returned the expected 16 actions and executable Master;
+only one runtime `actions.json` remained; final maintenance contract and health
+gates passed.
+
+**Acceptance marker:** `ACTIONS_GENERATOR_RUNTIME_ACCEPTANCE=PASS`.
+
+**Supersedes:** the stale action-copy blocker recorded after Master Batch
+acceptance. The unattended-upgrade blocker remains separate and unresolved.

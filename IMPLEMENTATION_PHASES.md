@@ -461,8 +461,9 @@ acceptance. Task 12 finished successfully with one PostgreSQL driver execution,
 15 CURRENT skips, a clean 16/16 post-scan, no pending reboot, and all final
 health gates PASS. Stage 7B remains IN PROGRESS pending reconciliation of the
 host-level unattended-upgrade path with the accepted manual-only
-`update.escloud.us` execution rule and normalization of the stale runtime
-dashboard action-contract copy.
+`update.escloud.us` execution rule. The stale runtime dashboard action-contract
+copy is resolved: one atomic artifact is generated on every Refresh from the
+canonical unit, template-mapping and enablement inputs.
 
 ## Stage 8 — Edge Monitoring, Heartbeats & Alerts
 
