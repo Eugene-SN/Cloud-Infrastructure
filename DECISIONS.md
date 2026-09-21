@@ -1409,3 +1409,25 @@ revision `54027cd40435415531c2efd537045111d83ea232`.
 **Current boundary:** implementation and safe activation are complete, but the
 first operator-triggered Master task and its resulting update/recovery evidence
 remain required for runtime acceptance. Stage 7B remains IN PROGRESS.
+
+## 2026-09-21 — Stage 7B Master Batch runtime acceptance
+
+**Status:** ACCEPTED
+
+**Context:** The first operator-triggered Edge Master Batch task (Task 11) executed six planned drivers successfully but correctly failed final acceptance because two Edge integration defects remained: the Semaphore sudo allowlist lacked the final post-scan/health validators, and the PostgreSQL Compose service was not recreated after the accepted remote digest was pinned. The canonical implementation was corrected. A subsequent operator-triggered Master Batch task (Task 12) then ran from `update.escloud.us`.
+
+**Acceptance evidence:**
+- Task 12 / Semaphore template `18` completed with status `success`;
+- exact 16-target fresh-cache precheck passed with 15 CURRENT and one UPDATE_AVAILABLE target;
+- PostgreSQL was the only driver executed; the other 15 targets were correctly skipped as CURRENT;
+- dispatch completed with `TOTAL=16`, `RUN=1`, `SKIPPED_CURRENT=15`, `FAILED=0`;
+- post-refresh completed successfully;
+- `MASTER_POST_SCAN_GATE=PASS|TOTAL=16|CURRENT=16|UPDATE_AVAILABLE=0|CHECK_FAILED=0|REBOOT_REQUIRED=0`;
+- `MASTER_HEALTH_GATE=PASS|SYSTEM_SERVICES=10|USER_SERVICES=3|DOCKER_TARGETS=6|SQLITE_DATABASES=2|POSTGRES_READINESS=PASS`;
+- final Ansible result reported `MASTER_BATCH_RESULT=SUCCESS`.
+
+**Decision:** The CT1000-derived Edge Master Batch lifecycle and runtime execution path are accepted. Semaphore template `18` remains the manual-only Master Batch action, with the existing fixed-plan, cache, failure-isolation, post-scan and health-gate contract.
+
+**Remaining Stage 7B blockers:** This acceptance does not complete Stage 7B. Runtime audit subsequently found that Ubuntu unattended upgrades are still enabled and have performed real package upgrades outside `update.escloud.us`, which conflicts with the already ACCEPTED Stage 7 manual-only execution rule. Runtime also has a stale `/opt/edge-maintenance/dashboard/actions.json` copy whose Master fields differ from the deployed/canonical action contract. These must be reconciled before final Stage 7B acceptance. Individual drivers that have never actually executed an update are not retroactively considered runtime-accepted merely because Master Batch itself is accepted.
+
+**Supersedes:** only the `OPERATOR RUNTIME ACCEPTANCE PENDING` boundary of the earlier Stage 7B CT1000-derived Master Batch activation entry.
