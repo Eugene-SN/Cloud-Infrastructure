@@ -492,15 +492,21 @@ The deployed implementation is one persistent host-native Python `edge-monitor.s
 
 `09 — Edge Cloud Portal`
 
-Build `app.escloud.us` only after Stage 8 monitoring/status sources and the final service inventory are accepted.
+**Status: IN PROGRESS — architecture/deployment contract ACCEPTED.**
+
+`STAGE09_ARCHITECTURE_ACCEPTANCE=PASS`
+
+The accepted baseline is a static nginx-served `app.escloud.us` portal behind the existing Xray/shared-TLS/Authelia ingress. It consumes the accepted Stage 8 `/run/edge-monitor/snapshot.json` through a same-origin read-only `/api/status` location and adds no application backend, container, database or second monitoring collector.
 
 Dedicated Codex substage:
 
 **Stage 9C — Codex: build `app.escloud.us`**
 
-The portal is navigation plus concise infrastructure/status presentation. It does not absorb detailed maintenance/update controls from `update.escloud.us`.
+The portal provides navigation plus concise infrastructure/status presentation with explicit LIVE/STALE/UNAVAILABLE freshness. It may display read-only maintenance metadata and link to `update.escloud.us`, but it does not absorb detailed maintenance/update controls or any mutation API.
 
-Acceptance planning: verify authenticated access, actual service links, current status and explicit stale/unavailable-data presentation using the accepted Stage 8 sources.
+Architecture record: `STAGE_09_ARCHITECTURE_ACCEPTANCE_2026-09-22.md`.
+
+Acceptance planning: verify authenticated access, actual service links, current status, stale/unavailable-data presentation and production non-regression.
 
 ## Stage 10 — Edge Final Integrated Infrastructure Acceptance
 
