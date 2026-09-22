@@ -587,3 +587,10 @@ Stage 6 general backup architecture is intentionally simple and is now fully spe
 - Knowledge remains the only independent backup chain: `/srv/knowledge`, schedule `04/10/16/22`, rolling local `14d`, no D5 replication.
 
 The rejected rolling-180d D5 policy is not part of the architecture. Restore acceptance must exercise isolated application usability, not only repository integrity.
+
+
+## Accepted Stage 8 monitoring architecture
+
+Stage 8 uses a minimal edge-only monitoring runtime. A host-native systemd timer runs a short oneshot collector every five minutes. The collector reuses existing health/state sources for five domains: EDGE, APPLICATIONS, HOME_PAI, KNOWLEDGE and OPERATIONS. Current machine-readable state is written to `/var/lib/edge-monitor/status.json`; transition state is stored in `/var/lib/edge-monitor/state.json`; alerts go directly to Mattermost only on meaningful transitions and recovery.
+
+No persistent monitoring daemon, metrics/logging platform, monitoring database, separate monitoring WebUI, external uptime service, independent vantage point, or Home/PAI monitoring agent is part of the accepted current scope. Stage 7 version/update state is read as metadata rather than refreshed automatically by Stage 8. Backrest monitoring is freshness/result based. Full edge loss remains an accepted uncovered failure class in this edge-only design.
