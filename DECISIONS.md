@@ -1702,3 +1702,30 @@ reconciled; the stale source must not be redeployed over the accepted runtime.
 **Acceptance marker:** `STAGE09_ARCHITECTURE_ACCEPTANCE=PASS`.
 
 **Evidence / contract:** `STAGE_09_ARCHITECTURE_ACCEPTANCE_2026-09-22.md`.
+
+---
+
+## 2026-09-22T14:18:00+03:00 — Stage 9 final Cloud Portal acceptance
+
+**Status:** ACCEPTED
+
+**Decision:** Stage 9 — Edge Cloud Portal is COMPLETE / ACCEPTED.
+
+`STAGE09_FINAL_ACCEPTANCE=PASS`
+
+Accepted production baseline:
+
+- `https://app.escloud.us` is a dedicated authenticated static portal;
+- host nginx serves static files from `/var/www/app.escloud.us`;
+- existing Authelia `auth_request` protects both portal and same-origin `/api/status`;
+- `/api/status` reads the accepted Stage 8 `/run/edge-monitor/snapshot.json` directly;
+- frontend status freshness is LIVE / STALE (>30s) / UNAVAILABLE with 5-second polling;
+- Stage 8 remains the sole monitoring/state producer and Stage 7 remains the sole update execution plane;
+- portal navigation contains only real operator-facing services: Hermes, n8n, CloudCLI, Mattermost, Mail and Maintenance;
+- no backend service, container, database, daemon, SSE/WebSocket, second collector or update mutation API was introduced.
+
+Acceptance proved browser rendering, service/status presentation, LIVE/STALE/UNAVAILABLE behavior, byte-exact frontend restoration after fixture testing, ingress/auth correctness, Stage 8 non-regression and zero failed systemd units.
+
+**Evidence:** `STAGE_09_FINAL_ACCEPTANCE_2026-09-22.md`.
+
+**Roadmap effect:** Stage 10 — Edge Final Integrated Infrastructure Acceptance is next.
