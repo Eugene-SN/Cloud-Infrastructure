@@ -1859,3 +1859,22 @@ Mixing discovery and deployment of such omitted capabilities back into Stage 10 
 **Initial known gap:** legacy baseline records `cloud.escloud.us -> Filestash -> /srv/cloud`, while the rebuild intentionally did not restore that runtime and current canonical inventory previously described the file-access layer only as an unresolved future capability.
 
 **Supersedes:** the roadmap statement that Stage 10 necessarily completed all infrastructure scope and that user workflows should begin immediately afterward. It does not supersede `STAGE10_FINAL_ACCEPTANCE=PASS` for the accepted pre-Stage-11 baseline.
+
+
+---
+
+## 2026-09-22T17:20:00+03:00 — Stage 11 cloud-drive research shortlist narrowed
+
+**Status:** ACCEPTED
+
+**Context:** Stage 11 re-evaluated the missing `cloud.escloud.us` role. The target is a level-3 personal cloud-drive rather than a WebUI over the edge filesystem: native desktop/mobile clients, sync/offline access, public sharing, WebUI, API/WebDAV integration and future automation support. Direct POSIX access to cloud-owned storage is no longer a blocking requirement because project/runtime workspaces remain separate and cloud artifacts can use supported application integrations.
+
+**Decision:**
+
+1. Exclude OpenCloud from further Stage 11 product research for `cloud.escloud.us`.
+2. Treat Nextcloud as the primary candidate and continue detailed runtime, resource, auth, backup/recovery and integration audit against the existing `edge` architecture.
+3. Retain ownCloud Infinite Scale only as a fallback candidate if a concrete Nextcloud incompatibility, unacceptable resource cost or lifecycle constraint is demonstrated.
+4. Do not yet classify Nextcloud as the final selected/deployed product; final selection remains gated by the remaining Stage 11 audit.
+5. Canonical POSIX storage for cloud user data is optional rather than mandatory. Existing project/workspace data remains ordinary POSIX and may be exposed separately through SMB; cloud user data may be application-owned and accessed through native clients, WebDAV/API and supported integrations.
+
+**Supersedes:** the earlier Stage 11 research framing that treated OpenCloud as a co-equal finalist or collaborative PosixFS as a primary selection criterion.
