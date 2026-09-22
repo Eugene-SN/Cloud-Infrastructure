@@ -105,15 +105,15 @@ Final record: `STAGE_03_ACCEPTANCE_2026-09-18.md`.
 - `n8n.escloud.us` — live n8n;
 - `code.escloud.us` — live CloudCLI;
 - `mail.escloud.us` — live Stalwart + Bulwark;
-- `backup.escloud.us` — future Backrest management UI;
+- `backup.escloud.us` — PLANNED / DEFERRED: future ingress for the existing Backrest management UI; no new backup product;
 - `ops.escloud.us` — FULLY RETIRED; removed from edge runtime/configuration/certificate/recovery state on 2026-09-21 and public Cloudflare DNS A record confirmed absent during Stage 10;
 - `update.escloud.us` — LIVE maintenance dashboard and full Semaphore UI through Xray, host nginx and Authelia; `/` redirects to `/status/`, the Semaphore history UI is `/project/1/history`, and both backends remain loopback-only;
 - `app.escloud.us` — live Stage 9 Cloud Portal; static nginx + Authelia; same-origin read-only Stage 8 status
-- `docs.escloud.us` — reserved;
+- `docs.escloud.us` — DEFERRED UNTIL CONTENT READY: future WenTian Product Guide/Datasheet publishing site for EN/RU translated corpus;
 - `hermes.escloud.us` — LIVE accepted Hermes Dashboard/Remote Gateway; native self-hosted OIDC through Authelia; backend loopback-only;
 - `chat.escloud.us` — LIVE Mattermost human endpoint; core runtime and public nginx ingress accepted; native Mattermost authentication without Authelia;
-- `cloud.escloud.us` — RESERVED / STAGE 11 RECONCILIATION; legacy baseline had live Filestash on `127.0.0.1:18334` over `/srv/cloud`, but the clean rebuild did not restore that service; current replacement/need must be explicitly re-evaluated before user workflows;
-- `sync.escloud.us` — future synchronization layer; implementation unresolved;
+- `cloud.escloud.us` — STAGE 12 PLANNED: Nextcloud personal cloud-drive; accepted portable user dataset `/srv/cloud/files` with Nextcloud-specific state under `/srv/nextcloud`;
+- `sync.escloud.us` — RETIRED: legacy public Syncthing UI role; current Syncthing remains private Knowledge replication and Stage 12 Nextcloud owns end-user cloud sync;
 - `go.escloud.us` — retired.
 
 ### Private `.lan`
@@ -455,3 +455,27 @@ Preserved intentionally:
 - `pollinate` OS package.
 
 Measured root filesystem reclaim: `1,900,048,384` bytes (`1.77 GiB`). Post-clean root usage: approximately `22 GiB used / 133 GiB available / 14%`.
+
+
+## Stage 11 reconciled future work
+
+Authoritative record: `STAGE_11_RECONCILED_FUTURE_WORK_2026-09-22.md`.
+
+### Stage 12 planned filesystem access
+
+- Nextcloud personal cloud-drive at `cloud.escloud.us`;
+- canonical portable cloud user dataset `/srv/cloud/files`;
+- Nextcloud-specific state under `/srv/nextcloud`;
+- private SMB access to explicitly selected project/workspace POSIX directories;
+- SMB only through trusted/private connectivity, never public TCP/445;
+- `/srv/cloud/files` is not automatically exported through SMB.
+
+### Other future tasks
+
+- `backup.escloud.us`: publish existing Backrest WebUI through accepted ingress/auth;
+- `docs.escloud.us`: deploy only after a useful EN/RU translated WenTian Product Guide/Datasheet corpus exists.
+
+### Retired namespace
+
+- `go.escloud.us`: retired n8n legacy hostname; stale external DNS is operator cleanup;
+- `sync.escloud.us`: retired legacy public Syncthing hostname; stale runtime/TLS/DNS artifacts are Stage 11 cleanup targets.
