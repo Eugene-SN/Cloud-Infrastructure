@@ -16,7 +16,10 @@
 **Stage 7 — Edge Maintenance & Update — COMPLETE / ACCEPTED**  
 **Stage 7A — Home Maintenance Framework Port — COMPLETE / ACCEPTED**  
 **Stage 7B — Edge Update Drivers & Recovery — COMPLETE / ACCEPTED**  
-**Stage 7C — update.escloud.us Dashboard Adaptation — COMPLETE / ACCEPTED**
+**Stage 7C — update.escloud.us Dashboard Adaptation — COMPLETE / ACCEPTED**  
+**Stage 8 — Edge Monitoring, Heartbeats & Alerts — COMPLETE / ACCEPTED**  
+**Stage 9 — Edge Cloud Portal — COMPLETE / ACCEPTED**  
+**Stage 10 — Edge Final Integrated Infrastructure Acceptance — COMPLETE / ACCEPTED**
 
 `EDGE_STAGE2_FINAL_INTEGRATED_ACCEPTANCE=PASS` on 2026-09-17.  
 `CLOUD_STAGE_02_5_FINAL_SCOPE_ACCEPTANCE=PASS` on 2026-09-18.  
@@ -73,7 +76,7 @@ Detailed acceptance record:
 
 Current accepted/runtime state:
 
-- `edge` is an ordinary host-native NetBird service peer on NetBird `0.78.2`;
+- `edge` is an ordinary host-native NetBird service peer on NetBird `0.79.0`;
 - `edge` NetBird IPv4 is `100.105.178.187/16`;
 - Home CT300 remains the Home routing/control-plane foundation;
 - `edge -> Home/PAI` through the existing `Home LAN 192.168.1.0/24` resource is verified;
@@ -174,7 +177,7 @@ Stage 7B accepted deployment:
 - Semaphore project 1 contains Refresh plus 16 executable per-unit templates (IDs `2..17`) and executable manual Master Batch template `18`;
 - generated dashboard `actions.json` has `read_only=false`, component template IDs `2..17`, executable Master template `18`, and exposes an action only when the corresponding status permits it;
 - `/etc/edge-maintenance/manual-driver-enablement.json` enables exactly the 16 fixed individual targets and Master; unknown or incomplete target sets still fail closed;
-- Docker application version, configured image track, running digest, remote digest and update reason are separate fields; current runtime probes report PostgreSQL `18.6`, Stalwart `0.16.22` and Mattermost `11.11.0` rather than their movable tags;
+- Docker application version, configured image track, running digest, remote digest and update reason are separate fields; current runtime probes report PostgreSQL `18.6`, Stalwart `0.16.23` and Mattermost `11.11.0` rather than their movable tags;
 - read-only verification passes exactly 16 update units / 23 monitored components / 8 non-actionable APT children; no Semaphore schedules or autonomous APT/update launchers exist;
 - operator-triggered Master Batch Task 12 completed runtime acceptance with exact-plan dispatch, clean post-scan and full health gates;
 - the first operator-triggered individual run from `update.escloud.us` remains the runtime acceptance for a driver that has not yet encountered a real available update; this does not reopen the accepted Stage 7B framework.
@@ -228,7 +231,7 @@ Acceptance record: `EDGE_REBOOT_LIFECYCLE_FIX_ACCEPTANCE_2026-09-18.md`.
 
 ### Authelia
 
-- version `4.39.27`;
+- version `4.39.28`;
 - backend `127.0.0.1:19091 -> 9091`;
 - fresh operator/auth state;
 - public `auth.escloud.us` accepted.
@@ -245,7 +248,7 @@ Current SAN set includes `escloud.us`, `app.escloud.us`, `auth.escloud.us`, `bac
 
 ### n8n
 
-- version `2.39.7`;
+- version `2.39.10`;
 - backend `127.0.0.1:15678` only;
 - public `https://n8n.escloud.us/` through Authelia;
 - fresh application state at Stage 2 acceptance.
@@ -259,7 +262,7 @@ Current SAN set includes `escloud.us`, `app.escloud.us`, `auth.escloud.us`, `bac
 
 ### Codex CLI
 
-- version `0.154.0` official standalone runtime;
+- version `0.155.1` official standalone runtime;
 - fresh ChatGPT authorization;
 - Remote Control through Unix control socket only;
 - no public Codex network listener.
@@ -273,7 +276,7 @@ Current SAN set includes `escloud.us`, `app.escloud.us`, `auth.escloud.us`, `bac
 
 ## Mail — production accepted
 
-- Stalwart `0.16.22`;
+- Stalwart `0.16.23`;
 - Bulwark `1.9.2`;
 - loopback web backends: Stalwart `127.0.0.1:18083`, Bulwark `127.0.0.1:18084`;
 - public mail protocols: TCP/25 SMTP, TCP/465 SMTPS submission, TCP/993 IMAPS;
@@ -303,7 +306,7 @@ Fresh expanded read-only audit on 2026-09-18 confirms the following current runt
 - system toolchain/browser normalization accepted, including managed Chromium and `cua-driver 0.28.2`;
 - `hermes-gateway.service` is enabled and currently active under `core`; current `NRestarts=0`;
 - Mattermost environment is configured and its token validates successfully as bot `hermes`;
-- standalone Codex CLI `0.154.0` and current Antigravity CLI `1.2.7` remain available to `core`;
+- standalone Codex CLI `0.155.1` and current Antigravity CLI `1.2.7` remain available to `core`;
 - Web Search/Extract, Edge TTS and Vision functional probes are PASS; CUA is accepted as `NOT_APPLICABLE_HEADLESS_EDGE`; Image Generation remains configured but is non-blocking for Stage 4 acceptance; fresh core Qwen3.8/vLLM regression is accepted with `STAGE4A_CORE_QWEN_VLLM_REGRESSION=PASS`.
 - Stage 4B executor read-only audit is accepted: `STAGE4B_EXECUTOR_READONLY_AUDIT=PASS`.
 - Actual Hermes local terminal child context is clean for standalone executors: cwd `/home/core`, `HOME=/home/core`, `HERMES_HOME=/home/core/.hermes`, core local bin on PATH, and no `OPENAI_BASE_URL`, `OPENAI_API_KEY` or `CODEX_*` environment override.
@@ -470,13 +473,7 @@ contract is:
 
 Final acceptance record: `STAGE_07_FINAL_ACCEPTANCE_2026-09-21.md`.
 
-**Repository implementation-source note:** the final runtime audit proves the
-normalized `user_cli` execution behavior and Hermes fail-closed lazy-dependency
-behavior currently deployed on edge. The maintenance implementation source on
-the current repository snapshot still predates those two final Codex runtime
-changes. Treat the verified runtime as authoritative and do not redeploy the
-older repository copy over it until that source drift is reconciled. This does
-not reopen Stage 7 runtime acceptance.
+**Repository implementation-source reconciliation:** Stage 10 persisted the exact accepted runtime `maintenance/edge/scripts/manual-update` back to the canonical repository. The normalized `/home/core` `user_cli` execution context and Hermes fail-closed lazy-dependency verification are now present in both runtime and repository source.
 
 The next finite infrastructure stage is **Stage 8 — Edge Monitoring, Heartbeats
 & Alerts**.
@@ -507,6 +504,16 @@ Known accepted limitation: because monitoring is intentionally hosted only on `e
 
 Final acceptance record: `STAGE_08_FINAL_ACCEPTANCE_2026-09-22.md`.
 
+## Stage 10 — Edge Final Integrated Infrastructure Acceptance — COMPLETE / ACCEPTED
+
+Stage 10 is complete with `STAGE10_FINAL_ACCEPTANCE=PASS`.
+
+The bounded final integrated audit completed with zero fresh failures and no runtime mutations or disruptive tests. Current services, containers, listeners, ingress/TLS/auth, NetBird/Home/PAI connectivity, Knowledge integration, Backrest state, maintenance/manual-only controls, monitoring and the Stage 9 portal all passed their fresh integration gates. Prior destructive/recovery evidence from Stages 3–9 was reused rather than repeated.
+
+Stage 10 also closed the known Stage 7 persistence gap by writing the exact accepted runtime `maintenance/edge/scripts/manual-update` into the canonical repository and reconciling current mutable version facts. Historical acceptance records remain unchanged.
+
+Final acceptance record: `STAGE_10_FINAL_ACCEPTANCE_2026-09-22.md`.
+
 ## Current next step
 
-Stage 9 — Edge Cloud Portal is **COMPLETE / ACCEPTED** with `STAGE09_FINAL_ACCEPTANCE=PASS`. `https://app.escloud.us` is now the authenticated static Cloud Portal served by host nginx from `/var/www/app.escloud.us`, protected by existing Authelia `auth_request`, and reading the accepted Stage 8 `/run/edge-monitor/snapshot.json` through same-origin read-only `/api/status`. The portal provides service navigation plus concise LIVE/STALE/UNAVAILABLE infrastructure status and exposes no update mutation plane. Detailed update controls remain exclusively on `update.escloud.us`. The next finite infrastructure stage is **Stage 10 — Edge Final Integrated Infrastructure Acceptance**.
+The finite Cloud Infrastructure build is complete. The next workstream is post-infrastructure **Automation & User Workflows**, which evolves continuously and does not reopen Stage 10 unless a future infrastructure change explicitly supersedes an accepted contract.
