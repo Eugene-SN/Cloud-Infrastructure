@@ -106,7 +106,7 @@ Final record: `STAGE_03_ACCEPTANCE_2026-09-18.md`.
 - `code.escloud.us` — live CloudCLI;
 - `mail.escloud.us` — live Stalwart + Bulwark;
 - `backup.escloud.us` — future Backrest management UI;
-- `ops.escloud.us` — RETIRED from edge runtime/configuration/certificate/recovery state on 2026-09-21; operator-owned Cloudflare DNS deletion remains;
+- `ops.escloud.us` — FULLY RETIRED; removed from edge runtime/configuration/certificate/recovery state on 2026-09-21 and public Cloudflare DNS A record confirmed absent during Stage 10;
 - `update.escloud.us` — LIVE maintenance dashboard and full Semaphore UI through Xray, host nginx and Authelia; `/` redirects to `/status/`, the Semaphore history UI is `/project/1/history`, and both backends remain loopback-only;
 - `app.escloud.us` — live Stage 9 Cloud Portal; static nginx + Authelia; same-origin read-only Stage 8 status
 - `docs.escloud.us` — reserved;
