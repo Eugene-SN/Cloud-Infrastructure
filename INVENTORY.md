@@ -112,7 +112,7 @@ Final record: `STAGE_03_ACCEPTANCE_2026-09-18.md`.
 - `docs.escloud.us` — reserved;
 - `hermes.escloud.us` — LIVE accepted Hermes Dashboard/Remote Gateway; native self-hosted OIDC through Authelia; backend loopback-only;
 - `chat.escloud.us` — LIVE Mattermost human endpoint; core runtime and public nginx ingress accepted; native Mattermost authentication without Authelia;
-- `cloud.escloud.us` — future file-access layer; implementation unresolved;
+- `cloud.escloud.us` — RESERVED / STAGE 11 RECONCILIATION; legacy baseline had live Filestash on `127.0.0.1:18334` over `/srv/cloud`, but the clean rebuild did not restore that service; current replacement/need must be explicitly re-evaluated before user workflows;
 - `sync.escloud.us` — future synchronization layer; implementation unresolved;
 - `go.escloud.us` — retired.
 
@@ -242,10 +242,11 @@ Future external client access through edge remains outside Stage 5.
 | 8 | Monitoring, Heartbeats & Alerts | COMPLETE / ACCEPTED; `STAGE08_FINAL_ACCEPTANCE=PASS` |
 | 9 | Cloud Portal: `app.escloud.us` | COMPLETE / ACCEPTED; `STAGE09_FINAL_ACCEPTANCE=PASS` |
 | 10 | Final Integrated Infrastructure Acceptance | COMPLETE / ACCEPTED; `STAGE10_FINAL_ACCEPTANCE=PASS` |
+| 11 | Remaining Infrastructure Gap Reconciliation & Completion | ACTIVE / ACCEPTED SCOPE |
 
 ## Post-infrastructure application/workflow layer
 
-Continuous workstream after Stage 10, not an infrastructure-completion stage:
+Continuous workstream after Stage 11 and any required bounded Stage 10 re-acceptance, not an infrastructure-completion stage:
 
 - n8n workflows;
 - Hermes/agent workflows;
