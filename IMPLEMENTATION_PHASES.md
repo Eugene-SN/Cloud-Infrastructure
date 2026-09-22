@@ -532,13 +532,56 @@ The known Stage 7 repository-source drift was closed by persisting the exact acc
 
 Final record: `STAGE_10_FINAL_ACCEPTANCE_2026-09-22.md`.
 
-Stage 10 closes the finite Cloud Infrastructure build.
+Stage 10 closes acceptance of the currently deployed baseline. It remains a valid accepted checkpoint even if later Stage 11 work extends the infrastructure.
+
+---
+
+## Stage 11 — Remaining Infrastructure Gap Reconciliation & Completion
+
+### Stage label
+
+`11 — Remaining Infrastructure Gap Reconciliation & Completion`
+
+**Status: ACTIVE / ACCEPTED SCOPE.**
+
+Purpose: perform one bounded reconciliation pass for infrastructure capabilities that were historically deployed, discussed, selected or expected before user workflows but were omitted, lost or incorrectly classified during the rebuild/repository bootstrap.
+
+Stage 11 begins with research/reconciliation, not deployment.
+
+Mandatory source order:
+1. current runtime and actual configuration;
+2. current canonical repository;
+3. legacy baseline and `migration-reference/`;
+4. Stage 0–10 acceptance/decision records;
+5. available project conversation/history context;
+6. current upstream documentation only where product/version/capability verification is required.
+
+Stage 11 must classify each discovered capability as:
+- `KEEP_CURRENT` — already present and sufficient;
+- `HISTORICAL_ONLY` — intentionally superseded/removed;
+- `MISSING_REQUIRED` — should exist before user workflows;
+- `OPTIONAL_DEFER` — useful only with a concrete later workflow;
+- `RESEARCH_REQUIRED` — current product/architecture choice unresolved.
+
+Initial known reconciliation target: the legacy `cloud.escloud.us` file-access layer, where the historical baseline records Filestash over `/srv/cloud` but current canonical inventory incorrectly reduces the capability to an unresolved future service.
+
+Do not redeploy legacy OpenCloud/Filestash or any other historical product merely because it existed. Re-evaluate whether the capability is still useful and choose the simplest current stable implementation that satisfies the accepted requirement.
+
+After selection, deploy/accept only the capabilities classified `MISSING_REQUIRED`.
+
+### Relationship to Stage 10
+
+Stage 10 remains COMPLETE / ACCEPTED for the pre-Stage-11 clean production baseline.
+
+If Stage 11 introduces material infrastructure changes, revisit Stage 10 afterward with a bounded integrated re-acceptance limited to the changed service/integration boundaries. Do not repeat unrelated Stage 3–10 destructive tests.
+
+If Stage 11 makes no material deployment changes, no Stage 10 rerun is required.
 
 ---
 
 ## Post-infrastructure continuous workstream — Automation & User Workflows
 
-This is deliberately not an infrastructure-completion stage. It begins only after Stage 10 and evolves continuously.
+This remains deliberately outside infrastructure completion. It begins only after Stage 11 and, where Stage 11 changed infrastructure, the required bounded Stage 10 re-acceptance.
 
 Examples include n8n workflows, Hermes/agent workflows, Universal Capture Inbox, human approvals, mail-triggered automation, continuous vendor/document intake, bounded AI research, durable application-level store-and-forward/retry, messaging/bot commands and user-specific orchestration among n8n, Hermes, Codex, Antigravity and local vLLM/PAI.
 
@@ -559,12 +602,13 @@ Stage 6: **COMPLETE / ACCEPTED**. `STAGE06_FINAL_ACCEPTANCE=PASS`.
 Stage 7: **COMPLETE / ACCEPTED**. `STAGE07_FINAL_ACCEPTANCE=PASS`.  
 Stage 8: **COMPLETE / ACCEPTED**. `STAGE08_FINAL_ACCEPTANCE=PASS`.
 Stage 9: **COMPLETE / ACCEPTED**. `STAGE09_FINAL_ACCEPTANCE=PASS`.  
-Stage 10: **COMPLETE / ACCEPTED**. `STAGE10_FINAL_ACCEPTANCE=PASS`.
+Stage 10: **COMPLETE / ACCEPTED**. `STAGE10_FINAL_ACCEPTANCE=PASS`.  
+Stage 11: **ACTIVE / ACCEPTED SCOPE**.
 
 Current accepted checkpoint on `main`:
 
 `Stage 10 — Edge Final Integrated Infrastructure Acceptance — COMPLETE / ACCEPTED`
 
-## Finite infrastructure build
+## Current infrastructure stage
 
-The finite Cloud Infrastructure build is complete. The next workstream is post-infrastructure **Automation & User Workflows**.
+Stage 11 — Remaining Infrastructure Gap Reconciliation & Completion — is active. User workflows follow Stage 11 and any required bounded Stage 10 re-acceptance.
