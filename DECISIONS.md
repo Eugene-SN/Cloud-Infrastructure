@@ -1929,3 +1929,43 @@ Mixing discovery and deployment of such omitted capabilities back into Stage 10 
 6. Stage 11 may continue and discover additional Stage 12-independent gaps in parallel at the planning/reconciliation level.
 
 **Supersedes:** only the prior Stage 11 execution assumption that deployment of every `MISSING_REQUIRED` capability must occur inside Stage 11 itself. The Stage 11 classification/reconciliation purpose remains unchanged.
+
+
+---
+
+## 2026-09-22T21:55:00+03:00 — Stage 11 final future-task classification
+
+**Status:** ACCEPTED
+
+**Context:** Stage 11 reconciled the remaining legacy/current capability gaps after Stage 10. The cloud-drive work was already split into Stage 12. The operator has now finalized the disposition of the other identified gaps so Stage 11 does not retain vague unresolved future scope.
+
+**Decision:**
+
+1. **Stage 12** owns both:
+   - `cloud.escloud.us` / Nextcloud personal cloud-drive deployment and acceptance;
+   - private SMB workspace access for selected ordinary POSIX project/workspace directories on `edge`, reachable only through trusted/private connectivity and not as a public TCP/445 service.
+2. SMB is complementary to Nextcloud:
+   - Nextcloud owns cloud user-data UX and native sync;
+   - SMB provides direct Finder/Windows Explorer access to selected project/workspace paths;
+   - cloud user data under `/srv/cloud/files` is not automatically exported through SMB.
+3. **`docs.escloud.us` is DEFERRED UNTIL CONTENT READY.**
+   - Intended role: a curated WenTian technical publishing/library site analogous in function to Lenovo Press for selected Product Guides and Datasheets;
+   - target content: translated English and Russian publications, with source/revision metadata;
+   - deployment begins only after a useful translated document corpus exists;
+   - no placeholder CMS/DMS/site is deployed now merely to occupy the hostname.
+4. **`backup.escloud.us` remains a small future infrastructure task.**
+   - It publishes the already-deployed Backrest WebUI through the existing ingress/auth architecture;
+   - it does not select or deploy a new backup product;
+   - implementation is deferred from Stage 11 so current reconciliation can close without mixing another standalone deployment.
+5. **`sync.escloud.us` is RETIRED.**
+   - The legacy public Syncthing UI role is historical only;
+   - current Syncthing remains private for Knowledge replication;
+   - Nextcloud provides the future end-user synchronization layer;
+   - runtime/TLS/DNS artifacts for the retired hostname should be removed when safely identified.
+6. **`go.escloud.us` remains RETIRED.**
+   - n8n is canonical at `n8n.escloud.us`;
+   - any remaining public DNS record is stale external residue to be removed manually by the operator.
+7. Legacy Homepage, Cockpit, Maintenance Center, monitoring nginx/socket-proxy, speedtest surface, legacy Codex runner, browser-stack, Filestash and public Syncthing UI remain `HISTORICAL_ONLY`; do not restore them.
+8. Current Stage 11 work may now focus on bounded stale-artifact cleanup and canonical reconciliation. DNS changes remain operator-managed.
+
+**Supersedes:** prior unresolved/future classification of `sync.escloud.us`, prior separation of SMB from Stage 12, and any interpretation that `docs.escloud.us` should be deployed before translated publication content exists.
