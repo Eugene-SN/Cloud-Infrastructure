@@ -1929,3 +1929,93 @@ Mixing discovery and deployment of such omitted capabilities back into Stage 10 
 6. Stage 11 may continue and discover additional Stage 12-independent gaps in parallel at the planning/reconciliation level.
 
 **Supersedes:** only the prior Stage 11 execution assumption that deployment of every `MISSING_REQUIRED` capability must occur inside Stage 11 itself. The Stage 11 classification/reconciliation purpose remains unchanged.
+
+
+---
+
+## 2026-09-22T21:55:00+03:00 — Stage 11 final future-task classification
+
+**Status:** ACCEPTED
+
+**Context:** Stage 11 reconciled the remaining legacy/current capability gaps after Stage 10. The cloud-drive work was already split into Stage 12. The operator has now finalized the disposition of the other identified gaps so Stage 11 does not retain vague unresolved future scope.
+
+**Decision:**
+
+1. **Stage 12** owns both:
+   - `cloud.escloud.us` / Nextcloud personal cloud-drive deployment and acceptance;
+   - private SMB workspace access for selected ordinary POSIX project/workspace directories on `edge`, reachable only through trusted/private connectivity and not as a public TCP/445 service.
+2. SMB is complementary to Nextcloud:
+   - Nextcloud owns cloud user-data UX and native sync;
+   - SMB provides direct Finder/Windows Explorer access to selected project/workspace paths;
+   - cloud user data under `/srv/cloud/files` is not automatically exported through SMB.
+3. **`docs.escloud.us` is DEFERRED UNTIL CONTENT READY.**
+   - Intended role: a curated WenTian technical publishing/library site analogous in function to Lenovo Press for selected Product Guides and Datasheets;
+   - target content: translated English and Russian publications, with source/revision metadata;
+   - deployment begins only after a useful translated document corpus exists;
+   - no placeholder CMS/DMS/site is deployed now merely to occupy the hostname.
+4. **`backup.escloud.us` remains a small future infrastructure task.**
+   - It publishes the already-deployed Backrest WebUI through the existing ingress/auth architecture;
+   - it does not select or deploy a new backup product;
+   - implementation is deferred from Stage 11 so current reconciliation can close without mixing another standalone deployment.
+5. **`sync.escloud.us` is RETIRED.**
+   - The legacy public Syncthing UI role is historical only;
+   - current Syncthing remains private for Knowledge replication;
+   - Nextcloud provides the future end-user synchronization layer;
+   - runtime/TLS/DNS artifacts for the retired hostname should be removed when safely identified.
+6. **`go.escloud.us` remains RETIRED.**
+   - n8n is canonical at `n8n.escloud.us`;
+   - any remaining public DNS record is stale external residue to be removed manually by the operator.
+7. Legacy Homepage, Cockpit, Maintenance Center, monitoring nginx/socket-proxy, speedtest surface, legacy Codex runner, browser-stack, Filestash and public Syncthing UI remain `HISTORICAL_ONLY`; do not restore them.
+8. Current Stage 11 work may now focus on bounded stale-artifact cleanup and canonical reconciliation. DNS changes remain operator-managed.
+
+**Supersedes:** prior unresolved/future classification of `sync.escloud.us`, prior separation of SMB from Stage 12, and any interpretation that `docs.escloud.us` should be deployed before translated publication content exists.
+
+
+---
+
+## 2026-09-22T22:10:00+03:00 — Stage 11 retired namespace cleanup accepted
+
+**Status:** ACCEPTED
+
+**Context:** Stage 11 classified `go.escloud.us` and `sync.escloud.us` as retired. A bounded runtime audit found no remaining legacy listeners, systemd units, Docker containers/images, legacy filesystem paths, nginx references or Authelia references. The only remaining runtime artifact was `sync.escloud.us` in the shared application TLS SAN. External DNS for both retired names was operator-managed.
+
+**Decision / accepted outcome:**
+
+1. Reissue the existing `escloud.us` certificate lineage without `sync.escloud.us`, while preserving all current and accepted future names:
+   - `escloud.us`
+   - `app.escloud.us`
+   - `auth.escloud.us`
+   - `backup.escloud.us`
+   - `chat.escloud.us`
+   - `cloud.escloud.us`
+   - `code.escloud.us`
+   - `docs.escloud.us`
+   - `hermes.escloud.us`
+   - `mail.escloud.us`
+   - `n8n.escloud.us`
+   - `update.escloud.us`
+2. New certificate fingerprint:
+   `3C:3F:E9:D6:C6:88:02:2F:32:AD:44:07:79:DA:5E:DD:1B:33:FD:E7:36:C6:5A:64:EA:9C:86:03:7A:B6:1C:D4`.
+3. Xray and Hysteria2 TLS copies were synchronized to the new lineage. Certbot's existing deploy hook also synchronized Xray, Hysteria2 and Stalwart.
+4. The first post-change public HTTPS verifier hit the short restart window after a second explicit Xray restart and failed connection. A recovery audit showed Xray/nginx/Hysteria healthy and identified the local fallback verifier defect: nginx `127.0.0.1:8080` requires PROXY protocol.
+5. Corrected final verification passed:
+   - nginx PROXY-protocol fallback PASS;
+   - local Xray HTTPS E2E PASS;
+   - public HTTPS E2E PASS for app/auth/chat/code/hermes/mail/n8n/update;
+   - `sync.escloud.us` SAN absent;
+   - Xray/Hysteria fingerprint matches current lineage;
+   - nginx config PASS;
+   - production containers healthy;
+   - zero failed systemd units.
+6. External DNS verification now reports:
+   - `go.escloud.us` A = ABSENT;
+   - `sync.escloud.us` A = ABSENT.
+7. No further runtime cleanup is required for the retired legacy services identified by Stage 11.
+
+**Acceptance markers:**
+
+- `STAGE11_LEGACY_ARTIFACT_CLEANUP_AUDIT=PASS`;
+- `STAGE11_SYNC_TLS_CLEANUP_FINAL_VERIFY=PASS`;
+- `SYNC_TLS_SAN=ABSENT`.
+
+**Supersedes:** any prior documentation that still treated `sync.escloud.us` as part of the active/future TLS namespace or treated `go.escloud.us` / `sync.escloud.us` DNS cleanup as pending.

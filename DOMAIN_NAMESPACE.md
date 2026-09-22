@@ -19,21 +19,20 @@ This file defines the intended `escloud.us` hostname allocation for Cloud Infras
 | `hermes.escloud.us` | Hermes Dashboard and Desktop Remote Gateway | ACTIVE; native self-hosted OIDC through Authelia; loopback backend |
 | `chat.escloud.us` | Mattermost collaboration/control | ACTIVE; Mattermost-native authentication; no Authelia proxy auth |
 | `update.escloud.us` | maintenance dashboard and Semaphore UI | ACTIVE; Xray/nginx/Authelia ingress; `/status/` dashboard plus `/project/1/history` Semaphore UI; loopback backends only |
+| `app.escloud.us` | Cloud Infrastructure portal/status dashboard | ACTIVE; static nginx + Authelia + Stage 8 status snapshot |
 
 ## Accepted future functional names
 
 | FQDN | Intended role | Dependency placement |
 |---|---|---|
-| `backup.escloud.us` | Backrest backup-management UI | late lifecycle after main service inventory stabilizes |
-| `app.escloud.us` | final private Cloud Infrastructure portal/dashboard | separate Codex substage after production monitoring/status sources and final service inventory are known |
-| `cloud.escloud.us` | future file-access/web file-management layer | after `edge ↔ ai-node ↔ PVE/Home` connectivity if the selected implementation requires that relationship |
-| `sync.escloud.us` | future synchronization layer | after cross-site connectivity; exact implementation unresolved |
+| `backup.escloud.us` | Backrest backup-management UI | FUTURE TASK; publish existing Backrest UI through accepted ingress/auth, no new backup product |
+| `cloud.escloud.us` | personal cloud-drive | STAGE 12; Nextcloud primary candidate with native clients/API/WebDAV |
 
 ## Reserved future names
 
 | FQDN | Reserved role | State |
 |---|---|---|
-| `docs.escloud.us` | technical documentation library or documentation-facing endpoint | RESERVED; no service implied |
+| `docs.escloud.us` | WenTian technical publishing/library site for translated Product Guides and Datasheets | DEFERRED UNTIL CONTENT READY; deploy only after a useful EN/RU corpus exists |
 
 Reserved names do not authorize premature service deployment.
 
@@ -42,9 +41,10 @@ Reserved names do not authorize premature service deployment.
 | FQDN | Historical role | Disposition |
 |---|---|---|
 | `go.escloud.us` | n8n | RETIRED after accepted migration to `n8n.escloud.us` |
-| `ops.escloud.us` | prepared candidate for a separate Semaphore UI | RETIRED from edge on 2026-09-21; operator will remove the remaining Cloudflare DNS record manually |
+| `ops.escloud.us` | prepared candidate for a separate Semaphore UI | RETIRED; runtime/config/certificate/DNS cleanup completed during Stage 10 |
+| `sync.escloud.us` | legacy public Syncthing UI / synchronization hostname | RETIRED; current Syncthing is private Knowledge replication and Stage 12 Nextcloud owns end-user sync |
 
-Do not preserve retired or unused names indefinitely unless a concrete compatibility requirement appears. The former `ops.escloud.us` name has no edge vhost, Authelia rule, certificate SAN, automation entry or recovery copy; its external Cloudflare DNS record is pending operator deletion.
+Do not preserve retired or unused names indefinitely unless a concrete compatibility requirement appears. `ops.escloud.us`, `go.escloud.us`, and `sync.escloud.us` are absent from the current public DNS namespace; `ops` and `sync` are also absent from the shared application certificate.
 
 ## DNS contract
 
@@ -61,7 +61,7 @@ Application/service A records point to the current public IPv4 of `edge`, `45.92
 
 The current shared application certificate lineage covers the accepted current application namespace except where a future hostname has not yet been activated. `update.escloud.us` is active in the shared certificate and public ingress.
 
-Future deployment stages should add a hostname to the certificate only when the corresponding service/page is actually being deployed. DNS existence alone remains insufficient evidence of activation for the remaining future names.
+Future deployment stages should add a hostname to the certificate only when the corresponding service/page is actually being deployed. DNS existence alone remains insufficient evidence of activation for the remaining future names. `sync.escloud.us` is retired and was removed from the live certificate lineage during Stage 11 cleanup.
 
 The intended namespace includes:
 
@@ -76,10 +76,9 @@ The intended namespace includes:
 - `hermes.escloud.us`
 - `mail.escloud.us`
 - `n8n.escloud.us`
-- `sync.escloud.us`
 - `update.escloud.us`
 
-`go.escloud.us` and `ops.escloud.us` remain outside the target namespace.
+`go.escloud.us`, `ops.escloud.us`, and `sync.escloud.us` remain outside the target namespace.
 
 ## Authentication namespace
 
@@ -92,7 +91,7 @@ Protected application names are expected to include, when corresponding services
 - `code.escloud.us`;
 - `backup.escloud.us`;
 - `update.escloud.us`;
-- future/reserved `docs.escloud.us`, `cloud.escloud.us`, and `sync.escloud.us` where appropriate.
+- future/deferred `docs.escloud.us` and Stage 12 `cloud.escloud.us` where appropriate.
 
 `chat.escloud.us` uses Mattermost-native authentication without Authelia. `hermes.escloud.us` uses Hermes-native self-hosted OIDC with Authelia as IdP; nginx does not use `auth_request` for Hermes. See `STAGE_04C_FINAL_ACCEPTANCE_2026-09-18.md` and `STAGE_04E_FINAL_ACCEPTANCE_2026-09-18.md`.
 
