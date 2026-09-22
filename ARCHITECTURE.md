@@ -519,7 +519,7 @@ The maintenance dashboard and full Semaphore UI share this origin, matching the 
 
 ## Stage 8 — Monitoring, Heartbeats & Alerts
 
-Production monitoring is intentionally late-stage so it covers actual stable inventory/connectivity/backup/update layers.
+**COMPLETE / ACCEPTED** with `STAGE08_FINAL_ACCEPTANCE=PASS`. Production monitoring covers the accepted stable inventory/connectivity/backup/update layers using the edge-only persistent-agent architecture documented below.
 
 ## Stage 9 — `app.escloud.us` Cloud Portal
 
@@ -597,4 +597,4 @@ A single host-native persistent `edge-monitor.service` (`Type=simple`) is superv
 
 Live telemetry is published atomically to `/run/edge-monitor/snapshot.json`. Only durable transition/notification state is persisted under `/var/lib/edge-monitor/state.json`. Monitoring domains remain EDGE, APPLICATIONS, HOME_PAI, KNOWLEDGE and OPERATIONS. Alerts go directly to Mattermost only on meaningful transitions and recovery; unchanged failure states remain silent.
 
-No Prometheus/Grafana/Loki/Gatus stack, monitoring database, separate receiver service, monitoring WebUI, external uptime service, independent vantage point or Home/PAI monitoring agent is part of the accepted current scope. PVE-specific D5/RAPL/EDAC/guest/gateway/SMART collectors and CT200 push/SSE presentation are not copied. Stage 7 update state is read as metadata rather than refreshed automatically by Stage 8. Backrest monitoring is based on authoritative successful-backup freshness. Full edge loss remains an accepted uncovered failure class in this edge-only design.
+No Prometheus/Grafana/Loki/Gatus stack, monitoring database, separate receiver service, monitoring WebUI, external uptime service, independent vantage point or Home/PAI monitoring agent is part of the accepted current scope. PVE-specific D5/RAPL/EDAC/guest/gateway/SMART collectors and CT200 push/SSE presentation are not copied. Stage 7 update state is read as metadata rather than refreshed automatically by Stage 8. Backrest monitoring is based on authoritative successful-backup freshness. Full edge loss remains an accepted uncovered failure class in this edge-only design. The transition engine has final runtime acceptance: two consecutive failed probes confirmed FAIL, unchanged FAIL was deduplicated, recovery emitted one notification, and production returned to overall OK with no synthetic artifacts.
