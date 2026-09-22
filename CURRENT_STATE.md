@@ -509,4 +509,4 @@ Final acceptance record: `STAGE_08_FINAL_ACCEPTANCE_2026-09-22.md`.
 
 ## Current next step
 
-The next finite infrastructure stage is **Stage 9 — Edge Cloud Portal**. Build `app.escloud.us` against the now-accepted Stage 8 status source; detailed maintenance/update controls remain on `update.escloud.us`.
+The current finite infrastructure stage is **Stage 9 — Edge Cloud Portal**. Its baseline architecture/deployment contract is ACCEPTED with `STAGE09_ARCHITECTURE_ACCEPTANCE=PASS`: static nginx-served `app.escloud.us`, existing Authelia protection, same-origin read-only `/api/status` exposing the Stage 8 `/run/edge-monitor/snapshot.json`, and no portal backend/database/update mutation plane. Runtime deployment and final Stage 9 acceptance remain pending. Detailed update controls remain on `update.escloud.us`.
