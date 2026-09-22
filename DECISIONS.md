@@ -1799,3 +1799,37 @@ No provider-side snapshot identifier was supplied, so none is invented or stored
 There are no remaining current-state DNS/runtime/configuration references that require `ops.escloud.us` to exist.
 
 This closes the last external cleanup item associated with the finite Cloud Infrastructure build. It does not create a new stage or reopen any earlier acceptance.
+
+
+---
+
+## 2026-09-22 — Stage 10 final hygiene cleanup and clean baseline
+
+**Status:** ACCEPTED
+
+**Context:** after functional Stage 10 acceptance, provider golden snapshot creation and final `ops.escloud.us` DNS retirement, the operator requested an expanded final hygiene audit so the finite Cloud Infrastructure build would end on a clean production baseline rather than retain temporary deployment/test residue.
+
+**Decision:** accept the bounded cleanup of only evidence-backed residue. Do not apply blanket `docker system prune`, package autoremove, journal vacuum or indiscriminate cache/log deletion.
+
+Removed items included APT/download caches, npm/npx caches, UV build/download cache, obsolete Codex `0.154.0`, completed stage-specific rollback artifacts, confirmed temporary audit/test files, verifier bytecode and stale package-install residue. Production/runtime-managed state, fallback kernel, logs, browser runtime cache, Restic cache and Docker production assets were retained.
+
+**Verification:**
+- root free-space delta: `+1,900,048,384` bytes (`1.77 GiB`);
+- APT cache reduced from `634M` to `80K`;
+- old Codex release absent, current `0.155.1` preserved;
+- Stage maintenance backup directory retained empty and ready for future component-specific backups;
+- no remaining `/srv/backups/edge-stage*` rollback trees;
+- nginx config validation PASS;
+- all required system and user services active;
+- Docker health PASS;
+- NetBird PASS;
+- ai-node vLLM PASS;
+- Knowledge path PASS;
+- zero failed systemd units;
+- `STAGE10_CLEANUP_FAILURES=0`;
+- `STAGE10_FINAL_BASELINE_CLEANUP=PASS`;
+- `STAGE10_PRODUCTION_NON_REGRESSION=PASS`;
+- `REBOOT_REQUIRED=NO`;
+- final RC=0.
+
+This clean baseline is the final production state of the finite Cloud Infrastructure build.
