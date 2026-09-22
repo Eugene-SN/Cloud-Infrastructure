@@ -1779,3 +1779,23 @@ This is a post-acceptance recovery checkpoint only. It does not reopen Stage 10,
 No provider-side snapshot identifier was supplied, so none is invented or stored.
 
 **Result:** Stage 6 post-build golden snapshot requirement is satisfied.
+
+
+---
+
+## 2026-09-22 — Stage 10 retired ops hostname final DNS cleanup
+
+**Status:** ACCEPTED
+
+**Context:** Stage 7 had already retired `ops.escloud.us` from edge runtime, nginx, Authelia, certificate/renewal and recovery state. The only remaining action was operator-owned deletion of the public Cloudflare DNS record.
+
+**Decision:** accept the final retirement of `ops.escloud.us` after the operator deleted the record and edge verification returned:
+
+- `OPS_ESCLOUD_US_A_RECORD=ABSENT`;
+- `OPS_DNS_RETIREMENT_GATE=PASS`;
+- `STAGE10_OPS_DNS_RETIREMENT_VERIFY=PASS`;
+- final RC=0.
+
+There are no remaining current-state DNS/runtime/configuration references that require `ops.escloud.us` to exist.
+
+This closes the last external cleanup item associated with the finite Cloud Infrastructure build. It does not create a new stage or reopen any earlier acceptance.
