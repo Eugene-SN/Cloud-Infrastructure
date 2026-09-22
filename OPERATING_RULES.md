@@ -54,9 +54,12 @@ Current accepted checkpoint:
 
 - Stages 0–10 are COMPLETE / ACCEPTED;
 - `STAGE10_FINAL_ACCEPTANCE=PASS`;
-- final Stage 10 record: `STAGE_10_FINAL_ACCEPTANCE_2026-09-22.md`.
+- final Stage 10 record: `STAGE_10_FINAL_ACCEPTANCE_2026-09-22.md`;
+- Stage 11 — Remaining Infrastructure Gap Reconciliation & Completion — is ACTIVE / ACCEPTED SCOPE.
 
-The finite Cloud Infrastructure build is complete. **Automation & User Workflows** is now the continuous post-infrastructure workstream, not another infrastructure-completion stage.
+Stage 10 is the accepted clean pre-Stage-11 baseline. Stage 11 may add only infrastructure capabilities proven missing and useful before user workflows. Historical presence alone is not sufficient justification for redeployment.
+
+**Automation & User Workflows** begins after Stage 11 and any bounded Stage 10 re-acceptance required by material Stage 11 changes.
 
 ## Functional completeness of selected services
 
@@ -317,7 +320,7 @@ Avoid heavyweight metrics/logging/observability stacks unless concrete requireme
 
 ## Post-infrastructure workflow rule
 
-After Stage 10, user-specific automation can evolve independently: n8n workflows, Hermes/agent workflows, Capture Inbox, approvals, mail-triggered automation, continuous information intake/change detection, bounded AI research, durable application-level cross-site task handoff, messaging/bot commands and orchestration across n8n, Hermes, Codex, Antigravity and local vLLM/PAI.
+After Stage 11 completion and any required bounded Stage 10 re-acceptance, user-specific automation can evolve independently: n8n workflows, Hermes/agent workflows, Capture Inbox, approvals, mail-triggered automation, continuous information intake/change detection, bounded AI research, durable application-level cross-site task handoff, messaging/bot commands and orchestration across n8n, Hermes, Codex, Antigravity and local vLLM/PAI.
 
 These are not blockers for final infrastructure acceptance.
 
