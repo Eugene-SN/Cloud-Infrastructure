@@ -52,18 +52,11 @@ Completed canonical stages:
 
 Current accepted checkpoint:
 
-- `STAGE05_FINAL_ACCEPTANCE=PASS`;
-- final Stage 5 record: `STAGE_05_3_FINAL_ACCEPTANCE_2026-09-20.md`.
+- Stages 0–10 are COMPLETE / ACCEPTED;
+- `STAGE10_FINAL_ACCEPTANCE=PASS`;
+- final Stage 10 record: `STAGE_10_FINAL_ACCEPTANCE_2026-09-22.md`.
 
-Remaining finite infrastructure roadmap:
-
-- `06 — Edge Backrest & Recovery`;
-- `07 — Edge Maintenance & Update` — Semaphore/update workflow plus separate Codex `update.escloud.us` substage;
-- `08 — Edge Monitoring, Heartbeats & Alerts`;
-- `09 — Edge Cloud Portal` — separate Codex `app.escloud.us` substage;
-- `10 — Edge Final Integrated Infrastructure Acceptance`.
-
-After Stage 10, **Automation & User Workflows** is a continuous post-infrastructure workstream, not another infrastructure-completion stage.
+The finite Cloud Infrastructure build is complete. **Automation & User Workflows** is now the continuous post-infrastructure workstream, not another infrastructure-completion stage.
 
 ## Functional completeness of selected services
 
@@ -183,15 +176,11 @@ A completed subtask is not permission to leave accepted stage scope incomplete.
 
 Current facts:
 
-1. Stage 0 through Stage 6 are complete and accepted; Stage 7A is complete and accepted, and Stage 7B is in progress.
-2. `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS`.
-3. `STAGE4_FINAL_ACCEPTANCE=PASS`.
-4. `STAGE05_2_PVE_CANONICAL_OBSIDIAN_RUNTIME=PASS`.
-5. `STAGE05_3_EDGE_KNOWLEDGE_REPLICATION_DATA_INTEGRATION=PASS`.
-6. `STAGE05_FINAL_ACCEPTANCE=PASS`.
-7. The current finite infrastructure stage is Stage 7 — Edge Maintenance & Update.
-8. Reuse the accepted Stage 3 transport and Stage 5 Knowledge topology; do not reopen them without a concrete incompatibility.
-9. The Stage 1 Docker `live-restore=true` setting remains superseded; current accepted runtime is `live-restore=false`.
+1. Stages 0 through 10 are complete and accepted; `STAGE10_FINAL_ACCEPTANCE=PASS`.
+2. `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS`, `STAGE4_FINAL_ACCEPTANCE=PASS`, `STAGE05_FINAL_ACCEPTANCE=PASS`, `STAGE06_FINAL_ACCEPTANCE=PASS`, `STAGE07_FINAL_ACCEPTANCE=PASS`, `STAGE08_FINAL_ACCEPTANCE=PASS`, `STAGE09_FINAL_ACCEPTANCE=PASS` and `STAGE10_FINAL_ACCEPTANCE=PASS` remain the accepted chain.
+3. The finite Cloud Infrastructure build is complete; current work belongs to the post-infrastructure Automation & User Workflows stream unless a future infrastructure requirement explicitly opens a new stage.
+4. Reuse accepted Stage 3 transport, Stage 5 Knowledge, Stage 6 recovery, Stage 7 maintenance, Stage 8 monitoring and Stage 9 portal contracts; do not reopen them without a concrete incompatibility or superseding requirement.
+5. The Stage 1 Docker `live-restore=true` setting remains superseded; current accepted runtime is `live-restore=false`.
 
 # Stage 3 — Cross-site Connectivity contract
 
