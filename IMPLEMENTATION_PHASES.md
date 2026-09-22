@@ -482,7 +482,9 @@ Research/finalize and deploy production monitoring against the substantially com
 
 Avoid a heavyweight metrics/logging platform unless concrete requirements justify it.
 
-Acceptance planning: select the monitoring implementation only after requirements are reconciled; distinguish Internet/service outages, loss of Home connectivity and unavailable inference. Verify meaningful failure and recovery notifications, backup freshness, synchronization health and maintenance suppression without repetitive unchanged-state alerts.
+**COMPLETE / ACCEPTED.** Final acceptance marker: `STAGE08_FINAL_ACCEPTANCE=PASS`.
+
+The deployed implementation is one persistent host-native Python `edge-monitor.service` with 5s/20s/60s/300s collection cadences, two-failure confirmation for ordinary endpoint probes, atomic live state at `/run/edge-monitor/snapshot.json`, durable transition state under `/var/lib/edge-monitor/state.json`, structured Backrest freshness, Syncthing/Home/PAI health and direct transition/recovery-only Mattermost alerts. A controlled synthetic transition test proved failure confirmation, deduplication and recovery notification without stopping production services. No heavyweight monitoring stack or independent vantage point was added.
 
 ## Stage 9 — Edge Cloud Portal
 
@@ -534,12 +536,13 @@ Stage 3: **COMPLETE / ACCEPTED**.
 Stage 4: **COMPLETE / ACCEPTED**. `STAGE4_FINAL_ACCEPTANCE=PASS`.
 Stage 5: **COMPLETE / ACCEPTED**. `STAGE05_FINAL_ACCEPTANCE=PASS`.
 Stage 6: **COMPLETE / ACCEPTED**. `STAGE06_FINAL_ACCEPTANCE=PASS`.
-Stage 7: **COMPLETE / ACCEPTED**. `STAGE07_FINAL_ACCEPTANCE=PASS`.
+Stage 7: **COMPLETE / ACCEPTED**. `STAGE07_FINAL_ACCEPTANCE=PASS`.  
+Stage 8: **COMPLETE / ACCEPTED**. `STAGE08_FINAL_ACCEPTANCE=PASS`.
 
 Current accepted checkpoint on `main`:
 
-`Stage 7 — Edge Maintenance & Update — COMPLETE / ACCEPTED`
+`Stage 8 — Edge Monitoring, Heartbeats & Alerts — COMPLETE / ACCEPTED`
 
 ## Current finite infrastructure stage
 
-Stage 8 — Edge Monitoring, Heartbeats & Alerts — is next. Begin with a Stage 8 requirements/current-baseline review and preserve the accepted Stage 7 maintenance/manual-execution contract.
+Stage 9 — Edge Cloud Portal — is next. Build `app.escloud.us` against the accepted Stage 8 status source while keeping detailed update controls on `update.escloud.us`.
