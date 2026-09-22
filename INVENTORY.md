@@ -420,3 +420,37 @@ The exact accepted runtime `maintenance/edge/scripts/manual-update` is now persi
 Final record: `STAGE_10_FINAL_ACCEPTANCE_2026-09-22.md`.
 
 Post-acceptance recovery inventory: one provider golden VPS snapshot was created successfully by the operator after Stage 10 final acceptance, satisfying the one-time Stage 6 post-build snapshot requirement. Snapshot provider-side identifier is not recorded in the repository.
+
+
+## Stage 10 clean production baseline
+
+Final hygiene cleanup acceptance:
+
+- `STAGE10_FINAL_BASELINE_CLEANUP=PASS`;
+- `STAGE10_PRODUCTION_NON_REGRESSION=PASS`;
+- `STAGE10_CLEANUP_FAILURES=0`;
+- `REBOOT_REQUIRED=NO`;
+- final RC=0.
+
+Verified cleanup removed:
+- APT package cache;
+- npm/npx caches for root and core;
+- core UV download/build cache;
+- obsolete Codex standalone release `0.154.0`, while `current` remains `0.155.1`;
+- completed Stage 1/3/4/5/7 local rollback artifacts superseded by accepted current state, Backrest recovery and the provider golden snapshot;
+- confirmed Stage 7/9 temporary audit/test artifacts;
+- verifier-generated Python bytecode;
+- stale package/install residue files.
+
+Preserved intentionally:
+- running kernel `7.0.0-31` plus one fallback kernel `7.0.0-15`;
+- system journals and normal logrotate history;
+- Playwright Chromium runtime cache used by Hermes tooling;
+- installed UV runtimes/tools under `/home/core/.local/share/uv`;
+- Restic repository caches;
+- runtime-managed temporary directories;
+- all production Docker images/containers/networks;
+- production nginx/systemd configuration;
+- `pollinate` OS package.
+
+Measured root filesystem reclaim: `1,900,048,384` bytes (`1.77 GiB`). Post-clean root usage: approximately `22 GiB used / 133 GiB available / 14%`.
