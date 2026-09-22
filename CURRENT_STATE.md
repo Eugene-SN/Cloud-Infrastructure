@@ -19,7 +19,8 @@
 **Stage 7C — update.escloud.us Dashboard Adaptation — COMPLETE / ACCEPTED**  
 **Stage 8 — Edge Monitoring, Heartbeats & Alerts — COMPLETE / ACCEPTED**  
 **Stage 9 — Edge Cloud Portal — COMPLETE / ACCEPTED**  
-**Stage 10 — Edge Final Integrated Infrastructure Acceptance — COMPLETE / ACCEPTED**
+**Stage 10 — Edge Final Integrated Infrastructure Acceptance — COMPLETE / ACCEPTED**  
+**Stage 11 — Remaining Infrastructure Gap Reconciliation & Completion — ACTIVE / ACCEPTED SCOPE**
 
 `EDGE_STAGE2_FINAL_INTEGRATED_ACCEPTANCE=PASS` on 2026-09-17.  
 `CLOUD_STAGE_02_5_FINAL_SCOPE_ACCEPTANCE=PASS` on 2026-09-18.  
@@ -516,7 +517,21 @@ Final acceptance record: `STAGE_10_FINAL_ACCEPTANCE_2026-09-22.md`.
 
 ## Current next step
 
-The finite Cloud Infrastructure build is complete. The next workstream is post-infrastructure **Automation & User Workflows**, which evolves continuously and does not reopen Stage 10 unless a future infrastructure change explicitly supersedes an accepted contract.
+Stage 10 remains a valid COMPLETE / ACCEPTED checkpoint for the currently deployed baseline, including final hygiene cleanup. A newly identified repository/history gap shows that some previously deployed or considered infrastructure capabilities were not fully carried into the canonical roadmap.
+
+The active next stage is **Stage 11 — Remaining Infrastructure Gap Reconciliation & Completion**.
+
+Stage 11 will:
+- reconcile legacy baseline, migration-reference material, canonical repository state, current runtime and available project history;
+- identify forgotten, omitted or incorrectly classified infrastructure services/tools;
+- distinguish historical-only/superseded components from capabilities still useful before user workflows;
+- research current upstream options only where the earlier product choice is no longer authoritative or the capability was never accepted;
+- deploy and accept only selected missing infrastructure capabilities;
+- preserve Stage 10 as the accepted pre-Stage-11 baseline rather than mixing new deployment work into Stage 10.
+
+If Stage 11 changes material infrastructure boundaries, return to Stage 10 afterward for a bounded re-acceptance of only the affected integration surfaces. If Stage 11 concludes with no material deployment changes, the existing Stage 10 acceptance remains sufficient.
+
+**Automation & User Workflows** begins only after Stage 11 completion and any required bounded Stage 10 re-acceptance.
 
 Post-Stage-10 recovery checkpoint: the one-time provider golden VPS snapshot required by the accepted Stage 6 recovery contract was created successfully by the operator after `STAGE10_FINAL_ACCEPTANCE=PASS`. This is a recovery checkpoint only; it does not create a new infrastructure stage or alter Stage 10 acceptance.
 
