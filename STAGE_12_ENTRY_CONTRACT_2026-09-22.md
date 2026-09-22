@@ -1,4 +1,4 @@
-# Stage 12 — Nextcloud Cloud Drive Deployment & Acceptance
+# Stage 12 — Nextcloud Cloud Drive & Private Workspace Access
 
 Date: 2026-09-22
 
@@ -8,7 +8,7 @@ Branch: `stage-12-nextcloud-cloud-drive`
 
 ## Purpose
 
-Stage 12 deploys and accepts the previously reconciled missing `cloud.escloud.us` capability as a production personal cloud-drive on `edge`.
+Stage 12 deploys and accepts the previously reconciled `cloud.escloud.us` personal cloud-drive capability and the complementary private SMB workspace-access layer on `edge`.
 
 Stage 11 remains active for discovery/classification of other omitted infrastructure capabilities. Stage 12 is intentionally separated so Nextcloud implementation does not obscure the remaining Stage 11 inventory work.
 
@@ -32,7 +32,13 @@ Do not reopen these accepted decisions without concrete runtime incompatibility:
 11. Nextcloud uses a **dedicated PostgreSQL instance**, not the existing Mattermost PostgreSQL lifecycle.
 12. Existing host nginx/Xray/shared TLS remain the ingress foundation.
 13. Authelia is used as the OIDC identity provider through Nextcloud-native OIDC integration; ordinary nginx `auth_request` is not the target interactive/native-client model for `cloud.escloud.us`.
-14. No Office suite, full-text-search stack, antivirus stack, media/photo stack or other heavyweight unrelated extension is introduced without a concrete requirement.
+14. Private SMB workspace access is part of Stage 12 and is separate from Nextcloud:
+   - expose only explicitly selected ordinary POSIX project/workspace paths;
+   - bind SMB only to trusted/private connectivity (Home/NetBird as selected during deployment);
+   - do not publish TCP/445 to the public Internet;
+   - do not automatically export `/srv/cloud/files` through SMB;
+   - preserve normal local ownership/permissions rather than making SMB the canonical storage layer.
+15. No Office suite, full-text-search stack, antivirus stack, media/photo stack or other heavyweight unrelated extension is introduced without a concrete requirement.
 
 ## Entry runtime baseline
 
@@ -85,6 +91,8 @@ Use upstream-supported current stable release paths. Version/channel constraints
 
 ## Functional target
 
+### Nextcloud cloud-drive
+
 Stage 12 must establish and verify:
 
 - working WebUI at `https://cloud.escloud.us`;
@@ -100,6 +108,20 @@ Stage 12 must establish and verify:
 - native/supported n8n integration for representative file operations;
 - supported WebDAV/API access path suitable for Codex/Hermes/Antigravity when later workflows need it;
 - no exposure of project/runtime workspaces through the cloud-drive.
+
+### Private SMB workspace access
+
+Stage 12 must also establish and verify:
+
+- Samba/SMB using the current stable upstream-supported Ubuntu path;
+- only selected project/workspace directories exposed;
+- MacBook Finder access;
+- Windows Explorer access;
+- read/write semantics matching the selected shares;
+- no public TCP/445 listener or UFW opening;
+- access through trusted/private connectivity only;
+- no implicit SMB export of `/srv/cloud/files`;
+- no regression of SSH/Git/local-agent ownership semantics.
 
 ## Resource policy
 
@@ -142,11 +164,14 @@ Use dependency-aware CHECK -> CHANGE -> VERIFY units:
 11. perform iOS/iPadOS client acceptance where practical;
 12. verify public sharing and filename search;
 13. verify representative n8n integration plus WebDAV/API machine access;
-14. integrate Stage 6 backup/recovery and perform isolated restore;
-15. add Stage 7 maintenance/update handling for the new components;
-16. add Stage 8 monitoring/status coverage and Stage 9 portal navigation if justified;
-17. bounded full non-regression of affected Stage 10 integration boundaries;
-18. persist final accepted state to canonical repository.
+14. audit/select exact project/workspace directories for SMB exposure;
+15. deploy private Samba/SMB and verify trusted-interface/listener/firewall boundaries;
+16. verify Finder and Windows Explorer RW behavior against the selected shares;
+17. integrate Stage 6 backup/recovery and perform isolated restore;
+18. add Stage 7 maintenance/update handling for Nextcloud/PostgreSQL/Redis and Samba where applicable;
+19. add Stage 8 monitoring/status coverage and Stage 9 portal navigation if justified;
+20. bounded full non-regression of affected Stage 10 integration boundaries;
+21. persist final accepted state to canonical repository.
 
 ## Acceptance boundaries
 
@@ -174,8 +199,7 @@ Stage 12 does not implement:
 - Office collaboration suite;
 - full-text search stack;
 - photo-management platform;
-- project workspace exposure through `cloud.escloud.us`;
-- SMB redesign for project/workspace access.
+- project workspace exposure through `cloud.escloud.us`.
 
 Those remain separate workflow or later-requirement concerns.
 
