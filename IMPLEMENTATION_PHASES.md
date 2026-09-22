@@ -612,3 +612,18 @@ Current accepted checkpoint on `main`:
 ## Current infrastructure stage
 
 Stage 11 — Remaining Infrastructure Gap Reconciliation & Completion — is active. User workflows follow Stage 11 and any required bounded Stage 10 re-acceptance.
+
+
+---
+
+## Stage 12 — Nextcloud Cloud Drive Deployment & Acceptance
+
+**Status:** PLANNED / ACCEPTED ENTRY CONTRACT.
+
+Branch: `stage-12-nextcloud-cloud-drive`.
+
+Authoritative entry contract: `STAGE_12_ENTRY_CONTRACT_2026-09-22.md`.
+
+Stage 12 owns the production deployment and acceptance of `cloud.escloud.us` as the selected personal cloud-drive capability. It carries forward the accepted Stage 11 Nextcloud/storage decisions and does not reopen them without concrete incompatibility.
+
+Stage 11 remains active separately for remaining infrastructure gap reconciliation.
