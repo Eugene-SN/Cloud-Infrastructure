@@ -1729,3 +1729,36 @@ Acceptance proved browser rendering, service/status presentation, LIVE/STALE/UNA
 **Evidence:** `STAGE_09_FINAL_ACCEPTANCE_2026-09-22.md`.
 
 **Roadmap effect:** Stage 10 — Edge Final Integrated Infrastructure Acceptance is next.
+
+
+---
+
+## 2026-09-22T14:35:00+03:00 — Stage 10 final integrated infrastructure acceptance
+
+**Status:** ACCEPTED
+
+**Context:** Stages 0–9 were already COMPLETE / ACCEPTED. Stage 10 was intentionally bounded: reuse prior stage-specific destructive/recovery PASS evidence and perform only the fresh read-only integration checks required to prove the complete current Cloud Infrastructure runtime is mutually consistent and matches canonical state.
+
+**Decision:**
+- accept Stage 10 — Edge Final Integrated Infrastructure Acceptance — as COMPLETE / ACCEPTED;
+- accept the finite Cloud Infrastructure build as complete;
+- retain prior Stage 3–9 acceptance evidence without unnecessary destructive reruns;
+- accept the fresh Stage 10 integrated audit with zero fresh failures and no runtime mutations/disruptive tests;
+- reconcile current mutable version facts to the fresh runtime evidence;
+- close the Stage 7 repository-source persistence gap by persisting the exact accepted runtime `maintenance/edge/scripts/manual-update`;
+- preserve historical stage-specific records as historical evidence rather than rewriting old accepted versions;
+- move subsequent user-specific automation/orchestration work into the continuous post-infrastructure **Automation & User Workflows** workstream.
+
+**Fresh integrated evidence:** `STAGE10_INTEGRATED_READONLY_AUDIT_V1` returned `STAGE10_FRESH_FAILURES=0`, `STAGE10_INTEGRATED_READONLY_AUDIT=PASS`, `STAGE10_RUNTIME_MUTATIONS=NONE`, `STAGE10_DISRUPTIVE_TESTS=NONE`, final RC=0.
+
+Fresh verification covered current system/user services, Docker workloads, failed units, listeners, nginx, TLS/SAN/expiry, Authelia/native-auth boundaries, NetBird and routed Home/PAI connectivity, split DNS, PVE Syncthing reachability, ai-node vLLM reachability, Knowledge path/runtime state, Backrest state, manual-only maintenance controls, monitoring state and the accepted Stage 9 portal hashes.
+
+**Stage 7 source reconciliation:** the deployed runtime dispatcher SHA256 was `427e7aa5c708391000180bc5b39306d0a065e1e217356678a2d995c25da8a635`; it compiled successfully and explicitly implements normalized `/home/core` execution context plus Hermes active lazy-dependency fail-closed verification. That exact source is now canonical repository source.
+
+The follow-up drift-capture verifier later exited RC=2 solely because `hermes version` is not a supported Hermes command. The failure happened after exact runtime source and current maintenance/version state had already been captured. It is a verifier defect and not a runtime failure.
+
+**Acceptance marker:** `STAGE10_FINAL_ACCEPTANCE=PASS`.
+
+**Evidence:** `STAGE_10_FINAL_ACCEPTANCE_2026-09-22.md`.
+
+**Supersedes:** only the Stage 7 note that repository implementation source still predates the accepted runtime `user_cli`/Hermes hardening. The historical Stage 7 note remains valid historical evidence of the drift before Stage 10 reconciliation.
