@@ -517,3 +517,5 @@ Final acceptance record: `STAGE_10_FINAL_ACCEPTANCE_2026-09-22.md`.
 ## Current next step
 
 The finite Cloud Infrastructure build is complete. The next workstream is post-infrastructure **Automation & User Workflows**, which evolves continuously and does not reopen Stage 10 unless a future infrastructure change explicitly supersedes an accepted contract.
+
+Post-Stage-10 recovery checkpoint: the one-time provider golden VPS snapshot required by the accepted Stage 6 recovery contract was created successfully by the operator after `STAGE10_FINAL_ACCEPTANCE=PASS`. This is a recovery checkpoint only; it does not create a new infrastructure stage or alter Stage 10 acceptance.
