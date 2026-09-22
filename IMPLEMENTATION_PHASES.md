@@ -612,3 +612,44 @@ Current accepted checkpoint on `main`:
 ## Current infrastructure stage
 
 Stage 11 — Remaining Infrastructure Gap Reconciliation & Completion — is active. User workflows follow Stage 11 and any required bounded Stage 10 re-acceptance.
+
+
+---
+
+## Stage 11 — Remaining Infrastructure Gap Reconciliation & Completion
+
+**Status:** ACTIVE / ACCEPTED SCOPE.
+
+Stage 11 reconciles forgotten/omitted infrastructure capabilities against the accepted Stage 10 baseline. Current remaining work is bounded stale-artifact cleanup and canonical reconciliation; substantial deployments are split into later dedicated tasks.
+
+## Stage 12 — Nextcloud Cloud Drive & Private Workspace Access
+
+**Status:** PLANNED / ACCEPTED ENTRY CONTRACT.
+
+Working branch: `stage-12-nextcloud-cloud-drive`.
+
+Stage 12 owns:
+
+- `cloud.escloud.us` Nextcloud personal cloud-drive deployment and acceptance;
+- product-independent user cloud dataset at `/srv/cloud/files`;
+- Nextcloud-specific state under `/srv/nextcloud`;
+- dedicated Nextcloud PostgreSQL plus required cache/locking/background-job components;
+- Authelia OIDC/native-client integration;
+- macOS/Windows/iOS native-client acceptance;
+- private SMB access to explicitly selected project/workspace directories for Finder/Windows Explorer;
+- no public TCP/445 exposure and no automatic SMB export of `/srv/cloud/files`;
+- backup/restore, maintenance, monitoring and bounded non-regression integration.
+
+Authoritative branch contract: `STAGE_12_ENTRY_CONTRACT_2026-09-22.md`.
+
+## Future task — Backrest WebUI ingress
+
+**Status:** PLANNED / DEFERRED.
+
+Publish the already-running Backrest WebUI at `backup.escloud.us` through the accepted ingress/auth architecture. This is an ingress/presentation task only; no replacement backup product is selected.
+
+## Future task — WenTian technical publishing
+
+**Status:** DEFERRED UNTIL CONTENT READY.
+
+`docs.escloud.us` is reserved for a curated WenTian technical documentation library modeled functionally on Lenovo Press, focused on selected Product Guides and Datasheets translated to English and Russian. Do not deploy a placeholder CMS/DMS/site before a useful translated corpus exists. Publishing implementation is selected and deployed when the content set is ready.
