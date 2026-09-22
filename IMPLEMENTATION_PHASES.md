@@ -618,7 +618,7 @@ Stage 11 — Remaining Infrastructure Gap Reconciliation & Completion — is act
 
 ## Stage 11 — Remaining Infrastructure Gap Reconciliation & Completion
 
-**Status:** ACTIVE / ACCEPTED SCOPE.
+**Status:** COMPLETE / ACCEPTED. `STAGE11_FINAL_ACCEPTANCE=PASS`.
 
 Stage 11 reconciles forgotten/omitted infrastructure capabilities against the accepted Stage 10 baseline. Current remaining work is bounded stale-artifact cleanup and canonical reconciliation; substantial deployments are split into later dedicated tasks.
 
