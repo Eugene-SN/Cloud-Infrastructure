@@ -523,7 +523,13 @@ The maintenance dashboard and full Semaphore UI share this origin, matching the 
 
 ## Stage 9 — `app.escloud.us` Cloud Portal
 
-Build after monitoring/status sources and final service inventory are accepted. It provides navigation and concise status, not detailed update controls.
+**Architecture / deployment contract ACCEPTED** with `STAGE09_ARCHITECTURE_ACCEPTANCE=PASS`.
+
+Baseline architecture: static files under `/var/www/app.escloud.us`, existing Xray -> nginx -> shared TLS ingress, ordinary Authelia `auth_request`, and a same-origin read-only `/api/status` view of the accepted Stage 8 `/run/edge-monitor/snapshot.json`. No portal backend service, container, database, SSE/WebSocket or second monitoring collector is used. The frontend presents concise current status plus explicit LIVE/STALE/UNAVAILABLE freshness and links only to real operator-facing services. Stage 7 update execution remains exclusively on `update.escloud.us`; the portal exposes no update mutation plane.
+
+Detailed contract: `STAGE_09_ARCHITECTURE_ACCEPTANCE_2026-09-22.md`.
+
+Runtime deployment/final acceptance remain pending.
 
 ## Stage 10 — Final Integrated Infrastructure Acceptance
 
