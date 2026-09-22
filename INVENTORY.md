@@ -237,9 +237,9 @@ Future external client access through edge remains outside Stage 5.
 | 05.1 | Cross-project Knowledge Reconciliation & Target Architecture | COMPLETE / ACCEPTED |
 | 05.2 | PVE Canonical Obsidian Runtime & WebUI | COMPLETE / ACCEPTED; `STAGE05_2_PVE_CANONICAL_OBSIDIAN_RUNTIME=PASS` |
 | 05.3 | Edge Knowledge Replication & Data Integration | COMPLETE / ACCEPTED; `STAGE05_3_EDGE_KNOWLEDGE_REPLICATION_DATA_INTEGRATION=PASS` |
-| 6 | Backrest & Recovery | PRODUCT DIRECTION ACCEPTED; topology research pending |
-| 7 | Maintenance & Update | Semaphore accepted; deploy only after Stage 6 restore acceptance |
-| 8 | Monitoring, Heartbeats & Alerts | REQUIRED / PRODUCT UNRESOLVED |
+| 6 | Backrest & Recovery | COMPLETE / ACCEPTED; `STAGE06_FINAL_ACCEPTANCE=PASS` |
+| 7 | Maintenance & Update | COMPLETE / ACCEPTED; `STAGE07_FINAL_ACCEPTANCE=PASS` |
+| 8 | Monitoring, Heartbeats & Alerts | COMPLETE / ACCEPTED; `STAGE08_FINAL_ACCEPTANCE=PASS` |
 | 9 | Cloud Portal: `app.escloud.us` | CAPABILITY ACCEPTED / dedicated Codex substage |
 | 10 | Final Integrated Infrastructure Acceptance | REQUIRED / FINAL GATE |
 
@@ -354,3 +354,22 @@ Stage 02.5 — COMPLETE / ACCEPTED.
 Stage 3 — COMPLETE / ACCEPTED.  
 
 `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS`. Final Stage 3 record: `STAGE_03_ACCEPTANCE_2026-09-18.md`. Stage 4 — Edge Hermes Agent Runtime is COMPLETE / ACCEPTED with `STAGE4_FINAL_ACCEPTANCE=PASS`; final record: `STAGE_04_FINAL_ACCEPTANCE_2026-09-18.md`.
+
+
+## Stage 8 monitoring runtime
+
+- status: **COMPLETE / ACCEPTED**; `STAGE08_FINAL_ACCEPTANCE=PASS`;
+- service: host-native `edge-monitor.service`, persistent Python process, systemd-supervised;
+- cadence: FAST 5s / NORMAL 20s / SLOW 60s / OPERATIONS 300s;
+- confirmation: two consecutive failed ordinary endpoint probes before `FAIL`;
+- live status: `/run/edge-monitor/snapshot.json`;
+- durable transition state: `/var/lib/edge-monitor/state.json`;
+- domains: EDGE, APPLICATIONS, HOME_PAI, KNOWLEDGE, OPERATIONS;
+- alert transport: dedicated Mattermost incoming webhook to private `Monitoring` channel; transition/recovery only;
+- Docker monitoring contract at acceptance: six running workloads — `authelia`, `bulwark`, `mattermost-mattermost-1`, `mattermost-postgres-1`, `n8n`, `stalwart`;
+- Backrest source: `/var/lib/backrest/oplog.sqlite`, successful snapshot operations joined by plan ID;
+- accepted Backrest freshness thresholds: OK <=7h, DEGRADED >7h, FAIL >13h;
+- Stage 7 update metadata is read-only/informational; monitoring does not trigger maintenance Refresh;
+- no monitoring database, separate receiver/WebUI, external monitoring service or independent vantage point;
+- accepted limitation: complete edge loss cannot be reported from the edge-only runtime while the node is unreachable;
+- final record: `STAGE_08_FINAL_ACCEPTANCE_2026-09-22.md`.
