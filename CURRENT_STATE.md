@@ -484,10 +484,14 @@ The next finite infrastructure stage is **Stage 8 — Edge Monitoring, Heartbeat
 
 ## Stage 8 — Edge Monitoring, Heartbeats & Alerts
 
-**Status:** IN PROGRESS.
+**Status:** IN PROGRESS — Stage 08.2 initial deployment accepted.
 
-Stage 08.1 requirements/current-baseline review and PVE production-pattern reconciliation are complete. The accepted target is a minimal edge-only persistent monitoring agent: one host-native Python `edge-monitor.service` supervised by systemd, with FAST 5s, NORMAL 20s, SLOW 60s and OPERATIONS 300s cadences. Ordinary endpoint failure is confirmed after two consecutive failed probes. Live telemetry is written atomically to `/run/edge-monitor/snapshot.json`; only durable transition/notification state is stored under `/var/lib/edge-monitor/state.json`. Monitoring domains are EDGE, APPLICATIONS, HOME_PAI, KNOWLEDGE and OPERATIONS, and direct Mattermost alerts are transition/recovery-only.
+Stage 08.1 requirements/current-baseline review and PVE production-pattern reconciliation are complete. The accepted runtime is now deployed as a single persistent Python `edge-monitor.service` supervised by systemd, with FAST 5s, NORMAL 20s, SLOW 60s and OPERATIONS 300s cadences. Ordinary endpoint failure is confirmed after two consecutive failed probes. Live telemetry is written atomically to `/run/edge-monitor/snapshot.json`; durable transition/notification state is stored under `/var/lib/edge-monitor/state.json`.
 
-The previous five-minute timer/oneshot design is superseded. No Prometheus/Grafana/Loki/Gatus stack, monitoring database, receiver service, separate monitoring WebUI, external monitoring provider, independent vantage point or Home/PAI agent is selected. PVE-specific D5/RAPL/EDAC/guest/gateway/SMART collectors and CT200 receiver/SSE presentation are not copied. Complete `edge` loss remains an accepted uncovered failure class for the current scope.
+Initial production verification passed with `STAGE08_2_EDGE_MONITOR_INITIAL_DEPLOYMENT=PASS`: the service is enabled/active with `NRestarts=0`; snapshot cadence advanced correctly; EDGE, APPLICATIONS, HOME_PAI, KNOWLEDGE and OPERATIONS all reported `OK`; both Backrest plans reported fresh successful snapshots from structured `oplog.sqlite` data; Stage 7 metadata remained healthy with `CHECK_FAILED=0`, `REBOOT_REQUIRED=0`, and informational `UPDATE_AVAILABLE=1`; systemd failed-unit gate passed.
 
-Before first Stage 08.2 runtime mutation, only two bounded implementation details remain to be read from current runtime: the existing Mattermost alert transport/credential path and the authoritative Backrest last-success source.
+Direct Mattermost incoming-webhook delivery is configured and its loopback POST test passed. No existing production service was repurposed as the alert transport.
+
+The previous five-minute timer/oneshot design remains superseded. No Prometheus/Grafana/Loki/Gatus stack, monitoring database, receiver service, separate monitoring WebUI, external monitoring provider, independent vantage point or Home/PAI agent is selected. Complete `edge` loss remains an accepted uncovered failure class for the current scope.
+
+The remaining Stage 8 gate is one controlled monitor-only transition/deduplication/recovery test without stopping production services, followed by bounded final acceptance.
