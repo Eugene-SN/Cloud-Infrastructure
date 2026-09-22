@@ -482,16 +482,31 @@ The next finite infrastructure stage is **Stage 8 — Edge Monitoring, Heartbeat
 & Alerts**.
 
 
-## Stage 8 — Edge Monitoring, Heartbeats & Alerts
+## Stage 8 — Edge Monitoring, Heartbeats & Alerts — COMPLETE / ACCEPTED
 
-**Status:** IN PROGRESS — Stage 08.2 initial deployment accepted.
+Stage 8 is complete with `STAGE08_FINAL_ACCEPTANCE=PASS`.
 
-Stage 08.1 requirements/current-baseline review and PVE production-pattern reconciliation are complete. The accepted runtime is now deployed as a single persistent Python `edge-monitor.service` supervised by systemd, with FAST 5s, NORMAL 20s, SLOW 60s and OPERATIONS 300s cadences. Ordinary endpoint failure is confirmed after two consecutive failed probes. Live telemetry is written atomically to `/run/edge-monitor/snapshot.json`; durable transition/notification state is stored under `/var/lib/edge-monitor/state.json`.
+Accepted/deployed runtime:
 
-Initial production verification passed with `STAGE08_2_EDGE_MONITOR_INITIAL_DEPLOYMENT=PASS`: the service is enabled/active with `NRestarts=0`; snapshot cadence advanced correctly; EDGE, APPLICATIONS, HOME_PAI, KNOWLEDGE and OPERATIONS all reported `OK`; both Backrest plans reported fresh successful snapshots from structured `oplog.sqlite` data; Stage 7 metadata remained healthy with `CHECK_FAILED=0`, `REBOOT_REQUIRED=0`, and informational `UPDATE_AVAILABLE=1`; systemd failed-unit gate passed.
+- one persistent host-native Python `edge-monitor.service`, enabled/active under systemd with `Restart=always` and accepted runtime `NRestarts=0`;
+- cadences: FAST 5s, NORMAL 20s, SLOW 60s, OPERATIONS 300s;
+- ordinary endpoint failures require two consecutive failed probes before `FAIL`;
+- live atomic telemetry: `/run/edge-monitor/snapshot.json`;
+- durable transition/notification state: `/var/lib/edge-monitor/state.json`;
+- domains: EDGE, APPLICATIONS, HOME_PAI, KNOWLEDGE and OPERATIONS;
+- direct dedicated Mattermost incoming webhook to the `Monitoring` channel, with notifications only on meaningful state changes and recovery;
+- current Docker workload contract covers six running containers;
+- Home/PVE and ai-node/vLLM reachability, Syncthing Knowledge state, Backrest freshness and Stage 7 maintenance metadata are monitored;
+- Backrest freshness is derived from structured `/var/lib/backrest/oplog.sqlite` successful snapshot operations;
+- Stage 7 `UPDATE_AVAILABLE` is informational and does not degrade monitoring; Stage 8 does not schedule Stage 7 Refresh;
+- no Prometheus/Grafana/Loki/Gatus stack, monitoring database, receiver service, separate monitoring WebUI, external provider, independent vantage point or Home/PAI agent is deployed.
 
-Direct Mattermost incoming-webhook delivery is configured and its loopback POST test passed. No existing production service was repurposed as the alert transport.
+Final Stage 08.3 acceptance used a monitor-only synthetic probe and proved the complete transition contract without stopping production services: initial `OK` was silent; two consecutive failed NORMAL probes produced one `OK → FAIL` notification; unchanged `FAIL` produced no duplicate; recovery produced one `FAIL → OK` notification. The original monitor config SHA256 `91bacef62dbf5076b405b3b08512aa85ab6bb03ca0c887b7f86521cdd78133c5` was restored exactly and all synthetic artifacts were removed. Final production state was all five domains `OK`, `OVERALL_STATE=OK`, `NRestarts=0`, and zero failed systemd units.
 
-The previous five-minute timer/oneshot design remains superseded. No Prometheus/Grafana/Loki/Gatus stack, monitoring database, receiver service, separate monitoring WebUI, external monitoring provider, independent vantage point or Home/PAI agent is selected. Complete `edge` loss remains an accepted uncovered failure class for the current scope.
+Known accepted limitation: because monitoring is intentionally hosted only on `edge`, complete loss of edge or its external connectivity cannot itself be reported while the node is unreachable.
 
-The remaining Stage 8 gate is one controlled monitor-only transition/deduplication/recovery test without stopping production services, followed by bounded final acceptance.
+Final acceptance record: `STAGE_08_FINAL_ACCEPTANCE_2026-09-22.md`.
+
+## Current next step
+
+The next finite infrastructure stage is **Stage 9 — Edge Cloud Portal**. Build `app.escloud.us` against the now-accepted Stage 8 status source; detailed maintenance/update controls remain on `update.escloud.us`.
