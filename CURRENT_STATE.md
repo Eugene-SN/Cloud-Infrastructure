@@ -20,7 +20,7 @@
 **Stage 8 — Edge Monitoring, Heartbeats & Alerts — COMPLETE / ACCEPTED**  
 **Stage 9 — Edge Cloud Portal — COMPLETE / ACCEPTED**  
 **Stage 10 — Edge Final Integrated Infrastructure Acceptance — COMPLETE / ACCEPTED**  
-**Stage 11 — Remaining Infrastructure Gap Reconciliation & Completion — ACTIVE / ACCEPTED SCOPE**
+**Stage 11 — Remaining Infrastructure Gap Reconciliation & Completion — COMPLETE / ACCEPTED**
 
 `EDGE_STAGE2_FINAL_INTEGRATED_ACCEPTANCE=PASS` on 2026-09-17.  
 `CLOUD_STAGE_02_5_FINAL_SCOPE_ACCEPTANCE=PASS` on 2026-09-18.  
@@ -536,3 +536,33 @@ If Stage 11 changes material infrastructure boundaries, return to Stage 10 after
 Post-Stage-10 recovery checkpoint: the one-time provider golden VPS snapshot required by the accepted Stage 6 recovery contract was created successfully by the operator after `STAGE10_FINAL_ACCEPTANCE=PASS`. This is a recovery checkpoint only; it does not create a new infrastructure stage or alter Stage 10 acceptance.
 
 Final Stage 10 hygiene cleanup is also complete. `STAGE10_FINAL_BASELINE_CLEANUP=PASS` and `STAGE10_PRODUCTION_NON_REGRESSION=PASS` with zero cleanup failures, final RC=0 and `REBOOT_REQUIRED=NO`. The cleanup removed verified temporary/audit artifacts, superseded stage rollback material, package/download caches and the obsolete Codex 0.154.0 standalone release while preserving production state, active runtime caches, fallback kernel, logs, Restic caches and current recovery mechanisms. Root filesystem free space increased by 1,900,048,384 bytes (1.77 GiB), from 132 GiB available / 15% used to 133 GiB available / 14% used.
+
+
+## Stage 11 — Remaining Infrastructure Gap Reconciliation & Completion — COMPLETE / ACCEPTED
+
+Stage 11 is complete.
+
+Accepted outcome:
+
+- forgotten/omitted legacy capabilities were reconciled against current runtime and architecture;
+- Nextcloud personal cloud-drive plus private SMB workspace access were split into planned Stage 12;
+- `backup.escloud.us` was retained as a small deferred Backrest WebUI ingress task;
+- `docs.escloud.us` was retained as deferred WenTian technical publishing, to begin only when a useful EN/RU translated corpus exists;
+- `go.escloud.us` and `sync.escloud.us` were retired;
+- legacy Filestash, public Syncthing UI, Homepage, Cockpit, Maintenance Center, old monitoring/socket-proxy, speedtest surface, legacy Codex runner, browser-stack and old same-VPS Restic architecture remain historical only;
+- runtime cleanup audit found no remaining legacy listeners, systemd units, containers/images, filesystem paths, nginx references or Authelia references;
+- the shared `escloud.us` certificate lineage was reissued without `sync.escloud.us`;
+- Xray/Hysteria TLS copies were synchronized;
+- corrected local and public HTTPS E2E verification passed;
+- final DNS verification reports both `go.escloud.us` and `sync.escloud.us` absent;
+- nginx config valid, production containers healthy, zero failed systemd units.
+
+Acceptance markers:
+
+- `STAGE11_LEGACY_ARTIFACT_CLEANUP_AUDIT=PASS`;
+- `STAGE11_SYNC_TLS_CLEANUP_FINAL_VERIFY=PASS`;
+- `STAGE11_FINAL_ACCEPTANCE=PASS`.
+
+Stage 10 remains the accepted pre-Stage-11 baseline; no broad Stage 10 re-acceptance is required because Stage 11 runtime mutation was limited to retired TLS namespace cleanup and bounded non-regression passed.
+
+**Current next implementation stage:** Stage 12 — Nextcloud Cloud Drive & Private Workspace Access.
