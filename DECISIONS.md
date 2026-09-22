@@ -1556,3 +1556,35 @@ runtime changes. The runtime is authoritative until that source copy is
 reconciled; the stale source must not be redeployed over the accepted runtime.
 
 **Next:** Stage 8 — Edge Monitoring, Heartbeats & Alerts.
+
+
+---
+
+## 2026-09-22T12:41:00+03:00 — Stage 8 minimal edge-only monitoring architecture
+
+**Status:** ACCEPTED
+
+**Context:** Stage 8 requirements/baseline reconciliation confirmed that the current project needs lightweight health/state monitoring and transition alerts, not a metrics/logging platform. The operator explicitly limited the current scope to monitoring hosted on `edge`; independent external vantage points are deferred.
+
+**Decision:**
+
+- implement Stage 8 on `edge` only;
+- use a host-native `systemd` timer invoking a short `Type=oneshot` monitoring collector rather than a persistent monitoring daemon;
+- baseline cadence: every 5 minutes, with a short boot delay;
+- reuse existing systemd, Docker, HTTP health endpoints, NetBird reachability, Syncthing REST API, Backrest state and Stage 7 maintenance artifacts rather than duplicating their logic;
+- monitoring domains are `EDGE`, `APPLICATIONS`, `HOME_PAI`, `KNOWLEDGE` and `OPERATIONS`;
+- persist machine-readable current state under `/var/lib/edge-monitor/status.json` and transition memory under `/var/lib/edge-monitor/state.json`;
+- health states are `OK`, `DEGRADED` and `FAIL`;
+- notify only on meaningful state transitions and recovery; unchanged failure state remains silent by default;
+- deliver Stage 8 alerts directly to Mattermost without n8n/Hermes relay;
+- treat Stage 7 `UPDATE_AVAILABLE` as informational metadata, not a health incident;
+- do not treat Stage 7 status artifact age as a monitoring failure and do not schedule automatic Stage 7 Refresh from Stage 8;
+- monitor Backrest by actual backup success/freshness, not by matching arbitrary journal warnings;
+- for the two accepted 6-hour Backrest schedules, initial freshness policy is PASS <=7h, DEGRADED >7h, FAIL >13h, subject to implementation validation against the authoritative runtime result source;
+- do not add a monitoring WebUI in Stage 8; Stage 9 may consume the Stage 8 canonical status artifact;
+- no Prometheus, Grafana, Loki, Gatus, monitoring database, Home/PAI monitoring agents, external uptime service or independent monitoring node is part of the current Stage 8 scope;
+- maintenance suppression integration is deferred unless real Stage 8 acceptance demonstrates false alerts during operator-triggered maintenance.
+
+**Known limitation:** complete loss of `edge` or its external connectivity cannot be reported by this edge-only monitoring design. This limitation is accepted for the current Stage 8 scope.
+
+**Next implementation gate:** before deployment, perform only the bounded read-only checks needed to select the existing Mattermost alert credential/mechanism and the authoritative Backrest last-success source.
