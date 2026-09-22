@@ -1588,3 +1588,36 @@ reconciled; the stale source must not be redeployed over the accepted runtime.
 **Known limitation:** complete loss of `edge` or its external connectivity cannot be reported by this edge-only monitoring design. This limitation is accepted for the current Stage 8 scope.
 
 **Next implementation gate:** before deployment, perform only the bounded read-only checks needed to select the existing Mattermost alert credential/mechanism and the authoritative Backrest last-success source.
+
+
+---
+
+## 2026-09-22T13:12:00+03:00 — Stage 8 PVE-derived persistent monitoring architecture
+
+**Status:** ACCEPTED
+
+**Context:** Fresh runtime audit of the accepted Home/PVE monitoring implementation showed that its production pattern is materially stronger than the initially proposed five-minute timer/oneshot design. PVE uses a lightweight persistent Python agent with a 5-second unified snapshot cadence, slower asynchronous collectors, atomic snapshot publication, per-probe failure confirmation and isolated delivery. The operator accepted reusing these architectural patterns on edge while keeping the Stage 8 scope edge-only and avoiding Home-specific receiver/UI complexity.
+
+**Decision:**
+
+- replace the Stage 8 timer/oneshot model with a host-native persistent `edge-monitor.service`, `Type=simple`, supervised by systemd with automatic restart;
+- keep the runtime as one lightweight Python process; do not add a monitoring stack, database, receiver service or WebUI;
+- use separated cadences rather than one global interval:
+  - FAST: 5 seconds for cheap local host state, cached-state assembly and atomic snapshot publication;
+  - NORMAL: 20 seconds for application/container/network reachability probes, executed concurrently where appropriate;
+  - SLOW: 60 seconds for semantic checks such as detailed Syncthing and broader system state;
+  - OPERATIONS: 300 seconds for Backrest freshness, Stage 7 maintenance metadata and other slow operational checks;
+- confirm ordinary endpoint failures only after two consecutive failed probes; retain the previous known state after a single transient failure;
+- publish live telemetry atomically to `/run/edge-monitor/snapshot.json`;
+- persist only durable transition/notification state under `/var/lib/edge-monitor/state.json`, avoiding unnecessary five-second persistent-disk rewrites;
+- retain the accepted monitoring domains `EDGE`, `APPLICATIONS`, `HOME_PAI`, `KNOWLEDGE` and `OPERATIONS`;
+- notify Mattermost directly only for meaningful state transitions and recovery; repeated unchanged failure state remains silent;
+- retain Stage 7 `UPDATE_AVAILABLE` as informational metadata; do not schedule Stage 7 Refresh from monitoring and do not treat maintenance-cache age by itself as a failure;
+- monitor Backrest by authoritative successful-backup/snapshot freshness, not by arbitrary journal WARN matching;
+- retain the initial six-hour-backup freshness policy of PASS <=7h, DEGRADED >7h, FAIL >13h, subject only to validating the exact runtime last-success source before deployment;
+- do not copy PVE-specific D5, RAPL, EDAC, PVE guest inventory, gateway egress, SMART, producer->receiver push, CT200 receiver or SSE/UI implementation unless a later edge requirement independently justifies them;
+- full edge loss remains intentionally outside the current edge-only Stage 8 detection boundary.
+
+**Supersedes:** the implementation-mechanism and cadence portions of `2026-09-22T12:41:00+03:00 — Stage 8 minimal edge-only monitoring architecture` that specified a five-minute systemd timer/oneshot collector and persistent live status under `/var/lib`. All non-conflicting scope boundaries from that decision remain accepted.
+
+**Next implementation gate:** perform one bounded read-only audit only for the existing Mattermost alert transport/credential path and the authoritative Backrest last-success source, then deploy Stage 08.2.
