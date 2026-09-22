@@ -1648,3 +1648,32 @@ reconciled; the stale source must not be redeployed over the accepted runtime.
 **Acceptance marker:** `STAGE08_2_EDGE_MONITOR_INITIAL_DEPLOYMENT=PASS`.
 
 **Next gate:** one controlled monitor-only transition/deduplication/recovery test, without stopping production services, followed by bounded final Stage 8 acceptance.
+
+
+---
+
+## 2026-09-22T13:43:00+03:00 — Stage 8 final integrated acceptance
+
+**Status:** COMPLETE / ACCEPTED
+
+**Context:** Stage 08.1 architecture reconciliation and Stage 08.2 initial deployment were already accepted. The final Stage 08.3 monitor-only acceptance exercised the production transition engine without stopping or degrading any production service.
+
+**Decision:**
+- accept Stage 8 — Edge Monitoring, Heartbeats & Alerts — as COMPLETE / ACCEPTED;
+- retain the deployed persistent `edge-monitor.service` architecture and accepted 5s/20s/60s/300s collection cadences;
+- retain two-consecutive-failure confirmation for ordinary endpoint probes;
+- retain atomic live telemetry at `/run/edge-monitor/snapshot.json` and durable notification state at `/var/lib/edge-monitor/state.json`;
+- retain direct dedicated Mattermost incoming-webhook delivery to the Monitoring channel;
+- retain transition/recovery-only notification behavior with unchanged-failure deduplication;
+- retain Backrest freshness from structured `/var/lib/backrest/oplog.sqlite` successful snapshot operations;
+- retain Stage 7 `UPDATE_AVAILABLE` as informational metadata, with no automatic Stage 7 Refresh from monitoring;
+- retain the edge-only boundary: complete edge loss remains undetectable until an independent vantage point is deliberately added in a future scope.
+
+**Final verification:** controlled synthetic monitoring probe established an `OK` baseline with no notification, reached `FAIL` after two failed NORMAL cycles and generated exactly one failure notification, remained in `FAIL` without duplicate alerts, then recovered to `OK` and generated exactly one recovery notification. The original config SHA256 `91bacef62dbf5076b405b3b08512aa85ab6bb03ca0c887b7f86521cdd78133c5` was restored byte-for-byte; synthetic config, snapshot and durable-state artifacts were absent afterward. Production non-regression passed with `edge-monitor.service` enabled/active, `NRestarts=0`, all five monitoring domains `OK`, overall `OK`, and zero failed systemd units.
+
+**Acceptance markers:**
+- `STAGE08_2_EDGE_MONITOR_INITIAL_DEPLOYMENT=PASS`;
+- `STAGE08_3_TRANSITION_DEDUP_RECOVERY_TEST=PASS`;
+- `STAGE08_FINAL_ACCEPTANCE=PASS`.
+
+**Next:** Stage 9 — Edge Cloud Portal.
