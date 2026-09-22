@@ -35,7 +35,7 @@ Fresh runtime verification outranks this file. This inventory records accepted l
 
 Accepted live connectivity inventory:
 
-- NetBird `0.78.2` host-native on `edge`;
+- NetBird `0.79.0` host-native on `edge`;
 - `edge` overlay IPv4 `100.105.178.187/16`;
 - CT300 overlay IPv4 `100.105.97.126/16`;
 - Home LAN `192.168.1.0/24` routed through `wt0`;
@@ -63,12 +63,12 @@ Final record: `STAGE_03_ACCEPTANCE_2026-09-18.md`.
 
 | Component | State | Runtime / notes |
 |---|---|---|
-| Authelia | LIVE / ACCEPTED | `4.39.27`; `127.0.0.1:19091`; fresh operator/auth secrets; `auth.escloud.us` |
-| n8n | LIVE / ACCEPTED | `2.39.7`; `127.0.0.1:15678`; fresh one-owner state; `n8n.escloud.us`; Authelia protected |
+| Authelia | LIVE / ACCEPTED | current `4.39.28`; `127.0.0.1:19091`; fresh operator/auth secrets; `auth.escloud.us` |
+| n8n | LIVE / ACCEPTED | current `2.39.10`; `127.0.0.1:15678`; fresh one-owner state; `n8n.escloud.us`; Authelia protected |
 | CloudCLI | LIVE / ACCEPTED | `1.37.3`; systemd; `127.0.0.1:18140`; fresh local user; `code.escloud.us`; Authelia protected |
-| Codex CLI | LIVE / ACCEPTED | `0.154.0`; official standalone; fresh ChatGPT auth; managed Remote Control via Unix socket |
+| Codex CLI | LIVE / ACCEPTED | current `0.155.1`; official standalone; fresh ChatGPT auth; managed Remote Control via Unix socket |
 | Antigravity CLI | LIVE / ACCEPTED | current `1.2.7`; Stage 4G accepted `1.2.6`; Stage 2/4B historical `1.2.5`; Google OAuth; instance `edge`; persistent user service |
-| Stalwart | LIVE / ACCEPTED | `0.16.22`; public SMTP25/SMTPS465/IMAPS993; useful mail data migrated; fresh auth/DKIM |
+| Stalwart | LIVE / ACCEPTED | current `0.16.23`; public SMTP25/SMTPS465/IMAPS993; useful mail data migrated; fresh auth/DKIM |
 | Bulwark | LIVE / ACCEPTED | `1.9.2`; `127.0.0.1:18084`; fresh session/admin state; default webmail route on `mail.escloud.us` |
 
 ### Accepted identities / hashes
@@ -240,8 +240,8 @@ Future external client access through edge remains outside Stage 5.
 | 6 | Backrest & Recovery | COMPLETE / ACCEPTED; `STAGE06_FINAL_ACCEPTANCE=PASS` |
 | 7 | Maintenance & Update | COMPLETE / ACCEPTED; `STAGE07_FINAL_ACCEPTANCE=PASS` |
 | 8 | Monitoring, Heartbeats & Alerts | COMPLETE / ACCEPTED; `STAGE08_FINAL_ACCEPTANCE=PASS` |
-| 9 | Cloud Portal: `app.escloud.us` | CAPABILITY ACCEPTED / dedicated Codex substage |
-| 10 | Final Integrated Infrastructure Acceptance | REQUIRED / FINAL GATE |
+| 9 | Cloud Portal: `app.escloud.us` | COMPLETE / ACCEPTED; `STAGE09_FINAL_ACCEPTANCE=PASS` |
+| 10 | Final Integrated Infrastructure Acceptance | COMPLETE / ACCEPTED; `STAGE10_FINAL_ACCEPTANCE=PASS` |
 
 ## Post-infrastructure application/workflow layer
 
@@ -384,3 +384,37 @@ Stage 3 — COMPLETE / ACCEPTED.
 - status source: `/run/edge-monitor/snapshot.json`;
 - portal has no independent backend service, container, database or update mutation plane;
 - final acceptance: `STAGE09_FINAL_ACCEPTANCE=PASS`.
+
+
+## Stage 10 final integrated inventory checkpoint
+
+Final acceptance: `STAGE10_FINAL_ACCEPTANCE=PASS`.
+
+Fresh Stage 10 runtime reconciliation confirmed the following current mutable versions without rewriting historical stage-specific acceptance evidence:
+
+- NetBird `0.79.0`;
+- n8n `2.39.10`;
+- Authelia `4.39.28`;
+- Stalwart `0.16.23`;
+- Codex CLI `0.155.1`;
+- CloudCLI `1.37.3`;
+- Antigravity CLI `1.2.7`;
+- Hermes `0.21.3`;
+- Mattermost `11.11.0`;
+- PostgreSQL `18.6`;
+- Syncthing `2.1.5`;
+- Backrest `1.14.1`;
+- Restic `0.19.1`;
+- Semaphore `2.19.12`;
+- Xray `26.3.27`;
+- Hysteria2 `2.12.3`;
+- Docker Engine `29.8.1`;
+- Docker Compose `5.5.1`;
+- containerd `2.3.5`;
+- nginx `1.28.3-2ubuntu1.11`;
+- Certbot `4.0.0-4`;
+- UFW `0.36.2-9build1`.
+
+The exact accepted runtime `maintenance/edge/scripts/manual-update` is now persisted in the canonical repository, closing the Stage 7 source drift noted at Stage 7 acceptance.
+
+Final record: `STAGE_10_FINAL_ACCEPTANCE_2026-09-22.md`.
