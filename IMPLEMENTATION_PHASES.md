@@ -492,21 +492,29 @@ The deployed implementation is one persistent host-native Python `edge-monitor.s
 
 `09 — Edge Cloud Portal`
 
-**Status: IN PROGRESS — architecture/deployment contract ACCEPTED.**
+**Status: COMPLETE / ACCEPTED.**
 
-`STAGE09_ARCHITECTURE_ACCEPTANCE=PASS`
+Final marker:
 
-The accepted baseline is a static nginx-served `app.escloud.us` portal behind the existing Xray/shared-TLS/Authelia ingress. It consumes the accepted Stage 8 `/run/edge-monitor/snapshot.json` through a same-origin read-only `/api/status` location and adds no application backend, container, database or second monitoring collector.
+`STAGE09_FINAL_ACCEPTANCE=PASS`
 
-Dedicated Codex substage:
+Accepted runtime:
 
-**Stage 9C — Codex: build `app.escloud.us`**
+- dedicated `https://app.escloud.us` static portal;
+- existing Xray -> nginx -> shared TLS ingress;
+- existing Authelia `auth_request`;
+- static root `/var/www/app.escloud.us`;
+- same-origin read-only `/api/status` from Stage 8 `/run/edge-monitor/snapshot.json`;
+- 5-second frontend polling with explicit LIVE / STALE (>30s) / UNAVAILABLE presentation;
+- navigation to Hermes, n8n, CloudCLI, Mattermost, Mail and Maintenance;
+- no backend service/container/database/second collector;
+- no update mutation controls; Stage 7 execution remains on `update.escloud.us`.
 
-The portal provides navigation plus concise infrastructure/status presentation with explicit LIVE/STALE/UNAVAILABLE freshness. It may display read-only maintenance metadata and link to `update.escloud.us`, but it does not absorb detailed maintenance/update controls or any mutation API.
+Browser acceptance and controlled freshness fixtures passed. Stage 8 remained unchanged with NRestarts=0 and all final monitored domains OK. Zero failed systemd units.
 
 Architecture record: `STAGE_09_ARCHITECTURE_ACCEPTANCE_2026-09-22.md`.
 
-Acceptance planning: verify authenticated access, actual service links, current status, stale/unavailable-data presentation and production non-regression.
+Final record: `STAGE_09_FINAL_ACCEPTANCE_2026-09-22.md`.
 
 ## Stage 10 — Edge Final Integrated Infrastructure Acceptance
 
@@ -544,11 +552,12 @@ Stage 5: **COMPLETE / ACCEPTED**. `STAGE05_FINAL_ACCEPTANCE=PASS`.
 Stage 6: **COMPLETE / ACCEPTED**. `STAGE06_FINAL_ACCEPTANCE=PASS`.
 Stage 7: **COMPLETE / ACCEPTED**. `STAGE07_FINAL_ACCEPTANCE=PASS`.  
 Stage 8: **COMPLETE / ACCEPTED**. `STAGE08_FINAL_ACCEPTANCE=PASS`.
+Stage 9: **COMPLETE / ACCEPTED**. `STAGE09_FINAL_ACCEPTANCE=PASS`.
 
 Current accepted checkpoint on `main`:
 
-`Stage 8 — Edge Monitoring, Heartbeats & Alerts — COMPLETE / ACCEPTED`
+`Stage 9 — Edge Cloud Portal — COMPLETE / ACCEPTED`
 
 ## Current finite infrastructure stage
 
-Stage 9 — Edge Cloud Portal — is next. Build `app.escloud.us` against the accepted Stage 8 status source while keeping detailed update controls on `update.escloud.us`.
+Stage 10 — Edge Final Integrated Infrastructure Acceptance — is next. Reconcile the complete runtime against canonical state and perform bounded final integrated acceptance.
