@@ -2,7 +2,7 @@
 
 Date: 2026-09-22
 
-Status: **ACCEPTED / ACTIVE CLEANUP**
+Status: **COMPLETE / ACCEPTED**
 
 ## Purpose
 
@@ -93,14 +93,26 @@ Confirmed cleanup targets:
 
 Do not automate or mutate Cloudflare from Stage 11.
 
-## Current Stage 11 closeout work
+## Final cleanup and acceptance
 
-Before Stage 11 is complete:
+Final Stage 11 cleanup completed successfully.
 
-1. remove only verified stale runtime/configuration/TLS artifacts for retired legacy names/services;
-2. preserve all accepted current services;
-3. verify nginx, TLS, listeners, systemd, Docker and monitoring non-regression;
-4. reconcile final current-state documents;
-5. leave future deployments to their dedicated tasks above.
+- no legacy listeners, systemd units, Docker objects, stale filesystem paths, nginx references or Authelia references remained;
+- `sync.escloud.us` was removed from the live shared TLS SAN;
+- current certificate fingerprint:
+  `3C:3F:E9:D6:C6:88:02:2F:32:AD:44:07:79:DA:5E:DD:1B:33:FD:E7:36:C6:5A:64:EA:9C:86:03:7A:B6:1C:D4`;
+- Xray and Hysteria2 use the current certificate lineage;
+- corrected nginx PROXY-protocol fallback verification PASS;
+- local Xray HTTPS E2E PASS;
+- public HTTPS E2E PASS;
+- `go.escloud.us` DNS A record ABSENT;
+- `sync.escloud.us` DNS A record ABSENT;
+- nginx config PASS;
+- production containers healthy;
+- zero failed systemd units.
 
-Stage 10 remains the accepted pre-Stage-11 baseline; any cleanup verification is bounded to the affected namespace/configuration surfaces.
+`STAGE11_FINAL_ACCEPTANCE=PASS`
+
+Stage 11 is COMPLETE / ACCEPTED.
+
+Stage 10 remains the accepted pre-Stage-11 baseline. No broad Stage 10 re-acceptance is required because the only Stage 11 runtime mutation was bounded retired TLS namespace cleanup and final non-regression passed.
