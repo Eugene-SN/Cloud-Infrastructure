@@ -14,6 +14,57 @@ MANIFEST = pathlib.Path("/opt/edge-maintenance/config/update-units.json")
 ENABLEMENT = pathlib.Path("/etc/edge-maintenance/manual-driver-enablement.json")
 CACHE = pathlib.Path("/var/www/maintenance-status/maintenance.json")
 CORE_UID = 1000
+CORE_HOME = pathlib.Path("/home/core")
+CORE_PATH = ":".join((
+    "/home/core/.local/bin",
+    "/usr/local/sbin",
+    "/usr/local/bin",
+    "/usr/sbin",
+    "/usr/bin",
+    "/sbin",
+    "/bin",
+    "/snap/bin",
+))
+HERMES_VENV_PYTHON = pathlib.Path(
+    "/home/core/.hermes/hermes-agent/venv/bin/python"
+)
+CORE_CONTEXT_CHECK = r"""
+import os
+
+expected = {
+    "HOME": "/home/core",
+    "USER": "core",
+    "LOGNAME": "core",
+}
+errors = []
+if os.getuid() != 1000:
+    errors.append(f"uid={os.getuid()}")
+if os.getcwd() != "/home/core":
+    errors.append(f"cwd={os.getcwd()}")
+for key, value in expected.items():
+    if os.environ.get(key) != value:
+        errors.append(f"{key}={os.environ.get(key)!r}")
+if not os.environ.get("PATH", "").startswith("/home/core/.local/bin:"):
+    errors.append("PATH is not core-local-first")
+if errors:
+    raise SystemExit("CORE_EXECUTION_CONTEXT=FAIL|" + ",".join(errors))
+print("CORE_EXECUTION_CONTEXT=PASS")
+"""
+HERMES_LAZY_DEPENDENCY_CHECK = r"""
+import json
+from tools.lazy_deps import active_features, feature_missing
+
+drift = {}
+for feature in active_features():
+    missing = feature_missing(feature)
+    if missing:
+        drift[feature] = list(missing)
+
+if drift:
+    print("HERMES_LAZY_DEPENDENCIES=DRIFT|" + json.dumps(drift, sort_keys=True))
+    raise SystemExit(1)
+print("HERMES_LAZY_DEPENDENCIES=PASS")
+"""
 
 
 def load(path):
@@ -27,7 +78,43 @@ def units():
 
 def run(argv, **kwargs):
     print("RUN=" + " ".join(argv), flush=True)
-    subprocess.run(argv, check=True, **kwargs)
+    return subprocess.run(argv, check=True, **kwargs)
+
+
+def core_context_argv(argv):
+    environment = [
+        "/usr/bin/env",
+        "-i",
+        f"HOME={CORE_HOME}",
+        "USER=core",
+        "LOGNAME=core",
+        "SHELL=/bin/bash",
+        f"PATH={CORE_PATH}",
+        "LANG=C.UTF-8",
+        "LC_ALL=C.UTF-8",
+    ]
+    runtime = pathlib.Path(f"/run/user/{CORE_UID}")
+    if runtime.is_dir():
+        environment.append(f"XDG_RUNTIME_DIR={runtime}")
+    return ["runuser", "-u", "core", "--", *environment, *argv]
+
+
+def run_as_core(argv):
+    return run(core_context_argv(argv), cwd=CORE_HOME)
+
+
+def verify_hermes_lazy_dependencies():
+    if not HERMES_VENV_PYTHON.is_file():
+        raise RuntimeError(f"missing Hermes venv Python: {HERMES_VENV_PYTHON}")
+    run_as_core([
+        str(HERMES_VENV_PYTHON),
+        "-c",
+        HERMES_LAZY_DEPENDENCY_CHECK,
+    ])
+
+
+def verify_core_context():
+    run_as_core(["/usr/bin/python3", "-c", CORE_CONTEXT_CHECK])
 
 
 def normalized_image_reference(reference):
@@ -48,6 +135,10 @@ def preflight(unit):
     elif driver == "user_cli":
         if not pathlib.Path(unit["binary"]).is_file():
             raise RuntimeError(f"missing CLI: {unit['binary']}")
+        if unit["id"] == "HERMES" and not HERMES_VENV_PYTHON.is_file():
+            raise RuntimeError(f"missing Hermes venv Python: {HERMES_VENV_PYTHON}")
+        verify_core_context()
+        run_as_core([unit["binary"], "--version"])
     elif driver == "maintctl" and not pathlib.Path("/usr/local/bin/maintctl").is_file():
         raise RuntimeError("missing maintctl")
     elif driver == "github_binary" and not pathlib.Path(f"/usr/local/bin/{unit['id'].lower()}").is_file():
@@ -149,11 +240,13 @@ def execute(unit, status_row):
             cwd=directory,
         )
     elif driver == "user_cli":
-        run(["runuser", "-u", "core", "--", unit["binary"], *unit["arguments"]])
+        run_as_core([unit["binary"], *unit["arguments"]])
         for service in unit.get("services", []):
-            run(["runuser", "-u", "core", "--", "env", f"XDG_RUNTIME_DIR=/run/user/{CORE_UID}", "systemctl", "--user", "restart", service])
+            run_as_core(["systemctl", "--user", "restart", service])
         if unit.get("system_service"):
             run(["systemctl", "restart", unit["system_service"]])
+        if unit["id"] == "HERMES":
+            verify_hermes_lazy_dependencies()
     else:
         raise RuntimeError(f"unsupported driver: {driver}")
 
