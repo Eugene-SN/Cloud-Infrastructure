@@ -1677,3 +1677,28 @@ reconciled; the stale source must not be redeployed over the accepted runtime.
 - `STAGE08_FINAL_ACCEPTANCE=PASS`.
 
 **Next:** Stage 9 — Edge Cloud Portal.
+
+---
+
+## 2026-09-22T13:55:00+03:00 — Stage 9 baseline Cloud Portal architecture
+
+**Status:** ACCEPTED
+
+**Context:** Stage 8 is COMPLETE / ACCEPTED and exposes the canonical atomic live snapshot at `/run/edge-monitor/snapshot.json`. A bounded Stage 9 runtime audit confirmed that the snapshot is directly readable by nginx, `app.escloud.us` already has DNS/TLS identity, and no dedicated app vhost exists yet. The operator accepted a deliberately lightweight baseline that can be improved later without introducing unnecessary runtime components.
+
+**Decision:**
+- deploy `app.escloud.us` as a static nginx-served portal protected by the existing Authelia `auth_request` pattern;
+- serve frontend assets from `/var/www/app.escloud.us`;
+- expose the Stage 8 snapshot same-origin at `/api/status` with no status backend service and no duplicate collector;
+- keep Stage 8 as the sole health/state producer;
+- frontend polls approximately every 5 seconds and presents `LIVE`, `STALE` (>30s), and `UNAVAILABLE` explicitly;
+- consume Stage 8 `OK/DEGRADED/FAIL` semantics as-is and do not derive a new application-domain aggregate where schema v1 does not provide one;
+- initial navigation links are Hermes, n8n, CloudCLI, Mattermost, Mail and Maintenance only;
+- do not present reserved/unimplemented names as working applications; in particular `backup.escloud.us` is not a portal destination until a real Backrest UI ingress is separately deployed;
+- allow read-only Stage 7 maintenance metadata and a link to `update.escloud.us`, but no update controls, Semaphore execution API or mutation plane;
+- no Docker container, application server, systemd portal daemon, database, SSE/WebSocket, n8n relay or Hermes relay is part of the baseline;
+- future UI/detail expansion is allowed so long as these responsibility boundaries remain intact.
+
+**Acceptance marker:** `STAGE09_ARCHITECTURE_ACCEPTANCE=PASS`.
+
+**Evidence / contract:** `STAGE_09_ARCHITECTURE_ACCEPTANCE_2026-09-22.md`.
