@@ -1621,3 +1621,30 @@ reconciled; the stale source must not be redeployed over the accepted runtime.
 **Supersedes:** the implementation-mechanism and cadence portions of `2026-09-22T12:41:00+03:00 — Stage 8 minimal edge-only monitoring architecture` that specified a five-minute systemd timer/oneshot collector and persistent live status under `/var/lib`. All non-conflicting scope boundaries from that decision remain accepted.
 
 **Next implementation gate:** perform one bounded read-only audit only for the existing Mattermost alert transport/credential path and the authoritative Backrest last-success source, then deploy Stage 08.2.
+
+
+---
+
+## 2026-09-22T13:37:31+03:00 — Stage 08.2 initial edge-monitor deployment
+
+**Status:** ACCEPTED
+
+**Context:** The accepted PVE-derived Stage 8 architecture was deployed on edge with a direct Mattermost incoming webhook and structured Backrest oplog integration.
+
+**Decision / confirmed runtime:**
+- `edge-monitor.service` is enabled and active as a persistent Python service with `Restart=always`, `RestartSec=2s`, and `NRestarts=0`;
+- runtime cadences are FAST 5s, NORMAL 20s, SLOW 60s, OPERATIONS 300s;
+- live snapshot is written atomically to `/run/edge-monitor/snapshot.json`;
+- durable notification state is stored in `/var/lib/edge-monitor/state.json`;
+- six current Docker workloads are monitored;
+- direct Mattermost webhook transport passed an end-to-end loopback POST test;
+- Backrest freshness is derived from `/var/lib/backrest/oplog.sqlite`, joined through `operation_groups.plan_id`, using successful operations with `status=3` and non-empty `snapshot_id`;
+- initial runtime snapshot reported overall `OK`: EDGE, APPLICATIONS, HOME_PAI, KNOWLEDGE and OPERATIONS all `OK`;
+- initial Backrest states were `OK` for both `edge-state` and `edge-knowledge-local`;
+- Stage 7 maintenance metadata was `CHECK_FAILED=0`, `REBOOT_REQUIRED=0`, `UPDATE_AVAILABLE=1`; the pending update remained informational and did not degrade monitoring;
+- snapshot cadence advanced from sequence 5 to 7 across the verification window;
+- systemd failed-unit gate passed.
+
+**Acceptance marker:** `STAGE08_2_EDGE_MONITOR_INITIAL_DEPLOYMENT=PASS`.
+
+**Next gate:** one controlled monitor-only transition/deduplication/recovery test, without stopping production services, followed by bounded final Stage 8 acceptance.
