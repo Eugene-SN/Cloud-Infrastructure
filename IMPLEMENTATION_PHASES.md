@@ -522,9 +522,15 @@ Final record: `STAGE_09_FINAL_ACCEPTANCE_2026-09-22.md`.
 
 `10 — Edge Final Integrated Infrastructure Acceptance`
 
-Perform final server-wide acceptance only after all selected infrastructure services, cross-site connectivity/data integration, Backrest restore, Semaphore/update, monitoring/alerts, `app.escloud.us` and final cleanup are accepted.
+**Status: COMPLETE / ACCEPTED.**
 
-Acceptance planning: reconcile runtime inventory with GitHub; verify access, ingress/TLS, service persistence, cross-site/data integration, recovery, update status, alerts and portal behavior. Record known accepted constraints separately from failures and remove only confirmed temporary artifacts. Any disruptive recovery/reboot scenario belongs to separately authorized implementation/acceptance work, not the current read-only audit.
+Final marker: `STAGE10_FINAL_ACCEPTANCE=PASS`.
+
+The final bounded integrated acceptance reused prior destructive/recovery PASS evidence and performed only the fresh read-only checks required to reconcile the complete current runtime: system/user services, Docker workloads, listeners, ingress/TLS/auth, NetBird/Home/PAI connectivity, Knowledge integration, Backrest state, maintenance/manual-only controls, monitoring and the Stage 9 portal. `STAGE10_INTEGRATED_READONLY_AUDIT_V1` completed with zero fresh failures, no runtime mutations and no disruptive tests.
+
+The known Stage 7 repository-source drift was closed by persisting the exact accepted runtime `maintenance/edge/scripts/manual-update`, including normalized `/home/core` execution context and Hermes lazy-dependency fail-closed verification. Current mutable version facts were reconciled without rewriting historical acceptance records.
+
+Final record: `STAGE_10_FINAL_ACCEPTANCE_2026-09-22.md`.
 
 Stage 10 closes the finite Cloud Infrastructure build.
 
@@ -552,12 +558,13 @@ Stage 5: **COMPLETE / ACCEPTED**. `STAGE05_FINAL_ACCEPTANCE=PASS`.
 Stage 6: **COMPLETE / ACCEPTED**. `STAGE06_FINAL_ACCEPTANCE=PASS`.
 Stage 7: **COMPLETE / ACCEPTED**. `STAGE07_FINAL_ACCEPTANCE=PASS`.  
 Stage 8: **COMPLETE / ACCEPTED**. `STAGE08_FINAL_ACCEPTANCE=PASS`.
-Stage 9: **COMPLETE / ACCEPTED**. `STAGE09_FINAL_ACCEPTANCE=PASS`.
+Stage 9: **COMPLETE / ACCEPTED**. `STAGE09_FINAL_ACCEPTANCE=PASS`.  
+Stage 10: **COMPLETE / ACCEPTED**. `STAGE10_FINAL_ACCEPTANCE=PASS`.
 
 Current accepted checkpoint on `main`:
 
-`Stage 9 — Edge Cloud Portal — COMPLETE / ACCEPTED`
+`Stage 10 — Edge Final Integrated Infrastructure Acceptance — COMPLETE / ACCEPTED`
 
-## Current finite infrastructure stage
+## Finite infrastructure build
 
-Stage 10 — Edge Final Integrated Infrastructure Acceptance — is next. Reconcile the complete runtime against canonical state and perform bounded final integrated acceptance.
+The finite Cloud Infrastructure build is complete. The next workstream is post-infrastructure **Automation & User Workflows**.
