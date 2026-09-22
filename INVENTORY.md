@@ -108,7 +108,7 @@ Final record: `STAGE_03_ACCEPTANCE_2026-09-18.md`.
 - `backup.escloud.us` — future Backrest management UI;
 - `ops.escloud.us` — RETIRED from edge runtime/configuration/certificate/recovery state on 2026-09-21; operator-owned Cloudflare DNS deletion remains;
 - `update.escloud.us` — LIVE maintenance dashboard and full Semaphore UI through Xray, host nginx and Authelia; `/` redirects to `/status/`, the Semaphore history UI is `/project/1/history`, and both backends remain loopback-only;
-- `app.escloud.us` — future final Cloud Infrastructure portal/dashboard; dedicated Codex substage after monitoring/status sources;
+- `app.escloud.us` — live Stage 9 Cloud Portal; static nginx + Authelia; same-origin read-only Stage 8 status
 - `docs.escloud.us` — reserved;
 - `hermes.escloud.us` — LIVE accepted Hermes Dashboard/Remote Gateway; native self-hosted OIDC through Authelia; backend loopback-only;
 - `chat.escloud.us` — LIVE Mattermost human endpoint; core runtime and public nginx ingress accepted; native Mattermost authentication without Authelia;
@@ -373,3 +373,14 @@ Stage 3 — COMPLETE / ACCEPTED.
 - no monitoring database, separate receiver/WebUI, external monitoring service or independent vantage point;
 - accepted limitation: complete edge loss cannot be reported from the edge-only runtime while the node is unreachable;
 - final record: `STAGE_08_FINAL_ACCEPTANCE_2026-09-22.md`.
+
+## Stage 9 Cloud Portal runtime
+
+- public endpoint: `https://app.escloud.us`;
+- static root: `/var/www/app.escloud.us`;
+- nginx vhost: `/etc/nginx/sites-available/app-escloud-us.conf` -> `/etc/nginx/sites-enabled/app-escloud-us.conf`;
+- authentication: existing Authelia `auth_request`;
+- status endpoint: same-origin `/api/status`;
+- status source: `/run/edge-monitor/snapshot.json`;
+- portal has no independent backend service, container, database or update mutation plane;
+- final acceptance: `STAGE09_FINAL_ACCEPTANCE=PASS`.
