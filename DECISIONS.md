@@ -1902,3 +1902,30 @@ Mixing discovery and deployment of such omitted capabilities back into Stage 10 
 7. No runtime directory creation or deployment is authorized by this decision alone.
 
 **Supersedes:** the provisional Stage 11 layout that placed the primary user cloud dataset under `/srv/nextcloud/data`.
+
+
+---
+
+## 2026-09-22T17:35:00+03:00 — Stage 12 split for Nextcloud cloud-drive deployment
+
+**Status:** ACCEPTED
+
+**Context:** Stage 11 is a broad remaining-infrastructure reconciliation pass. The `cloud.escloud.us` capability has now been sufficiently researched to move from general gap discovery into a distinct deployment/acceptance workstream. Continuing Nextcloud deployment inside Stage 11 would mix one substantial implementation with the still-unfinished search for other omitted infrastructure services.
+
+**Decision:**
+
+1. Keep **Stage 11 — Remaining Infrastructure Gap Reconciliation & Completion** active for discovery, classification and research of other forgotten/omitted infrastructure capabilities.
+2. Move the `cloud.escloud.us` implementation into a separate **Stage 12 — Nextcloud Cloud Drive Deployment & Acceptance**.
+3. Stage 12 carries forward all accepted Stage 11 cloud-drive decisions without reopening them absent concrete incompatibility:
+   - Nextcloud is the primary deployment candidate;
+   - OpenCloud is excluded from further research;
+   - ownCloud Infinite Scale is fallback only if a concrete Nextcloud incompatibility is demonstrated;
+   - canonical product-independent user dataset: `/srv/cloud/files`;
+   - Nextcloud-specific state: `/srv/nextcloud/data` and `/srv/nextcloud/postgres`;
+   - dedicated Nextcloud PostgreSQL;
+   - cloud user access through native clients, WebDAV/API and supported integrations rather than direct POSIX as the normal workflow.
+4. Stage 12 owns production-shaped deployment, ingress/OIDC, native-client E2E, integration acceptance, backup/recovery integration and final non-regression for the cloud-drive capability.
+5. No Stage 12 runtime mutation occurs merely by creating the branch/contract.
+6. Stage 11 may continue and discover additional Stage 12-independent gaps in parallel at the planning/reconciliation level.
+
+**Supersedes:** only the prior Stage 11 execution assumption that deployment of every `MISSING_REQUIRED` capability must occur inside Stage 11 itself. The Stage 11 classification/reconciliation purpose remains unchanged.
