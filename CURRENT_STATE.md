@@ -242,7 +242,7 @@ Protected private web namespace includes `n8n`, `code`, future `app`, `backup`, 
 
 Shared Certbot lineage: `/etc/letsencrypt/live/escloud.us`.
 
-Current SAN set includes `escloud.us`, `app.escloud.us`, `auth.escloud.us`, `backup.escloud.us`, `chat.escloud.us`, `cloud.escloud.us`, `code.escloud.us`, `docs.escloud.us`, `hermes.escloud.us`, `mail.escloud.us`, `n8n.escloud.us`, `sync.escloud.us` and `update.escloud.us`. `update.escloud.us` has active HTTPS ingress through Authelia for both the maintenance dashboard and Semaphore UI. The former `ops.escloud.us` candidate is fully retired from edge runtime/configuration/certificate state; only operator-owned Cloudflare DNS deletion remains.
+Current SAN set includes `escloud.us`, `app.escloud.us`, `auth.escloud.us`, `backup.escloud.us`, `chat.escloud.us`, `cloud.escloud.us`, `code.escloud.us`, `docs.escloud.us`, `hermes.escloud.us`, `mail.escloud.us`, `n8n.escloud.us`, `sync.escloud.us` and `update.escloud.us`. `update.escloud.us` has active HTTPS ingress through Authelia for both the maintenance dashboard and Semaphore UI. The former `ops.escloud.us` candidate is fully retired from edge runtime/configuration/certificate state and its public Cloudflare DNS A record is also deleted. `STAGE10_OPS_DNS_RETIREMENT_VERIFY=PASS`.
 
 ## Stage 2 applications
 
