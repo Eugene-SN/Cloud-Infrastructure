@@ -1762,3 +1762,20 @@ The follow-up drift-capture verifier later exited RC=2 solely because `hermes ve
 **Evidence:** `STAGE_10_FINAL_ACCEPTANCE_2026-09-22.md`.
 
 **Supersedes:** only the Stage 7 note that repository implementation source still predates the accepted runtime `user_cli`/Hermes hardening. The historical Stage 7 note remains valid historical evidence of the drift before Stage 10 reconciliation.
+
+
+---
+
+## 2026-09-22 — Post-Stage-10 provider golden VPS snapshot
+
+**Status:** ACCEPTED
+
+**Context:** the accepted Stage 6 recovery contract called for one provider golden VPS snapshot only after final infrastructure acceptance.
+
+**Decision:** record the operator-confirmed successful creation of the one-time provider golden VPS snapshot after `STAGE10_FINAL_ACCEPTANCE=PASS`.
+
+This is a post-acceptance recovery checkpoint only. It does not reopen Stage 10, create Stage 11, or change the finite Cloud Infrastructure architecture.
+
+No provider-side snapshot identifier was supplied, so none is invented or stored.
+
+**Result:** Stage 6 post-build golden snapshot requirement is satisfied.
