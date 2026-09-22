@@ -44,7 +44,7 @@ Reserved names do not authorize premature service deployment.
 | `ops.escloud.us` | prepared candidate for a separate Semaphore UI | RETIRED; runtime/config/certificate/DNS cleanup completed during Stage 10 |
 | `sync.escloud.us` | legacy public Syncthing UI / synchronization hostname | RETIRED; current Syncthing is private Knowledge replication and Stage 12 Nextcloud owns end-user sync |
 
-Do not preserve retired or unused names indefinitely unless a concrete compatibility requirement appears. The former `ops.escloud.us` name has no edge vhost, Authelia rule, certificate SAN, automation entry or recovery copy; its external Cloudflare DNS record is pending operator deletion.
+Do not preserve retired or unused names indefinitely unless a concrete compatibility requirement appears. `ops.escloud.us`, `go.escloud.us`, and `sync.escloud.us` are absent from the current public DNS namespace; `ops` and `sync` are also absent from the shared application certificate.
 
 ## DNS contract
 
@@ -61,7 +61,7 @@ Application/service A records point to the current public IPv4 of `edge`, `45.92
 
 The current shared application certificate lineage covers the accepted current application namespace except where a future hostname has not yet been activated. `update.escloud.us` is active in the shared certificate and public ingress.
 
-Future deployment stages should add a hostname to the certificate only when the corresponding service/page is actually being deployed. DNS existence alone remains insufficient evidence of activation for the remaining future names. `sync.escloud.us` is retired and should be removed from the live certificate lineage during the bounded Stage 11 stale-artifact cleanup.
+Future deployment stages should add a hostname to the certificate only when the corresponding service/page is actually being deployed. DNS existence alone remains insufficient evidence of activation for the remaining future names. `sync.escloud.us` is retired and was removed from the live certificate lineage during Stage 11 cleanup.
 
 The intended namespace includes:
 
