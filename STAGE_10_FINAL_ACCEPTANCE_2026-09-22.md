@@ -169,3 +169,20 @@ All selected Cloud Infrastructure services and cross-project integration boundar
 The finite Cloud Infrastructure build is complete.
 
 The next workstream is the post-infrastructure continuous **Automation & User Workflows** stream.
+
+
+## Post-acceptance completion
+
+After the initial Stage 10 acceptance:
+
+1. the operator created the one-time provider golden VPS snapshot required by the Stage 6 post-build recovery contract;
+2. the operator removed the retired `ops.escloud.us` public Cloudflare DNS record;
+3. edge verification confirmed:
+   - `OPS_ESCLOUD_US_A_RECORD=ABSENT`;
+   - `OPS_DNS_RETIREMENT_GATE=PASS`;
+   - `STAGE10_OPS_DNS_RETIREMENT_VERIFY=PASS`;
+   - final RC=0.
+
+These actions close the remaining post-acceptance recovery/DNS cleanup items without changing the already accepted runtime architecture.
+
+`STAGE10_FINAL_ACCEPTANCE=PASS` remains final.
