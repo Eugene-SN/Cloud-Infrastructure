@@ -1833,3 +1833,29 @@ Removed items included APT/download caches, npm/npx caches, UV build/download ca
 - final RC=0.
 
 This clean baseline is the final production state of the finite Cloud Infrastructure build.
+
+
+---
+
+## 2026-09-22 — Stage 11 remaining infrastructure gap reconciliation
+
+**Status:** ACCEPTED
+
+**Context:** Stage 10 successfully accepted and cleaned the currently deployed Cloud Infrastructure baseline. During final repository review, a material documentation/history gap was discovered: legacy infrastructure capabilities such as the `cloud.escloud.us` file-access layer had existed and were captured in the historical VPS baseline, but were not correctly carried into the canonical rebuild roadmap. Current inventory therefore classified at least one historically real capability as merely an unresolved future service.
+
+Mixing discovery and deployment of such omitted capabilities back into Stage 10 would blur the purpose of final integrated acceptance.
+
+**Decision:**
+- preserve Stage 10 as COMPLETE / ACCEPTED for the current clean pre-Stage-11 baseline;
+- create **Stage 11 — Remaining Infrastructure Gap Reconciliation & Completion**;
+- perform one systematic reconciliation of legacy baseline, migration-reference, canonical repo, current runtime, prior acceptance records and available project history;
+- identify forgotten/omitted infrastructure services and tools that should exist before user-specific workflows;
+- classify each candidate as `KEEP_CURRENT`, `HISTORICAL_ONLY`, `MISSING_REQUIRED`, `OPTIONAL_DEFER` or `RESEARCH_REQUIRED`;
+- do not redeploy historical products solely because they existed;
+- research current stable alternatives where necessary and deploy only capabilities classified `MISSING_REQUIRED`;
+- defer **Automation & User Workflows** until Stage 11 is complete;
+- if Stage 11 materially changes infrastructure, return to Stage 10 afterward for bounded re-acceptance only of affected integration boundaries.
+
+**Initial known gap:** legacy baseline records `cloud.escloud.us -> Filestash -> /srv/cloud`, while the rebuild intentionally did not restore that runtime and current canonical inventory previously described the file-access layer only as an unresolved future capability.
+
+**Supersedes:** the roadmap statement that Stage 10 necessarily completed all infrastructure scope and that user workflows should begin immediately afterward. It does not supersede `STAGE10_FINAL_ACCEPTANCE=PASS` for the accepted pre-Stage-11 baseline.
