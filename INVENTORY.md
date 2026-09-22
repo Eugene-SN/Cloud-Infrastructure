@@ -418,3 +418,5 @@ Fresh Stage 10 runtime reconciliation confirmed the following current mutable ve
 The exact accepted runtime `maintenance/edge/scripts/manual-update` is now persisted in the canonical repository, closing the Stage 7 source drift noted at Stage 7 acceptance.
 
 Final record: `STAGE_10_FINAL_ACCEPTANCE_2026-09-22.md`.
+
+Post-acceptance recovery inventory: one provider golden VPS snapshot was created successfully by the operator after Stage 10 final acceptance, satisfying the one-time Stage 6 post-build snapshot requirement. Snapshot provider-side identifier is not recorded in the repository.
