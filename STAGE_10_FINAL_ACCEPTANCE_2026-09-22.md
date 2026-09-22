@@ -186,3 +186,27 @@ After the initial Stage 10 acceptance:
 These actions close the remaining post-acceptance recovery/DNS cleanup items without changing the already accepted runtime architecture.
 
 `STAGE10_FINAL_ACCEPTANCE=PASS` remains final.
+
+
+## Final hygiene cleanup and clean baseline
+
+A final expanded read-only hygiene audit was performed after functional acceptance and golden snapshot creation. The audit found no Docker residue, no failed systemd units and no transient jobs. Cleanup was then limited to confirmed non-production residue.
+
+Cleanup removed verified caches, obsolete Codex `0.154.0`, completed stage rollback artifacts, acceptance/audit temporary files, verifier bytecode and stale package-install remnants. It intentionally preserved production state, one fallback kernel, journals/logrotate history, Hermes browser runtime cache, installed UV runtimes/tools, Restic caches, runtime-managed temporary directories and all Docker production assets.
+
+Measured result:
+
+- root available before: `140747862016` bytes;
+- root available after: `142647910400` bytes;
+- reclaimed: `1900048384` bytes (`1.77 GiB`);
+- post-clean root usage: approximately `22 GiB used / 133 GiB available / 14%`.
+
+Post-clean verification:
+
+- `STAGE10_CLEANUP_FAILURES=0`;
+- `STAGE10_FINAL_BASELINE_CLEANUP=PASS`;
+- `STAGE10_PRODUCTION_NON_REGRESSION=PASS`;
+- `REBOOT_REQUIRED=NO`;
+- final RC=0.
+
+The resulting clean production baseline is the final accepted Stage 10 state.
