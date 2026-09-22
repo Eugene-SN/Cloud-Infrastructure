@@ -1878,3 +1878,27 @@ Mixing discovery and deployment of such omitted capabilities back into Stage 10 
 5. Canonical POSIX storage for cloud user data is optional rather than mandatory. Existing project/workspace data remains ordinary POSIX and may be exposed separately through SMB; cloud user data may be application-owned and accessed through native clients, WebDAV/API and supported integrations.
 
 **Supersedes:** the earlier Stage 11 research framing that treated OpenCloud as a co-equal finalist or collaborative PosixFS as a primary selection criterion.
+
+
+---
+
+## 2026-09-22T17:31:00+03:00 — Stage 11 cloud storage path boundary
+
+**Status:** ACCEPTED
+
+**Context:** The `cloud.escloud.us` target is a personal cloud-drive with Nextcloud as the primary current candidate. The operator wants the user-data filesystem to remain reusable if the cloud product is later replaced, while keeping product-specific application state separate.
+
+**Decision:**
+
+1. The canonical product-independent user cloud dataset is:
+   - `/srv/cloud/files`
+2. Nextcloud-specific persistent state is separated under:
+   - `/srv/nextcloud/data` — internal Nextcloud data/appdata/state;
+   - `/srv/nextcloud/postgres` — dedicated Nextcloud PostgreSQL data.
+3. `/srv/cloud/files` must not contain Nextcloud runtime/application internals.
+4. Nextcloud will expose `/srv/cloud/files` through its supported storage integration rather than treating the path as its internal `datadirectory`.
+5. Normal user/service access to cloud data should go through Nextcloud native clients, WebDAV/API or supported integrations. Direct out-of-band POSIX modification of `/srv/cloud/files` is not the normal workflow.
+6. Backup/recovery policy must treat `/srv/cloud/files` as portable user data and `/srv/nextcloud` as application-specific state, with consistency requirements for the Nextcloud database/config handled separately.
+7. No runtime directory creation or deployment is authorized by this decision alone.
+
+**Supersedes:** the provisional Stage 11 layout that placed the primary user cloud dataset under `/srv/nextcloud/data`.
