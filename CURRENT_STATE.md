@@ -480,3 +480,14 @@ not reopen Stage 7 runtime acceptance.
 
 The next finite infrastructure stage is **Stage 8 — Edge Monitoring, Heartbeats
 & Alerts**.
+
+
+## Stage 8 — Edge Monitoring, Heartbeats & Alerts
+
+**Status:** IN PROGRESS.
+
+Stage 08.1 requirements/current-baseline review is complete. The accepted target is a minimal edge-only monitoring implementation: a five-minute host-native systemd timer invokes a oneshot collector that reuses existing systemd/Docker/API/status sources, writes `/var/lib/edge-monitor/status.json` plus transition state, and sends direct Mattermost alerts only on state transitions/recovery. Monitoring domains are EDGE, APPLICATIONS, HOME_PAI, KNOWLEDGE and OPERATIONS.
+
+No Prometheus/Grafana/Loki/Gatus stack, monitoring database, separate monitoring WebUI, external monitoring provider, independent vantage point or Home/PAI agents are selected. Complete `edge` loss is an accepted uncovered failure class for the current scope.
+
+Before first runtime mutation, only two bounded implementation details remain to be read from current runtime: the existing Mattermost alert transport/credential path and the authoritative Backrest last-success source.
