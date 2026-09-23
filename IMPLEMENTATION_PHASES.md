@@ -624,23 +624,26 @@ Stage 11 reconciles forgotten/omitted infrastructure capabilities against the ac
 
 ## Stage 12 — Nextcloud Cloud Drive & Private Workspace Access
 
-**Status:** PLANNED / ACCEPTED ENTRY CONTRACT.
+**Status:** COMPLETE / ACCEPTED. `STAGE12_FINAL_ACCEPTANCE=PASS`.
 
 Working branch: `stage-12-nextcloud-cloud-drive`.
 
-Stage 12 owns:
+Accepted result:
 
-- `cloud.escloud.us` Nextcloud personal cloud-drive deployment and acceptance;
-- product-independent user cloud dataset at `/srv/cloud/files`;
-- Nextcloud-specific state under `/srv/nextcloud`;
-- dedicated Nextcloud PostgreSQL plus required cache/locking/background-job components;
-- Authelia OIDC/native-client integration;
-- macOS/Windows/iOS native-client acceptance;
-- private SMB access to explicitly selected project/workspace directories for Finder/Windows Explorer;
-- no public TCP/445 exposure and no automatic SMB export of `/srv/cloud/files`;
-- backup/restore, maintenance, monitoring and bounded non-regression integration.
+- `cloud.escloud.us`: Nextcloud personal cloud drive, accepted with native-client E2E;
+- portable user-visible cloud files: `/srv/cloud`; Nextcloud-specific persistent state: `/srv/nextcloud`;
+- direct workspace access: WebDAV, not SMB;
+- WebDAV target is exactly `/home/core/projects/`;
+- rclone `1.75.1` runs as persistent `core` user service `projects-webdav.service` on loopback `127.0.0.1:18081`;
+- public workspace endpoint: `https://go.escloud.us/` through existing Xray -> nginx ingress;
+- WebDAV authentication: HTTP Basic over HTTPS;
+- Samba/SMB implementation was rejected and fully removed after topology testing showed that clientless Home LAN access would require unwanted Home routing/firewall changes or a proxy;
+- no Home Infrastructure mutation was made;
+- local and public WebDAV `PROPFIND/MKCOL/PUT/GET/MOVE/DELETE` acceptance passed;
+- macOS Finder access and automatic connection were accepted;
+- final server health: Xray/Hysteria/nginx/WebDAV active, zero failed systemd units.
 
-Authoritative branch contract: `STAGE_12_ENTRY_CONTRACT_2026-09-22.md`.
+Authoritative final record: `STAGE_12_FINAL_ACCEPTANCE_2026-09-23.md`.
 
 ## Future task — Backrest WebUI ingress
 
