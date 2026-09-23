@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate the refreshed maintenance cache after an Edge Master Batch."""
+"""Validate the refreshed manual-target state after an Edge Master Batch."""
 
 import datetime as dt
 import json
@@ -15,22 +15,24 @@ def validate(manifest, cache, now=None):
     expected = {unit["id"] for unit in manifest.get("units", [])}
     rows = cache.get("rows", [])
     index = {row.get("component"): row for row in rows}
+
     if (
         cache.get("schema") != 3
-        or cache.get("target_model") != "update_units_v3"
-        or len(expected) != 16
-        or len(rows) != 16
-        or len(index) != 16
-        or set(index) != expected
+        or cache.get("target_model") != "update_units_v4"
+        or not expected
+        or not expected.issubset(set(index))
     ):
         return False, "CACHE_TARGET_CONTRACT"
+
     try:
         stamp = dt.datetime.fromisoformat(cache["generated_at"].replace("Z", "+00:00"))
         age = int((now - stamp).total_seconds())
     except (KeyError, TypeError, ValueError):
         return False, "CACHE_TIMESTAMP"
+
     if age < 0 or age > int(manifest["cache_max_age_seconds"]):
         return False, f"CACHE_STALE:{age}"
+
     noncurrent = [
         f"{target}:{index[target].get('status')}"
         for target in sorted(expected)
@@ -38,17 +40,16 @@ def validate(manifest, cache, now=None):
     ]
     if noncurrent:
         return False, "NONCURRENT_ROWS_REMAIN:" + ",".join(noncurrent)
+
     summary = cache.get("summary", {})
     if summary.get("REBOOT_REQUIRED") != 0:
         return False, f"REBOOT_REQUIRED:{summary.get('REBOOT_REQUIRED')}"
-    if (
-        summary.get("TOTAL") != 16
-        or summary.get("CURRENT") != 16
-        or summary.get("UPDATE_AVAILABLE") != 0
-        or summary.get("CHECK_FAILED") != 0
-    ):
-        return False, "CACHE_SUMMARY_MISMATCH"
-    return True, "TOTAL=16|CURRENT=16|UPDATE_AVAILABLE=0|CHECK_FAILED=0|REBOOT_REQUIRED=0"
+    if summary.get("ACTIONABLE_TARGETS") != len(expected):
+        return False, "ACTIONABLE_SUMMARY_MISMATCH"
+
+    return True, (
+        f"MANUAL_TOTAL={len(expected)}|MANUAL_CURRENT={len(expected)}|REBOOT_REQUIRED=0"
+    )
 
 
 def main():
