@@ -2185,3 +2185,25 @@ Mixing discovery and deployment of such omitted capabilities back into Stage 10 
 
 **Supersedes:** the 2026-09-23T07:35:00+03:00 Stage 07.2 revocation decision as current acceptance state.
 
+
+---
+
+## 2026-09-23T10:40:00+03:00 — Edge Maintenance automatic cleanup and backup rotation architecture
+
+**Status:** ACCEPTED
+
+**Context:** Extended audit revealed that update drivers left unrotated artifacts: Docker compose updates left superseded and untagged images (~2.2 GB) and lacked orphan container removal; APT left package archives in `/var/cache/apt/archives` and orphaned packages; GitHub binaries accumulated unrotated binaries in `/var/backups/edge-maintenance/`; PostgreSQL dumps accumulated indefinitely; Rclone selfupdate left `/usr/bin/rclone.old`; and maintctl accumulated unrotated backups in `/var/backups/vpn-stack/`.
+
+**Decision:**
+- in `manual-update` compose driver: track pre-update image IDs, execute with `--remove-orphans`, safely remove superseded images via `docker rmi`, run `docker image prune -f`, and enforce backup rotation (keep 2 latest) on database dumps;
+- in `manual-update` apt driver: invoke `apt-get -y autoremove --purge` and `apt-get clean`;
+- in `manual-update` self_update driver: automatically unlink `/usr/bin/rclone.old` after service restart;
+- in `update-github-binary`: rotate binary backups in `/var/backups/edge-maintenance/`, keeping the 2 latest copies;
+- in `maintctl`: rotate backup directories in `/var/backups/vpn-stack/`, keeping the 2 latest copies;
+- guard all driver cleanup semantics with contract assertions in `verify-contract.py`.
+
+**Acceptance marker:** `EDGE_MAINTENANCE_CLEANUP_ROTATION_ARCHITECTURE=PASS`.
+
+**Evidence:** `verify-contract.py` PASS, `verify-master-contract.py` PASS, preflights PASS, host scripts synchronized.
+
+

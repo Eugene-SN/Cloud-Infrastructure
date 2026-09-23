@@ -188,12 +188,27 @@ def require_master_update(target, generated_at):
     return row
 
 
+def rotate_backups(directory, prefix, keep=2):
+    try:
+        backups = sorted(
+            directory.glob(f"{prefix}-*.sql"),
+            key=lambda p: p.stat().st_mtime,
+            reverse=True,
+        )
+        for old_backup in backups[keep:]:
+            old_backup.unlink(missing_ok=True)
+    except OSError:
+        pass
+
+
 def execute(unit, status_row):
     driver = unit["driver"]
     if driver == "apt":
         env = dict(os.environ, DEBIAN_FRONTEND="noninteractive")
         run(["apt-get", "update"], env=env)
         run(["apt-get", "-y", "upgrade"], env=env)
+        run(["apt-get", "-y", "autoremove", "--purge"], env=env)
+        run(["apt-get", "clean"], env=env)
         run(["dpkg", "--audit"])
     elif driver == "maintctl":
         run(["/usr/local/bin/maintctl", "update", unit["argument"], "latest"])
@@ -233,6 +248,19 @@ def execute(unit, status_row):
                     f"configured={configured or 'absent'}"
                 )
 
+        old_image_ids = set()
+        for service in services:
+            proc = subprocess.run(
+                compose + ["images", "-q", service],
+                cwd=directory,
+                capture_output=True,
+                text=True,
+            )
+            for line in proc.stdout.splitlines():
+                img_id = line.strip()
+                if img_id:
+                    old_image_ids.add(img_id)
+
         if unit.get("database_backup") == "postgresql" or unit["id"] == "POSTGRESQL":
             backup = pathlib.Path("/var/backups/edge-maintenance") / (
                 unit["id"].lower() + "-" + dt.datetime.now().strftime("%Y%m%d-%H%M%S") + ".sql"
@@ -248,17 +276,43 @@ def execute(unit, status_row):
                     check=True,
                     stdout=handle,
                 )
+            rotate_backups(backup.parent, unit["id"].lower(), keep=2)
 
         run(["docker", "pull", pinned])
         run(["docker", "tag", pinned, image])
         run(
-            compose + ["up", "-d", "--wait", "--force-recreate", *services],
+            compose + ["up", "-d", "--wait", "--force-recreate", "--remove-orphans", *services],
             cwd=directory,
         )
+
+        new_image_ids = set()
+        for service in services:
+            proc = subprocess.run(
+                compose + ["images", "-q", service],
+                cwd=directory,
+                capture_output=True,
+                text=True,
+            )
+            for line in proc.stdout.splitlines():
+                img_id = line.strip()
+                if img_id:
+                    new_image_ids.add(img_id)
+
+        for old_id in old_image_ids:
+            if old_id not in new_image_ids:
+                subprocess.run(["docker", "rmi", old_id], capture_output=True, check=False)
+
+        subprocess.run(["docker", "image", "prune", "-f"], capture_output=True, check=False)
     elif driver == "self_update":
         run([unit["binary"], *unit.get("arguments", [])])
         for service in unit.get("user_services", []):
             run_as_core(["systemctl", "--user", "restart", service])
+        old_bin = pathlib.Path(f"{unit['binary']}.old")
+        if old_bin.is_file():
+            try:
+                old_bin.unlink()
+            except OSError:
+                pass
 
     elif driver == "user_cli":
         run_as_core([unit["binary"], *unit["arguments"]])

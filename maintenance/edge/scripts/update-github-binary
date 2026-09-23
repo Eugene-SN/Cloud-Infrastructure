@@ -51,5 +51,9 @@ if test -n "$service"; then
     exit 1
   fi
 fi
+
+# Rotate older binary backups, retaining only the latest 2 copies
+ls -1t "/var/backups/edge-maintenance/${binary}-"* 2>/dev/null | tail -n +3 | xargs -r rm -f
+
 echo "NATIVE_UPDATE_RESULT=${target}:SUCCESS"
 echo "BACKUP=${backup}"

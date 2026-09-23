@@ -68,6 +68,13 @@ assert all(enablement["enabled"].values())
 
 assert 'enablement.get("schema") != 1' not in manual_update_source
 assert manual_update_source.count('enablement.get("schema") != 2') == 2
+assert "--remove-orphans" in manual_update_source
+assert '"docker", "rmi"' in manual_update_source
+assert '"image", "prune"' in manual_update_source
+assert "rotate_backups" in manual_update_source
+assert "autoremove" in manual_update_source
+assert '"apt-get", "clean"' in manual_update_source
+assert ".old" in manual_update_source
 assert '"projects-webdav.service"' in health_source
 assert 'unit.get("services", [unit["service"]])' in health_source
 assert "DOCKER_UNITS=" in health_source
