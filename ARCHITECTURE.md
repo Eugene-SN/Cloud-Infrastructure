@@ -604,3 +604,20 @@ A single host-native persistent `edge-monitor.service` (`Type=simple`) is superv
 Live telemetry is published atomically to `/run/edge-monitor/snapshot.json`. Only durable transition/notification state is persisted under `/var/lib/edge-monitor/state.json`. Monitoring domains remain EDGE, APPLICATIONS, HOME_PAI, KNOWLEDGE and OPERATIONS. Alerts go directly to Mattermost only on meaningful transitions and recovery; unchanged failure states remain silent.
 
 No Prometheus/Grafana/Loki/Gatus stack, monitoring database, separate receiver service, monitoring WebUI, external uptime service, independent vantage point or Home/PAI monitoring agent is part of the accepted current scope. PVE-specific D5/RAPL/EDAC/guest/gateway/SMART collectors and CT200 push/SSE presentation are not copied. Stage 7 update state is read as metadata rather than refreshed automatically by Stage 8. Backrest monitoring is based on authoritative successful-backup freshness. Full edge loss remains an accepted uncovered failure class in this edge-only design. The transition engine has final runtime acceptance: two consecutive failed probes confirmed FAIL, unchanged FAIL was deduplicated, recovery emitted one notification, and production returned to overall OK with no synthetic artifacts.
+
+
+## Stage 12 — Nextcloud Cloud Drive & Private Workspace Access
+
+Accepted architecture:
+
+- `cloud.escloud.us` provides the personal cloud-drive UX through Nextcloud;
+- Nextcloud runtime/state is isolated under `/srv/nextcloud`; portable user-visible files are under `/srv/cloud`;
+- `go.escloud.us` provides direct project/workspace file access without changing Home routing;
+- the WebDAV authority is exactly `/home/core/projects/`;
+- rclone WebDAV runs as `core` on loopback `127.0.0.1:18081`;
+- public WebDAV path is `go.escloud.us:443 -> Xray TLS -> nginx 127.0.0.1:8080 -> rclone 127.0.0.1:18081`;
+- authentication is WebDAV-native Basic over TLS, not browser/OIDC redirect middleware;
+- Samba/SMB is rejected for this deployment because its required LAN-wide overlay routing would introduce disproportionate Home infrastructure changes for an occasional workspace-access use case;
+- no Home VM100/MikroTik/CT300 mutation is part of Stage 12;
+- Syncthing is not used for project access because replication/conflict semantics are not desired;
+- Nextcloud External Storage is not used for `/home/core/projects` because project/workspace data must remain outside the cloud-drive dataset.
