@@ -20,7 +20,9 @@
 **Stage 8 — Edge Monitoring, Heartbeats & Alerts — COMPLETE / ACCEPTED**  
 **Stage 9 — Edge Cloud Portal — COMPLETE / ACCEPTED**  
 **Stage 10 — Edge Final Integrated Infrastructure Acceptance — COMPLETE / ACCEPTED**  
-**Stage 11 — Remaining Infrastructure Gap Reconciliation & Completion — COMPLETE / ACCEPTED**
+**Stage 11 — Remaining Infrastructure Gap Reconciliation & Completion — COMPLETE / ACCEPTED**  
+**Stage 12 — Nextcloud Cloud Drive & Private Workspace Access — COMPLETE / ACCEPTED**  
+**Stage 13 — Backrest WebUI Ingress — COMPLETE / ACCEPTED**
 
 `EDGE_STAGE2_FINAL_INTEGRATED_ACCEPTANCE=PASS` on 2026-09-17.  
 `CLOUD_STAGE_02_5_FINAL_SCOPE_ACCEPTANCE=PASS` on 2026-09-18.  
@@ -272,13 +274,13 @@ Acceptance record: `EDGE_REMOTE_CLI_AND_REBOOT_LIFECYCLE_ACCEPTANCE_2026-09-23.m
 - fresh operator/auth state;
 - public `auth.escloud.us` accepted.
 
-Protected private web namespace includes `n8n`, `code`, future `app`, `backup`, `update`, `docs`, `cloud` and `sync`. `mail.escloud.us` intentionally uses native mail-stack authentication. Stage 4D also accepts `chat.escloud.us` as an explicit native-client exception: Mattermost uses Mattermost-native authentication without Authelia.
+Protected private web namespace includes `n8n`, `code`, `app`, `backup`, `update`, `docs` and `cloud`. `backup.escloud.us` is active through the accepted Authelia gate; `docs.escloud.us` remains reserved/deferred and `sync.escloud.us` is retired. `mail.escloud.us` intentionally uses native mail-stack authentication. Stage 4D also accepts `chat.escloud.us` as an explicit native-client exception: Mattermost uses Mattermost-native authentication without Authelia.
 
 ## TLS
 
 Shared Certbot lineage: `/etc/letsencrypt/live/escloud.us`.
 
-Current SAN set includes `escloud.us`, `app.escloud.us`, `auth.escloud.us`, `backup.escloud.us`, `chat.escloud.us`, `cloud.escloud.us`, `code.escloud.us`, `docs.escloud.us`, `hermes.escloud.us`, `mail.escloud.us`, `n8n.escloud.us`, `sync.escloud.us` and `update.escloud.us`. `update.escloud.us` has active HTTPS ingress through Authelia for both the maintenance dashboard and Semaphore UI. The former `ops.escloud.us` candidate is fully retired from edge runtime/configuration/certificate state and its public Cloudflare DNS A record is also deleted. `STAGE10_OPS_DNS_RETIREMENT_VERIFY=PASS`.
+Current SAN set includes `escloud.us`, `app.escloud.us`, `auth.escloud.us`, `backup.escloud.us`, `chat.escloud.us`, `cloud.escloud.us`, `code.escloud.us`, `docs.escloud.us`, `go.escloud.us`, `hermes.escloud.us`, `mail.escloud.us`, `n8n.escloud.us` and `update.escloud.us`. `update.escloud.us` has active HTTPS ingress through Authelia for both the maintenance dashboard and Semaphore UI. The former `ops.escloud.us` candidate is fully retired from edge runtime/configuration/certificate state and its public Cloudflare DNS A record is also deleted. `STAGE10_OPS_DNS_RETIREMENT_VERIFY=PASS`.
 
 ## Stage 2 applications
 
@@ -604,7 +606,7 @@ Acceptance markers:
 
 Stage 10 remains the accepted pre-Stage-11 baseline; no broad Stage 10 re-acceptance is required because Stage 11 runtime mutation was limited to retired TLS namespace cleanup and bounded non-regression passed.
 
-**Current next implementation stage:** Stage 12 — Nextcloud Cloud Drive & Private Workspace Access.
+**Subsequent implementation:** Stage 12 and Stage 13 are now COMPLETE / ACCEPTED.
 
 
 ## Stage 12 — Nextcloud Cloud Drive & Private Workspace Access — COMPLETE / ACCEPTED
@@ -642,3 +644,36 @@ Acceptance markers:
 - `STAGE12_FINAL_ACCEPTANCE=PASS`.
 
 Authoritative final record: `STAGE_12_FINAL_ACCEPTANCE_2026-09-23.md`.
+
+## Stage 13 — Backrest WebUI Ingress — COMPLETE / ACCEPTED
+
+Stage 13 is complete and accepted.
+
+Accepted runtime:
+
+- existing Backrest remains host-native and loopback-only at `127.0.0.1:9898`;
+- public endpoint: `https://backup.escloud.us/`;
+- ingress path: Xray TLS :443 -> nginx `127.0.0.1:8080` -> Authelia -> Backrest `127.0.0.1:9898`;
+- TCP/80 redirects to HTTPS;
+- existing Authelia `one_factor` policy, DNS and shared TLS identity were reused without modification;
+- no new public listener or UFW rule was introduced;
+- Backrest-native bearer-token behavior is preserved behind Authelia;
+- Backrest config SHA remained `984b4b996e73b82fe99c5a2339c8d6a5dcf6b09da2219729dfb7c56bb015fa55`;
+- Backrest PID remained `1044`, `NRestarts=0`;
+- backup engine, repositories, schedules, retention and restore behavior were unchanged;
+- final server-side deployment marker: `STAGE13_SERVER_SIDE_INGRESS_DEPLOYMENT=PASS`;
+- authenticated browser E2E confirmed the real Backrest WebUI and existing repositories/plans/history are visible;
+- zero failed systemd units at final server-side acceptance.
+
+The first deployment verifier failure was a graceful-nginx-reload generation race: an immediate request reached an old worker and the automatic rollback restored the prior state. The corrected deployment retained the same vhost and used bounded route polling; the first poll saw the old default route and the second observed the new `301`, proving the production configuration itself was correct.
+
+Final marker:
+
+- `STAGE13_FINAL_ACCEPTANCE=PASS`.
+
+Authoritative final record: `STAGE_13_FINAL_ACCEPTANCE_2026-09-23.md`.
+
+## Current next step
+
+No finite infrastructure stage is active after Stage 13. The next normal workstream is **Automation & User Workflows**. The separate WenTian technical publishing task at `docs.escloud.us` remains deferred until a useful translated corpus exists.
+
