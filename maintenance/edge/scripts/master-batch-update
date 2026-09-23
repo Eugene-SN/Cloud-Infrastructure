@@ -20,7 +20,7 @@ def load(path):
 def validate_plan(manifest, cache, now=None):
     now = now or dt.datetime.now(dt.timezone.utc)
 
-    if cache.get("schema") != 3 or cache.get("target_model") != "update_units_v4":
+    if cache.get("schema") != 3 or cache.get("target_model") != "update_units_v5":
         raise RuntimeError("MASTER_CACHE_PRECHECK_GATE=FAIL|REASON=CACHE_CONTRACT")
 
     try:
@@ -109,10 +109,16 @@ def main():
         help="validate the current cache and print the fixed plan without updates",
     )
     args = parser.parse_args()
-    if not args.plan_only:
-        enablement = load(ENABLEMENT) if ENABLEMENT.is_file() else {}
-        if enablement.get("schema") != 1 or enablement.get("master") is not True:
-            raise RuntimeError("Master Batch acceptance pending")
+    enablement = load(ENABLEMENT) if ENABLEMENT.is_file() else {}
+
+    if (
+        enablement.get("schema") != 2
+        or enablement.get("master") is not True
+    ):
+        raise RuntimeError(
+            "Master Batch acceptance pending"
+        )
+
     manifest = load(BASE / "config/update-units.json")
     order, units, rows, generated_at = validate_plan(manifest, load(CACHE))
     if args.plan_only:
