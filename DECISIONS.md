@@ -2063,3 +2063,35 @@ Mixing discovery and deployment of such omitted capabilities back into Stage 10 
 
 **Supersedes:** any prior interpretation of Stage 7 or the maintenance framework that all deployed services must be updated manually through Semaphore regardless of upstream-native update capabilities.
 
+
+
+---
+
+## 2026-09-23T05:30:00+03:00 — Remote CLI lifecycle ownership and unused multipath runtime
+
+**Status:** ACCEPTED
+
+**Context:** Codex Remote Control disappeared after a package update/reboot because a legacy custom user service directly owned an obsolete app-server process while the current Codex CLI had its own native managed daemon lifecycle. A controlled reboot then proved that Codex native PID-backed Remote Control does not start by itself after host reboot. Antigravity, by contrast, natively registers an enabled user systemd service. The same reboot investigation also identified a separate ~90-second shutdown stall in `multipathd.service`; storage audit proved multipath is unused on this VPS.
+
+**Decision:**
+
+1. `root` remains the interactive operator context. `core` is the service/runtime identity; user-service operations from administrative blocks are executed explicitly in the `core` user context.
+2. Codex CLI current runtime is `0.156.0`. Its native managed daemon is the sole lifecycle owner: exactly one managed app-server and one native `pid-update-loop`; native auto-update remains enabled.
+3. The obsolete custom `codex-cli-daemon.service` remains removed and must not be recreated.
+4. Because the native Codex PID backend is not host-reboot persistent, retain the minimal enabled user oneshot `codex-remote-control-start.service`. Its only job is to invoke the supported `codex remote-control start --json` command at `core` user-manager boot; it must not run or supervise `app-server` directly.
+5. Antigravity keeps its native `agy remote-control start` registration model and enabled `antigravity-cli-daemon.service`; no parallel custom lifecycle is added.
+6. `multipathd.service` remains disabled/inactive on edge. The host has no multipath maps or device-mapper devices and root remains ordinary ext4 on `/dev/vda1`. Keep the Ubuntu `multipath-tools` package installed; do not alter initramfs or kernel command line without a new concrete requirement.
+7. Final combined reboot acceptance passed: `multipathd` did not run, SSH listened ~7.9 s after new-kernel start, full startup was `18.348s`, Codex boot persistence passed with one native owner/updater, Antigravity native boot persistence passed, and system failed-unit count was zero.
+
+**Acceptance markers:**
+
+- `EDGE_COMBINED_REBOOT_ACCEPTANCE=PASS`
+- `MULTIPATHD_BOOT_DISABLED=PASS`
+- `CODEX_BOOT_PERSISTENCE=PASS`
+- `CODEX_SINGLE_NATIVE_LIFECYCLE_OWNER=PASS`
+- `CODEX_NATIVE_AUTO_UPDATE_PRESERVED=PASS`
+- `ANTIGRAVITY_NATIVE_BOOT_PERSISTENCE=PASS`
+
+**Evidence:** `EDGE_REMOTE_CLI_AND_REBOOT_LIFECYCLE_ACCEPTANCE_2026-09-23.md`.
+
+**Supersedes:** the former custom Codex direct-daemon ownership model and any assumption that Codex and Antigravity require identical systemd implementations. It does not supersede their shared native-first lifecycle policy.
