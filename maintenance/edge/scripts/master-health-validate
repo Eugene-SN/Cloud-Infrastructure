@@ -26,6 +26,7 @@ USER_SERVICES = (
     "hermes-gateway.service",
     "hermes-dashboard.service",
     "antigravity-cli-daemon.service",
+    "projects-webdav.service",
 )
 SQLITE_DATABASES = (
     "/srv/n8n/database.sqlite",
@@ -76,30 +77,39 @@ def main():
         failures.append("DPKG_AUDIT")
 
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
+    compose_units = 0
+    compose_services = 0
     for unit in manifest["units"]:
         if unit["driver"] != "compose":
             continue
+        compose_units += 1
         compose = ["docker", "compose"]
         for filename in unit["files"]:
             compose.extend(["-f", filename])
-        container = command(
-            compose + ["ps", "-q", unit["service"]],
-            cwd=unit["directory"],
-        ).stdout.strip()
-        if not container:
-            failures.append(f"CONTAINER_ABSENT:{unit['id']}")
-            continue
-        def container_ready(container=container):
-            state = command(["docker", "inspect", container]).stdout
-            try:
-                status = json.loads(state)[0]["State"]
-            except (json.JSONDecodeError, IndexError, KeyError):
-                return False
-            health = status.get("Health", {}).get("Status")
-            return status.get("Running") is True and (not health or health == "healthy")
+        services = unit.get("services", [unit["service"]])
+        for service in services:
+            compose_services += 1
+            container = command(
+                compose + ["ps", "-q", service],
+                cwd=unit["directory"],
+            ).stdout.strip()
+            if not container:
+                failures.append(f"CONTAINER_ABSENT:{unit['id']}:{service}")
+                continue
 
-        if not wait_for(container_ready):
-            failures.append(f"CONTAINER_NOT_READY:{unit['id']}")
+            def container_ready(container=container):
+                state = command(["docker", "inspect", container]).stdout
+                try:
+                    status = json.loads(state)[0]["State"]
+                except (json.JSONDecodeError, IndexError, KeyError):
+                    return False
+                health = status.get("Health", {}).get("Status")
+                return status.get("Running") is True and (
+                    not health or health == "healthy"
+                )
+
+            if not wait_for(container_ready):
+                failures.append(f"CONTAINER_NOT_READY:{unit['id']}:{service}")
 
     postgres = command(
         [
@@ -125,8 +135,13 @@ def main():
         print("MASTER_HEALTH_GATE=FAIL|DETAIL=" + ",".join(failures))
         return 3
     print(
-        "MASTER_HEALTH_GATE=PASS|SYSTEM_SERVICES=10|USER_SERVICES=3|"
-        "DOCKER_TARGETS=6|SQLITE_DATABASES=2|POSTGRES_READINESS=PASS"
+        "MASTER_HEALTH_GATE=PASS"
+        f"|SYSTEM_SERVICES={len(SYSTEM_SERVICES)}"
+        f"|USER_SERVICES={len(USER_SERVICES)}"
+        f"|DOCKER_UNITS={compose_units}"
+        f"|DOCKER_SERVICES={compose_services}"
+        f"|SQLITE_DATABASES={len(SQLITE_DATABASES)}"
+        "|POSTGRES_READINESS=PASS"
     )
     return 0
 
