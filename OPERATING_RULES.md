@@ -464,13 +464,16 @@ Use `/tmp` for temporary test/audit artifacts and remove them after the task unl
 
 Avoid restart/reboot unless actually required.
 
-## Stage 7 manual update execution
+## Stage 7 update ownership and execution
 
-- All real component updates and Master Batch executions must be initiated manually by the operator from `update.escloud.us`.
-- Do not create or enable update timers, cron jobs, systemd update services, background update daemons, unattended updates, scheduled update jobs, or any equivalent autonomous trigger.
-- Stage 7B acceptance tests follow the same rule: expose the driver in `update.escloud.us`, let the operator inspect it, and execute the test only through the operator's manual page action.
-- Semaphore is the backend executor/orchestrator only; it must not independently schedule or launch real updates.
-- Read-only status/version refresh may be invoked by the page as needed; it must not imply or chain into a real update.
+- Use a native-first ownership model: supported upstream/vendor automatic update lifecycle remains authoritative unless a concrete incompatibility, regression, migration constraint or explicit accepted decision requires otherwise.
+- Maintenance/Semaphore owns only manual targets that do not have an accepted native automatic owner. Those real manual updates and Master Batch executions are operator-initiated from `update.escloud.us`.
+- Native-owned components may be monitored by Maintenance but must be non-actionable there; do not create a competing Semaphore template/driver for them.
+- Current native owners are Codex managed-daemon auto-update, Hermes native cron + conditional settlement, and Ubuntu security updates through package-owned `apt-daily*` / `unattended-upgrades`.
+- Normal and third-party APT updates remain manual through `APT_EDGE`; automatic reboot remains disabled.
+- Do not create project-specific automatic cron/systemd/scheduled update mechanisms for products that lack a supported native automatic updater.
+- Semaphore remains the backend executor/orchestrator for manual targets only; it must not independently schedule or launch them.
+- Read-only status/version refresh may be invoked as needed and must never chain into a manual update.
 
 ## Project-specific design constraints
 
