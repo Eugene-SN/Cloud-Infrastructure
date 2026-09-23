@@ -8,7 +8,7 @@ Fresh runtime verification outranks this file. This inventory records accepted l
 
 | Node | Role | State |
 |---|---|---|
-| `edge` / `edge.escloud.us` | Cloud Infrastructure VPS | LIVE; Stage 0–4 accepted; Stage 05.1 accepted; edge deployment planned for 05.3 |
+| `edge` / `edge.escloud.us` | Cloud Infrastructure VPS | LIVE; Stage 0–13 COMPLETE / ACCEPTED |
 | `nl-core-vds` | historical legacy VPS identity | HISTORICAL ONLY |
 | `ai-node` | PAI compute/data/knowledge node | external dependency/context; Stage 3 private target; Stage 4 local-vLLM endpoint |
 | PVE / Home Infrastructure | home infrastructure plane | external dependency/context; Stage 3 private routed fabric |
@@ -255,11 +255,13 @@ Future external client access through edge remains outside Stage 5.
 | 8 | Monitoring, Heartbeats & Alerts | COMPLETE / ACCEPTED; `STAGE08_FINAL_ACCEPTANCE=PASS` |
 | 9 | Cloud Portal: `app.escloud.us` | COMPLETE / ACCEPTED; `STAGE09_FINAL_ACCEPTANCE=PASS` |
 | 10 | Final Integrated Infrastructure Acceptance | COMPLETE / ACCEPTED; `STAGE10_FINAL_ACCEPTANCE=PASS` |
-| 11 | Remaining Infrastructure Gap Reconciliation & Completion | ACTIVE / ACCEPTED SCOPE |
+| 11 | Remaining Infrastructure Gap Reconciliation & Completion | COMPLETE / ACCEPTED; `STAGE11_FINAL_ACCEPTANCE=PASS` |
+| 12 | Nextcloud Cloud Drive & Private Workspace Access | COMPLETE / ACCEPTED; `STAGE12_FINAL_ACCEPTANCE=PASS` |
+| 13 | Backrest WebUI Ingress | COMPLETE / ACCEPTED; `STAGE13_FINAL_ACCEPTANCE=PASS` |
 
 ## Post-infrastructure application/workflow layer
 
-Continuous workstream after Stage 11 and any required bounded Stage 10 re-acceptance, not an infrastructure-completion stage:
+Continuous workstream after completed infrastructure Stage 13, not an infrastructure-completion stage:
 
 - n8n workflows;
 - Hermes/agent workflows;
@@ -366,8 +368,18 @@ Stage 1 — COMPLETE / ACCEPTED.
 Stage 2 — COMPLETE / ACCEPTED.  
 Stage 02.5 — COMPLETE / ACCEPTED.  
 Stage 3 — COMPLETE / ACCEPTED.  
+Stage 4 — COMPLETE / ACCEPTED.  
+Stage 5 — COMPLETE / ACCEPTED.  
+Stage 6 — COMPLETE / ACCEPTED.  
+Stage 7 — COMPLETE / ACCEPTED.  
+Stage 8 — COMPLETE / ACCEPTED.  
+Stage 9 — COMPLETE / ACCEPTED.  
+Stage 10 — COMPLETE / ACCEPTED.  
+Stage 11 — COMPLETE / ACCEPTED.  
+Stage 12 — COMPLETE / ACCEPTED.  
+Stage 13 — COMPLETE / ACCEPTED.  
 
-`EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS`. Final Stage 3 record: `STAGE_03_ACCEPTANCE_2026-09-18.md`. Stage 4 — Edge Hermes Agent Runtime is COMPLETE / ACCEPTED with `STAGE4_FINAL_ACCEPTANCE=PASS`; final record: `STAGE_04_FINAL_ACCEPTANCE_2026-09-18.md`.
+Final markers: `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS`, `STAGE4_FINAL_ACCEPTANCE=PASS`, `STAGE05_FINAL_ACCEPTANCE=PASS`, `STAGE06_FINAL_ACCEPTANCE=PASS`, `STAGE07_FINAL_ACCEPTANCE=PASS`, `STAGE07_2_FINAL_MASTER_BATCH_EXECUTION=PASS`, `STAGE08_FINAL_ACCEPTANCE=PASS`, `STAGE09_FINAL_ACCEPTANCE=PASS`, `STAGE10_FINAL_ACCEPTANCE=PASS`, `STAGE11_FINAL_ACCEPTANCE=PASS`, `STAGE12_FINAL_ACCEPTANCE=PASS`, `STAGE13_FINAL_ACCEPTANCE=PASS`.
 
 
 ## Stage 8 monitoring runtime

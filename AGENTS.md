@@ -20,11 +20,11 @@ Read, in this order when relevant:
 
 Current accepted checkpoint:
 
-`Stage 7 — Edge Maintenance & Update — COMPLETE / ACCEPTED`.
+`Stage 13 — Backrest WebUI Ingress — COMPLETE / ACCEPTED`.
 
-Stage 0 through Stage 7 are complete and accepted. Current markers include `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS`, `STAGE4_FINAL_ACCEPTANCE=PASS`, `STAGE05_FINAL_ACCEPTANCE=PASS`, `STAGE06_FINAL_ACCEPTANCE=PASS`, `STAGE07A_READONLY_DASHBOARD_SEMAPHORE_E2E=PASS`, `STAGE07B_MANUAL_ONLY_CLEANUP=PASS`, and `STAGE07_FINAL_ACCEPTANCE=PASS`.
+Stage 0 through Stage 13 are complete and accepted. Current markers include `EDGE_STAGE3_FINAL_INTEGRATED_ACCEPTANCE=PASS`, `STAGE4_FINAL_ACCEPTANCE=PASS`, `STAGE05_FINAL_ACCEPTANCE=PASS`, `STAGE06_FINAL_ACCEPTANCE=PASS`, `STAGE07_FINAL_ACCEPTANCE=PASS`, `STAGE07_2_FINAL_MASTER_BATCH_EXECUTION=PASS`, `STAGE08_FINAL_ACCEPTANCE=PASS`, `STAGE09_FINAL_ACCEPTANCE=PASS`, `STAGE10_FINAL_ACCEPTANCE=PASS`, `STAGE11_FINAL_ACCEPTANCE=PASS`, `STAGE12_FINAL_ACCEPTANCE=PASS`, and `STAGE13_FINAL_ACCEPTANCE=PASS`.
 
-Current canonical work is `Stage 8 — Edge Monitoring, Heartbeats & Alerts`. Use `CURRENT_STATE.md` for confirmed runtime, `IMPLEMENTATION_PHASES.md` for the authoritative roadmap/substage scope, and the latest applicable ACCEPTED entries/records for supersession.
+Current canonical work is the post-infrastructure application and workflow layer (n8n, Hermes, Universal Capture, AI research and user-specific automations). Use `CURRENT_STATE.md` for confirmed runtime, `IMPLEMENTATION_PHASES.md` for the authoritative roadmap/substage scope, and the latest applicable ACCEPTED entries/records for supersession.
 
 Do not duplicate mutable stage chronology in this file. `AGENTS.md` should contain durable cross-agent rules; volatile progress belongs in `CURRENT_STATE.md` and `IMPLEMENTATION_PHASES.md`.
 

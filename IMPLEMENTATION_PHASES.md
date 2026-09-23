@@ -1,6 +1,6 @@
 # Cloud Infrastructure — Accepted Implementation Phases
 
-**Status:** Stages 0–7 COMPLETE / ACCEPTED. Stage 8 is the current finite infrastructure stage.
+**Status:** Stages 0–13 COMPLETE / ACCEPTED. Post-infrastructure application/workflow layer is canonical.
 
 This document is the canonical stage chronology for Cloud Infrastructure / `edge`.
 

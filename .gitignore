@@ -1,0 +1,11 @@
+# Agent environments and tool metadata
+.agent/
+.agents/
+.codex/
+.gemini/
+.hermes/
+skills-lock.json
+
+# Local agent design and product artifacts
+DESIGN.md
+PRODUCT.md

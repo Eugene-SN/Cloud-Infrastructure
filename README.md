@@ -4,11 +4,10 @@ Public/cloud-facing infrastructure for the `edge.escloud.us` VPS, integrated wit
 
 ## Current checkpoint
 
-- Stages 0, 1, 2, 02.5, 3, 4, 5, 6 and 7 are COMPLETE / ACCEPTED.
-- Final Hermes marker: `STAGE4_FINAL_ACCEPTANCE=PASS`.
-- Stage 4F Docker-network identity hardening is accepted; n8n reaches Hermes through stable bridge `n8n-hermes`.
-- Stage 7 — Edge Maintenance & Update — is COMPLETE / ACCEPTED with `STAGE07_FINAL_ACCEPTANCE=PASS`.
-- Stage 8 — Edge Monitoring, Heartbeats & Alerts — is the current finite infrastructure stage; Stages 9–10 cover the Cloud portal and final integrated acceptance.
+- Stages 0 through 13 are COMPLETE / ACCEPTED.
+- Final accepted stage checkpoint: `Stage 13 — Backrest WebUI Ingress — COMPLETE / ACCEPTED` (`STAGE13_FINAL_ACCEPTANCE=PASS`).
+- Post-infrastructure application/workflow layer (n8n, Hermes, Universal Capture, AI research and automations) is canonical.
+- Key acceptance markers: `STAGE4_FINAL_ACCEPTANCE=PASS`, `STAGE05_FINAL_ACCEPTANCE=PASS`, `STAGE06_FINAL_ACCEPTANCE=PASS`, `STAGE07_FINAL_ACCEPTANCE=PASS`, `STAGE07_2_FINAL_MASTER_BATCH_EXECUTION=PASS`, `STAGE08_FINAL_ACCEPTANCE=PASS`, `STAGE09_FINAL_ACCEPTANCE=PASS`, `STAGE10_FINAL_ACCEPTANCE=PASS`, `STAGE11_FINAL_ACCEPTANCE=PASS`, `STAGE12_FINAL_ACCEPTANCE=PASS`, `STAGE13_FINAL_ACCEPTANCE=PASS`.
 
 See [CURRENT_STATE.md](CURRENT_STATE.md) for accepted runtime facts and [IMPLEMENTATION_PHASES.md](IMPLEMENTATION_PHASES.md) for the dependency-ordered roadmap.
 
