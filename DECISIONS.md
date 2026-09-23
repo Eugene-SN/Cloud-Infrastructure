@@ -2207,3 +2207,26 @@ Mixing discovery and deployment of such omitted capabilities back into Stage 10 
 **Evidence:** `verify-contract.py` PASS, `verify-master-contract.py` PASS, preflights PASS, host scripts synchronized.
 
 
+
+
+---
+
+## 2026-09-23T11:33:58+03:00 — Stage 07.2 final current-state acceptance
+
+**Status:** ACCEPTED
+
+**Context:** After the successful real Master Batch Task 26, the Maintenance update drivers were changed again to add automatic cleanup and backup rotation. Because those changes post-dated the Task 26 execution acceptance, Stage 07.2 required one final current-state audit against the actually deployed post-Task-26 runtime before transition to the next stage. The previous authoritative Stage 07.2 acceptance file was also stale because it still described four pending manual updates and stated that no real component update had executed.
+
+**Decision:**
+- accept `STAGE07_2_FINAL_CURRENT_STATE_AUDIT_V1` as the final Stage 07.2 current-state acceptance;
+- keep the v5 ownership model: 18 manual Maintenance targets, Hermes/Codex outside Maintenance under native ownership, `actions.json` manual-only with `auto_update=false`;
+- accept the real Task 26 execution evidence: driver RC=0, post-scan RC=0, health RC=0, 18/18 success and zero failed targets;
+- accept the post-Task-26 cleanup/rotation implementation after confirming deployed runtime byte identity with current `main`, 18/18 manual targets CURRENT, zero update/check failures, zero failed systemd units, zero dangling Docker images, zero APT autoremove candidates, empty APT package cache and no `rclone.old`;
+- retain the runtime `maintctl` rotation behavior as verified host-native state; do not claim repo byte identity for `maintctl` because it is not stored under `maintenance/edge`;
+- designate `STAGE_07_2_FINAL_CURRENT_STATE_ACCEPTANCE_2026-09-23.md` as the authoritative current Stage 07.2 acceptance record.
+
+**Acceptance marker:** `STAGE07_2_CURRENT_STATE_AUDIT=PASS`.
+
+**Final status:** Stage 07.2 **COMPLETE / ACCEPTED**.
+
+**Supersedes as current Stage 07.2 authority:** the earlier Stage 07.2 acceptance records, while retaining them as historical evidence. The 2026-09-23T10:40:00+03:00 cleanup/rotation architecture decision remains applicable and is incorporated into this final accepted state.
