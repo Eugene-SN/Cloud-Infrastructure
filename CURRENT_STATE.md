@@ -176,17 +176,22 @@ Stage 7 retired-hostname cleanup record: `STAGE_07_OPS_HOSTNAME_RETIREMENT_2026-
 Stage 7B historical deployment remains accepted; Stage 07.2 supersedes only its blanket manual-only ownership policy and fixed 16-target current model.
 
 Current Stage 07.2 maintenance state:
-- ownership model: `native_first_hybrid`;
-- generated target model: `update_units_v4`;
-- 18 actionable manual targets: `APT_EDGE`, `XRAY`, `HYSTERIA2`, `BACKREST`, `RESTIC`, `RCLONE`, `SEMAPHORE`, `N8N`, `AUTHELIA`, `MATTERMOST`, `POSTGRESQL`, `STALWART`, `BULWARK`, `NEXTCLOUD`, `NEXTCLOUD_POSTGRESQL`, `NEXTCLOUD_REDIS`, `CLOUDCLI`, `ANTIGRAVITY`;
-- monitor-only native-auto targets: `HERMES` and `CODEX`; neither has a Semaphore update template;
-- Ubuntu security ownership: package-owned `apt-daily.timer`, `apt-daily-upgrade.timer` and `unattended-upgrades.service` enabled; automatic reboot disabled; ordinary `-updates` and third-party APT remain manual through `APT_EDGE`;
-- Semaphore templates 14 and 16 are repurposed to Rclone and Nextcloud; Nextcloud PostgreSQL/Redis use templates 19/20; Refresh remains ID 1 and Master remains ID 18;
-- Rclone production runtime is `/usr/bin/rclone` with persistent `core` user service `projects-webdav.service`; manual update uses upstream `rclone selfupdate --stable`;
-- Nextcloud application, PostgreSQL and Redis are separate manual Compose targets; Nextcloud app action recreates both `app` and `cron`;
-- Bulwark configured tracking is `ghcr.io/bulwarkmail/webmail:latest`; runtime remained on `1.9.2` during migration and Maintenance correctly reported `1.10.0` available without executing the update;
-- accepted migration snapshot: 18 manual / 2 monitor-only, all 18 manual driver preflights PASS, Master plan-only PASS with 14 CURRENT + 4 UPDATE_AVAILABLE, native-owner non-regression PASS, no real service update executed;
-- Codex native updater advanced the active daemon to `0.156.1`; Hermes native updater is active on `v0.21.4`.
+- ownership policy: native-first; Maintenance execution plane: strictly manual;
+- generated target model: `update_units_v5`;
+- raw Maintenance collector: 25 rows; Hermes/Codex are not collected;
+- Maintenance: exactly 18 actionable manual targets: `APT_EDGE`, `XRAY`, `HYSTERIA2`, `BACKREST`, `RESTIC`, `RCLONE`, `SEMAPHORE`, `N8N`, `AUTHELIA`, `MATTERMOST`, `POSTGRESQL`, `STALWART`, `BULWARK`, `NEXTCLOUD`, `NEXTCLOUD_POSTGRESQL`, `NEXTCLOUD_REDIS`, `CLOUDCLI`, `ANTIGRAVITY`;
+- all 18 Maintenance rows have `update_owner=maintenance_manual`;
+- Hermes, Codex and Ubuntu security updates are native-owned outside Maintenance: Hermes native cron + settlement, Codex managed-daemon `pid-update-loop`, Ubuntu package-owned unattended-upgrades;
+- `actions.json` schema 10 contains exactly 18 manual components, `execution_mode=manual_only`, `auto_update=false`;
+- Master Batch and `--plan-only` require schema-2 enablement;
+- Stage 8 `edge-monitor` uses `/var/www/maintenance-status/maintenance.json` as the authoritative maintenance source;
+- Semaphore has no Hermes/Codex update templates; Refresh remains ID 1 and Master ID 18;
+- Rclone manual update uses upstream `rclone selfupdate --stable` and restarts `projects-webdav.service`;
+- Nextcloud application/PostgreSQL/Redis remain separate manual targets;
+- Bulwark tracks `ghcr.io/bulwarkmail/webmail:latest`; actual image replacement remains operator-triggered;
+- final corrective acceptance: `STAGE07_2_CORRECTIVE_MIGRATION=PASS`, RC=0, no real component update executed;
+- pending manual updates at acceptance: APT_EDGE (11 packages), n8n `2.39.10 -> 2.40.5`, Bulwark `1.9.2 -> 1.10.0`, Antigravity `1.2.7 -> 1.2.8`;
+- authoritative record: `STAGE_07_2_FINAL_NATIVE_UPDATE_OWNERSHIP_ACCEPTANCE_2026-09-23.md`.
 
 
 Implementation/deployment checkpoint: `STAGE_07B_DRIVER_SCAFFOLD_DEPLOYMENT_2026-09-21.md`.
