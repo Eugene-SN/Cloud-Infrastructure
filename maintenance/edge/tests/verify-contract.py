@@ -12,6 +12,8 @@ templates = json.loads((root / "config/semaphore-templates.json").read_text())
 enablement = json.loads((root / "config/manual-driver-enablement.example.json").read_text())
 renderer = runpy.run_path(root / "scripts/maintenance-actions-render")
 actions = renderer["build_actions"](manifest, templates, enablement)
+manual_update_source = (root / "scripts/manual-update").read_text()
+health_source = (root / "scripts/master-health-validate").read_text()
 
 rows = maintenance["rows"]
 manual = {u["id"] for u in manifest["units"]}
@@ -63,6 +65,13 @@ assert enablement["schema"] == 2
 assert enablement["master"] is True
 assert set(enablement["enabled"]) == manual
 assert all(enablement["enabled"].values())
+
+assert 'enablement.get("schema") != 1' not in manual_update_source
+assert manual_update_source.count('enablement.get("schema") != 2') == 2
+assert '"projects-webdav.service"' in health_source
+assert 'unit.get("services", [unit["service"]])' in health_source
+assert "DOCKER_UNITS=" in health_source
+assert "DOCKER_SERVICES=" in health_source
 
 assert actions["schema"] == 10
 assert actions["target_model"] == "update_units_v5"
