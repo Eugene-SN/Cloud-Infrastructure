@@ -155,7 +155,7 @@ def require_enablement(target):
     if not ENABLEMENT.is_file():
         raise RuntimeError("manual driver enablement registry absent; driver is locked")
     enablement = load(ENABLEMENT)
-    if enablement.get("schema") != 1 or enablement.get("enabled", {}).get(target) is not True:
+    if enablement.get("schema") != 2 or enablement.get("enabled", {}).get(target) is not True:
         raise RuntimeError(f"manual driver is disabled: {target}")
 
 
@@ -175,7 +175,7 @@ def require_fresh_update(target, max_age):
 
 def require_master_update(target, generated_at):
     enablement = load(ENABLEMENT) if ENABLEMENT.is_file() else {}
-    if enablement.get("schema") != 1 or enablement.get("master") is not True:
+    if enablement.get("schema") != 2 or enablement.get("master") is not True:
         raise RuntimeError("Master Batch acceptance pending")
     data = load(CACHE)
     if data.get("generated_at") != generated_at:
