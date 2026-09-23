@@ -2095,3 +2095,30 @@ Mixing discovery and deployment of such omitted capabilities back into Stage 10 
 **Evidence:** `EDGE_REMOTE_CLI_AND_REBOOT_LIFECYCLE_ACCEPTANCE_2026-09-23.md`.
 
 **Supersedes:** the former custom Codex direct-daemon ownership model and any assumption that Codex and Antigravity require identical systemd implementations. It does not supersede their shared native-first lifecycle policy.
+
+
+---
+
+## 2026-09-23T07:09:05+03:00 — Stage 07.2 native-first update ownership reconciliation
+
+**Status:** ACCEPTED
+
+**Context:** Stage 7 originally enforced blanket manual-only ownership for all updates. Stage 07.2 audited every deployed component against current upstream/runtime behavior and proved that Codex, Hermes and Ubuntu security updates have supported native automatic lifecycles that should remain authoritative.
+
+**Decision:**
+
+1. Replace blanket manual-only ownership with `native_first_hybrid`.
+2. Keep Codex and Hermes visible in Maintenance as monitor-only; remove competing manual templates/drivers.
+3. Restore Ubuntu package-owned security update lifecycle with `apt-daily*` and `unattended-upgrades`; keep normal/third-party APT manual through `APT_EDGE`; keep automatic reboot disabled.
+4. Expand the Maintenance manual target set from 16 to 18 by adding Rclone plus Nextcloud application/PostgreSQL/Redis and removing Hermes/Codex manual ownership.
+5. Use `update_units_v4` with 18 actionable manual rows and 2 native-owned monitor-only rows.
+6. Rclone uses upstream `rclone selfupdate --stable` and restarts `core` user service `projects-webdav.service`.
+7. Bulwark tracks the upstream stable `latest` tag; actual image replacement remains manual.
+8. Preserve Semaphore as a manual executor only; no Semaphore schedules are introduced.
+9. Historical Stage 7 acceptance records remain historical evidence and are not rewritten.
+
+**Acceptance:** `STAGE07_2_MAINTENANCE_SEMAPHORE_MIGRATION=PASS`, all 18 manual driver preflights PASS, Master plan-only PASS, native-owner non-regression PASS, no real service update executed.
+
+**Evidence:** `STAGE_07_2_NATIVE_UPDATE_OWNERSHIP_ACCEPTANCE_2026-09-23.md`.
+
+**Supersedes:** the current applicability of the 2026-09-21 Stage 7B blanket manual-only enforcement and fixed 16-target portions of Stage 7 final acceptance. Non-conflicting historical acceptance remains valid.
