@@ -12,27 +12,27 @@ Final acceptance marker:
 
 Comprehensive UX, technical, and visual modernization of `https://app.escloud.us` (The Sovereign Control Deck) into a 2026 Smoky Minimalist Frosted Glass console adhering to contemporary design trends, `apple-design`, Emil Kowalski's Design Engineering standards (`emil-design-eng`, `animate`), `taste-design`, and `impeccable`.
 
-1. **Clean Header & Live Timer Removal ("убрать таймер Live ...s ago")**:
+1. **Light Theme Built Around `#E3EBF0` ("светлое оформление построй вокруг цвета #E3EBF0")**:
+   - **Base Canvas**: Calibrated `--apple-canvas` to the exact cool arctic slate mist tone `#e3ebf0`.
+   - **Harmonized Smoky Vapor Layer**: Overhauled `.smoky-ambient` radial gradients to multi-stop cool vapor plumes (`rgba(200, 218, 232, 0.65)`, `rgba(212, 226, 238, 0.60)`, `rgba(227, 235, 240, 0.45)`) refracting softly through the translucent frosted glass cards.
+   - **Glass & Text Harmony**: Tinted glass inset panels to `rgba(227, 235, 240, 0.45)` with deep slate typography (`#141c24` primary, `#485768` secondary) and clean white specular rim lighting (`inset 0 1px 0 rgba(255, 255, 255, 0.95)`).
+
+2. **Clean Header & Live Timer Removal**:
    - Completely removed redundant `Live ...s ago` heartbeat capsule from header right.
    - Header now cleanly hosts the minimalist monospace date and real-time clock, theme toggle button, and manual refresh control.
 
-2. **Refined 3×3 Grid Flow & Information Architecture**:
+3. **Refined 3×3 Grid Flow & Information Architecture**:
    - **Row 1 (AI & Development)**: Hermes Agent → T3 Code → n8n Automation.
    - **Row 2 (Communication Suite)**: Mattermost Chat → Stalwart Webmail (center) → Stalwart Mail Admin (right).
    - **Row 3 (Storage & System Ops)**: Nextcloud Drive (bottom row, left) → Maintenance Hub (center) → Backrest Vaults (right).
 
-3. **+20% Enlarged Brand Logos & Frosted Squircles**:
+4. **+20% Enlarged Brand Logos & Frosted Squircles**:
    - Scaled official vector brand icons from `22px` to `26.5px` (+20%).
    - Adjusted frosted squircle container to `46×46px` with continuous `13px` corner curvature, preserving balanced Apple-style margins and tactile hover feedback.
 
-4. **Enhanced Glassmorphism & High-Transparency Frosted Mist**:
+5. **Enhanced Glassmorphism & High-Transparency Frosted Mist**:
    - Elevated all frosted glass components (`.console-header`, `.apple-card`, `.app-tile`) to `blur(36px) saturate(160%)` and `-webkit-backdrop-filter: blur(36px) saturate(160%)`.
-   - Card backgrounds set to `rgba(255, 255, 255, 0.42)` in light theme and `rgba(32, 38, 50, 0.46)` in dark theme, with `.app-tile` surfaces dialed to `0.30`–`0.36` alpha.
-   - Enhanced multi-stop radial smoky ambient background layer refracting through transparent glass surfaces.
-
-5. **Calibrated Palette Shifts ("светлая тема немного темнее, темная немного светлее")**:
-   - **Light Theme**: Shifted from bright chalk/pale white to a deep, sophisticated cool fog mist (`#d5dce6`).
-   - **Dark Theme**: Shifted from pitch-black obsidian to a softer titanium charcoal (`#191c23`) with graphite translucent glass.
+   - Card backgrounds set to `rgba(255, 255, 255, 0.48)` in light theme and `rgba(32, 38, 50, 0.46)` in dark theme, with `.app-tile` surfaces dialed to `0.38` alpha.
 
 6. **Full-Width Horizontal Telemetry & Fabric Strips**:
    - **Edge Node Telemetry**: AMD EPYC 2 vCPU tag and strict order **CPU Load → Memory → NVMe Storage** with clean vertical hairline dividers.
@@ -41,7 +41,7 @@ Comprehensive UX, technical, and visual modernization of `https://app.escloud.us
 ## Accepted Deployed File Hashes
 
 - `/var/www/app.escloud.us/index.html`: `1de1db210614ab6fc1547caef0ad7e7c1689b8478ed8d7b6f1142b173af5c8ce`
-- `/var/www/app.escloud.us/app.css`: `3a9ee2e6c424f7608ba1c71b0e28ae82ef384a2a6a71dae6b890bdf44f46fac5`
+- `/var/www/app.escloud.us/app.css`: `8bc789c9404dce835f9dd8c5c693d1447ccf8aabf5254ce607cabe3a312af8de`
 - `/var/www/app.escloud.us/app.js`: `9394d9b50e12604c78f3b52f61b45872f132a54e71c459ab508655e632cf67ee`
 - `/var/www/app.escloud.us/icons/hermes.svg`: `951b45c5ce168af1bedd2bed0a543de74f4e42acf03522e1e52db56d040f319e`
 - `/var/www/app.escloud.us/icons/vscode.svg`: `98d2dc1ad1d82b3684880e174a09a5c35737977dfdbe97dbe040ef2d55e10e75`
@@ -58,4 +58,4 @@ Comprehensive UX, technical, and visual modernization of `https://app.escloud.us
 - `nginx -t`: PASS
 - `curl -k https://127.0.0.1/ -H "Host: app.escloud.us"`: HTTP 200
 - `edge-monitor.service`: Active (running), `OVERALL: OK`
-- Live Browser Preview snapshots: Verified with reordered grid, enlarged brand logos, and removed timer.
+- Live Browser Preview snapshot: Captured for the `#E3EBF0`-centered light theme.
