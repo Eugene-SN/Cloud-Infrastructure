@@ -4,79 +4,76 @@ Current source for the single `edge` maintenance/update subsystem.
 
 ## Ownership model
 
-Stage 07.2 uses a **native-first hybrid** ownership model:
+Stage 07.2 uses **native-first ownership**:
 
-- upstream/vendor-native automatic lifecycle remains authoritative when it is supported and production-safe;
-- Maintenance/Semaphore is the manual update owner only for components without an accepted native automatic owner;
-- native-owned components remain visible in status but are never exposed as competing manual update actions.
+- a supported upstream/vendor-native automatic lifecycle remains authoritative when production-safe;
+- Maintenance/Semaphore owns only components whose updates remain operator-controlled;
+- native-auto products are deliberately absent from Maintenance rather than represented as disabled or monitor-only update targets.
 
-Current native-owned monitor-only targets:
+Native automatic owners outside Maintenance:
 
-- `CODEX` — Codex managed-daemon native updater;
 - `HERMES` — Hermes native cron updater plus conditional settlement timer;
-- Ubuntu security updates — package-owned `apt-daily*` / `unattended-upgrades`.
+- `CODEX` — Codex managed-daemon updater / `pid-update-loop`;
+- `UBUNTU_SECURITY` — package-owned `apt-daily*` / `unattended-upgrades`.
 
 Normal and third-party APT updates remain manual through `APT_EDGE`. Automatic reboot is disabled.
 
-## Manual update model
+## Maintenance target model
 
-There are 18 manual update targets:
+Generated target model: `update_units_v5`.
+
+Maintenance contains exactly 18 actionable manual targets:
 
 `APT_EDGE`, `XRAY`, `HYSTERIA2`, `BACKREST`, `RESTIC`, `RCLONE`,
 `SEMAPHORE`, `N8N`, `AUTHELIA`, `MATTERMOST`, `POSTGRESQL`,
 `STALWART`, `BULWARK`, `NEXTCLOUD`, `NEXTCLOUD_POSTGRESQL`,
 `NEXTCLOUD_REDIS`, `CLOUDCLI`, `ANTIGRAVITY`.
 
-`update.escloud.us` remains the single operator launch surface. Semaphore is the
-manual backend executor/orchestrator and does not schedule real updates.
+`HERMES` and `CODEX` do not appear in raw Maintenance version rows,
+`maintenance.json`, `actions.json`, the Maintenance dashboard or Semaphore
+update templates.
 
-The four Stage 12 targets use the existing generic `playbooks/update-unit.yml`
-path. Rclone updates with upstream `rclone selfupdate --stable` and then restarts
-the `core` user service `projects-webdav.service`. Nextcloud application,
-PostgreSQL and Redis are distinct Compose image targets.
+`actions.json` contains exactly the 18 manual actions, has
+`execution_mode=manual_only`, and `auto_update=false`.
 
-Bulwark tracks upstream stable through `ghcr.io/bulwarkmail/webmail:latest`;
-changing the tracked tag does not itself update/recreate the running container.
-The actual image update remains operator-triggered through Maintenance.
+`update.escloud.us` remains the operator launch surface. Semaphore is the
+manual executor/orchestrator and has no autonomous update schedule.
 
-## Generated contracts
+## Stage 12 targets
 
-`/var/www/maintenance-status/maintenance.json` uses target model
-`update_units_v4`. It contains 18 actionable manual rows plus two monitor-only
-native rows (`CODEX`, `HERMES`).
+Rclone uses upstream `rclone selfupdate --stable`, followed by restart of the
+persistent `core` user service `projects-webdav.service`.
 
-`/var/www/maintenance-status/actions.json` is generated from:
+Nextcloud application, PostgreSQL and Redis are distinct manual Compose targets.
+The Nextcloud application action recreates both `app` and `cron`.
 
-- `config/update-units.json`;
-- `config/semaphore-templates.json`;
-- root-owned `/etc/edge-maintenance/manual-driver-enablement.json`.
+Bulwark tracks upstream stable through `ghcr.io/bulwarkmail/webmail:latest`.
+Changing the tracked tag does not itself update/recreate the running container;
+the actual image update remains operator-triggered.
 
-Unknown or disabled manual targets fail closed. Monitor-only targets have no
-Semaphore template ID and are rendered as native-owned/non-executable.
+## Master Batch
 
-Master Batch evaluates only the 18 manual targets. Semaphore remains
-individual-only because self-updating the orchestrator inside its own batch can
-interrupt final acceptance. A reboot-required state blocks clean Master
-acceptance.
+Master Batch derives its 18-target plan from `config/update-units.json`.
+Both real execution and `--plan-only` require the accepted schema-2
+`/etc/edge-maintenance/manual-driver-enablement.json`.
 
-## APT policy
+Semaphore remains `individual_only` because updating the running orchestrator
+inside its own batch could interrupt final acceptance.
 
-The old Stage 7 blanket manual-only APT override is superseded.
+## Monitoring integration
 
-Package-owned `apt-daily.timer`, `apt-daily-upgrade.timer` and
-`unattended-upgrades.service` are enabled for Ubuntu security updates.
-Normal `-updates` and third-party package upgrades remain manual through
-`APT_EDGE`; unattended automatic reboot remains disabled.
-
-Do not reinstall the retired `99-edge-maintenance-manual-only` override or
-re-mask package-owned APT lifecycle units unless a later accepted decision
-explicitly supersedes Stage 07.2.
+Stage 8 `edge-monitor` consumes
+`/var/www/maintenance-status/maintenance.json` as the authoritative update
+state. Therefore its `UPDATE_AVAILABLE` count represents manual Maintenance
+updates, not native updater drift.
 
 ## Safety boundary
 
-Real manual updates require an enabled target in
-`/etc/edge-maintenance/manual-driver-enablement.json`, a fresh
-`UPDATE_AVAILABLE` cache row, and operator initiation from
-`update.escloud.us`.
+A manual component update requires:
 
-Read-only refreshes may run independently; they never chain into real updates.
+- the target to be one of the 18 manifest units;
+- schema-2 enablement to permit the target;
+- a fresh `UPDATE_AVAILABLE` row;
+- explicit operator initiation.
+
+Read-only Refresh never chains into a component update.
