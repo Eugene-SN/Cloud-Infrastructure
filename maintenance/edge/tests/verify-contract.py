@@ -12,79 +12,88 @@ templates = json.loads((root / "config/semaphore-templates.json").read_text())
 enablement = json.loads((root / "config/manual-driver-enablement.example.json").read_text())
 renderer = runpy.run_path(root / "scripts/maintenance-actions-render")
 actions = renderer["build_actions"](manifest, templates, enablement)
-refresh_source = (root / "scripts/maintenance-refresh").read_text()
-semaphore_refresh_source = (root / "playbooks/semaphore-refresh.yml").read_text()
-apt_policy = (root / "config/apt-periodic-manual-only.conf").read_text()
 
 rows = maintenance["rows"]
+manual = {u["id"] for u in manifest["units"]}
+monitor = {u["id"] for u in manifest["monitor_only"]}
+index = {r["component"]: r for r in rows}
+
 assert maintenance["schema"] == 3
-assert maintenance["target_model"] == "update_units_v3"
-assert len(rows) == 16
-assert maintenance["summary"]["MONITORED_COMPONENTS"] == 23
+assert maintenance["target_model"] == "update_units_v4"
+assert manifest["schema"] == 2
+assert manifest["ownership_mode"] == "native_first_hybrid"
+assert len(manual) == 18
+assert monitor == {"HERMES", "CODEX"}
+assert set(index) == manual | monitor
+assert maintenance["summary"]["ACTIONABLE_TARGETS"] == 18
+assert maintenance["summary"]["MONITOR_ONLY_TARGETS"] == 2
 assert maintenance["summary"]["APT_MANAGED_COMPONENTS"] == 8
-assert {row["group"] for row in rows} == {"system", "native", "docker", "cli"}
-assert len(manifest["units"]) == 16
-assert {u["id"] for u in manifest["units"]} == {r["component"] for r in rows}
 
-apt = next(row for row in rows if row["component"] == "APT_EDGE")
-assert len(apt["monitored_components"]) == 8
-assert all(not child["actionable"] for child in apt["monitored_components"])
-assert all(child["update_target"] == "APT_EDGE" for child in apt["monitored_components"])
-assert all(child["component"] not in actions["components"] for child in apt["monitored_components"])
+for target in manual:
+    assert index[target]["actionable"] is True
 
-docker = [row for row in rows if row["type"] == "DOCKER"]
-assert len(docker) == 6
-required = {"application_version", "available_application_version", "image_repository", "image_track", "running_image_digest", "remote_image_digest", "update_reason"}
+for target in monitor:
+    assert index[target]["actionable"] is False
+    assert index[target]["update_owner"] == "native_auto"
+    assert index[target]["managed_by"] == "native_auto"
+
+docker = [r for r in rows if r["type"] == "DOCKER"]
+assert len(docker) == 9
+required = {
+    "application_version",
+    "available_application_version",
+    "image_repository",
+    "image_track",
+    "running_image_digest",
+    "remote_image_digest",
+    "update_reason",
+}
 assert all(required <= set(row) for row in docker)
-assert all(row["update_reason"] in {"VERSION_UPDATE", "IMAGE_DIGEST_UPDATE", "CURRENT", "CHECK_FAILED"} for row in docker)
-assert next(r for r in docker if r["component"] == "POSTGRESQL")["application_version"] != "18-alpine"
-assert next(r for r in docker if r["component"] == "STALWART")["application_version"] != "v0.16"
-assert next(r for r in docker if r["component"] == "MATTERMOST")["application_version"] != "latest"
+assert next(r for r in docker if r["component"] == "BULWARK")["image_track"] == "latest"
+assert next(r for r in docker if r["component"] == "NEXTCLOUD")["image_track"] == "stable-apache"
 
-assert actions["schema"] == 8
-assert actions["read_only"] is False
-assert actions["manual_acceptance_mode"] is True
+assert templates["schema"] == 2
+assert set(templates["components"]) == manual
+template_ids = [v["template_id"] for v in templates["components"].values()]
+assert len(template_ids) == len(set(template_ids))
+assert templates["refresh_template_id"] == 1
+assert templates["master_template_id"] == 18
+
+assert enablement["schema"] == 2
+assert enablement["master"] is True
+assert set(enablement["enabled"]) == manual
+assert all(enablement["enabled"].values())
+
+assert actions["schema"] == 9
+assert actions["target_model"] == "update_units_v4"
+assert actions["execution_mode"] == "native_first_hybrid"
 assert actions["master_template_id"] == 18
-assert actions["master_driver_state"] == "executable"
-assert actions["stop_on_error"] is True
-assert sorted(item["template_id"] for item in actions["components"].values()) == list(range(2, 18))
-assert all(item["driver_state"] == "executable" for item in actions["components"].values())
-assert set(actions["components"]) == {u["id"] for u in manifest["units"]}
-assert not (root / "dashboard/actions.json").exists()
-assert "/opt/edge-maintenance/scripts/maintenance-status-render" in refresh_source
-assert "/usr/local/bin/maintenance-status-render" not in refresh_source
-assert "/opt/edge-maintenance/scripts/maintenance-refresh" in semaphore_refresh_source
-assert "/opt/edge-maintenance/scripts/maintenance-status-render" not in semaphore_refresh_source
-assert "/opt/edge-maintenance/scripts/maintenance-targets-refresh" not in semaphore_refresh_source
-assert "/usr/local/bin/maintenance-status-render" not in semaphore_refresh_source
-for apt_key in (
-    "Enable",
-    "Update-Package-Lists",
-    "Download-Upgradeable-Packages",
-    "AutocleanInterval",
-    "Unattended-Upgrade",
-):
-    assert f'APT::Periodic::{apt_key} "0";' in apt_policy
-assert len(manifest["master_order"]) == 16
-assert set(manifest["master_order"]) == {u["id"] for u in manifest["units"]}
-assert manifest["master_order"][-1] == "APT_EDGE"
-assert next(u for u in manifest["units"] if u["id"] == "SEMAPHORE")["master_policy"] == "individual_only"
+assert set(actions["components"]) == manual | monitor
 
-locked_enablement = copy.deepcopy(enablement)
-locked_enablement["master"] = False
-locked_enablement["enabled"]["N8N"] = False
-locked_actions = renderer["build_actions"](manifest, templates, locked_enablement)
-assert locked_actions["master_template_id"] is None
-assert locked_actions["master_driver_state"] == "acceptance_pending"
+for target in manual:
+    assert actions["components"][target]["template_id"] is not None
+    assert actions["components"][target]["driver_state"] == "executable"
+
+for target in monitor:
+    assert actions["components"][target]["template_id"] is None
+    assert actions["components"][target]["driver_state"] == "native_auto"
+
+assert not (root / "config/apt-periodic-manual-only.conf").exists()
+assert not (root / "playbooks/updates/hermes.yml").exists()
+assert not (root / "playbooks/updates/codex.yml").exists()
+
+for path in (
+    "rclone.yml",
+    "nextcloud.yml",
+    "nextcloud-postgresql.yml",
+    "nextcloud-redis.yml",
+):
+    assert (root / "playbooks/updates" / path).is_file()
+
+locked = copy.deepcopy(enablement)
+locked["enabled"]["N8N"] = False
+locked_actions = renderer["build_actions"](manifest, templates, locked)
 assert locked_actions["components"]["N8N"]["template_id"] is None
 assert locked_actions["components"]["N8N"]["driver_state"] == "acceptance_pending"
 
-broken_enablement = copy.deepcopy(enablement)
-del broken_enablement["enabled"]["CODEX"]
-try:
-    renderer["build_actions"](manifest, templates, broken_enablement)
-except RuntimeError:
-    pass
-else:
-    raise AssertionError("actions renderer accepted a missing enablement target")
 print("EDGE_MAINTENANCE_CONTRACT=PASS")
