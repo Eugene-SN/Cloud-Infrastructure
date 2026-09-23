@@ -22,18 +22,18 @@ Normal and third-party APT updates remain manual through `APT_EDGE`. Automatic r
 
 Generated target model: `update_units_v5`.
 
-Maintenance contains exactly 18 actionable manual targets:
+Maintenance contains exactly 17 actionable manual targets:
 
 `APT_EDGE`, `XRAY`, `HYSTERIA2`, `BACKREST`, `RESTIC`, `RCLONE`,
 `SEMAPHORE`, `N8N`, `AUTHELIA`, `MATTERMOST`, `POSTGRESQL`,
 `STALWART`, `BULWARK`, `NEXTCLOUD`, `NEXTCLOUD_POSTGRESQL`,
-`NEXTCLOUD_REDIS`, `CLOUDCLI`, `ANTIGRAVITY`.
+`NEXTCLOUD_REDIS`, `ANTIGRAVITY`.
 
 `HERMES` and `CODEX` do not appear in raw Maintenance version rows,
 `maintenance.json`, `actions.json`, the Maintenance dashboard or Semaphore
 update templates.
 
-`actions.json` contains exactly the 18 manual actions, has
+`actions.json` contains exactly the 17 manual actions, has
 `execution_mode=manual_only`, and `auto_update=false`.
 
 `update.escloud.us` remains the operator launch surface. Semaphore is the
