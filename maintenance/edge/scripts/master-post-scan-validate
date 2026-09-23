@@ -18,7 +18,7 @@ def validate(manifest, cache, now=None):
 
     if (
         cache.get("schema") != 3
-        or cache.get("target_model") != "update_units_v4"
+        or cache.get("target_model") != "update_units_v5"
         or not expected
         or not expected.issubset(set(index))
     ):
