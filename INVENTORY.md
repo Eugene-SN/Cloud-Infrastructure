@@ -500,3 +500,21 @@ Authoritative record: `STAGE_12_FINAL_ACCEPTANCE_2026-09-23.md`.
 ### Retired namespace
 
 - `sync.escloud.us`: retired legacy public Syncthing hostname.
+
+
+## Stage 07.2 current maintenance ownership
+
+- status: **COMPLETE / ACCEPTED**;
+- ownership model: `native_first_hybrid`;
+- target model: `update_units_v4`;
+- manual actionable targets: 18;
+- native monitor-only: `HERMES`, `CODEX`;
+- Ubuntu security owner: package-owned `unattended-upgrades`; normal/third-party APT remains `APT_EDGE`;
+- Codex current accepted runtime: `0.156.1`, native managed-daemon updater active;
+- Hermes current accepted runtime: `v0.21.4`, native cron updater plus settlement timer active;
+- Rclone: `1.75.1`, `/usr/bin/rclone`, persistent `core` user service `projects-webdav.service`;
+- Nextcloud maintenance targets: app, PostgreSQL, Redis;
+- Bulwark configured track: `ghcr.io/bulwarkmail/webmail:latest`; runtime remained `1.9.2` during Stage 07.2 migration;
+- Semaphore template IDs: Refresh 1, Master 18, Rclone 14, Nextcloud 16, Nextcloud PostgreSQL 19, Nextcloud Redis 20;
+- final acceptance: `STAGE07_2_MAINTENANCE_SEMAPHORE_MIGRATION=PASS`;
+- record: `STAGE_07_2_NATIVE_UPDATE_OWNERSHIP_ACCEPTANCE_2026-09-23.md`.
