@@ -2256,3 +2256,23 @@ Mixing discovery and deployment of such omitted capabilities back into Stage 10 
 
 **Supersedes:** the deferred/planned status of the Backrest WebUI ingress task. It does not supersede or modify the accepted Stage 6 backup/recovery architecture.
 
+
+
+## 2026-09-23 — CloudCLI retirement and code.escloud.us reassignment
+
+**Status:** ACCEPTED
+
+**Context:** The operator rejected CloudCLI for the current persistent remote-workspace requirement after successful T3 Codex/Antigravity ACP testing. A full runtime audit found CloudCLI in its systemd service, npm package/state, code.escloud.us backend, Cloud Portal, Maintenance/Semaphore, edge backup SQLite-overlay staging and Semaphore repository checkout cache.
+
+**Decision:**
+- fully retire CloudCLI from edge rather than retain it as a fallback;
+- remove cloudcli.service, listener 127.0.0.1:18140, npm package, /home/core/.cloudcli and /srv/ai-workspace;
+- remove CloudCLI from edge-state backup staging, Maintenance, Semaphore template mapping and Cloud Portal;
+- reduce current Maintenance from 18 to 17 actionable manual targets and from 25 to 24 monitored components;
+- preserve code.escloud.us DNS, shared TLS SAN and Authelia policy as the application slot for the planned persistent T3 WebUI;
+- keep code.escloud.us on an authenticated 503 placeholder until T3 deployment;
+- preserve historical Stage acceptance records, journal history and backup history as history rather than rewriting them.
+
+**Acceptance marker:** `CLOUDCLI_RETIREMENT_FINAL_ACCEPTANCE=PASS`.
+
+**Supersedes:** all prior current-runtime decisions that retain CloudCLI as the manual/remote cloud-AI workspace or as an actionable Maintenance target. Historical acceptance records remain historically valid.
