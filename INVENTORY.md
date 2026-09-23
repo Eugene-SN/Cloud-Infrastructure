@@ -78,7 +78,7 @@ Final record: `STAGE_03_ACCEPTANCE_2026-09-18.md`.
 |---|---|---|
 | Authelia | LIVE / ACCEPTED | current `4.39.28`; `127.0.0.1:19091`; fresh operator/auth secrets; `auth.escloud.us` |
 | n8n | LIVE / ACCEPTED | current `2.39.10`; `127.0.0.1:15678`; fresh one-owner state; `n8n.escloud.us`; Authelia protected |
-| CloudCLI | LIVE / ACCEPTED | `1.37.3`; systemd; `127.0.0.1:18140`; fresh local user; `code.escloud.us`; Authelia protected |
+| CloudCLI | RETIRED / ACCEPTED | retired 2026-09-23; systemd/listener/npm/state/workspace removed; `code.escloud.us` preserved for T3 |
 | Codex CLI | LIVE / ACCEPTED | current `0.156.0`; official standalone; fresh ChatGPT auth; native managed Remote Control via Unix socket; native updater enabled; minimal user oneshot boot-trigger invokes `codex remote-control start --json`; no legacy direct app-server service |
 | Antigravity CLI | LIVE / ACCEPTED | current `1.2.7`; Stage 4G accepted `1.2.6`; Stage 2/4B historical `1.2.5`; Google OAuth; instance `edge`; persistent user service |
 | Stalwart | LIVE / ACCEPTED | current `0.16.23`; public SMTP25/SMTPS465/IMAPS993; useful mail data migrated; fresh auth/DKIM |
@@ -88,7 +88,7 @@ Final record: `STAGE_03_ACCEPTANCE_2026-09-18.md`.
 
 - Authelia compose SHA256 `265dc881294e4b14bf9da5b529570ff6a2f234de2a3e335681d34d3deb447e96`;
 - n8n compose SHA256 `03f6e88c137dedf5c5ed5cb8481c097bc2ab322e612c745f636a8fcc9117dda0`;
-- CloudCLI systemd unit SHA256 `8bf303e000b3de0f5a761fc0a466139a75e72fd6ec5d07b08ab7cb82f95382af`;
+- historical CloudCLI systemd unit SHA256 `8bf303e000b3de0f5a761fc0a466139a75e72fd6ec5d07b08ab7cb82f95382af`; runtime unit is now absent;
 - mail compose SHA256 `7de766ed23fd7c30f63870f25af648f018d3295685fb58e40b88eaa578d2d4de`;
 - mail nginx SHA256 `601ff1feffcef8729901b1e00ab98001934db03a1315b55233965ba5d75f079c`;
 - Stalwart image digest `sha256:388dcb75a70727c5b551249a6d34b1f1321294852489e4fa3a4e6be698b7c4f0`;
@@ -116,7 +116,7 @@ Final record: `STAGE_03_ACCEPTANCE_2026-09-18.md`.
 - `edge.escloud.us` — infrastructure hostname;
 - `auth.escloud.us` — live Authelia;
 - `n8n.escloud.us` — live n8n;
-- `code.escloud.us` — live CloudCLI;
+- `code.escloud.us` — RESERVED FOR T3; existing DNS/TLS/Authelia ingress preserved; current backend placeholder returns 503 until T3 WebUI deployment;
 - `mail.escloud.us` — live Stalwart + Bulwark;
 - `backup.escloud.us` — PLANNED / DEFERRED: future ingress for the existing Backrest management UI; no new backup product;
 - `ops.escloud.us` — FULLY RETIRED; removed from edge runtime/configuration/certificate/recovery state on 2026-09-21 and public Cloudflare DNS A record confirmed absent during Stage 10;
