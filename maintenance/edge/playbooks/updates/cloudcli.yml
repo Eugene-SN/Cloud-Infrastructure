@@ -1,4 +1,0 @@
----
-- import_playbook: ../update-unit.yml
-  vars:
-    edge_update_target: CLOUDCLI
