@@ -142,7 +142,7 @@ Backrest-before-Semaphore remains mandatory as a Stage sequencing and deployment
 
 Stage 7 accepted target direction: Edge Maintenance is derived from the accepted Home Maintenance implementation on CT1000. Preserve the proven Semaphore + Ansible/native-script architecture, version/status cache model, fixed-target dispatch, per-component update-driver pattern, post-update refresh/acceptance flow and dashboard where applicable. Replace Home/PVE-specific inventory, VMID/PCT/QGA logic, collectors and drivers with edge-specific equivalents. `update.escloud.us` begins as an adapted copy of the existing Home Maintenance dashboard source rather than a greenfield frontend.
 
-Stage 7B manual-execution requirement: every real update is operator-initiated manually from `update.escloud.us` only. Do not create or enable update timers, cron jobs, systemd update services, background update daemons, unattended update jobs, scheduled update execution, or any equivalent path that can start a real update without an explicit user action in the page. This also applies to Stage 7B acceptance testing: a newly implemented driver is exposed in `update.escloud.us`, the user inspects it and manually starts the test update there. Semaphore remains the backend executor only.
+Stage 07.2 update-ownership correction: Maintenance/Semaphore remains manual for components without an accepted upstream-native automatic owner, but it must not compete with supported native update lifecycles. Current native-owned paths are Codex managed-daemon auto-update, Hermes native cron update plus conditional settlement timer, and Ubuntu security updates through package-owned `apt-daily*` / `unattended-upgrades`. Normal/third-party APT, Docker workloads and other non-native-auto components remain operator-triggered through `update.escloud.us`. Semaphore itself has no schedules and never autonomously launches manual targets.
 
 Stage 7A is COMPLETE / ACCEPTED. Current accepted edge maintenance foundation:
 - Semaphore Community `2.19.12-012ed06-1788086239`, host-native, `semaphore.service` active/enabled as `semaphore:semaphore`;
@@ -173,15 +173,21 @@ Stage 7 same-origin Semaphore UI record: `STAGE_07_SEMAPHORE_SAME_ORIGIN_UI_2026
 
 Stage 7 retired-hostname cleanup record: `STAGE_07_OPS_HOSTNAME_RETIREMENT_2026-09-21.md`.
 
-Stage 7B accepted deployment:
-- the repository and edge runtime now contain maintained dashboard, schema-v3 status/target renderers, a fixed 16-unit driver manifest, 16 per-unit playbooks, one Master Batch playbook and fail-closed dispatchers;
-- Semaphore project 1 contains Refresh plus 16 executable per-unit templates (IDs `2..17`) and executable manual Master Batch template `18`;
-- generated dashboard `actions.json` has `read_only=false`, component template IDs `2..17`, executable Master template `18`, and exposes an action only when the corresponding status permits it;
-- `/etc/edge-maintenance/manual-driver-enablement.json` enables exactly the 16 fixed individual targets and Master; unknown or incomplete target sets still fail closed;
-- Docker application version, configured image track, running digest, remote digest and update reason are separate fields; current runtime probes report PostgreSQL `18.6`, Stalwart `0.16.23` and Mattermost `11.11.0` rather than their movable tags;
-- read-only verification passes exactly 16 update units / 23 monitored components / 8 non-actionable APT children; no Semaphore schedules or autonomous APT/update launchers exist;
-- operator-triggered Master Batch Task 12 completed runtime acceptance with exact-plan dispatch, clean post-scan and full health gates;
-- the first operator-triggered individual run from `update.escloud.us` remains the runtime acceptance for a driver that has not yet encountered a real available update; this does not reopen the accepted Stage 7B framework.
+Stage 7B historical deployment remains accepted; Stage 07.2 supersedes only its blanket manual-only ownership policy and fixed 16-target current model.
+
+Current Stage 07.2 maintenance state:
+- ownership model: `native_first_hybrid`;
+- generated target model: `update_units_v4`;
+- 18 actionable manual targets: `APT_EDGE`, `XRAY`, `HYSTERIA2`, `BACKREST`, `RESTIC`, `RCLONE`, `SEMAPHORE`, `N8N`, `AUTHELIA`, `MATTERMOST`, `POSTGRESQL`, `STALWART`, `BULWARK`, `NEXTCLOUD`, `NEXTCLOUD_POSTGRESQL`, `NEXTCLOUD_REDIS`, `CLOUDCLI`, `ANTIGRAVITY`;
+- monitor-only native-auto targets: `HERMES` and `CODEX`; neither has a Semaphore update template;
+- Ubuntu security ownership: package-owned `apt-daily.timer`, `apt-daily-upgrade.timer` and `unattended-upgrades.service` enabled; automatic reboot disabled; ordinary `-updates` and third-party APT remain manual through `APT_EDGE`;
+- Semaphore templates 14 and 16 are repurposed to Rclone and Nextcloud; Nextcloud PostgreSQL/Redis use templates 19/20; Refresh remains ID 1 and Master remains ID 18;
+- Rclone production runtime is `/usr/bin/rclone` with persistent `core` user service `projects-webdav.service`; manual update uses upstream `rclone selfupdate --stable`;
+- Nextcloud application, PostgreSQL and Redis are separate manual Compose targets; Nextcloud app action recreates both `app` and `cron`;
+- Bulwark configured tracking is `ghcr.io/bulwarkmail/webmail:latest`; runtime remained on `1.9.2` during migration and Maintenance correctly reported `1.10.0` available without executing the update;
+- accepted migration snapshot: 18 manual / 2 monitor-only, all 18 manual driver preflights PASS, Master plan-only PASS with 14 CURRENT + 4 UPDATE_AVAILABLE, native-owner non-regression PASS, no real service update executed;
+- Codex native updater advanced the active daemon to `0.156.1`; Hermes native updater is active on `v0.21.4`.
+
 
 Implementation/deployment checkpoint: `STAGE_07B_DRIVER_SCAFFOLD_DEPLOYMENT_2026-09-21.md`.
 
