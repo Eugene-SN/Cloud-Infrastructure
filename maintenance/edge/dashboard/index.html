@@ -1356,6 +1356,7 @@
     function actionState(row) {
       const component = actionsConfig?.components?.[row.action_key];
       if (row.status !== "UPDATE_AVAILABLE") return { code: "NO_UPDATE", label: "No update available", executable: false };
+      if (row.update_owner === "native_auto" || component?.driver_state === "native_auto") return { code: "NATIVE_AUTO", label: "Native auto-update", executable: false };
       if (!component || component.driver_state === "not_implemented") return { code: "NO_DRIVER", label: "Driver not implemented", executable: false };
       if (actionsConfig.read_only === true || component.driver_state === "acceptance_pending") return { code: "PENDING", label: "Acceptance pending", executable: false };
       if (!component.template_id) return { code: "NO_TEMPLATE", label: "Template unavailable", executable: false };
