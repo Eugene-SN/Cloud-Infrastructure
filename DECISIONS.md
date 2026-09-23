@@ -2122,3 +2122,30 @@ Mixing discovery and deployment of such omitted capabilities back into Stage 10 
 **Evidence:** `STAGE_07_2_NATIVE_UPDATE_OWNERSHIP_ACCEPTANCE_2026-09-23.md`.
 
 **Supersedes:** the current applicability of the 2026-09-21 Stage 7B blanket manual-only enforcement and fixed 16-target portions of Stage 7 final acceptance. Non-conflicting historical acceptance remains valid.
+
+
+---
+
+## 2026-09-23T07:35:00+03:00 — Stage 07.2 final manual-only Maintenance target model
+
+**Status:** ACCEPTED
+
+**Context:** The preliminary Stage 07.2 v4 model correctly restored native update ownership for Hermes, Codex and Ubuntu security, but incorrectly kept Hermes/Codex as monitor-only Maintenance rows. Deep runtime audit also found `actions.json auto_update=true`, a stale schema-1 real Master enablement check, and Stage 8 monitoring preferring raw `status.json` rather than the actual Maintenance target model.
+
+**Decision:**
+- retain native-first ownership, but make the Maintenance target/action plane strictly manual;
+- remove Hermes and Codex completely from the Maintenance collector, generated rows, actions, dashboard and Semaphore update model;
+- preserve Hermes native cron + settlement, Codex native managed-daemon `pid-update-loop`, and Ubuntu package-owned unattended security updates;
+- use `update_units_v5` with exactly 18 actionable Maintenance targets, all `update_owner=maintenance_manual`;
+- use actions schema 10 with exactly 18 components, `execution_mode=manual_only`, `auto_update=false`;
+- require schema-2 enablement for both real Master execution and `--plan-only`;
+- make `/var/www/maintenance-status/maintenance.json` the authoritative Stage 8 maintenance source;
+- keep existing Semaphore mapping with no Hermes/Codex update templates.
+
+**Acceptance:** `STAGE07_2_MAINTENANCE_MANUAL_TARGET_MODEL_CORRECTION_V3` returned RC=0. Final runtime had 25 raw rows, 18 Maintenance rows, 18 manual actions, four pending manual updates, Master plan-only PASS, Semaphore non-regression PASS, native-owner non-regression PASS, edge-monitor source acceptance PASS, service non-regression PASS, and no real component update.
+
+**Acceptance marker:** `STAGE07_2_CORRECTIVE_MIGRATION=PASS`.
+
+**Evidence:** `STAGE_07_2_FINAL_NATIVE_UPDATE_OWNERSHIP_ACCEPTANCE_2026-09-23.md`.
+
+**Supersedes:** the 2026-09-23T07:09:05+03:00 Stage 07.2 v4 decision and the earlier Stage 07.2 v4 acceptance record as current authority. The native-first ownership principle itself remains accepted.
