@@ -1,22 +1,24 @@
 {
-  "schema": 1,
+  "schema": 2,
   "master": true,
   "enabled": {
-    "APT_EDGE": true,
     "XRAY": true,
     "HYSTERIA2": true,
     "BACKREST": true,
     "RESTIC": true,
-    "SEMAPHORE": true,
+    "RCLONE": true,
     "N8N": true,
     "AUTHELIA": true,
     "MATTERMOST": true,
     "POSTGRESQL": true,
     "STALWART": true,
     "BULWARK": true,
-    "HERMES": true,
+    "NEXTCLOUD": true,
+    "NEXTCLOUD_POSTGRESQL": true,
+    "NEXTCLOUD_REDIS": true,
     "CLOUDCLI": true,
-    "CODEX": true,
-    "ANTIGRAVITY": true
+    "ANTIGRAVITY": true,
+    "SEMAPHORE": true,
+    "APT_EDGE": true
   }
 }
