@@ -295,6 +295,21 @@ Accepted runtime:
 - OpenClaw keeps its existing PVE read-only relationship;
 - future public client access through edge remains outside Stage 5 and requires a separately selected mechanism.
 
+## Update ownership policy
+
+For every deployed service/product, prefer the vendor/upstream-native update lifecycle over project-built update automation.
+
+Rules:
+
+- If the service provides a supported native automatic-update mechanism, keep and use that mechanism by default.
+- Do not disable a native automatic updater merely to route the service through maintenance/Semaphore.
+- If the service has no supported native automatic-update mechanism, manage its updates manually through the accepted maintenance/Semaphore workflow.
+- Never create independent custom automatic-update scripts, cron jobs, systemd timers or equivalent project-specific auto-update mechanisms merely to add automation that upstream does not provide.
+- Maintenance/Semaphore may still inspect, report or expose status for a service that self-updates natively, but it must not become a competing update owner.
+- Override a native updater only for a concrete incompatibility, regression, migration constraint, or explicit operator decision.
+
+For Codex specifically, its supported managed-daemon/native auto-update lifecycle remains authoritative; do not disable it merely to make Codex a manual Semaphore-managed update target.
+
 ## Backup/update sequencing
 
 - Backrest using Restic is the accepted backup-management direction.
