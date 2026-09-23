@@ -534,3 +534,20 @@ Authoritative record: `STAGE_12_FINAL_ACCEPTANCE_2026-09-23.md`.
 - Stage 8 authoritative maintenance source: `/var/www/maintenance-status/maintenance.json`;
 - final acceptance: `STAGE07_2_CORRECTIVE_MIGRATION=PASS`;
 - record: `STAGE_07_2_FINAL_NATIVE_UPDATE_OWNERSHIP_ACCEPTANCE_2026-09-23.md`.
+
+
+### T3 Code persistent remote workspace
+
+- runtime owner: official `t3code.service` user unit under `core`;
+- accepted version: `0.0.43-nightly.20260923.2150` (temporary compatibility pin);
+- backend: `127.0.0.1:3773`;
+- project root: `/home/core/projects`;
+- public WebUI: `https://code.escloud.us` via existing Xray/nginx/Authelia ingress;
+- remote client transport: T3 Connect;
+- relay client: managed `cloudflared 2026.5.2`;
+- accepted clients: macOS T3 Desktop, iPad T3 Code, browser WebUI;
+- agent activity publication: disabled;
+- T3 Desktop SSH transport: retired; `/home/core/.t3/ssh-launch` cleanup completed;
+- ACP providers: Codex and Antigravity;
+- standalone Antigravity daemon remains separate.
+
