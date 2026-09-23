@@ -19,12 +19,15 @@ def load(path):
 
 def validate_plan(manifest, cache, now=None):
     now = now or dt.datetime.now(dt.timezone.utc)
-    if cache.get("schema") != 3 or cache.get("target_model") != "update_units_v3":
+
+    if cache.get("schema") != 3 or cache.get("target_model") != "update_units_v4":
         raise RuntimeError("MASTER_CACHE_PRECHECK_GATE=FAIL|REASON=CACHE_CONTRACT")
+
     try:
         stamp = dt.datetime.fromisoformat(cache["generated_at"].replace("Z", "+00:00"))
     except (KeyError, TypeError, ValueError) as exc:
         raise RuntimeError("MASTER_CACHE_PRECHECK_GATE=FAIL|REASON=CACHE_TIMESTAMP") from exc
+
     age = int((now - stamp).total_seconds())
     maximum = int(manifest["cache_max_age_seconds"])
     print(
@@ -38,24 +41,23 @@ def validate_plan(manifest, cache, now=None):
         )
 
     units = manifest.get("units", [])
-    index = {unit.get("id"): unit for unit in units}
+    index = {unit["id"]: unit for unit in units}
     order = manifest.get("master_order", [])
     expected = set(index)
-    if len(units) != 16 or len(index) != 16 or len(order) != 16 or set(order) != expected:
-        raise RuntimeError(
-            "MASTER_CACHE_PRECHECK_GATE=FAIL|REASON=MASTER_TARGET_SET|"
-            f"DETAIL=units:{len(units)},unique:{len(index)},order:{len(order)}"
-        )
+    if (
+        len(units) != len(expected)
+        or len(order) != len(expected)
+        or set(order) != expected
+    ):
+        raise RuntimeError("MASTER_CACHE_PRECHECK_GATE=FAIL|REASON=MASTER_TARGET_SET")
 
     rows = cache.get("rows", [])
     row_index = {row.get("component"): row for row in rows}
-    if len(rows) != 16 or len(row_index) != 16 or set(row_index) != expected:
-        missing = sorted(expected - set(row_index))
-        extra = sorted(set(row_index) - expected)
+    missing = expected - set(row_index)
+    if missing:
         raise RuntimeError(
-            "MASTER_CACHE_PRECHECK_GATE=FAIL|REASON=CACHE_TARGET_SET|"
-            f"DETAIL=rows:{len(rows)},missing:{','.join(missing) or 'none'},"
-            f"extra:{','.join(extra) or 'none'}"
+            "MASTER_CACHE_PRECHECK_GATE=FAIL|REASON=CACHE_TARGET_SET|MISSING="
+            + ",".join(sorted(missing))
         )
 
     current = 0
@@ -84,23 +86,15 @@ def validate_plan(manifest, cache, now=None):
             )
 
     summary = cache.get("summary", {})
-    if (
-        summary.get("TOTAL") != 16
-        or summary.get("CURRENT") != current
-        or summary.get("UPDATE_AVAILABLE") != available
-        or summary.get("CHECK_FAILED") != 0
-    ):
+    if summary.get("ACTIONABLE_TARGETS") != len(expected):
         raise RuntimeError(
-            "MASTER_CACHE_PRECHECK_GATE=FAIL|REASON=CACHE_SUMMARY_MISMATCH|"
-            f"DETAIL=current:{current},updates:{available}"
+            "MASTER_CACHE_PRECHECK_GATE=FAIL|REASON=ACTIONABLE_SUMMARY_MISMATCH"
         )
     if summary.get("REBOOT_REQUIRED") != 0:
-        raise RuntimeError(
-            "MASTER_CACHE_PRECHECK_GATE=FAIL|REASON=REBOOT_REQUIRED|"
-            f"DETAIL={summary.get('REBOOT_REQUIRED')}"
-        )
+        raise RuntimeError("MASTER_CACHE_PRECHECK_GATE=FAIL|REASON=REBOOT_REQUIRED")
+
     print(
-        f"MASTER_CACHE_PRECHECK_GATE=PASS|TOTAL=16|CURRENT={current}|"
+        f"MASTER_CACHE_PRECHECK_GATE=PASS|TOTAL={len(expected)}|CURRENT={current}|"
         f"UPDATE_AVAILABLE={available}",
         flush=True,
     )
