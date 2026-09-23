@@ -177,9 +177,19 @@ docker_runtime_version() {
             docker exec "$container" mattermost version 2>/dev/null |
               sed -n 's/^Version:[[:space:]]*//p' | head -n1
             ;;
-        POSTGRESQL)
+        POSTGRESQL|NEXTCLOUD_POSTGRESQL)
             docker exec "$container" postgres --version 2>/dev/null |
               awk '{print $NF; exit}'
+            ;;
+        NEXTCLOUD)
+            docker exec -u www-data "$container" \
+              php occ status --output=json 2>/dev/null |
+              python3 -c 'import json,sys; print(json.load(sys.stdin).get("versionstring",""))'
+            ;;
+        NEXTCLOUD_REDIS)
+            docker exec "$container" redis-server --version 2>/dev/null |
+              sed -n 's/.*v=\([0-9][0-9.]*\).*/\1/p' |
+              head -n1
             ;;
         STALWART)
             docker exec "$container" stalwart --version 2>/dev/null |
@@ -285,7 +295,7 @@ def walk(obj):
                     m=re.search(r"version:-\s*([^\s]+)",str(build))
                     if m:
                         versions.append(m.group(1))
-            if component == "POSTGRESQL":
+            if component in ("POSTGRESQL", "NEXTCLOUD_POSTGRESQL"):
                 for item in cfg.get("Env") or cfg.get("env") or []:
                     if str(item).startswith("PG_VERSION="):
                         versions.insert(0, str(item).split("=",1)[1])
@@ -416,6 +426,13 @@ restic_installed="$(
 )"
 emit_github_binary RESTIC "$restic_installed" restic/restic
 
+rclone_installed="$(
+    /usr/bin/rclone version 2>/dev/null |
+    awk 'NR==1 {print $2; exit}' ||
+    true
+)"
+emit_github_binary RCLONE "$rclone_installed" rclone/rclone
+
 echo
 echo "--- DOCKER APPLICATIONS ---"
 emit_docker_component N8N n8n docker.n8n.io/n8nio/n8n:stable docker.n8n.io/n8nio/n8n stable
@@ -423,7 +440,10 @@ emit_docker_component AUTHELIA authelia authelia/authelia:latest authelia/authel
 emit_docker_component MATTERMOST mattermost-mattermost-1 mattermost/mattermost-team-edition:latest mattermost/mattermost-team-edition latest
 emit_docker_component POSTGRESQL mattermost-postgres-1 postgres:18-alpine postgres 18-alpine
 emit_docker_component STALWART stalwart stalwartlabs/stalwart:v0.16 stalwartlabs/stalwart v0.16
-emit_docker_component BULWARK bulwark ghcr.io/bulwarkmail/webmail:1.9.2 ghcr.io/bulwarkmail/webmail 1.9.2
+emit_docker_component BULWARK bulwark ghcr.io/bulwarkmail/webmail:latest ghcr.io/bulwarkmail/webmail latest
+emit_docker_component NEXTCLOUD nextcloud-app-1 nextcloud:stable-apache nextcloud stable-apache
+emit_docker_component NEXTCLOUD_POSTGRESQL nextcloud-db-1 postgres:18-alpine postgres 18-alpine
+emit_docker_component NEXTCLOUD_REDIS nextcloud-redis-1 redis:alpine redis alpine
 
 echo
 echo "--- GIT / USER TOOLS ---"
