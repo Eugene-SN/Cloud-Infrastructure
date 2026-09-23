@@ -1,56 +1,82 @@
 # Edge Maintenance
 
-Maintained Stage 7B source for the single `edge` node. The design keeps the
-accepted `Semaphore -> Ansible -> native driver` chain and has no scheduler,
-timer, unattended updater, or background update daemon.
+Current source for the single `edge` maintenance/update subsystem.
 
-## Model
+## Ownership model
 
-- 16 update units: 1 APT, 5 native, 6 Docker, 4 CLI/agent.
-- 23 monitored components. The eight APT-managed components are details of
-  `APT_EDGE`; they are never standalone actions.
-- Docker rows keep application/runtime version, configured repository/track,
-  running digest, remote digest, and update reason as distinct fields.
-- `update.escloud.us` is the only operator launch surface.
+Stage 07.2 uses a **native-first hybrid** ownership model:
 
-`/var/www/maintenance-status/actions.json` is a generated runtime artifact, not
-a second configuration source. `scripts/maintenance-actions-render` joins the
-canonical update-unit definition, Semaphore template mapping and root-owned
-manual enablement registry, validates their exact 16-target agreement and
-atomically replaces the artifact on every Refresh. No `actions.json` copy is
-kept under `/opt/edge-maintenance/dashboard`.
+- upstream/vendor-native automatic lifecycle remains authoritative when it is supported and production-safe;
+- Maintenance/Semaphore is the manual update owner only for components without an accepted native automatic owner;
+- native-owned components remain visible in status but are never exposed as competing manual update actions.
 
-`playbooks/semaphore-refresh.yml` delegates to the same canonical
-`/opt/edge-maintenance/scripts/maintenance-refresh` pipeline used by direct
-runtime refreshes; it does not maintain a second orchestration sequence.
+Current native-owned monitor-only targets:
+
+- `CODEX` — Codex managed-daemon native updater;
+- `HERMES` — Hermes native cron updater plus conditional settlement timer;
+- Ubuntu security updates — package-owned `apt-daily*` / `unattended-upgrades`.
+
+Normal and third-party APT updates remain manual through `APT_EDGE`. Automatic reboot is disabled.
+
+## Manual update model
+
+There are 18 manual update targets:
+
+`APT_EDGE`, `XRAY`, `HYSTERIA2`, `BACKREST`, `RESTIC`, `RCLONE`,
+`SEMAPHORE`, `N8N`, `AUTHELIA`, `MATTERMOST`, `POSTGRESQL`,
+`STALWART`, `BULWARK`, `NEXTCLOUD`, `NEXTCLOUD_POSTGRESQL`,
+`NEXTCLOUD_REDIS`, `CLOUDCLI`, `ANTIGRAVITY`.
+
+`update.escloud.us` remains the single operator launch surface. Semaphore is the
+manual backend executor/orchestrator and does not schedule real updates.
+
+The four Stage 12 targets use the existing generic `playbooks/update-unit.yml`
+path. Rclone updates with upstream `rclone selfupdate --stable` and then restarts
+the `core` user service `projects-webdav.service`. Nextcloud application,
+PostgreSQL and Redis are distinct Compose image targets.
+
+Bulwark tracks upstream stable through `ghcr.io/bulwarkmail/webmail:latest`;
+changing the tracked tag does not itself update/recreate the running container.
+The actual image update remains operator-triggered through Maintenance.
+
+## Generated contracts
+
+`/var/www/maintenance-status/maintenance.json` uses target model
+`update_units_v4`. It contains 18 actionable manual rows plus two monitor-only
+native rows (`CODEX`, `HERMES`).
+
+`/var/www/maintenance-status/actions.json` is generated from:
+
+- `config/update-units.json`;
+- `config/semaphore-templates.json`;
+- root-owned `/etc/edge-maintenance/manual-driver-enablement.json`.
+
+Unknown or disabled manual targets fail closed. Monitor-only targets have no
+Semaphore template ID and are rendered as native-owned/non-executable.
+
+Master Batch evaluates only the 18 manual targets. Semaphore remains
+individual-only because self-updating the orchestrator inside its own batch can
+interrupt final acceptance. A reboot-required state blocks clean Master
+acceptance.
+
+## APT policy
+
+The old Stage 7 blanket manual-only APT override is superseded.
+
+Package-owned `apt-daily.timer`, `apt-daily-upgrade.timer` and
+`unattended-upgrades.service` are enabled for Ubuntu security updates.
+Normal `-updates` and third-party package upgrades remain manual through
+`APT_EDGE`; unattended automatic reboot remains disabled.
+
+Do not reinstall the retired `99-edge-maintenance-manual-only` override or
+re-mask package-owned APT lifecycle units unless a later accepted decision
+explicitly supersedes Stage 07.2.
 
 ## Safety boundary
 
-Individual templates are exposed only through the manual dashboard controls.
-Execution remains fail-closed: `/etc/edge-maintenance/manual-driver-enablement.json`
-must explicitly enable each fixed unit. Master Batch has a separate `master`
-gate. Its single Semaphore task performs a fresh pre-scan, validates the exact
-16-target cache, skips current targets, executes available targets sequentially,
-continues after isolated driver failures, runs a complete post-scan and requires
-both status and health acceptance before reporting success. Semaphore self-update
-remains individual-only because restarting the orchestrator from its own batch
-would interrupt acceptance. A pending reboot blocks dispatch and also prevents a
-completed batch from being reported as accepted.
+Real manual updates require an enabled target in
+`/etc/edge-maintenance/manual-driver-enablement.json`, a fresh
+`UPDATE_AVAILABLE` cache row, and operator initiation from
+`update.escloud.us`.
 
-The canonical Semaphore sudo allowlist is `config/semaphore-sudoers`. It must be
-installed as `/etc/sudoers.d/91-semaphore-edge-maintenance`; Master post-scan and
-health validators are part of the required command set. Compose drivers always
-force service recreation after pinning the exact scanned digest so a movable tag
-cannot leave the previous image running.
-
-Host package updates follow the same manual-only boundary. Install
-`config/apt-periodic-manual-only.conf` as
-`/etc/apt/apt.conf.d/99-edge-maintenance-manual-only` and mask
-`apt-daily.timer`, `apt-daily.service`, `apt-daily-upgrade.timer`,
-`apt-daily-upgrade.service` and `unattended-upgrades.service`. This disables
-autonomous metadata refresh and package installation without affecting the
-explicit `apt-get` calls made by the `APT_EDGE` driver.
-
-The first operator-initiated run of each driver is its runtime acceptance:
-review the displayed version, backup/rollback and health checks, then launch it
-from `update.escloud.us`. No other launch surface is supported.
+Read-only refreshes may run independently; they never chain into real updates.
