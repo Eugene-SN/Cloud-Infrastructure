@@ -52,7 +52,6 @@ DOCKER_COMPONENTS = [
 ]
 
 CLI_COMPONENTS = [
-    ("CLOUDCLI", "CloudCLI"),
     ("ANTIGRAVITY", "Antigravity CLI"),
 ]
 
