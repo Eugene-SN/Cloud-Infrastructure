@@ -581,7 +581,7 @@ If Stage 11 makes no material deployment changes, no Stage 10 rerun is required.
 
 ## Post-infrastructure continuous workstream — Automation & User Workflows
 
-This remains deliberately outside infrastructure completion. It begins only after Stage 11 and, where Stage 11 changed infrastructure, the required bounded Stage 10 re-acceptance.
+This remains deliberately outside infrastructure completion. It is now eligible because Stages 11–13 are COMPLETE / ACCEPTED.
 
 Examples include n8n workflows, Hermes/agent workflows, Universal Capture Inbox, human approvals, mail-triggered automation, continuous vendor/document intake, bounded AI research, durable application-level store-and-forward/retry, messaging/bot commands and user-specific orchestration among n8n, Hermes, Codex, Antigravity and local vLLM/PAI.
 
@@ -603,15 +603,17 @@ Stage 7: **COMPLETE / ACCEPTED**. `STAGE07_FINAL_ACCEPTANCE=PASS`.
 Stage 8: **COMPLETE / ACCEPTED**. `STAGE08_FINAL_ACCEPTANCE=PASS`.
 Stage 9: **COMPLETE / ACCEPTED**. `STAGE09_FINAL_ACCEPTANCE=PASS`.  
 Stage 10: **COMPLETE / ACCEPTED**. `STAGE10_FINAL_ACCEPTANCE=PASS`.  
-Stage 11: **ACTIVE / ACCEPTED SCOPE**.
+Stage 11: **COMPLETE / ACCEPTED**. `STAGE11_FINAL_ACCEPTANCE=PASS`.
+Stage 12: **COMPLETE / ACCEPTED**. `STAGE12_FINAL_ACCEPTANCE=PASS`.
+Stage 13: **COMPLETE / ACCEPTED**. `STAGE13_FINAL_ACCEPTANCE=PASS`.
 
 Current accepted checkpoint on `main`:
 
-`Stage 10 — Edge Final Integrated Infrastructure Acceptance — COMPLETE / ACCEPTED`
+`Stage 13 — Backrest WebUI Ingress — COMPLETE / ACCEPTED`
 
 ## Current infrastructure stage
 
-Stage 11 — Remaining Infrastructure Gap Reconciliation & Completion — is active. User workflows follow Stage 11 and any required bounded Stage 10 re-acceptance.
+No finite infrastructure stage is active. Stage 13 is COMPLETE / ACCEPTED. The next normal workstream is post-infrastructure **Automation & User Workflows**; WenTian publishing remains deferred until content is ready.
 
 
 ---
@@ -645,11 +647,23 @@ Accepted result:
 
 Authoritative final record: `STAGE_12_FINAL_ACCEPTANCE_2026-09-23.md`.
 
-## Future task — Backrest WebUI ingress
+## Stage 13 — Backrest WebUI Ingress
 
-**Status:** PLANNED / DEFERRED.
+**Status:** COMPLETE / ACCEPTED. `STAGE13_FINAL_ACCEPTANCE=PASS`.
 
-Publish the already-running Backrest WebUI at `backup.escloud.us` through the accepted ingress/auth architecture. This is an ingress/presentation task only; no replacement backup product is selected.
+Accepted result:
+
+- the existing Backrest WebUI is published at `https://backup.escloud.us/`;
+- Backrest remains loopback-only at `127.0.0.1:9898`;
+- public path reuses Xray TLS -> nginx -> Authelia -> Backrest;
+- existing DNS, shared TLS identity and Authelia `one_factor` policy were reused;
+- no new public application port or UFW rule was added;
+- Backrest-native authentication behavior remains preserved behind Authelia;
+- backup engine, repositories, schedules, retention and restore behavior were not changed;
+- server-side deployment/verification passed with zero failed systemd units;
+- authenticated browser E2E confirmed the real Backrest WebUI and existing repositories/plans/history are visible.
+
+Authoritative final record: `STAGE_13_FINAL_ACCEPTANCE_2026-09-23.md`.
 
 ## Future task — WenTian technical publishing
 
