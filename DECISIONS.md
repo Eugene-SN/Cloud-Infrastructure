@@ -2230,3 +2230,29 @@ Mixing discovery and deployment of such omitted capabilities back into Stage 10 
 **Final status:** Stage 07.2 **COMPLETE / ACCEPTED**.
 
 **Supersedes as current Stage 07.2 authority:** the earlier Stage 07.2 acceptance records, while retaining them as historical evidence. The 2026-09-23T10:40:00+03:00 cleanup/rotation architecture decision remains applicable and is incorporated into this final accepted state.
+
+---
+
+## 2026-09-23T12:20:41+03:00 — Stage 13 Backrest WebUI ingress acceptance
+
+**Status:** ACCEPTED
+
+**Context:** Stage 11 retained `backup.escloud.us` as a small deferred presentation task for the already-running Backrest runtime. Stage 13 bounded audit confirmed Backrest healthy on loopback `127.0.0.1:9898`, existing DNS/TLS identity ready, the existing Authelia `one_factor` policy already present, and no conflicting nginx vhost. The backup engine, repositories, schedules and retention did not require any change.
+
+**Decision:**
+- publish the existing Backrest WebUI at `https://backup.escloud.us/`;
+- use the accepted public chain `Xray TLS -> nginx 127.0.0.1:8080 -> Authelia -> Backrest 127.0.0.1:9898`;
+- keep Backrest loopback-only and add no public Backrest port/UFW rule;
+- reuse existing DNS, shared certificate and Authelia policy unchanged;
+- preserve Backrest-native bearer-token behavior behind Authelia by forwarding the client `Authorization` header;
+- retain Backrest/Restic repositories, plans/schedules, retention, restore semantics and service lifecycle unchanged;
+- accept the first deployment failure as a verifier defect caused by an immediate request reaching an old nginx worker generation during graceful reload; the automatic rollback restored the prior state, and the corrected verifier used bounded route polling without changing the production vhost;
+- accept `STAGE13_BACKREST_WEBUI_INGRESS_DEPLOY_VERIFY_V2` with RC=0 and `STAGE13_SERVER_SIDE_INGRESS_DEPLOYMENT=PASS`;
+- accept authenticated browser E2E confirming Authelia login, the real Backrest WebUI, and visibility of existing repositories/plans/history.
+
+**Acceptance marker:** `STAGE13_FINAL_ACCEPTANCE=PASS`.
+
+**Evidence:** `STAGE_13_FINAL_ACCEPTANCE_2026-09-23.md`.
+
+**Supersedes:** the deferred/planned status of the Backrest WebUI ingress task. It does not supersede or modify the accepted Stage 6 backup/recovery architecture.
+
