@@ -496,7 +496,7 @@ Current accepted/deployed state:
 - controlled ai-node-ai-state local/D5 verification passed: `6be74a98...` -> `ea798442...`;
 - dedicated Knowledge policies remain unchanged;
 - no recurring edge full/bare-metal Restic chain is planned;
-- the former CloudCLI workspace drift is resolved: `/srv/ai-workspace` exists as `core:core 0755`, and the system `cloudcli.service` is enabled, active/running with `NRestarts=0`.
+- historical Stage 6 CloudCLI workspace drift was resolved at that checkpoint; CloudCLI was subsequently fully retired on 2026-09-23 and `/srv/ai-workspace` plus `cloudcli.service` are now absent.
 
 Acceptance record: `STAGE_06_7_FINAL_ACCEPTANCE_2026-09-21.md`.
 Final Stage 6 acceptance record: `STAGE_06_FINAL_ACCEPTANCE_2026-09-21.md`.
@@ -510,12 +510,12 @@ Final Stage 7 acceptance reused the accepted Stage 7A and Stage 7B evidence and
 closed Stage 7C with a fresh integrated read-only audit. The accepted runtime
 contract is:
 
-- maintenance model `update_units_v3`: exactly 16 actionable update units / 23 monitored components / 8 non-actionable APT children;
-- Refresh template ID `1`, individual update templates `2–17`, manual Master Batch template `18`;
+- historical Stage 7 acceptance used `update_units_v3`; current post-Stage-07.2 model is `update_units_v5` with 17 actionable update units / 24 monitored components / 8 non-actionable APT children after CloudCLI retirement;
+- Refresh template ID `1` and manual Master Batch template `18` remain; CloudCLI template ID `15` is retired and absent;
 - every real update remains manually initiated from `update.escloud.us`; Semaphore has zero schedules, no project update timer/cron launcher exists, and all Ubuntu periodic/unattended APT paths are masked/inactive with effective periodic values `0`;
 - the dashboard uses one generated runtime action artifact and the four accepted groups: System Packages, Native Applications, Docker Applications, and CLI & Agent Applications;
-- normalized `core` execution context is verified for Hermes, CloudCLI, Codex and Antigravity with cwd `/home/core`; all four preflights pass;
-- the final fresh scan resolved all 16 targets with `CHECK_FAILED=0` and `REBOOT_REQUIRED=0`; Hermes alone is `UPDATE_AVAILABLE` because its active lazy-dependency drift is now detected fail-closed and remains an ordinary next manual WebUI update, not an acceptance failure;
+- normalized `core` execution context remains relevant for Hermes, Codex and Antigravity; the former CloudCLI preflight is historical because CloudCLI is retired;
+- that Stage 7 checkpoint resolved all 16 targets; current post-retirement Maintenance acceptance is 17 actionable targets with `CHECK_FAILED=0`, while update availability is ordinary mutable runtime state;
 - Docker application-version / track / digest semantics remain valid;
 - operator-triggered Master Batch Task 12 remains accepted with clean post-scan and health gates;
 - public `update.escloud.us`, Authelia boundary, same-origin Semaphore API/UI, nginx, system/user services, Docker workloads and failed-unit gate all pass.
