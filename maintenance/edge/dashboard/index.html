@@ -20,31 +20,41 @@
     })();
   </script>
   <style>
-    /* ESCLOUD.US 2026 SOVEREIGN FROSTED GLASS TOKENS */
+    /* ESCLOUD.US 2026 SOVEREIGN FROSTED GLASS TOKENS - NORDIC GLACIER CALIBRATION */
     :root, html[data-theme="light"] {
       color-scheme: light;
       --canvas: #f1f8fd;
-      --canvas-soft: #e5f2fb;
-      --surface: rgba(255, 255, 255, 0.52);
+      --canvas-soft: #e7f2fa;
+      --surface: rgba(255, 255, 255, 0.50);
       --surface-solid: rgba(255, 255, 255, 0.82);
-      --surface-hover: rgba(255, 255, 255, 0.75);
+      --surface-hover: rgba(255, 255, 255, 0.72);
       --surface-glass-inset: rgba(241, 248, 253, 0.65);
-      --ink: #121d28;
-      --ink-soft: #475a6f;
-      --ink-faint: #71869d;
-      --line: rgba(50, 90, 130, 0.08);
-      --line-strong: rgba(40, 80, 120, 0.15);
-      --accent: #0284c7;
-      --accent-soft: rgba(2, 132, 199, 0.10);
-      --up: #16a34a;
-      --up-soft: rgba(22, 163, 74, 0.10);
-      --down: #dc2626;
-      --down-soft: rgba(220, 38, 38, 0.10);
-      --warn: #d97706;
-      --warn-soft: rgba(217, 119, 6, 0.12);
-      --unknown: #64748b;
-      --unknown-soft: rgba(100, 116, 139, 0.10);
-      --focus: #0284c7;
+      --ink: #162432;
+      --ink-soft: #4a5d6e;
+      --ink-faint: #6c8092;
+      --line: rgba(50, 85, 115, 0.08);
+      --line-strong: rgba(40, 75, 105, 0.15);
+      
+      /* Calibrated Nordic Glacier Palette (Muted & Harmonious) */
+      --accent: #35627e;
+      --accent-soft: rgba(53, 98, 126, 0.12);
+      --up: #266b59;
+      --up-soft: rgba(38, 107, 89, 0.12);
+      --down: #9c4545;
+      --down-soft: rgba(156, 69, 69, 0.11);
+      --warn: #946029;
+      --warn-soft: rgba(148, 96, 41, 0.11);
+      --unknown: #607385;
+      --unknown-soft: rgba(96, 115, 133, 0.10);
+      
+      /* Action Column Buttons (Glacier Sage - Muted Frosted Glass) */
+      --btn-action-bg: rgba(38, 107, 89, 0.11);
+      --btn-action-border: rgba(38, 107, 89, 0.26);
+      --btn-action-hover: rgba(38, 107, 89, 0.19);
+      --btn-action-hover-border: rgba(38, 107, 89, 0.40);
+      --btn-action-text: #0e2720;
+      
+      --focus: #35627e;
       --glass-border: rgba(255, 255, 255, 0.82);
       --glass-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.95);
       --card-shadow: 0 8px 32px -4px rgba(20, 50, 80, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.95);
@@ -63,22 +73,32 @@
       --surface-solid: rgba(32, 38, 50, 0.80);
       --surface-hover: rgba(45, 54, 70, 0.60);
       --surface-glass-inset: rgba(18, 22, 30, 0.50);
-      --ink: #f0f3f6;
-      --ink-soft: #9ca8b7;
-      --ink-faint: #697688;
+      --ink: #e8edf2;
+      --ink-soft: #9aa8b6;
+      --ink-faint: #697887;
       --line: rgba(255, 255, 255, 0.08);
       --line-strong: rgba(255, 255, 255, 0.14);
-      --accent: #38bdf8;
-      --accent-soft: rgba(56, 189, 248, 0.14);
-      --up: #34d399;
-      --up-soft: rgba(52, 211, 153, 0.14);
-      --down: #f87171;
-      --down-soft: rgba(248, 113, 113, 0.14);
-      --warn: #fbbf24;
-      --warn-soft: rgba(251, 191, 36, 0.14);
-      --unknown: #94a3b8;
-      --unknown-soft: rgba(148, 163, 184, 0.14);
-      --focus: #38bdf8;
+      
+      /* Calibrated Cosmic Titanium Palette (Muted & Harmonious) */
+      --accent: #78a1bc;
+      --accent-soft: rgba(120, 161, 188, 0.15);
+      --up: #5ba391;
+      --up-soft: rgba(91, 163, 145, 0.15);
+      --down: #c97979;
+      --down-soft: rgba(201, 121, 121, 0.15);
+      --warn: #c79e69;
+      --warn-soft: rgba(199, 158, 105, 0.15);
+      --unknown: #9aa8b6;
+      --unknown-soft: rgba(154, 168, 182, 0.14);
+      
+      /* Action Column Buttons (Frosted Pine - Luminous Subtle Glass) */
+      --btn-action-bg: rgba(91, 163, 145, 0.17);
+      --btn-action-border: rgba(91, 163, 145, 0.30);
+      --btn-action-hover: rgba(91, 163, 145, 0.25);
+      --btn-action-hover-border: rgba(91, 163, 145, 0.46);
+      --btn-action-text: #051711;
+      
+      --focus: #78a1bc;
       --glass-border: rgba(255, 255, 255, 0.12);
       --glass-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.12);
       --card-shadow: 0 8px 32px -4px rgba(0, 0, 0, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.12);
@@ -241,7 +261,7 @@
       box-shadow: 0 0 6px var(--up);
     }
 
-    /* ACTIONS & BUTTONS - HARMONIOUS MUTED FROSTED GLASS */
+    /* ACTIONS & BUTTONS - CALIBRATED HARMONIOUS FROSTED GLASS */
     .action {
       display: inline-flex;
       align-items: center;
@@ -282,108 +302,111 @@
       cursor: not-allowed;
     }
 
-    /* COLORED BUTTONS - MUTED / DIMMED SHADES WITH BLACK FONT */
+    /* COLORED BUTTONS - MUTED / DIMMED TONES WITH BLACK/DARK INK FONT */
     .action-primary {
-      background: rgba(2, 132, 199, 0.14);
-      border-color: rgba(2, 132, 199, 0.28);
-      color: #0b1d28 !important;
+      background: rgba(53, 98, 126, 0.12);
+      border-color: rgba(53, 98, 126, 0.25);
+      color: #102533 !important;
       font-weight: 620;
     }
 
     html[data-theme="light"] .action-primary {
-      background: rgba(2, 132, 199, 0.14);
-      border-color: rgba(2, 132, 199, 0.28);
-      color: #0b1d28 !important;
+      background: rgba(53, 98, 126, 0.12);
+      border-color: rgba(53, 98, 126, 0.25);
+      color: #102533 !important;
     }
 
     .action-primary:hover:not(:disabled) {
-      background: rgba(2, 132, 199, 0.22);
-      border-color: rgba(2, 132, 199, 0.42);
-      color: #000000 !important;
+      background: rgba(53, 98, 126, 0.20);
+      border-color: rgba(53, 98, 126, 0.38);
+      color: #071620 !important;
     }
 
     html[data-theme="dark"] .action-primary {
-      background: rgba(56, 189, 248, 0.22);
-      border-color: rgba(56, 189, 248, 0.38);
-      color: #041424 !important;
+      background: rgba(120, 161, 188, 0.18);
+      border-color: rgba(120, 161, 188, 0.32);
+      color: #05141e !important;
     }
 
     html[data-theme="dark"] .action-primary:hover:not(:disabled) {
-      background: rgba(56, 189, 248, 0.32);
-      border-color: rgba(56, 189, 248, 0.52);
+      background: rgba(120, 161, 188, 0.26);
+      border-color: rgba(120, 161, 188, 0.48);
       color: #000000 !important;
     }
 
     .action-success {
-      background: rgba(22, 163, 74, 0.14);
-      border-color: rgba(22, 163, 74, 0.28);
-      color: #0b1a11 !important;
+      background: var(--btn-action-bg);
+      border-color: var(--btn-action-border);
+      color: var(--btn-action-text) !important;
       font-weight: 620;
     }
 
     html[data-theme="light"] .action-success {
-      background: rgba(22, 163, 74, 0.14);
-      border-color: rgba(22, 163, 74, 0.28);
-      color: #0b1a11 !important;
+      background: var(--btn-action-bg);
+      border-color: var(--btn-action-border);
+      color: var(--btn-action-text) !important;
     }
 
     .action-success:hover:not(:disabled) {
-      background: rgba(22, 163, 74, 0.22);
-      border-color: rgba(22, 163, 74, 0.42);
+      background: var(--btn-action-hover);
+      border-color: var(--btn-action-hover-border);
       color: #000000 !important;
     }
 
     html[data-theme="dark"] .action-success {
-      background: rgba(52, 211, 153, 0.22);
-      border-color: rgba(52, 211, 153, 0.38);
-      color: #05140b !important;
+      background: var(--btn-action-bg);
+      border-color: var(--btn-action-border);
+      color: var(--btn-action-text) !important;
     }
 
     html[data-theme="dark"] .action-success:hover:not(:disabled) {
-      background: rgba(52, 211, 153, 0.32);
-      border-color: rgba(52, 211, 153, 0.52);
+      background: var(--btn-action-hover);
+      border-color: var(--btn-action-hover-border);
       color: #000000 !important;
     }
 
-    /* TABLE ACTION COLUMN BUTTONS - EXCLUSIVELY GREEN (DIMMED TINT, BLACK FONT) */
+    /* TABLE ACTION COLUMN BUTTONS - EXCLUSIVELY CALIBRATED GLACIER SAGE (BLACK FONT) */
     .col-act .action {
-      background: rgba(46, 140, 75, 0.15);
-      border-color: rgba(46, 140, 75, 0.28);
-      color: #0b1a11 !important;
+      background: var(--btn-action-bg);
+      border-color: var(--btn-action-border);
+      color: var(--btn-action-text) !important;
       font-weight: 600;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04), var(--glass-highlight);
     }
 
     .col-act .action:hover:not(:disabled) {
-      background: rgba(46, 140, 75, 0.25);
-      border-color: rgba(46, 140, 75, 0.44);
+      background: var(--btn-action-hover);
+      border-color: var(--btn-action-hover-border);
       color: #000000 !important;
+      transform: translateY(-1px);
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.07), var(--glass-highlight);
     }
 
     html[data-theme="light"] .col-act .action-primary,
     html[data-theme="light"] .col-act .action {
-      background: rgba(46, 140, 75, 0.15);
-      border-color: rgba(46, 140, 75, 0.28);
-      color: #0b1a11 !important;
+      background: var(--btn-action-bg);
+      border-color: var(--btn-action-border);
+      color: var(--btn-action-text) !important;
     }
 
     html[data-theme="light"] .col-act .action-primary:hover:not(:disabled),
     html[data-theme="light"] .col-act .action:hover:not(:disabled) {
-      background: rgba(46, 140, 75, 0.25);
-      border-color: rgba(46, 140, 75, 0.44);
+      background: var(--btn-action-hover);
+      border-color: var(--btn-action-hover-border);
       color: #000000 !important;
     }
 
     html[data-theme="dark"] .col-act .action-primary,
     html[data-theme="dark"] .col-act .action {
-      background: rgba(52, 199, 89, 0.22);
-      border-color: rgba(52, 199, 89, 0.38);
-      color: #05140b !important;
+      background: var(--btn-action-bg);
+      border-color: var(--btn-action-border);
+      color: var(--btn-action-text) !important;
     }
 
     html[data-theme="dark"] .col-act .action-primary:hover:not(:disabled),
     html[data-theme="dark"] .col-act .action:hover:not(:disabled) {
-      background: rgba(52, 199, 89, 0.32);
-      border-color: rgba(52, 199, 89, 0.54);
+      background: var(--btn-action-hover);
+      border-color: var(--btn-action-hover-border);
       color: #000000 !important;
     }
 
