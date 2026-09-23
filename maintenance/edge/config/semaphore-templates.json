@@ -1,5 +1,5 @@
 {
-  "schema": 1,
+  "schema": 2,
   "project_id": 1,
   "refresh_template_id": 1,
   "master_template_id": 18,
@@ -16,9 +16,11 @@
     "POSTGRESQL": {"template_id": 11, "label": "Update PostgreSQL"},
     "STALWART": {"template_id": 12, "label": "Update Stalwart"},
     "BULWARK": {"template_id": 13, "label": "Update Bulwark"},
-    "HERMES": {"template_id": 14, "label": "Update Hermes Agent"},
+    "RCLONE": {"template_id": 14, "label": "Update rclone"},
     "CLOUDCLI": {"template_id": 15, "label": "Update CloudCLI"},
-    "CODEX": {"template_id": 16, "label": "Update Codex CLI"},
-    "ANTIGRAVITY": {"template_id": 17, "label": "Update Antigravity CLI"}
+    "NEXTCLOUD": {"template_id": 16, "label": "Update Nextcloud"},
+    "ANTIGRAVITY": {"template_id": 17, "label": "Update Antigravity CLI"},
+    "NEXTCLOUD_POSTGRESQL": {"template_id": 19, "label": "Update Nextcloud PostgreSQL"},
+    "NEXTCLOUD_REDIS": {"template_id": 20, "label": "Update Nextcloud Redis"}
   }
 }
