@@ -1,12 +1,17 @@
 #!/usr/bin/env python3
-"""Render the single Edge dashboard action contract from canonical inputs."""
+"""Render the Edge native-first dashboard action contract."""
 
 import json
 import os
 import pathlib
 import tempfile
 
-BASE = pathlib.Path(os.environ.get("EDGE_MAINTENANCE_BASE", "/opt/edge-maintenance"))
+BASE = pathlib.Path(
+    os.environ.get(
+        "EDGE_MAINTENANCE_BASE",
+        "/opt/edge-maintenance",
+    )
+)
 ENABLEMENT = pathlib.Path(
     os.environ.get(
         "EDGE_MAINTENANCE_ENABLEMENT",
@@ -26,29 +31,34 @@ def load(path):
 
 
 def build_actions(manifest, templates, enablement):
-    if manifest.get("schema") != 1 or manifest.get("manual_only") is not True:
+    if (
+        manifest.get("schema") != 2
+        or manifest.get("ownership_mode") != "native_first_hybrid"
+    ):
         raise RuntimeError("invalid update-unit contract")
-    if templates.get("schema") != 1:
+    if templates.get("schema") != 2:
         raise RuntimeError("invalid Semaphore template mapping")
-    if enablement.get("schema") != 1:
+    if enablement.get("schema") != 2:
         raise RuntimeError("invalid manual driver enablement registry")
 
     units = manifest.get("units", [])
-    unit_index = {unit.get("id"): unit for unit in units}
+    manual_ids = {unit["id"] for unit in units}
     template_map = templates.get("components", {})
     enabled_map = enablement.get("enabled", {})
-    expected = set(unit_index)
-    if (
-        len(units) != 16
-        or len(unit_index) != 16
-        or set(template_map) != expected
-        or set(enabled_map) != expected
-    ):
-        raise RuntimeError("action inputs do not define the same exact 16 targets")
 
-    template_ids = [item.get("template_id") for item in template_map.values()]
-    if sorted(template_ids) != list(range(2, 18)):
-        raise RuntimeError("component template IDs must be unique and exactly 2..17")
+    if (
+        len(units) != len(manual_ids)
+        or set(template_map) != manual_ids
+        or set(enabled_map) != manual_ids
+    ):
+        raise RuntimeError("manual action inputs disagree")
+
+    template_ids = [
+        item.get("template_id")
+        for item in template_map.values()
+    ]
+    if None in template_ids or len(template_ids) != len(set(template_ids)):
+        raise RuntimeError("manual template IDs are invalid")
     if templates.get("refresh_template_id") != 1:
         raise RuntimeError("refresh template mapping must be ID 1")
     if templates.get("master_template_id") != 18:
@@ -60,7 +70,9 @@ def build_actions(manifest, templates, enablement):
         "user_cli": "user_or_git",
         "maintctl": "native",
         "github_binary": "native",
+        "self_update": "native",
     }
+
     components = {}
     for unit in units:
         target = unit["id"]
@@ -71,20 +83,35 @@ def build_actions(manifest, templates, enablement):
             "label": mapping["label"],
             "group": unit["group"],
             "managed_by": managed_by[unit["driver"]],
+            "update_owner": "maintenance_manual",
             "driver_state": "executable" if enabled else "acceptance_pending",
             "disabled_reason": "" if enabled else "Manual driver acceptance pending",
         }
 
+    for item in manifest.get("monitor_only", []):
+        target = item["id"]
+        if target in components:
+            raise RuntimeError("monitor-only target also has manual action")
+        components[target] = {
+            "template_id": None,
+            "label": target,
+            "group": item.get("group", "cli"),
+            "managed_by": item.get("owner", "native_auto"),
+            "update_owner": "native_auto",
+            "driver_state": "native_auto",
+            "disabled_reason": "Managed by native updater",
+        }
+
     master_enabled = enablement.get("master") is True
     return {
-        "schema": 8,
-        "target_model": "update_units_v3",
+        "schema": 9,
+        "target_model": "update_units_v4",
         "project_id": templates["project_id"],
         "master_template_id": templates["master_template_id"] if master_enabled else None,
         "refresh_template_id": templates["refresh_template_id"],
-        "execution_mode": "manual_only",
+        "execution_mode": "native_first_hybrid",
         "stop_on_error": True,
-        "auto_update": False,
+        "auto_update": True,
         "read_only": False,
         "components": components,
         "master_driver_state": "executable" if master_enabled else "acceptance_pending",
@@ -122,9 +149,11 @@ def main():
     actions = build_actions(manifest, templates, enablement)
     atomic_write(OUTPUT, actions)
     print(
-        "ACTIONS_RENDER=PASS|TARGETS=16|"
-        f"MASTER={'ENABLED' if actions['master_template_id'] else 'DISABLED'}|"
-        "AUTO_UPDATE=NO"
+        "ACTIONS_RENDER=PASS"
+        f"|MANUAL_TARGETS={len(manifest.get('units', []))}"
+        f"|MONITOR_ONLY={len(manifest.get('monitor_only', []))}"
+        f"|MASTER={'ENABLED' if actions['master_template_id'] else 'DISABLED'}"
+        "|MODE=NATIVE_FIRST_HYBRID"
     )
 
 
