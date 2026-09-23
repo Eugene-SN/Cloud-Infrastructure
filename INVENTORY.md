@@ -505,16 +505,20 @@ Authoritative record: `STAGE_12_FINAL_ACCEPTANCE_2026-09-23.md`.
 ## Stage 07.2 current maintenance ownership
 
 - status: **COMPLETE / ACCEPTED**;
-- ownership model: `native_first_hybrid`;
-- target model: `update_units_v4`;
-- manual actionable targets: 18;
-- native monitor-only: `HERMES`, `CODEX`;
-- Ubuntu security owner: package-owned `unattended-upgrades`; normal/third-party APT remains `APT_EDGE`;
-- Codex current accepted runtime: `0.156.1`, native managed-daemon updater active;
-- Hermes current accepted runtime: `v0.21.4`, native cron updater plus settlement timer active;
+- ownership policy: native-first; Maintenance execution plane: manual-only;
+- target model: `update_units_v5`;
+- raw Maintenance rows: 25;
+- manual actionable Maintenance targets: 18;
+- Hermes/Codex: absent from Maintenance collector, generated targets, actions, UI and Semaphore templates;
+- native automatic owners outside Maintenance: Hermes native cron + settlement, Codex managed-daemon `pid-update-loop`, Ubuntu package-owned unattended-upgrades;
+- `actions.json`: schema 10, 18 components, `execution_mode=manual_only`, `auto_update=false`;
+- normal/third-party APT remains `APT_EDGE`; automatic reboot disabled;
+- Codex accepted runtime: `0.156.1`, native updater active;
+- Hermes accepted runtime: `v0.21.4`, native cron updater plus settlement timer active;
 - Rclone: `1.75.1`, `/usr/bin/rclone`, persistent `core` user service `projects-webdav.service`;
 - Nextcloud maintenance targets: app, PostgreSQL, Redis;
-- Bulwark configured track: `ghcr.io/bulwarkmail/webmail:latest`; runtime remained `1.9.2` during Stage 07.2 migration;
+- Bulwark configured track: `ghcr.io/bulwarkmail/webmail:latest`;
 - Semaphore template IDs: Refresh 1, Master 18, Rclone 14, Nextcloud 16, Nextcloud PostgreSQL 19, Nextcloud Redis 20;
-- final acceptance: `STAGE07_2_MAINTENANCE_SEMAPHORE_MIGRATION=PASS`;
-- record: `STAGE_07_2_NATIVE_UPDATE_OWNERSHIP_ACCEPTANCE_2026-09-23.md`.
+- Stage 8 authoritative maintenance source: `/var/www/maintenance-status/maintenance.json`;
+- final acceptance: `STAGE07_2_CORRECTIVE_MIGRATION=PASS`;
+- record: `STAGE_07_2_FINAL_NATIVE_UPDATE_OWNERSHIP_ACCEPTANCE_2026-09-23.md`.
