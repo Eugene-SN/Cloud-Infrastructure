@@ -2019,3 +2019,26 @@ Mixing discovery and deployment of such omitted capabilities back into Stage 10 
 - `SYNC_TLS_SAN=ABSENT`.
 
 **Supersedes:** any prior documentation that still treated `sync.escloud.us` as part of the active/future TLS namespace or treated `go.escloud.us` / `sync.escloud.us` DNS cleanup as pending.
+
+
+---
+
+## 2026-09-23T04:15:00+03:00 — Stage 12 final workspace-access architecture
+
+**Status:** ACCEPTED
+
+**Context:** Stage 12 initially selected private SMB for direct Finder/Explorer access to selected edge project paths. Runtime testing proved that Home LAN clients do not route to the edge NetBird overlay through CT300; VM100/Mihomo intercepts the flow. Enabling clientless SMB would therefore require production Home routing/firewall mutation or an additional proxy. The operator rejected that complexity for this occasional-access requirement.
+
+**Decision:**
+
+1. Reject the Stage 12 Samba/SMB implementation and remove it completely from edge.
+2. Do not modify Home VM100, MikroTik or CT300 for Stage 12 workspace access.
+3. Use WebDAV over the existing public HTTPS ingress for direct project/workspace access.
+4. The only published workspace tree is `/home/core/projects/`.
+5. Run rclone WebDAV as `core` on `127.0.0.1:18081`.
+6. Publish it at `https://go.escloud.us/` through the existing Xray TLS -> nginx fallback architecture.
+7. Use protocol-native Basic authentication over HTTPS; do not place Authelia browser redirects in the WebDAV protocol path.
+8. Keep project/workspace data outside the Nextcloud cloud-drive dataset and do not use Syncthing replication for this requirement.
+9. macOS automount uses the native Finder server connection/Login Items/Keychain path; `.DS_Store` suppression is a client-side macOS policy, not a server cleanup service.
+
+**Supersedes:** the 2026-09-22 Stage 11 decision assigning private SMB workspace access to Stage 12, and the Stage 11 retirement of `go.escloud.us`. `go.escloud.us` is now an active Stage 12 WebDAV endpoint.
