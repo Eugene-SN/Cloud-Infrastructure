@@ -224,7 +224,7 @@ Accepted role separation:
 - n8n = deterministic workflow/orchestration plane;
 - Hermes = persistent cloud-side agentic reasoning/tool/delegation plane;
 - Mattermost = private collaboration/control/notification surface;
-- CloudCLI = manual web/remote cloud-AI workspace;
+- CloudCLI = retired on 2026-09-23; do not restore it as the remote-workspace surface;
 - Codex CLI and Antigravity CLI = specialist executors directly usable by the user and delegatable by Hermes;
 - OpenClaw = Home/PAI local personal agent;
 - vLLM on `ai-node` = local inference backend available through Stage 3.
@@ -361,7 +361,7 @@ Accepted live substrate facts include:
 - OpenSSH is socket-activated through `ssh.socket`;
 - persistent journald-use ceiling is `500M`;
 - `/etc/netplan/50-cloud-init.yaml` is the current authoritative IPv4-only public network config; cloud-init network regeneration is disabled by `/etc/cloud/cloud.cfg.d/99-edge-disable-network-config.cfg`;
-- Docker/Compose, nginx, Xray, Hysteria2, Authelia, n8n, CloudCLI, Codex CLI, Antigravity CLI, Stalwart and Bulwark are accepted current runtime components as documented in `CURRENT_STATE.md`;
+- Docker/Compose, nginx, Xray, Hysteria2, Authelia, n8n, Codex CLI, Antigravity CLI, Stalwart and Bulwark are accepted current runtime components as documented in `CURRENT_STATE.md`; CloudCLI is explicitly retired.
 - Docker `live-restore=false` is the accepted current lifecycle state; application containers use `restart=unless-stopped` for reboot persistence.
 
 Fresh runtime/configuration has priority over historical reference.
