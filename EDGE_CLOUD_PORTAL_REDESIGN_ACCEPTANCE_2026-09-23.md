@@ -12,10 +12,10 @@ Final acceptance marker:
 
 Comprehensive UX, technical, and visual modernization of `https://app.escloud.us` (The Sovereign Control Deck) into a 2026 Smoky Minimalist Frosted Glass console adhering to contemporary design trends, `apple-design`, Emil Kowalski's Design Engineering standards (`emil-design-eng`, `animate`), `taste-design`, and `impeccable`.
 
-1. **Light Theme Built Around `#E3EBF0` ("светлое оформление построй вокруг цвета #E3EBF0")**:
-   - **Base Canvas**: Calibrated `--apple-canvas` to the exact cool arctic slate mist tone `#e3ebf0`.
-   - **Harmonized Smoky Vapor Layer**: Overhauled `.smoky-ambient` radial gradients to multi-stop cool vapor plumes (`rgba(200, 218, 232, 0.65)`, `rgba(212, 226, 238, 0.60)`, `rgba(227, 235, 240, 0.45)`) refracting softly through the translucent frosted glass cards.
-   - **Glass & Text Harmony**: Tinted glass inset panels to `rgba(227, 235, 240, 0.45)` with deep slate typography (`#141c24` primary, `#485768` secondary) and clean white specular rim lighting (`inset 0 1px 0 rgba(255, 255, 255, 0.95)`).
+1. **Designer Aurora Mesh Gradients for Light and Dark Themes ("дизайнерские градиенты для фона")**:
+   - **Light Theme (Centered on `#E3EBF0`)**: Multi-node atmospheric aurora mesh combining soft arctic ice (`rgba(188, 212, 242, 0.80)`), radiant sky mist (`rgba(175, 226, 244, 0.70)`), iridescent lilac glow (`rgba(218, 212, 244, 0.55)`), and arctic cyan (`rgba(182, 216, 236, 0.75)`), overlaid with a 135-degree specular wash (`linear-gradient(135deg, rgba(255, 255, 255, 0.35) 0%, transparent 45%, ...)`).
+   - **Dark Theme**: Deep cosmic twilight aurora combining royal sapphire (`rgba(48, 80, 138, 0.52)`), emerald teal nebula (`rgba(28, 92, 114, 0.44)`), midnight amethyst (`rgba(72, 48, 116, 0.38)`), and deep twilight cyan (`rgba(36, 72, 108, 0.50)`).
+   - **Translucent Glass Refraction**: Frosted cards (`blur(36px)` / `blur(32px)`) refract the organic mesh nodes naturally, generating depth and soft luminescence without visual clutter.
 
 2. **Clean Header & Live Timer Removal**:
    - Completely removed redundant `Live ...s ago` heartbeat capsule from header right.
@@ -41,7 +41,7 @@ Comprehensive UX, technical, and visual modernization of `https://app.escloud.us
 ## Accepted Deployed File Hashes
 
 - `/var/www/app.escloud.us/index.html`: `1de1db210614ab6fc1547caef0ad7e7c1689b8478ed8d7b6f1142b173af5c8ce`
-- `/var/www/app.escloud.us/app.css`: `8bc789c9404dce835f9dd8c5c693d1447ccf8aabf5254ce607cabe3a312af8de`
+- `/var/www/app.escloud.us/app.css`: `facf6223eff70b0f6e967502a5f6fa7840f0532e5fcd4278b6d13ea115bc55dc`
 - `/var/www/app.escloud.us/app.js`: `9394d9b50e12604c78f3b52f61b45872f132a54e71c459ab508655e632cf67ee`
 - `/var/www/app.escloud.us/icons/hermes.svg`: `951b45c5ce168af1bedd2bed0a543de74f4e42acf03522e1e52db56d040f319e`
 - `/var/www/app.escloud.us/icons/vscode.svg`: `98d2dc1ad1d82b3684880e174a09a5c35737977dfdbe97dbe040ef2d55e10e75`
@@ -58,4 +58,4 @@ Comprehensive UX, technical, and visual modernization of `https://app.escloud.us
 - `nginx -t`: PASS
 - `curl -k https://127.0.0.1/ -H "Host: app.escloud.us"`: HTTP 200
 - `edge-monitor.service`: Active (running), `OVERALL: OK`
-- Live Browser Preview snapshot: Captured for the `#E3EBF0`-centered light theme.
+- Live Browser Preview snapshots: Verified for both Light and Dark themes with designer aurora mesh gradients.
