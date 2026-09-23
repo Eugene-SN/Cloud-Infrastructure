@@ -2128,7 +2128,7 @@ Mixing discovery and deployment of such omitted capabilities back into Stage 10 
 
 ## 2026-09-23T07:35:00+03:00 — Stage 07.2 final manual-only Maintenance target model
 
-**Status:** ACCEPTED
+**Status:** SUPERSEDED
 
 **Context:** The preliminary Stage 07.2 v4 model correctly restored native update ownership for Hermes, Codex and Ubuntu security, but incorrectly kept Hermes/Codex as monitor-only Maintenance rows. Deep runtime audit also found `actions.json auto_update=true`, a stale schema-1 real Master enablement check, and Stage 8 monitoring preferring raw `status.json` rather than the actual Maintenance target model.
 
@@ -2149,3 +2149,16 @@ Mixing discovery and deployment of such omitted capabilities back into Stage 10 
 **Evidence:** `STAGE_07_2_FINAL_NATIVE_UPDATE_OWNERSHIP_ACCEPTANCE_2026-09-23.md`.
 
 **Supersedes:** the 2026-09-23T07:09:05+03:00 Stage 07.2 v4 decision and the earlier Stage 07.2 v4 acceptance record as current authority. The native-first ownership principle itself remains accepted.
+
+
+---
+
+## 2026-09-23T07:35:00+03:00 — Stage 07.2 acceptance revoked after real Master Batch failure
+
+**Status:** ACCEPTED
+
+**Context:** After the v5 corrective model passed structural, plan-only and non-regression gates, the operator executed the real Master Batch through the accepted Maintenance/Semaphore surface and it failed. This proves the prior Stage 07.2 final acceptance was premature because the real execution path had not been accepted after the v5 changes.
+
+**Decision:** Reopen Stage 07.2 as ACTIVE / NOT ACCEPTED. Preserve the v5 ownership model provisionally, but do not treat it as final until the exact Master failure is identified and the real Master execution path completes its bounded recovery acceptance. Do not rerun updates blindly; first inspect the failed Semaphore task/output and all Master execution/refresh/post-scan/health gates.
+
+**Supersedes:** the 2026-09-23T07:35:00+03:00 Stage 07.2 final acceptance decision as current acceptance state. It does not by itself revert the deployed v5 runtime model.
