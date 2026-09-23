@@ -25,13 +25,13 @@ assert maintenance["target_model"] == "update_units_v5"
 assert manifest["schema"] == 2
 assert manifest["ownership_mode"] == "native_first_hybrid"
 assert "monitor_only" not in manifest
-assert len(manual) == 18
+assert len(manual) == 17
 assert native == {"HERMES", "CODEX", "UBUNTU_SECURITY"}
 assert set(index) == manual
 assert "HERMES" not in index
 assert "CODEX" not in index
-assert maintenance["summary"]["TOTAL"] == 18
-assert maintenance["summary"]["ACTIONABLE_TARGETS"] == 18
+assert maintenance["summary"]["TOTAL"] == 17
+assert maintenance["summary"]["ACTIONABLE_TARGETS"] == 17
 assert "MONITOR_ONLY_TARGETS" not in maintenance["summary"]
 assert maintenance["summary"]["APT_MANAGED_COMPONENTS"] == 8
 
