@@ -566,3 +566,40 @@ Acceptance markers:
 Stage 10 remains the accepted pre-Stage-11 baseline; no broad Stage 10 re-acceptance is required because Stage 11 runtime mutation was limited to retired TLS namespace cleanup and bounded non-regression passed.
 
 **Current next implementation stage:** Stage 12 — Nextcloud Cloud Drive & Private Workspace Access.
+
+
+## Stage 12 — Nextcloud Cloud Drive & Private Workspace Access — COMPLETE / ACCEPTED
+
+Stage 12 is complete and accepted.
+
+Accepted runtime:
+
+- Nextcloud `34.0.4.1` / `34.0.4` is deployed at `/opt/nextcloud/compose.yaml`;
+- application backend is loopback-only at `127.0.0.1:18080`;
+- persistent Nextcloud state is under `/srv/nextcloud`;
+- the portable user-visible cloud files tree is `/srv/cloud`, bound into the accepted Nextcloud user's `files` directory while Nextcloud metadata/version/trash state remains outside that path;
+- public cloud endpoint is `https://cloud.escloud.us/` through the existing Xray -> nginx ingress;
+- macOS Nextcloud native client/File Provider acceptance passed; iPad client behavior was also validated;
+- the originally deployed Samba/SMB workspace implementation was rejected for this topology because clientless Home LAN access to the edge NetBird overlay would require production Home routing/firewall changes or an extra proxy;
+- Samba and all Stage 12 operational traces were fully removed: packages, binaries, units, listeners, firewall rules, config/state/cache/log paths and installation APT cache are absent;
+- Home VM100, MikroTik and CT300 were not modified for workspace access;
+- direct workspace access is instead provided by rclone WebDAV `1.75.1`;
+- WebDAV publishes exactly `/home/core/projects/`, owned `core:core`, and nothing else;
+- `projects-webdav.service` is an enabled persistent `core` user service bound only to `127.0.0.1:18081`;
+- public workspace endpoint is `https://go.escloud.us/` through Xray TLS -> nginx -> rclone;
+- WebDAV uses protocol-native HTTP Basic authentication over HTTPS; Authelia is intentionally not inserted into the WebDAV client protocol path;
+- local and public `PROPFIND/MKCOL/PUT/GET/MOVE/DELETE` E2E passed;
+- the shared `escloud.us` certificate lineage was expanded to include `go.escloud.us` and the existing deploy hook synchronized Xray/Hysteria2/Stalwart;
+- macOS Finder connection is accepted and configured for automatic login-time connection using the native server connection + Keychain path;
+- macOS network-store `.DS_Store` suppression was selected client-side rather than adding server-side cleanup automation;
+- zero failed systemd units at final server acceptance.
+
+Acceptance markers:
+
+- `STAGE12_NEXTCLOUD_CORE_FINAL_AUDIT=PASS`;
+- `STAGE12_SAMBA_FULL_REMOVAL=PASS`;
+- `STAGE12_PROJECTS_WEBDAV_LOCAL_ACCEPTANCE=PASS`;
+- `STAGE12_GO_WEBDAV_PUBLIC_INGRESS_DEPLOYMENT=PASS`;
+- `STAGE12_FINAL_ACCEPTANCE=PASS`.
+
+Authoritative final record: `STAGE_12_FINAL_ACCEPTANCE_2026-09-23.md`.
