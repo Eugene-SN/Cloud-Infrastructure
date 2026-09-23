@@ -57,6 +57,19 @@ Final record: `STAGE_03_ACCEPTANCE_2026-09-18.md`.
 - acceptance: `EDGE_REBOOT_AFTER_LIVE_RESTORE_FIX_ACCEPTANCE_V1=PASS`;
 - detailed record: `EDGE_REBOOT_LIFECYCLE_FIX_ACCEPTANCE_2026-09-18.md`.
 
+### 2026-09-23 follow-up reboot correction
+
+- later ~90-second shutdown stall traced to unused `multipathd.service`, not SSH/network or Docker;
+- edge has no multipath maps and no device-mapper devices; root remains ext4 on `/dev/vda1`;
+- `multipathd.service` disabled/inactive; `multipath-tools` package retained;
+- final reboot request -> SSH listening: ~26.7 s;
+- new kernel -> SSH listening: ~7.9 s;
+- full system startup: `18.348s`;
+- Codex `0.156.0` native managed daemon + native updater boot persistence accepted through minimal oneshot start trigger;
+- Antigravity `1.2.7` native registered user service reboot persistence accepted;
+- acceptance: `EDGE_COMBINED_REBOOT_ACCEPTANCE=PASS`;
+- detailed record: `EDGE_REMOTE_CLI_AND_REBOOT_LIFECYCLE_ACCEPTANCE_2026-09-23.md`.
+
 ## Stage 2 — COMPLETE / ACCEPTED
 
 `EDGE_STAGE2_FINAL_INTEGRATED_ACCEPTANCE=PASS` on 2026-09-17.
@@ -66,7 +79,7 @@ Final record: `STAGE_03_ACCEPTANCE_2026-09-18.md`.
 | Authelia | LIVE / ACCEPTED | current `4.39.28`; `127.0.0.1:19091`; fresh operator/auth secrets; `auth.escloud.us` |
 | n8n | LIVE / ACCEPTED | current `2.39.10`; `127.0.0.1:15678`; fresh one-owner state; `n8n.escloud.us`; Authelia protected |
 | CloudCLI | LIVE / ACCEPTED | `1.37.3`; systemd; `127.0.0.1:18140`; fresh local user; `code.escloud.us`; Authelia protected |
-| Codex CLI | LIVE / ACCEPTED | current `0.155.1`; official standalone; fresh ChatGPT auth; managed Remote Control via Unix socket |
+| Codex CLI | LIVE / ACCEPTED | current `0.156.0`; official standalone; fresh ChatGPT auth; native managed Remote Control via Unix socket; native updater enabled; minimal user oneshot boot-trigger invokes `codex remote-control start --json`; no legacy direct app-server service |
 | Antigravity CLI | LIVE / ACCEPTED | current `1.2.7`; Stage 4G accepted `1.2.6`; Stage 2/4B historical `1.2.5`; Google OAuth; instance `edge`; persistent user service |
 | Stalwart | LIVE / ACCEPTED | current `0.16.23`; public SMTP25/SMTPS465/IMAPS993; useful mail data migrated; fresh auth/DKIM |
 | Bulwark | LIVE / ACCEPTED | `1.9.2`; `127.0.0.1:18084`; fresh session/admin state; default webmail route on `mail.escloud.us` |
