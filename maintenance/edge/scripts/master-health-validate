@@ -19,7 +19,6 @@ SYSTEM_SERVICES = (
     "netbird.service",
     "docker.service",
     "containerd.service",
-    "cloudcli.service",
     "syncthing@core.service",
 )
 USER_SERVICES = (
