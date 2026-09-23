@@ -112,9 +112,9 @@ Final record: `STAGE_03_ACCEPTANCE_2026-09-18.md`.
 - `docs.escloud.us` — DEFERRED UNTIL CONTENT READY: future WenTian Product Guide/Datasheet publishing site for EN/RU translated corpus;
 - `hermes.escloud.us` — LIVE accepted Hermes Dashboard/Remote Gateway; native self-hosted OIDC through Authelia; backend loopback-only;
 - `chat.escloud.us` — LIVE Mattermost human endpoint; core runtime and public nginx ingress accepted; native Mattermost authentication without Authelia;
-- `cloud.escloud.us` — STAGE 12 PLANNED: Nextcloud personal cloud-drive; accepted portable user dataset `/srv/cloud/files` with Nextcloud-specific state under `/srv/nextcloud`;
+- `cloud.escloud.us` — LIVE / ACCEPTED: Nextcloud personal cloud-drive; user-visible files under `/srv/cloud`, Nextcloud-specific state under `/srv/nextcloud`, backend `127.0.0.1:18080`;
 - `sync.escloud.us` — RETIRED: legacy public Syncthing UI role; current Syncthing remains private Knowledge replication and Stage 12 Nextcloud owns end-user cloud sync;
-- `go.escloud.us` — retired.
+- `go.escloud.us` — LIVE / ACCEPTED Stage 12 WebDAV endpoint for exactly `/home/core/projects/`; Xray TLS -> nginx -> rclone `127.0.0.1:18081`; protocol-native Basic auth over HTTPS.
 
 ### Private `.lan`
 
