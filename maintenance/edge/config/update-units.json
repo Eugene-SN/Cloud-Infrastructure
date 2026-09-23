@@ -32,7 +32,6 @@
     "NEXTCLOUD",
     "NEXTCLOUD_POSTGRESQL",
     "NEXTCLOUD_REDIS",
-    "CLOUDCLI",
     "ANTIGRAVITY",
     "SEMAPHORE",
     "APT_EDGE"
@@ -185,16 +184,6 @@
         "compose.yaml"
       ],
       "service": "redis"
-    },
-    {
-      "id": "CLOUDCLI",
-      "group": "cli",
-      "driver": "user_cli",
-      "binary": "/home/core/.local/bin/cloudcli",
-      "arguments": [
-        "update"
-      ],
-      "system_service": "cloudcli.service"
     },
     {
       "id": "ANTIGRAVITY",
