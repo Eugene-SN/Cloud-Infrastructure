@@ -684,3 +684,32 @@ Authoritative final record: `STAGE_13_FINAL_ACCEPTANCE_2026-09-23.md`.
 
 No finite infrastructure stage is active after Stage 13. The next normal workstream is **Automation & User Workflows**. The separate WenTian technical publishing task at `docs.escloud.us` remains deferred until a useful translated corpus exists.
 
+
+
+## T3 persistent remote workspace — accepted 2026-09-23
+
+T3 persistent remote workspace is **COMPLETE / ACCEPTED**.
+
+Current accepted state:
+
+- official user service `t3code.service` under `core`;
+- temporary compatibility pin `0.0.43-nightly.20260923.2150`;
+- service-managed runtime on `127.0.0.1:3773`;
+- project root `/home/core/projects`;
+- T3 Connect is the primary client transport;
+- managed relay client `cloudflared 2026.5.2`;
+- T3 Connect remains desired/authenticated/linked with `publishAgentActivity=false`;
+- macOS T3 Desktop and iPad T3 Code are accepted T3 Connect clients;
+- `https://code.escloud.us` is the accepted browser surface through existing Xray/nginx/Authelia ingress;
+- Codex ACP and Antigravity ACP are usable through T3;
+- standalone `antigravity-cli-daemon.service` remains independent;
+- the former T3 Desktop SSH transport/profile is retired;
+- stale `/home/core/.t3/ssh-launch` artifacts were removed and no SSH-managed T3 runtime remains;
+- controlled reboot acceptance passed: official service, service-owned runtime, nightly pin and relay/T3 Connect recovered automatically without operator restart/relink;
+- relay startup is asynchronous to `t3 serve`; automatic reconciliation completed and registered four QUIC tunnel connections after reboot;
+- post-reboot Mac/iPad T3 Connect, existing threads, Antigravity and `code.escloud.us` all passed.
+
+Stable `0.0.42` is not the accepted persistent version because it reproduced old-thread projection decoding failures and an Antigravity local-health failure in this deployment. The nightly pin is temporary and should be re-evaluated against a later stable release, not downgraded blindly.
+
+Authoritative record: `T3_PERSISTENT_REMOTE_WORKSPACE_ACCEPTANCE_2026-09-23.md`.
+
