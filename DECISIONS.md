@@ -2101,7 +2101,7 @@ Mixing discovery and deployment of such omitted capabilities back into Stage 10 
 
 ## 2026-09-23T07:09:05+03:00 — Stage 07.2 native-first update ownership reconciliation
 
-**Status:** ACCEPTED
+**Status:** SUPERSEDED
 
 **Context:** Stage 7 originally enforced blanket manual-only ownership for all updates. Stage 07.2 audited every deployed component against current upstream/runtime behavior and proved that Codex, Hermes and Ubuntu security updates have supported native automatic lifecycles that should remain authoritative.
 
