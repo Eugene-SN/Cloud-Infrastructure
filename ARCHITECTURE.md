@@ -552,7 +552,6 @@ Do not replace without concrete incompatibility or changed requirement:
 - Hysteria2;
 - nginx;
 - n8n;
-- CloudCLI;
 - Stalwart + Bulwark;
 - Authelia;
 - Codex CLI;
