@@ -656,3 +656,28 @@ Publish the already-running Backrest WebUI at `backup.escloud.us` through the ac
 **Status:** DEFERRED UNTIL CONTENT READY.
 
 `docs.escloud.us` is reserved for a curated WenTian technical documentation library modeled functionally on Lenovo Press, focused on selected Product Guides and Datasheets translated to English and Russian. Do not deploy a placeholder CMS/DMS/site before a useful translated corpus exists. Publishing implementation is selected and deployed when the content set is ready.
+
+
+---
+
+## Stage 07.2 — Native Update Ownership Reconciliation
+
+**Status: COMPLETE / ACCEPTED.**
+
+Stage 07.2 is a corrective substage of the already accepted Stage 7 baseline.
+
+Accepted result:
+
+- native-first hybrid update ownership;
+- Codex and Hermes are native-owned monitor-only Maintenance rows;
+- Ubuntu security updates use package-owned unattended-upgrades;
+- ordinary/third-party APT remains manual;
+- Maintenance target model `update_units_v4`: 18 manual targets + 2 monitor-only native targets;
+- Stage 12 Rclone and Nextcloud app/PostgreSQL/Redis included in Maintenance;
+- Bulwark stable tracking corrected without executing the pending update;
+- Semaphore template mapping reconciled;
+- all manual preflights, Master plan-only and native-owner non-regression passed.
+
+Final marker: `STAGE07_2_MAINTENANCE_SEMAPHORE_MIGRATION=PASS`.
+
+Authoritative record: `STAGE_07_2_NATIVE_UPDATE_OWNERSHIP_ACCEPTANCE_2026-09-23.md`.
