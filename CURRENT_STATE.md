@@ -193,8 +193,9 @@ Current Stage 07.2 maintenance state:
 - Bulwark tracks `ghcr.io/bulwarkmail/webmail:latest`; actual image replacement remains operator-triggered;
 - final corrective acceptance: `STAGE07_2_CORRECTIVE_MIGRATION=PASS`, RC=0;
 - real execution acceptance: `STAGE07_2_FINAL_MASTER_BATCH_EXECUTION=PASS` (Semaphore task 26, RC=0);
+- final current-state audit: `STAGE07_2_CURRENT_STATE_AUDIT=PASS`; runtime matches current `main`, 18/18 manual targets CURRENT, cleanup/rotation state verified;
 - pending manual updates at final execution: 0 (all 18 manual targets CURRENT: `APT_EDGE`, `XRAY`, `HYSTERIA2`, `BACKREST`, `RESTIC`, `RCLONE`, `SEMAPHORE`, `N8N`, `AUTHELIA`, `MATTERMOST`, `POSTGRESQL`, `STALWART`, `BULWARK`, `NEXTCLOUD`, `NEXTCLOUD_POSTGRESQL`, `NEXTCLOUD_REDIS`, `CLOUDCLI`, `ANTIGRAVITY`);
-- authoritative record: `STAGE_07_2_FINAL_NATIVE_UPDATE_OWNERSHIP_ACCEPTANCE_2026-09-23.md`.
+- authoritative record: `STAGE_07_2_FINAL_CURRENT_STATE_ACCEPTANCE_2026-09-23.md`.
 
 
 Implementation/deployment checkpoint: `STAGE_07B_DRIVER_SCAFFOLD_DEPLOYMENT_2026-09-21.md`.
