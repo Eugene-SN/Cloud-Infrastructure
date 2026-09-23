@@ -184,16 +184,16 @@ Stage 7 retired-hostname cleanup record: `STAGE_07_OPS_HOSTNAME_RETIREMENT_2026-
 
 Stage 7B historical deployment remains accepted; Stage 07.2 supersedes only its blanket manual-only ownership policy and fixed 16-target current model.
 
-Stage 07.2 status: **COMPLETE / ACCEPTED** with `STAGE07_2_FINAL_MASTER_BATCH_EXECUTION=PASS` on 2026-09-23. The execution-path failure in Task 23 was diagnosed (runtime schema check drift in manual-update), corrected by synchronizing the deployed `/opt/edge-maintenance/scripts/` with canonical `origin/main`, and re-verified through real operator-triggered Semaphore Master Batch Task 26 (RC=0). Post-scan gate passed with 18/18 targets `CURRENT` and `REBOOT_REQUIRED=0`; health gate passed with 10 system services, 4 user services, 9 compose units (10 containers), 2 SQLite databases and PostgreSQL readiness.
+Stage 07.2 status: **COMPLETE / ACCEPTED** with `STAGE07_2_FINAL_MASTER_BATCH_EXECUTION=PASS` on 2026-09-23. The execution-path failure in Task 23 was diagnosed (runtime schema check drift in manual-update), corrected by synchronizing the deployed `/opt/edge-maintenance/scripts/` with canonical `origin/main`, and re-verified through real operator-triggered Semaphore Master Batch Task 26 (RC=0). Post-scan gate originally passed with 18/18 targets `CURRENT` and `REBOOT_REQUIRED=0`; after the accepted CloudCLI retirement on 2026-09-23, the current model is 17 actionable manual targets / 24 monitored components. Current health passes with 9 system services, 4 user services, 9 compose units (10 containers), 2 SQLite databases and PostgreSQL readiness.
 
 Current Stage 07.2 maintenance state:
 - ownership policy: native-first; Maintenance execution plane: strictly manual;
 - generated target model: `update_units_v5`;
-- raw Maintenance collector: 25 rows; Hermes/Codex are not collected;
-- Maintenance: exactly 18 actionable manual targets: `APT_EDGE`, `XRAY`, `HYSTERIA2`, `BACKREST`, `RESTIC`, `RCLONE`, `SEMAPHORE`, `N8N`, `AUTHELIA`, `MATTERMOST`, `POSTGRESQL`, `STALWART`, `BULWARK`, `NEXTCLOUD`, `NEXTCLOUD_POSTGRESQL`, `NEXTCLOUD_REDIS`, `CLOUDCLI`, `ANTIGRAVITY`;
-- all 18 Maintenance rows have `update_owner=maintenance_manual`;
+- raw Maintenance collector: 24 rows; Hermes/Codex/CloudCLI are not collected;
+- Maintenance: exactly 17 actionable manual targets: `APT_EDGE`, `XRAY`, `HYSTERIA2`, `BACKREST`, `RESTIC`, `RCLONE`, `SEMAPHORE`, `N8N`, `AUTHELIA`, `MATTERMOST`, `POSTGRESQL`, `STALWART`, `BULWARK`, `NEXTCLOUD`, `NEXTCLOUD_POSTGRESQL`, `NEXTCLOUD_REDIS`, `ANTIGRAVITY`;
+- all 17 Maintenance rows have `update_owner=maintenance_manual`;
 - Hermes, Codex and Ubuntu security updates are native-owned outside Maintenance: Hermes native cron + settlement, Codex managed-daemon `pid-update-loop`, Ubuntu package-owned unattended-upgrades;
-- `actions.json` schema 10 contains exactly 18 manual components, `execution_mode=manual_only`, `auto_update=false`;
+- `actions.json` schema 10 contains exactly 17 manual components, `execution_mode=manual_only`, `auto_update=false`;
 - Master Batch and `--plan-only` require schema-2 enablement;
 - Stage 8 `edge-monitor` uses `/var/www/maintenance-status/maintenance.json` as the authoritative maintenance source;
 - Semaphore has no Hermes/Codex update templates; Refresh remains ID 1 and Master ID 18;
@@ -202,8 +202,8 @@ Current Stage 07.2 maintenance state:
 - Bulwark tracks `ghcr.io/bulwarkmail/webmail:latest`; actual image replacement remains operator-triggered;
 - final corrective acceptance: `STAGE07_2_CORRECTIVE_MIGRATION=PASS`, RC=0;
 - real execution acceptance: `STAGE07_2_FINAL_MASTER_BATCH_EXECUTION=PASS` (Semaphore task 26, RC=0);
-- final current-state audit: `STAGE07_2_CURRENT_STATE_AUDIT=PASS`; runtime matches current `main`, 18/18 manual targets CURRENT, cleanup/rotation state verified;
-- pending manual updates at final execution: 0 (all 18 manual targets CURRENT: `APT_EDGE`, `XRAY`, `HYSTERIA2`, `BACKREST`, `RESTIC`, `RCLONE`, `SEMAPHORE`, `N8N`, `AUTHELIA`, `MATTERMOST`, `POSTGRESQL`, `STALWART`, `BULWARK`, `NEXTCLOUD`, `NEXTCLOUD_POSTGRESQL`, `NEXTCLOUD_REDIS`, `CLOUDCLI`, `ANTIGRAVITY`);
+- Stage 07.2 historical audit remains accepted; current post-retirement runtime is 17 actionable targets / 24 monitored components with CloudCLI removed;
+- current post-retirement maintenance acceptance: 17 actionable targets, 24 monitored components, no CloudCLI target/template/runtime references;
 - authoritative record: `STAGE_07_2_FINAL_CURRENT_STATE_ACCEPTANCE_2026-09-23.md`.
 
 
@@ -298,12 +298,12 @@ Current SAN set includes `escloud.us`, `app.escloud.us`, `auth.escloud.us`, `bac
 - public `https://n8n.escloud.us/` through Authelia;
 - fresh application state at Stage 2 acceptance.
 
-### CloudCLI
+### CloudCLI — RETIRED
 
-- version `1.37.3` under `/home/core/.local`;
-- backend `127.0.0.1:18140` only;
-- public `https://code.escloud.us/` through Authelia;
-- fresh local application/auth state at acceptance.
+- CloudCLI `1.37.3` was fully retired from edge on 2026-09-23 after the operator rejected it for the current remote-workspace requirement;
+- `cloudcli.service`, listener `127.0.0.1:18140`, npm package, `/home/core/.cloudcli`, `/srv/ai-workspace`, Maintenance target/template and Cloud Portal card are absent;
+- `code.escloud.us` DNS/TLS/Authelia slot is intentionally preserved and currently returns an authenticated `503` placeholder for the planned T3 WebUI;
+- acceptance marker: `CLOUDCLI_RETIREMENT_FINAL_ACCEPTANCE=PASS`.
 
 ### Codex CLI
 
