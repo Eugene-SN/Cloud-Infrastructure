@@ -8,14 +8,19 @@ import subprocess
 
 root = pathlib.Path(__file__).resolve().parents[1]
 manifest = json.loads((root / "config/update-units.json").read_text())
+enablement = json.loads((root / "config/manual-driver-enablement.example.json").read_text())
 sudoers = (root / "config/semaphore-sudoers").read_text()
 master = runpy.run_path(root / "scripts/master-batch-update")
 post = runpy.run_path(root / "scripts/master-post-scan-validate")
 now = dt.datetime.now(dt.timezone.utc)
 manual = [u["id"] for u in manifest["units"]]
 
+assert manifest["schema"] == 2
+assert enablement["schema"] == 2
+assert enablement["master"] is True
 assert len(manual) == 18
 assert set(manual) == set(manifest["master_order"])
+assert set(enablement["enabled"]) == set(manual)
 assert manifest["master_order"][-1] == "APT_EDGE"
 assert next(u for u in manifest["units"] if u["id"] == "SEMAPHORE")["master_policy"] == "individual_only"
 assert "/opt/edge-maintenance/scripts/master-post-scan-validate" in sudoers
@@ -24,28 +29,23 @@ assert "/opt/edge-maintenance/scripts/master-health-validate" in sudoers
 
 def fixture(status="CURRENT"):
     rows = [
-        {"component": target, "status": status, "actionable": True}
-        for target in manual
-    ]
-    rows += [
         {
             "component": target,
-            "status": "CURRENT",
-            "actionable": False,
-            "update_owner": "native_auto",
+            "status": status,
+            "actionable": True,
+            "update_owner": "maintenance_manual",
         }
-        for target in ("HERMES", "CODEX")
+        for target in manual
     ]
     return {
         "schema": 3,
-        "target_model": "update_units_v4",
+        "target_model": "update_units_v5",
         "generated_at": now.isoformat(),
         "rows": rows,
         "summary": {
-            "TOTAL": 20,
+            "TOTAL": 18,
             "ACTIONABLE_TARGETS": 18,
-            "MONITOR_ONLY_TARGETS": 2,
-            "CURRENT": 20 if status == "CURRENT" else 2,
+            "CURRENT": 18 if status == "CURRENT" else 0,
             "UPDATE_AVAILABLE": 0 if status == "CURRENT" else 18,
             "CHECK_FAILED": 0,
             "REBOOT_REQUIRED": 0,
@@ -57,7 +57,7 @@ clean = fixture()
 order, units, rows, stamp = master["validate_plan"](manifest, clean, now)
 assert order == manifest["master_order"]
 assert set(units) == set(manual)
-assert set(manual).issubset(rows)
+assert set(rows) == set(manual)
 assert stamp == clean["generated_at"]
 assert post["validate"](manifest, clean, now)[0] is True
 
@@ -73,7 +73,7 @@ assert "--plan-only" in help_result.stdout
 one_update = fixture()
 target = "AUTHELIA"
 next(r for r in one_update["rows"] if r["component"] == target)["status"] = "UPDATE_AVAILABLE"
-one_update["summary"]["CURRENT"] = 19
+one_update["summary"]["CURRENT"] = 17
 one_update["summary"]["UPDATE_AVAILABLE"] = 1
 assert master["validate_plan"](manifest, one_update, now)[2][target]["status"] == "UPDATE_AVAILABLE"
 assert post["validate"](manifest, one_update, now)[0] is False
