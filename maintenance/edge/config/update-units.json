@@ -1,13 +1,20 @@
 {
-  "schema": 1,
+  "schema": 2,
   "cache_max_age_seconds": 300,
-  "manual_only": true,
+  "ownership_mode": "native_first_hybrid",
   "launch_surface": "update.escloud.us",
+  "monitor_only": [
+    {"id":"HERMES","group":"cli","owner":"native_auto"},
+    {"id":"CODEX","group":"cli","owner":"native_auto"}
+  ],
+  "native_auto": [
+    {"id":"UBUNTU_SECURITY","owner":"unattended-upgrades"}
+  ],
   "master_order": [
-    "XRAY", "HYSTERIA2", "BACKREST", "RESTIC",
+    "XRAY", "HYSTERIA2", "BACKREST", "RESTIC", "RCLONE",
     "N8N", "AUTHELIA", "MATTERMOST", "POSTGRESQL", "STALWART", "BULWARK",
-    "HERMES", "CLOUDCLI", "CODEX", "ANTIGRAVITY",
-    "SEMAPHORE", "APT_EDGE"
+    "NEXTCLOUD", "NEXTCLOUD_POSTGRESQL", "NEXTCLOUD_REDIS",
+    "CLOUDCLI", "ANTIGRAVITY", "SEMAPHORE", "APT_EDGE"
   ],
   "units": [
     {"id":"APT_EDGE","group":"system","driver":"apt"},
@@ -15,6 +22,7 @@
     {"id":"HYSTERIA2","group":"native","driver":"maintctl","argument":"hy2"},
     {"id":"BACKREST","group":"native","driver":"github_binary","repository":"garethgeorge/backrest","service":"backrest"},
     {"id":"RESTIC","group":"native","driver":"github_binary","repository":"restic/restic"},
+    {"id":"RCLONE","group":"native","driver":"self_update","binary":"/usr/bin/rclone","arguments":["selfupdate","--stable"],"user_services":["projects-webdav.service"]},
     {"id":"SEMAPHORE","group":"native","driver":"github_binary","repository":"semaphoreui/semaphore","service":"semaphore","master_policy":"individual_only"},
     {"id":"N8N","group":"docker","driver":"compose","directory":"/opt/n8n","files":["compose.yaml"],"service":"n8n"},
     {"id":"AUTHELIA","group":"docker","driver":"compose","directory":"/opt/authelia","files":["compose.yaml"],"service":"authelia"},
@@ -22,9 +30,10 @@
     {"id":"POSTGRESQL","group":"docker","driver":"compose","directory":"/opt/mattermost","files":["docker-compose.yml","docker-compose.edge.yml"],"service":"postgres"},
     {"id":"STALWART","group":"docker","driver":"compose","directory":"/opt/mail-stack","files":["compose.yaml"],"service":"stalwart"},
     {"id":"BULWARK","group":"docker","driver":"compose","directory":"/opt/mail-stack","files":["compose.yaml"],"service":"bulwark"},
-    {"id":"HERMES","group":"cli","driver":"user_cli","binary":"/home/core/.local/bin/hermes","arguments":["update"],"services":["hermes-gateway.service","hermes-dashboard.service"]},
+    {"id":"NEXTCLOUD","group":"docker","driver":"compose","directory":"/opt/nextcloud","files":["compose.yaml"],"service":"app","services":["app","cron"]},
+    {"id":"NEXTCLOUD_POSTGRESQL","group":"docker","driver":"compose","directory":"/opt/nextcloud","files":["compose.yaml"],"service":"db","database_backup":"postgresql"},
+    {"id":"NEXTCLOUD_REDIS","group":"docker","driver":"compose","directory":"/opt/nextcloud","files":["compose.yaml"],"service":"redis"},
     {"id":"CLOUDCLI","group":"cli","driver":"user_cli","binary":"/home/core/.local/bin/cloudcli","arguments":["update"],"system_service":"cloudcli.service"},
-    {"id":"CODEX","group":"cli","driver":"user_cli","binary":"/home/core/.local/bin/codex","arguments":["update"]},
     {"id":"ANTIGRAVITY","group":"cli","driver":"user_cli","binary":"/home/core/.local/bin/agy","arguments":["update"],"services":["antigravity-cli-daemon.service"]}
   ]
 }
