@@ -175,7 +175,7 @@ Stage 7 retired-hostname cleanup record: `STAGE_07_OPS_HOSTNAME_RETIREMENT_2026-
 
 Stage 7B historical deployment remains accepted; Stage 07.2 supersedes only its blanket manual-only ownership policy and fixed 16-target current model.
 
-Stage 07.2 status: **ACTIVE / NOT ACCEPTED**. The v5 runtime model passed structural/read-only gates, but the first real operator-triggered Master Batch subsequently failed. Final acceptance is revoked pending bounded failure analysis and real Master-path recovery acceptance.
+Stage 07.2 status: **COMPLETE / ACCEPTED** with `STAGE07_2_FINAL_MASTER_BATCH_EXECUTION=PASS` on 2026-09-23. The execution-path failure in Task 23 was diagnosed (runtime schema check drift in manual-update), corrected by synchronizing the deployed `/opt/edge-maintenance/scripts/` with canonical `origin/main`, and re-verified through real operator-triggered Semaphore Master Batch Task 26 (RC=0). Post-scan gate passed with 18/18 targets `CURRENT` and `REBOOT_REQUIRED=0`; health gate passed with 10 system services, 4 user services, 9 compose units (10 containers), 2 SQLite databases and PostgreSQL readiness.
 
 Current Stage 07.2 maintenance state:
 - ownership policy: native-first; Maintenance execution plane: strictly manual;
@@ -191,8 +191,9 @@ Current Stage 07.2 maintenance state:
 - Rclone manual update uses upstream `rclone selfupdate --stable` and restarts `projects-webdav.service`;
 - Nextcloud application/PostgreSQL/Redis remain separate manual targets;
 - Bulwark tracks `ghcr.io/bulwarkmail/webmail:latest`; actual image replacement remains operator-triggered;
-- final corrective acceptance: `STAGE07_2_CORRECTIVE_MIGRATION=PASS`, RC=0, no real component update executed;
-- pending manual updates at acceptance: APT_EDGE (11 packages), n8n `2.39.10 -> 2.40.5`, Bulwark `1.9.2 -> 1.10.0`, Antigravity `1.2.7 -> 1.2.8`;
+- final corrective acceptance: `STAGE07_2_CORRECTIVE_MIGRATION=PASS`, RC=0;
+- real execution acceptance: `STAGE07_2_FINAL_MASTER_BATCH_EXECUTION=PASS` (Semaphore task 26, RC=0);
+- pending manual updates at final execution: 0 (all 18 manual targets CURRENT: `APT_EDGE`, `XRAY`, `HYSTERIA2`, `BACKREST`, `RESTIC`, `RCLONE`, `SEMAPHORE`, `N8N`, `AUTHELIA`, `MATTERMOST`, `POSTGRESQL`, `STALWART`, `BULWARK`, `NEXTCLOUD`, `NEXTCLOUD_POSTGRESQL`, `NEXTCLOUD_REDIS`, `CLOUDCLI`, `ANTIGRAVITY`);
 - authoritative record: `STAGE_07_2_FINAL_NATIVE_UPDATE_OWNERSHIP_ACCEPTANCE_2026-09-23.md`.
 
 

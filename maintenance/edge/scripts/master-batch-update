@@ -157,8 +157,14 @@ def main():
                 target,
                 "--master-batch-generated-at",
                 generated_at,
-            ]
+            ],
+            capture_output=True,
+            text=True,
         )
+        if result.stdout:
+            print(result.stdout.rstrip(), flush=True)
+        if result.stderr:
+            print(result.stderr.rstrip(), flush=True)
         success = result.returncode == 0
         results.append((target, success))
         outcome = "SUCCESS" if success else "FAILED_CONTINUED"

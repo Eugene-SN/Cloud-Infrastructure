@@ -2155,10 +2155,33 @@ Mixing discovery and deployment of such omitted capabilities back into Stage 10 
 
 ## 2026-09-23T07:35:00+03:00 — Stage 07.2 acceptance revoked after real Master Batch failure
 
-**Status:** ACCEPTED
+**Status:** SUPERSEDED
 
 **Context:** After the v5 corrective model passed structural, plan-only and non-regression gates, the operator executed the real Master Batch through the accepted Maintenance/Semaphore surface and it failed. This proves the prior Stage 07.2 final acceptance was premature because the real execution path had not been accepted after the v5 changes.
 
 **Decision:** Reopen Stage 07.2 as ACTIVE / NOT ACCEPTED. Preserve the v5 ownership model provisionally, but do not treat it as final until the exact Master failure is identified and the real Master execution path completes its bounded recovery acceptance. Do not rerun updates blindly; first inspect the failed Semaphore task/output and all Master execution/refresh/post-scan/health gates.
 
 **Supersedes:** the 2026-09-23T07:35:00+03:00 Stage 07.2 final acceptance decision as current acceptance state. It does not by itself revert the deployed v5 runtime model.
+
+
+---
+
+## 2026-09-23T10:15:00+03:00 — Stage 07.2 final recovery and Master Batch execution acceptance
+
+**Status:** ACCEPTED
+
+**Context:** Extended audit diagnosed the cause of Task 23 failure as runtime drift in `/opt/edge-maintenance/scripts/manual-update` (stale `schema != 1` check while `/etc/edge-maintenance/manual-driver-enablement.json` was on schema 2) and `master-health-validate` (lacking Stage 12 `projects-webdav` coverage). Both fixes were committed to `origin/main` but had not been deployed to `/opt/edge-maintenance/scripts/`. Additionally, `master-batch-update` was improved to capture and emit child process stdout/stderr. After synchronizing `/opt/edge-maintenance/scripts/` with canonical repository state, the operator executed Master Batch Task 26 in Semaphore.
+
+**Decision:**
+- mark Stage 07.2 as **COMPLETE / ACCEPTED**;
+- accept Task 26 execution: all 18 targets evaluated, 15 current targets skipped, 3 actionable targets (`N8N`, `BULWARK`, `APT_EDGE`) updated with RC=0;
+- accept `MASTER_POST_SCAN_GATE=PASS` (18/18 manual targets CURRENT, `REBOOT_REQUIRED=0`);
+- accept `MASTER_HEALTH_GATE=PASS` (10 system units, 4 user units including `projects-webdav`, 9 compose units / 10 containers, 2 SQLite databases, PostgreSQL readiness);
+- clean unneeded `pollinate` package via `apt-get autoremove --purge`.
+
+**Acceptance marker:** `STAGE07_2_FINAL_MASTER_BATCH_EXECUTION=PASS`.
+
+**Evidence:** Semaphore task 26, `maintenance.json` (`CURRENT=18`, `UPDATE_AVAILABLE=0`, `CHECK_FAILED=0`), clean `systemctl` / `docker` health.
+
+**Supersedes:** the 2026-09-23T07:35:00+03:00 Stage 07.2 revocation decision as current acceptance state.
+

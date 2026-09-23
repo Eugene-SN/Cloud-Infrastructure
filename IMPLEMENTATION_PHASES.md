@@ -662,11 +662,9 @@ Publish the already-running Backrest WebUI at `backup.escloud.us` through the ac
 
 ## Stage 07.2 — Native Update Ownership Reconciliation
 
-**Status: ACTIVE / NOT ACCEPTED.**
+**Status: COMPLETE / ACCEPTED.**
 
-The v5 corrective model passed structural/read-only acceptance, but a subsequent real operator-triggered Master Batch failed. Stage 07.2 remains open until the exact execution-path failure is identified, corrected, and re-accepted through the real Master path.
-
-Stage 07.2 is a corrective substage of the accepted Stage 7 baseline.
+Stage 07.2 is a corrective substage of the accepted Stage 7 baseline. The execution-path failure in Task 23 was diagnosed, resolved by aligning the deployed runtime scripts with canonical `origin/main`, and fully validated through real operator-triggered Master Batch Task 26 in Semaphore (RC=0).
 
 Final accepted result:
 
@@ -681,9 +679,10 @@ Final accepted result:
 - Stage 12 Rclone and Nextcloud app/PostgreSQL/Redis remain included;
 - Bulwark stable tracking remains corrected without automatic execution;
 - Semaphore mapping remained non-regressed and contains no Hermes/Codex templates;
-- final corrective acceptance completed with RC=0 and no real component update.
+- final corrective acceptance completed with RC=0;
+- real execution acceptance completed with RC=0 (Task 26), 18/18 manual targets updated to CURRENT, post-scan gate PASS, health gate PASS.
 
-Final marker: `STAGE07_2_CORRECTIVE_MIGRATION=PASS`.
+Final marker: `STAGE07_2_CORRECTIVE_MIGRATION=PASS`, `STAGE07_2_FINAL_MASTER_BATCH_EXECUTION=PASS`.
 
 Authoritative record: `STAGE_07_2_FINAL_NATIVE_UPDATE_OWNERSHIP_ACCEPTANCE_2026-09-23.md`.
 
