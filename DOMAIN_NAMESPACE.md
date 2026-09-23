@@ -14,7 +14,7 @@ This file defines the intended `escloud.us` hostname allocation for Cloud Infras
 | `edge.escloud.us` | VPS infrastructure hostname for node `edge` | ACTIVE DNS identity; not an application vhost by default |
 | `auth.escloud.us` | Authelia | ACTIVE |
 | `n8n.escloud.us` | n8n automation UI/API/webhooks | ACTIVE |
-| `code.escloud.us` | CloudCLI workspace/interface | ACTIVE |
+| `code.escloud.us` | reserved T3 remote-workspace WebUI slot | ACTIVE DNS/TLS/Authelia identity; CloudCLI retired; temporary authenticated 503 backend until T3 deployment |
 | `mail.escloud.us` | Stalwart APIs/admin/JMAP plus Bulwark webmail | ACTIVE |
 | `hermes.escloud.us` | Hermes Dashboard and Desktop Remote Gateway | ACTIVE; native self-hosted OIDC through Authelia; loopback backend |
 | `chat.escloud.us` | Mattermost collaboration/control | ACTIVE; Mattermost-native authentication; no Authelia proxy auth |
