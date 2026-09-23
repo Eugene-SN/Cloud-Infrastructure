@@ -228,6 +228,26 @@ Accepted current state:
 
 Acceptance record: `EDGE_REBOOT_LIFECYCLE_FIX_ACCEPTANCE_2026-09-18.md`.
 
+## 2026-09-23 reboot/SSH lifecycle correction
+
+A later controlled reboot exposed a separate ~90-second late-shutdown stall unrelated to Docker: `multipathd.service` reported shutdown but remained in `stop-sigterm` until its 90-second stop timeout elapsed.
+
+Fresh storage/runtime audit proved that edge has no multipath maps and no device-mapper devices; root is ordinary ext4 on `/dev/vda1`. `multipathd.service` was therefore disabled from `sysinit.target` while the Ubuntu `multipath-tools` package remains installed. The static/inactive `multipathd.socket` and helper queueing unit remain non-owning/inactive.
+
+Final combined reboot acceptance on 2026-09-23:
+- reboot request: `05:29:27 MSK`;
+- reboot target reached: `05:29:39.188 MSK` (~12.2 s after request);
+- previous journal stopped: `05:29:39.260 MSK`;
+- new kernel: `05:29:45.786 MSK` (~6.5 s later);
+- `network-online.target`: `05:29:52.817 MSK`;
+- SSH port 22 listening: `05:29:53.717 MSK`, ~7.9 s after new-kernel start and ~26.7 s after reboot request;
+- full system startup: `18.348s`;
+- `multipathd.service`: disabled/inactive and absent from current-boot execution;
+- zero failed systemd units;
+- Codex and Antigravity reboot persistence both passed.
+
+Acceptance record: `EDGE_REMOTE_CLI_AND_REBOOT_LIFECYCLE_ACCEPTANCE_2026-09-23.md`.
+
 ## Authentication / ingress
 
 ### Authelia
@@ -263,10 +283,14 @@ Current SAN set includes `escloud.us`, `app.escloud.us`, `auth.escloud.us`, `bac
 
 ### Codex CLI
 
-- version `0.155.1` official standalone runtime;
+- current version `0.156.0` official standalone runtime;
 - fresh ChatGPT authorization;
-- Remote Control through Unix control socket only;
-- no public Codex network listener.
+- Remote Control through Unix control socket only; no public Codex network listener;
+- native managed lifecycle is the sole Codex runtime owner: one managed app-server plus one native `pid-update-loop`;
+- native auto-update is enabled and preserved;
+- legacy custom `codex-cli-daemon.service` is removed;
+- because the native PID backend does not persist across host reboot, a minimal enabled user oneshot `codex-remote-control-start.service` under `core` invokes only the supported `codex remote-control start --json` command at user-manager boot; it does not supervise the managed daemon;
+- controlled reboot acceptance on 2026-09-23 verified exactly one managed app-server, one native updater and the control socket without manual Codex start.
 
 ### Antigravity CLI
 
@@ -307,7 +331,7 @@ Fresh expanded read-only audit on 2026-09-18 confirms the following current runt
 - system toolchain/browser normalization accepted, including managed Chromium and `cua-driver 0.28.2`;
 - `hermes-gateway.service` is enabled and currently active under `core`; current `NRestarts=0`;
 - Mattermost environment is configured and its token validates successfully as bot `hermes`;
-- standalone Codex CLI `0.155.1` and current Antigravity CLI `1.2.7` remain available to `core`;
+- standalone Codex CLI `0.156.0` and current Antigravity CLI `1.2.7` remain available to `core`;
 - Web Search/Extract, Edge TTS and Vision functional probes are PASS; CUA is accepted as `NOT_APPLICABLE_HEADLESS_EDGE`; Image Generation remains configured but is non-blocking for Stage 4 acceptance; fresh core Qwen3.8/vLLM regression is accepted with `STAGE4A_CORE_QWEN_VLLM_REGRESSION=PASS`.
 - Stage 4B executor read-only audit is accepted: `STAGE4B_EXECUTOR_READONLY_AUDIT=PASS`.
 - Actual Hermes local terminal child context is clean for standalone executors: cwd `/home/core`, `HOME=/home/core`, `HERMES_HOME=/home/core/.hermes`, core local bin on PATH, and no `OPENAI_BASE_URL`, `OPENAI_API_KEY` or `CODEX_*` environment override.
