@@ -48,7 +48,7 @@ def build_actions(manifest, templates, enablement):
 
     if (
         len(units) != len(manual_ids)
-        or len(manual_ids) != 18
+        or len(manual_ids) != 17
         or set(template_map) != manual_ids
         or set(enabled_map) != manual_ids
     ):
