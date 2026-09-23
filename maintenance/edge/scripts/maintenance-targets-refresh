@@ -52,16 +52,9 @@ DOCKER_COMPONENTS = [
 ]
 
 CLI_COMPONENTS = [
-    ("HERMES", "Hermes Agent"),
     ("CLOUDCLI", "CloudCLI"),
-    ("CODEX", "Codex CLI"),
     ("ANTIGRAVITY", "Antigravity CLI"),
 ]
-
-MONITOR_ONLY_COMPONENTS = {
-    "HERMES",
-    "CODEX",
-}
 
 
 def apt_probe():
@@ -430,16 +423,7 @@ def independent_target(
         "actionable": True,
     }
 
-    if component in MONITOR_ONLY_COMPONENTS:
-        result.update({
-            "managed_by": "native_auto",
-            "update_owner": "native_auto",
-            "action_key": None,
-            "update_target": None,
-            "actionable": False,
-        })
-    else:
-        result["update_owner"] = "maintenance_manual"
+    result["update_owner"] = "maintenance_manual"
 
     if target_type == "DOCKER":
         result.update({
@@ -450,12 +434,6 @@ def independent_target(
             "running_image_digest": str(source.get("RUNNING_DIGEST", "—")) if source else "—",
             "remote_image_digest": str(source.get("REMOTE_DIGEST", "—")) if source else "—",
             "update_reason": str(source.get("UPDATE_REASON", "CHECK_FAILED")) if source else "CHECK_FAILED",
-        })
-
-    if component == "HERMES":
-        result.update({
-            "installed_ref": str(source.get("INSTALLED_REF", "—")) if source else "—",
-            "available_ref": str(source.get("STABLE_REF", "—")) if source else "—",
         })
 
     return result
@@ -505,6 +483,8 @@ rows = [
             "system",
         "managed_by":
             "apt",
+        "update_owner":
+            "maintenance_manual",
         "current":
             "System / APT",
         "available":
@@ -586,12 +566,6 @@ summary = {
             for row in rows
             if row.get("actionable") is True
         ),
-    "MONITOR_ONLY_TARGETS":
-        sum(
-            1
-            for row in rows
-            if row.get("actionable") is False
-        ),
     "MONITORED_COMPONENTS":
         len(status_rows),
     "APT_MANAGED_COMPONENTS":
@@ -667,7 +641,7 @@ payload = {
     "schema":
         3,
     "target_model":
-        "update_units_v4",
+        "update_units_v5",
     "generated_at":
         datetime.datetime.now(
             datetime.timezone.utc
@@ -724,7 +698,7 @@ finally:
 
 
 print(
-    "TARGET_MODEL=update_units_v4"
+    "TARGET_MODEL=update_units_v5"
 )
 
 print(
