@@ -664,20 +664,25 @@ Publish the already-running Backrest WebUI at `backup.escloud.us` through the ac
 
 **Status: COMPLETE / ACCEPTED.**
 
-Stage 07.2 is a corrective substage of the already accepted Stage 7 baseline.
+Stage 07.2 is a corrective substage of the accepted Stage 7 baseline.
 
-Accepted result:
+Final accepted result:
 
-- native-first hybrid update ownership;
-- Codex and Hermes are native-owned monitor-only Maintenance rows;
-- Ubuntu security updates use package-owned unattended-upgrades;
-- ordinary/third-party APT remains manual;
-- Maintenance target model `update_units_v4`: 18 manual targets + 2 monitor-only native targets;
-- Stage 12 Rclone and Nextcloud app/PostgreSQL/Redis included in Maintenance;
-- Bulwark stable tracking corrected without executing the pending update;
-- Semaphore template mapping reconciled;
-- all manual preflights, Master plan-only and native-owner non-regression passed.
+- native-first update ownership;
+- Maintenance execution plane strictly manual;
+- Hermes and Codex fully excluded from Maintenance collection, rows, actions, UI and Semaphore templates;
+- Hermes native cron + settlement, Codex native managed-daemon updater and Ubuntu unattended security updates preserved;
+- `update_units_v5`: exactly 18 actionable manual Maintenance targets;
+- `actions.json`: exactly 18 manual actions, `execution_mode=manual_only`, `auto_update=false`;
+- Master real execution and `--plan-only` both validate schema-2 enablement;
+- Stage 8 `edge-monitor` consumes `maintenance.json`, so its update count reflects only manual Maintenance targets;
+- Stage 12 Rclone and Nextcloud app/PostgreSQL/Redis remain included;
+- Bulwark stable tracking remains corrected without automatic execution;
+- Semaphore mapping remained non-regressed and contains no Hermes/Codex templates;
+- final corrective acceptance completed with RC=0 and no real component update.
 
-Final marker: `STAGE07_2_MAINTENANCE_SEMAPHORE_MIGRATION=PASS`.
+Final marker: `STAGE07_2_CORRECTIVE_MIGRATION=PASS`.
 
-Authoritative record: `STAGE_07_2_NATIVE_UPDATE_OWNERSHIP_ACCEPTANCE_2026-09-23.md`.
+Authoritative record: `STAGE_07_2_FINAL_NATIVE_UPDATE_OWNERSHIP_ACCEPTANCE_2026-09-23.md`.
+
+The earlier v4 acceptance record is retained only as superseded historical evidence.
