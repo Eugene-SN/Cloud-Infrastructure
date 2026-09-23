@@ -175,6 +175,8 @@ Stage 7 retired-hostname cleanup record: `STAGE_07_OPS_HOSTNAME_RETIREMENT_2026-
 
 Stage 7B historical deployment remains accepted; Stage 07.2 supersedes only its blanket manual-only ownership policy and fixed 16-target current model.
 
+Stage 07.2 status: **ACTIVE / NOT ACCEPTED**. The v5 runtime model passed structural/read-only gates, but the first real operator-triggered Master Batch subsequently failed. Final acceptance is revoked pending bounded failure analysis and real Master-path recovery acceptance.
+
 Current Stage 07.2 maintenance state:
 - ownership policy: native-first; Maintenance execution plane: strictly manual;
 - generated target model: `update_units_v5`;
