@@ -2042,3 +2042,24 @@ Mixing discovery and deployment of such omitted capabilities back into Stage 10 
 9. macOS automount uses the native Finder server connection/Login Items/Keychain path; `.DS_Store` suppression is a client-side macOS policy, not a server cleanup service.
 
 **Supersedes:** the 2026-09-22 Stage 11 decision assigning private SMB workspace access to Stage 12, and the Stage 11 retirement of `go.escloud.us`. `go.escloud.us` is now an active Stage 12 WebDAV endpoint.
+
+---
+
+## 2026-09-23T04:55:00+03:00 — Native update ownership policy
+
+**Status:** ACCEPTED
+
+**Context:** The project update policy had been described incompletely, which allowed an incorrect interpretation that all updates should be manual through maintenance/Semaphore. The operator clarified the intended ownership model.
+
+**Decision:**
+
+1. When a deployed service/product provides a supported upstream/native automatic-update mechanism, use that native mechanism by default.
+2. Do not disable a native automatic updater merely to route updates through maintenance/Semaphore.
+3. When a service/product does not provide a supported native automatic-update mechanism, keep updates manual through the accepted maintenance/Semaphore workflow.
+4. Do not create custom automatic-update scripts, cron jobs, systemd timers or equivalent project-specific update automation solely to automate a product that lacks an upstream auto-update function.
+5. Maintenance/Semaphore may inspect/report/update-status for natively self-updating services, but must not become a competing update owner.
+6. A native updater may be overridden only for a demonstrated incompatibility/regression, migration constraint, workaround requirement, or explicit operator decision.
+7. For Codex, the supported managed-daemon/native auto-update lifecycle remains authoritative; it must not be disabled merely to make Codex a manual Semaphore-managed update target.
+
+**Supersedes:** any prior interpretation of Stage 7 or the maintenance framework that all deployed services must be updated manually through Semaphore regardless of upstream-native update capabilities.
+
