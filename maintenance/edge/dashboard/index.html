@@ -241,7 +241,7 @@
       box-shadow: 0 0 6px var(--up);
     }
 
-    /* ACTIONS */
+    /* ACTIONS & BUTTONS - MUTED SOFT GREEN FROSTED GLASS WITH BLACK FONT */
     .action {
       display: inline-flex;
       align-items: center;
@@ -249,14 +249,14 @@
       gap: 7px;
       min-height: var(--header-control-height);
       padding: 0 13px;
-      border: 1px solid var(--glass-border);
+      border: 1px solid rgba(46, 130, 70, 0.25);
       border-radius: var(--radius-small);
-      background: var(--surface);
+      background: rgba(46, 150, 75, 0.14);
       backdrop-filter: blur(20px) saturate(160%);
       -webkit-backdrop-filter: blur(20px) saturate(160%);
-      color: var(--ink-soft);
+      color: #0b1a11 !important;
       font-size: .76rem;
-      font-weight: 580;
+      font-weight: 600;
       text-decoration: none;
       cursor: pointer;
       user-select: none;
@@ -266,9 +266,9 @@
     }
 
     .action:hover:not(:disabled) {
-      border-color: var(--line-strong);
-      background: var(--surface-hover);
-      color: var(--ink);
+      border-color: rgba(46, 130, 70, 0.42);
+      background: rgba(46, 150, 75, 0.24);
+      color: #000000 !important;
       transform: translateY(-1px);
       box-shadow: 0 4px 12px rgba(0, 0, 0, .06), var(--glass-highlight);
     }
@@ -282,35 +282,52 @@
       cursor: not-allowed;
     }
 
-    .action-primary {
-      background: color-mix(in srgb, var(--accent) 52%, var(--surface-solid));
-      border-color: color-mix(in srgb, var(--accent) 55%, var(--line-strong));
-      color: color-mix(in srgb, #ffffff 92%, var(--ink));
-      font-weight: 600;
-    }
-
-    html[data-theme="light"] .action-primary {
-      background: color-mix(in srgb, var(--accent) 85%, var(--surface-solid));
-      border-color: var(--accent);
-      color: #ffffff;
-    }
-
-    .action-primary:hover:not(:disabled) {
-      background: color-mix(in srgb, var(--accent) 64%, var(--surface-solid));
-      border-color: var(--accent);
-      color: #ffffff;
-    }
-
+    .action-primary,
     .action-success {
-      background: color-mix(in srgb, var(--up) 82%, var(--surface-solid));
-      border-color: var(--up);
-      color: #ffffff;
-      font-weight: 620;
+      background: rgba(46, 160, 75, 0.22);
+      border-color: rgba(46, 130, 70, 0.38);
+      color: #0b1a11 !important;
+      font-weight: 640;
     }
 
+    html[data-theme="light"] .action-primary,
+    html[data-theme="light"] .action-success {
+      background: rgba(46, 160, 75, 0.22);
+      border-color: rgba(46, 130, 70, 0.38);
+      color: #0b1a11 !important;
+    }
+
+    .action-primary:hover:not(:disabled),
+    .action-success:hover:not(:disabled) {
+      background: rgba(46, 160, 75, 0.32);
+      border-color: rgba(46, 130, 70, 0.52);
+      color: #000000 !important;
+    }
+
+    html[data-theme="dark"] .action {
+      background: rgba(160, 215, 185, 0.55);
+      border-color: rgba(140, 205, 165, 0.65);
+      color: #06150b !important;
+    }
+
+    html[data-theme="dark"] .action:hover:not(:disabled) {
+      background: rgba(175, 230, 200, 0.70);
+      border-color: rgba(150, 215, 175, 0.80);
+      color: #000000 !important;
+    }
+
+    html[data-theme="dark"] .action-primary,
     html[data-theme="dark"] .action-success {
-      color: #0b1d14;
-      background: var(--up);
+      background: rgba(150, 220, 180, 0.68);
+      border-color: rgba(130, 210, 160, 0.80);
+      color: #041208 !important;
+    }
+
+    html[data-theme="dark"] .action-primary:hover:not(:disabled),
+    html[data-theme="dark"] .action-success:hover:not(:disabled) {
+      background: rgba(165, 235, 195, 0.82);
+      border-color: rgba(140, 225, 175, 0.90);
+      color: #000000 !important;
     }
 
     .action-sm {
@@ -505,7 +522,7 @@
       border: none;
       border-radius: 7px;
       background: transparent;
-      color: var(--ink-soft);
+      color: #475a6f;
       font-size: .73rem;
       font-weight: 550;
       cursor: pointer;
@@ -514,14 +531,19 @@
     }
 
     .tab-btn:hover {
-      color: var(--ink);
+      color: #000000 !important;
     }
 
     .tab-btn.active {
-      background: var(--surface-hover);
-      color: var(--ink);
+      background: rgba(46, 160, 75, 0.18);
+      color: #0b1a11 !important;
       box-shadow: 0 1px 4px rgba(0, 0, 0, .08);
       font-weight: 650;
+    }
+
+    html[data-theme="dark"] .tab-btn.active {
+      background: rgba(160, 215, 185, 0.55);
+      color: #06150b !important;
     }
 
     /* TOAST / PROGRESS NOTIFICATIONS */
