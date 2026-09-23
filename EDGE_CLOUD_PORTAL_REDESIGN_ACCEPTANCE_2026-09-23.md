@@ -10,37 +10,44 @@ Final acceptance marker:
 
 ## Scope
 
-Comprehensive UX, technical, and visual modernization of `https://app.escloud.us` (The Sovereign Control Deck) into a 2026 Precision Cloud Console conforming to `taste-design`, `frontend-design`, and `impeccable` guidelines.
+Comprehensive UX, technical, and visual modernization of `https://app.escloud.us` (The Sovereign Control Deck) into a 2026 Daylight & Precision Cloud Console conforming to `taste-design`, `frontend-design`, and `impeccable` guidelines.
 
-1. **Anti-Slop Visual Ergonomics & Palette**:
-   - Palette: Deep Modern Graphite (`#11141a` canvas, `#171b23` surface, `#1e232e` elevated, `#242b38` hover, `#272f3e` hairline borders) replacing oppressive pure-black void backgrounds.
-   - Restrained human typography: sentence case everywhere, eliminating shouting uppercase (`ALL CAPS`). Natural font weights (`font-weight: 500` headings, `font-weight: 400` body and labels).
-   - Strict 1.25x typographic scale steps: Body 14px, Section Headers 21px, Panels 16px, Telemetry metrics 17px with tabular monospace numbers (`font-variant-numeric: tabular-nums`).
-   - High Contrast compliance: WCAG AA contrast ratio >= 4.5:1 across all body and muted text (verified via `impeccable detect`).
+1. **Light / Daylight Theme & Eye Comfort**:
+   - Palette: Clean Modern Daylight Console (`#f8fafc` canvas, `#ffffff` surfaces, `#e2e8f0` crisp hairline borders, deep slate `#0f172a` text, `#64748b` muted slate with WCAG AA >= 4.5:1 contrast).
+   - Built-in instantaneous theme toggle (`Daylight` / `Dark`) persisted via `localStorage` and keyboard shortcut (`T`).
+   - Clean, luminous layout eliminating the gloomy dark cave feeling while preserving professional contrast and clarity.
 
-2. **Proportional Architecture & Mathematical Grid**:
-   - 54px sticky navigation bar with breadcrumb (`ESCLOUD / Infrastructure`), node badge `edge.escloud.us`, centered status capsule (`All systems operational · HH:MM:SS`), live status tag, and subtle sync button (`[R]`).
-   - Horizontal Unified Telemetry Strip: 5 mathematically balanced cells with crisp hairline vertical dividers (Health status with 4 domain pips, CPU load average `1m · 5m · 15m`, Memory with transform-based fill meter, Root storage with transform-based fill meter, and Node uptime).
-   - 3×3 Symmetrical Service Matrix: 9 core operator services (Hermes, T3 Code, n8n, Mattermost, Nextcloud, Stalwart Webmail, Stalwart Admin, Maintenance Hub, Backrest) in uniform cards with 36px monochrome icon containers, subtle hover elevation, and latency chips.
-   - Symmetrical 50/50 Bottom Operations Deck:
-     - Left Panel: Clean tabular data view of Probed HTTP Endpoints with HTTP status tags (`HTTP 200`, `HTTP 401`), latency in ms, and state.
-     - Right Panel: Subsystem Infrastructure cloud (14 systemd units, 10 Docker containers, Hybrid Mesh & Nodes rows, Resilience & Storage rows).
+2. **Accurate Operational Semantics (Elimination of Localhost Ping)**:
+   - Meaningless localhost ping latencies removed from local edge services.
+   - Replaced by real operational states:
+     - Hermes Agent: `Online` (Gateway & Web UI active)
+     - T3 Code: `Ready` (Port 3773 responsive)
+     - n8n: `Active` (HTTP 200)
+     - Mattermost: `Online` (PostgreSQL healthy)
+     - Nextcloud: `Healthy` (Storage & Redis active)
+     - Stalwart Webmail: `Active` (JMAP/IMAP active)
+     - Mail Admin: `Directory ready`
+     - Maintenance Hub: Dynamic updates counter (`1 update` or `Up to date`)
+     - Backrest Vaults: Dynamic plans state (`2 vaults synced`)
+   - Real network ping is displayed strictly where it belongs: remote NetBird WireGuard mesh fabric nodes (`Proxmox VE Node: 42 ms`, `AI Node Host: 42 ms`).
 
-3. **Service Plane Updates**:
-   - Complete replacement of retired CloudCLI (`127.0.0.1:18140`) with T3 Code (`code.escloud.us`, port 3773).
-   - Real-time latency and health badges rendered dynamically on service cards.
+3. **Compact & Functional Cadence Monitoring**:
+   - Eliminated the oversized, useless 5-card server metric ribbon.
+   - Introduced a slim, non-intrusive Overview Bar:
+     - 4 Health Domains (`Edge host`, `PAI mesh`, `Syncthing`, `Backrest & Ops`) with live status pips.
+     - Compact Host Resources (`CPU`, `RAM`, `NVMe free`).
+     - Cadence Engine integration: dynamically syncs with backend `intervals_s.fast: 5s`, showing snapshot sequence, timestamp, and a live second-by-second age ticker (`Live · 2s ago`).
 
-4. **Frontend Telemetry Engine**:
-   - In-place reactive DOM updates without layout destruction or scroll jump.
-   - Polling engine querying `/api/status` every 5000ms.
-   - Manual sync trigger with rotation feedback and global shortcut (`R`).
-   - Hardware-accelerated CSS `transform: scaleX(...)` on telemetry meters to avoid browser reflow.
+4. **Concise, High-Information Content**:
+   - Stripped redundant marketing descriptions and essay labels.
+   - Clean 3×3 service matrix with clear 1-line functional scopes.
+   - Symmetrical 50/50 bottom deck: Probed Ingress Endpoints on the left, Remote Mesh Nodes & Subsystems on the right.
 
 ## Accepted Deployed File Hashes
 
-- `/var/www/app.escloud.us/index.html`: `ecc4a1e0bf292e91a783c845b8e6f6248da2b5921bfde4ced5740ae64c1c0bee`
-- `/var/www/app.escloud.us/app.css`: `2d73b43ea840eb3c5eb16e595f9c7c8fc8ddbdaff8fe6bd07e9bf3236e066da1`
-- `/var/www/app.escloud.us/app.js`: `9fc53bfb48cd0b503d8ce06e788ab18eb037953e347ea8391e1dc28c493a1fa9`
+- `/var/www/app.escloud.us/index.html`: `89fe97e6489406513be1a391a540317c6ff7a52be4d3e4a7a56ab29c828000ab`
+- `/var/www/app.escloud.us/app.css`: `c04e98ad59e63b3ad819ff44e5f436ebcb2fedfe6d771813b91abf39e99c83b8`
+- `/var/www/app.escloud.us/app.js`: `256e8750d2e6c31ae6f2cae447cd26746f304ffbc31cbad0de0e16bd47b0a2b9`
 - `/var/www/app.escloud.us/favicon.svg`: `88fb448689e751c3523f985d8332184c072c4184696200f5287ab926d3f57590`
 - `/var/www/app.escloud.us/manifest.webmanifest`: `d3b0ab81f294010027b70f554c357f0535956485c032582e7e43bd19f5c7e7af`
 - `/etc/nginx/sites-available/app-escloud-us.conf`: `248512c5ae376f42ecb105df3db79423a3acf90c8213b5a0213a2173b63a2884`
@@ -52,4 +59,4 @@ Comprehensive UX, technical, and visual modernization of `https://app.escloud.us
 - `nginx -t`: PASS
 - Public asset caching and headers: PASS
 - `edge-monitor.service`: Active (running), `OVERALL: OK` (all 4 domains OK)
-- Live Browser Preview snapshot: Captured and verified at 1280×800.
+- Live Browser Preview snapshot: Captured and verified at 1280×800 in Daylight mode.
