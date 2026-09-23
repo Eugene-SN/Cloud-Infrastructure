@@ -662,7 +662,9 @@ Publish the already-running Backrest WebUI at `backup.escloud.us` through the ac
 
 ## Stage 07.2 — Native Update Ownership Reconciliation
 
-**Status: COMPLETE / ACCEPTED.**
+**Status: ACTIVE / NOT ACCEPTED.**
+
+The v5 corrective model passed structural/read-only acceptance, but a subsequent real operator-triggered Master Batch failed. Stage 07.2 remains open until the exact execution-path failure is identified, corrected, and re-accepted through the real Master path.
 
 Stage 07.2 is a corrective substage of the accepted Stage 7 baseline.
 
