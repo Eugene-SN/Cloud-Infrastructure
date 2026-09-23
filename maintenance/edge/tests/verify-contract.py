@@ -15,27 +15,27 @@ actions = renderer["build_actions"](manifest, templates, enablement)
 
 rows = maintenance["rows"]
 manual = {u["id"] for u in manifest["units"]}
-monitor = {u["id"] for u in manifest["monitor_only"]}
+native = {u["id"] for u in manifest["native_auto"]}
 index = {r["component"]: r for r in rows}
 
 assert maintenance["schema"] == 3
-assert maintenance["target_model"] == "update_units_v4"
+assert maintenance["target_model"] == "update_units_v5"
 assert manifest["schema"] == 2
 assert manifest["ownership_mode"] == "native_first_hybrid"
+assert "monitor_only" not in manifest
 assert len(manual) == 18
-assert monitor == {"HERMES", "CODEX"}
-assert set(index) == manual | monitor
+assert native == {"HERMES", "CODEX", "UBUNTU_SECURITY"}
+assert set(index) == manual
+assert "HERMES" not in index
+assert "CODEX" not in index
+assert maintenance["summary"]["TOTAL"] == 18
 assert maintenance["summary"]["ACTIONABLE_TARGETS"] == 18
-assert maintenance["summary"]["MONITOR_ONLY_TARGETS"] == 2
+assert "MONITOR_ONLY_TARGETS" not in maintenance["summary"]
 assert maintenance["summary"]["APT_MANAGED_COMPONENTS"] == 8
 
 for target in manual:
     assert index[target]["actionable"] is True
-
-for target in monitor:
-    assert index[target]["actionable"] is False
-    assert index[target]["update_owner"] == "native_auto"
-    assert index[target]["managed_by"] == "native_auto"
+    assert index[target]["update_owner"] == "maintenance_manual"
 
 docker = [r for r in rows if r["type"] == "DOCKER"]
 assert len(docker) == 9
@@ -64,19 +64,19 @@ assert enablement["master"] is True
 assert set(enablement["enabled"]) == manual
 assert all(enablement["enabled"].values())
 
-assert actions["schema"] == 9
-assert actions["target_model"] == "update_units_v4"
-assert actions["execution_mode"] == "native_first_hybrid"
+assert actions["schema"] == 10
+assert actions["target_model"] == "update_units_v5"
+assert actions["execution_mode"] == "manual_only"
+assert actions["auto_update"] is False
 assert actions["master_template_id"] == 18
-assert set(actions["components"]) == manual | monitor
+assert set(actions["components"]) == manual
+assert "HERMES" not in actions["components"]
+assert "CODEX" not in actions["components"]
 
 for target in manual:
     assert actions["components"][target]["template_id"] is not None
     assert actions["components"][target]["driver_state"] == "executable"
-
-for target in monitor:
-    assert actions["components"][target]["template_id"] is None
-    assert actions["components"][target]["driver_state"] == "native_auto"
+    assert actions["components"][target]["update_owner"] == "maintenance_manual"
 
 assert not (root / "config/apt-periodic-manual-only.conf").exists()
 assert not (root / "playbooks/updates/hermes.yml").exists()
