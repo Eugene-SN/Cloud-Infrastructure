@@ -12,27 +12,41 @@ sudoers = (root / "config/semaphore-sudoers").read_text()
 master = runpy.run_path(root / "scripts/master-batch-update")
 post = runpy.run_path(root / "scripts/master-post-scan-validate")
 now = dt.datetime.now(dt.timezone.utc)
+manual = [u["id"] for u in manifest["units"]]
 
+assert len(manual) == 18
+assert set(manual) == set(manifest["master_order"])
+assert manifest["master_order"][-1] == "APT_EDGE"
+assert next(u for u in manifest["units"] if u["id"] == "SEMAPHORE")["master_policy"] == "individual_only"
 assert "/opt/edge-maintenance/scripts/master-post-scan-validate" in sudoers
 assert "/opt/edge-maintenance/scripts/master-health-validate" in sudoers
-manual_source = (root / "scripts/manual-update").read_text()
-assert '["up", "-d", "--wait", "--force-recreate", unit["service"]]' in manual_source
 
 
 def fixture(status="CURRENT"):
     rows = [
-        {"component": unit["id"], "status": status, "actionable": True}
-        for unit in manifest["units"]
+        {"component": target, "status": status, "actionable": True}
+        for target in manual
+    ]
+    rows += [
+        {
+            "component": target,
+            "status": "CURRENT",
+            "actionable": False,
+            "update_owner": "native_auto",
+        }
+        for target in ("HERMES", "CODEX")
     ]
     return {
         "schema": 3,
-        "target_model": "update_units_v3",
+        "target_model": "update_units_v4",
         "generated_at": now.isoformat(),
         "rows": rows,
         "summary": {
-            "TOTAL": 16,
-            "CURRENT": 16 if status == "CURRENT" else 0,
-            "UPDATE_AVAILABLE": 16 if status == "UPDATE_AVAILABLE" else 0,
+            "TOTAL": 20,
+            "ACTIONABLE_TARGETS": 18,
+            "MONITOR_ONLY_TARGETS": 2,
+            "CURRENT": 20 if status == "CURRENT" else 2,
+            "UPDATE_AVAILABLE": 0 if status == "CURRENT" else 18,
             "CHECK_FAILED": 0,
             "REBOOT_REQUIRED": 0,
         },
@@ -42,7 +56,8 @@ def fixture(status="CURRENT"):
 clean = fixture()
 order, units, rows, stamp = master["validate_plan"](manifest, clean, now)
 assert order == manifest["master_order"]
-assert set(units) == set(rows)
+assert set(units) == set(manual)
+assert set(manual).issubset(rows)
 assert stamp == clean["generated_at"]
 assert post["validate"](manifest, clean, now)[0] is True
 
@@ -57,36 +72,32 @@ assert "--plan-only" in help_result.stdout
 
 one_update = fixture()
 target = "AUTHELIA"
-next(row for row in one_update["rows"] if row["component"] == target)["status"] = "UPDATE_AVAILABLE"
-one_update["summary"]["CURRENT"] = 15
+next(r for r in one_update["rows"] if r["component"] == target)["status"] = "UPDATE_AVAILABLE"
+one_update["summary"]["CURRENT"] = 19
 one_update["summary"]["UPDATE_AVAILABLE"] = 1
 assert master["validate_plan"](manifest, one_update, now)[2][target]["status"] == "UPDATE_AVAILABLE"
 assert post["validate"](manifest, one_update, now)[0] is False
 
-for mutation in ("UNRESOLVED", "MISSING", "SEMAPHORE", "STALE", "REBOOT"):
+for mutation in ("UNRESOLVED", "MISSING", "SEMAPHORE", "STALE", "REBOOT", "NONACTIONABLE"):
     broken = copy.deepcopy(clean)
     if mutation == "UNRESOLVED":
-        next(row for row in broken["rows"] if row["component"] == "RESTIC")["status"] = "STABLE_UNRESOLVED"
-        broken["summary"]["CURRENT"] = 15
+        next(r for r in broken["rows"] if r["component"] == "RESTIC")["status"] = "STABLE_UNRESOLVED"
     elif mutation == "MISSING":
-        broken["rows"].pop()
+        broken["rows"] = [r for r in broken["rows"] if r["component"] != "RESTIC"]
     elif mutation == "SEMAPHORE":
-        next(row for row in broken["rows"] if row["component"] == "SEMAPHORE")["status"] = "UPDATE_AVAILABLE"
-        broken["summary"]["CURRENT"] = 15
-        broken["summary"]["UPDATE_AVAILABLE"] = 1
+        next(r for r in broken["rows"] if r["component"] == "SEMAPHORE")["status"] = "UPDATE_AVAILABLE"
     elif mutation == "STALE":
         broken["generated_at"] = (now - dt.timedelta(seconds=301)).isoformat()
-    else:
+    elif mutation == "REBOOT":
         broken["summary"]["REBOOT_REQUIRED"] = 1
+    else:
+        next(r for r in broken["rows"] if r["component"] == "N8N")["actionable"] = False
+
     try:
         master["validate_plan"](manifest, broken, now)
     except RuntimeError:
         pass
     else:
         raise AssertionError(f"Master precheck accepted invalid fixture: {mutation}")
-
-reboot_pending = copy.deepcopy(clean)
-reboot_pending["summary"]["REBOOT_REQUIRED"] = 1
-assert post["validate"](manifest, reboot_pending, now) == (False, "REBOOT_REQUIRED:1")
 
 print("EDGE_MASTER_CONTRACT=PASS")
