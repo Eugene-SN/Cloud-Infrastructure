@@ -2276,3 +2276,34 @@ Mixing discovery and deployment of such omitted capabilities back into Stage 10 
 **Acceptance marker:** `CLOUDCLI_RETIREMENT_FINAL_ACCEPTANCE=PASS`.
 
 **Supersedes:** all prior current-runtime decisions that retain CloudCLI as the manual/remote cloud-AI workspace or as an actionable Maintenance target. Historical acceptance records remain historically valid.
+
+
+## 2026-09-23T21:36:00+03:00 — T3 persistent remote workspace transport and compatibility version
+
+**Status:** ACCEPTED
+
+### Context / alternatives
+
+T3 was required as a persistent 24/7 remote workspace on `edge`, independent of a Desktop-managed SSH lifecycle, while preserving browser access and mobile clients. Stable `0.0.42` reproduced persisted-thread decode failures and an Antigravity local-health failure. The installed nightly `0.0.43-nightly.20260923.2150` restored both user-visible functions. T3 Desktop SSH reuse was verified during transition, then the SSH profile and stale server-side SSH launcher state were retired after T3 Connect acceptance.
+
+### Decision
+
+- use official `t3code.service` as the sole persistent T3 server owner;
+- keep `0.0.43-nightly.20260923.2150` as a temporary compatibility pin;
+- use T3 Connect as the accepted Mac/iPad client transport;
+- use managed `cloudflared 2026.5.2` relay owned by T3;
+- publish browser access at `code.escloud.us` through the existing ingress to `127.0.0.1:3773`;
+- keep `publishAgentActivity=false`;
+- retire the T3 Desktop SSH environment/profile and remove stale `~/.t3/ssh-launch` artifacts after Connect acceptance;
+- preserve ordinary administrative SSH access to `edge`;
+- do not place T3 into the Hermes/n8n executor path.
+
+### Constraints
+
+- do not downgrade to stable `0.0.42` without resolving the demonstrated regressions;
+- re-evaluate the compatibility pin when a later stable T3 release is available;
+- retain exactly one service-owned `t3 serve` runtime;
+- relay recovery after reboot may be delayed by startup reconciliation but must complete automatically without manual restart/relink.
+
+**Supersedes:** prior transitional use of T3 Desktop SSH as the client transport for this environment.
+
