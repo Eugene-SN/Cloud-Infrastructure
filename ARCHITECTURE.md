@@ -94,7 +94,7 @@ Production anchors:
 
 - Authelia;
 - n8n;
-- CloudCLI;
+- CloudCLI — retired 2026-09-23;
 - Codex CLI;
 - Antigravity CLI;
 - Stalwart;
@@ -106,13 +106,13 @@ Do not reopen them without concrete incompatibility or changed requirement.
 
 - **n8n** — deterministic automation/orchestration;
 - **Hermes** — persistent cloud-side agentic reasoning, tools, supervision and delegation;
-- **CloudCLI** — manual/remote Cloud AI workspace;
+- **CloudCLI** — retired; no longer part of the current runtime architecture;
 - **Codex CLI** — OpenAI coding/agent executor;
 - **Antigravity CLI / `agy`** — Google cloud-agent/coding executor;
 - **OpenClaw** — Home/PAI local personal-agent role;
 - **vLLM on `ai-node`** — local inference backend for Hermes after private connectivity exists.
 
-Hermes invokes Codex/Antigravity directly; CloudCLI is not a proxy between them.
+Hermes invokes Codex/Antigravity directly. CloudCLI is retired and is not part of the execution path.
 
 ### Accepted Stage 4B executor trust and invocation model
 
@@ -158,7 +158,7 @@ Architectural role:
 - Hermes remains the persistent agent runtime/reasoning/delegation layer;
 - n8n remains deterministic orchestration;
 - Codex/Antigravity remain specialist executors;
-- CloudCLI remains manual cloud-AI workspace;
+- CloudCLI is retired; `code.escloud.us` is reserved for the planned T3 WebUI;
 - Stalwart remains the existing mail subsystem.
 
 ### Native-only Mattermost integration invariant
