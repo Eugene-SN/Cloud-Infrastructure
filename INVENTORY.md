@@ -150,7 +150,7 @@ Accepted placement/integration direction:
 - host-native under `core` by default;
 - n8n remains deterministic workflow/orchestration plane;
 - Hermes remains agentic reasoning/delegation plane;
-- CloudCLI/Codex/Antigravity remain manually usable tools/executors;
+- Codex/Antigravity remain manually usable specialist tools/executors; CloudCLI is retired;
 - Stage 4 verifies `n8n -> Hermes -> Codex/AGY -> Hermes -> n8n`;
 - Stage 4 also verifies real `Hermes -> vLLM on ai-node` through the Stage 3 private fabric;
 - `hermes.escloud.us` is the accepted Dashboard/Desktop endpoint using native self-hosted OIDC; the backend remains loopback-only.
@@ -423,7 +423,7 @@ Fresh Stage 10 runtime reconciliation confirmed the following current mutable ve
 - Authelia `4.39.28`;
 - Stalwart `0.16.23`;
 - Codex CLI `0.155.1`;
-- CloudCLI `1.37.3`;
+- CloudCLI `1.37.3` at the historical Stage 10 checkpoint; subsequently retired on 2026-09-23;
 - Antigravity CLI `1.2.7`;
 - Hermes `0.21.3`;
 - Mattermost `11.11.0`;
