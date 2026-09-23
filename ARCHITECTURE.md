@@ -621,3 +621,20 @@ Accepted architecture:
 - no Home VM100/MikroTik/CT300 mutation is part of Stage 12;
 - Syncthing is not used for project access because replication/conflict semantics are not desired;
 - Nextcloud External Storage is not used for `/home/core/projects` because project/workspace data must remain outside the cloud-drive dataset.
+
+## Stage 13 — Backrest WebUI Ingress
+
+Accepted architecture:
+
+- `backup.escloud.us` publishes the existing Backrest WebUI; it does not introduce a new backup engine or replacement product;
+- Backrest remains host-native and bound only to `127.0.0.1:9898`;
+- public path is `backup.escloud.us:443 -> Xray TLS -> nginx 127.0.0.1:8080 -> Authelia -> Backrest 127.0.0.1:9898`;
+- TCP/80 redirects to HTTPS;
+- reuse the existing shared `escloud.us` certificate, public DNS and Authelia `one_factor` policy for `backup.escloud.us`;
+- no direct public Backrest listener and no dedicated UFW opening are permitted;
+- nginx preserves the client `Authorization` header so Backrest-native bearer-token behavior continues to work behind the outer Authelia gate;
+- reverse proxying supports Backrest ConnectRPC/streaming behavior without response buffering and with long-lived request timeouts;
+- Stage 13 does not change Backrest/Restic repositories, plans/schedules, retention, restore semantics or service lifecycle.
+
+Final acceptance: `STAGE_13_FINAL_ACCEPTANCE_2026-09-23.md`.
+
