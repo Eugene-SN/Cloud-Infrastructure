@@ -35,6 +35,7 @@ NATIVE_COMPONENTS = [
     ("HYSTERIA2", "Hysteria2"),
     ("BACKREST", "Backrest"),
     ("RESTIC", "Restic"),
+    ("RCLONE", "rclone"),
     ("SEMAPHORE", "Semaphore"),
 ]
 
@@ -45,6 +46,9 @@ DOCKER_COMPONENTS = [
     ("POSTGRESQL", "PostgreSQL"),
     ("STALWART", "Stalwart"),
     ("BULWARK", "Bulwark"),
+    ("NEXTCLOUD", "Nextcloud"),
+    ("NEXTCLOUD_POSTGRESQL", "Nextcloud PostgreSQL"),
+    ("NEXTCLOUD_REDIS", "Nextcloud Redis"),
 ]
 
 CLI_COMPONENTS = [
@@ -53,6 +57,11 @@ CLI_COMPONENTS = [
     ("CODEX", "Codex CLI"),
     ("ANTIGRAVITY", "Antigravity CLI"),
 ]
+
+MONITOR_ONLY_COMPONENTS = {
+    "HERMES",
+    "CODEX",
+}
 
 
 def apt_probe():
@@ -421,6 +430,17 @@ def independent_target(
         "actionable": True,
     }
 
+    if component in MONITOR_ONLY_COMPONENTS:
+        result.update({
+            "managed_by": "native_auto",
+            "update_owner": "native_auto",
+            "action_key": None,
+            "update_target": None,
+            "actionable": False,
+        })
+    else:
+        result["update_owner"] = "maintenance_manual"
+
     if target_type == "DOCKER":
         result.update({
             "application_version": str(source.get("APPLICATION_VERSION", "—")) if source else "—",
@@ -561,7 +581,17 @@ summary = {
     "TOTAL":
         len(rows),
     "ACTIONABLE_TARGETS":
-        len(rows),
+        sum(
+            1
+            for row in rows
+            if row.get("actionable") is True
+        ),
+    "MONITOR_ONLY_TARGETS":
+        sum(
+            1
+            for row in rows
+            if row.get("actionable") is False
+        ),
     "MONITORED_COMPONENTS":
         len(status_rows),
     "APT_MANAGED_COMPONENTS":
@@ -637,7 +667,7 @@ payload = {
     "schema":
         3,
     "target_model":
-        "update_units_v3",
+        "update_units_v4",
     "generated_at":
         datetime.datetime.now(
             datetime.timezone.utc
@@ -694,7 +724,7 @@ finally:
 
 
 print(
-    "TARGET_MODEL=update_units_v3"
+    "TARGET_MODEL=update_units_v4"
 )
 
 print(
