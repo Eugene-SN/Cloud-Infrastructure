@@ -681,9 +681,10 @@ Final accepted result:
 - Semaphore mapping remained non-regressed and contains no Hermes/Codex templates;
 - final corrective acceptance completed with RC=0;
 - real execution acceptance completed with RC=0 (Task 26), 18/18 manual targets updated to CURRENT, post-scan gate PASS, health gate PASS.
+- final current-state audit passed against the post-Task-26 cleanup/rotation implementation; deployed runtime matches current `main`, all 18 manual targets remain CURRENT, zero update/check failures.
 
-Final marker: `STAGE07_2_CORRECTIVE_MIGRATION=PASS`, `STAGE07_2_FINAL_MASTER_BATCH_EXECUTION=PASS`.
+Final markers: `STAGE07_2_CORRECTIVE_MIGRATION=PASS`, `STAGE07_2_FINAL_MASTER_BATCH_EXECUTION=PASS`, `STAGE07_2_CURRENT_STATE_AUDIT=PASS`.
 
-Authoritative record: `STAGE_07_2_FINAL_NATIVE_UPDATE_OWNERSHIP_ACCEPTANCE_2026-09-23.md`.
+Authoritative record: `STAGE_07_2_FINAL_CURRENT_STATE_ACCEPTANCE_2026-09-23.md`.
 
 The earlier v4 acceptance record is retained only as superseded historical evidence.
