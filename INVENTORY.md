@@ -112,9 +112,9 @@ Final record: `STAGE_03_ACCEPTANCE_2026-09-18.md`.
 - `docs.escloud.us` — DEFERRED UNTIL CONTENT READY: future WenTian Product Guide/Datasheet publishing site for EN/RU translated corpus;
 - `hermes.escloud.us` — LIVE accepted Hermes Dashboard/Remote Gateway; native self-hosted OIDC through Authelia; backend loopback-only;
 - `chat.escloud.us` — LIVE Mattermost human endpoint; core runtime and public nginx ingress accepted; native Mattermost authentication without Authelia;
-- `cloud.escloud.us` — STAGE 12 PLANNED: Nextcloud personal cloud-drive; accepted portable user dataset `/srv/cloud/files` with Nextcloud-specific state under `/srv/nextcloud`;
+- `cloud.escloud.us` — LIVE / ACCEPTED: Nextcloud personal cloud-drive; user-visible files under `/srv/cloud`, Nextcloud-specific state under `/srv/nextcloud`, backend `127.0.0.1:18080`;
 - `sync.escloud.us` — RETIRED: legacy public Syncthing UI role; current Syncthing remains private Knowledge replication and Stage 12 Nextcloud owns end-user cloud sync;
-- `go.escloud.us` — retired.
+- `go.escloud.us` — LIVE / ACCEPTED Stage 12 WebDAV endpoint for exactly `/home/core/projects/`; Xray TLS -> nginx -> rclone `127.0.0.1:18081`; protocol-native Basic auth over HTTPS.
 
 ### Private `.lan`
 
@@ -457,18 +457,27 @@ Preserved intentionally:
 Measured root filesystem reclaim: `1,900,048,384` bytes (`1.77 GiB`). Post-clean root usage: approximately `22 GiB used / 133 GiB available / 14%`.
 
 
-## Stage 11 reconciled future work
+## Stage 12 filesystem access — LIVE / ACCEPTED
 
-Authoritative record: `STAGE_11_RECONCILED_FUTURE_WORK_2026-09-22.md`.
+Authoritative record: `STAGE_12_FINAL_ACCEPTANCE_2026-09-23.md`.
 
-### Stage 12 planned filesystem access
+### Cloud drive
 
-- Nextcloud personal cloud-drive at `cloud.escloud.us`;
-- canonical portable cloud user dataset `/srv/cloud/files`;
-- Nextcloud-specific state under `/srv/nextcloud`;
-- private SMB access to explicitly selected project/workspace POSIX directories;
-- SMB only through trusted/private connectivity, never public TCP/445;
-- `/srv/cloud/files` is not automatically exported through SMB.
+- `cloud.escloud.us`: live Nextcloud personal cloud drive;
+- user-visible portable file tree: `/srv/cloud`;
+- Nextcloud-specific persistent state: `/srv/nextcloud`;
+- backend: `127.0.0.1:18080`.
+
+### Direct project/workspace access
+
+- `go.escloud.us`: live WebDAV endpoint;
+- published tree: exactly `/home/core/projects/`;
+- implementation: rclone `1.75.1`, `projects-webdav.service` under `core`;
+- backend: `127.0.0.1:18081` only;
+- public path: Xray TLS -> nginx -> rclone;
+- authentication: HTTP Basic over HTTPS;
+- Samba/SMB Stage 12 implementation is rejected and fully removed;
+- no Home VM100/MikroTik/CT300 mutation is required.
 
 ### Other future tasks
 
@@ -477,5 +486,4 @@ Authoritative record: `STAGE_11_RECONCILED_FUTURE_WORK_2026-09-22.md`.
 
 ### Retired namespace
 
-- `go.escloud.us`: retired n8n legacy hostname; stale external DNS is operator cleanup;
-- `sync.escloud.us`: retired legacy public Syncthing hostname; stale runtime/TLS/DNS artifacts are Stage 11 cleanup targets.
+- `sync.escloud.us`: retired legacy public Syncthing hostname.
