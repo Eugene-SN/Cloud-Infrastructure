@@ -16,7 +16,6 @@
     "NEXTCLOUD": true,
     "NEXTCLOUD_POSTGRESQL": true,
     "NEXTCLOUD_REDIS": true,
-    "CLOUDCLI": true,
     "ANTIGRAVITY": true,
     "SEMAPHORE": true,
     "APT_EDGE": true
