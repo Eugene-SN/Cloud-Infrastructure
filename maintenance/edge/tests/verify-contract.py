@@ -52,7 +52,12 @@ required = {
 }
 assert all(required <= set(row) for row in docker)
 assert next(r for r in docker if r["component"] == "BULWARK")["image_track"] == "latest"
-assert next(r for r in docker if r["component"] == "NEXTCLOUD")["image_track"] == "stable-apache"
+nextcloud = next(r for r in docker if r["component"] == "NEXTCLOUD")
+nextcloud_available = nextcloud["available_application_version"]
+assert nextcloud_available.count(".") == 2
+assert nextcloud["image_track"] == nextcloud_available.split(".", 1)[0] + "-apache"
+assert next(u for u in manifest["units"] if u["id"] == "NEXTCLOUD")["driver"] == "nextcloud_compose"
+assert (root / "scripts/update-nextcloud").is_file()
 
 assert templates["schema"] == 2
 assert set(templates["components"]) == manual
@@ -68,6 +73,8 @@ assert all(enablement["enabled"].values())
 
 assert 'enablement.get("schema") != 1' not in manual_update_source
 assert manual_update_source.count('enablement.get("schema") != 2') == 2
+assert 'driver in ("compose", "nextcloud_compose")' in manual_update_source
+assert 'elif driver == "nextcloud_compose":' in manual_update_source
 assert "--remove-orphans" in manual_update_source
 assert '"docker", "rmi"' in manual_update_source
 assert '"image", "prune"' in manual_update_source
