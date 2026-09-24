@@ -41,9 +41,9 @@ Comprehensive UX, technical, and visual modernization of `https://app.escloud.us
 
 ## Accepted Deployed File Hashes
 
-- `/var/www/app.escloud.us/index.html`: `1de1db210614ab6fc1547caef0ad7e7c1689b8478ed8d7b6f1142b173af5c8ce`
+- `/var/www/app.escloud.us/index.html`: `1ff6c73a9f374e10685dcb25f1429e1a3c02a1bc7e23b3340f6627a0aaf26d44`
 - `/var/www/app.escloud.us/app.css`: `3e8336f79c64999a9074e33eb4fd2ca2eeadce7d5fdca69a88284b682ffbc2e4`
-- `/var/www/app.escloud.us/app.js`: `9394d9b50e12604c78f3b52f61b45872f132a54e71c459ab508655e632cf67ee`
+- `/var/www/app.escloud.us/app.js`: `86d26e2bd0c17ef7a0cf3be2eb3d5993ed2f24fc2347e4eb7d63deb8b2c003f8`
 - `/var/www/app.escloud.us/icons/hermes.svg`: `951b45c5ce168af1bedd2bed0a543de74f4e42acf03522e1e52db56d040f319e`
 - `/var/www/app.escloud.us/icons/vscode.svg`: `98d2dc1ad1d82b3684880e174a09a5c35737977dfdbe97dbe040ef2d55e10e75`
 - `/var/www/app.escloud.us/icons/n8n.svg`: `45b282108f60b12df6cba68e3fa633d56970eab4d2ac6b1eef43a60b5ea29af5`
