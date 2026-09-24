@@ -382,7 +382,8 @@ try:
     # For CURRENT images, runtime version already describes
     # exactly the same top-level manifest.
     if (
-        local_digest == digest
+        component != "NEXTCLOUD"
+        and local_digest == digest
         and installed
         and installed not in (
             "-",
@@ -490,73 +491,85 @@ try:
             )
 
     elif component == "NEXTCLOUD":
-        series_values = []
-
-        for alias in aliases:
-            match = re.fullmatch(
-                r"([0-9]+\.[0-9]+)-apache",
-                alias,
-            )
-
-            if match:
-                series_values.append(
-                    match.group(1)
-                )
-
-        if not series_values:
-            raise ValueError(
-                "Nextcloud series unresolved"
-            )
-
-        series = max(
-            series_values,
-            key=semver_key,
-        )
-
-        major = series.split(
-            ".",
-            1,
-        )[0]
-
         versions_data = get_json(
             "https://raw.githubusercontent.com/"
             "nextcloud/docker/master/versions.json"
         )
 
-        candidate = str(
-            (
-                versions_data.get(major)
-                or {}
-            ).get("version")
-            or ""
-        ).strip()
+        releases = []
 
-        if not re.fullmatch(
-            re.escape(series)
-            + r"\.[0-9]+",
-            candidate,
-        ):
-            raise ValueError(
-                "Nextcloud upstream version unresolved"
+        for major_key, release in versions_data.items():
+            if not re.fullmatch(
+                r"[0-9]+",
+                str(major_key),
+            ):
+                continue
+
+            candidate_value = str(
+                (release or {}).get("version")
+                or ""
+            ).strip()
+
+            if not re.fullmatch(
+                r"[0-9]+\.[0-9]+\.[0-9]+",
+                candidate_value,
+            ):
+                continue
+
+            releases.append(
+                (
+                    int(major_key),
+                    candidate_value,
+                )
             )
 
-        exact = get_json(
+        if not releases:
+            raise ValueError(
+                "Nextcloud stable releases unresolved"
+            )
+
+        major_number, candidate = max(
+            releases,
+            key=lambda item: item[0],
+        )
+
+        major = str(major_number)
+        target_tag = major + "-apache"
+
+        target_floating = get_json(
             base
             + "/"
             + urllib.parse.quote(
-                candidate + "-apache",
+                target_tag,
                 safe="",
             )
         )
 
+        dockerfile = get_text(
+            "https://raw.githubusercontent.com/"
+            "nextcloud/docker/master/"
+            + major
+            + "/apache/Dockerfile"
+        )
+
+        match = re.search(
+            r"^ENV[ \t]+NEXTCLOUD_VERSION[ \t]+([^ \t\r\n]+)",
+            dockerfile,
+            re.MULTILINE,
+        )
+
         if (
-            amd64_digest(floating)
-            != amd64_digest(exact)
+            not match
+            or match.group(1).strip()
+            != candidate
         ):
             raise ValueError(
-                "Nextcloud amd64 binding mismatch"
+                "Nextcloud Docker image version binding mismatch"
             )
 
+        digest = top_digest(
+            target_floating
+        )
         version = candidate
 
     elif component == "NEXTCLOUD_REDIS":
@@ -714,6 +727,10 @@ emit_docker_component() {
     test -n "$installed" && test "$installed" != "<no value>" || installed="-"
     test -n "$remote_version" || remote_version="-"
 
+    if test "$component" = "NEXTCLOUD" && test "$remote_version" != "-"; then
+        track="${remote_version%%.*}-apache"
+    fi
+
     if test -z "$local_digest" || test -z "$remote_digest"; then
         status="STABLE_UNRESOLVED"
         update_reason="CHECK_FAILED"
@@ -733,8 +750,13 @@ emit_docker_component() {
         fi
     fi
 
+    source="DOCKER_RUNTIME_AND_REGISTRY"
+    if test "$component" = "NEXTCLOUD"; then
+        source="NEXTCLOUD_UPSTREAM_STABLE_AND_OFFICIAL_DOCKER"
+    fi
+
     printf '%s\n' \
-      "VERSION|SCOPE=EDGE|COMPONENT=${component}|INSTALLED=$(normalize "$installed")|STABLE=$(normalize "$remote_version")|APPLICATION_VERSION=$(normalize "$installed")|AVAILABLE_VERSION=$(normalize "$remote_version")|IMAGE_REPOSITORY=${repository}|IMAGE_TAG=${fallback}|RUNNING_DIGEST=${local_digest:--}|REMOTE_DIGEST=${remote_digest:--}|UPDATE_REASON=${update_reason}|STATUS=${status}|SOURCE=DOCKER_RUNTIME_AND_REGISTRY"
+      "VERSION|SCOPE=EDGE|COMPONENT=${component}|INSTALLED=$(normalize "$installed")|STABLE=$(normalize "$remote_version")|APPLICATION_VERSION=$(normalize "$installed")|AVAILABLE_VERSION=$(normalize "$remote_version")|IMAGE_REPOSITORY=${repository}|IMAGE_TAG=${track}|RUNNING_DIGEST=${local_digest:--}|REMOTE_DIGEST=${remote_digest:--}|UPDATE_REASON=${update_reason}|STATUS=${status}|SOURCE=${source}"
 }
 
 echo "VERSION_MONITOR_SCHEMA=3"
