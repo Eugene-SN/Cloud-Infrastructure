@@ -126,12 +126,16 @@ def normalized_image_reference(reference):
 
 def preflight(unit):
     driver = unit["driver"]
-    if driver == "compose":
+    if driver in ("compose", "nextcloud_compose"):
         directory = pathlib.Path(unit["directory"])
         for item in unit["files"]:
             if not (directory / item).is_file():
                 raise RuntimeError(f"missing compose file: {directory / item}")
         run(["docker", "compose", *sum((["-f", f] for f in unit["files"]), []), "config", "--quiet"], cwd=directory)
+        if driver == "nextcloud_compose":
+            helper = pathlib.Path("/opt/edge-maintenance/scripts/update-nextcloud")
+            if not helper.is_file():
+                raise RuntimeError(f"missing Nextcloud update helper: {helper}")
     elif driver == "user_cli":
         if not pathlib.Path(unit["binary"]).is_file():
             raise RuntimeError(f"missing CLI: {unit['binary']}")
@@ -218,6 +222,20 @@ def execute(unit, status_row):
             run(["systemd-run", "--wait", "--collect", "--unit=edge-maintenance-semaphore-update", *command])
         else:
             run(command)
+    elif driver == "nextcloud_compose":
+        target = str(
+            status_row.get("available_application_version")
+            or status_row.get("available")
+            or ""
+        ).strip()
+        if not target:
+            raise RuntimeError("fresh Nextcloud target version is incomplete")
+        run([
+            sys.executable,
+            "/opt/edge-maintenance/scripts/update-nextcloud",
+            "--target-version",
+            target,
+        ])
     elif driver == "compose":
         directory = pathlib.Path(unit["directory"])
         compose = ["docker", "compose", *sum((["-f", f] for f in unit["files"]), [])]
