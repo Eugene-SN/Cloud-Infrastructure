@@ -122,6 +122,16 @@ For architecture choices involving authentication, reverse proxies, OAuth/OIDC, 
 
 ## Stable project rules
 
+### Operator decision authority invariant
+
+- The operator decides **whether and when** to update, migrate, enable, disable, adopt, defer, or retain any supported service/version/capability.
+- Never invent project policy, restrictions, ceilings, holds, pins, channel/branch/major-version limits, staged-rollout requirements, compatibility gates, risk controls, security layers, or other constraints that the operator did not explicitly request or accept.
+- Do not convert an upstream procedural requirement into an operator policy. If upstream requires intermediate steps (for example sequential major-version upgrades), follow those steps only as the execution mechanism while still exposing and targeting the latest upstream stable release selected by the operator.
+- Never hide, suppress, downgrade, or relabel an available upstream-supported stable update/capability merely because a more conservative track, alias, or operating practice exists.
+- When upstream offers multiple supported choices, present the relevant facts and let the operator choose; do not make the product/architecture decision on the operator's behalf.
+- A genuine hard technical/upstream constraint may be enforced only when it is verified from authoritative evidence and must be described as a mechanism constraint, not as a user policy.
+
+
 - Treat `nl-core-vds` as historical/as-is identity and `edge` as the current live logical node.
 - Never rewrite historical baseline/audit artifacts to use target-state naming.
 - Cloud Infrastructure complements Home Infrastructure and PAI; do not duplicate them merely because a function can run on a VPS.
