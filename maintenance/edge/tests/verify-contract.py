@@ -69,6 +69,7 @@ assert templates["master_template_id"] == 18
 
 assert enablement["schema"] == 2
 assert enablement["master"] is True
+assert "CLOUDCLI" not in enablement["enabled"]
 assert set(enablement["enabled"]) == manual
 assert all(enablement["enabled"].values())
 
