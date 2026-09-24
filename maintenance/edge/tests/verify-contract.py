@@ -76,6 +76,7 @@ assert 'enablement.get("schema") != 1' not in manual_update_source
 assert manual_update_source.count('enablement.get("schema") != 2') == 2
 assert 'driver in ("compose", "nextcloud_compose")' in manual_update_source
 assert 'elif driver == "nextcloud_compose":' in manual_update_source
+assert actions["components"]["NEXTCLOUD"]["managed_by"] == "docker"
 assert "--remove-orphans" in manual_update_source
 assert '"docker", "rmi"' in manual_update_source
 assert '"image", "prune"' in manual_update_source
