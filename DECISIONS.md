@@ -2307,3 +2307,31 @@ T3 was required as a persistent 24/7 remote workspace on `edge`, independent of 
 
 **Supersedes:** prior transitional use of T3 Desktop SSH as the client transport for this environment.
 
+
+
+---
+
+## 2026-09-24T20:58:09+03:00 — Edge Maintenance version-discovery source model
+
+**Status:** ACCEPTED
+
+**Context:** The previous remote-version implementation could perpetuate stale Docker remote state by reading it from the rendered status snapshot and then re-rendering that snapshot with a fresh timestamp. Docker Hub Registry V2 discovery also failed under the unauthenticated pull-rate limit, and GitHub REST latest-release discovery could independently exhaust the anonymous GitHub API quota. The correction was required to preserve accurate manual-update decisions without adding credentials, a new cache service, or another component.
+
+**Decision:**
+- remove persistent cross-run remote Docker version/digest cache and all unbounded stale fallback;
+- use the Docker Hub Tags API for Docker Hub floating-tag discovery, including n8n via the `n8nio/n8n` repository;
+- resolve semantic aliases from same-digest tags where available;
+- for Nextcloud and Redis, obtain exact patch versions from official upstream release sources and bind the exact tag to the floating image through the Linux/amd64 descriptor digest;
+- keep Bulwark on GHCR registry metadata;
+- replace GitHub REST latest-release discovery with the ordinary `github.com/<owner>/<repo>/releases/latest` redirect;
+- retain fail-closed `STABLE_UNRESOLVED` / `CHECK_FAILED` behavior when current upstream state cannot be resolved;
+- remove `EDGE_MAINTENANCE_FORCE_REGISTRY_COMPONENT` because a forced per-component registry refresh is no longer part of the current model;
+- retain the existing manual-only Maintenance execution policy and native-first ownership model unchanged.
+
+**Acceptance:** runtime candidate and production refresh passed while Docker Hub Registry V2 returned 429 and GitHub REST returned 403; accepted collector blob is `19397985821a1204cde4333b40775bc0a4cef306`. Canonical commit `46c3a3a9e8eb650eb4b1b050320d4df128eed49e` contains the byte-identical collector. Fresh Semaphore task 33 then updated its checkout to that commit and completed with 24 status rows, zero unresolved rows and zero failed checks.
+
+**Acceptance marker:** `VERSION_DISCOVERY_V2_FINAL_ACCEPTANCE=PASS`.
+
+**Evidence:** `VERSION_DISCOVERY_V2_FINAL_ACCEPTANCE_2026-09-24.md`.
+
+**Supersedes:** only prior current-state assumptions that persistent remote Docker cache, Docker Hub Registry V2 latest discovery, GitHub REST latest-release discovery, or `EDGE_MAINTENANCE_FORCE_REGISTRY_COMPONENT` are required by the current Maintenance implementation. Non-conflicting Stage 7 / Stage 07.2 decisions remain applicable.
