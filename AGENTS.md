@@ -81,6 +81,8 @@ Every material claim about runtime state, paths, names, versions, topology, owne
 
 Do not silently fill gaps from analogy, memory, previous deployments, naming conventions, best practices, or what would be convenient. If a proposed mutation depends materially on an inference or assumption, stop before mutation and obtain only the minimum read-only evidence needed to convert it into a confirmed fact or explicitly accepted design choice.
 
+**Mutation boundary invariant:** never generate or execute a mutation based on an unverified assumption about runtime state, filesystem paths, deployment layout, ownership, service identity, versions, configuration, command availability, or integration behavior. If any fact required by the next mutation is uncertain, perform the smallest sufficient read-only audit first. Do not substitute a plausible default, historical pattern, repository layout, or remembered state for that audit. Assumptions may be discussed explicitly during design, but they are not valid inputs to mutation commands until verified or explicitly chosen by the operator as a new design decision.
+
 When sources disagree, report drift/uncertainty explicitly. Do not choose the preferred-looking value and present it as fact.
 
 ## Mandatory research-before-change discipline
