@@ -437,7 +437,8 @@ def build_steps(installed, target, releases):
 
 def apply_step(major, expected_version):
     old_reference = effective_nextcloud_image()
-    new_reference = f"nextcloud:{major}-apache"
+    parts = expected_version.split(".")
+    new_reference = f"nextcloud:{parts[0]}.{parts[1]}-apache"
 
     original = None
     compose_changed = False
