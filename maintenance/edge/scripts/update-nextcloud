@@ -1,0 +1,618 @@
+#!/usr/bin/env python3
+"""Operator-triggered Nextcloud Docker update using the upstream Compose lifecycle."""
+
+import argparse
+import json
+import os
+import pathlib
+import re
+import subprocess
+import tempfile
+import urllib.request
+
+
+DIRECTORY = pathlib.Path("/opt/nextcloud")
+COMPOSE_FILES = ["compose.yaml"]
+APP_SERVICE = "app"
+CRON_SERVICE = "cron"
+SERVICES = [APP_SERVICE, CRON_SERVICE]
+VERSIONS_URL = (
+    "https://raw.githubusercontent.com/"
+    "nextcloud/docker/master/versions.json"
+)
+
+
+def run(argv, **kwargs):
+    print("RUN=" + " ".join(argv), flush=True)
+    return subprocess.run(argv, check=True, **kwargs)
+
+
+def compose_argv(*args):
+    argv = ["docker", "compose"]
+    for name in COMPOSE_FILES:
+        argv.extend(["-f", name])
+    argv.extend(args)
+    return argv
+
+
+def compose_run(*args, **kwargs):
+    return run(
+        compose_argv(*args),
+        cwd=DIRECTORY,
+        **kwargs,
+    )
+
+
+def get_json(url):
+    request = urllib.request.Request(
+        url,
+        headers={
+            "User-Agent": "Edge-Maintenance",
+            "Accept": "application/json",
+        },
+    )
+    with urllib.request.urlopen(
+        request,
+        timeout=20,
+    ) as response:
+        return json.load(response)
+
+
+def release_map():
+    data = get_json(VERSIONS_URL)
+    releases = {}
+
+    for major_key, release in data.items():
+        if not re.fullmatch(r"[0-9]+", str(major_key)):
+            continue
+
+        version = str(
+            (release or {}).get("version")
+            or ""
+        ).strip()
+
+        if not re.fullmatch(
+            r"[0-9]+\.[0-9]+\.[0-9]+",
+            version,
+        ):
+            continue
+
+        major = int(major_key)
+
+        if int(version.split(".", 1)[0]) != major:
+            raise RuntimeError(
+                "Nextcloud versions.json major/version mismatch"
+            )
+
+        releases[major] = version
+
+    if not releases:
+        raise RuntimeError(
+            "Nextcloud upstream stable releases unresolved"
+        )
+
+    return releases
+
+
+def compose_config():
+    result = subprocess.run(
+        compose_argv("config", "--format", "json"),
+        cwd=DIRECTORY,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    return json.loads(result.stdout)
+
+
+def normalized_image(reference):
+    for prefix in ("docker.io/", "index.docker.io/"):
+        if reference.startswith(prefix):
+            return reference[len(prefix):]
+    return reference
+
+
+def effective_nextcloud_image():
+    data = compose_config()
+    images = []
+
+    for service in SERVICES:
+        image = str(
+            data.get("services", {})
+            .get(service, {})
+            .get("image", "")
+        )
+        if not image:
+            raise RuntimeError(
+                f"Nextcloud compose image missing: service={service}"
+            )
+        images.append(
+            normalized_image(image)
+        )
+
+    if len(set(images)) != 1:
+        raise RuntimeError(
+            "Nextcloud app/cron compose images are not aligned: "
+            + ",".join(images)
+        )
+
+    if not images[0].startswith("nextcloud:"):
+        raise RuntimeError(
+            "unexpected Nextcloud compose repository: "
+            + images[0]
+        )
+
+    return images[0]
+
+
+def occ_status():
+    result = subprocess.run(
+        compose_argv(
+            "exec",
+            "-T",
+            "-u",
+            "www-data",
+            APP_SERVICE,
+            "php",
+            "occ",
+            "status",
+            "--output=json",
+        ),
+        cwd=DIRECTORY,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    data = json.loads(result.stdout)
+
+    version = str(
+        data.get("versionstring")
+        or ""
+    ).strip()
+
+    if not re.fullmatch(
+        r"[0-9]+\.[0-9]+\.[0-9]+",
+        version,
+    ):
+        raise RuntimeError(
+            "Nextcloud runtime version unresolved"
+        )
+
+    return data
+
+
+def pulled_image_version(reference):
+    result = subprocess.run(
+        [
+            "docker",
+            "image",
+            "inspect",
+            reference,
+            "--format",
+            "{{json .Config.Env}}",
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+
+    values = json.loads(result.stdout)
+    prefix = "NEXTCLOUD_VERSION="
+
+    matches = [
+        value[len(prefix):]
+        for value in values
+        if isinstance(value, str)
+        and value.startswith(prefix)
+    ]
+
+    if len(matches) != 1:
+        raise RuntimeError(
+            "pulled Nextcloud image version unresolved"
+        )
+
+    return matches[0]
+
+
+def rewrite_compose_image(old_reference, new_reference):
+    path = DIRECTORY / COMPOSE_FILES[0]
+    original = path.read_text(
+        encoding="utf-8",
+    )
+    lines = original.splitlines(
+        keepends=True,
+    )
+    replacements = 0
+    rewritten = []
+
+    for line in lines:
+        stripped = line.strip()
+
+        if not stripped.startswith("image:"):
+            rewritten.append(line)
+            continue
+
+        raw = stripped[len("image:"):].strip()
+        quote = ""
+
+        if (
+            len(raw) >= 2
+            and raw[0] in ("'", '"')
+            and raw[-1] == raw[0]
+        ):
+            quote = raw[0]
+            value = raw[1:-1]
+        else:
+            value = raw
+
+        if normalized_image(value) != normalized_image(old_reference):
+            rewritten.append(line)
+            continue
+
+        indent = line[: len(line) - len(line.lstrip())]
+        newline = "\n" if line.endswith("\n") else ""
+        rewritten.append(
+            f"{indent}image: {quote}{new_reference}{quote}{newline}"
+        )
+        replacements += 1
+
+    if replacements != len(SERVICES):
+        raise RuntimeError(
+            "Nextcloud compose image rewrite refused: "
+            f"expected={len(SERVICES)} actual={replacements}"
+        )
+
+    updated = "".join(rewritten)
+
+    fd, temporary = tempfile.mkstemp(
+        prefix=".compose.nextcloud.",
+        suffix=".yaml",
+        dir=str(DIRECTORY),
+    )
+
+    try:
+        with os.fdopen(
+            fd,
+            "w",
+            encoding="utf-8",
+        ) as handle:
+            handle.write(updated)
+
+        os.chmod(
+            temporary,
+            path.stat().st_mode & 0o777,
+        )
+        os.replace(
+            temporary,
+            path,
+        )
+    finally:
+        if os.path.exists(temporary):
+            os.unlink(temporary)
+
+    return original
+
+
+def restore_compose(original):
+    path = DIRECTORY / COMPOSE_FILES[0]
+
+    fd, temporary = tempfile.mkstemp(
+        prefix=".compose.nextcloud.restore.",
+        suffix=".yaml",
+        dir=str(DIRECTORY),
+    )
+
+    try:
+        with os.fdopen(
+            fd,
+            "w",
+            encoding="utf-8",
+        ) as handle:
+            handle.write(original)
+
+        os.chmod(
+            temporary,
+            path.stat().st_mode & 0o777,
+        )
+        os.replace(
+            temporary,
+            path,
+        )
+    finally:
+        if os.path.exists(temporary):
+            os.unlink(temporary)
+
+
+def verify_runtime(expected):
+    status = occ_status()
+    actual = str(status["versionstring"])
+
+    if actual != expected:
+        raise RuntimeError(
+            "Nextcloud runtime version mismatch: "
+            f"expected={expected} actual={actual}"
+        )
+
+    if status.get("maintenance") is not False:
+        raise RuntimeError(
+            "Nextcloud remained in maintenance mode"
+        )
+
+    if status.get("needsDbUpgrade") is not False:
+        raise RuntimeError(
+            "Nextcloud reports pending database upgrade"
+        )
+
+    print(
+        "NEXTCLOUD_RUNTIME_GATE=PASS"
+        f"|VERSION={actual}"
+    )
+
+
+def run_background_migrations():
+    for iteration in range(1, 4):
+        print(
+            "NEXTCLOUD_BACKGROUND_MIGRATION_CRON"
+            f"|ITERATION={iteration}"
+        )
+        compose_run(
+            "exec",
+            "-T",
+            "-u",
+            "www-data",
+            APP_SERVICE,
+            "php",
+            "-f",
+            "/var/www/html/cron.php",
+        )
+
+
+def build_steps(installed, target, releases):
+    current_major = int(
+        installed.split(".", 1)[0]
+    )
+    target_major = int(
+        target.split(".", 1)[0]
+    )
+
+    if target_major < current_major:
+        raise RuntimeError(
+            "Nextcloud target is older than installed version"
+        )
+
+    if target_major not in releases:
+        raise RuntimeError(
+            "Nextcloud target major absent from upstream stable releases"
+        )
+
+    if releases[target_major] != target:
+        raise RuntimeError(
+            "Nextcloud target is not latest stable point release "
+            f"for major {target_major}: "
+            f"target={target} upstream={releases[target_major]}"
+        )
+
+    latest_major = max(releases)
+
+    if target_major != latest_major:
+        raise RuntimeError(
+            "Nextcloud target is not the latest upstream stable major: "
+            f"target_major={target_major} latest_major={latest_major}"
+        )
+
+    steps = []
+
+    if current_major not in releases:
+        raise RuntimeError(
+            "installed Nextcloud major absent from upstream release map"
+        )
+
+    if installed != releases[current_major]:
+        steps.append(
+            (
+                current_major,
+                releases[current_major],
+            )
+        )
+
+    for major in range(
+        current_major + 1,
+        target_major + 1,
+    ):
+        if major not in releases:
+            raise RuntimeError(
+                "required intermediate Nextcloud major is unavailable: "
+                + str(major)
+            )
+
+        steps.append(
+            (
+                major,
+                releases[major],
+            )
+        )
+
+    return steps
+
+
+def apply_step(major, expected_version):
+    old_reference = effective_nextcloud_image()
+    new_reference = f"nextcloud:{major}-apache"
+
+    original = None
+    compose_changed = False
+
+    if normalized_image(old_reference) != normalized_image(new_reference):
+        original = rewrite_compose_image(
+            old_reference,
+            new_reference,
+        )
+        compose_changed = True
+
+    try:
+        config_image = effective_nextcloud_image()
+
+        if normalized_image(config_image) != normalized_image(new_reference):
+            raise RuntimeError(
+                "Nextcloud compose target verification failed: "
+                f"expected={new_reference} actual={config_image}"
+            )
+
+        compose_run(
+            "config",
+            "--quiet",
+        )
+
+        compose_run(
+            "pull",
+            *SERVICES,
+        )
+
+        actual_image_version = pulled_image_version(
+            new_reference
+        )
+
+        if actual_image_version != expected_version:
+            raise RuntimeError(
+                "Nextcloud pulled image version mismatch: "
+                f"expected={expected_version} "
+                f"actual={actual_image_version}"
+            )
+
+    except Exception:
+        if compose_changed and original is not None:
+            restore_compose(original)
+            print(
+                "NEXTCLOUD_COMPOSE_RECOVERY=RESTORED_BEFORE_RECREATE"
+            )
+        raise
+
+    print(
+        "NEXTCLOUD_COMPOSE_TRACK_GATE=PASS"
+        f"|TRACK={new_reference}"
+        f"|EXPECTED_VERSION={expected_version}"
+    )
+
+    # From this point onward the new image may have upgraded persistent
+    # application/database state. Do not auto-downgrade on failure.
+    compose_run(
+        "up",
+        "-d",
+        "--wait",
+        "--force-recreate",
+        *SERVICES,
+    )
+
+    verify_runtime(
+        expected_version
+    )
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--target-version",
+        required=True,
+    )
+    args = parser.parse_args()
+
+    if not (DIRECTORY / COMPOSE_FILES[0]).is_file():
+        raise RuntimeError(
+            "Nextcloud compose file missing"
+        )
+
+    initial = occ_status()
+    installed = str(
+        initial["versionstring"]
+    )
+
+    releases = release_map()
+    target = args.target_version.strip()
+
+    if not re.fullmatch(
+        r"[0-9]+\.[0-9]+\.[0-9]+",
+        target,
+    ):
+        raise RuntimeError(
+            "invalid Nextcloud target version"
+        )
+
+    steps = build_steps(
+        installed,
+        target,
+        releases,
+    )
+
+    print(
+        "NEXTCLOUD_UPDATE_PLAN"
+        f"|INSTALLED={installed}"
+        f"|TARGET={target}"
+        f"|STEPS={','.join(version for _, version in steps) or 'NONE'}"
+    )
+
+    if not steps:
+        verify_runtime(target)
+        print(
+            "NEXTCLOUD_UPDATE_RESULT=SUCCESS"
+            f"|VERSION={target}"
+        )
+        return
+
+    previous_major = int(
+        installed.split(".", 1)[0]
+    )
+
+    for index, (major, expected) in enumerate(
+        steps,
+        start=1,
+    ):
+        print(
+            "NEXTCLOUD_UPDATE_STEP_BEGIN"
+            f"|INDEX={index}"
+            f"|MAJOR={major}"
+            f"|TARGET={expected}"
+        )
+
+        apply_step(
+            major,
+            expected,
+        )
+
+        major_changed = (
+            major != previous_major
+        )
+
+        more_steps = (
+            index < len(steps)
+        )
+
+        if major_changed and more_steps:
+            run_background_migrations()
+            verify_runtime(expected)
+
+        previous_major = major
+
+        print(
+            "NEXTCLOUD_UPDATE_STEP_END"
+            f"|INDEX={index}"
+            f"|VERSION={expected}"
+            "|GATE=PASS"
+        )
+
+    verify_runtime(target)
+
+    print(
+        "NEXTCLOUD_UPDATE_RESULT=SUCCESS"
+        f"|VERSION={target}"
+    )
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except Exception as exc:
+        print(
+            f"NEXTCLOUD_UPDATE_RESULT=FAILED:{exc}",
+            flush=True,
+        )
+        raise SystemExit(1)
