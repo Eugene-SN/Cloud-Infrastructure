@@ -2347,12 +2347,12 @@ T3 was required as a persistent 24/7 remote workspace on `edge`, independent of 
 
 **Decision:**
 - Nextcloud Maintenance discovery must report the latest stable Nextcloud Server release from authoritative upstream Nextcloud sources and must not use the conservative Docker `stable-apache` alias as the version authority.
-- The current implementation resolves the highest stable release from official `nextcloud/docker/versions.json`, validates the corresponding official `<major>-apache` image against the upstream Dockerfile `NEXTCLOUD_VERSION`, and exposes that version as `AVAILABLE_VERSION`.
+- The current implementation resolves the highest stable release from official `nextcloud/docker/versions.json`, validates the corresponding official production rolling-minor `<major>.<minor>-apache` image against the upstream Dockerfile `NEXTCLOUD_VERSION`, and exposes that version as `AVAILABLE_VERSION`.
 - The Docker image track is an execution artifact, not a policy ceiling. Maintenance must expose the latest stable target even when reaching it requires intermediate upstream-supported major-version steps.
 - Operator initiation remains mandatory. Discovery never authorizes an update.
 - Nextcloud execution uses a dedicated `nextcloud_compose` driver following the official Docker Compose lifecycle (`pull` then `up -d`).
 - If the installed release is behind by more than one major, the driver must execute each required intermediate major in sequence, including the latest point release of the current/intermediate major as required by Nextcloud, and run the documented background-job/cron step before proceeding to another major.
-- The driver persists the corresponding official major image track for `app` and `cron` together and verifies runtime `occ status` after each step.
+- The driver persists the corresponding official production rolling-minor image track for `app` and `cron` together and verifies runtime `occ status` after each step.
 - A verified upstream procedural requirement may determine execution order but must not hide the final latest-stable target or become an operator policy.
 
 **Supersedes:** only the Nextcloud-specific portion of the 2026-09-24T20:58:09+03:00 Version Discovery v2 decision that derived Nextcloud stable availability from the Docker `stable-apache` floating alias. The remaining Version Discovery v2 source model remains applicable.
