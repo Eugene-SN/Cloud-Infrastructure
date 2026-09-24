@@ -2031,6 +2031,18 @@
       updateButtons();
     }
 
+    async function apiFetch(url, options = {}) {
+      const res = await fetch(url, options);
+      if (res.status === 401 || res.status === 403) {
+        showToast("Session expired. Redirecting to login...", "warn");
+        setTimeout(() => {
+          window.location.href = "https://auth.escloud.us/?rd=" + encodeURIComponent(window.location.href);
+        }, 1200);
+        throw new Error("Authentication required (HTTP " + res.status + ")");
+      }
+      return res;
+    }
+
     async function runSingle(actionKey) {
       if (!actionsConfig || !actionsConfig.components || !actionsConfig.components[actionKey]) return;
       const comp = actionsConfig.components[actionKey];
@@ -2041,7 +2053,7 @@
       showToast(`<span class="spin-loader"></span> Launching <strong>${label}</strong>...`, "info");
 
       try {
-        const res = await fetch("/api/project/1/tasks", {
+        const res = await apiFetch("/api/project/1/tasks", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ template_id: templateId })
@@ -2064,7 +2076,7 @@
       showToast(`<span class="spin-loader"></span> Launching <strong>Master Batch Update</strong>...`, "info");
 
       try {
-        const res = await fetch("/api/project/1/tasks", {
+        const res = await apiFetch("/api/project/1/tasks", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ template_id: actionsConfig.master_template_id })
@@ -2095,7 +2107,7 @@
 
         showToast(`<span class="spin-loader"></span> [${i+1}/${keys.length}] Updating <strong>${comp.label}</strong>...`, "info");
         try {
-          const res = await fetch("/api/project/1/tasks", {
+          const res = await apiFetch("/api/project/1/tasks", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ template_id: comp.template_id })
@@ -2124,7 +2136,7 @@
       showToast(`<span class="spin-loader"></span> Scanning edge maintenance telemetry...`, "info");
 
       try {
-        const res = await fetch("/api/project/1/tasks", {
+        const res = await apiFetch("/api/project/1/tasks", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ template_id: actionsConfig.refresh_template_id })
@@ -2144,7 +2156,7 @@
       for (let i = 0; i < maxAttempts; i++) {
         await new Promise(r => setTimeout(r, 2000));
         try {
-          const res = await fetch(`/api/project/1/tasks/${taskId}`);
+          const res = await apiFetch(`/api/project/1/tasks/${taskId}`);
           if (!res.ok) continue;
           const t = await res.json();
           if (t.status === "success") {
@@ -2294,8 +2306,8 @@
     async function loadData() {
       try {
         const [mRes, aRes] = await Promise.all([
-          fetch("/status/maintenance.json?t=" + Date.now()),
-          fetch("/status/actions.json?t=" + Date.now())
+          apiFetch("/status/maintenance.json?t=" + Date.now()),
+          apiFetch("/status/actions.json?t=" + Date.now())
         ]);
         if (mRes.ok) maintenanceData = await mRes.json();
         if (aRes.ok) actionsConfig = await aRes.json();
