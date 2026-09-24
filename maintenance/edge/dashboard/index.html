@@ -261,7 +261,7 @@
       box-shadow: 0 0 6px var(--up);
     }
 
-    /* ACTIONS & BUTTONS - APPLE TRANSLUCENT LUMINOUS GLASS (HIGH CONTRAST, BLACK FONT) */
+    /* ACTIONS & BUTTONS - CALIBRATED DESIGNER PALETTE (RESTFUL SAGE & ARCTIC SLATE) */
     .action {
       display: inline-flex;
       align-items: center;
@@ -269,28 +269,28 @@
       gap: 7px;
       min-height: var(--header-control-height);
       padding: 0 13px;
-      border: 1px solid rgba(160, 190, 215, 0.45);
+      border: 1px solid var(--line-strong);
       border-radius: var(--radius-small);
-      background: rgba(255, 255, 255, 0.85);
+      background: var(--surface);
       backdrop-filter: blur(20px) saturate(160%);
       -webkit-backdrop-filter: blur(20px) saturate(160%);
-      color: #121d28 !important;
+      color: var(--ink);
       font-size: .76rem;
-      font-weight: 600;
+      font-weight: 580;
       text-decoration: none;
       cursor: pointer;
       user-select: none;
       white-space: nowrap;
-      box-shadow: 0 2px 6px rgba(20, 50, 80, 0.05), var(--glass-highlight);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), var(--glass-highlight);
       transition: background-color 160ms var(--ease), border-color 160ms var(--ease), color 160ms var(--ease), transform 160ms var(--ease), box-shadow 160ms var(--ease);
     }
 
     .action:hover:not(:disabled) {
-      border-color: rgba(140, 175, 205, 0.65);
-      background: rgba(255, 255, 255, 0.95);
-      color: #000000 !important;
+      border-color: var(--line-strong);
+      background: var(--surface-hover);
+      color: var(--ink);
       transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(20, 50, 80, 0.09), var(--glass-highlight);
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.06), var(--glass-highlight);
     }
 
     .action:active:not(:disabled) {
@@ -302,142 +302,141 @@
       cursor: not-allowed;
     }
 
-    /* PRIMARY BLUE BUTTON - RUN ALL UPDATES (LUMINOUS GLACIER BLUE, BLACK FONT) */
-    .action-primary {
-      background: rgba(180, 218, 252, 0.85);
-      border: 1px solid rgba(55, 135, 225, 0.45);
-      color: #08243c !important;
-      font-weight: 640;
-      box-shadow: 0 2px 8px rgba(30, 100, 180, 0.12), var(--glass-highlight);
-    }
-
-    html[data-theme="light"] .action-primary {
-      background: rgba(180, 218, 252, 0.85);
-      border-color: rgba(55, 135, 225, 0.45);
-      color: #08243c !important;
-    }
-
-    .action-primary:hover:not(:disabled) {
-      background: rgba(162, 208, 248, 0.96);
-      border-color: rgba(45, 125, 215, 0.65);
-      color: #000000 !important;
-      box-shadow: 0 4px 14px rgba(30, 100, 180, 0.18), var(--glass-highlight);
-    }
-
-    /* SUCCESS GREEN BUTTON - RUN SELECTED (LUMINOUS JADE MINT, BLACK FONT) */
-    .action-success {
-      background: rgba(175, 230, 200, 0.85);
-      border: 1px solid rgba(50, 160, 105, 0.45);
-      color: #062413 !important;
-      font-weight: 640;
-      box-shadow: 0 2px 8px rgba(25, 110, 65, 0.12), var(--glass-highlight);
-    }
-
-    html[data-theme="light"] .action-success {
-      background: rgba(175, 230, 200, 0.85);
-      border-color: rgba(50, 160, 105, 0.45);
-      color: #062413 !important;
-    }
-
-    .action-success:hover:not(:disabled) {
-      background: rgba(155, 222, 185, 0.96);
-      border-color: rgba(40, 150, 95, 0.65);
-      color: #000000 !important;
-      box-shadow: 0 4px 14px rgba(25, 110, 65, 0.18), var(--glass-highlight);
-    }
-
-    /* DARK THEME BUTTONS - LUMINOUS SURFACE CONTRAST, NEVER BLEND WITH DARK BG */
+    /* NEUTRAL GLASS CONTROLS IN DARK THEME (DO NOT OVERWRITE WITH OPAQUE LIGHT) */
     html[data-theme="dark"] .action {
-      background: rgba(220, 232, 245, 0.85);
-      border-color: rgba(255, 255, 255, 0.50);
-      color: #0d1a24 !important;
-      font-weight: 600;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.30);
+      background: rgba(255, 255, 255, 0.07);
+      border-color: rgba(255, 255, 255, 0.12);
+      color: var(--ink);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.30), var(--glass-highlight);
     }
 
     html[data-theme="dark"] .action:hover:not(:disabled) {
-      background: rgba(240, 246, 252, 0.98);
-      border-color: rgba(255, 255, 255, 0.70);
+      background: rgba(255, 255, 255, 0.14);
+      border-color: rgba(255, 255, 255, 0.22);
+      color: #ffffff;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.40), var(--glass-highlight);
+    }
+
+    /* PRIMARY BLUE BUTTON - RUN ALL UPDATES (CALIBRATED MUTED ARCTIC SLATE BLUE, BLACK FONT) */
+    .action-primary {
+      background: #c3d7ea;
+      border: 1px solid #85a4c5;
+      color: #0a1f33 !important;
+      font-weight: 600;
+      box-shadow: 0 1px 4px rgba(20, 40, 70, 0.06), var(--glass-highlight);
+    }
+
+    html[data-theme="light"] .action-primary {
+      background: #c3d7ea;
+      border-color: #85a4c5;
+      color: #0a1f33 !important;
+    }
+
+    html[data-theme="light"] .action-primary:hover:not(:disabled) {
+      background: #b2cce2;
+      border-color: #6f92b6;
       color: #000000 !important;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.40);
+      box-shadow: 0 3px 10px rgba(20, 40, 70, 0.10), var(--glass-highlight);
     }
 
     html[data-theme="dark"] .action-primary {
-      background: rgba(105, 188, 245, 0.88);
-      border-color: rgba(160, 225, 255, 0.65);
-      color: #041828 !important;
-      font-weight: 650;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.30), 0 0 14px rgba(105, 188, 245, 0.22);
+      background: #6896bc;
+      border-color: #8ab4d6;
+      color: #031422 !important;
+      font-weight: 620;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.20);
     }
 
     html[data-theme="dark"] .action-primary:hover:not(:disabled) {
-      background: rgba(128, 204, 255, 0.98);
-      border-color: rgba(190, 240, 255, 0.85);
+      background: #78a3c8;
+      border-color: #9ec5e4;
       color: #000000 !important;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.40), 0 0 18px rgba(105, 188, 245, 0.35);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.30);
+    }
+
+    /* SUCCESS GREEN BUTTON - RUN SELECTED (CALIBRATED MUTED MINERAL SAGE GREEN, BLACK FONT) */
+    .action-success {
+      background: #c2ddcc;
+      border: 1px solid #84b092;
+      color: #0b2214 !important;
+      font-weight: 600;
+      box-shadow: 0 1px 4px rgba(20, 50, 30, 0.06), var(--glass-highlight);
+    }
+
+    html[data-theme="light"] .action-success {
+      background: #c2ddcc;
+      border-color: #84b092;
+      color: #0b2214 !important;
+    }
+
+    html[data-theme="light"] .action-success:hover:not(:disabled) {
+      background: #b2d4bd;
+      border-color: #6e9f7d;
+      color: #000000 !important;
+      box-shadow: 0 3px 10px rgba(20, 50, 30, 0.10), var(--glass-highlight);
     }
 
     html[data-theme="dark"] .action-success {
-      background: rgba(86, 212, 154, 0.88);
-      border-color: rgba(140, 245, 195, 0.65);
-      color: #031c10 !important;
-      font-weight: 650;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.30), 0 0 14px rgba(86, 212, 154, 0.22);
+      background: #62a382;
+      border-color: #7ebfa0;
+      color: #04160c !important;
+      font-weight: 620;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.20);
     }
 
     html[data-theme="dark"] .action-success:hover:not(:disabled) {
-      background: rgba(110, 228, 172, 0.98);
-      border-color: rgba(165, 255, 215, 0.85);
+      background: #71b090;
+      border-color: #92d1b2;
       color: #000000 !important;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.40), 0 0 18px rgba(86, 212, 154, 0.35);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.30);
     }
 
-    /* TABLE ACTION COLUMN BUTTONS - CLEAR VIBRANT JADE MINT GREEN, BLACK FONT */
+    /* TABLE ACTION COLUMN BUTTONS - EXCLUSIVELY CALIBRATED MUTED SAGE GREEN WITH BLACK FONT */
     .col-act .action {
-      background: rgba(175, 230, 200, 0.85);
-      border: 1px solid rgba(50, 160, 105, 0.45);
-      color: #062413 !important;
-      font-weight: 640;
-      box-shadow: 0 2px 6px rgba(25, 110, 65, 0.12), var(--glass-highlight);
+      background: #c2ddcc;
+      border: 1px solid #84b092;
+      color: #0b2214 !important;
+      font-weight: 600;
+      box-shadow: 0 1px 3px rgba(20, 50, 30, 0.06), var(--glass-highlight);
     }
 
     .col-act .action:hover:not(:disabled) {
-      background: rgba(155, 222, 185, 0.96);
-      border-color: rgba(40, 150, 95, 0.65);
+      background: #b2d4bd;
+      border-color: #6e9f7d;
       color: #000000 !important;
       transform: translateY(-1px);
-      box-shadow: 0 3px 10px rgba(25, 110, 65, 0.18), var(--glass-highlight);
+      box-shadow: 0 3px 8px rgba(20, 50, 30, 0.10), var(--glass-highlight);
     }
 
     html[data-theme="light"] .col-act .action-primary,
     html[data-theme="light"] .col-act .action {
-      background: rgba(175, 230, 200, 0.85);
-      border: 1px solid rgba(50, 160, 105, 0.45);
-      color: #062413 !important;
+      background: #c2ddcc;
+      border: 1px solid #84b092;
+      color: #0b2214 !important;
     }
 
     html[data-theme="light"] .col-act .action-primary:hover:not(:disabled),
     html[data-theme="light"] .col-act .action:hover:not(:disabled) {
-      background: rgba(155, 222, 185, 0.96);
-      border-color: rgba(40, 150, 95, 0.65);
+      background: #b2d4bd;
+      border-color: #6e9f7d;
       color: #000000 !important;
     }
 
     html[data-theme="dark"] .col-act .action-primary,
     html[data-theme="dark"] .col-act .action {
-      background: rgba(86, 212, 154, 0.88);
-      border: 1px solid rgba(140, 245, 195, 0.65);
-      color: #031c10 !important;
-      font-weight: 650;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.30), 0 0 12px rgba(86, 212, 154, 0.20);
+      background: #62a382;
+      border: 1px solid #7ebfa0;
+      color: #04160c !important;
+      font-weight: 620;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.20);
     }
 
     html[data-theme="dark"] .col-act .action-primary:hover:not(:disabled),
     html[data-theme="dark"] .col-act .action:hover:not(:disabled) {
-      background: rgba(110, 228, 172, 0.98);
-      border-color: rgba(165, 255, 215, 0.85);
+      background: #71b090;
+      border-color: #92d1b2;
       color: #000000 !important;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.40), 0 0 16px rgba(86, 212, 154, 0.35);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.30);
     }
 
     .action-sm {
