@@ -738,3 +738,14 @@ Current accepted state:
 Acceptance marker: `VERSION_DISCOVERY_V2_FINAL_ACCEPTANCE=PASS`.
 
 Authoritative record: `VERSION_DISCOVERY_V2_FINAL_ACCEPTANCE_2026-09-24.md`.
+
+## 2026-09-25 — Nextcloud Update Architecture — COMPLETE / ACCEPTED
+
+- acceptance marker: `NEXTCLOUD_UPDATE_ARCHITECTURE=PASS`;
+- runtime remains Nextcloud `34.0.4`; no application update was executed;
+- Maintenance now reports `34.0.4 -> 35.0.1` as `UPDATE_AVAILABLE`;
+- deployment artifact resolved for the current target is `nextcloud:35.0-apache`;
+- dedicated `nextcloud_compose` driver, actions renderer, framework contract and driver preflight all passed;
+- update execution remains operator-initiated only.
+
+Acceptance record: `NEXTCLOUD_UPDATE_ARCHITECTURE_ACCEPTANCE_2026-09-25.md`.
