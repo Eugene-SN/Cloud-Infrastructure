@@ -534,7 +534,7 @@ try:
         )
 
         major = str(major_number)
-        target_tag = major + "-apache"
+        target_tag = ".".join(candidate.split(".")[:2]) + "-apache"
 
         target_floating = get_json(
             base
@@ -729,7 +729,10 @@ emit_docker_component() {
     test -n "$remote_version" || remote_version="-"
 
     if test "$component" = "NEXTCLOUD" && test "$remote_version" != "-"; then
-        track="${remote_version%%.*}-apache"
+        nc_major="${remote_version%%.*}"
+        nc_rest="${remote_version#*.}"
+        nc_minor="${nc_rest%%.*}"
+        track="${nc_major}.${nc_minor}-apache"
     fi
 
     if test -z "$local_digest" || test -z "$remote_digest"; then
