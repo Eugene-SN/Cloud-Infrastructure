@@ -703,6 +703,7 @@ emit_docker_component() {
     image="$3"
     repository="$4"
     fallback="$5"
+    track="$fallback"
 
     running="$(docker inspect "$container" --format '{{.State.Running}}' 2>/dev/null || true)"
     if test "$running" != "true"; then
