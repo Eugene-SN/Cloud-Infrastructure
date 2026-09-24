@@ -126,9 +126,9 @@ For architecture choices involving authentication, reverse proxies, OAuth/OIDC, 
 
 - The operator decides **whether and when** to update, migrate, enable, disable, adopt, defer, or retain any supported service/version/capability.
 - Never invent project policy, restrictions, ceilings, holds, pins, channel/branch/major-version limits, staged-rollout requirements, compatibility gates, risk controls, security layers, or other constraints that the operator did not explicitly request or accept.
-- Do not convert an upstream procedural requirement into an operator policy. If upstream requires intermediate steps (for example sequential major-version upgrades), follow those steps only as the execution mechanism while still exposing and targeting the latest upstream stable release selected by the operator.
+- Do not convert an upstream procedural requirement into an operator policy. Report any verified upstream sequencing or compatibility requirement as information only. Never execute an intermediate step, migration, update, workaround, restriction, or other mutation unless the operator explicitly instructs that action.
 - Never hide, suppress, downgrade, or relabel an available upstream-supported stable update/capability merely because a more conservative track, alias, or operating practice exists.
-- When upstream offers multiple supported choices, present the relevant facts and let the operator choose; do not make the product/architecture decision on the operator's behalf.
+- When upstream offers multiple supported choices, present the relevant facts and let the operator choose; do not make the product/architecture/operational decision on the operator's behalf. The assistant's role is to inform, verify, and execute explicitly requested actions.
 - A genuine hard technical/upstream constraint may be enforced only when it is verified from authoritative evidence and must be described as a mechanism constraint, not as a user policy.
 
 
