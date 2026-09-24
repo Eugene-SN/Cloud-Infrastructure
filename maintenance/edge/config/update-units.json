@@ -153,7 +153,7 @@
     {
       "id": "NEXTCLOUD",
       "group": "docker",
-      "driver": "compose",
+      "driver": "nextcloud_compose",
       "directory": "/opt/nextcloud",
       "files": [
         "compose.yaml"
