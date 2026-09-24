@@ -18,8 +18,6 @@
         argv:
           - sudo
           - -n
-          - env
-          - "EDGE_MAINTENANCE_FORCE_REGISTRY_COMPONENT={{ edge_update_target }}"
           - /opt/edge-maintenance/scripts/maintenance-refresh
       changed_when: false
       when: update_result is succeeded

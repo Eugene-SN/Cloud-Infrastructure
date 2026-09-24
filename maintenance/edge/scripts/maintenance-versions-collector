@@ -46,91 +46,26 @@ apt_status() {
 
 github_latest() {
     repo="$1"
-    python3 - "$repo" <<'PY'
-import json, sys, urllib.request
-repo = sys.argv[1]
-req = urllib.request.Request(
-    f"https://api.github.com/repos/{repo}/releases/latest",
-    headers={
-        "Accept": "application/vnd.github+json",
-        "User-Agent": "Edge-Maintenance",
-    },
-)
-try:
-    with urllib.request.urlopen(req, timeout=10) as r:
-        data = json.load(r)
-    if data.get("draft") or data.get("prerelease"):
-        raise SystemExit(0)
-    print(str(data.get("tag_name") or "").strip())
-except Exception:
-    pass
-PY
-}
 
-github_latest_series() {
-    repo="$1"
-    series="$2"
-    python3 - "$repo" "$series" <<'PY'
-import json, re, sys, urllib.request
-repo, series = sys.argv[1:]
-req = urllib.request.Request(
-    f"https://api.github.com/repos/{repo}/releases?per_page=100",
-    headers={"Accept": "application/vnd.github+json", "User-Agent": "Edge-Maintenance"},
-)
-try:
-    with urllib.request.urlopen(req, timeout=10) as response:
-        releases = json.load(response)
-    versions = []
-    for release in releases:
-        tag = str(release.get("tag_name") or "").lstrip("v")
-        if release.get("draft") or release.get("prerelease") or not tag.startswith(series + "."):
-            continue
-        if re.fullmatch(r"[0-9]+(?:\.[0-9]+)+", tag):
-            versions.append(tuple(map(int, tag.split("."))))
-    if versions:
-        print(".".join(map(str, max(versions))))
-except Exception:
-    pass
-PY
-}
+    final_url="$(
+        curl \
+          --silent \
+          --show-error \
+          --location \
+          --head \
+          --connect-timeout 10 \
+          --max-time 20 \
+          --output /dev/null \
+          --write-out '%{url_effective}' \
+          "https://github.com/${repo}/releases/latest" \
+          2>/dev/null || true
+    )"
 
-github_project_version() {
-    repo="$1"
-    ref="$2"
-    python3 - "$repo" "$ref" <<'PY'
-import sys, tomllib, urllib.request
-repo, ref = sys.argv[1:]
-if not ref:
-    raise SystemExit(0)
-req = urllib.request.Request(
-    f"https://raw.githubusercontent.com/{repo}/{ref}/pyproject.toml",
-    headers={"User-Agent": "Edge-Maintenance"},
-)
-try:
-    with urllib.request.urlopen(req, timeout=10) as response:
-        project = tomllib.loads(response.read().decode("utf-8")).get("project", {})
-    version = str(project.get("version") or "").strip()
-    if version:
-        print("v" + version.lstrip("v"))
-except Exception:
-    pass
-PY
-}
-
-npm_latest() {
-    package="$1"
-    python3 - "$package" <<'PY'
-import json, sys, urllib.parse, urllib.request
-pkg = sys.argv[1]
-url = "https://registry.npmjs.org/" + urllib.parse.quote(pkg, safe="") + "/latest"
-try:
-    req = urllib.request.Request(url, headers={"User-Agent": "Edge-Maintenance"})
-    with urllib.request.urlopen(req, timeout=10) as r:
-        data = json.load(r)
-    print(str(data.get("version") or "").strip())
-except Exception:
-    pass
-PY
+    case "$final_url" in
+        */releases/tag/*)
+            printf '%s' "${final_url##*/releases/tag/}"
+            ;;
+    esac
 }
 
 emit_apt_component() {
@@ -219,43 +154,9 @@ docker_local_digest() {
       sed -n "s#^${repository}@##p" | head -n1
 }
 
-docker_cached_remote_snapshot() {
-    component="$1"
-    max_age="$2"
-    cache="${EDGE_MAINTENANCE_STATUS_CACHE:-/var/www/maintenance-status/status.json}"
-
-    python3 - "$cache" "$component" "$max_age" <<'PY'
-import datetime, json, pathlib, sys
-path, component, max_age_raw = sys.argv[1:]
-try:
-    data = json.loads(pathlib.Path(path).read_text(encoding="utf-8"))
-    max_age = int(max_age_raw)
-    stamp = datetime.datetime.fromisoformat(str(data["generated_at"]).replace("Z", "+00:00"))
-    age = (datetime.datetime.now(datetime.timezone.utc) - stamp).total_seconds()
-    if max_age >= 0 and age > max_age:
-        raise SystemExit(0)
-    row = next(item for item in data.get("rows", []) if item.get("COMPONENT") == component)
-    digest = str(row.get("REMOTE_DIGEST") or "")
-    version = str(row.get("AVAILABLE_VERSION") or "")
-    if digest.startswith("sha256:"):
-        print(digest + "|" + ("" if version == "-" else version))
-except Exception:
-    pass
-PY
-}
-
-docker_remote_snapshot() {
+docker_registry_snapshot() {
     image="$1"
     component="$2"
-
-    force_component="${EDGE_MAINTENANCE_FORCE_REGISTRY_COMPONENT:-}"
-    if test "$component" != "$force_component"; then
-        cached="$(docker_cached_remote_snapshot "$component" 1800)"
-        if test -n "$cached"; then
-            printf '%s' "$cached"
-            return
-        fi
-    fi
 
     raw="$(
         docker buildx imagetools inspect "$image" \
@@ -263,59 +164,524 @@ docker_remote_snapshot() {
           2>/dev/null || true
     )"
 
-    snapshot="$(printf '%s' "$raw" | python3 -c '
-import json, sys
-component=sys.argv[1]
-raw=sys.stdin.read().strip()
+    printf '%s' "$raw" |
+    python3 -c '
+import json
+import re
+import sys
+
+component = sys.argv[1]
+raw = sys.stdin.read().strip()
+
 if not raw:
     raise SystemExit(0)
+
 try:
-    dec=json.JSONDecoder()
-    digest,pos=dec.raw_decode(raw)
+    decoder = json.JSONDecoder()
+
+    digest, pos = decoder.raw_decode(raw)
+
     while pos < len(raw) and raw[pos].isspace():
         pos += 1
-    image,pos=dec.raw_decode(raw,pos)
+
+    image, pos = decoder.raw_decode(raw, pos)
+
 except Exception:
     raise SystemExit(0)
-versions=[]
-def walk(obj):
-    if isinstance(obj,dict):
-        cfg=obj.get("config")
-        if isinstance(cfg,dict):
-            labels=cfg.get("Labels") or cfg.get("labels") or {}
-            if isinstance(labels,dict):
-                value=labels.get("org.opencontainers.image.version")
-                if value:
-                    value=str(value).strip()
-                    if value and value not in versions:
-                        versions.append(value)
-                build=labels.get("build_version")
-                if build and not versions:
-                    import re
-                    m=re.search(r"version:-\s*([^\s]+)",str(build))
-                    if m:
-                        versions.append(m.group(1))
-            if component in ("POSTGRESQL", "NEXTCLOUD_POSTGRESQL"):
-                for item in cfg.get("Env") or cfg.get("env") or []:
-                    if str(item).startswith("PG_VERSION="):
-                        versions.insert(0, str(item).split("=",1)[1])
-        for v in obj.values():
-            walk(v)
-    elif isinstance(obj,list):
-        for v in obj:
-            walk(v)
-walk(image)
-if isinstance(digest,str) and digest.startswith("sha256:"):
-    if component == "STALWART":
-        versions.clear()
-    print(digest + "|" + (versions[0] if versions else ""))
-' "$component")"
 
-    if test -n "$snapshot"; then
-        printf '%s' "$snapshot"
-    else
-        docker_cached_remote_snapshot "$component" -1
-    fi
+versions = []
+
+def walk(obj):
+    if isinstance(obj, dict):
+        cfg = obj.get("config")
+
+        if isinstance(cfg, dict):
+            labels = (
+                cfg.get("Labels")
+                or cfg.get("labels")
+                or {}
+            )
+
+            if isinstance(labels, dict):
+                value = labels.get(
+                    "org.opencontainers.image.version"
+                )
+
+                if value:
+                    value = str(value).strip()
+
+                    if (
+                        value
+                        and value not in versions
+                    ):
+                        versions.append(value)
+
+                build = labels.get(
+                    "build_version"
+                )
+
+                if build and not versions:
+                    match = re.search(
+                        r"version:-\s*([^\s]+)",
+                        str(build),
+                    )
+
+                    if match:
+                        versions.append(
+                            match.group(1)
+                        )
+
+        for value in obj.values():
+            walk(value)
+
+    elif isinstance(obj, list):
+        for value in obj:
+            walk(value)
+
+walk(image)
+
+if (
+    isinstance(digest, str)
+    and digest.startswith("sha256:")
+):
+    print(
+        digest
+        + "|"
+        + (
+            versions[0]
+            if versions
+            else ""
+        )
+    )
+' "$component"
+}
+
+
+docker_hub_snapshot() {
+    component="$1"
+    repository="$2"
+    tag="$3"
+    local_digest="$4"
+    installed="$5"
+
+    python3 \
+      -c '
+import json
+import re
+import sys
+import urllib.parse
+import urllib.request
+
+(
+    component,
+    repository,
+    tag,
+    local_digest,
+    installed,
+) = sys.argv[1:]
+
+if "/" in repository:
+    namespace, repo = repository.split("/", 1)
+else:
+    namespace, repo = "library", repository
+
+base = (
+    "https://hub.docker.com/v2/repositories/"
+    f"{namespace}/{repo}/tags"
+)
+
+headers = {
+    "User-Agent": "Edge-Maintenance",
+    "Accept": "application/json",
+}
+
+
+def get_json(url):
+    request = urllib.request.Request(
+        url,
+        headers=headers,
+    )
+
+    with urllib.request.urlopen(
+        request,
+        timeout=15,
+    ) as response:
+        return json.load(response)
+
+
+def get_text(url):
+    request = urllib.request.Request(
+        url,
+        headers=headers,
+    )
+
+    with urllib.request.urlopen(
+        request,
+        timeout=15,
+    ) as response:
+        return response.read().decode(
+            "utf-8",
+            errors="replace",
+        )
+
+
+def top_digest(data):
+    value = str(
+        data.get("digest") or ""
+    )
+
+    if not value.startswith("sha256:"):
+        raise ValueError(
+            "top digest unresolved"
+        )
+
+    return value
+
+
+def amd64_digest(data):
+    values = [
+        str(item.get("digest") or "")
+        for item in data.get("images", [])
+        if item.get("os") == "linux"
+        and item.get("architecture") == "amd64"
+    ]
+
+    values = [
+        value
+        for value in values
+        if value.startswith("sha256:")
+    ]
+
+    if len(values) != 1:
+        raise ValueError(
+            "linux/amd64 descriptor unresolved"
+        )
+
+    return values[0]
+
+
+def semver_key(value):
+    return tuple(
+        int(part)
+        for part in value.split(".")
+    )
+
+
+try:
+    floating = get_json(
+        base
+        + "/"
+        + urllib.parse.quote(
+            tag,
+            safe="",
+        )
+    )
+
+    digest = top_digest(floating)
+
+    # For CURRENT images, runtime version already describes
+    # exactly the same top-level manifest.
+    if (
+        local_digest == digest
+        and installed
+        and installed not in (
+            "-",
+            "<no value>",
+        )
+    ):
+        print(
+            digest
+            + "|"
+            + installed.lstrip("v")
+        )
+        raise SystemExit(0)
+
+    page = get_json(
+        base
+        + "?page_size=100"
+        + "&ordering=last_updated"
+    )
+
+    aliases = [
+        str(item.get("name") or "")
+        for item in page.get(
+            "results",
+            [],
+        )
+        if str(
+            item.get("digest") or ""
+        ) == digest
+    ]
+
+    version = ""
+
+    if component in (
+        "N8N",
+        "AUTHELIA",
+        "MATTERMOST",
+    ):
+        versions = []
+
+        for alias in aliases:
+            if re.fullmatch(
+                r"[0-9]+\.[0-9]+\.[0-9]+",
+                alias,
+            ):
+                versions.append(alias)
+
+        if versions:
+            version = max(
+                versions,
+                key=semver_key,
+            )
+
+    elif component in (
+        "POSTGRESQL",
+        "NEXTCLOUD_POSTGRESQL",
+    ):
+        major = tag.split(
+            "-",
+            1,
+        )[0]
+
+        versions = []
+
+        for alias in aliases:
+            match = re.fullmatch(
+                re.escape(major)
+                + r"\.([0-9]+)-alpine",
+                alias,
+            )
+
+            if match:
+                versions.append(
+                    major
+                    + "."
+                    + match.group(1)
+                )
+
+        if versions:
+            version = max(
+                versions,
+                key=semver_key,
+            )
+
+    elif component == "STALWART":
+        series = tag.lstrip("v")
+        versions = []
+
+        for alias in aliases:
+            match = re.fullmatch(
+                r"v?("
+                + re.escape(series)
+                + r"\.[0-9]+)",
+                alias,
+            )
+
+            if match:
+                versions.append(
+                    match.group(1)
+                )
+
+        if versions:
+            version = max(
+                versions,
+                key=semver_key,
+            )
+
+    elif component == "NEXTCLOUD":
+        series_values = []
+
+        for alias in aliases:
+            match = re.fullmatch(
+                r"([0-9]+\.[0-9]+)-apache",
+                alias,
+            )
+
+            if match:
+                series_values.append(
+                    match.group(1)
+                )
+
+        if not series_values:
+            raise ValueError(
+                "Nextcloud series unresolved"
+            )
+
+        series = max(
+            series_values,
+            key=semver_key,
+        )
+
+        major = series.split(
+            ".",
+            1,
+        )[0]
+
+        versions_data = get_json(
+            "https://raw.githubusercontent.com/"
+            "nextcloud/docker/master/versions.json"
+        )
+
+        candidate = str(
+            (
+                versions_data.get(major)
+                or {}
+            ).get("version")
+            or ""
+        ).strip()
+
+        if not re.fullmatch(
+            re.escape(series)
+            + r"\.[0-9]+",
+            candidate,
+        ):
+            raise ValueError(
+                "Nextcloud upstream version unresolved"
+            )
+
+        exact = get_json(
+            base
+            + "/"
+            + urllib.parse.quote(
+                candidate + "-apache",
+                safe="",
+            )
+        )
+
+        if (
+            amd64_digest(floating)
+            != amd64_digest(exact)
+        ):
+            raise ValueError(
+                "Nextcloud amd64 binding mismatch"
+            )
+
+        version = candidate
+
+    elif component == "NEXTCLOUD_REDIS":
+        series_values = []
+
+        for alias in aliases:
+            match = re.fullmatch(
+                r"([0-9]+\.[0-9]+)-alpine",
+                alias,
+            )
+
+            if match:
+                series_values.append(
+                    match.group(1)
+                )
+
+        if not series_values:
+            raise ValueError(
+                "Redis series unresolved"
+            )
+
+        series = max(
+            series_values,
+            key=semver_key,
+        )
+
+        listing = get_text(
+            "https://download.redis.io/releases/"
+        )
+
+        versions = re.findall(
+            r"redis-("
+            + re.escape(series)
+            + r"\.[0-9]+)\.tar\.gz",
+            listing,
+        )
+
+        if not versions:
+            raise ValueError(
+                "Redis upstream version unresolved"
+            )
+
+        candidate = max(
+            set(versions),
+            key=semver_key,
+        )
+
+        exact = get_json(
+            base
+            + "/"
+            + urllib.parse.quote(
+                candidate + "-alpine",
+                safe="",
+            )
+        )
+
+        if (
+            amd64_digest(floating)
+            != amd64_digest(exact)
+        ):
+            raise ValueError(
+                "Redis amd64 binding mismatch"
+            )
+
+        version = candidate
+
+    if not version:
+        raise ValueError(
+            "available version unresolved"
+        )
+
+    print(
+        digest
+        + "|"
+        + version
+    )
+
+except Exception:
+    pass
+' \
+      "$component" \
+      "$repository" \
+      "$tag" \
+      "$local_digest" \
+      "$installed"
+}
+
+
+docker_remote_snapshot() {
+    image="$1"
+    component="$2"
+    repository="$3"
+    tag="$4"
+    local_digest="$5"
+    installed="$6"
+
+    case "$component" in
+        N8N)
+            docker_hub_snapshot \
+                "$component" \
+                "n8nio/n8n" \
+                "$tag" \
+                "$local_digest" \
+                "$installed"
+            ;;
+
+        AUTHELIA|MATTERMOST|POSTGRESQL|STALWART|NEXTCLOUD|NEXTCLOUD_POSTGRESQL|NEXTCLOUD_REDIS)
+            docker_hub_snapshot \
+                "$component" \
+                "$repository" \
+                "$tag" \
+                "$local_digest" \
+                "$installed"
+            ;;
+
+        BULWARK)
+            docker_registry_snapshot \
+                "$image" \
+                "$component"
+            ;;
+
+        *)
+            return 0
+            ;;
+    esac
 }
 
 emit_docker_component() {
@@ -334,7 +700,7 @@ emit_docker_component() {
 
     installed="$(docker_runtime_version "$component" "$container")"
     local_digest="$(docker_local_digest "$container" "$repository")"
-    remote="$(docker_remote_snapshot "$image" "$component")"
+    remote="$(docker_remote_snapshot "$image" "$component" "$repository" "$fallback" "$local_digest" "$installed")"
 
     remote_digest=""
     remote_version=""
@@ -347,14 +713,6 @@ emit_docker_component() {
 
     test -n "$installed" && test "$installed" != "<no value>" || installed="-"
     test -n "$remote_version" || remote_version="-"
-
-    if test "$component" = "STALWART"; then
-        stalwart_release="$(github_latest_series stalwartlabs/stalwart 0.16)"
-        if test -n "$stalwart_release"; then
-            remote_version="$stalwart_release"
-        fi
-        test -n "$remote_version" || remote_version="-"
-    fi
 
     if test -z "$local_digest" || test -z "$remote_digest"; then
         status="STABLE_UNRESOLVED"
