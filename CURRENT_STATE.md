@@ -715,3 +715,26 @@ Stable `0.0.42` is not the accepted persistent version because it reproduced old
 
 Authoritative record: `T3_PERSISTENT_REMOTE_WORKSPACE_ACCEPTANCE_2026-09-23.md`.
 
+
+
+## 2026-09-24 — Maintenance Version Discovery v2 — COMPLETE / ACCEPTED
+
+Post-Stage-07.2 corrective work on the Edge Maintenance version-discovery path is complete and accepted.
+
+Current accepted state:
+
+- persistent cross-run Docker remote-version cache is removed; stale remote data is not carried forward as a fallback;
+- Docker Hub workloads, including `docker.n8n.io/n8nio/n8n:stable`, resolve current floating-tag state through the Docker Hub Tags API rather than Docker Hub Registry V2;
+- Nextcloud and Redis exact patch versions are resolved from their official upstream release sources and bound to the floating image by Linux/amd64 descriptor digest;
+- Bulwark remains resolved through GHCR registry metadata;
+- GitHub-native latest versions use `github.com/.../releases/latest` redirects and do not depend on the GitHub REST release API;
+- obsolete `EDGE_MAINTENANCE_FORCE_REGISTRY_COMPONENT` refresh behavior is removed;
+- accepted runtime/repository collector blob: `19397985821a1204cde4333b40775bc0a4cef306`;
+- canonical implementation commit: `46c3a3a9e8eb650eb4b1b050320d4df128eed49e`;
+- normal post-commit Semaphore Refresh task 33 updated the template checkout to that commit;
+- final refresh: 24 status rows, zero unresolved rows and zero failed checks;
+- manual-only Maintenance execution and native-first ownership policy remain unchanged.
+
+Acceptance marker: `VERSION_DISCOVERY_V2_FINAL_ACCEPTANCE=PASS`.
+
+Authoritative record: `VERSION_DISCOVERY_V2_FINAL_ACCEPTANCE_2026-09-24.md`.
