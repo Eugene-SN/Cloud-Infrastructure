@@ -2357,4 +2357,4 @@ T3 was required as a persistent 24/7 remote workspace on `edge`, independent of 
 
 **Supersedes:** only the Nextcloud-specific portion of the 2026-09-24T20:58:09+03:00 Version Discovery v2 decision that derived Nextcloud stable availability from the Docker `stable-apache` floating alias. The remaining Version Discovery v2 source model remains applicable.
 
-**Implementation state:** canonical repository implementation is in progress; runtime deployment/acceptance must be recorded separately after edge verification.
+**Implementation state:** COMPLETE / ACCEPTED. Runtime deployment and verification passed with `NEXTCLOUD_UPDATE_ARCHITECTURE=PASS`; Nextcloud itself remained on `34.0.4` and no application update was executed. Evidence: `NEXTCLOUD_UPDATE_ARCHITECTURE_ACCEPTANCE_2026-09-25.md`.
