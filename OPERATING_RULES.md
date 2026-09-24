@@ -13,9 +13,9 @@
 
 - The operator decides whether and when to update, migrate, enable, disable, adopt, defer, or retain supported services, versions and capabilities.
 - Do not add project constraints that the operator did not explicitly request or accept, including version or release-channel holds, major-version ceilings, rollout delays, feature exclusions, or other policy choices.
-- Verified upstream requirements may determine the technical sequence of an operation, but they must not be turned into an operator policy or used to hide a supported choice.
+- Verified upstream requirements are information about the technical sequence or compatibility constraints of an operation. They do not authorize any mutation. Report them to the operator and execute only the actions the operator explicitly instructs.
 - Update discovery must report the latest applicable stable release from the authoritative upstream source unless an explicit accepted project decision defines a different target.
-- When reaching that target requires supported intermediate upgrade steps, perform those steps as procedure and keep the operator-selected final target unchanged.
+- When reaching a target requires supported intermediate upgrade steps, report those required steps and their consequences. Do not perform any of them until the operator explicitly instructs execution.
 - When multiple supported alternatives exist, present the relevant facts and consequences and leave the selection to the operator.
 
 ## Project scope
