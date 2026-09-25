@@ -2496,3 +2496,25 @@ T3 was required as a persistent 24/7 remote workspace on `edge`, independent of 
 **Evidence:** `NEXTCLOUD_POLICY_RECONCILIATION_ACCEPTANCE_2026-09-25.md`.
 
 **Supersedes:** only prior provisional Nextcloud app-cleanup recommendations that attempted to disable platform `alwaysEnabled` apps or retained per-user Dashboard layout drift. Stage 12 architecture and accepted native-client/cloud-drive behavior remain unchanged.
+
+
+---
+
+## 2026-09-25 — Nextcloud to Mattermost file-send use case
+
+**Status:** ACCEPTED
+
+**Context:** After installing and connecting `integration_mattermost 3.2.0`, the practical value of the integration was reviewed against the actual single-operator workflow. Creating a dedicated Mattermost channel solely to exercise the integration would add structure without a real operational need.
+
+**Decision:**
+- retain the Nextcloud Mattermost integration for the concrete workflow **Nextcloud Files -> Send to Mattermost -> choose an existing relevant channel**;
+- do not create a dedicated `Nextcloud` channel merely for the integration;
+- treat Dashboard notifications and unified Mattermost search as secondary optional conveniences;
+- keep the existing user-level PAT connection for `eugene`;
+- defer the final real file-send E2E until a genuine Mattermost channel/use case exists, rather than creating synthetic infrastructure only for testing.
+
+**Current verification:** application enabled; Mattermost PAT valid; Nextcloud user connection state PASS; Dashboard widget registered; file action enabled; Nextcloud health PASS.
+
+**Marker:** `NEXTCLOUD_MATTERMOST_FILE_SEND_USE_CASE_ACCEPTED`.
+
+**Supersedes:** the provisional idea to create a dedicated Mattermost `Nextcloud` channel solely for integration testing.
