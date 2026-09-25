@@ -192,19 +192,6 @@ def require_master_update(target, generated_at):
     return row
 
 
-def rotate_backups(directory, prefix, keep=2):
-    try:
-        backups = sorted(
-            directory.glob(f"{prefix}-*.sql"),
-            key=lambda p: p.stat().st_mtime,
-            reverse=True,
-        )
-        for old_backup in backups[keep:]:
-            old_backup.unlink(missing_ok=True)
-    except OSError:
-        pass
-
-
 def execute(unit, status_row):
     driver = unit["driver"]
     if driver == "apt":
@@ -278,23 +265,6 @@ def execute(unit, status_row):
                 img_id = line.strip()
                 if img_id:
                     old_image_ids.add(img_id)
-
-        if unit.get("database_backup") == "postgresql" or unit["id"] == "POSTGRESQL":
-            backup = pathlib.Path("/var/backups/edge-maintenance") / (
-                unit["id"].lower() + "-" + dt.datetime.now().strftime("%Y%m%d-%H%M%S") + ".sql"
-            )
-            backup.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
-            with backup.open("wb") as handle:
-                subprocess.run(
-                    compose + [
-                        "exec", "-T", primary_service, "sh", "-c",
-                        'exec pg_dumpall -U "$POSTGRES_USER"',
-                    ],
-                    cwd=directory,
-                    check=True,
-                    stdout=handle,
-                )
-            rotate_backups(backup.parent, unit["id"].lower(), keep=2)
 
         run(["docker", "pull", pinned])
         run(["docker", "tag", pinned, image])
