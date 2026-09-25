@@ -113,6 +113,32 @@ The following table is the accepted correlation contract for the currently deplo
 - Existing notification deduplication remains conceptually retained, but durable state must track incident identity/start time rather than only raw check state where needed for duration/correlation.
 - Obsolete durable keys that no longer exist in the current check inventory must be pruned safely; the observed retired `app/cloudcli` key is stale state, not an active monitor target.
 
+
+## Mattermost visual message contract
+
+Mattermost `Monitoring` uses native Mattermost Blocks through incoming-webhook `props.mm_blocks`, with a plain-text `text` fallback in the same payload. No bot/plugin/action callback is introduced.
+
+### Layout
+
+Each operator-visible event is one bordered `container` with a semantic left accent bar and gray background:
+
+- `danger` for INCIDENT;
+- `warning` for DEGRADED;
+- `good` for RECOVERED.
+
+The visible hierarchy is:
+
+1. icon + human-readable event title;
+2. scope and category;
+3. concise impact;
+4. cause for INCIDENT/DEGRADED;
+5. compact columns for start/recovery time, status, confirmation or duration;
+6. collapsed Diagnostics section containing only supporting technical evidence.
+
+Raw internal check keys are not used as primary titles. Diagnostics may include unit/container state, HTTP status/latency/error, peer state, model/mode, backup age, or maintenance fields when those values are already available from the accepted probes.
+
+No mutation buttons, acknowledgement workflow, restart controls, or repair actions are part of Monitoring v2. The channel remains a read-only operational event surface.
+
 ## Explicit current limitations
 
 - No independent external vantage point is added. Complete edge/public-connectivity loss can still be unreportable from edge itself.
