@@ -2391,7 +2391,7 @@ T3 was required as a persistent 24/7 remote workspace on `edge`, independent of 
 - Antigravity native background self-updater is the authoritative update owner.
 - Do not disable Antigravity native auto-update.
 - Remove Antigravity from manual Maintenance status rows, update actions, Master Batch order, manual driver enablement, and the active Semaphore template mapping.
-- Preserve historical Semaphore task/template evidence if deleting the old template would remove task history; historical artifacts are not current update ownership.
+- Remove the retired Antigravity Semaphore template and its associated obsolete task history as part of cleanup, matching the prior Codex/Hermes native-ownership transitions; do not keep inactive manual-update artifacts.
 - Antigravity update lifecycle health belongs to ordinary infrastructure monitoring rather than the manual Maintenance action model.
 - This decision changes ownership only; it does not authorize or trigger an Antigravity update.
 
