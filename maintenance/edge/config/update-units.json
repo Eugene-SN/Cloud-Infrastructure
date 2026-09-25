@@ -64,8 +64,11 @@
     {
       "id": "RESTIC",
       "group": "native",
-      "driver": "github_binary",
-      "repository": "restic/restic"
+      "driver": "self_update",
+      "binary": "/usr/local/bin/restic",
+      "arguments": [
+        "self-update"
+      ]
     },
     {
       "id": "RCLONE",
