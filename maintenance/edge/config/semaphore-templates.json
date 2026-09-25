@@ -42,7 +42,7 @@
     },
     "POSTGRESQL": {
       "template_id": 11,
-      "label": "Update PostgreSQL"
+      "label": "Update PostgreSQL (Mattermost)"
     },
     "STALWART": {
       "template_id": 12,
@@ -62,11 +62,11 @@
     },
     "NEXTCLOUD_POSTGRESQL": {
       "template_id": 19,
-      "label": "Update Nextcloud PostgreSQL"
+      "label": "Update PostgreSQL (Nextcloud)"
     },
     "NEXTCLOUD_REDIS": {
       "template_id": 20,
-      "label": "Update Nextcloud Redis"
+      "label": "Update Redis (Nextcloud)"
     }
   }
 }
