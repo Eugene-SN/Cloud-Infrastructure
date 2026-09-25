@@ -122,6 +122,14 @@ For architecture choices involving authentication, reverse proxies, OAuth/OIDC, 
 
 ## Stable project rules
 
+### Shell-block preflight invariant
+
+- Every shell block sent to the operator for execution must be syntax-checked with `bash -n` against the exact final block text before it is sent.
+- If the block contains embedded Python, JSON, jq, awk, sed, heredocs, or other nested-language payloads, validate those payloads separately where practical because `bash -n` validates shell syntax only.
+- Do not claim a block was checked unless that exact final block text was actually validated.
+- This preflight reduces avoidable broken blocks; it does not replace runtime, dependency, permission, or semantic verification.
+
+
 ### Operator decision authority invariant
 
 - The operator decides **whether and when** to update, migrate, enable, disable, adopt, defer, or retain any supported service/version/capability.
