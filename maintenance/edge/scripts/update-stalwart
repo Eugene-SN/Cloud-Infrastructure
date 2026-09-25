@@ -1,0 +1,253 @@
+#!/usr/bin/env python3
+"""Operator-triggered Stalwart Docker update with persisted rolling-minor track."""
+
+import argparse
+import json
+import os
+import pathlib
+import re
+import subprocess
+import tempfile
+
+
+DIRECTORY = pathlib.Path("/opt/mail-stack")
+COMPOSE_FILE = "compose.yaml"
+SERVICE = "stalwart"
+REPOSITORY = "stalwartlabs/stalwart"
+
+
+def run(argv, **kwargs):
+    print("RUN=" + " ".join(argv), flush=True)
+    return subprocess.run(argv, check=True, **kwargs)
+
+
+def compose_argv(*args):
+    return ["docker", "compose", "-f", COMPOSE_FILE, *args]
+
+
+def compose_run(*args, **kwargs):
+    return run(compose_argv(*args), cwd=DIRECTORY, **kwargs)
+
+
+def normalized_image(reference):
+    for prefix in ("docker.io/", "index.docker.io/"):
+        if reference.startswith(prefix):
+            return reference[len(prefix):]
+    return reference
+
+
+def compose_config():
+    result = subprocess.run(
+        compose_argv("config", "--format", "json"),
+        cwd=DIRECTORY,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    return json.loads(result.stdout)
+
+
+def effective_image():
+    image = str(
+        compose_config()
+        .get("services", {})
+        .get(SERVICE, {})
+        .get("image", "")
+    )
+    image = normalized_image(image)
+    if not image.startswith(REPOSITORY + ":"):
+        raise RuntimeError(
+            "unexpected Stalwart compose image: " + (image or "missing")
+        )
+    return image
+
+
+def running_version():
+    result = subprocess.run(
+        ["docker", "exec", SERVICE, "stalwart", "--version"],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    match = re.search(r"([0-9]+\.[0-9]+\.[0-9]+)", result.stdout + result.stderr)
+    if not match:
+        raise RuntimeError("Stalwart runtime version unresolved")
+    return match.group(1)
+
+
+def rewrite_image(old_reference, new_reference):
+    path = DIRECTORY / COMPOSE_FILE
+    original = path.read_text(encoding="utf-8")
+    rewritten = []
+    replacements = 0
+
+    for line in original.splitlines(keepends=True):
+        stripped = line.strip()
+        if not stripped.startswith("image:"):
+            rewritten.append(line)
+            continue
+
+        raw = stripped[len("image:"):].strip()
+        quote = ""
+
+        if (
+            len(raw) >= 2
+            and raw[0] in ("'", '"')
+            and raw[-1] == raw[0]
+        ):
+            quote = raw[0]
+            value = raw[1:-1]
+        else:
+            value = raw
+
+        if normalized_image(value) != normalized_image(old_reference):
+            rewritten.append(line)
+            continue
+
+        indent = line[: len(line) - len(line.lstrip())]
+        newline = "\n" if line.endswith("\n") else ""
+        rewritten.append(
+            f"{indent}image: {quote}{new_reference}{quote}{newline}"
+        )
+        replacements += 1
+
+    if replacements != 1:
+        raise RuntimeError(
+            "Stalwart compose image rewrite refused: "
+            f"expected=1 actual={replacements}"
+        )
+
+    fd, temporary = tempfile.mkstemp(
+        prefix=".compose.stalwart.",
+        suffix=".yaml",
+        dir=str(DIRECTORY),
+    )
+
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as handle:
+            handle.write("".join(rewritten))
+        os.chmod(temporary, path.stat().st_mode & 0o777)
+        os.replace(temporary, path)
+    finally:
+        if os.path.exists(temporary):
+            os.unlink(temporary)
+
+    return original
+
+
+def restore_compose(original):
+    path = DIRECTORY / COMPOSE_FILE
+    fd, temporary = tempfile.mkstemp(
+        prefix=".compose.stalwart.restore.",
+        suffix=".yaml",
+        dir=str(DIRECTORY),
+    )
+
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as handle:
+            handle.write(original)
+        os.chmod(temporary, path.stat().st_mode & 0o777)
+        os.replace(temporary, path)
+    finally:
+        if os.path.exists(temporary):
+            os.unlink(temporary)
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--preflight", action="store_true")
+    parser.add_argument("--target-version")
+    parser.add_argument("--target-track")
+    parser.add_argument("--target-digest")
+    args = parser.parse_args()
+
+    if not (DIRECTORY / COMPOSE_FILE).is_file():
+        raise RuntimeError("Stalwart compose file missing")
+
+    compose_run("config", "--quiet")
+    old_reference = effective_image()
+    installed = running_version()
+
+    if args.preflight:
+        print(
+            "STALWART_UPDATE_PREFLIGHT=PASS"
+            f"|INSTALLED={installed}"
+            f"|IMAGE={old_reference}"
+        )
+        print("REAL_UPDATE_EXECUTED=NO")
+        return
+
+    target_version = str(args.target_version or "").strip()
+    target_track = str(args.target_track or "").strip()
+    target_digest = str(args.target_digest or "").strip()
+
+    if not re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+", target_version):
+        raise RuntimeError("invalid Stalwart target version")
+
+    parts = target_version.split(".")
+    expected_track = "v" + ".".join(parts[:2])
+
+    if target_track != expected_track:
+        raise RuntimeError(
+            "Stalwart target track mismatch: "
+            f"expected={expected_track} actual={target_track}"
+        )
+
+    if not target_digest.startswith("sha256:"):
+        raise RuntimeError("invalid Stalwart target digest")
+
+    new_reference = f"{REPOSITORY}:{target_track}"
+    pinned = f"{REPOSITORY}@{target_digest}"
+
+    run(["docker", "pull", pinned])
+    run(["docker", "tag", pinned, new_reference])
+
+    original = None
+
+    if normalized_image(old_reference) != normalized_image(new_reference):
+        original = rewrite_image(old_reference, new_reference)
+
+    try:
+        compose_run("config", "--quiet")
+        compose_run(
+            "up",
+            "-d",
+            "--wait",
+            "--force-recreate",
+            "--remove-orphans",
+            SERVICE,
+        )
+
+        actual = running_version()
+        if actual != target_version:
+            raise RuntimeError(
+                "Stalwart runtime version mismatch: "
+                f"expected={target_version} actual={actual}"
+            )
+    except Exception:
+        if original is not None:
+            restore_compose(original)
+            compose_run("config", "--quiet")
+            compose_run(
+                "up",
+                "-d",
+                "--wait",
+                "--force-recreate",
+                "--remove-orphans",
+                SERVICE,
+            )
+        raise
+
+    print(
+        "STALWART_UPDATE_GATE=PASS"
+        f"|VERSION={target_version}"
+        f"|TRACK={target_track}"
+    )
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except Exception as exc:
+        print(f"STALWART_UPDATE_RESULT=FAILED:{exc}", flush=True)
+        raise SystemExit(1)
