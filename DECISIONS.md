@@ -2518,3 +2518,26 @@ T3 was required as a persistent 24/7 remote workspace on `edge`, independent of 
 **Marker:** `NEXTCLOUD_MATTERMOST_FILE_SEND_USE_CASE_ACCEPTED`.
 
 **Supersedes:** the provisional idea to create a dedicated Mattermost `Nextcloud` channel solely for integration testing.
+
+
+---
+
+## 2026-09-25 — Nextcloud files-first UI; Dashboard disabled
+
+**Status:** ACCEPTED
+
+**Context:** The Nextcloud instance is used primarily as a personal file cloud. The Dashboard and its widgets added an intermediate landing page without meaningful value for the current single-operator workflow. Mattermost integration value is retained through the Files action rather than the Dashboard widget.
+
+**Decision:**
+- set Nextcloud system `defaultapp` to `files`;
+- disable the `dashboard` app;
+- remove Dashboard widgets from the active UI model by disabling Dashboard itself;
+- retain `integration_mattermost` and its Files action;
+- preserve the accepted workflow **Nextcloud Files -> Send to Mattermost -> choose an existing relevant channel**;
+- do not keep Dashboard solely for Mattermost notifications.
+
+**Verification:** `FINAL_DEFAULTAPP=files`; Dashboard disabled; Mattermost integration enabled; Mattermost file action `1`; Nextcloud health PASS.
+
+**Acceptance marker:** `NEXTCLOUD_FILES_DEFAULT_DASHBOARD_DISABLED=PASS`.
+
+**Supersedes:** the prior current-state Dashboard layout policy (`files-favorites,mattermost_notifications`) and the earlier decision to expose the Mattermost Dashboard widget. It does not supersede the accepted Nextcloud↔Mattermost file-send integration.
