@@ -480,7 +480,7 @@ Avoid restart/reboot unless actually required.
 - Use a native-first ownership model: supported upstream/vendor automatic update lifecycle remains authoritative unless a concrete incompatibility, regression, migration constraint or explicit accepted decision requires otherwise.
 - Maintenance/Semaphore owns only manual targets that do not have an accepted native automatic owner. Those real manual updates and Master Batch executions are operator-initiated from `update.escloud.us`.
 - Native-owned automatic-update components are outside the Maintenance target/action model entirely; do not collect/render them as Maintenance update rows and do not create competing Semaphore templates/drivers for them. Their lifecycle health belongs to the ordinary infrastructure monitoring layer when monitoring is required.
-- Current native owners are Codex managed-daemon auto-update, Hermes native cron + conditional settlement, and Ubuntu security updates through package-owned `apt-daily*` / `unattended-upgrades`.
+- Current native owners are Codex managed-daemon auto-update, Hermes native cron + conditional settlement, Antigravity native background self-updater, and Ubuntu security updates through package-owned `apt-daily*` / `unattended-upgrades`.
 - Normal and third-party APT updates remain manual through `APT_EDGE`; automatic reboot remains disabled.
 - Do not create project-specific automatic cron/systemd/scheduled update mechanisms for products that lack a supported native automatic updater.
 - Semaphore remains the backend executor/orchestrator for manual targets only; it must not independently schedule or launch them.
