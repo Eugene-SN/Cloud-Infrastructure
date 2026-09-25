@@ -461,6 +461,8 @@ Latest applicable `ACCEPTED` decision has priority. `SUPERSEDED`, `REJECTED`, an
 
 Any terminal block whose output must be returned to chat uses a subshell, `set -Eeuo pipefail`, ASCII/English `BLOCK_NAME`, and green BEGIN/END delimiters including final RC.
 
+Before sending any shell block to the operator, validate the exact final block text with `bash -n`. If the block embeds Python, JSON, jq, awk, sed, heredocs, or another nested language, validate that embedded payload separately where practical because `bash -n` checks only shell grammar. Never state that a block was preflighted unless the exact final text was actually checked.
+
 Do not hide failures through `|| true`, global `set +e`, or stderr suppression. Handle expected non-zero statuses explicitly.
 
 If a block fails or the terminal/session closes, determine the failure point and side effects with a proportionate read-only recovery audit before retrying.
