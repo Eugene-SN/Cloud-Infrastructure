@@ -60,6 +60,20 @@ assert nextcloud["image_track"] == ".".join(nextcloud_parts[:2]) + "-apache"
 assert next(u for u in manifest["units"] if u["id"] == "NEXTCLOUD")["driver"] == "nextcloud_compose"
 assert (root / "scripts/update-nextcloud").is_file()
 
+for component in ("POSTGRESQL", "NEXTCLOUD_POSTGRESQL"):
+    row = next(r for r in docker if r["component"] == component)
+    available = row["available_application_version"]
+    assert available.count(".") == 1
+    assert row["image_track"] == available.split(".", 1)[0] + "-alpine"
+    assert row["source"] == "POSTGRES_OFFICIAL_LATEST_STABLE_DOCKER"
+
+stalwart = next(r for r in docker if r["component"] == "STALWART")
+stalwart_available = stalwart["available_application_version"]
+stalwart_parts = stalwart_available.split(".")
+assert len(stalwart_parts) == 3
+assert stalwart["image_track"] == "v" + ".".join(stalwart_parts[:2])
+assert stalwart["source"] == "STALWART_OFFICIAL_LATEST_STABLE_DOCKER"
+
 assert templates["schema"] == 2
 assert set(templates["components"]) == manual
 template_ids = [v["template_id"] for v in templates["components"].values()]
