@@ -126,7 +126,7 @@ def normalized_image_reference(reference):
 
 def preflight(unit):
     driver = unit["driver"]
-    if driver in ("compose", "nextcloud_compose"):
+    if driver in ("compose", "nextcloud_compose", "stalwart_compose"):
         directory = pathlib.Path(unit["directory"])
         for item in unit["files"]:
             if not (directory / item).is_file():
@@ -136,6 +136,10 @@ def preflight(unit):
             helper = pathlib.Path("/opt/edge-maintenance/scripts/update-nextcloud")
             if not helper.is_file():
                 raise RuntimeError(f"missing Nextcloud update helper: {helper}")
+        elif driver == "stalwart_compose":
+            helper = pathlib.Path("/opt/edge-maintenance/scripts/update-stalwart")
+            if not helper.is_file():
+                raise RuntimeError(f"missing Stalwart update helper: {helper}")
     elif driver == "user_cli":
         if not pathlib.Path(unit["binary"]).is_file():
             raise RuntimeError(f"missing CLI: {unit['binary']}")
@@ -222,6 +226,26 @@ def execute(unit, status_row):
             "/opt/edge-maintenance/scripts/update-nextcloud",
             "--target-version",
             target,
+        ])
+    elif driver == "stalwart_compose":
+        target = str(
+            status_row.get("available_application_version")
+            or status_row.get("available")
+            or ""
+        ).strip()
+        track = str(status_row.get("image_track") or "").strip()
+        digest = str(status_row.get("remote_image_digest") or "").strip()
+        if not target or not track or not digest.startswith("sha256:"):
+            raise RuntimeError("fresh Stalwart target identity is incomplete")
+        run([
+            sys.executable,
+            "/opt/edge-maintenance/scripts/update-stalwart",
+            "--target-version",
+            target,
+            "--target-track",
+            track,
+            "--target-digest",
+            digest,
         ])
     elif driver == "compose":
         directory = pathlib.Path(unit["directory"])
