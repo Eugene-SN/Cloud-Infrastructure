@@ -25,13 +25,14 @@ assert maintenance["target_model"] == "update_units_v5"
 assert manifest["schema"] == 2
 assert manifest["ownership_mode"] == "native_first_hybrid"
 assert "monitor_only" not in manifest
-assert len(manual) == 17
-assert native == {"HERMES", "CODEX", "UBUNTU_SECURITY"}
+assert len(manual) == 16
+assert native == {"HERMES", "CODEX", "UBUNTU_SECURITY", "ANTIGRAVITY"}
 assert set(index) == manual
 assert "HERMES" not in index
 assert "CODEX" not in index
-assert maintenance["summary"]["TOTAL"] == 17
-assert maintenance["summary"]["ACTIONABLE_TARGETS"] == 17
+assert "ANTIGRAVITY" not in index
+assert maintenance["summary"]["TOTAL"] == 16
+assert maintenance["summary"]["ACTIONABLE_TARGETS"] == 16
 assert "MONITOR_ONLY_TARGETS" not in maintenance["summary"]
 assert maintenance["summary"]["APT_MANAGED_COMPONENTS"] == 8
 
@@ -89,6 +90,7 @@ assert templates["master_template_id"] == 18
 assert enablement["schema"] == 2
 assert enablement["master"] is True
 assert "CLOUDCLI" not in enablement["enabled"]
+assert "ANTIGRAVITY" not in enablement["enabled"]
 assert set(enablement["enabled"]) == manual
 assert all(enablement["enabled"].values())
 
@@ -119,6 +121,7 @@ assert actions["master_template_id"] == 18
 assert set(actions["components"]) == manual
 assert "HERMES" not in actions["components"]
 assert "CODEX" not in actions["components"]
+assert "ANTIGRAVITY" not in actions["components"]
 
 for target in manual:
     assert actions["components"][target]["template_id"] is not None
@@ -128,6 +131,7 @@ for target in manual:
 assert not (root / "config/apt-periodic-manual-only.conf").exists()
 assert not (root / "playbooks/updates/hermes.yml").exists()
 assert not (root / "playbooks/updates/codex.yml").exists()
+assert not (root / "playbooks/updates/antigravity.yml").exists()
 
 for path in (
     "rclone.yml",
