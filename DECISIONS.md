@@ -2395,5 +2395,5 @@ T3 was required as a persistent 24/7 remote workspace on `edge`, independent of 
 - Antigravity update lifecycle health belongs to ordinary infrastructure monitoring rather than the manual Maintenance action model.
 - This decision changes ownership only; it does not authorize or trigger an Antigravity update.
 
-**Evidence:** runtime audit reported `ANTIGRAVITY_NATIVE_AUTO_UPDATE=ENABLED_DEFAULT`, `AGY_CLI_DISABLE_AUTO_UPDATE=ABSENT`, and an existing native updater directory under `~/.gemini/antigravity-cli/updater/`.
+**Acceptance evidence:** native updater proof reported official manifest version `1.2.10`, enabled default updater state, background updater processes in Antigravity logs, and `update_status.json` with `success=true` / `Update successful, restart CLI to use`. Final runtime reconciliation passed with 16 actionable manual targets / 23 monitored components / 0 CLI targets / `CHECK_FAILED=0`; Semaphore template ID 17 had zero tasks and was deleted with zero foreign-key violations. Acceptance marker: `ANTIGRAVITY_NATIVE_AUTO_UPDATE_OWNERSHIP=PASS`.
 
