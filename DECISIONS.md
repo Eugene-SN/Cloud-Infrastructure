@@ -2397,3 +2397,22 @@ T3 was required as a persistent 24/7 remote workspace on `edge`, independent of 
 
 **Acceptance evidence:** native updater proof reported official manifest version `1.2.10`, enabled default updater state, background updater processes in Antigravity logs, and `update_status.json` with `success=true` / `Update successful, restart CLI to use`. Final runtime reconciliation passed with 16 actionable manual targets / 23 monitored components / 0 CLI targets / `CHECK_FAILED=0`; Semaphore template ID 17 had zero tasks and was deleted with zero foreign-key violations. Acceptance marker: `ANTIGRAVITY_NATIVE_AUTO_UPDATE_OWNERSHIP=PASS`.
 
+---
+
+## 2026-09-25 — Stalwart rolling-minor execution architecture
+
+**Status:** ACCEPTED
+
+**Context:** Latest-stable discovery had been decoupled from the deployed `v0.16` track, but generic Compose execution could not persist a future transition to a newer upstream stable minor series because the compose file would still reference the old rolling-minor tag.
+
+**Decision:**
+- latest-stable discovery remains authoritative and uncapped;
+- production Stalwart follows the upstream-recommended rolling-minor track `v<major>.<minor>`;
+- operator-triggered updates use the dedicated `stalwart_compose` driver;
+- patch updates within the current series keep the existing rolling-minor track;
+- if a later upstream stable release belongs to a new rolling-minor series, the driver may atomically persist the corresponding new track as part of the explicitly initiated update;
+- runtime version must match the discovered target after execution; compose state is restored if execution fails after a track rewrite;
+- discovery never authorizes execution.
+
+**Acceptance:** runtime verification passed with Stalwart `0.16.23`, track `v0.16`, helper preflight PASS, and no service mutation. Acceptance marker: `STALWART_ROLLING_MINOR_EXECUTION_ARCHITECTURE=PASS`.
+
