@@ -440,25 +440,17 @@ try:
         "POSTGRESQL",
         "NEXTCLOUD_POSTGRESQL",
     ):
-        major = tag.split(
-            "-",
-            1,
-        )[0]
-
         versions = []
 
         for alias in aliases:
             match = re.fullmatch(
-                re.escape(major)
-                + r"\.([0-9]+)-alpine",
+                r"([0-9]+\.[0-9]+)-alpine",
                 alias,
             )
 
             if match:
                 versions.append(
-                    major
-                    + "."
-                    + match.group(1)
+                    match.group(1)
                 )
 
         if versions:
@@ -468,14 +460,11 @@ try:
             )
 
     elif component == "STALWART":
-        series = tag.lstrip("v")
         versions = []
 
         for alias in aliases:
             match = re.fullmatch(
-                r"v?("
-                + re.escape(series)
-                + r"\.[0-9]+)",
+                r"v?([0-9]+\.[0-9]+\.[0-9]+)",
                 alias,
             )
 
@@ -728,11 +717,25 @@ emit_docker_component() {
     test -n "$installed" && test "$installed" != "<no value>" || installed="-"
     test -n "$remote_version" || remote_version="-"
 
-    if test "$component" = "NEXTCLOUD" && test "$remote_version" != "-"; then
-        nc_major="${remote_version%%.*}"
-        nc_rest="${remote_version#*.}"
-        nc_minor="${nc_rest%%.*}"
-        track="${nc_major}.${nc_minor}-apache"
+    if test "$remote_version" != "-"; then
+        case "$component" in
+            NEXTCLOUD)
+                nc_major="${remote_version%%.*}"
+                nc_rest="${remote_version#*.}"
+                nc_minor="${nc_rest%%.*}"
+                track="${nc_major}.${nc_minor}-apache"
+                ;;
+            POSTGRESQL|NEXTCLOUD_POSTGRESQL)
+                pg_major="${remote_version%%.*}"
+                track="${pg_major}-alpine"
+                ;;
+            STALWART)
+                sw_major="${remote_version%%.*}"
+                sw_rest="${remote_version#*.}"
+                sw_minor="${sw_rest%%.*}"
+                track="v${sw_major}.${sw_minor}"
+                ;;
+        esac
     fi
 
     if test -z "$local_digest" || test -z "$remote_digest"; then
@@ -755,9 +758,17 @@ emit_docker_component() {
     fi
 
     source="DOCKER_RUNTIME_AND_REGISTRY"
-    if test "$component" = "NEXTCLOUD"; then
-        source="NEXTCLOUD_UPSTREAM_STABLE_AND_OFFICIAL_DOCKER"
-    fi
+    case "$component" in
+        NEXTCLOUD)
+            source="NEXTCLOUD_UPSTREAM_STABLE_AND_OFFICIAL_DOCKER"
+            ;;
+        POSTGRESQL|NEXTCLOUD_POSTGRESQL)
+            source="POSTGRES_OFFICIAL_LATEST_STABLE_DOCKER"
+            ;;
+        STALWART)
+            source="STALWART_OFFICIAL_LATEST_STABLE_DOCKER"
+            ;;
+    esac
 
     printf '%s\n' \
       "VERSION|SCOPE=EDGE|COMPONENT=${component}|INSTALLED=$(normalize "$installed")|STABLE=$(normalize "$remote_version")|APPLICATION_VERSION=$(normalize "$installed")|AVAILABLE_VERSION=$(normalize "$remote_version")|IMAGE_REPOSITORY=${repository}|IMAGE_TAG=${track}|RUNNING_DIGEST=${local_digest:--}|REMOTE_DIGEST=${remote_digest:--}|UPDATE_REASON=${update_reason}|STATUS=${status}|SOURCE=${source}"
@@ -822,11 +833,11 @@ echo "--- DOCKER APPLICATIONS ---"
 emit_docker_component N8N n8n docker.n8n.io/n8nio/n8n:stable docker.n8n.io/n8nio/n8n stable
 emit_docker_component AUTHELIA authelia authelia/authelia:latest authelia/authelia latest
 emit_docker_component MATTERMOST mattermost-mattermost-1 mattermost/mattermost-team-edition:latest mattermost/mattermost-team-edition latest
-emit_docker_component POSTGRESQL mattermost-postgres-1 postgres:18-alpine postgres 18-alpine
-emit_docker_component STALWART stalwart stalwartlabs/stalwart:v0.16 stalwartlabs/stalwart v0.16
+emit_docker_component POSTGRESQL mattermost-postgres-1 postgres:alpine postgres alpine
+emit_docker_component STALWART stalwart stalwartlabs/stalwart:latest stalwartlabs/stalwart latest
 emit_docker_component BULWARK bulwark ghcr.io/bulwarkmail/webmail:latest ghcr.io/bulwarkmail/webmail latest
 emit_docker_component NEXTCLOUD nextcloud-app-1 nextcloud:stable-apache nextcloud stable-apache
-emit_docker_component NEXTCLOUD_POSTGRESQL nextcloud-db-1 postgres:18-alpine postgres 18-alpine
+emit_docker_component NEXTCLOUD_POSTGRESQL nextcloud-db-1 postgres:alpine postgres alpine
 emit_docker_component NEXTCLOUD_REDIS nextcloud-redis-1 redis:alpine redis alpine
 
 echo
