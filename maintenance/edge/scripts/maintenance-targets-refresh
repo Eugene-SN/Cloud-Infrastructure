@@ -51,9 +51,7 @@ DOCKER_COMPONENTS = [
     ("NEXTCLOUD_REDIS", "Nextcloud Redis"),
 ]
 
-CLI_COMPONENTS = [
-    ("ANTIGRAVITY", "Antigravity CLI"),
-]
+CLI_COMPONENTS = []
 
 
 def apt_probe():
