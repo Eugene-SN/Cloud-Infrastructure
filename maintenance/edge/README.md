@@ -14,7 +14,8 @@ Native automatic owners outside Maintenance:
 
 - `HERMES` — Hermes native cron updater plus conditional settlement timer;
 - `CODEX` — Codex managed-daemon updater / `pid-update-loop`;
-- `UBUNTU_SECURITY` — package-owned `apt-daily*` / `unattended-upgrades`.
+- `UBUNTU_SECURITY` — package-owned `apt-daily*` / `unattended-upgrades`;
+- `ANTIGRAVITY` — upstream-native background self-updater.
 
 Normal and third-party APT updates remain manual through `APT_EDGE`. Automatic reboot is disabled.
 
@@ -22,18 +23,18 @@ Normal and third-party APT updates remain manual through `APT_EDGE`. Automatic r
 
 Generated target model: `update_units_v5`.
 
-Maintenance contains exactly 17 actionable manual targets:
+Maintenance contains exactly 16 actionable manual targets:
 
 `APT_EDGE`, `XRAY`, `HYSTERIA2`, `BACKREST`, `RESTIC`, `RCLONE`,
 `SEMAPHORE`, `N8N`, `AUTHELIA`, `MATTERMOST`, `POSTGRESQL`,
 `STALWART`, `BULWARK`, `NEXTCLOUD`, `NEXTCLOUD_POSTGRESQL`,
-`NEXTCLOUD_REDIS`, `ANTIGRAVITY`.
+`NEXTCLOUD_REDIS`.
 
-`HERMES` and `CODEX` do not appear in raw Maintenance version rows,
+`HERMES`, `CODEX` and `ANTIGRAVITY` do not appear in raw Maintenance version rows,
 `maintenance.json`, `actions.json`, the Maintenance dashboard or Semaphore
 update templates.
 
-`actions.json` contains exactly the 17 manual actions, has
+`actions.json` contains exactly the 16 manual actions, has
 `execution_mode=manual_only`, and `auto_update=false`.
 
 `update.escloud.us` remains the operator launch surface. Semaphore is the
@@ -53,7 +54,7 @@ the actual image update remains operator-triggered.
 
 ## Master Batch
 
-Master Batch derives its 18-target plan from `config/update-units.json`.
+Master Batch derives its 16-target plan from `config/update-units.json`.
 Both real execution and `--plan-only` require the accepted schema-2
 `/etc/edge-maintenance/manual-driver-enablement.json`.
 
@@ -71,7 +72,7 @@ updates, not native updater drift.
 
 A manual component update requires:
 
-- the target to be one of the 18 manifest units;
+- the target to be one of the 16 manifest units;
 - schema-2 enablement to permit the target;
 - a fresh `UPDATE_AVAILABLE` row;
 - explicit operator initiation.
