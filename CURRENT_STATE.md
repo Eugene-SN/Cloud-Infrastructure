@@ -833,3 +833,18 @@ Acceptance markers:
 - Nextcloud updater now uses bounded application-readiness polling after container recreation; retry and fail-closed timeout semantics are accepted.
 - Final clean Master regression: `16/16 CURRENT`, `RUN=0`, `SKIPPED_CURRENT=16`, post-scan PASS, health PASS, no component update executed.
 - Acceptance marker: `TASK39_READINESS_INCIDENT_ACCEPTANCE=PASS`.
+
+---
+
+## 2026-09-25 — Maintenance service-name normalization
+
+- Display names accepted:
+  - `POSTGRESQL` → `PostgreSQL (Mattermost)`;
+  - `NEXTCLOUD_POSTGRESQL` → `PostgreSQL (Nextcloud)`;
+  - `NEXTCLOUD_REDIS` → `Redis (Nextcloud)`.
+- Internal target IDs remain unchanged.
+- Update drivers, execution order and lifecycle semantics remain unchanged.
+- Maintenance rows are sorted by display `label` using case-insensitive ordering before `maintenance.json` is written; dashboard tables therefore render `SERVICE NAME` alphabetically.
+- Accepted Docker table order: `Authelia`, `Bulwark`, `Mattermost`, `n8n`, `Nextcloud`, `PostgreSQL (Mattermost)`, `PostgreSQL (Nextcloud)`, `Redis (Nextcloud)`, `Stalwart`.
+- Runtime/canonical alignment passed for `maintenance-targets-refresh` and `semaphore-templates.json`.
+- Acceptance markers: `MAINTENANCE_SERVICE_NAME_NORMALIZATION=PASS`, `SERVICE_NAME_ALPHABETICAL_SORT=PASS`.
