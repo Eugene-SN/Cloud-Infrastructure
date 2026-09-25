@@ -2541,3 +2541,31 @@ T3 was required as a persistent 24/7 remote workspace on `edge`, independent of 
 **Acceptance marker:** `NEXTCLOUD_FILES_DEFAULT_DASHBOARD_DISABLED=PASS`.
 
 **Supersedes:** the prior current-state Dashboard layout policy (`files-favorites,mattermost_notifications`) and the earlier decision to expose the Mattermost Dashboard widget. It does not supersede the accepted Nextcloud↔Mattermost file-send integration.
+
+
+---
+
+## 2026-09-25T19:57:00+03:00 — Stage 8 Monitoring Notification Model v2
+
+**Status:** ACCEPTED
+
+**Context:** A fresh read-only audit confirmed that the accepted Stage 8 `edge-monitor` collects substantially richer diagnostic state than is currently presented in the Mattermost `Monitoring` channel. The current notification layer treats raw checks as independent alert identities and emits a minimal state transition, which preserves deduplication but produces low-information messages and can create cascading child alerts for one root cause.
+
+**Decision:**
+- keep the accepted single `edge-monitor.service`, collectors, probe cadences, two-failure confirmation, atomic snapshot, edge-only scope, and no-heavy-monitoring-stack constraint;
+- redefine Mattermost `Monitoring` as an operational incident journal rather than telemetry/log/update feed;
+- use only `INCIDENT`, `DEGRADED`, and `RECOVERED` user-visible event classes; healthy state stays silent;
+- correlate raw checks into service-oriented incidents with explicit primary versus diagnostic signals;
+- suppress redundant child notifications when a failed parent dependency explains them, while retaining child states in `snapshot.json`;
+- format notifications with human-readable title/scope/impact/cause, relevant diagnostic evidence, incident start time, and recovery duration when the existing probes provide those facts;
+- make NetBird an explicit notification signal and treat it as the parent for dependent Home/PAI reachability where applicable;
+- keep `UPDATE_AVAILABLE` informational and out of Mattermost Monitoring;
+- retain host CPU/memory/root-filesystem values as dashboard/snapshot telemetry without inventing new alert thresholds;
+- safely prune retired durable notification-state keys such as the observed stale `app/cloudcli`;
+- do not add Prometheus/Grafana/Loki/Alertmanager/Gatus, a monitoring database, an external uptime service, or another monitoring daemon.
+
+**Canonical design:** `STAGE_08_MONITORING_NOTIFICATION_MODEL_V2_DESIGN_2026-09-25.md`.
+
+**Implementation state:** PENDING. This decision accepts the target notification/correlation model only; production runtime remains on the existing Stage 8 notification implementation until a separately verified mutation is completed.
+
+**Supersedes:** only the Stage 8 Mattermost presentation assumption that each raw check transition is an appropriate independent user-facing alert. It does not supersede Stage 8 collectors, cadence, failure thresholds, snapshot/state paths, monitoring domains, or accepted edge-only limitations.
