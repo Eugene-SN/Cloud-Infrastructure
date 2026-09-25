@@ -910,3 +910,23 @@ Current accepted state:
 - Nextcloud remained healthy after the change: maintenance off, no DB upgrade pending.
 
 Acceptance marker: `NEXTCLOUD_FILES_DEFAULT_DASHBOARD_DISABLED=PASS`.
+
+
+---
+
+## 2026-09-25 — Stage 8 Monitoring Notification Model v2.3.3 — COMPLETE / ACCEPTED
+
+- Production runtime SHA-256: `8bc25a8788bfd60f61c1cc1b62fd61e14f4c551f5ebfc3900f7c837b4dc3b714`.
+- Mattermost `Monitoring` uses service-oriented correlated incident notifications with parent/child suppression.
+- Notification posts are Blocks-only; duplicated top-level plain text is removed.
+- Presentation is mobile-first and vertical; production cards do not use `column_set`.
+- Accepted heading: large integrated severity title such as `### 🔴 Mattermost unavailable`; scope/category remains a separate small/subtle line.
+- Incident metadata is `STARTED` plus optional `CONFIRMED` when meaningful.
+- Recovery metadata is `DURATION` plus `RECOVERED`.
+- Diagnostics remain collapsible.
+- Final real-webhook synthetic E2E proved INCIDENT delivery, unchanged-incident deduplication and RECOVERED delivery with exactly two Mattermost posts.
+- Final E2E did not mutate production durable state; service remained active/running and `overall_state=OK`.
+
+Acceptance marker: `EDGE_MONITOR_NOTIFICATION_V2_3_3_FINAL_E2E=PASS`.
+
+Authoritative record: `STAGE_08_MONITORING_NOTIFICATION_MODEL_V2_3_3_ACCEPTANCE_2026-09-25.md`.
