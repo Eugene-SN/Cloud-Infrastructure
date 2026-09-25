@@ -140,6 +140,7 @@ def preflight(unit):
             helper = pathlib.Path("/opt/edge-maintenance/scripts/update-stalwart")
             if not helper.is_file():
                 raise RuntimeError(f"missing Stalwart update helper: {helper}")
+            run([sys.executable, str(helper), "--preflight"])
     elif driver == "user_cli":
         if not pathlib.Path(unit["binary"]).is_file():
             raise RuntimeError(f"missing CLI: {unit['binary']}")
