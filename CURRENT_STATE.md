@@ -848,3 +848,30 @@ Acceptance markers:
 - Accepted Docker table order: `Authelia`, `Bulwark`, `Mattermost`, `n8n`, `Nextcloud`, `PostgreSQL (Mattermost)`, `PostgreSQL (Nextcloud)`, `Redis (Nextcloud)`, `Stalwart`.
 - Runtime/canonical alignment passed for `maintenance-targets-refresh` and `semaphore-templates.json`.
 - Acceptance markers: `MAINTENANCE_SERVICE_NAME_NORMALIZATION=PASS`, `SERVICE_NAME_ALPHABETICAL_SORT=PASS`.
+
+
+---
+
+## 2026-09-25 — Nextcloud personal-file-cloud policy reconciliation
+
+Current accepted Nextcloud policy after runtime reconciliation:
+
+- Nextcloud Server: `35.0.1`; healthy, maintenance off, no DB upgrade pending.
+- Primary working account: OIDC user `Eugene` via Authelia; local Database user `admin` is retained as recovery/bootstrap admin.
+- Native-client access remains active; permanent filesystem tokens for macOS and iOS were preserved.
+- Required file-cloud apps remain enabled: Files, DAV, Settings, Provisioning API, File Sharing, Deleted files, Versions, Dashboard, Notifications, user_oidc, Viewer, Webhook Listeners and Workflow Engine.
+- `files_versions` is enabled as part of file data-safety semantics.
+- Nextcloud-native TOTP and WebAuthn providers are disabled; `twofactor_backupcodes` remains enabled only because Nextcloud marks it always-enabled.
+- Federation user functionality is disabled globally through `files_sharing`: outgoing/incoming server-to-server shares, outgoing/incoming server-to-server group shares and lookup-server use are all `no`.
+- Always-enabled platform apps are retained rather than bypassed: `cloud_federation_api`, `federatedfilesharing`, `lookup_server_connector`, `oauth2`, `profile`, `twofactor_backupcodes`.
+- OAuth2 has zero registered clients.
+- Unused optional apps disabled by reconciliation: `logreader`, `privacy`, `serverinfo`, `twofactor_totp`, `twofactor_webauthn`.
+- Existing disabled non-required apps remain disabled, including Activity, AppAPI, Teams/Circles, Comments, Federation, external storage, Office, Photos, Recommendations, Support, Usage Survey, User Migration, User Status and Weather Status.
+- UI-oriented apps intentionally retained include Dashboard, Inter Fonts, Custom menu, PDF viewer, Text, Theming, Viewer and Related Resources.
+- Integration-oriented apps intentionally retained include File Sharing, Share by mail, Notifications, Webhook Listeners and Workflow Engine.
+- Global Dashboard layout is `files-favorites`; per-user Dashboard layout overrides were removed so both existing users inherit the same global policy.
+- Background jobs remain on `cron`.
+- Local health verification passed: `/status.php` HTTP 200 and unauthenticated DAV probe HTTP 401.
+- Acceptance marker: `NEXTCLOUD_POLICY_RECONCILIATION_FINAL=PASS`.
+
+Authoritative record: `NEXTCLOUD_POLICY_RECONCILIATION_ACCEPTANCE_2026-09-25.md`.
