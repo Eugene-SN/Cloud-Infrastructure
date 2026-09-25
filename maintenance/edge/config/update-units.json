@@ -15,6 +15,10 @@
     {
       "id": "UBUNTU_SECURITY",
       "owner": "unattended-upgrades"
+    },
+    {
+      "id": "ANTIGRAVITY",
+      "owner": "antigravity_native_background_updater"
     }
   ],
   "master_order": [
@@ -32,7 +36,6 @@
     "NEXTCLOUD",
     "NEXTCLOUD_POSTGRESQL",
     "NEXTCLOUD_REDIS",
-    "ANTIGRAVITY",
     "SEMAPHORE",
     "APT_EDGE"
   ],
@@ -186,18 +189,6 @@
         "compose.yaml"
       ],
       "service": "redis"
-    },
-    {
-      "id": "ANTIGRAVITY",
-      "group": "cli",
-      "driver": "user_cli",
-      "binary": "/home/core/.local/bin/agy",
-      "arguments": [
-        "update"
-      ],
-      "services": [
-        "antigravity-cli-daemon.service"
-      ]
     }
   ]
 }
