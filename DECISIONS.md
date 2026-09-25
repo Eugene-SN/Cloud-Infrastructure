@@ -2566,6 +2566,6 @@ T3 was required as a persistent 24/7 remote workspace on `edge`, independent of 
 
 **Canonical design:** `STAGE_08_MONITORING_NOTIFICATION_MODEL_V2_DESIGN_2026-09-25.md`.
 
-**Implementation state:** PENDING. This decision accepts the target notification/correlation model only; production runtime remains on the existing Stage 8 notification implementation until a separately verified mutation is completed.
+**Implementation state:** COMPLETE / ACCEPTED. Production Notification Model v2.3.3 is deployed and verified. Accepted runtime SHA-256: `8bc25a8788bfd60f61c1cc1b62fd61e14f4c551f5ebfc3900f7c837b4dc3b714`. Final real-webhook synthetic E2E proved INCIDENT delivery, unchanged-state deduplication and RECOVERED delivery with exactly two Mattermost posts while leaving production durable state unchanged. Mobile-first vertical Blocks-only presentation and the integrated severity heading are accepted. Acceptance record: `STAGE_08_MONITORING_NOTIFICATION_MODEL_V2_3_3_ACCEPTANCE_2026-09-25.md`.
 
 **Supersedes:** only the Stage 8 Mattermost presentation assumption that each raw check transition is an appropriate independent user-facing alert. It does not supersede Stage 8 collectors, cadence, failure thresholds, snapshot/state paths, monitoring domains, or accepted edge-only limitations.
