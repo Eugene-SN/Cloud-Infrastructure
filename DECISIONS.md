@@ -2569,3 +2569,27 @@ T3 was required as a persistent 24/7 remote workspace on `edge`, independent of 
 **Implementation state:** COMPLETE / ACCEPTED. Production Notification Model v2.3.3 is deployed and verified. Accepted runtime SHA-256: `8bc25a8788bfd60f61c1cc1b62fd61e14f4c551f5ebfc3900f7c837b4dc3b714`. Final real-webhook synthetic E2E proved INCIDENT delivery, unchanged-state deduplication and RECOVERED delivery with exactly two Mattermost posts while leaving production durable state unchanged. Mobile-first vertical Blocks-only presentation and the integrated severity heading are accepted. Acceptance record: `STAGE_08_MONITORING_NOTIFICATION_MODEL_V2_3_3_ACCEPTANCE_2026-09-25.md`.
 
 **Supersedes:** only the Stage 8 Mattermost presentation assumption that each raw check transition is an appropriate independent user-facing alert. It does not supersede Stage 8 collectors, cadence, failure thresholds, snapshot/state paths, monitoring domains, or accepted edge-only limitations.
+
+
+---
+
+## 2026-09-25 — Mattermost global message history reset
+
+**Status:** ACCEPTED
+
+**Context:** The operator requested a complete reset of Mattermost message history across public/private channels and DM/GM conversations while preserving users, channels, memberships and the rest of the server configuration. Direct SQL deletion was rejected in favor of the Mattermost application-layer permanent-delete path after upstream source verification.
+
+**Decision:**
+- use Mattermost permanent post deletion through `DELETE /api/v4/posts/{id}?permanent=true`;
+- temporarily enable `ServiceSettings.EnableAPIPostDeletion` only for the prune window;
+- authenticate with the existing active system-admin PAT;
+- preserve channel and user objects;
+- keep a temporary PostgreSQL/config recovery point only until final acceptance;
+- restore `EnableAPIPostDeletion=false` after deletion;
+- remove the temporary recovery artifact after full verification.
+
+**Acceptance evidence:** original `posts=181`; final `posts=0`; active/soft-deleted posts, thread replies, threads, thread memberships and fileinfo all zero; auxiliary post/root references zero; Mattermost healthy/API HTTP 200; users/channels preserved; monitoring restored; recovery artifact removed.
+
+**Acceptance marker:** `MATTERMOST_GLOBAL_MESSAGES_PERMANENT_PRUNE=PASS`.
+
+**Evidence:** `MATTERMOST_GLOBAL_MESSAGE_PRUNE_ACCEPTANCE_2026-09-25.md`.
