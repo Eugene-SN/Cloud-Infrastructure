@@ -607,6 +607,17 @@ Live telemetry is published atomically to `/run/edge-monitor/snapshot.json`. Onl
 
 No Prometheus/Grafana/Loki/Gatus stack, monitoring database, separate receiver service, monitoring WebUI, external uptime service, independent vantage point or Home/PAI monitoring agent is part of the accepted current scope. PVE-specific D5/RAPL/EDAC/guest/gateway/SMART collectors and CT200 push/SSE presentation are not copied. Stage 7 update state is read as metadata rather than refreshed automatically by Stage 8. Backrest monitoring is based on authoritative successful-backup freshness. Full edge loss remains an accepted uncovered failure class in this edge-only design. The transition engine has final runtime acceptance: two consecutive failed probes confirmed FAIL, unchanged FAIL was deduplicated, recovery emitted one notification, and production returned to overall OK with no synthetic artifacts.
 
+### Accepted Stage 8 Notification Model v2 target
+
+The accepted target for Mattermost `Monitoring` is service-oriented incident reporting rather than raw-check transition reporting. Existing collectors and probe semantics remain authoritative. Raw checks are classified as primary service signals or diagnostic/dependent evidence; parent failures suppress redundant child fan-out in Mattermost while all underlying states remain visible in the live snapshot.
+
+User-visible event classes are limited to `INCIDENT`, `DEGRADED`, and `RECOVERED`. Normal health is silent. Messages should expose human-readable scope/impact/cause, useful diagnostic evidence, incident start time and recovery duration when available. NetBird is an explicit parent signal for dependent Home/PAI reachability. `UPDATE_AVAILABLE` remains metadata rather than a Monitoring event. Host CPU/memory/root-filesystem metrics remain snapshot/portal telemetry until a separate threshold policy is accepted.
+
+The full primary-versus-diagnostic mapping, correlation rules and current limitations are canonical in `STAGE_08_MONITORING_NOTIFICATION_MODEL_V2_DESIGN_2026-09-25.md`.
+
+**Implementation state:** accepted target, production deployment pending. The current Stage 8 runtime notification code remains unchanged until verified implementation.
+
+
 
 ## Stage 12 — Nextcloud Cloud Drive & Private Workspace Access
 
