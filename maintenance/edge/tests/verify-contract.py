@@ -75,6 +75,9 @@ stalwart_parts = stalwart_available.split(".")
 assert len(stalwart_parts) == 3
 assert stalwart["image_track"] == "v" + ".".join(stalwart_parts[:2])
 assert stalwart["source"] == "STALWART_OFFICIAL_LATEST_STABLE_DOCKER"
+stalwart_unit = next(u for u in manifest["units"] if u["id"] == "STALWART")
+assert stalwart_unit["driver"] == "stalwart_compose"
+assert (root / "scripts/update-stalwart").is_file()
 
 restic_unit = next(u for u in manifest["units"] if u["id"] == "RESTIC")
 assert restic_unit["driver"] == "self_update"
@@ -97,9 +100,11 @@ assert all(enablement["enabled"].values())
 
 assert 'enablement.get("schema") != 1' not in manual_update_source
 assert manual_update_source.count('enablement.get("schema") != 2') == 2
-assert 'driver in ("compose", "nextcloud_compose")' in manual_update_source
+assert 'driver in ("compose", "nextcloud_compose", "stalwart_compose")' in manual_update_source
 assert 'elif driver == "nextcloud_compose":' in manual_update_source
+assert 'elif driver == "stalwart_compose":' in manual_update_source
 assert actions["components"]["NEXTCLOUD"]["managed_by"] == "docker"
+assert actions["components"]["STALWART"]["managed_by"] == "docker"
 assert "--remove-orphans" in manual_update_source
 assert '"docker", "rmi"' in manual_update_source
 assert '"image", "prune"' in manual_update_source
