@@ -74,6 +74,11 @@ assert len(stalwart_parts) == 3
 assert stalwart["image_track"] == "v" + ".".join(stalwart_parts[:2])
 assert stalwart["source"] == "STALWART_OFFICIAL_LATEST_STABLE_DOCKER"
 
+restic_unit = next(u for u in manifest["units"] if u["id"] == "RESTIC")
+assert restic_unit["driver"] == "self_update"
+assert restic_unit["binary"] == "/usr/local/bin/restic"
+assert restic_unit["arguments"] == ["self-update"]
+
 assert templates["schema"] == 2
 assert set(templates["components"]) == manual
 template_ids = [v["template_id"] for v in templates["components"].values()]
