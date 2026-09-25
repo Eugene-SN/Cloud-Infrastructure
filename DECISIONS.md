@@ -2358,3 +2358,24 @@ T3 was required as a persistent 24/7 remote workspace on `edge`, independent of 
 **Supersedes:** only the Nextcloud-specific portion of the 2026-09-24T20:58:09+03:00 Version Discovery v2 decision that derived Nextcloud stable availability from the Docker `stable-apache` floating alias. The remaining Version Discovery v2 source model remains applicable.
 
 **Implementation state:** COMPLETE / ACCEPTED. Runtime deployment and verification passed with `NEXTCLOUD_UPDATE_ARCHITECTURE=PASS`; Nextcloud itself remained on `34.0.4` and no application update was executed. Evidence: `NEXTCLOUD_UPDATE_ARCHITECTURE_ACCEPTANCE_2026-09-25.md`.
+
+---
+
+## 2026-09-25 — Maintenance update architecture audit — operator-approved corrections
+
+**Status:** ACCEPTED
+
+**Context:** The operator requested a full audit of Maintenance discovery and execution against authoritative upstream stable-release sources and developer-supported update mechanisms. The audit must not introduce restrictions, enterprise-style duplicate backup gates, or changes merely because an upstream installer exists.
+
+**Decision:**
+- update discovery must expose the latest applicable upstream stable release without being capped by the currently deployed major/minor track;
+- PostgreSQL latest-stable discovery is independent of the deployed `<major>-alpine` execution track; current accepted runtime is `18.6` with execution track `18-alpine`;
+- Stalwart latest-stable discovery is independent of the deployed rolling-minor `v<major>.<minor>` execution track; current accepted runtime is `0.16.23` with track `v0.16`;
+- Restic standalone binary updates use native `restic self-update`;
+- Xray, Hysteria2 and Backrest custom update wrappers remain accepted where they preserve project-specific service/configuration state and provide the same necessary binary-update function as the upstream installer;
+- do not add Xray `.dgst` verification solely for extra checksum validation;
+- do not add per-update database/application backup gates where the existing Backrest/rollback recovery model is sufficient for this personal infrastructure;
+- upstream hard migration mechanics remain technical requirements when they actually apply, but they do not authorize an update or create an operator policy.
+
+**Acceptance evidence:** `DISCOVERY_VERSION_CEILINGS_REMOVED=PASS` and `RESTIC_NATIVE_SELF_UPDATE_DEPLOY_VERIFY=PASS`. No real PostgreSQL, Stalwart or Restic application update was executed as part of these architecture changes.
+
