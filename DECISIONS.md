@@ -2463,3 +2463,36 @@ T3 was required as a persistent 24/7 remote workspace on `edge`, independent of 
 - do not change update drivers, execution semantics, target ownership or runtime service names.
 
 **Acceptance evidence:** `MAINTENANCE_SERVICE_NAMES_SORT_DEPLOY_VERIFY_V1` completed with RC=0; canonical/runtime blobs matched; all three service/action labels matched expected values; APT, Native, Docker and CLI ordering gates passed; target IDs were preserved; `ACTIONABLE_TARGETS=16`; `CHECK_FAILED=0`; no update executed.
+
+
+---
+
+## 2026-09-25T11:55:00+03:00 — Nextcloud personal-file-cloud application and account policy reconciliation
+
+**Status:** ACCEPTED
+
+**Context:** Nextcloud is used primarily as the personal file-cloud endpoint with native macOS/iOS/Windows clients, while preserving the existing WebUI and useful integration paths to edge services such as n8n. Runtime audit showed two admin accounts: the actively used OIDC account `Eugene` backed by Authelia and a local Database `admin` account. It also showed several Nextcloud apps that are platform-level `alwaysEnabled` components and therefore must not be forcibly disabled.
+
+**Decision:**
+- treat the OIDC `Eugene` account as the primary working account;
+- retain local Database `admin` as recovery/bootstrap access rather than deleting it;
+- keep global application policy authoritative across accounts and reserve per-user settings for presentation/state only;
+- preserve Files, DAV, Provisioning API, File Sharing, Trashbin, Versions, Dashboard, Notifications, OIDC, Viewer, Webhooks and Workflow Engine;
+- preserve UI customization apps that are intentionally used;
+- preserve integration primitives that can serve existing edge services;
+- disable unused optional apps `logreader`, `privacy`, `serverinfo`, `twofactor_totp` and `twofactor_webauthn`;
+- enable `files_versions`;
+- keep Nextcloud `alwaysEnabled` components enabled rather than bypassing AppManager protections;
+- disable federation functionality through supported `files_sharing` configuration while retaining required platform apps;
+- keep `oauth2` technically enabled because it is `alwaysEnabled`, with zero registered OAuth clients;
+- use Authelia/OIDC as the primary interactive authentication path; Nextcloud-native TOTP/WebAuthn remain disabled;
+- set global Dashboard layout to `files-favorites` and remove existing per-user Dashboard layout overrides so existing accounts inherit the same global layout;
+- preserve existing native-client auth tokens and cron background-job mode.
+
+**Verification:** Nextcloud `35.0.1` healthy with maintenance off and no DB upgrade pending; required-app gates PASS; Authelia OIDC provider PASS; native client tokens preserved; federation configuration gates PASS; global Dashboard inheritance PASS; `files_versions` enabled; status endpoint HTTP 200; DAV unauthenticated endpoint HTTP 401; cron mode PASS.
+
+**Acceptance marker:** `NEXTCLOUD_POLICY_RECONCILIATION_FINAL=PASS`.
+
+**Evidence:** `NEXTCLOUD_POLICY_RECONCILIATION_ACCEPTANCE_2026-09-25.md`.
+
+**Supersedes:** only prior provisional Nextcloud app-cleanup recommendations that attempted to disable platform `alwaysEnabled` apps or retained per-user Dashboard layout drift. Stage 12 architecture and accepted native-client/cloud-drive behavior remain unchanged.
