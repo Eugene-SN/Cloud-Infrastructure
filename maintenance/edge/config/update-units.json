@@ -175,8 +175,7 @@
       "files": [
         "compose.yaml"
       ],
-      "service": "db",
-      "database_backup": "postgresql"
+      "service": "db"
     },
     {
       "id": "NEXTCLOUD_REDIS",
