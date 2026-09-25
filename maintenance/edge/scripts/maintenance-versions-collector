@@ -842,17 +842,6 @@ emit_docker_component NEXTCLOUD_REDIS nextcloud-redis-1 redis:alpine redis alpin
 
 echo
 echo "--- GIT / USER TOOLS ---"
-agy_installed="$(
-    runuser -u core -- /home/core/.local/bin/agy --version 2>/dev/null |
-    grep -o '[0-9][0-9.]*' |
-    head -n1 ||
-    true
-)"
-agy_stable="$(github_latest google-antigravity/antigravity-cli)"
-agy_status="$(semver_status "$agy_installed" "$agy_stable")"
-printf '%s\n' \
-  "VERSION|SCOPE=EDGE|COMPONENT=ANTIGRAVITY|INSTALLED=${agy_installed:-UNRESOLVED}|STABLE=${agy_stable:-UNRESOLVED}|STATUS=${agy_status}|SOURCE=GITHUB_RELEASES_LATEST"
-
 sem_installed="$(
     /usr/local/bin/semaphore version 2>/dev/null |
     grep -o '[0-9][0-9.]*' |
