@@ -8,6 +8,7 @@ import pathlib
 import re
 import subprocess
 import tempfile
+import time
 import urllib.request
 
 
@@ -20,6 +21,8 @@ VERSIONS_URL = (
     "https://raw.githubusercontent.com/"
     "nextcloud/docker/master/versions.json"
 )
+RUNTIME_READY_ATTEMPTS = 30
+RUNTIME_READY_DELAY_SECONDS = 2
 
 
 def run(argv, **kwargs):
@@ -145,7 +148,7 @@ def effective_nextcloud_image():
     return images[0]
 
 
-def occ_status():
+def occ_status_probe():
     result = subprocess.run(
         compose_argv(
             "exec",
@@ -159,11 +162,41 @@ def occ_status():
             "--output=json",
         ),
         cwd=DIRECTORY,
-        check=True,
+        check=False,
         capture_output=True,
         text=True,
     )
-    data = json.loads(result.stdout)
+
+    stdout = result.stdout.strip()
+    stderr = result.stderr.strip()
+
+    if result.returncode != 0:
+        return None, (
+            f"rc={result.returncode} "
+            f"stdout={stdout!r} stderr={stderr!r}"
+        )
+
+    try:
+        data = json.loads(stdout)
+    except json.JSONDecodeError as exc:
+        return None, (
+            f"rc=0 invalid_json={exc} "
+            f"stdout={stdout!r} stderr={stderr!r}"
+        )
+
+    return data, (
+        f"rc=0 stdout={stdout!r} stderr={stderr!r}"
+    )
+
+
+def occ_status():
+    data, detail = occ_status_probe()
+
+    if data is None:
+        raise RuntimeError(
+            "Nextcloud occ status failed: "
+            + detail
+        )
 
     version = str(
         data.get("versionstring")
@@ -179,6 +212,69 @@ def occ_status():
         )
 
     return data
+
+
+def wait_for_runtime(expected):
+    last_detail = "no probe completed"
+
+    for attempt in range(
+        1,
+        RUNTIME_READY_ATTEMPTS + 1,
+    ):
+        status, probe_detail = occ_status_probe()
+
+        if status is None:
+            last_detail = probe_detail
+        else:
+            actual = str(
+                status.get("versionstring")
+                or ""
+            ).strip()
+            maintenance = status.get("maintenance")
+            needs_db_upgrade = status.get("needsDbUpgrade")
+
+            last_detail = (
+                f"actual={actual or 'UNRESOLVED'} "
+                f"maintenance={maintenance!r} "
+                f"needsDbUpgrade={needs_db_upgrade!r} "
+                f"probe={probe_detail}"
+            )
+
+            if (
+                actual == expected
+                and maintenance is False
+                and needs_db_upgrade is False
+            ):
+                print(
+                    "NEXTCLOUD_RUNTIME_READY_GATE=PASS"
+                    f"|VERSION={actual}"
+                    f"|ATTEMPT={attempt}"
+                )
+                print(
+                    "NEXTCLOUD_RUNTIME_GATE=PASS"
+                    f"|VERSION={actual}"
+                )
+                return
+
+        print(
+            "NEXTCLOUD_RUNTIME_WAIT"
+            f"|ATTEMPT={attempt}"
+            f"|EXPECTED={expected}"
+            f"|STATE={last_detail}",
+            flush=True,
+        )
+
+        if attempt < RUNTIME_READY_ATTEMPTS:
+            time.sleep(
+                RUNTIME_READY_DELAY_SECONDS
+            )
+
+    raise RuntimeError(
+        "Nextcloud runtime readiness timeout: "
+        f"expected={expected} "
+        f"attempts={RUNTIME_READY_ATTEMPTS} "
+        f"last={last_detail}"
+    )
 
 
 def pulled_image_version(reference):
@@ -504,7 +600,7 @@ def apply_step(major, expected_version):
         *SERVICES,
     )
 
-    verify_runtime(
+    wait_for_runtime(
         expected_version
     )
 
