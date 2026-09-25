@@ -875,3 +875,21 @@ Current accepted Nextcloud policy after runtime reconciliation:
 - Acceptance marker: `NEXTCLOUD_POLICY_RECONCILIATION_FINAL=PASS`.
 
 Authoritative record: `NEXTCLOUD_POLICY_RECONCILIATION_ACCEPTANCE_2026-09-25.md`.
+
+
+---
+
+## 2026-09-25 — Nextcloud ↔ Mattermost file-sharing integration
+
+Current accepted state:
+
+- Nextcloud app `integration_mattermost 3.2.0` is installed and enabled.
+- Mattermost user access tokens are enabled; the existing `eugene` account is connected from Nextcloud through its user-level encrypted token storage.
+- Nextcloud connection verification passed for `https://chat.escloud.us`, Mattermost user `eugene`, and Nextcloud health.
+- Global Dashboard layout currently includes `mattermost_notifications` in addition to `files-favorites`.
+- The accepted primary use case is **Nextcloud Files -> Send to Mattermost -> select an existing relevant Mattermost channel**.
+- No dedicated Mattermost channel is created merely for the integration.
+- Dashboard notifications and unified Mattermost search are secondary conveniences, not the reason for retaining the app.
+- A real file-send E2E remains pending until an actual relevant Mattermost channel/use case exists; this does not block the accepted integration design.
+
+Marker: `NEXTCLOUD_MATTERMOST_FILE_SEND_USE_CASE_ACCEPTED`.
