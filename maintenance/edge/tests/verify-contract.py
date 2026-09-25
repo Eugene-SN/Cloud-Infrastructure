@@ -100,10 +100,12 @@ assert actions["components"]["NEXTCLOUD"]["managed_by"] == "docker"
 assert "--remove-orphans" in manual_update_source
 assert '"docker", "rmi"' in manual_update_source
 assert '"image", "prune"' in manual_update_source
-assert "rotate_backups" in manual_update_source
+assert "rotate_backups" not in manual_update_source
 assert "autoremove" in manual_update_source
 assert '"apt-get", "clean"' in manual_update_source
 assert ".old" in manual_update_source
+assert "pg_dumpall" not in manual_update_source
+assert "database_backup" not in json.dumps(manifest)
 assert '"projects-webdav.service"' in health_source
 assert 'unit.get("services", [unit["service"]])' in health_source
 assert "DOCKER_UNITS=" in health_source
