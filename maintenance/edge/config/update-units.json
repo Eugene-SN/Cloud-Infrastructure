@@ -139,7 +139,7 @@
     {
       "id": "STALWART",
       "group": "docker",
-      "driver": "compose",
+      "driver": "stalwart_compose",
       "directory": "/opt/mail-stack",
       "files": [
         "compose.yaml"
