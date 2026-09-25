@@ -813,3 +813,23 @@ Acceptance markers:
 - `STALWART_ROLLING_MINOR_EXECUTION_ARCHITECTURE=PASS`
 - `NO_SERVICE_MUTATION_GATE=PASS`
 
+
+---
+
+## 2026-09-25 — Edge Maintenance / Nextcloud current accepted state
+
+- Maintenance target model: `update_units_v5`.
+- Current manual actionable targets: 16.
+- Current monitored components: 23.
+- Current CLI targets: 0.
+- Current refresh state: `CURRENT=23`, `UPDATE_AVAILABLE=0`, `CHECK_FAILED=0`.
+- Master Batch accepted current model: `TOTAL=16`; `SEMAPHORE` remains `individual_only`.
+- Antigravity is outside manual Maintenance under its native background updater.
+- Nextcloud runtime: `35.0.1`; application track `nextcloud:35.0-apache`.
+- Nextcloud `occ status`: installed, `maintenance=false`, `needsDbUpgrade=false`.
+- Nextcloud schema check: clean (`[]`).
+- `oc_federated_invites` schema drift was repaired by re-executing official `cloud_federation_api` migration `1016Date202502262004`; migration history remains singular.
+- Canonical/runtime `update-nextcloud` blob: `f1c1d17c39b4e90c129a32d4f5bcdf45e3a40751`.
+- Nextcloud updater now uses bounded application-readiness polling after container recreation; retry and fail-closed timeout semantics are accepted.
+- Final clean Master regression: `16/16 CURRENT`, `RUN=0`, `SKIPPED_CURRENT=16`, post-scan PASS, health PASS, no component update executed.
+- Acceptance marker: `TASK39_READINESS_INCIDENT_ACCEPTANCE=PASS`.
