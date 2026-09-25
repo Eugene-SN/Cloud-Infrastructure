@@ -930,3 +930,22 @@ Acceptance marker: `NEXTCLOUD_FILES_DEFAULT_DASHBOARD_DISABLED=PASS`.
 Acceptance marker: `EDGE_MONITOR_NOTIFICATION_V2_3_3_FINAL_E2E=PASS`.
 
 Authoritative record: `STAGE_08_MONITORING_NOTIFICATION_MODEL_V2_3_3_ACCEPTANCE_2026-09-25.md`.
+
+
+---
+
+## 2026-09-25 — Mattermost global message prune — COMPLETE / ACCEPTED
+
+- All Mattermost message history was permanently removed through the Mattermost application API.
+- Original corpus: 181 post rows.
+- Final message state: `posts=0`, `threads=0`, `threadmemberships=0`, `fileinfo=0`.
+- Active users and public/private/DM channel structures were preserved.
+- Final preserved active inventory: 6 users, 2 public channels, 3 private channels, 4 DM channels, 0 group-DM channels.
+- `ServiceSettings.EnableAPIPostDeletion` was restored to `false`.
+- Mattermost returned healthy with API HTTP 200.
+- `edge-monitor.service` was restored and healthy.
+- Temporary recovery artifacts were removed only after final acceptance.
+
+Acceptance marker: `MATTERMOST_GLOBAL_MESSAGES_PERMANENT_PRUNE=PASS`.
+
+Authoritative record: `MATTERMOST_GLOBAL_MESSAGE_PRUNE_ACCEPTANCE_2026-09-25.md`.
