@@ -615,7 +615,7 @@ User-visible event classes are limited to `INCIDENT`, `DEGRADED`, and `RECOVERED
 
 The full primary-versus-diagnostic mapping, correlation rules and current limitations are canonical in `STAGE_08_MONITORING_NOTIFICATION_MODEL_V2_DESIGN_2026-09-25.md`.
 
-**Implementation state:** accepted target, production deployment pending. The current Stage 8 runtime notification code remains unchanged until verified implementation.
+**Implementation state:** COMPLETE / ACCEPTED. Production runs Notification Model v2.3.3 with runtime SHA-256 `8bc25a8788bfd60f61c1cc1b62fd61e14f4c551f5ebfc3900f7c837b4dc3b714`. Mattermost notifications are Blocks-only and mobile-first vertical; production cards do not use `column_set`. The accepted large integrated severity heading remains in the title, with scope/category on a separate small/subtle line. Final real-webhook synthetic E2E verified INCIDENT -> dedup -> RECOVERED behavior without mutating production durable state. Acceptance record: `STAGE_08_MONITORING_NOTIFICATION_MODEL_V2_3_3_ACCEPTANCE_2026-09-25.md`.
 
 
 
