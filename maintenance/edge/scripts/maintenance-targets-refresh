@@ -43,12 +43,12 @@ DOCKER_COMPONENTS = [
     ("N8N", "n8n"),
     ("AUTHELIA", "Authelia"),
     ("MATTERMOST", "Mattermost"),
-    ("POSTGRESQL", "PostgreSQL"),
+    ("POSTGRESQL", "PostgreSQL (Mattermost)"),
     ("STALWART", "Stalwart"),
     ("BULWARK", "Bulwark"),
     ("NEXTCLOUD", "Nextcloud"),
-    ("NEXTCLOUD_POSTGRESQL", "Nextcloud PostgreSQL"),
-    ("NEXTCLOUD_REDIS", "Nextcloud Redis"),
+    ("NEXTCLOUD_POSTGRESQL", "PostgreSQL (Nextcloud)"),
+    ("NEXTCLOUD_REDIS", "Redis (Nextcloud)"),
 ]
 
 CLI_COMPONENTS = []
@@ -552,6 +552,15 @@ for component, label in CLI_COMPONENTS:
             "user_or_git",
         )
     )
+
+
+rows.sort(
+    key=lambda row: str(
+        row.get("label")
+        or row.get("component")
+        or ""
+    ).casefold()
+)
 
 
 summary = {
