@@ -769,3 +769,27 @@ Acceptance markers:
 
 The broader update-architecture audit remains in progress; do not treat unresolved components as accepted changes.
 
+## 2026-09-25 — Antigravity native auto-update ownership — COMPLETE / ACCEPTED
+
+Runtime reconciliation completed successfully.
+
+Accepted current state:
+
+- Antigravity native background self-updater is the sole active update owner;
+- native updater proof passed: official manifest reachable, updater enabled, background updater observed in logs, and `update_status.json` reported `success=true` / `Update successful, restart CLI to use`;
+- Antigravity is absent from Maintenance version rows, generated manual targets, actions, Master Batch order, runtime enablement, and active Semaphore mappings;
+- current Maintenance model is exactly 16 actionable manual targets / 23 monitored components / 0 manual CLI targets / `CHECK_FAILED=0`;
+- retired Semaphore template ID 17 (`43. Update Antigravity CLI`) was removed completely;
+- template 17 had zero historical tasks before deletion, so no task history was lost;
+- Semaphore SQLite foreign-key check remained clean after deletion;
+- no Antigravity update and no service restart was executed during ownership reconciliation.
+
+Acceptance markers:
+
+- `ANTIGRAVITY_NATIVE_AUTO_UPDATE_PROOF_AUDIT=PASS`
+- `ANTIGRAVITY_ACTIVE_MODEL_GATE=PASS`
+- `SEMAPHORE_TEMPLATE_17_CLEANUP_GATE=PASS`
+- `ANTIGRAVITY_NATIVE_UPDATER_GATE=PASS`
+- `ANTIGRAVITY_NATIVE_AUTO_UPDATE_OWNERSHIP=PASS`
+- `ANTIGRAVITY_MANUAL_MAINTENANCE_REMOVED=PASS`
+
