@@ -893,3 +893,20 @@ Current accepted state:
 - A real file-send E2E remains pending until an actual relevant Mattermost channel/use case exists; this does not block the accepted integration design.
 
 Marker: `NEXTCLOUD_MATTERMOST_FILE_SEND_USE_CASE_ACCEPTED`.
+
+
+---
+
+## 2026-09-25 — Nextcloud files-first WebUI policy
+
+Current accepted state:
+
+- Nextcloud system `defaultapp` is explicitly set to `files`.
+- The `dashboard` app is disabled.
+- Nextcloud now opens directly into Files after login instead of showing Dashboard.
+- Dashboard widgets are no longer part of the active UI policy.
+- `integration_mattermost` remains enabled.
+- Mattermost file action remains enabled (`file_action_enabled=1`), so the accepted workflow **Nextcloud Files -> Send to Mattermost -> choose an existing relevant channel** is preserved.
+- Nextcloud remained healthy after the change: maintenance off, no DB upgrade pending.
+
+Acceptance marker: `NEXTCLOUD_FILES_DEFAULT_DASHBOARD_DISABLED=PASS`.
