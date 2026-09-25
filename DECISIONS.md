@@ -2416,3 +2416,33 @@ T3 was required as a persistent 24/7 remote workspace on `edge`, independent of 
 
 **Acceptance:** runtime verification passed with Stalwart `0.16.23`, track `v0.16`, helper preflight PASS, and no service mutation. Acceptance marker: `STALWART_ROLLING_MINOR_EXECUTION_ARCHITECTURE=PASS`.
 
+
+---
+
+## 2026-09-25T06:12:57+02:00 — Nextcloud 35 Task39 readiness incident closure
+
+**Status:** ACCEPTED
+
+**Context:** The first real Master Batch execution after the Nextcloud 34.0.4 -> 35.0.1 update reported `NEXTCLOUD` failed even though the official container entrypoint subsequently completed the upgrade successfully. Root-cause audit proved that the dedicated `update-nextcloud` driver called `occ status` immediately after `docker compose up -d --wait --force-recreate`, while the Nextcloud application-level upgrade was still running. A separate post-upgrade schema check also found missing table `oc_federated_invites` even though migration `1016Date202502262004` was already recorded as executed.
+
+**Decision:**
+- treat Task39 as a driver-readiness false failure, not a Master Batch/Semaphore orchestration failure;
+- keep the accepted Nextcloud Docker/Compose update architecture and rolling-minor track model unchanged;
+- after container recreation, wait for application readiness with a bounded poll instead of a single immediate `occ status`;
+- readiness succeeds only when the expected exact version is reported, `maintenance=false`, and `needsDbUpgrade=false`;
+- transient non-zero/invalid `occ status`, an old version during entrypoint upgrade, maintenance mode, or pending DB upgrade are retryable within the bounded readiness window;
+- production readiness timeout remains fail-closed and reports the last observed state;
+- do not auto-downgrade after the new image may have changed persistent application/database state;
+- repair the isolated `oc_federated_invites` drift by re-executing the exact official `cloud_federation_api` migration `1016Date202502262004`; do not create the table manually;
+- preserve production `debug` state as unset/false after the repair;
+- current Maintenance model is 16 actionable manual targets / 23 monitored components / 0 CLI targets.
+
+**Acceptance evidence:**
+- schema repair: `FEDERATED_INVITES_SCHEMA_REPAIR=PASS`, migration history count remained 1, `db:schema:check=[]`;
+- readiness implementation: canonical/runtime `update-nextcloud` blob `f1c1d17c39b4e90c129a32d4f5bcdf45e3a40751`, commit `5c4d1582d2dd5aebd0e0ea696ec52bae6ea8ee28`;
+- synthetic retry path reached success on attempt 4 and timeout path failed closed;
+- live no-update driver check returned `NEXTCLOUD_UPDATE_RESULT=SUCCESS|VERSION=35.0.1`;
+- final Master regression: `MASTER_BATCH_REGRESSION=PASS`, `TOTAL=16`, `RUN=0`, `SKIPPED_CURRENT=16`, post-scan PASS, health PASS;
+- final marker: `TASK39_READINESS_INCIDENT_ACCEPTANCE=PASS`.
+
+**Supersedes:** only the failed Task39 interpretation that Nextcloud update execution itself was unsuccessful. It does not supersede the accepted Nextcloud latest-stable/update architecture or the Stage 07.2 Master Batch design.
