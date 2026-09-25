@@ -69,6 +69,7 @@ def build_actions(manifest, templates, enablement):
         "apt": "apt",
         "compose": "docker",
         "nextcloud_compose": "docker",
+        "stalwart_compose": "docker",
         "user_cli": "user_or_git",
         "maintctl": "native",
         "github_binary": "native",
