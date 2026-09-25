@@ -33,6 +33,7 @@ assert "CODEX" not in index
 assert "ANTIGRAVITY" not in index
 assert maintenance["summary"]["TOTAL"] == 16
 assert maintenance["summary"]["ACTIONABLE_TARGETS"] == 16
+assert maintenance["summary"]["CLI_TARGETS"] == 0
 assert "MONITOR_ONLY_TARGETS" not in maintenance["summary"]
 assert maintenance["summary"]["APT_MANAGED_COMPONENTS"] == 8
 
