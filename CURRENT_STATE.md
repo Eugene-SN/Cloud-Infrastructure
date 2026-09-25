@@ -749,3 +749,23 @@ Authoritative record: `VERSION_DISCOVERY_V2_FINAL_ACCEPTANCE_2026-09-24.md`.
 - update execution remains operator-initiated only.
 
 Acceptance record: `NEXTCLOUD_UPDATE_ARCHITECTURE_ACCEPTANCE_2026-09-25.md`.
+
+## 2026-09-25 — Maintenance update architecture audit corrections — ACCEPTED PARTIAL BASELINE
+
+Confirmed and accepted runtime corrections from the ongoing update-architecture audit:
+
+- PostgreSQL discovery for both Mattermost and Nextcloud no longer uses the installed major track as the latest-stable ceiling. Official latest-stable discovery reports PostgreSQL `18.6`; execution track resolves to `18-alpine` for the current stable major.
+- Stalwart discovery no longer uses the installed `v0.16` series as the latest-stable ceiling. Official latest-stable discovery reports `0.16.23`; execution track remains `v0.16` for that current stable series.
+- Runtime verification passed with `DISCOVERY_VERSION_CEILINGS_REMOVED=PASS`; no PostgreSQL or Stalwart service update was executed.
+- Restic Maintenance ownership now uses the native standalone-binary updater `/usr/local/bin/restic self-update` instead of the generic GitHub binary replacement driver.
+- Restic runtime verification passed with `RESTIC_NATIVE_SELF_UPDATE_DEPLOY_VERIFY=PASS`; installed version remained `0.19.1` and no Restic update was executed.
+- Xray, Hysteria2 and Backrest custom binary-update ownership remains unchanged after audit because the wrappers preserve accepted service/config state while performing the required binary update; no change is accepted for those drivers.
+- Xray upstream `.dgst` verification was explicitly rejected by the operator as unnecessary complexity for this deployment.
+
+Acceptance markers:
+
+- `DISCOVERY_VERSION_CEILINGS_REMOVED=PASS`
+- `RESTIC_NATIVE_SELF_UPDATE_DEPLOY_VERIFY=PASS`
+
+The broader update-architecture audit remains in progress; do not treat unresolved components as accepted changes.
+
