@@ -2446,3 +2446,20 @@ T3 was required as a persistent 24/7 remote workspace on `edge`, independent of 
 - final marker: `TASK39_READINESS_INCIDENT_ACCEPTANCE=PASS`.
 
 **Supersedes:** only the failed Task39 interpretation that Nextcloud update execution itself was unsuccessful. It does not supersede the accepted Nextcloud latest-stable/update architecture or the Stage 07.2 Master Batch design.
+
+---
+
+## 2026-09-25T07:28:00+03:00 — Maintenance service display naming and ordering
+
+**Status:** ACCEPTED
+
+**Context:** The Maintenance dashboard used asymmetric names for the two PostgreSQL instances and Nextcloud Redis, and table row order followed target construction order rather than the visible `SERVICE NAME`.
+
+**Decision:**
+- keep the existing internal target IDs `POSTGRESQL`, `NEXTCLOUD_POSTGRESQL`, and `NEXTCLOUD_REDIS` unchanged;
+- display them as `PostgreSQL (Mattermost)`, `PostgreSQL (Nextcloud)`, and `Redis (Nextcloud)` respectively;
+- use matching action labels in Semaphore/action metadata;
+- sort Maintenance rows case-insensitively by display label before rendering so each dashboard table is alphabetical by `SERVICE NAME`;
+- do not change update drivers, execution semantics, target ownership or runtime service names.
+
+**Acceptance evidence:** `MAINTENANCE_SERVICE_NAMES_SORT_DEPLOY_VERIFY_V1` completed with RC=0; canonical/runtime blobs matched; all three service/action labels matched expected values; APT, Native, Docker and CLI ordering gates passed; target IDs were preserved; `ACTIONABLE_TARGETS=16`; `CHECK_FAILED=0`; no update executed.
