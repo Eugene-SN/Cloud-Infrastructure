@@ -793,3 +793,23 @@ Acceptance markers:
 - `ANTIGRAVITY_NATIVE_AUTO_UPDATE_OWNERSHIP=PASS`
 - `ANTIGRAVITY_MANUAL_MAINTENANCE_REMOVED=PASS`
 
+## 2026-09-25 — Stalwart rolling-minor update architecture — COMPLETE / ACCEPTED
+
+Runtime deployment and verification completed successfully.
+
+Accepted current state:
+
+- Stalwart latest-stable discovery is independent of the deployed rolling-minor track;
+- current runtime and latest stable are both `0.16.23`;
+- current production image track remains `stalwartlabs/stalwart:v0.16`;
+- dedicated `stalwart_compose` driver is deployed and executable;
+- the driver preserves the current rolling-minor track for patch updates and can persist the next upstream-supported rolling-minor track when the operator initiates a future series upgrade;
+- helper preflight passed against the real compose/runtime state;
+- no Stalwart container recreate, restart, image change, compose rewrite, or version update occurred during acceptance.
+
+Acceptance markers:
+
+- `STALWART_LATEST_STABLE_DISCOVERY=PASS`
+- `STALWART_ROLLING_MINOR_EXECUTION_ARCHITECTURE=PASS`
+- `NO_SERVICE_MUTATION_GATE=PASS`
+
