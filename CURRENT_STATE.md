@@ -949,3 +949,21 @@ Authoritative record: `STAGE_08_MONITORING_NOTIFICATION_MODEL_V2_3_3_ACCEPTANCE_
 Acceptance marker: `MATTERMOST_GLOBAL_MESSAGES_PERMANENT_PRUNE=PASS`.
 
 Authoritative record: `MATTERMOST_GLOBAL_MESSAGE_PRUNE_ACCEPTANCE_2026-09-25.md`.
+
+
+---
+
+## 2026-09-27 — Hermes self-learning experiment isolation — COMPLETE / ACCEPTED
+
+Current accepted state:
+
+- Hermes production/default profile has been cleaned of prior experiment artifacts.
+- Self-learning experiments are isolated to profile `selflearning`.
+- The canonical experiment project is `/home/core/projects/hermes-self-learning`.
+- No future self-learning experiment may intentionally write experiment artifacts into the production/default Hermes profile.
+- The next evaluation phase is about learning quality, not mere skill reuse: durable procedure extraction versus transient runtime facts, transfer to new task classes, reduction of probes/errors across iterations, and autonomous correction of accumulated skills.
+- Before any future promotion into default Hermes, all accumulated experiment knowledge must be classified through `KEEP / DISTILL / DROP`.
+
+Acceptance markers:
+- `HERMES_SELF_LEARNING_ISOLATION=PASS`
+- `HERMES_DEFAULT_EXPERIMENT_CLEANUP=PASS`
