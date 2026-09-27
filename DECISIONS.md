@@ -2593,3 +2593,26 @@ T3 was required as a persistent 24/7 remote workspace on `edge`, independent of 
 **Acceptance marker:** `MATTERMOST_GLOBAL_MESSAGES_PERMANENT_PRUNE=PASS`.
 
 **Evidence:** `MATTERMOST_GLOBAL_MESSAGE_PRUNE_ACCEPTANCE_2026-09-25.md`.
+
+
+---
+
+## 2026-09-27T21:10:00+03:00 — Hermes self-learning isolation and promotion gate
+
+**Status:** ACCEPTED
+
+**Context:** The initial Hermes self-learning experiment proved enough capability to justify further testing, but experiment artifacts must not contaminate the production/default profile and simple reuse of a previously created skill is not sufficient evidence of useful self-learning.
+
+**Decision:**
+- keep the production/default Hermes profile clean of self-learning experiment artifacts;
+- run all further self-learning experiments only through profile `selflearning`;
+- use `/home/core/projects/hermes-self-learning` as the canonical experiment project;
+- evaluate learning quality on four dimensions: extraction of durable procedures instead of transient runtime facts, transfer of methodology to new task classes, reduction in probes/errors across repeated iterations, and autonomous repair of accumulated skills when evidence invalidates them;
+- require a final `KEEP / DISTILL / DROP` review of all accumulated experiment knowledge before any promotion into default Hermes;
+- do not promote experiment knowledge merely because it was reused successfully once.
+
+**Acceptance markers:**
+- `HERMES_SELF_LEARNING_ISOLATION=PASS`
+- `HERMES_DEFAULT_EXPERIMENT_CLEANUP=PASS`
+
+**Supersedes:** any provisional experiment workflow that writes learning artifacts into the production/default Hermes profile or treats one successful skill reuse as sufficient promotion evidence.
