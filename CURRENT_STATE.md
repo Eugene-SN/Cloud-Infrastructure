@@ -967,3 +967,30 @@ Current accepted state:
 Acceptance markers:
 - `HERMES_SELF_LEARNING_ISOLATION=PASS`
 - `HERMES_DEFAULT_EXPERIMENT_CLEANUP=PASS`
+
+
+---
+
+## 2026-09-28 — Hermes default clean-sheet baseline — COMPLETE / ACCEPTED
+
+The Hermes self-learning experiment is retired and no experiment knowledge was promoted to production.
+
+Current accepted state:
+
+- Hermes Agent `v0.21.5+4396.gad2d482 (2026.9.24)`, upstream `ad2d4822`;
+- installation remains git-based under `/home/core/.hermes/hermes-agent`;
+- only the default Hermes profile remains active;
+- profile `selflearning` and `/home/core/projects/hermes-self-learning-runtime` are removed;
+- default session database contains `0` sessions and `0` messages;
+- `MEMORY.md` and `USER.md` are absent/empty;
+- default skill store contains exactly `58` bundled skills aligned with the current installed checkout;
+- no learned-skill curator ledger is present;
+- old Hermes history, stale experiment leases, old cache/log footprint, update backups and state snapshots were removed;
+- fresh runtime logs/cache created after restart are baseline runtime data, not historical experiment residue;
+- configuration was migrated only from schema version 46 to 49 by the upstream update; working auth/provider settings were preserved;
+- `hermes-gateway.service` and `hermes-dashboard.service` are active after clean restart;
+- no self-learning experiment result is accepted as production knowledge.
+
+Acceptance marker: `HERMES_CLEAN_SHEET=PASS`.
+
+Authoritative record: `HERMES_CLEAN_SHEET_ACCEPTANCE_2026-09-28.md`.
