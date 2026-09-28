@@ -2616,3 +2616,44 @@ T3 was required as a persistent 24/7 remote workspace on `edge`, independent of 
 - `HERMES_DEFAULT_EXPERIMENT_CLEANUP=PASS`
 
 **Supersedes:** any provisional experiment workflow that writes learning artifacts into the production/default Hermes profile or treats one successful skill reuse as sufficient promotion evidence.
+
+
+---
+
+## 2026-09-28T23:48:00+03:00 — Hermes self-learning experiment retired; default clean-sheet baseline
+
+**Status:** ACCEPTED
+
+**Context:**
+
+The isolated `selflearning` experiment proved that Hermes can create and reuse autonomous skills/memory, but also exposed quality-control failure modes: premature persistence, transient runtime facts written as durable memory, unverified operational claims in generated skills, and background review not acting as a mandatory post-write quality gate. The experiment is therefore treated as a capability evaluation, not as production knowledge.
+
+**Decision:**
+
+- fully retire the `selflearning` profile and its runtime;
+- promote **none** of the experiment-created skills or memories into the default profile;
+- discard all experiment results as production knowledge;
+- keep Hermes production as a single default profile;
+- reset default persistent conversational/learning state to a clean-sheet baseline while preserving working configuration, authentication, provider/gateway/dashboard setup, installation/update path, production cron jobs, plugins/hooks/platform configuration and pairing/authentication state;
+- default skill store contains only the current bundled skills reseeded from the installed Hermes checkout;
+- future Hermes use starts from this clean baseline; do not resume synthetic self-learning training unless explicitly re-authorized as a new experiment.
+
+**Accepted clean-sheet state:**
+
+- Hermes: `v0.21.5+4396.gad2d482 (2026.9.24)`, upstream `ad2d4822`;
+- config schema: `_config_version: 49`;
+- profiles: default only; `selflearning` absent;
+- sessions: `0`;
+- messages: `0`;
+- durable memory: empty;
+- learned/custom skills: `0`;
+- bundled skills: `58`, aligned with current installed checkout;
+- old local history: `0`;
+- stale experiment leases: `0`;
+- gateway: active;
+- dashboard: active;
+- old cache/log/update backups/state snapshots were removed before fresh runtime start.
+
+**Acceptance marker:** `HERMES_CLEAN_SHEET=PASS`.
+
+**Supersedes:** `2026-09-27 — Hermes self-learning experiment isolation — COMPLETE / ACCEPTED` as current operating state. That entry remains historical evidence of the experiment phase.
