@@ -611,3 +611,12 @@ Authoritative record: `STAGE_12_FINAL_ACCEPTANCE_2026-09-23.md`.
   - `MASTER_HEALTH_GATE=PASS`
   - 16/16 `manual-update <TARGET> --preflight` returned `PASS` with `REAL_UPDATE_EXECUTED=NO`
   - `READ_ONLY_REFRESH=PASS`
+
+
+### Shared PostgreSQL 18 production topology (accepted 2026-09-29)
+
+- Production database service: Docker container `postgres`, image track `postgres:18`, persistent data `/srv/postgres`, no host-published 5432.
+- Databases: `mattermost`, `nextcloud`, `openproject` with separate roles.
+- Backrest `edge-state` preparation creates logical dumps for all three databases plus PostgreSQL globals and stages OpenProject `openproject_opdata`; OpenProject restart is guarded by readiness wait.
+- Edge Monitor current Docker contract: 15 persistent production containers, including shared `postgres` and the OpenProject web/worker/cron/cache/proxy/autoheal services.
+- Retired from runtime: `mattermost-postgres-1`, `nextcloud-db-1`, `openproject-db-1`, `openproject-hocuspocus-1`, their superseded database data/volume, migration rollback files, and obsolete `postgres:17`, `postgres:18-alpine`, `openproject/hocuspocus:17.8.0` images.
