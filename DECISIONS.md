@@ -2702,3 +2702,28 @@ The isolated `selflearning` experiment proved that Hermes can create and reuse a
 - each stage uses audit -> plan/recovery path -> mutation -> verification -> acceptance, and persists accepted state to the canonical repository before moving on.
 
 **Supersedes:** ad-hoc execution of this normalization through repeated chat-issued mutation blocks. It does not supersede the underlying PostgreSQL 18 or Hocuspocus target-architecture decisions.
+
+
+---
+
+## 2026-09-29T11:50:00+03:00 — Stage 1 PostgreSQL consolidation acceptance
+
+**Status:** ACCEPTED
+
+**Context:** Stage 1 of the three-stage Antigravity execution workflow has completed. The implementation established the accepted production steady state, then underwent an independent read-only audit, an upstream-cleanliness corrective pass, canonical manifest persistence, rollback inventory reconciliation, and a final Mattermost-role consistency check.
+
+**Decision:**
+
+- accept Stage 1 as COMPLETE / ACCEPTED;
+- production steady state is one infrastructure-owned `postgres:18` service with databases/roles `mattermost`, `nextcloud`, and `openproject`;
+- Mattermost, Nextcloud, and OpenProject use the consolidated PostgreSQL service; embedded application PostgreSQL services are no longer active production dependencies;
+- OpenProject Hocuspocus is disabled/removed from the active production topology and real-time collaborative editing is disabled;
+- Mattermost and OpenProject upstream Git trees remain clean; local edge-specific topology is implemented through canonicalized override files;
+- Nextcloud full logical dump/restore is accepted as an implementation deviation because it preserved the accepted configuration while the resulting PostgreSQL ownership, roles, privileges, and topology match the target architecture;
+- Stage 1 rollback artifacts remain preserved until Stage 3 cleanup;
+- Stage 2 Maintenance/Semaphore normalization may now proceed;
+- Stage 2 must not delete Stage 1 rollback artifacts.
+
+**Acceptance evidence:** independent Stage 1 audit PASS/acceptable-deviation markers; corrective upstream-cleanliness PASS; rollback reconciliation PASS; canonical manifests persisted under `deployments/edge/`; final runtime/canonical Mattermost role alignment confirmed as `mattermost`.
+
+**Supersedes:** the temporary Stage 1 status `VERIFIED / PENDING OPERATOR ACCEPTANCE`.
