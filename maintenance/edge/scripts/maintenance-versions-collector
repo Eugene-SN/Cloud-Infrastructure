@@ -487,8 +487,6 @@ try:
                 )
         except Exception:
             pass
-        if not version:
-            version = "17.8.0" 
 
     elif component == "STALWART":
         versions = []

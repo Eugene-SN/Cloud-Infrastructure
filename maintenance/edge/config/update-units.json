@@ -102,7 +102,10 @@
       "files": [
         "compose.yaml"
       ],
-      "service": "n8n"
+      "service": "n8n",
+      "health_services": [
+        "n8n"
+      ]
     },
     {
       "id": "AUTHELIA",
@@ -112,7 +115,10 @@
       "files": [
         "compose.yaml"
       ],
-      "service": "authelia"
+      "service": "authelia",
+      "health_services": [
+        "authelia"
+      ]
     },
     {
       "id": "MATTERMOST",
@@ -123,7 +129,10 @@
         "docker-compose.yml",
         "docker-compose.edge.yml"
       ],
-      "service": "mattermost"
+      "service": "mattermost",
+      "health_services": [
+        "mattermost"
+      ]
     },
     {
       "id": "POSTGRESQL",
@@ -135,7 +144,10 @@
       ],
       "service": "postgres",
       "image_track": "18",
-      "major_policy": "18"
+      "major_policy": "18",
+      "health_services": [
+        "postgres"
+      ]
     },
     {
       "id": "STALWART",
@@ -145,7 +157,10 @@
       "files": [
         "compose.yaml"
       ],
-      "service": "stalwart"
+      "service": "stalwart",
+      "health_services": [
+        "stalwart"
+      ]
     },
     {
       "id": "BULWARK",
@@ -155,7 +170,10 @@
       "files": [
         "compose.yaml"
       ],
-      "service": "bulwark"
+      "service": "bulwark",
+      "health_services": [
+        "bulwark"
+      ]
     },
     {
       "id": "NEXTCLOUD",
@@ -169,6 +187,10 @@
       "services": [
         "app",
         "cron"
+      ],
+      "health_services": [
+        "app",
+        "cron"
       ]
     },
     {
@@ -179,7 +201,10 @@
       "files": [
         "compose.yaml"
       ],
-      "service": "redis"
+      "service": "redis",
+      "health_services": [
+        "redis"
+      ]
     },
     {
       "id": "OPENPROJECT",
@@ -200,7 +225,15 @@
         "autoheal",
         "seeder"
       ],
-      "branch": "stable/17"
+      "branch": "stable/17",
+      "health_services": [
+        "web",
+        "worker",
+        "cron",
+        "cache",
+        "proxy",
+        "autoheal"
+      ]
     }
   ]
 }

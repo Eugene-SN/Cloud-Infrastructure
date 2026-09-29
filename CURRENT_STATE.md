@@ -1046,5 +1046,11 @@ Current verified runtime state on `edge`:
 
 - **Stage Boundary & Operational Scope**:
   - Stage 1 production steady state normalization: **COMPLETE / ACCEPTED**.
-  - Stage 2 Maintenance Center & Semaphore Normalization: **VERIFIED / PENDING ACCEPTANCE**. All 16 update units, single PostgreSQL (track 18), OpenProject (track 17-slim), Semaphore alignment, orphan safety, and preflights verified without application update mutations.
+  - Stage 2 Maintenance Center & Semaphore Normalization: **VERIFIED / PENDING ACCEPTANCE**.
+    - All 16 update units, single PostgreSQL (track 18), OpenProject (track 17-slim), Semaphore alignment, orphan safety, and preflights verified without application update mutations.
+    - Post-Master health gate (`master-health-validate`) expanded across all 9 Compose-family update units (`N8N`, `AUTHELIA`, `MATTERMOST`, `POSTGRESQL`, `STALWART`, `BULWARK`, `NEXTCLOUD`, `NEXTCLOUD_REDIS`, `OPENPROJECT`), validating 15 permanent running services (`DOCKER_UNITS=9`, `DOCKER_SERVICES=15`).
+    - OpenProject one-shot `seeder` is cleanly excluded from health requirements via explicit unit `health_services` configuration (`web`, `worker`, `cron`, `cache`, `proxy`, `autoheal`).
+    - OpenProject version discovery is strictly fail-closed: hardcoded fallback `17.8.0` removed from `maintenance-versions-collector`. Upstream GitHub releases are queried dynamically for `17.x`; failure to discover upstream releases yields `STABLE_UNRESOLVED` / `CHECK_FAILED`. OpenProject 18+ is blocked from routine update targets.
+    - OpenProject update execution target identity: `manual-update` extracts and passes `--target-version`, `--target-track`, `--target-digest` to `update-openproject`. The helper strictly enforces major 17, track `17-slim`, sha256 format, pulls and tags accepted digest before compose up, and verifies post-recreate container image ID matches target digest.
+    - Rollback inventory wording reconciled: `/var/backups/stage1-pre-consolidation/` does not exist on `edge` and was a drafting error in the initial Stage-2 report; canonical Stage 1 rollback artifacts (Mattermost dump at `/srv/mattermost/backups/mattermost_dump_pre_consolidation.sql`, Nextcloud old DB at `/srv/nextcloud/postgres`, OpenProject volume `openproject_pgdata`, and stopped containers `mattermost-postgres-1`, `nextcloud-db-1`, `openproject-db-1`, `openproject-hocuspocus-1`) remain intact.
   - Stage 3 (Backup/Backrest reconciliation, monitoring normalization, final cleanup/deletion of rollback artifacts) has NOT been executed or started.

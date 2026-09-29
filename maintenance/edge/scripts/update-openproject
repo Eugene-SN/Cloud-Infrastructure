@@ -5,6 +5,7 @@ import argparse
 import json
 import os
 import pathlib
+import re
 import subprocess
 import sys
 import time
@@ -16,6 +17,7 @@ HEALTH_URL = "http://127.0.0.1:18082/health_checks/default"
 ROLLBACK_CONTAINERS = ["openproject-db-1", "openproject-hocuspocus-1"]
 READY_ATTEMPTS = 40
 READY_DELAY_SECONDS = 3
+REPOSITORY = "openproject/openproject"
 
 
 def run(argv, **kwargs):
@@ -129,8 +131,11 @@ def preflight():
     print("OPENPROJECT_UPDATE_PREFLIGHT=PASS")
 
 
-def execute_update():
+def execute_update(target_version, target_track, target_digest):
     preflight()
+
+    pinned = f"{REPOSITORY}@{target_digest}"
+    tracked = f"{REPOSITORY}:{target_track}"
 
     # 1. Update git tracked files on stable/17
     run(["git", "-c", "safe.directory=/opt/openproject", "pull", "--ff-only", "origin", "stable/17"], cwd=DIRECTORY)
@@ -138,10 +143,36 @@ def execute_update():
     # 2. Pull updated images ignoring buildable proxy
     compose_run("pull", "--ignore-buildable")
 
-    # 3. Bring up updated services WITHOUT --remove-orphans to preserve rollback containers!
+    # 3. Pull the exact accepted target image by digest
+    run(["docker", "pull", pinned])
+
+    # 4. Tag the pinned image to the tracked reference (17-slim) so compose uses this exact digest
+    run(["docker", "tag", pinned, tracked])
+
+    # 5. Bring up updated services without orphan removal to preserve rollback containers!
     compose_run("up", "-d", "--wait")
 
-    # 4. Wait for application readiness
+    # 6. Verify resulting web container image ID corresponds to target pinned digest
+    web_image_id = subprocess.run(
+        ["docker", "inspect", "openproject-web-1", "--format", "{{.Image}}"],
+        capture_output=True,
+        text=True,
+        check=True,
+    ).stdout.strip()
+
+    pinned_image_id = subprocess.run(
+        ["docker", "image", "inspect", pinned, "--format", "{{.Id}}"],
+        capture_output=True,
+        text=True,
+        check=True,
+    ).stdout.strip()
+
+    if web_image_id != pinned_image_id:
+        raise RuntimeError(
+            f"OpenProject web image ID mismatch: expected={pinned_image_id} actual={web_image_id}"
+        )
+
+    # 7. Wait for application readiness
     ready = False
     last_err = ""
     for attempt in range(1, READY_ATTEMPTS + 1):
@@ -157,7 +188,7 @@ def execute_update():
     if not ready:
         raise RuntimeError(f"OpenProject runtime readiness timeout: {last_err}")
 
-    # 5. Verify rollback containers remain intact
+    # 8. Verify rollback containers remain intact
     check_rollback_containers()
 
     print("OPENPROJECT_UPDATE_RESULT=SUCCESS")
@@ -166,12 +197,30 @@ def execute_update():
 def main():
     parser = argparse.ArgumentParser(description="OpenProject Compose update driver")
     parser.add_argument("--preflight", action="store_true", help="Perform preflight verification only")
+    parser.add_argument("--target-version", help="Accepted target application version")
+    parser.add_argument("--target-track", help="Accepted image track")
+    parser.add_argument("--target-digest", help="Accepted remote image digest")
     args = parser.parse_args()
 
     if args.preflight:
         preflight()
-    else:
-        execute_update()
+        print("REAL_UPDATE_EXECUTED=NO")
+        return
+
+    target_version = str(args.target_version or "").strip()
+    target_track = str(args.target_track or "").strip()
+    target_digest = str(args.target_digest or "").strip()
+
+    if not target_version or not re.fullmatch(r"17\.[0-9]+(\.[0-9]+)?", target_version):
+        raise RuntimeError(f"invalid OpenProject target version: {target_version} (must be 17.x)")
+
+    if target_track != "17-slim":
+        raise RuntimeError(f"invalid OpenProject target track: {target_track} (expected 17-slim)")
+
+    if not re.fullmatch(r"sha256:[0-9a-f]{64}", target_digest):
+        raise RuntimeError(f"invalid OpenProject target digest: {target_digest}")
+
+    execute_update(target_version, target_track, target_digest)
 
 
 if __name__ == "__main__":

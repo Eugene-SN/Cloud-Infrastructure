@@ -75,17 +75,24 @@ def main():
     if audit.returncode != 0 or audit.stdout.strip() or audit.stderr.strip():
         failures.append("DPKG_AUDIT")
 
+    COMPOSE_DRIVERS = (
+        "compose",
+        "nextcloud_compose",
+        "stalwart_compose",
+        "openproject_compose",
+    )
+
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
     compose_units = 0
     compose_services = 0
     for unit in manifest["units"]:
-        if unit["driver"] != "compose":
+        if unit.get("driver") not in COMPOSE_DRIVERS:
             continue
         compose_units += 1
         compose = ["docker", "compose"]
         for filename in unit["files"]:
             compose.extend(["-f", filename])
-        services = unit.get("services", [unit["service"]])
+        services = unit.get("health_services") or unit.get("services") or [unit["service"]]
         for service in services:
             compose_services += 1
             container = command(

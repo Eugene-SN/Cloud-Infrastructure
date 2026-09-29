@@ -143,9 +143,58 @@ assert ".old" in manual_update_source
 assert "pg_dumpall" not in manual_update_source
 assert "database_backup" not in json.dumps(manifest)
 assert '"projects-webdav.service"' in health_source
-assert 'unit.get("services", [unit["service"]])' in health_source
+assert 'unit.get("health_services")' in health_source
+assert '"nextcloud_compose"' in health_source
+assert '"stalwart_compose"' in health_source
+assert '"openproject_compose"' in health_source
 assert "DOCKER_UNITS=" in health_source
 assert "DOCKER_SERVICES=" in health_source
+
+# Master health coverage verification
+COMPOSE_DRIVERS = ("compose", "nextcloud_compose", "stalwart_compose", "openproject_compose")
+compose_family_units = [u for u in manifest["units"] if u.get("driver") in COMPOSE_DRIVERS]
+assert len(compose_family_units) == 9
+
+op_manifest = next(u for u in manifest["units"] if u["id"] == "OPENPROJECT")
+assert "seeder" not in op_manifest["health_services"]
+assert set(op_manifest["health_services"]) == {"web", "worker", "cron", "cache", "proxy", "autoheal"}
+
+nc_manifest = next(u for u in manifest["units"] if u["id"] == "NEXTCLOUD")
+assert set(nc_manifest["health_services"]) == {"app", "cron"}
+
+sw_manifest = next(u for u in manifest["units"] if u["id"] == "STALWART")
+assert set(sw_manifest["health_services"]) == {"stalwart"}
+
+# OpenProject fail-closed discovery verification
+collector_source = (root / "scripts/maintenance-versions-collector").read_text(encoding="utf-8")
+assert 'version = "17.8.0"' not in collector_source
+assert "version = '17.8.0'" not in collector_source
+assert 're.match(r"^17\\.[0-9]+(\\.[0-9]+)?$", tag_name)' in collector_source
+
+# OpenProject update helper verification
+update_op_source = (root / "scripts/update-openproject").read_text(encoding="utf-8")
+assert "--remove-orphans" not in update_op_source
+assert "--target-version" in update_op_source
+assert "--target-track" in update_op_source
+assert "--target-digest" in update_op_source
+assert "pinned_image_id" in update_op_source
+assert "web_image_id" in update_op_source
+assert "web_image_id != pinned_image_id" in update_op_source
+assert "openproject-db-1" in update_op_source
+assert "openproject-hocuspocus-1" in update_op_source
+
+# Verify manual-update passes target identity to openproject helper
+assert '"--target-version"' in manual_update_source
+assert '"--target-track"' in manual_update_source
+assert '"--target-digest"' in manual_update_source
+
+# Regression test: helper argument rejection
+import subprocess
+op_script = str(root / "scripts/update-openproject")
+assert subprocess.run([sys.executable, op_script], capture_output=True).returncode != 0
+assert subprocess.run([sys.executable, op_script, "--target-version", "18.0.0", "--target-track", "17-slim", "--target-digest", "sha256:" + "a" * 64], capture_output=True).returncode != 0
+assert subprocess.run([sys.executable, op_script, "--target-version", "17.8.0", "--target-track", "17", "--target-digest", "sha256:" + "a" * 64], capture_output=True).returncode != 0
+assert subprocess.run([sys.executable, op_script, "--target-version", "17.8.0", "--target-track", "17-slim", "--target-digest", "invalid"], capture_output=True).returncode != 0
 
 assert actions["schema"] == 10
 assert actions["target_model"] == "update_units_v5"
