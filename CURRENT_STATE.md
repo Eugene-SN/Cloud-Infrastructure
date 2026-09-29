@@ -1064,3 +1064,17 @@ Stage 2 (Maintenance normalization) is COMPLETE / ACCEPTED based on the live edg
 ### 2026-09-29 — Stage 3 PostgreSQL consolidation — COMPLETE / ACCEPTED
 
 Runtime-first acceptance completed. Backrest `edge-state` uses consolidated PostgreSQL logical dumps for `mattermost`, `nextcloud`, and `openproject`, includes PostgreSQL globals and OpenProject `opdata`, and a real snapshot plus tier copy completed successfully. Edge Monitor tracks the current 15-container production topology with shared `postgres` and OpenProject probing. Superseded embedded database/Hocuspocus containers, old database data, migration rollback files, and obsolete database/Hocuspocus images were removed. Final runtime gates: 3 production application databases present; Mattermost/Nextcloud/OpenProject checks PASS; Maintenance Master Health PASS; Edge Monitor EDGE_STATE=OK and OVERALL_STATE=OK.
+
+
+## 2026-09-29 — Edge clean steady state
+
+- Status: COMPLETE / ACCEPTED.
+- Runtime-first housekeeping finished successfully.
+- Docker: 15 running containers; 0 stopped; 0 dangling images; 0 dangling volumes; 0 build cache.
+- Only persistent Docker volume remaining: `openproject_opdata`.
+- Known superseded rollback/temp/old artifacts were removed; residual historical-file scan returned `NONE`.
+- Nginx maintenance site is normalized to canonical `sites-available` + `sites-enabled` symlink layout; `nginx -t` PASS.
+- PostgreSQL, Mattermost, Nextcloud, OpenProject, Maintenance and Edge Monitor non-regression checks PASS.
+- Edge Monitor: 15 Docker workloads, `EDGE_STATE=OK`, `OVERALL_STATE=OK`.
+- Root filesystem: 155G total, 46G used, 109G available (30%). `/tmp`: 3.4M used of 7.8G (1%).
+- Acceptance markers: `EDGE_RESIDUAL_FILESYSTEM_CLEANUP=PASS`, `EDGE_DOCKER_CLEAN_STATE=PASS`, `EDGE_NORMALIZED_STEADY_STATE=PASS`.
