@@ -2791,3 +2791,16 @@ The isolated `selflearning` experiment proved that Hermes can create and reuse a
 - final verification must include both service non-regression and cleanup/absence checks for artifacts scheduled for retirement.
 
 **Supersedes:** any prior informal practice or interpretation that retained obsolete artifacts primarily because they consumed little space, seemed harmless, or might hypothetically be useful later.
+
+
+---
+
+## 2026-09-29T14:48:00+03:00 — Edge post-mutation housekeeping acceptance
+
+**Status:** ACCEPTED
+
+**Decision:** accept the current edge runtime as the clean normalized steady state. Future acceptance must continue to remove proven-unnecessary rollback, temporary, superseded, orphaned, duplicate, and reproducible artifacts rather than retaining them due to size or hypothetical future usefulness. The remaining Stage-3 review items (`openproject-seeder-1` and the anonymous Docker volume) were audited and removed; nginx maintenance-site layout was normalized; residual historical-file scan returned `NONE`; Docker and application non-regression checks passed.
+
+**Acceptance basis:** 15 running containers; 0 stopped containers; 0 dangling images; 0 dangling volumes; 0 build cache; PostgreSQL/application/Maintenance/Edge Monitor PASS; `EDGE_STATE=OK`; `OVERALL_STATE=OK`.
+
+**Supersedes:** the Stage-3 residual-state note that left `openproject-seeder-1` and the anonymous Docker volume for later review.
