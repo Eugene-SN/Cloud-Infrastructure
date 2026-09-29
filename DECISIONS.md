@@ -2854,3 +2854,21 @@ The isolated `selflearning` experiment proved that Hermes can create and reuse a
 - prefer existing components and native capabilities; do not introduce new middleware or services unless a concrete blocker is proven.
 
 **Implementation boundary:** this decision defines scope only. Each integration must still follow runtime-first audit -> implementation -> verification -> acceptance, and Nextcloud compatibility must be tested rather than inferred.
+
+
+---
+
+## 2026-09-30T02:02:00+03:00 — Temporary Antigravity utilization priority before quota reset
+
+**Status:** ACCEPTED
+
+**Context:** The operator expects the current Antigravity subscription quota to reset in approximately 15 hours and explicitly wants the already-installed edge Antigravity runtime used on suitable current tasks rather than leaving useful paid capacity unused.
+
+**Decision:**
+
+- until the next Antigravity subscription quota reset, prefer using the existing edge Antigravity runtime for bounded tasks where additional model work has concrete value, especially code/repository analysis, automation/workflow logic review, complex mutation/recovery block review, and other development-oriented subtasks;
+- do not invoke Antigravity merely to consume tokens when the task is already deterministically resolved or when delegation would add complexity without improving correctness;
+- keep existing architectural boundaries unchanged: Antigravity does not gain a separate direct OpenProject integration, and GitHub/Hermes boundaries remain as already accepted;
+- this is a temporary execution-priority directive and self-expires after the next subscription quota reset; it does not supersede the normal tool-selection and simplicity rules afterward.
+
+**Supersedes:** none.
