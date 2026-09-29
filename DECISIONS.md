@@ -2748,3 +2748,23 @@ The isolated `selflearning` experiment proved that Hermes can create and reuse a
 - Stage 3 may proceed with runtime-first backup/recovery reconciliation, monitoring reconciliation, and cleanup.
 
 **Acceptance basis:** live runtime audit STAGE2_RUNTIME_ACCEPTANCE_AUDIT=PASS; repository state is secondary/supporting context only.
+
+
+---
+
+## 2026-09-29T13:41:00+03:00 — Stage 3 PostgreSQL consolidation closure
+
+**Status:** ACCEPTED
+
+**Context:** Final acceptance was based on the live edge runtime. Backrest `edge-state` now prepares logical dumps for Mattermost, Nextcloud and OpenProject from the shared PostgreSQL 18 service, includes PostgreSQL globals and OpenProject persistent `opdata`, waits for OpenProject readiness after quiesce/restart, and completed a real Backrest snapshot plus successful tier copy. Edge Monitor now reflects the consolidated topology with 15 persistent Docker workloads, shared `postgres`, and OpenProject application probing. Superseded embedded PostgreSQL/Hocuspocus containers, old database data, migration rollback files and obsolete images were removed only after backup acceptance.
+
+**Decision:**
+
+- accept Stage 3 as COMPLETE / ACCEPTED;
+- accept the PostgreSQL/OpenProject normalization workstream as complete;
+- shared infrastructure PostgreSQL 18 is the production database service for Mattermost, Nextcloud and OpenProject;
+- Stage-1 rollback database artifacts are retired;
+- `edge-state` Backrest preparation and Edge Monitor are normalized to the current topology;
+- remaining stopped `openproject-seeder-1` and the small anonymous Docker volume are not part of this acceptance decision and may be reviewed separately if desired.
+
+**Acceptance basis:** live runtime verification: production database count 3; Mattermost, Nextcloud and OpenProject application checks PASS; Maintenance Master Health PASS with 9 Docker units / 15 services; Edge Monitor reports 15 Docker workloads, EDGE_STATE=OK and OVERALL_STATE=OK; superseded database containers/data/volume absent.
