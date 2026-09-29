@@ -1054,3 +1054,8 @@ Current verified runtime state on `edge`:
     - OpenProject update execution target identity: `manual-update` extracts and passes `--target-version`, `--target-track`, `--target-digest` to `update-openproject`. The helper strictly enforces major 17, track `17-slim`, sha256 format, pulls and tags accepted digest before compose up, and verifies post-recreate container image ID matches target digest.
     - Rollback inventory wording reconciled: `/var/backups/stage1-pre-consolidation/` does not exist on `edge` and was a drafting error in the initial Stage-2 report; canonical Stage 1 rollback artifacts (Mattermost dump at `/srv/mattermost/backups/mattermost_dump_pre_consolidation.sql`, Nextcloud old DB at `/srv/nextcloud/postgres`, OpenProject volume `openproject_pgdata`, and stopped containers `mattermost-postgres-1`, `nextcloud-db-1`, `openproject-db-1`, `openproject-hocuspocus-1`) remain intact.
   - Stage 3 (Backup/Backrest reconciliation, monitoring normalization, final cleanup/deletion of rollback artifacts) has NOT been executed or started.
+
+
+### 2026-09-29 — Stage 2 runtime acceptance
+
+Stage 2 (Maintenance normalization) is COMPLETE / ACCEPTED based on the live edge runtime audit. Final gates: 16/16 preflights PASS; read-only Refresh PASS; PostgreSQL 18 track PASS; OpenProject target-lock PASS; Semaphore live templates PASS; Master health PASS with 9 Compose-family units and 15 persistent services; Stage-1 rollback artifacts preserved; application non-regression PASS. Stage 3 is the next authorized workstream.
