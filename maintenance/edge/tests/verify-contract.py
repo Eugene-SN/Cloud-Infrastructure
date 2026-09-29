@@ -62,12 +62,34 @@ assert nextcloud["image_track"] == ".".join(nextcloud_parts[:2]) + "-apache"
 assert next(u for u in manifest["units"] if u["id"] == "NEXTCLOUD")["driver"] == "nextcloud_compose"
 assert (root / "scripts/update-nextcloud").is_file()
 
-for component in ("POSTGRESQL", "NEXTCLOUD_POSTGRESQL"):
-    row = next(r for r in docker if r["component"] == component)
-    available = row["available_application_version"]
-    assert available.count(".") == 1
-    assert row["image_track"] == available.split(".", 1)[0] + "-alpine"
-    assert row["source"] == "POSTGRES_OFFICIAL_LATEST_STABLE_DOCKER"
+postgresql = next(r for r in docker if r["component"] == "POSTGRESQL")
+assert postgresql["image_track"] == "18"
+assert postgresql["source"] == "POSTGRES_OFFICIAL_LATEST_STABLE_DOCKER"
+assert postgresql["application_version"].startswith("18.")
+assert postgresql["available_application_version"].startswith("18.")
+assert not postgresql["available_application_version"].startswith("19.")
+postgresql_unit = next(u for u in manifest["units"] if u["id"] == "POSTGRESQL")
+assert postgresql_unit["major_policy"] == "18"
+assert postgresql_unit["image_track"] == "18"
+assert postgresql_unit["directory"] == "/opt/postgres"
+assert postgresql_unit["files"] == ["compose.yaml"]
+assert postgresql_unit["service"] == "postgres"
+print("POSTGRESQL_IMAGE_TRACK=18")
+print("POSTGRESQL_MAJOR_UPGRADE_DISCOVERY=DISABLED")
+
+openproject = next(r for r in docker if r["component"] == "OPENPROJECT")
+assert openproject["image_track"] == "17-slim"
+assert openproject["source"] == "OPENPROJECT_UPSTREAM_STABLE_AND_OFFICIAL_DOCKER"
+assert openproject["application_version"].startswith("17.")
+assert openproject["available_application_version"].startswith("17.")
+openproject_unit = next(u for u in manifest["units"] if u["id"] == "OPENPROJECT")
+assert openproject_unit["driver"] == "openproject_compose"
+assert openproject_unit["directory"] == "/opt/openproject"
+assert openproject_unit["branch"] == "stable/17"
+assert openproject_unit["files"] == ["docker-compose.yml", "docker-compose.override.yml"]
+assert (root / "scripts/update-openproject").is_file()
+assert not (root / "playbooks/updates/nextcloud-postgresql.yml").exists()
+assert (root / "playbooks/updates/openproject.yml").exists()
 
 stalwart = next(r for r in docker if r["component"] == "STALWART")
 stalwart_available = stalwart["available_application_version"]
@@ -99,13 +121,19 @@ assert set(enablement["enabled"]) == manual
 assert all(enablement["enabled"].values())
 
 assert 'enablement.get("schema") != 1' not in manual_update_source
-assert manual_update_source.count('enablement.get("schema") != 2') == 2
-assert 'driver in ("compose", "nextcloud_compose", "stalwart_compose")' in manual_update_source
+assert manual_update_source.count('enablement.get("schema") != 2') >= 1
+assert 'driver in ("compose", "nextcloud_compose", "stalwart_compose", "openproject_compose")' in manual_update_source
 assert 'elif driver == "nextcloud_compose":' in manual_update_source
 assert 'elif driver == "stalwart_compose":' in manual_update_source
+assert 'elif driver == "openproject_compose":' in manual_update_source
 assert actions["components"]["NEXTCLOUD"]["managed_by"] == "docker"
 assert actions["components"]["STALWART"]["managed_by"] == "docker"
-assert "--remove-orphans" in manual_update_source
+assert actions["components"]["OPENPROJECT"]["managed_by"] == "docker"
+assert "NEXTCLOUD_POSTGRESQL" not in actions["components"]
+assert "NEXTCLOUD_POSTGRESQL" not in {u["id"] for u in manifest["units"]}
+assert "NEXTCLOUD_POSTGRESQL" not in templates["components"]
+assert "NEXTCLOUD_POSTGRESQL" not in enablement["enabled"]
+assert "--remove-orphans" not in manual_update_source
 assert '"docker", "rmi"' in manual_update_source
 assert '"image", "prune"' in manual_update_source
 assert "rotate_backups" not in manual_update_source
@@ -142,7 +170,7 @@ assert not (root / "playbooks/updates/antigravity.yml").exists()
 for path in (
     "rclone.yml",
     "nextcloud.yml",
-    "nextcloud-postgresql.yml",
+    "openproject.yml",
     "nextcloud-redis.yml",
 ):
     assert (root / "playbooks/updates" / path).is_file()

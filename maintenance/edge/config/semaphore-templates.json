@@ -42,7 +42,7 @@
     },
     "POSTGRESQL": {
       "template_id": 11,
-      "label": "Update Mattermost (PostgreSQL)"
+      "label": "Update PostgreSQL"
     },
     "STALWART": {
       "template_id": 12,
@@ -60,13 +60,13 @@
       "template_id": 16,
       "label": "Update Nextcloud"
     },
-    "NEXTCLOUD_POSTGRESQL": {
-      "template_id": 19,
-      "label": "Update Nextcloud (PostgreSQL)"
-    },
     "NEXTCLOUD_REDIS": {
       "template_id": 20,
       "label": "Update Nextcloud (Redis)"
+    },
+    "OPENPROJECT": {
+      "template_id": 19,
+      "label": "Update OpenProject"
     }
   }
 }

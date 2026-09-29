@@ -29,13 +29,13 @@
     "RCLONE",
     "N8N",
     "AUTHELIA",
-    "MATTERMOST",
     "POSTGRESQL",
+    "MATTERMOST",
     "STALWART",
     "BULWARK",
     "NEXTCLOUD",
-    "NEXTCLOUD_POSTGRESQL",
     "NEXTCLOUD_REDIS",
+    "OPENPROJECT",
     "SEMAPHORE",
     "APT_EDGE"
   ],
@@ -129,12 +129,13 @@
       "id": "POSTGRESQL",
       "group": "docker",
       "driver": "compose",
-      "directory": "/opt/mattermost",
+      "directory": "/opt/postgres",
       "files": [
-        "docker-compose.yml",
-        "docker-compose.edge.yml"
+        "compose.yaml"
       ],
-      "service": "postgres"
+      "service": "postgres",
+      "image_track": "18",
+      "major_policy": "18"
     },
     {
       "id": "STALWART",
@@ -171,16 +172,6 @@
       ]
     },
     {
-      "id": "NEXTCLOUD_POSTGRESQL",
-      "group": "docker",
-      "driver": "compose",
-      "directory": "/opt/nextcloud",
-      "files": [
-        "compose.yaml"
-      ],
-      "service": "db"
-    },
-    {
       "id": "NEXTCLOUD_REDIS",
       "group": "docker",
       "driver": "compose",
@@ -189,6 +180,27 @@
         "compose.yaml"
       ],
       "service": "redis"
+    },
+    {
+      "id": "OPENPROJECT",
+      "group": "docker",
+      "driver": "openproject_compose",
+      "directory": "/opt/openproject",
+      "files": [
+        "docker-compose.yml",
+        "docker-compose.override.yml"
+      ],
+      "service": "web",
+      "services": [
+        "web",
+        "worker",
+        "cron",
+        "cache",
+        "proxy",
+        "autoheal",
+        "seeder"
+      ],
+      "branch": "stable/17"
     }
   ]
 }

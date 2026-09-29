@@ -112,11 +112,10 @@ def main():
 
     postgres = command(
         [
-            "docker", "compose", "-f", "docker-compose.yml", "-f",
-            "docker-compose.edge.yml", "exec", "-T", "postgres",
-            "pg_isready", "-U", "mmuser",
+            "docker", "compose", "-f", "compose.yaml", "exec", "-T", "postgres",
+            "pg_isready", "-U", "postgres",
         ],
-        cwd="/opt/mattermost",
+        cwd="/opt/postgres",
     )
     if postgres.returncode != 0:
         failures.append("POSTGRES_READINESS")

@@ -1,79 +1,21 @@
 #!/usr/bin/env python3
-"""Fail-closed dispatcher for one operator-triggered Edge update unit."""
+"""Execute manual updates strictly from the Edge maintenance allowlist."""
 
 import argparse
 import datetime as dt
 import json
 import os
 import pathlib
+import runpy
 import shutil
 import subprocess
 import sys
 
-MANIFEST = pathlib.Path("/opt/edge-maintenance/config/update-units.json")
+BASE = pathlib.Path("/opt/edge-maintenance")
+MANIFEST = BASE / "config/update-units.json"
 ENABLEMENT = pathlib.Path("/etc/edge-maintenance/manual-driver-enablement.json")
-CACHE = pathlib.Path("/var/www/maintenance-status/maintenance.json")
+STATUS_CACHE = pathlib.Path("/var/www/maintenance-status/maintenance.json")
 CORE_UID = 1000
-CORE_HOME = pathlib.Path("/home/core")
-CORE_PATH = ":".join((
-    "/home/core/.local/bin",
-    "/usr/local/sbin",
-    "/usr/local/bin",
-    "/usr/sbin",
-    "/usr/bin",
-    "/sbin",
-    "/bin",
-    "/snap/bin",
-))
-HERMES_VENV_PYTHON = pathlib.Path(
-    "/home/core/.hermes/hermes-agent/venv/bin/python"
-)
-CORE_CONTEXT_CHECK = r"""
-import os
-
-expected = {
-    "HOME": "/home/core",
-    "USER": "core",
-    "LOGNAME": "core",
-}
-errors = []
-if os.getuid() != 1000:
-    errors.append(f"uid={os.getuid()}")
-if os.getcwd() != "/home/core":
-    errors.append(f"cwd={os.getcwd()}")
-for key, value in expected.items():
-    if os.environ.get(key) != value:
-        errors.append(f"{key}={os.environ.get(key)!r}")
-if not os.environ.get("PATH", "").startswith("/home/core/.local/bin:"):
-    errors.append("PATH is not core-local-first")
-if errors:
-    raise SystemExit("CORE_EXECUTION_CONTEXT=FAIL|" + ",".join(errors))
-print("CORE_EXECUTION_CONTEXT=PASS")
-"""
-HERMES_LAZY_DEPENDENCY_CHECK = r"""
-import json
-from tools.lazy_deps import active_features, feature_missing
-
-drift = {}
-for feature in active_features():
-    missing = feature_missing(feature)
-    if missing:
-        drift[feature] = list(missing)
-
-if drift:
-    print("HERMES_LAZY_DEPENDENCIES=DRIFT|" + json.dumps(drift, sort_keys=True))
-    raise SystemExit(1)
-print("HERMES_LAZY_DEPENDENCIES=PASS")
-"""
-
-
-def load(path):
-    return json.loads(path.read_text(encoding="utf-8"))
-
-
-def units():
-    data = load(MANIFEST)
-    return data, {unit["id"]: unit for unit in data["units"]}
 
 
 def run(argv, **kwargs):
@@ -81,40 +23,108 @@ def run(argv, **kwargs):
     return subprocess.run(argv, check=True, **kwargs)
 
 
-def core_context_argv(argv):
-    environment = [
-        "/usr/bin/env",
-        "-i",
-        f"HOME={CORE_HOME}",
-        "USER=core",
-        "LOGNAME=core",
-        "SHELL=/bin/bash",
-        f"PATH={CORE_PATH}",
-        "LANG=C.UTF-8",
-        "LC_ALL=C.UTF-8",
-    ]
-    runtime = pathlib.Path(f"/run/user/{CORE_UID}")
-    if runtime.is_dir():
-        environment.append(f"XDG_RUNTIME_DIR={runtime}")
-    return ["runuser", "-u", "core", "--", *environment, *argv]
-
-
 def run_as_core(argv):
-    return run(core_context_argv(argv), cwd=CORE_HOME)
-
-
-def verify_hermes_lazy_dependencies():
-    if not HERMES_VENV_PYTHON.is_file():
-        raise RuntimeError(f"missing Hermes venv Python: {HERMES_VENV_PYTHON}")
-    run_as_core([
-        str(HERMES_VENV_PYTHON),
-        "-c",
-        HERMES_LAZY_DEPENDENCY_CHECK,
-    ])
+    print("RUN_CORE=" + " ".join(argv), flush=True)
+    return subprocess.run(
+        [
+            "runuser",
+            "-u",
+            "core",
+            "--",
+            "env",
+            f"XDG_RUNTIME_DIR=/run/user/{CORE_UID}",
+            *argv,
+        ],
+        check=True,
+    )
 
 
 def verify_core_context():
-    run_as_core(["/usr/bin/python3", "-c", CORE_CONTEXT_CHECK])
+    runtime_dir = pathlib.Path(f"/run/user/{CORE_UID}")
+    if not runtime_dir.is_dir():
+        raise RuntimeError(
+            f"core user runtime directory missing: {runtime_dir}"
+        )
+    bus = runtime_dir / "bus"
+    if not bus.exists():
+        raise RuntimeError(f"core user systemd bus missing: {bus}")
+
+
+def verify_hermes_lazy_dependencies():
+    for tool in ("rg", "fd"):
+        path = shutil.which(tool)
+        if not path:
+            raise RuntimeError(f"missing lazy Hermes dependency: {tool}")
+        run([path, "--version"])
+
+
+def units():
+    data = json.loads(MANIFEST.read_text(encoding="utf-8"))
+    return data, {u["id"]: u for u in data["units"]}
+
+
+def require_enablement(target):
+    if not ENABLEMENT.is_file():
+        raise RuntimeError("driver enablement file missing")
+    enablement = json.loads(ENABLEMENT.read_text(encoding="utf-8"))
+    if enablement.get("schema") != 2:
+        raise RuntimeError("unsupported enablement schema")
+    if not enablement.get("enabled", {}).get(target):
+        raise RuntimeError(f"target is disabled in configuration: {target}")
+
+
+def require_fresh_update(target, max_age_seconds):
+    if not STATUS_CACHE.is_file():
+        raise RuntimeError("maintenance cache missing")
+    cache = json.loads(STATUS_CACHE.read_text(encoding="utf-8"))
+    if (
+        cache.get("schema") != 3
+        or cache.get("target_model") != "update_units_v5"
+    ):
+        raise RuntimeError("unsupported maintenance cache contract")
+    stamp = dt.datetime.fromisoformat(
+        cache["generated_at"].replace("Z", "+00:00")
+    )
+    age = (dt.datetime.now(dt.timezone.utc) - stamp).total_seconds()
+    if age < 0 or age > max_age_seconds:
+        raise RuntimeError(f"maintenance cache is stale: {int(age)}s")
+    for row in cache.get("rows", []):
+        if row.get("component") == target:
+            if row.get("actionable") is not True:
+                raise RuntimeError(
+                    f"target is not marked actionable in cache: {target}"
+                )
+            if row.get("status") != "UPDATE_AVAILABLE":
+                raise RuntimeError(
+                    f"no update is currently available in cache: {target}"
+                )
+            return row
+    raise RuntimeError(f"target missing from maintenance cache: {target}")
+
+
+def require_master_update(target, batch_generated_at):
+    if not STATUS_CACHE.is_file():
+        raise RuntimeError("maintenance cache missing")
+    cache = json.loads(STATUS_CACHE.read_text(encoding="utf-8"))
+    if (
+        cache.get("schema") != 3
+        or cache.get("target_model") != "update_units_v5"
+    ):
+        raise RuntimeError("unsupported maintenance cache contract")
+    if cache.get("generated_at") != batch_generated_at:
+        raise RuntimeError("maintenance cache changed during Master Batch")
+    for row in cache.get("rows", []):
+        if row.get("component") == target:
+            if row.get("actionable") is not True:
+                raise RuntimeError(
+                    f"target is not marked actionable in cache: {target}"
+                )
+            if row.get("status") != "UPDATE_AVAILABLE":
+                raise RuntimeError(
+                    f"no update is currently available in cache: {target}"
+                )
+            return row
+    raise RuntimeError(f"target missing from maintenance cache: {target}")
 
 
 def normalized_image_reference(reference):
@@ -126,7 +136,7 @@ def normalized_image_reference(reference):
 
 def preflight(unit):
     driver = unit["driver"]
-    if driver in ("compose", "nextcloud_compose", "stalwart_compose"):
+    if driver in ("compose", "nextcloud_compose", "stalwart_compose", "openproject_compose"):
         directory = pathlib.Path(unit["directory"])
         for item in unit["files"]:
             if not (directory / item).is_file():
@@ -140,6 +150,11 @@ def preflight(unit):
             helper = pathlib.Path("/opt/edge-maintenance/scripts/update-stalwart")
             if not helper.is_file():
                 raise RuntimeError(f"missing Stalwart update helper: {helper}")
+            run([sys.executable, str(helper), "--preflight"])
+        elif driver == "openproject_compose":
+            helper = pathlib.Path("/opt/edge-maintenance/scripts/update-openproject")
+            if not helper.is_file():
+                raise RuntimeError(f"missing OpenProject update helper: {helper}")
             run([sys.executable, str(helper), "--preflight"])
     elif driver == "user_cli":
         if not pathlib.Path(unit["binary"]).is_file():
@@ -160,82 +175,86 @@ def preflight(unit):
     print(f"DRIVER_PREFLIGHT={unit['id']}:PASS")
 
 
-def require_enablement(target):
-    if not ENABLEMENT.is_file():
-        raise RuntimeError("manual driver enablement registry absent; driver is locked")
-    enablement = load(ENABLEMENT)
-    if enablement.get("schema") != 2 or enablement.get("enabled", {}).get(target) is not True:
-        raise RuntimeError(f"manual driver is disabled: {target}")
-
-
-def require_fresh_update(target, max_age):
-    data = load(CACHE)
-    stamp = dt.datetime.fromisoformat(data["generated_at"].replace("Z", "+00:00"))
-    age = (dt.datetime.now(dt.timezone.utc) - stamp).total_seconds()
-    if age > max_age:
-        raise RuntimeError(f"maintenance cache is stale ({int(age)}s)")
-    row = next((row for row in data.get("rows", []) if row.get("component") == target), None)
-    if not row:
-        raise RuntimeError("target absent from maintenance cache")
-    if row.get("status") != "UPDATE_AVAILABLE":
-        raise RuntimeError(f"target is not actionable: {row.get('status')}")
-    return row
-
-
-def require_master_update(target, generated_at):
-    enablement = load(ENABLEMENT) if ENABLEMENT.is_file() else {}
-    if enablement.get("schema") != 2 or enablement.get("master") is not True:
-        raise RuntimeError("Master Batch acceptance pending")
-    data = load(CACHE)
-    if data.get("generated_at") != generated_at:
-        raise RuntimeError("maintenance cache changed after Master plan acceptance")
-    row = next((row for row in data.get("rows", []) if row.get("component") == target), None)
-    if not row:
-        raise RuntimeError("target absent from accepted Master cache")
-    if row.get("status") != "UPDATE_AVAILABLE":
-        raise RuntimeError(f"Master target is not actionable: {row.get('status')}")
-    return row
-
-
 def execute(unit, status_row):
     driver = unit["driver"]
     if driver == "apt":
-        env = dict(os.environ, DEBIAN_FRONTEND="noninteractive")
+        env = {
+            **os.environ,
+            "DEBIAN_FRONTEND": "noninteractive",
+            "NEEDRESTART_MODE": "a",
+        }
         run(["apt-get", "update"], env=env)
-        run(["apt-get", "-y", "upgrade"], env=env)
-        run(["apt-get", "-y", "autoremove", "--purge"], env=env)
+        run(
+            [
+                "apt-get",
+                "-o",
+                "Dpkg::Options::=--force-confdef",
+                "-o",
+                "Dpkg::Options::=--force-confold",
+                "dist-upgrade",
+                "-y",
+            ],
+            env=env,
+        )
+        run(["apt-get", "autoremove", "-y"], env=env)
         run(["apt-get", "clean"], env=env)
-        run(["dpkg", "--audit"])
     elif driver == "maintctl":
-        run(["/usr/local/bin/maintctl", "update", unit["argument"], "latest"])
+        run(["/usr/local/bin/maintctl", "update", unit["argument"]])
     elif driver == "github_binary":
-        command = ["/opt/edge-maintenance/scripts/update-github-binary", unit["id"]]
-        if unit["id"] == "SEMAPHORE":
-            run(["systemd-run", "--wait", "--collect", "--unit=edge-maintenance-semaphore-update", *command])
-        else:
-            run(command)
+        binary_name = unit["id"].lower()
+        target = pathlib.Path(f"/usr/local/bin/{binary_name}")
+        old_bin = pathlib.Path(f"/usr/local/bin/{binary_name}.old")
+        tmp_bin = pathlib.Path(f"/usr/local/bin/{binary_name}.new")
+        service = unit["service"]
+
+        try:
+            old_bin.unlink(missing_ok=True)
+            tmp_bin.unlink(missing_ok=True)
+            installed = (
+                subprocess.run(
+                    [str(target), "--version"],
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                )
+                .stdout.splitlines()[0]
+                .strip()
+            )
+            download = BASE / "scripts/download-github-release-binary"
+            run(
+                [
+                    str(download),
+                    unit["repository"],
+                    binary_name,
+                    str(tmp_bin),
+                ]
+            )
+            run(["systemctl", "stop", service])
+            if target.exists():
+                target.rename(old_bin)
+            shutil.move(str(tmp_bin), str(target))
+            target.chmod(0o755)
+            run(["systemctl", "start", service])
+            run(["systemctl", "is-active", "--quiet", service])
+            old_bin.unlink(missing_ok=True)
+        except Exception:
+            if old_bin.exists() and not target.exists():
+                old_bin.rename(target)
+            tmp_bin.unlink(missing_ok=True)
+            subprocess.run(
+                ["systemctl", "restart", service],
+                check=False,
+            )
+            raise
     elif driver == "nextcloud_compose":
-        target = str(
-            status_row.get("available_application_version")
-            or status_row.get("available")
-            or ""
-        ).strip()
-        if not target:
-            raise RuntimeError("fresh Nextcloud target version is incomplete")
         run([
             sys.executable,
             "/opt/edge-maintenance/scripts/update-nextcloud",
-            "--target-version",
-            target,
         ])
     elif driver == "stalwart_compose":
-        target = str(
-            status_row.get("available_application_version")
-            or status_row.get("available")
-            or ""
-        ).strip()
-        track = str(status_row.get("image_track") or "").strip()
-        digest = str(status_row.get("remote_image_digest") or "").strip()
+        target = str(status_row.get("available_application_version") or "")
+        track = str(status_row.get("image_track") or "")
+        digest = str(status_row.get("remote_image_digest") or "")
         if not target or not track or not digest.startswith("sha256:"):
             raise RuntimeError("fresh Stalwart target identity is incomplete")
         run([
@@ -247,6 +266,14 @@ def execute(unit, status_row):
             track,
             "--target-digest",
             digest,
+        ])
+    elif driver == "openproject_compose":
+        helper = pathlib.Path("/opt/edge-maintenance/scripts/update-openproject")
+        if not helper.is_file():
+            raise RuntimeError(f"missing OpenProject update helper: {helper}")
+        run([
+            sys.executable,
+            str(helper),
         ])
     elif driver == "compose":
         directory = pathlib.Path(unit["directory"])
@@ -268,10 +295,9 @@ def execute(unit, status_row):
             text=True,
         )
         config_data = json.loads(config.stdout)
+        configured_services = config_data.get("services", {})
         for service in services:
-            configured = str(
-                config_data.get("services", {}).get(service, {}).get("image", "")
-            )
+            configured = configured_services.get(service, {}).get("image")
             if normalized_image_reference(configured) != normalized_image_reference(image):
                 raise RuntimeError(
                     f"compose image mismatch: service={service} expected={image} "
@@ -294,7 +320,7 @@ def execute(unit, status_row):
         run(["docker", "pull", pinned])
         run(["docker", "tag", pinned, image])
         run(
-            compose + ["up", "-d", "--wait", "--force-recreate", "--remove-orphans", *services],
+            compose + ["up", "-d", "--wait", "--force-recreate", *services],
             cwd=directory,
         )
 
@@ -368,5 +394,5 @@ if __name__ == "__main__":
     try:
         main()
     except Exception as exc:
-        print(f"UPDATE_RESULT=FAILED:{exc}", file=sys.stderr)
+        print(f"UPDATE_ERROR={exc}", file=sys.stderr)
         raise SystemExit(1)

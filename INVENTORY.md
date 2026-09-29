@@ -589,3 +589,25 @@ Authoritative record: `STAGE_12_FINAL_ACCEPTANCE_2026-09-23.md`.
   - `nextcloud-db-1` (`postgres:18-alpine`, Exited (0));
   - `openproject-db-1` (`postgres:17`, Exited (0));
   - `openproject-hocuspocus-1` (`openproject/hocuspocus:17.8.0`, Exited (0)).
+
+## Stage 2 Live Topology: Maintenance Center & Semaphore Normalization (2026-09-29)
+
+- **Status**: **VERIFIED / PENDING ACCEPTANCE**;
+- **Ownership Policy**: native-first; Maintenance execution plane: strictly manual-only;
+- **Target Model**: `update_units_v5`;
+- **Actionable Manual Units**: exactly 16 (`APT_EDGE`, `XRAY`, `HYSTERIA2`, `BACKREST`, `RESTIC`, `RCLONE`, `SEMAPHORE`, `N8N`, `AUTHELIA`, `MATTERMOST`, `POSTGRESQL`, `STALWART`, `BULWARK`, `NEXTCLOUD`, `NEXTCLOUD_REDIS`, `OPENPROJECT`);
+- **Master Batch Order**: 16 units dependency-ordered (`XRAY` -> `HYSTERIA2` -> `BACKREST` -> `RESTIC` -> `RCLONE` -> `N8N` -> `AUTHELIA` -> `POSTGRESQL` -> `MATTERMOST` -> `STALWART` -> `BULWARK` -> `NEXTCLOUD` -> `NEXTCLOUD_REDIS` -> `OPENPROJECT` -> `SEMAPHORE` -> `APT_EDGE`);
+- **PostgreSQL Unit**: unified single unit ID `POSTGRESQL`, display `PostgreSQL`, directory `/opt/postgres`, Compose `compose.yaml`, service `postgres`, container `postgres`, image track `18`, major policy `18` (major 19+ upgrades discovery disabled);
+- **OpenProject Unit**: unified logical unit ID `OPENPROJECT`, display `OpenProject`, directory `/opt/openproject`, files `docker-compose.yml` + `docker-compose.override.yml`, service `web`, branch `stable/17`, driver `openproject_compose` (dedicated helper `/opt/edge-maintenance/scripts/update-openproject`), application version `17.8.0`;
+- **Removed Stale Units**: `NEXTCLOUD_POSTGRESQL` completely purged from units, master order, collector, renderer labels, contract tests, and Semaphore templates;
+- **Orphan Container Safety**: unconditional `--remove-orphans` purged from generic Compose driver in `manual-update`; rollback containers (`openproject-db-1`, `openproject-hocuspocus-1`, `mattermost-postgres-1`, `nextcloud-db-1`) remain intact and protected;
+- **Semaphore Templates**: template 11 (`33. Update PostgreSQL`, playbook `maintenance/edge/playbooks/updates/postgresql.yml`), template 19 updated to `Update OpenProject` (playbook `maintenance/edge/playbooks/updates/openproject.yml`);
+- **Dashboard / UI**: `update.escloud.us` reflects normalized topology with 16 manual actionable targets, 23 monitored components, showing `PostgreSQL` and `OpenProject`, with zero `NOT_INSTALLED` or stale container errors;
+- **Verification Gates**:
+  - `POSTGRESQL_IMAGE_TRACK=18`
+  - `POSTGRESQL_MAJOR_UPGRADE_DISCOVERY=DISABLED`
+  - `EDGE_MAINTENANCE_CONTRACT=PASS`
+  - `EDGE_MASTER_CONTRACT=PASS`
+  - `MASTER_HEALTH_GATE=PASS`
+  - 16/16 `manual-update <TARGET> --preflight` returned `PASS` with `REAL_UPDATE_EXECUTED=NO`
+  - `READ_ONLY_REFRESH=PASS`
