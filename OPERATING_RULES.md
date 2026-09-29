@@ -494,3 +494,22 @@ Avoid restart/reboot unless actually required.
 - Home/PAI connectivity must not become a foundation requirement for independently useful `edge` capabilities, but it must exist before services whose correctness depends on Home/PAI.
 - Do not carry legacy configuration forward blindly; use `migration-reference/` only as sanitized engineering context.
 - Do not begin the next implementation stage until the current stage is accepted and canonical files have been committed to `main` and read back.
+
+## Production cleanliness and normalization policy
+
+**Operator priority:** keep the server in the cleanest practical accepted steady state: clear filesystem structure, normalized naming/layout, no unnecessary historical residue, and no obsolete runtime objects.
+
+Rules:
+
+1. **Cleanliness is part of correctness.** A stage/workstream is not fully closed merely because services are healthy; known superseded artifacts created by the work must also be reconciled.
+2. **No size-based KEEP decisions.** Kilobytes of confirmed garbage are still garbage. Reclaimable size determines urgency only.
+3. **No ad-hoc rollback accumulation after acceptance.** Once the accepted Backrest/recovery path and current runtime are verified, remove superseded migration dumps, local rollback trees, manual `.bak/.old` copies, temporary state, and other redundant recovery artifacts unless the operator explicitly retains one.
+4. **Remove reproducible orphaned runtime artifacts.** Retire proven-unused stopped containers, images, volumes, networks, caches, old binaries, obsolete units/drop-ins/scripts, and stale Compose/runtime artifacts when they have no required lifecycle role.
+5. **Normalize structure and names.** When duplicate/inconsistent filesystem or configuration layouts are proven and a canonical structure is known, converge to the canonical structure instead of preserving historical drift merely because it still functions.
+6. **Evidence before deletion.** Verify active references, mounts, Compose/systemd/upstream lifecycle requirements, backup/recovery dependencies, and any other relevant ownership before removal. Use exact targets and fail-closed checks; avoid blind global prune/delete operations.
+7. **REVIEW is temporary.** If an artifact's purpose is unclear, audit it. Do not let "uncertain" silently become indefinite retention.
+8. **KEEP requires a concrete reason.** Valid reasons are: active runtime dependency, accepted persistent application/user data, accepted recovery requirement, upstream-required lifecycle/state, or an explicit operator decision.
+9. **History belongs outside live production state.** Use Git/history and the accepted backup system for historical evidence. Do not keep arbitrary historical copies next to active production files as a substitute.
+10. **Close with cleanup verification.** Final acceptance must verify both service non-regression and the intended absence of obsolete artifacts.
+
+This policy applies project-wide to all future infrastructure, application, update, migration, troubleshooting, experiment, and housekeeping work on `edge` and other Cloud Infrastructure nodes.
