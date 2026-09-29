@@ -2657,3 +2657,26 @@ The isolated `selflearning` experiment proved that Hermes can create and reuse a
 **Acceptance marker:** `HERMES_CLEAN_SHEET=PASS`.
 
 **Supersedes:** `2026-09-27 — Hermes self-learning experiment isolation — COMPLETE / ACCEPTED` as current operating state. That entry remains historical evidence of the experiment phase.
+
+
+---
+
+## 2026-09-29T10:21:00+03:00 — Edge PostgreSQL consolidation and OpenProject collaboration scope
+
+**Status:** ACCEPTED
+
+**Context:** The edge currently runs separate PostgreSQL containers for Nextcloud, Mattermost, and the OpenProject evaluation stack. Mattermost and Nextcloud are not yet in substantive production use, so the database ownership boundary can still be normalized without preserving an intentionally fragmented database topology. OpenProject real-time collaborative Documents are not required for the single-operator workflow.
+
+**Decision:**
+
+- converge edge to one infrastructure-owned PostgreSQL service named **`postgres`**;
+- use PostgreSQL **major 18** as the compatibility boundary for Nextcloud, Mattermost, and OpenProject;
+- within major 18, follow normal stable minor/security updates; do not treat PostgreSQL 19 or later as an ordinary Maintenance update target and do not surface a major-version transition as a routine available update;
+- create separate databases and roles for `nextcloud`, `mattermost`, and `openproject`; do not share application schemas or credentials;
+- PostgreSQL has its own Compose/data ownership and is not owned by any one application stack; no PostgreSQL host port is required by default;
+- application stacks remain separate Compose projects; do not create a monolithic edge Compose solely because PostgreSQL is shared;
+- remove embedded PostgreSQL services from the three application stacks only after a bounded audit/migration with rollback and application-level verification;
+- exclude OpenProject Hocuspocus / real-time collaborative Documents from the target deployment before OpenProject Documents enter real use;
+- this decision records target architecture only. Runtime remains unchanged until the migration is executed and accepted.
+
+**Supersedes:** the current-state assumption that separate per-application PostgreSQL containers are the intended long-term edge architecture. Historical deployment/acceptance records remain factual for their time.
