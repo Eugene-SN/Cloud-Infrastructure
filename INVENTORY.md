@@ -620,3 +620,24 @@ Authoritative record: `STAGE_12_FINAL_ACCEPTANCE_2026-09-23.md`.
 - Backrest `edge-state` preparation creates logical dumps for all three databases plus PostgreSQL globals and stages OpenProject `openproject_opdata`; OpenProject restart is guarded by readiness wait.
 - Edge Monitor current Docker contract: 15 persistent production containers, including shared `postgres` and the OpenProject web/worker/cron/cache/proxy/autoheal services.
 - Retired from runtime: `mattermost-postgres-1`, `nextcloud-db-1`, `openproject-db-1`, `openproject-hocuspocus-1`, their superseded database data/volume, migration rollback files, and obsolete `postgres:17`, `postgres:18-alpine`, `openproject/hocuspocus:17.8.0` images.
+
+
+### Final normalized edge runtime inventory (accepted 2026-09-29)
+
+- Docker steady state: 15 running production containers, 12 active images, 1 persistent local volume (`openproject_opdata`), 0 stopped containers, 0 dangling images, 0 dangling volumes, 0 build cache.
+- OpenProject Maintenance helper: `/opt/edge-maintenance/scripts/update-openproject`; retired rollback-container requirements removed; current preflight PASS.
+- NetBird normalized local integration:
+  - `/etc/systemd/system/netbird.service.d/90-restart-policy.conf`
+  - `/etc/systemd/system/netbird.service.d/95-wt0-prestart.conf`
+  - `/usr/local/sbin/netbird-wt0-prestart`
+- Nginx normalized active configs:
+  - `/etc/nginx/sites-available/maintenance-internal.conf` with enabled symlink
+  - `/etc/nginx/sites-available/escloud-us.conf` with enabled symlink
+- T3 retained runtime generations:
+  - `0.0.43-nightly.20260923.2150` (service launcher reference)
+  - `0.0.43-nightly.20260928.2402` (native runtime state reference)
+  - `0.0.43-nightly.20260929.2428` (current serve/runtime processes)
+- Codex: current standalone release `0.159.0-x86_64-unknown-linux-musl` only; native managed remote-control app-server/updater recovered; zombie count 0.
+- Hermes: default-only clean-sheet; one dependency environment after native PM GC; no `bootstrap/selflearning.json`; no `refs/hermes-update-backups/*`.
+- Retired/absent residual paths include `/srv/mattermost/backups`, `/home/core/Documents`, `/home/core/.config/google-chrome-for-testing-headless`, and `/var/www/html`.
+- Resource state: root filesystem 42G used / 113G available (27%); `/tmp` 3.4M used of 7.8G.
