@@ -2680,3 +2680,25 @@ The isolated `selflearning` experiment proved that Hermes can create and reuse a
 - this decision records target architecture only. Runtime remains unchanged until the migration is executed and accepted.
 
 **Supersedes:** the current-state assumption that separate per-application PostgreSQL containers are the intended long-term edge architecture. Historical deployment/acceptance records remain factual for their time.
+
+
+---
+
+## 2026-09-29T10:36:00+03:00 — PostgreSQL/OpenProject normalization execution workflow
+
+**Status:** ACCEPTED
+
+**Context:** PostgreSQL consolidation to a single PostgreSQL 18 service and removal of OpenProject Hocuspocus are already accepted target architecture. The operator selected the installed edge Antigravity CLI as the implementation executor so it can work directly against the local runtime/configuration and canonical repository without repeated chat-mediated shell mutation blocks.
+
+**Decision:**
+
+- execute the normalization through the installed Antigravity CLI on `edge` using `Eugene-SN/Cloud-Infrastructure` as canonical context;
+- split work strictly into three independently accepted stages; Antigravity must not proceed to the next stage until the current stage is verified and explicitly accepted;
+- Stage 1: establish the new production steady state — deploy one infrastructure-owned `postgres:18`, migrate Mattermost while retaining useful configuration/channel structure, rebuild OpenProject cleanly against external PostgreSQL without embedded DB or Hocuspocus, and rebuild Nextcloud DB/runtime around the existing accepted Nextcloud configuration while preserving `/srv/cloud` and required integrations;
+- Stage 2: normalize Maintenance/Semaphore/update ownership and presentation for the new topology, including one PostgreSQL 18 update target and no routine PostgreSQL major-version upgrade discovery;
+- Stage 3: reconcile backup/recovery, monitoring/inventory/documentation, remove superseded database/runtime artifacts only after acceptance, and perform final cleanup/non-regression verification;
+- Stage 1 must preserve rollback paths until all three applications pass application-level and persistence acceptance; do not delete old database data or rollback material during Stage 1 before acceptance;
+- Nextcloud configuration is preserved; only its database/runtime topology is rebuilt around the new PostgreSQL service;
+- each stage uses audit -> plan/recovery path -> mutation -> verification -> acceptance, and persists accepted state to the canonical repository before moving on.
+
+**Supersedes:** ad-hoc execution of this normalization through repeated chat-issued mutation blocks. It does not supersede the underlying PostgreSQL 18 or Hocuspocus target-architecture decisions.
