@@ -1084,7 +1084,7 @@ Runtime-first acceptance completed. Backrest `edge-state` uses consolidated Post
 
 ## 2026-09-29 — Cloud Portal and n8n discovery point normalization — COMPLETE
 
-- `app.escloud.us`: Maintenance Hub is now the single header action immediately to the right of `Sync`; the former Maintenance tile was replaced in place by OpenProject linking to `https://projects.escloud.us/`.
+- `app.escloud.us`: `Sync` and Maintenance Hub are matching icon-only header actions, with Maintenance immediately to the right of `Sync`; the former Maintenance tile was replaced in place by OpenProject linking to `https://projects.escloud.us/`.
 - The existing 3-column / 2-column / 1-column portal grid remains intact. Fresh rendered checks at 1440, 768, 375 and 320 px found no document or header overflow.
 - Installed n8n remains `2.40.7`; no n8n update or container recreation was performed.
 - n8n upstream production channel remains `stable`; current resolved stable version is `2.41.3`.
