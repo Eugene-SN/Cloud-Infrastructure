@@ -576,7 +576,7 @@ Authoritative record: `STAGE_12_FINAL_ACCEPTANCE_2026-09-23.md`.
 - **Database Engine**: single shared PostgreSQL 18 container (`postgres:18`), managed under `/opt/postgres/compose.yaml`, storage `/srv/postgres`.
 - **Database Network**: isolated Docker network `postgres_net` (no host port publication).
 - **Database Ownership & Roles**:
-  - `mattermost`: owned by `mmuser` (`NOSUPERUSER NOCREATEDB NOCREATEROLE`);
+  - `mattermost`: owned by `mattermost` (`NOSUPERUSER NOCREATEDB NOCREATEROLE`);
   - `nextcloud`: owned by `nextcloud` (`NOSUPERUSER NOCREATEDB NOCREATEROLE`);
   - `openproject`: owned by `openproject` (`NOSUPERUSER NOCREATEDB NOCREATEROLE`, extensions: `btree_gist`, `pg_trgm`, `unaccent`);
   - `postgres`: owned by `postgres` (superuser administrative database).
