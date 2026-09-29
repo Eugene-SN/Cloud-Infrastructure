@@ -240,3 +240,18 @@ Stage 5 branches 05.1, 05.2 and 05.3 are all COMPLETE / ACCEPTED.
 - Production monitoring is deployed after the substantially complete service inventory, cross-site connectivity, Backrest and update subsystem exist.
 - `app.escloud.us` is built as a separate Codex substage after monitoring/status sources and final service inventory are accepted.
 - Final infrastructure acceptance follows all selected services, connectivity/data integration, backup/restore, maintenance/update, monitoring, portal and cleanup.
+
+## Production cleanliness and post-mutation cleanup invariant
+
+A production state is accepted only when it is both functionally correct **and clean/normalized**.
+
+- After a mutation, migration, upgrade, experiment, recovery action, or accepted stage/workstream, explicitly audit and remove artifacts that are no longer required by the accepted runtime, upstream lifecycle, current recovery path, or an explicit operator decision.
+- Do **not** retain obsolete artifacts merely because they are small, harmless, already stopped, easy to ignore, or "might be useful someday". Artifact size affects cleanup priority, not whether unnecessary state should remain.
+- "Keep just in case" is not an accepted rationale once a verified recovery path exists. Historical evidence belongs in Git/history/accepted documentation and recovery data belongs in the accepted backup system; it should not accumulate beside production state as ad-hoc `.bak`, `.old`, migration dumps, retired trees, or stale containers.
+- Cleanup candidates include, when proven unused: superseded/rollback files, migration dumps, `.bak/.old/.orig/.save/.previous/.rollback` copies, abandoned directories, temporary/test artifacts, stale stopped containers, orphaned volumes/networks, unreferenced images, unused reproducible build caches, retired units/drop-ins/scripts, duplicate configs, and stale local tooling binaries.
+- A stopped/unused object is **not** automatically removable. Before deletion, verify references and lifecycle requirements. KEEP is justified only by a concrete current role: active runtime dependency, accepted persistent data, accepted recovery path, required upstream lifecycle/state, or explicit operator decision.
+- Ambiguous artifacts are temporary **REVIEW** items, not permanent KEEP. Resolve their purpose with the minimum read-only audit and then either retain for a documented reason or remove them.
+- Normalize proven configuration/layout/name drift when a canonical structure is known and normalization is within the current task/workstream. "It works" is not sufficient reason to preserve unnecessary duplicate or inconsistent production structure.
+- Prefer precise fail-closed cleanup over broad destructive commands. Do not use blanket prune/delete actions when exact targets can be identified and verified.
+- Temporary/test data belongs in `/tmp` and must be removed when the task completes unless it intentionally becomes persistent state.
+- Final verification for a mutation/stage/workstream must include both non-regression of the accepted services and absence of the superseded artifacts that were scheduled for cleanup.
