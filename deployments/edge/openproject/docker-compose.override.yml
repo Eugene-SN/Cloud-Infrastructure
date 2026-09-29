@@ -1,0 +1,62 @@
+x-evaluation-env: &evaluation_env
+  OPENPROJECT_DEFAULT__LANGUAGE: "${OPENPROJECT_DEFAULT__LANGUAGE:-ru}"
+  OPENPROJECT_REAL__TIME__TEXT__COLLABORATION__ENABLED: "false"
+
+services:
+  db:
+    profiles:
+      - disabled
+
+  hocuspocus:
+    profiles:
+      - disabled
+
+  proxy:
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+
+  web:
+    environment:
+      <<: *evaluation_env
+    depends_on: !reset
+      - cache
+      - seeder
+    healthcheck:
+      start_period: 120s
+    networks:
+      - frontend
+      - backend
+      - postgres_net
+
+  worker:
+    environment:
+      <<: *evaluation_env
+    depends_on: !reset
+      - cache
+      - seeder
+    networks:
+      - backend
+      - postgres_net
+
+  cron:
+    environment:
+      <<: *evaluation_env
+    depends_on: !reset
+      - cache
+      - seeder
+    networks:
+      - backend
+      - postgres_net
+
+  seeder:
+    environment:
+      <<: *evaluation_env
+      OPENPROJECT_SEED_ADMIN_USER_PASSWORD: "${OPENPROJECT_SEED_ADMIN_USER_PASSWORD}"
+      OPENPROJECT_SEED_ADMIN_USER_PASSWORD_RESET: "${OPENPROJECT_SEED_ADMIN_USER_PASSWORD_RESET:-false}"
+    networks:
+      - backend
+      - postgres_net
+
+networks:
+  postgres_net:
+    external: true

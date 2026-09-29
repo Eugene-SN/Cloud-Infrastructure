@@ -994,3 +994,57 @@ Current accepted state:
 Acceptance marker: `HERMES_CLEAN_SHEET=PASS`.
 
 Authoritative record: `HERMES_CLEAN_SHEET_ACCEPTANCE_2026-09-28.md`.
+
+---
+
+## 2026-09-29 — Edge PostgreSQL Consolidation & Application Topology Normalization (Stage 1 Steady State — VERIFIED / PENDING OPERATOR ACCEPTANCE)
+
+Current verified runtime state on `edge`:
+
+- **Unified Infrastructure PostgreSQL (`postgres`)**:
+  - Single infrastructure-owned service `postgres:18` running under `/opt/postgres` (`compose.yaml`).
+  - Durable data directory: `/srv/postgres` mounted to `/var/lib/postgresql`.
+  - Dedicated Docker bridge network: `postgres_net` (`external: true` for application projects); host PostgreSQL port publication is not enabled.
+  - Dedicated application databases and roles with non-elevated privileges (`NOSUPERUSER NOCREATEDB NOCREATEROLE`):
+    - `mattermost` (database `mattermost`, owner `mmuser`);
+    - `nextcloud` (database `nextcloud`, owner `nextcloud`);
+    - `openproject` (database `openproject`, owner `openproject`, required extensions: `btree_gist`, `pg_trgm`, `unaccent`);
+    - `postgres` (administrative/superuser database).
+  - Healthcheck: `pg_isready -U postgres -d postgres` (status: `healthy`).
+
+- **Mattermost (`/opt/mattermost`)**:
+  - Official upstream repository on `main` branch restored to clean checkout/HEAD (zero tracked modifications).
+  - Runtime configuration managed via local override `/opt/mattermost/docker-compose.edge.yml`:
+    - Embedded `postgres` service disabled via Compose v2 profile `profiles: [disabled]`;
+    - Mattermost service decoupled via `depends_on: !reset []`;
+    - Connected to `default` and external `postgres_net`;
+    - Host port binding: `127.0.0.1:18065 -> 8065`.
+  - Effective version: `11.11.1`, status: `Up (healthy)`. Data intact (6 users, all channels preserved).
+
+- **Nextcloud (`/opt/nextcloud`)**:
+  - Multi-container topology: `app` (`nextcloud:35.0-apache`), `cron` (`nextcloud:35.0-apache`), `redis` (`redis:alpine`).
+  - Connected to external `postgres_net` and unified `postgres:18` database `nextcloud`.
+  - External storage mounted: `/srv/cloud` -> user files, persistent state in `/srv/nextcloud/data`.
+  - Status: `Up (healthy)`, OCC reports `installed: true`, `version: 35.0.1.1`, `maintenance: false`, `needsDbUpgrade: false`.
+
+- **OpenProject (`/opt/openproject`)**:
+  - Official upstream repository on `stable/17` branch restored to clean checkout/HEAD (zero tracked modifications).
+  - Runtime configuration managed via local override `/opt/openproject/docker-compose.override.yml`:
+    - Embedded `db` and `hocuspocus` services disabled via Compose v2 profile `profiles: [disabled]`;
+    - Services `web`, `worker`, `cron` decoupled from `db` via `depends_on: !reset [cache, seeder]`;
+    - Connected to external `postgres_net`;
+    - Collaborative editing disabled: `OPENPROJECT_REAL__TIME__TEXT__COLLABORATION__ENABLED="false"`;
+    - Service `proxy` mounts dedicated standalone `/opt/openproject/caddy/Caddyfile` (`:ro`), removing dead upstream route `/hocuspocus*`;
+    - Service `web` configured with `healthcheck.start_period: 120s` to prevent premature autoheal restarts.
+  - Active containers: `web` (`Up (healthy)`), `proxy` (`Up`), `worker` (`Up`), `cron` (`Up`), `cache` (`Up`), `autoheal` (`Up (healthy)`), `seeder` (`Exited (0)`).
+  - Stopped containers: `openproject-db-1` (`Exited (0)`), `openproject-hocuspocus-1` (`Exited (0)`).
+  - Data intact: Work Package #38 confirmed, public login accessible (`https://projects.escloud.us/login`).
+
+- **Effective Container Topology on `edge`**:
+  - Active application containers: `postgres`, `mattermost-mattermost-1`, `nextcloud-app-1`, `nextcloud-cron-1`, `nextcloud-redis-1`, `openproject-web-1`, `openproject-proxy-1`, `openproject-worker-1`, `openproject-cron-1`, `openproject-cache-1`, `openproject-autoheal-1`, `authelia`, `stalwart`, `bulwark`, `n8n`.
+  - Preserved rollback containers (stopped): `mattermost-postgres-1`, `nextcloud-db-1`, `openproject-db-1`, `openproject-hocuspocus-1`.
+
+- **Stage Boundary & Operational Scope**:
+  - Stage 1 production steady state normalization is verified and complete.
+  - Stage 2 (Maintenance/Semaphore update ownership and presentation normalization) has NOT been executed or modified.
+  - Formal acceptance of Stage 1 remains pending explicit operator decision.

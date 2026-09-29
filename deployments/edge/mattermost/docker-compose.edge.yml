@@ -1,0 +1,17 @@
+services:
+  postgres:
+    profiles:
+      - disabled
+
+  mattermost:
+    depends_on: !reset []
+    ports:
+      - "127.0.0.1:${APP_PORT:-18065}:8065"
+    networks:
+      - default
+      - postgres_net
+
+networks:
+  default:
+  postgres_net:
+    external: true

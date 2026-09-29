@@ -286,6 +286,26 @@ Continuous workstream after completed infrastructure Stage 13, not an infrastruc
 - Stage 1 recovery archive `/srv/backups/edge-stage1/edge-stage1-base-20260916T234611Z.tar.gz`, SHA256 `37486e763ddac4c5ef3a92a35c3dad49787d75ffd8b97499073c79af617cc566`;
 - historical migration-preservation archive identity: `/tmp/edge-migration-preservation-20260916T141048Z.tar.gz`, SHA256 `0203e5845f57bc1d04b384cef2b26a45fbff855c341e1edf1193034c34de9fdf`. The path is absent and the archive was declared no longer required on 2026-09-19. It must not be recreated; sanitized `migration-reference/` remains in Git.
 
+
+### 2026-09-29 Stage 1 PostgreSQL consolidation rollback inventory (reconciled)
+
+- **Mattermost dump**:
+  - Primary persistent canonical artifact: `/srv/mattermost/backups/mattermost_dump_pre_consolidation.sql` (size: 531682 bytes, SHA256: `6ff90d4af634797cb8d96062977382e60ea62575cbd302a45b2757f86ca5aafa`);
+  - Worktree copy (identical content and size): `/opt/mattermost/mattermost_dump_pre_consolidation.sql`;
+  - Note: Both files exist and are verified bitwise identical; `/srv/mattermost/backups/` is the authoritative persistent location. Neither file was moved or deleted.
+- **Nextcloud old PostgreSQL cluster**:
+  - Exact verified path: `/srv/nextcloud/postgres` (contains `18/data`, cluster files owned by `70:70`);
+  - Verified container mount: `nextcloud-db-1` was inspected, bind mount source is `/srv/nextcloud/postgres`;
+  - Path `/srv/nextcloud/db` is **absent** (non-existent, reconciled as historical false reference).
+- **OpenProject evaluation rollback state**:
+  - Stopped container: `openproject-db-1` (image `postgres:17`, status `Exited (0)`);
+  - Docker volume: `openproject_pgdata` (mountpoint `/var/lib/docker/volumes/openproject_pgdata/_data`);
+  - Stopped container: `openproject-hocuspocus-1` (image `openproject/hocuspocus:17.8.0`, status `Exited (0)`);
+  - Upstream backup manifests: `/opt/openproject/docker-compose.yml.bak`, `/opt/openproject/proxy/Caddyfile.template.bak`.
+- **Other backup manifests**:
+  - `/opt/mattermost/docker-compose.yml.bak`;
+  - `/opt/nextcloud/compose.yaml.bak`.
+
 ## Stage 4 services — Hermes / Mattermost / n8n integration
 
 ### Hermes Dashboard / Desktop
@@ -551,3 +571,21 @@ Authoritative record: `STAGE_12_FINAL_ACCEPTANCE_2026-09-23.md`.
 - ACP providers: Codex and Antigravity;
 - standalone Antigravity daemon remains separate.
 
+## Stage 1 Live Topology: Consolidated PostgreSQL & Applications (2026-09-29)
+
+- **Database Engine**: single shared PostgreSQL 18 container (`postgres:18`), managed under `/opt/postgres/compose.yaml`, storage `/srv/postgres`.
+- **Database Network**: isolated Docker network `postgres_net` (no host port publication).
+- **Database Ownership & Roles**:
+  - `mattermost`: owned by `mmuser` (`NOSUPERUSER NOCREATEDB NOCREATEROLE`);
+  - `nextcloud`: owned by `nextcloud` (`NOSUPERUSER NOCREATEDB NOCREATEROLE`);
+  - `openproject`: owned by `openproject` (`NOSUPERUSER NOCREATEDB NOCREATEROLE`, extensions: `btree_gist`, `pg_trgm`, `unaccent`);
+  - `postgres`: owned by `postgres` (superuser administrative database).
+- **Application Topology**:
+  - **Mattermost**: container `mattermost-mattermost-1` (`mattermost/mattermost-team-edition:latest`), external DB `postgres:5432/mattermost` via `postgres_net`, embedded DB disabled.
+  - **Nextcloud**: containers `nextcloud-app-1`, `nextcloud-cron-1`, `nextcloud-redis-1`, external DB `postgres:5432/nextcloud` via `postgres_net`, storage `/srv/cloud` and `/srv/nextcloud/data`.
+  - **OpenProject**: containers `openproject-web-1`, `openproject-proxy-1`, `openproject-worker-1`, `openproject-cron-1`, `openproject-cache-1`, `openproject-autoheal-1`, external DB `postgres:5432/openproject` via `postgres_net`, embedded DB and Hocuspocus disabled, collaborative editing disabled.
+- **Rollback Containers (Preserved / Stopped)**:
+  - `mattermost-postgres-1` (`postgres:18-alpine`, Exited (0));
+  - `nextcloud-db-1` (`postgres:18-alpine`, Exited (0));
+  - `openproject-db-1` (`postgres:17`, Exited (0));
+  - `openproject-hocuspocus-1` (`openproject/hocuspocus:17.8.0`, Exited (0)).
