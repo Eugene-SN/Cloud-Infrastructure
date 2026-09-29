@@ -2804,3 +2804,27 @@ The isolated `selflearning` experiment proved that Hermes can create and reuse a
 **Acceptance basis:** 15 running containers; 0 stopped containers; 0 dangling images; 0 dangling volumes; 0 build cache; PostgreSQL/application/Maintenance/Edge Monitor PASS; `EDGE_STATE=OK`; `OVERALL_STATE=OK`.
 
 **Supersedes:** the Stage-3 residual-state note that left `openproject-seeder-1` and the anonymous Docker volume for later review.
+
+
+---
+
+## 2026-09-29T17:02:00+03:00 — Final edge cleanup and runtime normalization acceptance
+
+**Status:** ACCEPTED
+
+**Context:** The initial post-mutation housekeeping acceptance was followed by an extended read-only audit. That audit found additional runtime/configuration drift and lifecycle residue: stale OpenProject rollback checks, stage-named NetBird/nginx artifacts, stale T3 and Codex generations, residual Hermes self-learning/update-backup state, and a Codex updater-loop retaining zombie children. Targeted normalization and recovery were then completed and re-verified.
+
+**Decision:**
+
+- accept the current edge runtime as the final clean normalized steady state;
+- OpenProject Maintenance must validate the current production topology and must not require retired Stage-1 rollback containers;
+- retain NetBird restart/wt0-prestart behavior but use normalized production names rather than stage-specific names;
+- use normalized nginx production names `maintenance-internal.conf` and `escloud-us.conf`;
+- retain only T3 runtime generations with a current launcher/state/process reference;
+- retain only the current Codex standalone release and require zero Codex zombie processes;
+- Hermes clean-sheet state includes no `selflearning` bootstrap, one dependency environment after native PM GC, and no stale Hermes update-backup refs;
+- empty historical/residual directories without a current role are removed.
+
+**Acceptance basis:** live runtime verification: `CODEX_ZOMBIE_RECOVERY=PASS`; `EDGE_FINAL_CLEANUP_RECOVERY=PASS`; Codex zombie count 0; Codex release count 1 (`0.159.0`); Hermes environment count 1 and update-backup ref count 0; OpenProject update preflight PASS; PostgreSQL/Mattermost/Nextcloud/OpenProject/Maintenance/Edge Monitor PASS; Docker 15 active containers with 0 reclaimable images/volumes/build cache; root filesystem 42G used / 113G available.
+
+**Supersedes:** the 2026-09-29T14:48:00+03:00 housekeeping acceptance as the current acceptance point. That earlier entry remains historical evidence of the first cleanup pass.
