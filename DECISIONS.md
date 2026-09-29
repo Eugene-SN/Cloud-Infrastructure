@@ -2768,3 +2768,26 @@ The isolated `selflearning` experiment proved that Hermes can create and reuse a
 - remaining stopped `openproject-seeder-1` and the small anonymous Docker volume are not part of this acceptance decision and may be reviewed separately if desired.
 
 **Acceptance basis:** live runtime verification: production database count 3; Mattermost, Nextcloud and OpenProject application checks PASS; Maintenance Master Health PASS with 9 Docker units / 15 services; Edge Monitor reports 15 Docker workloads, EDGE_STATE=OK and OVERALL_STATE=OK; superseded database containers/data/volume absent.
+
+---
+
+## 2026-09-29T13:55:00+03:00 — Project-wide production cleanliness and normalization policy
+
+**Status:** ACCEPTED
+
+**Context:** Repeated work left a tendency to preserve stopped containers, old images, rollback copies, temporary files, migration artifacts, caches, and other residue merely because they were small or potentially useful "just in case". The operator explicitly rejects that practice. The project priority is a clean, orderly, normalized production state across filesystem structure, naming, configuration layout, and runtime objects.
+
+**Decision:**
+
+- cleanliness and normalization are mandatory parts of completion/acceptance, not optional cosmetic work;
+- after recovery is verified and a mutation/stage/workstream is accepted, remove proven-unnecessary rollback, temporary, historical, superseded, orphaned, duplicate, and reproducible artifacts;
+- artifact size is not a reason to retain it;
+- "might be useful later", "harmless", "already stopped", or "works as-is" are not sufficient KEEP rationales;
+- KEEP requires a concrete current role: active runtime dependency, accepted persistent data, accepted recovery requirement, upstream-required lifecycle/state, or explicit operator instruction;
+- ambiguous artifacts must be audited and resolved rather than retained indefinitely;
+- normalize proven filesystem/configuration/name drift to the accepted canonical structure when within scope;
+- preserve historical evidence through Git/history and accepted backups, not arbitrary copies adjacent to production state;
+- use targeted fail-closed cleanup with dependency/reference checks rather than blind global prune/delete operations;
+- final verification must include both service non-regression and cleanup/absence checks for artifacts scheduled for retirement.
+
+**Supersedes:** any prior informal practice or interpretation that retained obsolete artifacts primarily because they consumed little space, seemed harmless, or might hypothetically be useful later.
