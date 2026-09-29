@@ -2828,3 +2828,29 @@ The isolated `selflearning` experiment proved that Hermes can create and reuse a
 **Acceptance basis:** live runtime verification: `CODEX_ZOMBIE_RECOVERY=PASS`; `EDGE_FINAL_CLEANUP_RECOVERY=PASS`; Codex zombie count 0; Codex release count 1 (`0.159.0`); Hermes environment count 1 and update-backup ref count 0; OpenProject update preflight PASS; PostgreSQL/Mattermost/Nextcloud/OpenProject/Maintenance/Edge Monitor PASS; Docker 15 active containers with 0 reclaimable images/volumes/build cache; root filesystem 42G used / 113G available.
 
 **Supersedes:** the 2026-09-29T14:48:00+03:00 housekeeping acceptance as the current acceptance point. That earlier entry remains historical evidence of the first cleanup pass.
+
+
+---
+
+## 2026-09-29T17:23:00+03:00 — OpenProject integration workstream scope
+
+**Status:** ACCEPTED
+
+**Context:** The OpenProject runtime is stable and accepted, but application-level integrations with the existing infrastructure remain a separate substantial workstream. The operator selected the integrations to implement and explicitly excluded unnecessary direct integrations and Enterprise-only MCP/OIDC paths.
+
+**Decision:**
+
+- implement the native OpenProject ↔ GitHub integration for the canonical Cloud Infrastructure development workflow;
+- evaluate the native OpenProject ↔ Nextcloud integration on the current Nextcloud 35 runtime despite the published compatibility boundary, using a bounded audit/test rather than assuming incompatibility from metadata alone; do not downgrade Nextcloud or deploy nightly builds merely to force compatibility;
+- implement OpenProject mail integration through the existing Stalwart service, including outbound notifications and useful inbound-email workflows;
+- implement OpenProject ↔ n8n using OpenProject webhooks plus API v3 as the general integration bus; before implementation, document in simple terms why this architecture is preferred for OpenProject notifications and cross-service automation;
+- implement OpenProject ↔ Mattermost through n8n, with a dedicated OpenProject Mattermost channel and dedicated bot/integration identity so OpenProject traffic is not mixed with generic n8n traffic;
+- implement Hermes ↔ OpenProject without MCP. The deployment is Community Edition, so MCP/Enterprise-only OpenProject integration paths are out of scope. Use API-based integration where useful;
+- do not create separate direct OpenProject integrations for Codex or Antigravity. Development-agent interaction with OpenProject should flow through Hermes where needed, while GitHub remains the implementation/code integration boundary;
+- implement selective OpenProject ↔ Knowledge/Obsidian integration, keeping OpenProject authoritative for execution/task state and Knowledge authoritative for durable knowledge/decisions;
+- keep the current native OpenProject authentication model; do not add Authelia/OIDC integration;
+- do not integrate Edge Monitor, Maintenance or Backrest events into OpenProject;
+- enable useful OpenProject calendar/iCalendar integration;
+- prefer existing components and native capabilities; do not introduce new middleware or services unless a concrete blocker is proven.
+
+**Implementation boundary:** this decision defines scope only. Each integration must still follow runtime-first audit -> implementation -> verification -> acceptance, and Nextcloud compatibility must be tested rather than inferred.
