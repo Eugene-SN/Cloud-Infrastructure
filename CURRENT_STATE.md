@@ -997,7 +997,7 @@ Authoritative record: `HERMES_CLEAN_SHEET_ACCEPTANCE_2026-09-28.md`.
 
 ---
 
-## 2026-09-29 — Edge PostgreSQL Consolidation & Application Topology Normalization (Stage 1 Steady State — VERIFIED / PENDING OPERATOR ACCEPTANCE)
+## 2026-09-29 — Edge PostgreSQL Consolidation & Application Topology Normalization (Stage 1 — COMPLETE / ACCEPTED)
 
 Current verified runtime state on `edge`:
 
