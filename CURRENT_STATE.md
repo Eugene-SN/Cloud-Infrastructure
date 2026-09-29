@@ -1066,15 +1066,17 @@ Stage 2 (Maintenance normalization) is COMPLETE / ACCEPTED based on the live edg
 Runtime-first acceptance completed. Backrest `edge-state` uses consolidated PostgreSQL logical dumps for `mattermost`, `nextcloud`, and `openproject`, includes PostgreSQL globals and OpenProject `opdata`, and a real snapshot plus tier copy completed successfully. Edge Monitor tracks the current 15-container production topology with shared `postgres` and OpenProject probing. Superseded embedded database/Hocuspocus containers, old database data, migration rollback files, and obsolete database/Hocuspocus images were removed. Final runtime gates: 3 production application databases present; Mattermost/Nextcloud/OpenProject checks PASS; Maintenance Master Health PASS; Edge Monitor EDGE_STATE=OK and OVERALL_STATE=OK.
 
 
-## 2026-09-29 — Edge clean steady state
+## 2026-09-29 — Edge clean normalized steady state — FINAL ACCEPTED
 
-- Status: COMPLETE / ACCEPTED.
-- Runtime-first housekeeping finished successfully.
-- Docker: 15 running containers; 0 stopped; 0 dangling images; 0 dangling volumes; 0 build cache.
-- Only persistent Docker volume remaining: `openproject_opdata`.
-- Known superseded rollback/temp/old artifacts were removed; residual historical-file scan returned `NONE`.
-- Nginx maintenance site is normalized to canonical `sites-available` + `sites-enabled` symlink layout; `nginx -t` PASS.
-- PostgreSQL, Mattermost, Nextcloud, OpenProject, Maintenance and Edge Monitor non-regression checks PASS.
-- Edge Monitor: 15 Docker workloads, `EDGE_STATE=OK`, `OVERALL_STATE=OK`.
-- Root filesystem: 155G total, 46G used, 109G available (30%). `/tmp`: 3.4M used of 7.8G (1%).
-- Acceptance markers: `EDGE_RESIDUAL_FILESYSTEM_CLEANUP=PASS`, `EDGE_DOCKER_CLEAN_STATE=PASS`, `EDGE_NORMALIZED_STEADY_STATE=PASS`.
+- Status: COMPLETE / ACCEPTED after extended read-only audit, targeted normalization, Codex recovery, and final non-regression.
+- Docker: 15 running production containers; 0 stopped containers; 0 dangling images; 0 dangling volumes; 0 build cache; only persistent Docker volume is `openproject_opdata`.
+- PostgreSQL, Mattermost, Nextcloud, OpenProject, Maintenance and Edge Monitor all pass; Edge Monitor reports 15 Docker workloads, `EDGE_STATE=OK`, `OVERALL_STATE=OK`.
+- OpenProject Maintenance driver no longer depends on retired Stage-1 rollback containers; `update-openproject --preflight` passes against the current topology.
+- Hermes clean-sheet state is normalized: `bootstrap/selflearning.json` removed, native `hermes pm gc` reduced dependency environments to one, and stale `refs/hermes-update-backups/*` refs were removed.
+- NetBird runtime naming is normalized without topology change: drop-ins are `90-restart-policy.conf` and `95-wt0-prestart.conf`; prestart helper is `/usr/local/sbin/netbird-wt0-prestart`.
+- Nginx runtime naming is normalized: active configs are `maintenance-internal.conf` and `escloud-us.conf`, enabled through symlinks; `nginx -t` passes.
+- T3 stale runtime generations were removed; retained generations are `0.0.43-nightly.20260923.2150`, `0.0.43-nightly.20260928.2402`, and `0.0.43-nightly.20260929.2428` because they remain referenced by launcher/state/current processes.
+- Codex native remote-control updater was recovered from a stale updater-loop that held two zombie children. Final state: zombie count 0; only standalone release `0.159.0-x86_64-unknown-linux-musl` remains; managed app-server and updater loop are healthy.
+- Final residual cleanup removed empty `/home/core/Documents`, `/home/core/.config/google-chrome-for-testing-headless`, `/srv/mattermost/backups`, and unused `/var/www/html`.
+- Final footprint: root filesystem 155G total, 42G used, 113G available (27%); `/tmp` 3.4M used of 7.8G (1%). Hermes ~6.7G, T3 ~2.9G, Codex ~692M.
+- Final acceptance markers: `CODEX_ZOMBIE_RECOVERY=PASS`, `EDGE_FINAL_CLEANUP_RECOVERY=PASS`.
