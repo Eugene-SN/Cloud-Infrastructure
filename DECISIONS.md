@@ -2727,3 +2727,24 @@ The isolated `selflearning` experiment proved that Hermes can create and reuse a
 **Acceptance evidence:** independent Stage 1 audit PASS/acceptable-deviation markers; corrective upstream-cleanliness PASS; rollback reconciliation PASS; canonical manifests persisted under `deployments/edge/`; final runtime/canonical Mattermost role alignment confirmed as `mattermost`.
 
 **Supersedes:** the temporary Stage 1 status `VERIFIED / PENDING OPERATOR ACCEPTANCE`.
+
+
+---
+
+## 2026-09-29T12:45:00+03:00 — Stage 2 Maintenance normalization acceptance
+
+**Status:** ACCEPTED
+
+**Context:** Stage 2 was validated against the live edge runtime rather than repository state. Final runtime acceptance audit confirmed 16/16 update-unit preflights, normalized read-only Maintenance Refresh, one PostgreSQL 18 target, one OpenProject target, correct live Semaphore mappings, complete Compose-family Master health coverage (9 units / 15 persistent services), preserved Stage-1 rollback artifacts, and healthy application/non-regression state.
+
+**Decision:**
+
+- accept Stage 2 as COMPLETE / ACCEPTED;
+- Maintenance remains manual-only with 16 actionable units;
+- PostgreSQL routine updates remain constrained to major 18;
+- stale embedded-DB update targets remain removed;
+- OpenProject uses the dedicated fail-closed, accepted-target-locked update path;
+- Stage-1 rollback artifacts remain preserved for Stage 3 cleanup;
+- Stage 3 may proceed with runtime-first backup/recovery reconciliation, monitoring reconciliation, and cleanup.
+
+**Acceptance basis:** live runtime audit STAGE2_RUNTIME_ACCEPTANCE_AUDIT=PASS; repository state is secondary/supporting context only.
