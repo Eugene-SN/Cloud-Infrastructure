@@ -425,6 +425,38 @@ try:
         ) == digest
     ]
 
+    if component == "N8N":
+        n8n_alias_page_limit = 20
+        page_count = 1
+
+        while not any(
+            re.fullmatch(
+                r"[0-9]+\.[0-9]+\.[0-9]+",
+                alias,
+            )
+            for alias in aliases
+        ):
+            next_url = page.get("next")
+
+            if (
+                not next_url
+                or page_count >= n8n_alias_page_limit
+            ):
+                break
+
+            page = get_json(next_url)
+            page_count += 1
+            aliases.extend(
+                str(item.get("name") or "")
+                for item in page.get(
+                    "results",
+                    [],
+                )
+                if str(
+                    item.get("digest") or ""
+                ) == digest
+            )
+
     version = ""
 
     if component in (

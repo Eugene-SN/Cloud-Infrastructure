@@ -171,6 +171,13 @@ assert 'version = "17.8.0"' not in collector_source
 assert "version = '17.8.0'" not in collector_source
 assert 're.match(r"^17\\.[0-9]+(\\.[0-9]+)?$", tag_name)' in collector_source
 
+# n8n stable aliases can move beyond the first Docker Hub Tags API page when
+# nightly tags are published. Discovery must paginate without a version fallback.
+assert "n8n_alias_page_limit = 20" in collector_source
+assert "while not any(" in collector_source
+assert 'next_url = page.get("next")' in collector_source
+assert "page_count >= n8n_alias_page_limit" in collector_source
+
 # OpenProject update helper verification
 update_op_source = (root / "scripts/update-openproject").read_text(encoding="utf-8")
 assert "--remove-orphans" not in update_op_source

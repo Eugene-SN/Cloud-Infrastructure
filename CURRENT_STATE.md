@@ -1080,3 +1080,15 @@ Runtime-first acceptance completed. Backrest `edge-state` uses consolidated Post
 - Final residual cleanup removed empty `/home/core/Documents`, `/home/core/.config/google-chrome-for-testing-headless`, `/srv/mattermost/backups`, and unused `/var/www/html`.
 - Final footprint: root filesystem 155G total, 42G used, 113G available (27%); `/tmp` 3.4M used of 7.8G (1%). Hermes ~6.7G, T3 ~2.9G, Codex ~692M.
 - Final acceptance markers: `CODEX_ZOMBIE_RECOVERY=PASS`, `EDGE_FINAL_CLEANUP_RECOVERY=PASS`.
+
+
+## 2026-09-29 — Cloud Portal and n8n discovery point normalization — COMPLETE
+
+- `app.escloud.us`: Maintenance Hub is now the single header action immediately to the right of `Sync`; the former Maintenance tile was replaced in place by OpenProject linking to `https://projects.escloud.us/`.
+- The existing 3-column / 2-column / 1-column portal grid remains intact. Fresh rendered checks at 1440, 768, 375 and 320 px found no document or header overflow.
+- Installed n8n remains `2.40.7`; no n8n update or container recreation was performed.
+- n8n upstream production channel remains `stable`; current resolved stable version is `2.41.3`.
+- Root cause of `STABLE_UNRESOLVED`: new `v3-nightly-*` tag volume moved the exact `2.41.3` alias for the `stable` manifest digest from Docker Hub Tags API page 1 to page 2, while the collector inspected only the first 100 tags.
+- The existing Docker Hub discovery path now paginates only the N8N same-digest alias lookup, remains bounded and fail-closed, and has no hardcoded version fallback.
+- Fresh read-only Refresh: 23 monitored rows, 22 `CURRENT`, N8N `UPDATE_AVAILABLE`, `UNRESOLVED=0`, `CHECK_FAILED=0`.
+- `manual-update N8N --preflight`: PASS with `REAL_UPDATE_EXECUTED=NO`; `master-health-validate`: PASS; nginx, n8n health and Edge Monitor `EDGE_STATE=OK` / `OVERALL_STATE=OK` remain non-regressed.
