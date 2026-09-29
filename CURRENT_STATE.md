@@ -1059,3 +1059,8 @@ Current verified runtime state on `edge`:
 ### 2026-09-29 — Stage 2 runtime acceptance
 
 Stage 2 (Maintenance normalization) is COMPLETE / ACCEPTED based on the live edge runtime audit. Final gates: 16/16 preflights PASS; read-only Refresh PASS; PostgreSQL 18 track PASS; OpenProject target-lock PASS; Semaphore live templates PASS; Master health PASS with 9 Compose-family units and 15 persistent services; Stage-1 rollback artifacts preserved; application non-regression PASS. Stage 3 is the next authorized workstream.
+
+
+### 2026-09-29 — Stage 3 PostgreSQL consolidation — COMPLETE / ACCEPTED
+
+Runtime-first acceptance completed. Backrest `edge-state` uses consolidated PostgreSQL logical dumps for `mattermost`, `nextcloud`, and `openproject`, includes PostgreSQL globals and OpenProject `opdata`, and a real snapshot plus tier copy completed successfully. Edge Monitor tracks the current 15-container production topology with shared `postgres` and OpenProject probing. Superseded embedded database/Hocuspocus containers, old database data, migration rollback files, and obsolete database/Hocuspocus images were removed. Final runtime gates: 3 production application databases present; Mattermost/Nextcloud/OpenProject checks PASS; Maintenance Master Health PASS; Edge Monitor EDGE_STATE=OK and OVERALL_STATE=OK.
