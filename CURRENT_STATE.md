@@ -1006,7 +1006,7 @@ Current verified runtime state on `edge`:
   - Durable data directory: `/srv/postgres` mounted to `/var/lib/postgresql`.
   - Dedicated Docker bridge network: `postgres_net` (`external: true` for application projects); host PostgreSQL port publication is not enabled.
   - Dedicated application databases and roles with non-elevated privileges (`NOSUPERUSER NOCREATEDB NOCREATEROLE`):
-    - `mattermost` (database `mattermost`, owner `mmuser`);
+    - `mattermost` (database `mattermost`, owner `mattermost`);
     - `nextcloud` (database `nextcloud`, owner `nextcloud`);
     - `openproject` (database `openproject`, owner `openproject`, required extensions: `btree_gist`, `pg_trgm`, `unaccent`);
     - `postgres` (administrative/superuser database).
