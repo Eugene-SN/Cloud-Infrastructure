@@ -714,3 +714,20 @@ Authoritative record: `STAGE_12_FINAL_ACCEPTANCE_2026-09-23.md`.
 - Upstream tracked OpenProject Compose mutation: none.
 - Acceptance marker: `OPENPROJECT_PUBLIC_FQDN_DOCKER_DNS_COLLISION_FIX=PASS`.
 
+---
+
+## 2026-09-30 — OpenProject ↔ Nextcloud integration — deferred / no runtime assets
+
+- Status: `DEFERRED / CLEAN`.
+- Nextcloud app `integration_openproject`: absent.
+- Nextcloud integration app files/config/migrations/table/background jobs: absent.
+- Nextcloud OAuth clients created for this integration: 0.
+- OpenProject Nextcloud Storage objects: 0.
+- OpenProject ProjectStorage links for this integration: 0.
+- Nextcloud-specific OpenProject OAuth applications: absent.
+- Local compatibility backports/shims: absent.
+- Version pins/holds/downgrades for Nextcloud, OpenProject or the integration app: absent.
+- Revisit only when a future stable `integration_openproject` release supports the deployed stable Nextcloud without local source patches.
+- Independent OpenProject Docker hostname/DNS normalization remains accepted and active.
+- Final marker: `OPINT4_DEFER_DB_RESIDUE_RECOVERY_AND_FINAL_ACCEPTANCE=PASS`.
+
