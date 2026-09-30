@@ -1145,3 +1145,39 @@ Acceptance marker: `OPENPROJECT_STALWART_SMTP_FINAL_ACCEPTANCE=PASS`.
 
 Next integration stage starts from this accepted outbound-mail baseline; inbound email remains a separate later stage.
 
+---
+
+## 2026-09-30 — OpenProject Integrations OP-INT-3 Work Package iCalendar / Apple Calendar — COMPLETE / ACCEPTED
+
+Verified production state after end-to-end acceptance:
+
+- Global OpenProject iCalendar subscriptions remain enabled.
+- OpenProject project `Cloud Infrastructure` now has exactly `calendar_view`, `github`, and `work_package_tracking` enabled.
+- The `meetings` module remains disabled for this project; no meeting iCalendar token was created.
+- One private saved Work Package calendar exists:
+  - name: `Cloud Infrastructure`;
+  - query id: `29`;
+  - owner: OpenProject admin user;
+  - public: false.
+- One persistent Work Package iCalendar subscription token exists:
+  - token id: `5`;
+  - token name: `Apple Calendar iCloud`;
+  - scoped to saved calendar/query id `29`.
+- The bearer subscription URL is intentionally not recorded in the canonical repository.
+- Real E2E verification created temporary dated Work Package #40, fetched the public tokenized iCalendar feed with HTTP 200 and `Content-Type: text/calendar`, and confirmed:
+  - `VCALENDAR` / `VEVENT`;
+  - UID `40@projects.escloud.us`;
+  - correct start/end dates;
+  - Work Package location URL;
+  - expected summary;
+  - calendar name `Cloud Infrastructure`;
+  - refresh interval `PT1H`.
+- Temporary Work Package #40 was deleted through the normal OpenProject service; a subsequent feed fetch returned HTTP 200 and no longer contained the temporary event.
+- Apple Calendar/iCloud subscription was successfully added by the operator using the generated OpenProject iCalendar URL.
+- OpenProject tracked tree remains clean and health remains `default: PASSED Application is running`.
+- No new runtime component was introduced.
+
+Acceptance marker: `OPENPROJECT_CALENDAR_ICAL_FINAL_ACCEPTANCE=PASS`.
+
+Meetings calendar functionality remains separate and intentionally disabled until a concrete requirement exists.
+
