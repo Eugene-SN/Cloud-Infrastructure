@@ -2872,3 +2872,31 @@ The isolated `selflearning` experiment proved that Hermes can create and reuse a
 - this is a temporary execution-priority directive and self-expires after the next subscription quota reset; it does not supersede the normal tool-selection and simplicity rules afterward.
 
 **Supersedes:** none.
+
+
+---
+
+## 2026-09-30T03:10:00+03:00 — OP-INT-1 native OpenProject ↔ GitHub integration acceptance
+
+**Status:** ACCEPTED
+
+**Context:** The accepted OpenProject integration workstream required a native GitHub integration without a GitHub PAT and without introducing new middleware. Runtime-first implementation and recovery audits established the correct OpenProject 17.8.0 service contracts, including explicit project `workspace_type`, separate project-module lifecycle through `Projects::EnabledModulesService`, standard membership validation, OpenProject API-token authentication for the webhook endpoint, and upstream lifecycle ownership for GitHub integration cache records.
+
+**Decision:**
+
+- accept OP-INT-1 as COMPLETE / ACCEPTED;
+- use OpenProject project `Cloud Infrastructure` (`cloud-infrastructure`) for the canonical infrastructure development workflow;
+- keep the project private and active with exactly `github` and `work_package_tracking` enabled;
+- use dedicated non-admin OpenProject actor `github-integration`;
+- use dedicated role `GitHub Integration` with requested permissions `view_work_packages` and `add_work_package_comments`, accepting only OpenProject's automatically-added public project permissions in addition;
+- use an OpenProject API token named `GitHub Webhook` for incoming repository webhook authentication;
+- use a separate OpenProject GitHub webhook secret for `X-Hub-Signature-256` verification;
+- keep the repository webhook on `Eugene-SN/Cloud-Infrastructure` configured as `application/json` with event mode `*` / “Send me everything”, following upstream OpenProject guidance;
+- do not create a GitHub Fine-grained PAT for this native integration;
+- retain normal upstream cache lifecycle: orphaned `GithubPullRequest` records are cleared by `Cron::ClearOldPullRequestsJob`; `GithubUser` lookup records are not manually purged merely because the associated E2E test PR cache was removed;
+- remove the sample `your-scrum-project` and retain `demo-project`;
+- future development repositories are integrated individually when they become real project repositories; `Cloud-Infrastructure` is not a central GitHub gateway for all OpenProject projects.
+
+**Acceptance basis:** GitHub webhook ping HTTP 200; real `pull_request` E2E against existing merged PR #2 linked temporary Work Package #39 and produced repository/PR/state/merged data correctly; webhook delivery HTTP 200; PR body restored; temporary WP removed; native orphan PR cleanup PASS; OpenProject final-state gates PASS; GitHub repository main-head non-regression PASS during runtime test; OpenProject health PASS.
+
+**Supersedes:** the implementation-pending GitHub portion of the 2026-09-29T17:23:00+03:00 OpenProject integration workstream scope. The remaining integration scope from that decision stays active.
