@@ -1245,3 +1245,21 @@ Current governing state:
 
 Authoritative decision: `OP-INT-4 version-warning handling` in `DECISIONS.md`.
 
+---
+
+## 2026-09-30 — OP-INT-4 deferred — cleanup pending
+
+Current state after direct production compatibility attempt:
+
+- Current stable `integration_openproject` was installed and enabled in production.
+- Native OAuth2 pairing failed on Nextcloud 35 with `Call to undefined method OCA\OAuth2\Db\Client::setName()`.
+- Upstream development commit `76860d3caa28dd2ad5ccbc09c67ebe37be141287` contains the relevant OAuth2 Client compatibility fix, but carrying that fix locally would require a persistent two-file PHP backport.
+- A temporary backport attempt was fully rolled back to the original stable app source hashes.
+- Nextcloud currently has no OpenProject app configuration and no OAuth client created by this integration.
+- OpenProject currently has one incomplete unconfigured Nextcloud Storage and its associated OAuth application; no ProjectStorage link exists and no temporary admin API token remains.
+- Operator decision: defer OP-INT-4 until a future stable integration release supports the deployed stable Nextcloud without local source patches.
+- Cleanup of the partial OpenProject Storage and installed Nextcloud app is the next action.
+- The accepted OpenProject public-FQDN Docker DNS normalization remains in force independently of OP-INT-4.
+
+Authoritative decision: `OP-INT-4 deferred pending native stable Nextcloud support` in `DECISIONS.md`.
+
