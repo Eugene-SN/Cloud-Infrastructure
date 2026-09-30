@@ -523,3 +523,12 @@ This policy applies project-wide to all future infrastructure, application, upda
 - After a successful update, the newly verified stable version becomes current. Integration configuration must not encode the previously tested application/server version as an ongoing constraint.
 - If an optional integration on current stable releases requires local source patches, backports, custom compatibility shims, parallel maintenance logic, or other persistent workarounds that materially increase future support burden, prefer deferring that integration until upstream stable support exists. Do not accumulate infrastructure complexity merely to force a non-critical integration to work.
 
+## Local execution agents and Antigravity
+
+- Antigravity CLI on `edge` is a local audit, diagnostic and execution instrument. It is not an architectural authority and must not independently redefine project policy, accepted decisions, scope or target architecture.
+- Antigravity recommendations are hypotheses only. Treat its runtime observations, command output and file/config evidence as evidence to be reviewed against operator instructions, latest applicable ACCEPTED decisions and current runtime state.
+- When delegating to Antigravity, prompts must be explicit about scope, mutation authority, verification gates and prohibited actions. Prefer deterministic audit/implementation instructions over open-ended requests such as "improve", "secure", "optimize" or "redesign".
+- Antigravity must not add components, security layers, version pins, compatibility workarounds, refactors, cleanup, monitoring or redesign outside the instructed scope unless the operator explicitly authorizes them.
+- For read-only audits, require evidence-first reporting and prohibit repository/runtime mutations. For implementation tasks, require the same CHECK/AUDIT -> CHANGE -> VERIFY discipline used by this project.
+- Antigravity output does not supersede operator instructions or accepted project state. Any persistent architectural or policy conclusion is accepted only after review in the main project workflow.
+
