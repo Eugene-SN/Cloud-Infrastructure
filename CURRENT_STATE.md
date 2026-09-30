@@ -1230,3 +1230,18 @@ Compatibility marker: `OPINT4_NEXTCLOUD35_OPENPROJECT_APP_EPHEMERAL_COMPAT_V2=PA
 
 This checkpoint proves practical app/runtime compatibility for the tested install/enable/bootstrap/migration surface. It does not yet constitute OP-INT-4 production integration acceptance; production app installation, OAuth2 pairing, OpenProject Storage configuration and user E2E remain pending.
 
+---
+
+## 2026-09-30 — OP-INT-4 strategy correction — VERSION WARNING IS NON-BLOCKING
+
+Current governing state:
+
+- Production Nextcloud remains the current accepted stable deployment; no downgrade, hold or version pin was introduced by OP-INT-4.
+- Production OpenProject remains on its current accepted stable deployment; no version pin was introduced by OP-INT-4.
+- `integration_openproject` compatibility metadata is not a deployment gate. The requested production integration is to be implemented against current production versions and accepted or rejected on actual end-to-end behavior.
+- The earlier disposable compatibility deployment was unnecessary under the operator's explicit policy. It created no production mutation and is retained only as historical test evidence.
+- Do not preserve `integration_openproject 3.2.0`, Nextcloud 35.0.1, PHP 8.5.11, or the app manifest's previous maximum-version value as configuration constraints or future update baselines.
+- No additional compatibility test stack is required. OP-INT-4 proceeds directly to production installation, native OAuth2 pairing, OpenProject Storage linkage and user-visible E2E verification.
+
+Authoritative decision: `OP-INT-4 version-warning handling` in `DECISIONS.md`.
+
