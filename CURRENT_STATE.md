@@ -1118,3 +1118,30 @@ Verified production state after end-to-end acceptance:
 Acceptance marker: `OPENPROJECT_GITHUB_STAGE1_E2E_RESUME=PASS`.
 
 Next integration stage is independent from OP-INT-1 and should start from the accepted runtime state above.
+
+---
+
+## 2026-09-30 — OpenProject Integrations OP-INT-2 Outbound SMTP via Stalwart — COMPLETE / ACCEPTED
+
+Verified production state after end-to-end acceptance:
+
+- Dedicated Stalwart mailbox `openproject@escloud.us` exists and is used exclusively as the OpenProject sender identity.
+- OpenProject outbound mail uses the existing Stalwart submission listener at `mail.escloud.us:465` with implicit TLS, SMTP AUTH `plain`, and peer certificate verification.
+- Sender identity is `OpenProject <openproject@escloud.us>`.
+- OpenProject persists the SMTP configuration in the existing local `/opt/openproject/.env` plus `/opt/openproject/docker-compose.override.yml`; no tracked upstream OpenProject file was modified.
+- The SMTP password is stored only in the existing local `.env` and is not recorded in the canonical repository.
+- `web`, `worker`, and `cron` receive the same SMTP environment; no new Docker network, SMTP relay, proxy, or secret-management component was introduced.
+- Port 587 remains unused; the accepted path is direct implicit TLS submission on port 465.
+- Temporary Stalwart recovery-admin access used only for mailbox provisioning was removed before acceptance; no recovery credential remains in the production container environment.
+- Temporary `stalwart-cli` image used for provisioning was removed after use.
+- OpenProject 17.8.0 mailer behavior was reconciled: `Setting.reload_mailer_settings!` is invoked by normal web-request and background-job paths. A plain `rails runner` without that callback can show the bootstrap `localhost:25` ActionMailer state and is not a valid production SMTP verification by itself.
+- Real OpenProject `UserMailer.test_mail` delivery authenticated successfully as `openproject@escloud.us`, submitted from `openproject@escloud.us` to `es@escloud.us`, was queued by Stalwart, ingested into the local mailbox, and completed with SMTP code 250.
+- Stalwart delivery trace confirmed local delivery completion and the expected sender/recipient.
+- Decoded OpenProject text and HTML test-mail parts both render `https://projects.escloud.us`.
+- OpenProject tracked tree remains clean; OpenProject health remains `default: PASSED Application is running`.
+- Inbound IMAP/email handling remains explicitly out of scope and was not enabled.
+
+Acceptance marker: `OPENPROJECT_STALWART_SMTP_FINAL_ACCEPTANCE=PASS`.
+
+Next integration stage starts from this accepted outbound-mail baseline; inbound email remains a separate later stage.
+
