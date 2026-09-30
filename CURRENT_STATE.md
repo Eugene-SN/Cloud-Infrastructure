@@ -1092,3 +1092,29 @@ Runtime-first acceptance completed. Backrest `edge-state` uses consolidated Post
 - The existing Docker Hub discovery path now paginates only the N8N same-digest alias lookup, remains bounded and fail-closed, and has no hardcoded version fallback.
 - Fresh read-only Refresh: 23 monitored rows, 22 `CURRENT`, N8N `UPDATE_AVAILABLE`, `UNRESOLVED=0`, `CHECK_FAILED=0`.
 - `manual-update N8N --preflight`: PASS with `REAL_UPDATE_EXECUTED=NO`; `master-health-validate`: PASS; nginx, n8n health and Edge Monitor `EDGE_STATE=OK` / `OVERALL_STATE=OK` remain non-regressed.
+
+
+---
+
+## 2026-09-30 — OpenProject Integrations OP-INT-1 Native GitHub Integration — COMPLETE / ACCEPTED
+
+Verified production state after end-to-end acceptance:
+
+- OpenProject project `Cloud Infrastructure` exists as private, active workspace `cloud-infrastructure` with exactly the modules `github` and `work_package_tracking` enabled.
+- Dedicated OpenProject integration actor `github-integration` is active and non-admin.
+- Dedicated project role `GitHub Integration` is assigned to the integration actor. Its effective permissions are the two requested permissions (`view_work_packages`, `add_work_package_comments`) plus OpenProject's automatically-added public project permissions.
+- Exactly one OpenProject API token named `GitHub Webhook` exists for the integration actor; token material is not recorded in the repository.
+- OpenProject GitHub integration settings reference the dedicated actor and have webhook signature verification enabled with a configured shared secret; secret material is not recorded in the repository.
+- GitHub repository `Eugene-SN/Cloud-Infrastructure` has one active OpenProject repository webhook (GitHub hook id `689080899`) targeting the OpenProject GitHub webhook endpoint, using `application/json`, event mode `*` / “Send me everything”, and the OpenProject API token through the required `key` query parameter.
+- GitHub webhook ping delivery returned HTTP 200.
+- Real E2E verification used existing merged PR #2 without creating a branch, commit, or new PR. A temporary reference to OpenProject Work Package #39 produced a full non-partial `pull_request` record in OpenProject with repository `Eugene-SN/Cloud-Infrastructure`, PR number 2, state `closed`, and `merged=true`; GitHub webhook delivery returned HTTP 200.
+- The temporary PR body edit was restored exactly, the temporary Work Package was deleted, and `Cron::ClearOldPullRequestsJob` removed the orphaned PR cache record. One `GithubUser` lookup record remains by normal upstream lifecycle and is not an orphan cleanup target.
+- Sample project `your-scrum-project` and its 23 sample Work Packages were removed through `Projects::DeleteService`; `demo-project` remains.
+- GitHub Fine-grained PAT was not created and is not required for this integration.
+- No new runtime components were introduced; n8n, Hermes and Nextcloud were not mutated by OP-INT-1.
+- Repository code/content non-regression gate passed before acceptance: `main` remained at `61015bbcbca642db3651d10d882901eb06d3fe6b` during runtime E2E; documentation commits after acceptance are expected repository-state changes.
+- OpenProject health check: `default: PASSED Application is running`.
+
+Acceptance marker: `OPENPROJECT_GITHUB_STAGE1_E2E_RESUME=PASS`.
+
+Next integration stage is independent from OP-INT-1 and should start from the accepted runtime state above.
