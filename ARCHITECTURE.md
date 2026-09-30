@@ -665,3 +665,17 @@ This network separates application-level communication from database infrastruct
 - `edge_internal` (`172.30.0.0/24`) hosts inter-service application APIs and webhooks.
 - Initial member services: `n8n` (alias `n8n`), `mattermost` (alias `mattermost`), `openproject-web-1` (alias `openproject`), `openproject-worker-1` (alias `openproject-worker`).
 - Host-native integrations (such as `Hermes` gateway) connect to application services via their dedicated loopback port bindings (e.g. `127.0.0.1:18065` for Mattermost), eliminating same-host hairpin traffic through public DNS and reverse proxy infrastructure.
+
+
+### OP-INT-5: OpenProject ↔ n8n Event Ingress Architecture
+
+Under OP-INT-5, OpenProject and n8n communicate directly over `edge_internal`:
+- **Webhook Ingress Path:**
+  `openproject-worker-1` (GoodJob background worker) → `http://n8n:5678/webhook/openproject-events`
+- **Security & Authentication:**
+  - Network boundary: strictly `edge_internal` (`172.30.0.0/24`). OpenProject SSRF protection permits `172.30.0.0/24` via `OPENPROJECT_SSRF_PROTECTION_IP_ALLOWLIST`.
+  - Signature verification: outgoing webhooks compute an HMAC-SHA1 signature formatted as `X-OP-Signature: sha1=<hex>`.
+  - Fail-closed validation: n8n workflow `OpenProjectEventIngress01` verifies the signature using the Crypto node and secret stored in `OpenProjectWebhookHMAC01`. Tampered, missing, or mismatched signatures immediately reject with HTTP 401 Unauthorized.
+  - Event payload: verified webhooks are acknowledged with HTTP 204 No Content.
+- **Bidirectional API Path:**
+  `n8n` → `http://openproject:8080/api/v3/` with `Host: projects.escloud.us` and Bearer token credential `OpenProjectAPI01` (`n8n Integration` admin token) for internal queries without public ingress exposure.

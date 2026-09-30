@@ -3037,3 +3037,28 @@ The isolated `selflearning` experiment proved that Hermes can create and reuse a
 **Acceptance basis:** All preflight, compose configuration, container recreation, image ID, DNS resolution, internal HTTP, credential auth, WebSocket connection, public ingress non-regression, integration non-regression, and membership audit gates PASSED.
 
 **Final marker:** `EDGE_EAST_WEST_NORMALIZATION_PHASE_1=PASS`.
+
+
+---
+
+## 2026-09-30T08:30:00+03:00 — OP-INT-5 — OpenProject ↔ n8n Event Ingress Integration
+
+**Status:** ACCEPTED
+
+**Context:** With the establishment of the `edge_internal` Docker bridge network, internal communication between OpenProject and n8n became possible without routing through public reverse proxy ingress or hairpinning. OP-INT-5 required establishing an event ingress path from OpenProject worker to n8n for work package events in project `Cloud Infrastructure`, secured with HMAC-SHA1 signatures and native SSRF controls, plus bidirectional OpenProject API credential readiness.
+
+**Decision:**
+
+- use OpenProject native outgoing webhook system over `edge_internal` (`http://n8n:5678/webhook/openproject-events`);
+- configure OpenProject SSRF allowlist (`OPENPROJECT_SSRF_PROTECTION_IP_ALLOWLIST: "172.30.0.0/24"`) in `/opt/openproject/docker-compose.override.yml` for `web` and `worker` to permit outbound requests to `edge_internal` without disabling SSRF protection globally;
+- configure HMAC-SHA1 signature authentication (`X-OP-Signature`) using a dedicated shared secret managed natively via n8n Crypto credential type (`OpenProjectWebhookHMAC01`);
+- implement n8n ingress workflow `OpenProjectEventIngress01` (`OpenProject Event Ingress`) with strict fail-closed signature verification:
+  - invalid or missing signatures immediately return HTTP 401 Unauthorized;
+  - valid signatures normalize payload and return HTTP 204 No Content;
+- provision an OpenProject admin API token (`n8n Integration`) and corresponding n8n credential (`OpenProjectAPI01`) for authorized internal queries (`http://openproject:8080/api/v3/` with `Host: projects.escloud.us`);
+- scope outgoing webhook subscriptions strictly to project `Cloud Infrastructure` (id 4) and events `work_package:created` and `work_package:updated`;
+- maintain zero secret disclosure policy: no secrets in git, command logs, or broad inspection dumps.
+
+**Acceptance basis:** All preflight, lifecycle, SSRF allowlist, credential creation, workflow activation, negative signature tests, bidirectional API queries, real E2E creation and update deliveries, temporary object cleanups, and non-regression tests PASSED.
+
+**Final marker:** `OPINT5_FINAL_ACCEPTANCE=PASS`.

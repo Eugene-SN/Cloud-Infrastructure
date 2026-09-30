@@ -1337,3 +1337,61 @@ Final markers:
 - `EXISTING_INTEGRATIONS_NON_REGRESSION=PASS`
 - `FINAL_MEMBERSHIP_AUDIT=PASS`
 - `OPERATION_CLEANUP=PASS`
+
+
+---
+
+## 2026-09-30 — OP-INT-5 — OpenProject ↔ n8n Event Ingress Integration — ACCEPTED
+
+- Integration scope: native OpenProject outgoing webhook delivery to n8n over `edge_internal` with HMAC-SHA1 signature verification, plus bidirectional OpenProject API authentication.
+- Network and Transport:
+  - Path: `openproject-worker-1` (via GoodJob background worker) → `http://n8n:5678/webhook/openproject-events` over `edge_internal` (`172.30.0.0/24`).
+  - No public DNS, no reverse proxy, no Authelia, and no public hairpinning used for service-to-service communication.
+- OpenProject Configuration:
+  - SSRF Allowlist: `OPENPROJECT_SSRF_PROTECTION_IP_ALLOWLIST: "172.30.0.0/24"` configured in `/opt/openproject/docker-compose.override.yml` for both `web` and `worker` services. Container images unchanged (`sha256:49c585c5c853...`).
+  - Outgoing Webhook: `n8n - Cloud Infrastructure` (ID 1), target `http://n8n:5678/webhook/openproject-events`, enabled, scoped to project `Cloud Infrastructure` (ID 4, identifier `cloud-infrastructure`), events: `work_package:created`, `work_package:updated`.
+  - Signature: HMAC-SHA1 header `X-OP-Signature: sha1=<hex>`.
+  - API Token: admin API token `n8n Integration` created for administrative/API queries from n8n.
+- n8n Configuration:
+  - Workflow: `OpenProjectEventIngress01` (`OpenProject Event Ingress`), active / published.
+    - Webhook Node: `POST /webhook/openproject-events`, `responseMode: "responseNode"`, `rawBody: true`.
+    - Crypto Node: HMAC-SHA1 hex calculation using credential `OpenProjectWebhookHMAC01`.
+    - Validation Logic: compares received `X-OP-Signature` with computed HMAC.
+    - Invalid Branch: returns HTTP 401 Unauthorized `{"error":"invalid signature"}`.
+    - Valid Branch: normalizes event payload and returns HTTP 204 No Content.
+  - Credentials:
+    - `OpenProjectWebhookHMAC01` (`OpenProject Webhook HMAC - edge internal`, type `crypto`): holds webhook HMAC secret.
+    - `OpenProjectAPI01` (`OpenProject API - edge internal`, type `httpBearerAuth`): holds OpenProject API bearer token.
+- Verification & E2E Acceptance:
+  - Negative signature tests: 4 test cases (missing, empty, invalid, corrupted payload) all returned HTTP 401.
+  - n8n → OpenProject API: verified `GET http://openproject:8080/api/v3/projects/4` using `OpenProjectAPI01` and `Host: projects.escloud.us`, successfully returning project `cloud-infrastructure`.
+  - Real E2E Work Package Creation: temporary Work Package created in project 4; webhook delivered by worker over `edge_internal`, verified HTTP 204 response in `Webhooks::Log` and `success` execution in n8n for `work_package:created`.
+  - Real E2E Work Package Update: temporary Work Package updated; webhook delivered by worker over `edge_internal`, verified HTTP 204 response in `Webhooks::Log` and `success` execution in n8n for `work_package:updated`.
+  - Cleanup: all temporary Work Packages and temporary files in `/tmp` completely removed. OpenProject journal aggregation setting preserved at 5 minutes.
+  - Non-Regression: verified `n8n -> Hermes` (`http://172.19.0.1:8642/`), `n8n -> Mattermost` (`http://mattermost:8065`), `Hermes -> Mattermost` (`http://127.0.0.1:18065`), `Edge Monitor -> Mattermost`, `postgres_net` database connectivity, and external ingress (`https://n8n.escloud.us`, `https://projects.escloud.us`, `https://chat.escloud.us`) all healthy and operational.
+
+Final markers:
+- `OPINT5_PRECONDITION_GATE=PASS`
+- `N8N_NATIVE_CREDENTIAL_LIFECYCLE=PASS`
+- `N8N_NATIVE_WORKFLOW_LIFECYCLE=PASS`
+- `N8N_NATIVE_EXECUTION_PATH=PASS`
+- `OPENPROJECT_SSRF_ALLOWLIST_GATE=PASS`
+- `OPENPROJECT_IMAGE_ID_UNCHANGED=PASS`
+- `WEBHOOK_HMAC_SECRET_GENERATED=PASS`
+- `WEBHOOK_HMAC_SECRET_MATCH_GATE=PASS`
+- `N8N_OPENPROJECT_HMAC_CREDENTIAL_GATE=PASS`
+- `WORKFLOW_ACTIVE=PASS`
+- `WEBHOOK_LISTENER_REGISTERED=PASS`
+- `N8N_NEGATIVE_SIGNATURE_GATE=PASS`
+- `OPENPROJECT_API_TOKEN_GATE=PASS`
+- `N8N_OPENPROJECT_API_CREDENTIAL_GATE=PASS`
+- `N8N_OPENPROJECT_API_QUERY_GATE=PASS`
+- `TEMP_WORKFLOW_CLEANUP_GATE=PASS`
+- `OPENPROJECT_WEBHOOK_CREATED_GATE=PASS`
+- `E2E_WORK_PACKAGE_CREATED_GATE=PASS`
+- `E2E_WORK_PACKAGE_UPDATED_GATE=PASS`
+- `E2E_CLEANUP_GATE=PASS`
+- `OPINT5_NONREGRESSION_GATE=PASS`
+- `DOCUMENTATION_GATE=PASS`
+- `SECRET_DISCLOSURE=NONE`
+- `OPINT5_FINAL_ACCEPTANCE=PASS`

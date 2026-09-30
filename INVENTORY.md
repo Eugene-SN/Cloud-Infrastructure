@@ -753,3 +753,19 @@ Authoritative record: `STAGE_12_FINAL_ACCEPTANCE_2026-09-23.md`.
   - `n8n` → `Mattermost`: `http://mattermost:8065` (credential `16a0a988ad514ab1`, name `Mattermost API - edge internal`)
   - `Hermes` → `Mattermost`: `http://127.0.0.1:18065` (in `/home/core/.hermes/.env`)
 - Acceptance marker: `EDGE_EAST_WEST_NORMALIZATION_PHASE_1=PASS`.
+
+
+---
+
+## 2026-09-30 — OP-INT-5 — OpenProject ↔ n8n Event Ingress Integration
+
+- OpenProject:
+  - Outgoing Webhook: ID 1 (`n8n - Cloud Infrastructure`), URL `http://n8n:5678/webhook/openproject-events`, enabled: true, all_projects: false, project: `Cloud Infrastructure` (ID 4), events: `["work_package:created", "work_package:updated"]`, signature: HMAC-SHA1.
+  - SSRF Allowlist: `OPENPROJECT_SSRF_PROTECTION_IP_ALLOWLIST: "172.30.0.0/24"` (defined in `/opt/openproject/docker-compose.override.yml` for `web` and `worker`).
+  - Admin API Token: `n8n Integration` (user `admin`).
+- n8n:
+  - Active Workflow: `OpenProjectEventIngress01` (`OpenProject Event Ingress`), webhook listener at `POST /webhook/openproject-events`.
+  - Credentials:
+    - `OpenProjectWebhookHMAC01` (`OpenProject Webhook HMAC - edge internal`, type `crypto`): HMAC secret.
+    - `OpenProjectAPI01` (`OpenProject API - edge internal`, type `httpBearerAuth`): OpenProject admin bearer token.
+- Acceptance marker: `OPINT5_FINAL_ACCEPTANCE=PASS`.
