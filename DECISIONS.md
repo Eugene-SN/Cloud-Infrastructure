@@ -2900,3 +2900,30 @@ The isolated `selflearning` experiment proved that Hermes can create and reuse a
 **Acceptance basis:** GitHub webhook ping HTTP 200; real `pull_request` E2E against existing merged PR #2 linked temporary Work Package #39 and produced repository/PR/state/merged data correctly; webhook delivery HTTP 200; PR body restored; temporary WP removed; native orphan PR cleanup PASS; OpenProject final-state gates PASS; GitHub repository main-head non-regression PASS during runtime test; OpenProject health PASS.
 
 **Supersedes:** the implementation-pending GitHub portion of the 2026-09-29T17:23:00+03:00 OpenProject integration workstream scope. The remaining integration scope from that decision stays active.
+
+---
+
+## 2026-09-30T03:55:55+03:00 — OP-INT-2 OpenProject outbound SMTP via Stalwart acceptance
+
+**Status:** ACCEPTED
+
+**Context:** The OpenProject integration workstream required outbound notifications through the existing Stalwart mail service without adding a relay or other middleware. Runtime-first audit confirmed that Stalwart already exposes authenticated implicit-TLS submission on port 465 with a valid certificate for `mail.escloud.us`, while OpenProject 17.8.0 supports the required SMTP SSL and verification settings. A dedicated sender account was provisioned and full application-level delivery was verified.
+
+**Decision:**
+
+- accept OP-INT-2 outbound SMTP as COMPLETE / ACCEPTED;
+- use dedicated sender mailbox `openproject@escloud.us`;
+- use direct OpenProject -> `mail.escloud.us:465` submission with implicit TLS, SMTP AUTH `plain`, and peer certificate verification;
+- use sender identity `OpenProject <openproject@escloud.us>`;
+- keep port 587 disabled/unpublished for this integration because port 465 already provides the required native submission path;
+- persist OpenProject SMTP configuration only in the existing local `/opt/openproject/.env` and `/opt/openproject/docker-compose.override.yml`; do not modify tracked upstream OpenProject files;
+- keep the SMTP password out of the canonical repository;
+- do not add a new Docker network, SMTP relay, proxy, auth bypass, OAuth client, or secret-management component;
+- temporary Stalwart recovery-admin access is provisioning-only and must not persist after account creation;
+- retain normal OpenProject mailer lifecycle: production request/job paths reload SMTP settings through `Setting.reload_mailer_settings!`; do not add a custom initializer solely to force ActionMailer state during bare `rails runner` execution;
+- inbound IMAP/email processing remains deferred and is not part of OP-INT-2.
+
+**Acceptance basis:** dedicated mailbox creation PASS; SMTP AUTH after removal of recovery-admin PASS; effective SMTP reload contract PASS for address `mail.escloud.us`, port 465, domain `projects.escloud.us`, auth `plain`, SSL enabled, STARTTLS disabled, verify mode `peer`; real OpenProject test-mail sender/recipient/subject PASS; Stalwart trace confirmed authenticated submission, queueing, local mailbox ingestion, DSN success code 250 and completed delivery; decoded text/HTML parts contain `https://projects.escloud.us`; OpenProject tracked tree clean; OpenProject health PASS.
+
+**Supersedes:** the implementation-pending outbound SMTP portion of the 2026-09-29T17:23:00+03:00 OpenProject integration workstream scope. Inbound mail remains pending as a separate integration stage.
+
