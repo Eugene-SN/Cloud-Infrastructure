@@ -651,3 +651,17 @@ Accepted architecture:
 
 Final acceptance: `STAGE_13_FINAL_ACCEPTANCE_2026-09-23.md`.
 
+
+
+## Edge East-West Application Network (`edge_internal`)
+
+An explicit stable Docker bridge network `edge_internal` provides direct, internal east-west application integration between approved application services on the edge server:
+- Subnet: `172.30.0.0/24`
+- Gateway: `172.30.0.1`
+- Linux bridge: `edge-internal`
+
+This network separates application-level communication from database infrastructure:
+- `postgres_net` (`172.26.0.0/16`) remains strictly dedicated to PostgreSQL database connections.
+- `edge_internal` (`172.30.0.0/24`) hosts inter-service application APIs and webhooks.
+- Initial member services: `n8n` (alias `n8n`), `mattermost` (alias `mattermost`), `openproject-web-1` (alias `openproject`), `openproject-worker-1` (alias `openproject-worker`).
+- Host-native integrations (such as `Hermes` gateway) connect to application services via their dedicated loopback port bindings (e.g. `127.0.0.1:18065` for Mattermost), eliminating same-host hairpin traffic through public DNS and reverse proxy infrastructure.

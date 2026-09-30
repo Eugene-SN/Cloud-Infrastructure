@@ -1291,3 +1291,49 @@ Final marker: `OPINT4_DEFER_DB_RESIDUE_RECOVERY_AND_FINAL_ACCEPTANCE=PASS`.
 
 The earlier compatibility experiments and failed pairing attempts are historical evidence only and do not define current runtime state or future version policy.
 
+
+---
+
+## 2026-09-30 — Edge East-West Normalization Phase 1 — ACCEPTED
+
+- Explicit Docker application-integration bridge `edge_internal` created:
+  - Subnet: `172.30.0.0/24`
+  - Gateway: `172.30.0.1`
+  - Linux bridge: `edge-internal`
+  - Scope: internal application-to-application east-west communication only; strictly distinct from `postgres_net` (which remains dedicated to database traffic).
+- Membership (strictly 4 members):
+  - `n8n` (IP `172.30.0.2`, alias `n8n`)
+  - `mattermost-mattermost-1` (IP `172.30.0.3`, alias `mattermost`)
+  - `openproject-web-1` (IP `172.30.0.5`, alias `openproject`)
+  - `openproject-worker-1` (IP `172.30.0.4`, alias `openproject-worker`)
+- Explicit non-members (strictly verified unattached):
+  - `postgres`, `nextcloud`, `openproject-cron`, `openproject-cache`, `openproject-proxy`, `openproject-autoheal`, `authelia`, `stalwart`, `bulwark`, `redis`.
+- Communication Paths:
+  - `n8n` → `Mattermost`: migrated from hairpin `https://chat.escloud.us` to internal Docker DNS `http://mattermost:8065`. Credential ID `16a0a988ad514ab1` and access token preserved natively via `n8n` CLI lifecycle; renamed to `Mattermost API - edge internal`. Authenticated `GET /api/v4/users/me` verified.
+  - `Hermes` → `Mattermost`: migrated from hairpin `https://chat.escloud.us` to local loopback port binding `http://127.0.0.1:18065` in `/home/core/.hermes/.env`. `hermes-gateway.service` restarted and verified connected to WebSocket (`localhost:56766 -> localhost:18065`).
+  - `OpenProject`: attached to `edge_internal` (`web` with alias `openproject`, `worker` with alias `openproject-worker`) as foundation for OP-INT-5. No webhook, API token, or SSRF allowlist modifications created in this phase.
+- Non-Regression Verification:
+  - Public ingress: `https://chat.escloud.us`, `https://n8n.escloud.us` (Authelia gate), `https://projects.escloud.us` all 100% operational with valid TLS and untouched nginx configuration.
+  - Existing integrations: `n8n` → `Hermes` (`http://172.19.0.1:8642/v1/responses`), `Edge Monitor` → `Mattermost` (`http://127.0.0.1:18065`), `postgres_net` database connectivity for OpenProject and Mattermost all verified functional.
+- Image integrity: container image IDs for all 4 recreated containers remained identical before and after.
+
+Final markers:
+- `EDGE_INTERNAL_SUBNET_PREFLIGHT=PASS`
+- `N8N_CREDENTIAL_NATIVE_UPDATE_PATH=PASS`
+- `EDGE_INTERNAL_CREATE_GATE=PASS`
+- `N8N_COMPOSE_CONFIG_GATE=PASS`
+- `MATTERMOST_COMPOSE_CONFIG_GATE=PASS`
+- `OPENPROJECT_COMPOSE_CONFIG_GATE=PASS`
+- `CONTAINER_RECREATE_GATE=PASS`
+- `IMAGE_ID_UNCHANGED=PASS`
+- `EDGE_INTERNAL_DNS_GATE=PASS`
+- `EDGE_INTERNAL_HTTP_GATE=PASS`
+- `N8N_MATTERMOST_CREDENTIAL_ID_PRESERVED=PASS`
+- `N8N_MATTERMOST_ACCESS_TOKEN_UNCHANGED=PASS`
+- `N8N_MATTERMOST_INTERNAL_AUTH_GATE=PASS`
+- `HERMES_MATTERMOST_TRANSPORT_GATE=PASS`
+- `HERMES_MATTERMOST_WS_GATE=PASS`
+- `PUBLIC_INGRESS_NON_REGRESSION=PASS`
+- `EXISTING_INTEGRATIONS_NON_REGRESSION=PASS`
+- `FINAL_MEMBERSHIP_AUDIT=PASS`
+- `OPERATION_CLEANUP=PASS`

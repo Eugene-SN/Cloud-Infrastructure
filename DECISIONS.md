@@ -3015,3 +3015,25 @@ The isolated `selflearning` experiment proved that Hermes can create and reuse a
 
 **Supersedes:** the cleanup-pending portion of `OP-INT-4 deferred pending native stable Nextcloud support`. The deferment itself remains active.
 
+
+---
+
+## 2026-09-30T07:45:00+03:00 — Edge East-West Normalization Phase 1
+
+**Status:** ACCEPTED
+
+**Context:** The comprehensive edge networking audit revealed multiple application-to-application communication paths hairpinning through public DNS and reverse proxy infrastructure (`chat.escloud.us`) from within the same host. Specifically, `n8n` reached Mattermost via `https://chat.escloud.us` and host-native `Hermes` reached Mattermost via `https://chat.escloud.us`. Furthermore, `postgres_net` was previously used as the sole cross-stack bridge, creating a risk of conflating database access with application-level east-west integrations.
+
+**Decision:**
+
+- create an explicit, dedicated Docker application-integration bridge named `edge_internal` (`172.30.0.0/24`, gateway `172.30.0.1`, Linux bridge `edge-internal`) distinct from `postgres_net`;
+- attach only approved application services requiring inter-service communication: `n8n` (alias `n8n`), `mattermost-mattermost-1` (alias `mattermost`), `openproject-web-1` (alias `openproject`), `openproject-worker-1` (alias `openproject-worker`);
+- exclude `postgres` (which remains strictly on `postgres_net`), `nextcloud`, `redis`, and background/auxiliary OpenProject containers (`cron`, `cache`, `proxy`, `autoheal`);
+- migrate `n8n` → Mattermost from public hairpin `https://chat.escloud.us` to internal Docker DNS `http://mattermost:8065`. Native credential ID `16a0a988ad514ab1` and access token must be preserved via n8n native CLI import/export lifecycle;
+- migrate host-native `Hermes` → Mattermost from public hairpin `https://chat.escloud.us` to local loopback port binding `http://127.0.0.1:18065`, preserving existing bot token, channel, allowlist, and WebSocket adapter behavior;
+- retain `openproject-web-1` and `openproject-worker-1` on `edge_internal` as pre-requisite foundation for future OpenProject webhook integration (OP-INT-5), without creating webhooks, tokens, or SSRF configuration at this phase;
+- preserve public ingress, TLS endpoints, Authelia authentication gates, and `postgres_net` topology without modification.
+
+**Acceptance basis:** All preflight, compose configuration, container recreation, image ID, DNS resolution, internal HTTP, credential auth, WebSocket connection, public ingress non-regression, integration non-regression, and membership audit gates PASSED.
+
+**Final marker:** `EDGE_EAST_WEST_NORMALIZATION_PHASE_1=PASS`.

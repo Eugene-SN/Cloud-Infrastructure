@@ -731,3 +731,25 @@ Authoritative record: `STAGE_12_FINAL_ACCEPTANCE_2026-09-23.md`.
 - Independent OpenProject Docker hostname/DNS normalization remains accepted and active.
 - Final marker: `OPINT4_DEFER_DB_RESIDUE_RECOVERY_AND_FINAL_ACCEPTANCE=PASS`.
 
+
+---
+
+## 2026-09-30 — Edge East-West Normalization Phase 1
+
+- Network: `edge_internal`
+  - Subnet: `172.30.0.0/24`
+  - Gateway: `172.30.0.1`
+  - Linux bridge name: `edge-internal`
+  - Driver: `bridge`
+  - External network declared in Compose configurations: `/opt/n8n/compose.yaml`, `/opt/mattermost/docker-compose.edge.yml`, `/opt/openproject/docker-compose.override.yml`.
+- Container Membership:
+  - `n8n`: IP `172.30.0.2`, aliases `['n8n', 'n8n', 'n8n']`, networks: `['edge_internal', 'n8n_hermes']`
+  - `mattermost-mattermost-1`: IP `172.30.0.3`, aliases `['mattermost-mattermost-1', 'mattermost', 'mattermost']`, networks: `['edge_internal', 'mattermost_default', 'postgres_net']`
+  - `openproject-web-1`: IP `172.30.0.5`, aliases `['openproject-web-1', 'web', 'openproject']`, networks: `['edge_internal', 'openproject_backend', 'openproject_frontend', 'postgres_net']`
+  - `openproject-worker-1`: IP `172.30.0.4`, aliases `['openproject-worker-1', 'worker', 'openproject-worker']`, networks: `['edge_internal', 'openproject_backend', 'postgres_net']`
+- Excluded Containers (verified NOT connected):
+  - `postgres`, `nextcloud`, `openproject-cron`, `openproject-cache`, `openproject-proxy`, `openproject-autoheal`, `authelia`, `stalwart`, `bulwark`, `redis`.
+- Updated Integration Endpoints:
+  - `n8n` → `Mattermost`: `http://mattermost:8065` (credential `16a0a988ad514ab1`, name `Mattermost API - edge internal`)
+  - `Hermes` → `Mattermost`: `http://127.0.0.1:18065` (in `/home/core/.hermes/.env`)
+- Acceptance marker: `EDGE_EAST_WEST_NORMALIZATION_PHASE_1=PASS`.
