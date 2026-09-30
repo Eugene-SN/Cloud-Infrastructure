@@ -513,3 +513,12 @@ Rules:
 10. **Close with cleanup verification.** Final acceptance must verify both service non-regression and the intended absence of obsolete artifacts.
 
 This policy applies project-wide to all future infrastructure, application, update, migration, troubleshooting, experiment, and housekeeping work on `edge` and other Cloud Infrastructure nodes.
+
+## Integration compatibility and version policy
+
+- Keep deployed products on the current accepted/latest stable release path. Do not downgrade, pin, hold, or freeze a component merely because an integration manifest, compatibility matrix, marketplace warning, vendor recommendation, or declared maximum version lags behind the deployed stable release.
+- For an explicitly requested integration, a declared version mismatch is informational unless a concrete runtime failure is observed. Implement the integration against the current production versions first, then verify the completed end-to-end function.
+- Do not create compatibility test installations, parallel stacks, throwaway service deployments, or version-specific staging solely to satisfy or work around a declared compatibility range unless the operator explicitly requests such a test or a concrete production failure requires isolation.
+- If the integration requires an upstream-supported override such as `--force` to bypass stale compatibility metadata, use the override without converting it into a version pin.
+- After a successful update, the newly verified stable version becomes current. Integration configuration must not encode the previously tested application/server version as an ongoing constraint.
+
