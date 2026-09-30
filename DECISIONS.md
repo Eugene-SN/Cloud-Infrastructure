@@ -2952,3 +2952,24 @@ The isolated `selflearning` experiment proved that Hermes can create and reuse a
 
 **Supersedes:** the implementation-pending calendar/iCalendar portion of the 2026-09-29T17:23:00+03:00 OpenProject integration workstream scope. Meetings calendar integration remains unimplemented by design.
 
+---
+
+## 2026-09-30T15:30:00+02:00 — OP-INT-4 version-warning handling
+
+**Status:** ACCEPTED
+
+**Context:** During OP-INT-4, the Nextcloud `integration_openproject` application advertised a maximum supported Nextcloud version below the already accepted production Nextcloud release. An unnecessary disposable compatibility deployment was performed before production integration. This did not mutate production and did not create a runtime version pin, but the gating strategy contradicted the project rule to keep current stable software and validate requested integrations against the actual production versions.
+
+**Decision:**
+
+- compatibility metadata and marketplace/version warnings are informational for this workstream and must not block the requested integration by themselves;
+- keep Nextcloud and OpenProject on their current/latest accepted stable update paths;
+- do not downgrade, pin, hold, or otherwise constrain Nextcloud, OpenProject, or `integration_openproject` to a previously tested version;
+- perform OP-INT-4 directly in production using the current stable app available through Nextcloud, using the normal supported override only if needed to bypass stale compatibility metadata;
+- validate compatibility by the completed production OAuth/storage/file-linking workflow and normal health/non-regression checks after implementation;
+- do not create another compatibility/staging deployment for this version warning.
+
+**Historical note:** the completed disposable test remains only evidence that the then-current app could initialize on the then-current Nextcloud runtime. It is not an architectural requirement, compatibility gate, version baseline, or update constraint.
+
+**Supersedes:** any interpretation of the OP-INT-4 disposable compatibility checkpoint as a prerequisite, compatibility policy, or version constraint.
+
