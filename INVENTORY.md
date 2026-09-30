@@ -702,3 +702,15 @@ Authoritative record: `STAGE_12_FINAL_ACCEPTANCE_2026-09-23.md`.
 - Permanent new runtime components: none.
 - Acceptance marker: `OPENPROJECT_CALENDAR_ICAL_FINAL_ACCEPTANCE=PASS`.
 
+---
+
+## 2026-09-30 — OpenProject Docker hostname normalization
+
+- OpenProject application/public hostname: `projects.escloud.us`.
+- OpenProject Docker hostname for service `web`: `web`.
+- Persistence: local `/opt/openproject/docker-compose.override.yml`.
+- Purpose: prevent Docker embedded DNS from shadowing the public `projects.escloud.us` name on shared `postgres_net`.
+- Nextcloud resolution after normalization: `projects.escloud.us -> 45.92.156.17`.
+- Upstream tracked OpenProject Compose mutation: none.
+- Acceptance marker: `OPENPROJECT_PUBLIC_FQDN_DOCKER_DNS_COLLISION_FIX=PASS`.
+
