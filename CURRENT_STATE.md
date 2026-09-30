@@ -1263,3 +1263,31 @@ Current state after direct production compatibility attempt:
 
 Authoritative decision: `OP-INT-4 deferred pending native stable Nextcloud support` in `DECISIONS.md`.
 
+---
+
+## 2026-09-30 — OP-INT-4 deferred / clean final state — ACCEPTED
+
+Final production state after cleanup:
+
+- OP-INT-4 is deferred until a future stable `integration_openproject` release supports the deployed stable Nextcloud OAuth2 Client API without local source patches.
+- `integration_openproject` is absent from Nextcloud app registration and filesystem.
+- All integration-specific Nextcloud app configuration is absent.
+- All `integration_openproject` migration records are absent.
+- Integration table `oc_direct_upload` is absent.
+- Integration background jobs are absent.
+- Integration-related Nextcloud OAuth clients are absent.
+- The temporary `app_install_overwrite` entry used by force-enable is absent.
+- OpenProject Nextcloud Storage count returned to zero.
+- OpenProject ProjectStorage links for `Cloud Infrastructure` returned to zero.
+- The temporary Nextcloud-related OpenProject OAuth application is absent.
+- OpenProject Mobile App OAuth application remains intact.
+- Temporary OpenProject admin API tokens are absent.
+- No local backport, compatibility shim, downgrade, hold or version pin remains.
+- Nextcloud public health is HTTP 200 with maintenance off and no DB upgrade pending.
+- OpenProject health remains `default: PASSED Application is running`.
+- The independently accepted OpenProject public-FQDN Docker DNS normalization remains in force and `projects.escloud.us` resolves from Nextcloud to `45.92.156.17`.
+
+Final marker: `OPINT4_DEFER_DB_RESIDUE_RECOVERY_AND_FINAL_ACCEPTANCE=PASS`.
+
+The earlier compatibility experiments and failed pairing attempts are historical evidence only and do not define current runtime state or future version policy.
+
