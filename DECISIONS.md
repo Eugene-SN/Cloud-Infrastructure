@@ -2973,3 +2973,24 @@ The isolated `selflearning` experiment proved that Hermes can create and reuse a
 
 **Supersedes:** any interpretation of the OP-INT-4 disposable compatibility checkpoint as a prerequisite, compatibility policy, or version constraint.
 
+---
+
+## 2026-09-30T06:00:00+03:00 — OP-INT-4 deferred pending native stable Nextcloud support
+
+**Status:** ACCEPTED
+
+**Context:** Direct production implementation of the current stable Nextcloud OpenProject integration exposed a concrete runtime incompatibility on the accepted current Nextcloud release: `integration_openproject` calls legacy OAuth2 Client setter methods removed/changed in Nextcloud 35. Upstream has already fixed this in development commit `76860d3caa28dd2ad5ccbc09c67ebe37be141287`, but the current stable app installed from the Nextcloud App Store does not contain that fix. Completing OP-INT-4 now would therefore require maintaining a local two-file PHP backport until a future stable app release.
+
+**Decision:**
+
+- defer OP-INT-4 rather than carry a local source backport or compatibility shim for a non-critical integration;
+- keep Nextcloud and OpenProject on their normal current/latest stable update paths with no downgrade, hold or version pin;
+- remove the partially installed/configured OpenProject integration from production and return both services to a clean pre-integration state;
+- retain the independently valid OpenProject Docker public-FQDN/DNS normalization because it fixes a real topology defect unrelated to the deferred integration;
+- reconsider OP-INT-4 when the current stable `integration_openproject` release natively supports the deployed stable Nextcloud OAuth2 Client API and the integration can be completed without local source patches;
+- do not create compatibility staging, persistent backports, custom updater exceptions or maintenance logic solely for this deferred integration.
+
+**Acceptance basis:** production failure reproduced as `Call to undefined method OCA\OAuth2\Db\Client::setName()`; upstream development fix identified; rollback restored original stable app sources; Nextcloud ingress and health recovered; no Nextcloud OAuth/config side effects remained; OpenProject side effect is limited to one incomplete Storage/OAuth application and is scheduled for cleanup.
+
+**Supersedes:** the implementation directive in `OP-INT-4 version-warning handling` to continue production pairing despite the warning. The general rule that metadata warnings alone are non-blocking remains valid; this deferment is based on an observed runtime incompatibility and ongoing maintenance cost.
+
