@@ -2927,3 +2927,28 @@ The isolated `selflearning` experiment proved that Hermes can create and reuse a
 
 **Supersedes:** the implementation-pending outbound SMTP portion of the 2026-09-29T17:23:00+03:00 OpenProject integration workstream scope. Inbound mail remains pending as a separate integration stage.
 
+---
+
+## 2026-09-30T04:20:00+03:00 — OP-INT-3 OpenProject Work Package iCalendar / Apple Calendar acceptance
+
+**Status:** ACCEPTED
+
+**Context:** The OpenProject integration workstream required useful calendar/iCalendar integration without adding middleware. OpenProject 17.8.0 Community provides native tokenized iCalendar subscriptions for saved Work Package calendars. Runtime audit showed iCalendar globally enabled but the `calendar_view` project module disabled, with no existing saved calendar or tokens.
+
+**Decision:**
+
+- accept OP-INT-3 as COMPLETE / ACCEPTED;
+- enable only the native `calendar_view` module for project `Cloud Infrastructure`;
+- retain existing `github` and `work_package_tracking` modules;
+- keep the `meetings` module disabled until a concrete meeting-calendar requirement exists;
+- use one private saved calendar named `Cloud Infrastructure`;
+- use one persistent Work Package iCalendar token named `Apple Calendar iCloud`;
+- treat the generated iCalendar URL as bearer credential material and do not store it in the canonical repository;
+- use the native OpenProject feed directly from Apple Calendar/iCloud without n8n, CalDAV middleware, proxying, or another calendar service;
+- retain OpenProject's native `PT1H` refresh hint;
+- Work Package iCalendar remains read-only from the external calendar client.
+
+**Acceptance basis:** project module/permission gates PASS; saved calendar query id 29 private and admin-owned; exactly one iCalendar token id 5 scoped to query 29; real feed HTTP 200; temporary dated Work Package #40 rendered correctly in the ICS feed and disappeared after deletion; Apple Calendar subscription confirmed by the operator; Meetings module/token count remains zero; OpenProject tracked tree clean; OpenProject health PASS.
+
+**Supersedes:** the implementation-pending calendar/iCalendar portion of the 2026-09-29T17:23:00+03:00 OpenProject integration workstream scope. Meetings calendar integration remains unimplemented by design.
+
