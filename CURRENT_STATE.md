@@ -1181,3 +1181,22 @@ Acceptance marker: `OPENPROJECT_CALENDAR_ICAL_FINAL_ACCEPTANCE=PASS`.
 
 Meetings calendar functionality remains separate and intentionally disabled until a concrete requirement exists.
 
+---
+
+## 2026-09-30 — OpenProject public-FQDN Docker DNS collision normalization — COMPLETE
+
+Verified runtime state:
+
+- OpenProject application hostname remains `projects.escloud.us` through `OPENPROJECT_HOST__NAME`.
+- Docker runtime hostname for `openproject-web-1` is normalized to `web` through the local `/opt/openproject/docker-compose.override.yml`.
+- The upstream tracked `/opt/openproject/docker-compose.yml` remains unmodified.
+- `projects.escloud.us` is no longer registered as a Docker DNS name on `openproject_backend`, `openproject_frontend`, or shared `postgres_net`.
+- From `nextcloud-app-1`, `projects.escloud.us` now resolves to public edge IPv4 `45.92.156.17`, not OpenProject's `postgres_net` address.
+- Nextcloud -> OpenProject TLS hostname/peer verification passes; HTTPS reaches the native OpenProject login redirect.
+- OpenProject -> Nextcloud HTTPS status endpoint returns HTTP 200.
+- OpenProject application URL generation remains `https://projects.escloud.us`.
+- OP-INT-2 SMTP and OP-INT-3 iCalendar non-regression checks pass.
+- OpenProject tracked tree is clean and health remains `default: PASSED Application is running`.
+
+Acceptance marker: `OPENPROJECT_PUBLIC_FQDN_DOCKER_DNS_COLLISION_FIX=PASS`.
+
