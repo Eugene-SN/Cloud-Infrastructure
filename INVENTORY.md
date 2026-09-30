@@ -641,3 +641,19 @@ Authoritative record: `STAGE_12_FINAL_ACCEPTANCE_2026-09-23.md`.
 - Hermes: default-only clean-sheet; one dependency environment after native PM GC; no `bootstrap/selflearning.json`; no `refs/hermes-update-backups/*`.
 - Retired/absent residual paths include `/srv/mattermost/backups`, `/home/core/Documents`, `/home/core/.config/google-chrome-for-testing-headless`, and `/var/www/html`.
 - Resource state: root filesystem 42G used / 113G available (27%); `/tmp` 3.4M used of 7.8G.
+
+
+---
+
+## 2026-09-30 — OpenProject Native GitHub Integration Assets
+
+- OpenProject project: `Cloud Infrastructure` (identifier `cloud-infrastructure`), private/active, modules `github` + `work_package_tracking`.
+- OpenProject integration actor: `github-integration`, active non-admin.
+- OpenProject project role: `GitHub Integration`; requested permissions `view_work_packages` + `add_work_package_comments` plus upstream-added public project permissions.
+- OpenProject API token: one token named `GitHub Webhook` assigned to `github-integration`; secret value intentionally not recorded.
+- OpenProject GitHub webhook signature secret: configured; secret value intentionally not recorded.
+- GitHub repository integration: `Eugene-SN/Cloud-Infrastructure`.
+- GitHub repository webhook id: `689080899`; active; content type `application/json`; events `*` / “Send me everything”.
+- Webhook endpoint base: `https://projects.escloud.us/webhooks/github`; authenticated with OpenProject API-token `key` query parameter and GitHub `X-Hub-Signature-256` secret validation.
+- Native cache lifecycle: orphaned `GithubPullRequest` rows are cleaned by `Cron::ClearOldPullRequestsJob`; `GithubUser` lookup rows persist normally.
+- Sample project `your-scrum-project` retired; `demo-project` retained.
