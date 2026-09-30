@@ -677,3 +677,28 @@ Authoritative record: `STAGE_12_FINAL_ACCEPTANCE_2026-09-23.md`.
 - Inbound OpenProject mail/IMAP: deferred / not enabled.
 - Acceptance marker: `OPENPROJECT_STALWART_SMTP_FINAL_ACCEPTANCE=PASS`.
 
+---
+
+## 2026-09-30 — OpenProject Work Package iCalendar Assets
+
+- Project: `Cloud Infrastructure`.
+- Enabled project modules: `calendar_view`, `github`, `work_package_tracking`.
+- Meetings module: disabled.
+- Saved calendar:
+  - name `Cloud Infrastructure`;
+  - query id `29`;
+  - private;
+  - admin-owned.
+- Work Package iCalendar token:
+  - token id `5`;
+  - name `Apple Calendar iCloud`;
+  - scoped to query id `29`.
+- Subscription URL/token plaintext: intentionally not recorded.
+- Feed endpoint model: native OpenProject tokenized iCalendar URL.
+- Feed mode: read-only Work Package subscription.
+- Feed refresh hint: `PT1H`.
+- Apple Calendar/iCloud subscription: operator-confirmed active.
+- Meeting iCalendar tokens for admin: 0.
+- Permanent new runtime components: none.
+- Acceptance marker: `OPENPROJECT_CALENDAR_ICAL_FINAL_ACCEPTANCE=PASS`.
+
