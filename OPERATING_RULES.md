@@ -521,4 +521,5 @@ This policy applies project-wide to all future infrastructure, application, upda
 - Do not create compatibility test installations, parallel stacks, throwaway service deployments, or version-specific staging solely to satisfy or work around a declared compatibility range unless the operator explicitly requests such a test or a concrete production failure requires isolation.
 - If the integration requires an upstream-supported override such as `--force` to bypass stale compatibility metadata, use the override without converting it into a version pin.
 - After a successful update, the newly verified stable version becomes current. Integration configuration must not encode the previously tested application/server version as an ongoing constraint.
+- If an optional integration on current stable releases requires local source patches, backports, custom compatibility shims, parallel maintenance logic, or other persistent workarounds that materially increase future support burden, prefer deferring that integration until upstream stable support exists. Do not accumulate infrastructure complexity merely to force a non-critical integration to work.
 
