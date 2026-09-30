@@ -1395,3 +1395,55 @@ Final markers:
 - `DOCUMENTATION_GATE=PASS`
 - `SECRET_DISCLOSURE=NONE`
 - `OPINT5_FINAL_ACCEPTANCE=PASS`
+
+---
+
+## 2026-09-30 — OP-INT-6 — OpenProject Dedicated Mattermost Notification Integration — ACCEPTED
+
+- Integration scope: dedicated, deterministic notification path from OpenProject work package events to Mattermost private channel `openproject` via n8n over `edge_internal`.
+- Components & Configuration:
+  - Mattermost Dedicated Bot:
+    - Username: `openproject`, Display Name: `OpenProject`, User ID: `fc7je5jjqjfydgzjrb3nnz95gh`.
+    - Bot access token provisioned for n8n API interactions.
+  - Mattermost Dedicated Private Channel:
+    - Channel Name: `openproject`, Display Name: `OpenProject`, Channel ID: `5djtwy7c7jbpdkfxrgzbs9igna`, Team: `es-cloud` (`d5i7u61ptfdq7r8d94k415y75w`).
+    - Membership: restricted strictly to bot `openproject` (`fc7je5jjqjfydgzjrb3nnz95gh`) and operator `eugene` (`mof5mc6w3jds8qp36b678qrzoc`).
+  - n8n Dedicated Credential:
+    - Name: `OpenProjectMattermostAuth01` (`Mattermost API - OpenProject edge internal`), ID: `OpenProjectMattermostAuth01`, Type: `mattermostApi`.
+    - Base URL: `http://mattermost:8065`, authenticated with bot `openproject` access token.
+  - n8n Sub-Workflow `OpenProjectMattermost01`:
+    - Workflow Name: `OpenProject Mattermost Notifications`, ID: `OpenProjectMattermost01`, active and published.
+    - Trigger: `Execute Workflow Trigger`.
+    - Action Router: Switch node routing on normalized `action` (`work_package:created` vs `work_package:updated`).
+    - Formatting Nodes: standard JavaScript Code nodes formatting exact Markdown payloads for created and updated events with direct links to `https://projects.escloud.us/work_packages/<ID>`.
+    - Delivery Node: Mattermost node (`n8n-nodes-base.mattermost`, channel `5djtwy7c7jbpdkfxrgzbs9igna`).
+  - n8n Ingress Dispatch `OpenProjectEventIngress01`:
+    - Connected `Execute Sub-workflow` node (`OpenProjectMattermost01`) with `waitForSubWorkflow=false`.
+    - Ingress returns HTTP 204 No Content to OpenProject worker immediately upon signature verification, decoupling OpenProject webhook delivery from downstream Mattermost processing.
+- Verification & E2E Acceptance:
+  - Negative Non-Dispatch: invalid signature requests return HTTP 401 and trigger 0 sub-workflow executions and 0 Mattermost posts.
+  - Real E2E Created Event: real Work Package created in OpenProject, worker emitted `work_package:created` webhook over `edge_internal`, ingress responded HTTP 204 and dispatched `OpenProjectMattermost01`, message posted to private channel `openproject` by bot `openproject` matching specification.
+  - Real E2E Updated Event: real Work Package updated in OpenProject, worker emitted `work_package:updated` webhook over `edge_internal`, ingress responded HTTP 204 and dispatched `OpenProjectMattermost01`, message posted to private channel `openproject` by bot `openproject` matching specification.
+  - Post & Entity Cleanup: all temporary test posts deleted permanently via `mmctl`, channel verified clean of non-system messages, temporary Work Package deleted via OpenProject API (verified 404).
+  - Production Health & Non-Regression: containers healthy (`n8n`, `mattermost`, `openproject-web`, `openproject-worker`), Hermes workflow and credentials intact, OpenProject webhook intact and functional.
+  - Secret Handling: zero secret disclosure; all temporary tokens and files shredded and removed.
+
+Final markers:
+- `OPINT6_PRECONDITION_GATE=PASS`
+- `OPENPROJECT_EVENT_PAYLOAD_SCHEMA_GATE=PASS`
+- `MATTERMOST_NATIVE_PROVISIONING_PATH=PASS`
+- `OPENPROJECT_MATTERMOST_BOT_GATE=PASS`
+- `OPENPROJECT_MATTERMOST_CHANNEL_GATE=PASS`
+- `N8N_OPENPROJECT_MATTERMOST_CREDENTIAL_GATE=PASS`
+- `OPENPROJECT_MATTERMOST_WORKFLOW_IMPORT_GATE=PASS`
+- `OPENPROJECT_INGRESS_ASYNC_DISPATCH_GATE=PASS`
+- `OPINT6_INVALID_SIGNATURE_NONDISPATCH_GATE=PASS`
+- `OPINT6_CREATED_EVENT_E2E=PASS`
+- `OPINT6_UPDATED_EVENT_E2E=PASS`
+- `OPINT6_E2E_CLEANUP_GATE=PASS`
+- `OPINT6_PRODUCTION_STATE=PASS`
+- `OPINT6_NON_REGRESSION_GATE=PASS`
+- `OPINT6_TEMP_ARTIFACTS=ABSENT`
+- `SECRET_DISCLOSURE=NONE`
+- `OPINT6_FINAL_ACCEPTANCE=PASS`
+

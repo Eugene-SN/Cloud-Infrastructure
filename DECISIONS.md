@@ -3062,3 +3062,23 @@ The isolated `selflearning` experiment proved that Hermes can create and reuse a
 **Acceptance basis:** All preflight, lifecycle, SSRF allowlist, credential creation, workflow activation, negative signature tests, bidirectional API queries, real E2E creation and update deliveries, temporary object cleanups, and non-regression tests PASSED.
 
 **Final marker:** `OPINT5_FINAL_ACCEPTANCE=PASS`.
+
+## 2026-09-30T09:30:00+03:00 — OP-INT-6 — OpenProject Dedicated Mattermost Notification Integration
+
+**Status:** ACCEPTED
+
+**Context:** Following the establishment of the secure OpenProject event ingress workflow (`OpenProjectEventIngress01`) under OP-INT-5, notifications needed to be relayed deterministically to Mattermost. The integration required strong isolation from existing bots and channels, decoupled asynchronous execution so that downstream chat delivery never affects OpenProject's HTTP 204 webhook response, and strict fail-closed secret handling.
+
+**Decision:**
+
+- **Dedicated Mattermost Bot:** provisioned a dedicated bot account `openproject` (display name `OpenProject`, user ID `fc7je5jjqjfydgzjrb3nnz95gh`) rather than reusing the generic n8n bot or Hermes agent, ensuring distinct sender identity and granular permission boundaries;
+- **Private Mattermost Channel:** provisioned a dedicated private channel `openproject` (`5djtwy7c7jbpdkfxrgzbs9igna`) under team `es-cloud`, restricting membership strictly to authorized operator `eugene` and the `openproject` bot to maintain confidential notification boundaries;
+- **Dedicated Credential:** configured n8n credential `OpenProjectMattermostAuth01` (`Mattermost API - OpenProject edge internal`) targeting `http://mattermost:8065` via internal container networking with the dedicated bot token;
+- **Decoupled Asynchronous Dispatch:** connected `OpenProjectEventIngress01` to `OpenProjectMattermost01` using an `Execute Sub-workflow` node configured with `waitForSubWorkflow=false`. The ingress workflow returns HTTP 204 No Content immediately upon verifying HMAC-SHA1 signatures, ensuring OpenProject's webhook delivery remains completely independent of Mattermost availability or transient latency;
+- **Deterministic Formatting & AST Resilience:** structured `OpenProjectMattermost01` with an action switch and standard JavaScript Code nodes to construct Markdown payloads, eliminating isolated-vm expression syntax conflicts with private identifiers (`#$`) while enforcing standard, scannable notification templates;
+- **Strict Secret Hygiene:** zero secret disclosure policy enforced. All temporary authentication tokens and intermediate files were kept in mode-600 files within a mode-700 temporary directory, securely shredded upon verification, and never committed to version control.
+
+**Acceptance basis:** All precondition audits, bot and channel provisioning, credential importing, sub-workflow creation, negative non-dispatch verification, real E2E creation and update deliveries, test post and entity cleanup, and non-regression verification PASSED.
+
+**Final marker:** `OPINT6_FINAL_ACCEPTANCE=PASS`.
+

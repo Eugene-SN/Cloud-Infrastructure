@@ -769,3 +769,15 @@ Authoritative record: `STAGE_12_FINAL_ACCEPTANCE_2026-09-23.md`.
     - `OpenProjectWebhookHMAC01` (`OpenProject Webhook HMAC - edge internal`, type `crypto`): HMAC secret.
     - `OpenProjectAPI01` (`OpenProject API - edge internal`, type `httpBearerAuth`): OpenProject admin bearer token.
 - Acceptance marker: `OPINT5_FINAL_ACCEPTANCE=PASS`.
+
+## 2026-09-30 — OP-INT-6 — OpenProject Dedicated Mattermost Notification Integration
+
+- Mattermost:
+  - Bot: `openproject` (display name `OpenProject`, user ID `fc7je5jjqjfydgzjrb3nnz95gh`, active).
+  - Channel: `openproject` (display name `OpenProject`, channel ID `5djtwy7c7jbpdkfxrgzbs9igna`, type `P` - private, team `es-cloud`), members: `eugene`, `openproject`.
+- n8n:
+  - Active Workflow: `OpenProjectMattermost01` (`OpenProject Mattermost Notifications`), sub-workflow triggered by `OpenProjectEventIngress01` via `waitForSubWorkflow=false`.
+  - Credentials:
+    - `OpenProjectMattermostAuth01` (`Mattermost API - OpenProject edge internal`, type `mattermostApi`): bot `openproject` API token targeting `http://mattermost:8065`.
+- Acceptance marker: `OPINT6_FINAL_ACCEPTANCE=PASS`.
+

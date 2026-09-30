@@ -679,3 +679,24 @@ Under OP-INT-5, OpenProject and n8n communicate directly over `edge_internal`:
   - Event payload: verified webhooks are acknowledged with HTTP 204 No Content.
 - **Bidirectional API Path:**
   `n8n` → `http://openproject:8080/api/v3/` with `Host: projects.escloud.us` and Bearer token credential `OpenProjectAPI01` (`n8n Integration` admin token) for internal queries without public ingress exposure.
+
+### OP-INT-6: OpenProject Dedicated Mattermost Notification Integration
+
+Under OP-INT-6, a dedicated, deterministic notification path delivers OpenProject work package events to Mattermost:
+- **Notification Path & Architecture:**
+  `openproject-worker-1` → `http://n8n:5678/webhook/openproject-events` (`OpenProjectEventIngress01`)
+  ↳ [Async dispatch: `waitForSubWorkflow=false`] → `OpenProjectMattermost01`
+  ↳ `http://mattermost:8065/api/v4/posts` → Private Mattermost channel `openproject` (`OpenProject`)
+- **Decoupled Asynchronous Dispatch:**
+  - The ingress workflow `OpenProjectEventIngress01` verifies incoming webhook HMAC-SHA1 signatures and immediately returns HTTP 204 No Content to the OpenProject worker before triggering downstream notification delivery.
+  - The sub-workflow `OpenProjectMattermost01` is dispatched asynchronously (`options.waitForSubWorkflow = false`). Mattermost availability, rate limiting, or posting delays never block or fail the OpenProject webhook delivery.
+- **Dedicated Bot & Channel Isolation:**
+  - Bot Account: dedicated bot `openproject` (`OpenProject`, username `openproject`), scoped strictly to work package notifications. The generic n8n bot is not reused.
+  - Channel: private Mattermost channel `openproject` (display name `OpenProject`, team `es-cloud`), restricted strictly to authorized team members (`eugene`) and the `openproject` bot.
+  - Authentication: n8n credential `OpenProjectMattermostAuth01` (type `mattermostApi`) targeting `http://mattermost:8065` using a dedicated bot personal access token.
+- **Deterministic Message Formatting:**
+  - Event routing: `OpenProjectMattermost01` switches on normalized `action` (`work_package:created` vs `work_package:updated`).
+  - Formatting nodes: standard JavaScript Code nodes construct clean, deterministic Markdown notifications avoiding template expression syntax collisions:
+    - Created events include header (`🆕 OpenProject · Created`), `#<ID> <SUBJECT>`, `Project`, `Type`, `Status`, `Assignee`, `Actor`, and direct URL `https://projects.escloud.us/work_packages/<ID>`.
+    - Updated events include header (`🔄 OpenProject · Updated`), `#<ID> <SUBJECT>`, `Project`, `Status`, `Assignee`, `Actor`, and direct URL `https://projects.escloud.us/work_packages/<ID>`.
+
