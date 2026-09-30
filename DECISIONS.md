@@ -2994,3 +2994,24 @@ The isolated `selflearning` experiment proved that Hermes can create and reuse a
 
 **Supersedes:** the implementation directive in `OP-INT-4 version-warning handling` to continue production pairing despite the warning. The general rule that metadata warnings alone are non-blocking remains valid; this deferment is based on an observed runtime incompatibility and ongoing maintenance cost.
 
+---
+
+## 2026-09-30T06:20:00+03:00 — OP-INT-4 deferred cleanup acceptance
+
+**Status:** ACCEPTED
+
+**Context:** The decision to defer OP-INT-4 required returning production to a clean state rather than leaving partially installed application, OAuth, Storage or migration artifacts.
+
+**Decision:**
+
+- accept OP-INT-4 as `DEFERRED / CLEAN`;
+- keep the deferred integration entirely absent from production until native stable support exists;
+- retain only the independent OpenProject Docker public-FQDN/DNS normalization;
+- do not preserve any local compatibility patch, app-store override, migration/table residue, OAuth client/application residue, Storage link, version pin or hold from the attempted integration.
+
+**Acceptance basis:** `integration_openproject` app/files/config absent; six app migration records removed; `oc_direct_upload` removed; app background jobs removed; Nextcloud OAuth client count zero; app-install overwrite absent; OpenProject Storage/ProjectStorage counts zero; Nextcloud-specific OpenProject OAuth application absent; OpenProject Mobile App OAuth application preserved; admin API tokens zero; Nextcloud health PASS; OpenProject health PASS; public-FQDN DNS normalization preserved.
+
+**Final marker:** `OPINT4_DEFER_DB_RESIDUE_RECOVERY_AND_FINAL_ACCEPTANCE=PASS`.
+
+**Supersedes:** the cleanup-pending portion of `OP-INT-4 deferred pending native stable Nextcloud support`. The deferment itself remains active.
+
