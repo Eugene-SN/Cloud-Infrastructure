@@ -1200,3 +1200,33 @@ Verified runtime state:
 
 Acceptance marker: `OPENPROJECT_PUBLIC_FQDN_DOCKER_DNS_COLLISION_FIX=PASS`.
 
+---
+
+## 2026-09-30 — OP-INT-4 Nextcloud 35 compatibility checkpoint — VERIFIED / PRODUCTION NOT YET MUTATED
+
+Compatibility test completed against the exact production Nextcloud runtime generation without changing production Nextcloud:
+
+- Production Nextcloud remains `35.0.1` on PHP `8.5.11`.
+- Production `integration_openproject` remains absent.
+- Stable Nextcloud app `integration_openproject 3.2.0` was tested in an isolated disposable Nextcloud 35.0.1 instance using the same production Nextcloud image and PostgreSQL 18 image.
+- The app was installed with the documented Nextcloud version override because its stable manifest still declares `max-version="34"`.
+- No unstable/nightly app build was used.
+- The isolated test passed:
+  - forced stable install;
+  - enable on Nextcloud 35;
+  - fresh-process bootstrap;
+  - six app migrations;
+  - creation of `oc_direct_upload`;
+  - OpenProject background-job registration;
+  - app config bootstrap;
+  - zero OpenProject-related error-level Nextcloud log entries.
+- The deprecated/removed `occ app:check-code` command is unavailable in Nextcloud 35 and was informational only; runtime gates passed independently.
+- All disposable containers/network/tmp data were removed after the test.
+- Production Nextcloud health/non-regression passed after the test.
+- OpenProject health passed.
+- The previously accepted OpenProject Docker hostname normalization remains effective: from production Nextcloud, `projects.escloud.us` resolves to public edge IPv4 `45.92.156.17`.
+
+Compatibility marker: `OPINT4_NEXTCLOUD35_OPENPROJECT_APP_EPHEMERAL_COMPAT_V2=PASS`.
+
+This checkpoint proves practical app/runtime compatibility for the tested install/enable/bootstrap/migration surface. It does not yet constitute OP-INT-4 production integration acceptance; production app installation, OAuth2 pairing, OpenProject Storage configuration and user E2E remain pending.
+
