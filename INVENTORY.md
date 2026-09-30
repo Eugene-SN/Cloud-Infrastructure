@@ -657,3 +657,23 @@ Authoritative record: `STAGE_12_FINAL_ACCEPTANCE_2026-09-23.md`.
 - Webhook endpoint base: `https://projects.escloud.us/webhooks/github`; authenticated with OpenProject API-token `key` query parameter and GitHub `X-Hub-Signature-256` secret validation.
 - Native cache lifecycle: orphaned `GithubPullRequest` rows are cleaned by `Cron::ClearOldPullRequestsJob`; `GithubUser` lookup rows persist normally.
 - Sample project `your-scrum-project` retired; `demo-project` retained.
+
+---
+
+## 2026-09-30 — OpenProject Outbound SMTP Integration Assets
+
+- Sender mailbox: `openproject@escloud.us` in Stalwart.
+- SMTP endpoint: `mail.escloud.us:465`.
+- Transport: implicit TLS; certificate verification mode `peer`.
+- Authentication: SMTP AUTH `plain`.
+- OpenProject mail-from identity: `OpenProject <openproject@escloud.us>`.
+- OpenProject SMTP local persistence: `/opt/openproject/.env` plus `/opt/openproject/docker-compose.override.yml`.
+- SMTP credential is local-only and intentionally not recorded in the canonical repository.
+- OpenProject SMTP consumers: `openproject-web-1`, `openproject-worker-1`, `openproject-cron-1`.
+- Stalwart submission listener remains existing TCP/465; TCP/587 is not required for OpenProject.
+- Temporary recovery-admin provisioning credential: absent from final runtime.
+- Temporary `ghcr.io/stalwartlabs/cli:latest` provisioning image: removed after use.
+- Permanent new runtime components: none.
+- Inbound OpenProject mail/IMAP: deferred / not enabled.
+- Acceptance marker: `OPENPROJECT_STALWART_SMTP_FINAL_ACCEPTANCE=PASS`.
+
