@@ -1,8 +1,8 @@
 # Cloud Infrastructure — Inventory
 
-## Current runtime override — 2026-10-01
+## Current runtime override — 2026-10-02
 
-Plane Community Part 1 is **COMPLETE / ACCEPTED** with `PLANE_PART1_CORE_DEPLOYMENT=PASS`. Authoritative record: `PLANE_PART_1_ACCEPTANCE_2026-10-01.md`; deployment/recovery contract: `deployments/plane/README.md`. This current override supersedes earlier project-management runtime descriptions below.
+Plane Community Part 1 and **P2-1 outbound SMTP** are **COMPLETE / ACCEPTED**, with `PLANE_PART1_CORE_DEPLOYMENT=PASS` and `PLANE_P2_1_SMTP=PASS`. Authoritative records: `PLANE_PART_1_ACCEPTANCE_2026-10-01.md`, `PLANE_P2_1_SMTP_ACCEPTANCE_2026-10-02.md`; deployment/recovery contract: `deployments/plane/README.md`. This current override supersedes earlier project-management runtime descriptions below.
 
 - Plane v1.4.2 (official release ID 375236829, published 2026-08-23T14:39:21Z) serves `https://projects.escloud.us` through existing Xray/nginx/shared TLS with Plane-native authentication. Native administrator `es@escloud.us` is active; password is outside Git.
 - Official vendor Compose remains unmodified at `/opt/plane/plane-app/docker-compose.yaml`. Site override, protected `plane.env` and sole transparent `/usr/local/sbin/plane-compose` wrapper enforce the accepted layout.
@@ -13,7 +13,8 @@ Plane Community Part 1 is **COMPLETE / ACCEPTED** with `PLANE_PART1_CORE_DEPLOYM
 - Plane named volumes: plane_uploads, plane_redisdata, plane_rabbitmq_data, plane_logs_api, plane_logs_worker, plane_logs_beat-worker, plane_logs_migrator. DB/uploads/protected runtime and immutable image identities enter the existing Backrest edge-state recovery set. Valkey cache and RabbitMQ task queues persist normally but are reconstructed for historical recovery; no shared physical DB rollback.
 - Nineteen production containers / sixteen images. Monitor expects nineteen persistent containers and reports one correlated Plane service incident. Current Edge/overall state is OK. Maintenance has 16 manual targets, 9 Docker units, 23 monitored components; PLANE installed/latest v1.4.2 CURRENT, updater preflight PASS. Semaphore Update Plane template 21; no scheduled Plane update.
 - Portal has nine service tiles, including Plane, using current design and live monitor status. Desktop/tablet/mobile render passed. Temporary workspace/entities/uploads/auth sessions were removed after CRUD, worker and full-container-recreate persistence acceptance.
-- SMTP, webhooks/tokens/workflows, GitHub/Mattermost/Hermes/Nextcloud/Knowledge/calendar/intake integrations, MCP service and AI/OpenSearch were not enabled. Part 2 evaluates useful integrations separately on the accepted network foundation.
+- Outbound SMTP is accepted: existing Stalwart 0.16.24 Account/User `plane@escloud.us` (id `e`, ordinary User role, no aliases), submission `mail.escloud.us:465`, implicit TLS and certificate verification, sender `Plane <plane@escloud.us>`. Plane God Mode/runtime DB owns settings and encrypted password; no SMTP secret in Git or `plane.env`. No additional listener, DNS record, service or network was introduced.
+- Remaining Part 2 integrations are unimplemented: webhooks/API tokens/n8n workflows, GitHub/Mattermost/Hermes/Nextcloud/Knowledge/calendar/intake paths and MCP. Current API-token/webhook counts remain zero. P2-2a/P2-2b require separate authorization and the reconciled API v1/current-webhook contract.
 - OpenProject remains **DECOMMISSIONED**, with zero active runtime/integration residue. Historical records/recovery artifacts remain unchanged; historical matched DB/opdata recovery is in Restic snapshot `79ac237d`. External Apple Calendar subscription remains a manual client-side check from the decommission workstream.
 
 All earlier dated OpenProject deployment/integration/rollback descriptions are **HISTORICAL_REFERENCE**. The decommission acceptance record describes its own earlier checkpoint; its `PLANE_DEPLOYMENT=NOT_STARTED` marker is historical and superseded by this Plane acceptance.

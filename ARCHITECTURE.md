@@ -673,7 +673,7 @@ OpenProject runtime and its integration paths are removed. That accepted decommi
 
 ### Plane Community Part 1 — 2026-10-01
 
-COMPLETE / ACCEPTED: `PLANE_PART1_CORE_DEPLOYMENT=PASS`. Plane-native authenticated project management at `projects.escloud.us`, official Community v1.4.2, ten persistent services, one-shot official migrator, no embedded database/Caddy proxy. Existing public Xray/nginx/TLS path routes six loopback targets. Shared PostgreSQL 18.6 owns isolated Plane database/role alongside Mattermost and Nextcloud; only four migration-time DB consumers join `postgres_net`. Only api/worker join `edge_internal`; private dependency services use `plane_default`. No Part 2 integration objects exist.
+COMPLETE / ACCEPTED: `PLANE_PART1_CORE_DEPLOYMENT=PASS`. Plane-native authenticated project management at `projects.escloud.us`, official Community v1.4.2, ten persistent services, one-shot official migrator, no embedded database/Caddy proxy. Existing public Xray/nginx/TLS path routes six loopback targets. Shared PostgreSQL 18.6 owns isolated Plane database/role alongside Mattermost and Nextcloud; only four migration-time DB consumers join `postgres_net`. Only api/worker join `edge_internal`; private dependency services use `plane_default`. Part 1 created no Part 2 integration objects; the subsequent SMTP acceptance is recorded below.
 
 ```mermaid
 flowchart LR
@@ -698,4 +698,12 @@ flowchart LR
 
 Stable vendor Valkey/RabbitMQ/uploads/log volumes are retained. Historical recovery uses logical Plane DB + matched uploads + protected runtime + immutable image identities through existing Backrest, reconstructing cache/queues without restoring unrelated DBs. Manual Maintenance/Semaphore updater checks official stable releases, native merged/unmerged topology and route/variable drift, requires a real pre-update backup, and leaves the new generation stopped on migrator failure. Monitoring covers actual persistent graph and three availability probes with a single correlated Plane incident. Portal exposes Plane after core acceptance.
 
-Exact layout, route map, update/recovery mechanism, references and limitations: `deployments/plane/README.md`; production evidence: `PLANE_PART_1_ACCEPTANCE_2026-10-01.md`. Part 2 SMTP/API/webhook/GitHub/Mattermost/Hermes/Knowledge/Nextcloud/calendar/intake work remains separately authorized future scope.
+Exact layout, route map, update/recovery mechanism, references and limitations: `deployments/plane/README.md`; production evidence: `PLANE_PART_1_ACCEPTANCE_2026-10-01.md`. Part 2 integrations beyond the accepted SMTP stage below remain separately authorized future scope.
+
+### Plane P2-1 outbound SMTP — 2026-10-02
+
+COMPLETE / ACCEPTED: `PLANE_P2_1_SMTP=PASS`. Plane native God Mode/runtime database configuration sends through existing Stalwart using `mail.escloud.us:465`, implicit TLS with standard Django certificate verification, dedicated ordinary mailbox `plane@escloud.us`, and sender `Plane <plane@escloud.us>`. `EMAIL_USE_SSL=1`, `EMAIL_USE_TLS=0`; no relay, additional mail service/listener, DNS change, auth proxy or Plane patch.
+
+Settings are consumed dynamically by API and worker. SMTP credentials do not belong in `plane.env` or Git. Native God Mode PATCH encrypts the password in Plane's database. Stalwart uses its native Account/User password credential. Plane was not restarted. Temporary recovery-admin access required two Stalwart-only recreations on the unchanged image; the final environment and Compose are identical to the pre-stage configuration.
+
+Recovery is bounded to restoring the previous effective SMTP settings through the same native endpoint and deleting only the newly created mailbox when an explicit rollback requires it. Existing Backrest preparation already captures the quiesced mail tree and Plane logical DB/runtime; no new recovery subsystem or ad-hoc persistent backup copy was added. Acceptance and delivery/cleanup evidence: `PLANE_P2_1_SMTP_ACCEPTANCE_2026-10-02.md`.

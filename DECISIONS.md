@@ -3143,3 +3143,19 @@ Integrate logical Plane DB/matched objects/protected runtime/immutable image ide
 **Final marker:** `PLANE_PART1_CORE_DEPLOYMENT=PASS`.
 
 **Deferred:** independently accepted Part 2 SMTP, API/webhook/n8n, GitHub/Mattermost/Hermes/Knowledge/Nextcloud/calendar/intake work; no AI/OpenSearch or MCP HTTP service is introduced in this core deployment.
+
+## 2026-10-02 — Plane P2-1 outbound SMTP via existing Stalwart
+
+**Status:** ACCEPTED
+
+**Context:** The operator accepted Part 1 and the Part 2A capability audit and explicitly authorized the bounded outbound SMTP stage, dedicated mailbox provisioning, one native test, cleanup and direct-to-main persistence.
+
+**Decision:** Use existing Stalwart `mail.escloud.us:465` with implicit TLS and standard Django certificate verification. Dedicated native Account/User `plane@escloud.us` (id `e`) uses a newly generated unique password, ordinary User role and no aliases. Sender is `Plane <plane@escloud.us>`. Plane native God Mode/runtime DB owns `ENABLE_SMTP=1`, host/port/user/password/from and `EMAIL_USE_SSL=1`, `EMAIL_USE_TLS=0`; native PATCH encrypts the password. No SMTP env change or Plane restart, relay, listener, DNS record, auth proxy or source patch.
+
+Temporary Stalwart recovery-admin provisioning used two Stalwart-only recreations on the same image, without recovery mode. The original Compose/environment/mounts/ports/networks are restored, and the temporary identity is rejected. Dedicated mailbox/settings remain production state. Existing Backrest captures the mail tree and Plane DB/runtime; no extra snapshot or persistent recovery-admin/credential artifact is added. Bounded rollback restores effective settings through the same native endpoint and removes only the new account when explicitly requested.
+
+**Acceptance:** Native God Mode PATCH and native test-email POST returned HTTP 200. One message from `plane@escloud.us` to existing `es@escloud.us` was authenticated, queued as `332643947109154816`, delivered successfully and confirmed in the recipient Inbox through JMAP. The exact test Email and temporary Plane session were removed. API/worker read back effective settings without restart; unrelated accounts, nginx, n8n/Mattermost and shared services passed non-regression; Edge/overall OK. No secret entered Git or broad logs. Evidence: `PLANE_P2_1_SMTP_ACCEPTANCE_2026-10-02.md`.
+
+**Final marker:** `PLANE_P2_1_SMTP=PASS`.
+
+**Remaining scope:** P2-2a/P2-2b and later integration stages remain separately authorized. The accepted capability audit reconciles the installed CE contract to API v1/current webhooks; SMTP completion does not implement their DNS-alias/allowlist prerequisite or any integration objects. Historical OpenProject and Part 1 acceptance entries remain unchanged.

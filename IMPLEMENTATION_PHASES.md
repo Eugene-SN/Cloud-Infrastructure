@@ -709,3 +709,21 @@ The earlier v4 acceptance record is retained only as superseded historical evide
 **COMPLETE / ACCEPTED**, `PLANE_PART1_CORE_DEPLOYMENT=PASS`. Operator-provided Part 1 requirements explicitly accepted the production composition and execution after OpenProject decommission. Official current stable Community v1.4.2, shared PostgreSQL 18.6 isolated DB/role, Plane-owned Valkey/RabbitMQ/MinIO, external nginx, native auth and complete ten-service graph were deployed and verified. Backrest, monitor, manual Maintenance/Semaphore and portal are included in this completed scope. CRUD, uploads, worker/beat, Pages/cycles/modules, full recreate persistence, private n8n network readiness and shared-service non-regression passed; temporary data was removed.
 
 Authoritative acceptance: `PLANE_PART_1_ACCEPTANCE_2026-10-01.md`. Part 2 remains future independent evaluation/implementation: Stalwart SMTP, Plane Webhooks v2→n8n, n8n→Plane API v2, Mattermost notifications, GitHub (actual Community-native capability or n8n), Hermes API/MCP stdio, Knowledge/Obsidian workflows, useful Nextcloud/calendar work, optional intake email after architecture review. Part 1 creates no such integration objects; AI/OpenSearch is outside this requested core scope.
+
+## 2026-10-02 — Plane Part 2 reconciled sequence and P2-1 completion
+
+The operator accepted the Part 2A capability audit and authorized only P2-1 implementation. This current sequence supersedes the earlier prospective v2 wording: installed CE v1.4.2 provides API v1/current webhooks; a single-label `http://n8n:5678/...` webhook URL fails native URLField validation despite the hostname SSRF allowlist. No runtime correction for that blocker was made during SMTP work.
+
+| Stage | Scope | State |
+|---|---|---|
+| P2-1 | Plane native outbound SMTP -> existing Stalwart, dedicated mailbox, implicit TLS 465, runtime DB settings | COMPLETE / ACCEPTED; `PLANE_P2_1_SMTP=PASS` |
+| P2-2a | Internal webhook URL prerequisite: FQDN n8n alias in existing edge_internal plus exact hostname allowlist | PROPOSED / NOT STARTED; separate authorization |
+| P2-2b | Current CE signed webhooks -> n8n and n8n -> API v1, dedicated identity/PAT, raw-body HMAC and idempotent processing | PROPOSED / NOT STARTED; follows P2-2a |
+| P2-3 | Filtered Plane notifications -> n8n -> Mattermost | PROPOSED / NOT STARTED |
+| P2-4 | Selected GitHub PR metadata/status links through n8n and Plane API; initial polling avoids public ingress changes | PROPOSED / NOT STARTED |
+| P2-5 | Hermes -> official Plane MCP stdio, confirmed CE-compatible tool subset | PROPOSED / NOT STARTED |
+| P2-6 | Selective accepted results/decision references -> Knowledge/Obsidian | PROPOSED / NOT STARTED |
+| P2-7 | Nextcloud artifact references / external calendar only for a useful concrete workflow | DEFERRED |
+| P2-8 | Intake email only when justified; evaluate existing Stalwart -> n8n -> API | DEFERRED |
+
+P2-1 evidence: `PLANE_P2_1_SMTP_ACCEPTANCE_2026-10-02.md`. Dedicated `plane@escloud.us` remains; exact native test mail and temporary administrative state were cleaned. No Plane restart/env modification or additional mail infrastructure. P2-2a/P2-2b and subsequent stages must not begin automatically after this completion.
