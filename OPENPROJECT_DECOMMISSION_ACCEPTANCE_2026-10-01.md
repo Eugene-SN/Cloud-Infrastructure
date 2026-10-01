@@ -130,3 +130,9 @@ Canonical changes are prepared in the working tree: architecture/current state/i
 - Read-only Refresh passes with 22 components, 15 actionable targets, 8 Docker targets, 4 real available updates and zero unresolved/check-failed state. Contract and Master contract tests PASS; Master Health PASS with 9 system services, 4 user services, 8 Docker units, 9 services, 2 SQLite checks and PostgreSQL readiness.
 - Assistant verifier defects were corrected without production changes: a guessed n8n host port, a guessed contract-cache filename, and an SMTP response loop that waited only for 250 after invalid EHLO. Proven earlier results were preserved; only failed checks were resumed against inspected paths/native SMTP behavior.
 - Required recovery documents remain byte-for-byte identical to their committed versions. Temporary test/authentication files and browser session artifacts were removed. No Plane runtime/configuration or premature portal tile was created.
+
+## Canonical persistence and Semaphore readback
+
+Implementation/acceptance commit `bbcc00411d529502107445d67fc0002a28cd38d7` was pushed directly to main. GitHub commit readback matched the local commit, and contents API readback matched critical architecture/current state/inventory/decisions, both unchanged recovery documents, PostgreSQL provisioning, Maintenance unit contract, backup/monitor source and portal source.
+
+Native Semaphore Refresh task **57** completed **success** after pulling that commit into its normal repository checkout. Checkout readback confirmed the accepted commit and absence of the deleted deployment/helper. Actual task output includes `READ_ONLY_REFRESH=PASS`, `ACTIONABLE_TARGET_COUNT=15`, `DOCKER_TARGET_COUNT=8`, `CHECK_FAILED_COUNT=0`. Current Edge Monitor remains EDGE_STATE=OK / OVERALL_STATE=OK. Final task/schema/baseline temporary files are removed.
