@@ -35,6 +35,7 @@
     "BULWARK",
     "NEXTCLOUD",
     "NEXTCLOUD_REDIS",
+    "PLANE",
     "SEMAPHORE",
     "APT_EDGE"
   ],
@@ -203,6 +204,30 @@
       "service": "redis",
       "health_services": [
         "redis"
+      ]
+    },
+    {
+      "id": "PLANE",
+      "group": "docker",
+      "driver": "plane_compose",
+      "directory": "/opt/plane/plane-app",
+      "files": [
+        "docker-compose.yaml",
+        "docker-compose.edge.yml"
+      ],
+      "env_file": "plane.env",
+      "service": "api",
+      "health_services": [
+        "web",
+        "api",
+        "admin",
+        "space",
+        "live",
+        "worker",
+        "beat-worker",
+        "plane-redis",
+        "plane-mq",
+        "plane-minio"
       ]
     }
   ]

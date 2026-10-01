@@ -166,6 +166,13 @@
       mmChip.innerHTML = `<span class="pip ${ok ? 'green' : 'amber'}"></span>${ok ? 'Online' : 'Error'}`;
     }
 
+    const planeChip = document.querySelector('[data-probe="plane"]');
+    if (planeChip) {
+      const ok = apps.plane?.state === 'OK' && apps.plane_api?.state === 'OK' && apps.plane_live?.state === 'OK';
+      planeChip.className = ok ? 'status-pill green font-mono' : 'status-pill amber font-mono';
+      planeChip.innerHTML = `<span class="pip ${ok ? 'green' : 'amber'}"></span>${ok ? 'Online' : 'Degraded'}`;
+    }
+
     // 5. Nextcloud
     const ncChip = document.querySelector('[data-probe="nextcloud"]');
     if (ncChip) {

@@ -1,0 +1,20 @@
+{
+  "release": "v1.4.2",
+  "release_id": 375236829,
+  "url": "https://github.com/makeplane/plane/releases/tag/v1.4.2",
+  "published_at": "2026-08-23T14:39:21Z",
+  "assets": {
+    "setup.sh": {
+      "url": "https://github.com/makeplane/plane/releases/download/v1.4.2/setup.sh",
+      "sha256": "466b2e0d6137f72b577e10bd8af20a1f5c11268fc1294445fed7571c99d40031"
+    },
+    "docker-compose.yml": {
+      "url": "https://github.com/makeplane/plane/releases/download/v1.4.2/docker-compose.yml",
+      "sha256": "1560157357fcdcdd3b69d6a823a6bf497ab2b5e03a39888082ac0cab605986ae"
+    },
+    "variables.env": {
+      "url": "https://github.com/makeplane/plane/releases/download/v1.4.2/variables.env",
+      "sha256": "64db1740913f288d6c6af9f4824c020cde139591ac7dd555b02836dca86a1e06"
+    }
+  }
+}

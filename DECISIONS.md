@@ -3125,3 +3125,21 @@ The operator explicitly authorized one recreation of the shared PostgreSQL conta
 **Final marker:** `OPENPROJECT_EDGE_DECOMMISSION=PASS`.
 
 **Supersession:** This completes the accepted 2026-10-01 clean-decommission-before-Plane decision and supersedes prior OpenProject facts only as current/runtime state. Historical decisions and recovery references remain valid historical evidence.
+
+---
+
+## 2026-10-01 — Plane Community Part 1 production deployment
+
+**Status:** ACCEPTED
+
+**Context:** The operator explicitly authorized autonomous deployment of Plane Community at projects.escloud.us after complete OpenProject decommission, with the exact core/network/operational contract and separate Part 2 integration scope.
+
+**Decision:** Use official current stable v1.4.2 unmodified release artifacts with one site override and one transparent Compose wrapper. Keep the complete ten-service Community graph and vendor-owned Valkey/RabbitMQ/MinIO/log state; migrator is one-shot. Disable embedded PostgreSQL and Caddy proxy, reuse shared PostgreSQL18.6 with isolated plane database/non-superuser login-owner and existing Xray/host nginx/shared TLS. Bind six ingress targets to loopback only, with native Plane authentication. Add only api/worker to edge_internal with explicit aliases and hostname webhook allowlist n8n; api/worker/beat-worker and migrator use postgres_net. No real Part 2 integrations are created.
+
+Integrate logical Plane DB/matched objects/protected runtime/immutable image identities into existing Backrest, reconstruct cache/queues for historical recovery, keep rollback confined to Plane. Use manual Maintenance/Semaphore official stable discovery and fail-closed native topology/route/env preflight, completed pre-update backup and official migration. No scheduled Plane update. Extend existing monitor with actual persistent graph and one correlated Plane service incident; add Plane to current portal only after application acceptance. Normalize fixed Rabbit node identity and MinIO's unused image-volume path; remove temporary entities/assets/sessions/workspace seed bot and proven unused artifacts.
+
+**Acceptance:** PostgreSQL18 migrations, native login/admin/frontends/API/WebSocket/uploads/CRUD/cycles/modules/Pages/worker/beat, full ten-container recreation persistence, bidirectional n8n network readiness, real Backrest flows, Maintenance contracts/preflight/Master Health, native Semaphore template readback, responsive portal and shared-service non-regression passed. Historical OpenProject records remain unchanged. Record: `PLANE_PART_1_ACCEPTANCE_2026-10-01.md`; recovery contract: `deployments/plane/README.md`.
+
+**Final marker:** `PLANE_PART1_CORE_DEPLOYMENT=PASS`.
+
+**Deferred:** independently accepted Part 2 SMTP, API/webhook/n8n, GitHub/Mattermost/Hermes/Knowledge/Nextcloud/calendar/intake work; no AI/OpenSearch or MCP HTTP service is introduced in this core deployment.

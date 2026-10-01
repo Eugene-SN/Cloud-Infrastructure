@@ -16,6 +16,7 @@
     "NEXTCLOUD": true,
     "NEXTCLOUD_REDIS": true,
     "SEMAPHORE": true,
-    "APT_EDGE": true
+    "APT_EDGE": true,
+    "PLANE": true
   }
 }

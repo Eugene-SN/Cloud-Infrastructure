@@ -1,6 +1,6 @@
 # Edge Maintenance
 
-Current contract (2026-10-01): 15 manual targets, 8 Docker units, 22 monitored components. Project-management update unit/helper/playbook/template/discovery has been removed. Shared PostgreSQL and every other update driver remain. Earlier stage target counts below are historical checkpoints.
+Current contract (2026-10-01 after Plane Part 1): 16 manual targets, 9 Docker units, 23 monitored components. PLANE is an official-release unit using `plane_compose`, manual helper `scripts/update-plane`, Git playbook `playbooks/updates/plane.yml`, and Semaphore template 21. Current/latest stable v1.4.2 CURRENT; preflight checks native vendor/site graphs, public routes/variables and actual Backrest recovery contents, and real updates require a completed backup before migration. No scheduled Plane update. Full contract: `../../deployments/plane/README.md`; acceptance: `../../PLANE_PART_1_ACCEPTANCE_2026-10-01.md`. Shared PostgreSQL and every other update driver remain. Earlier stage target counts below are historical checkpoints.
 
 Current source for the single `edge` maintenance/update subsystem.
 
@@ -29,7 +29,7 @@ Maintenance contains exactly 16 actionable manual targets:
 
 `APT_EDGE`, `XRAY`, `HYSTERIA2`, `BACKREST`, `RESTIC`, `RCLONE`,
 `SEMAPHORE`, `N8N`, `AUTHELIA`, `MATTERMOST`, `POSTGRESQL`,
-`STALWART`, `BULWARK`, `NEXTCLOUD`, `NEXTCLOUD_POSTGRESQL`,
+`STALWART`, `BULWARK`, `NEXTCLOUD`, `PLANE`,
 `NEXTCLOUD_REDIS`.
 
 `HERMES`, `CODEX` and `ANTIGRAVITY` do not appear in raw Maintenance version rows,
@@ -47,7 +47,7 @@ manual executor/orchestrator and has no autonomous update schedule.
 Rclone uses upstream `rclone selfupdate --stable`, followed by restart of the
 persistent `core` user service `projects-webdav.service`.
 
-Nextcloud application, PostgreSQL and Redis are distinct manual Compose targets.
+Nextcloud application, shared PostgreSQL and Redis are distinct manual Compose targets; Plane reuses the shared PostgreSQL unit and has its own coherent release unit.
 The Nextcloud application action recreates both `app` and `cron`.
 
 Bulwark tracks upstream stable through `ghcr.io/bulwarkmail/webmail:latest`.

@@ -136,7 +136,9 @@ def normalized_image_reference(reference):
 
 def preflight(unit):
     driver = unit["driver"]
-    if driver in ("compose", "nextcloud_compose", "stalwart_compose"):
+    if driver == "plane_compose":
+        run([sys.executable, "/opt/edge-maintenance/scripts/update-plane", "--preflight"])
+    elif driver in ("compose", "nextcloud_compose", "stalwart_compose"):
         directory = pathlib.Path(unit["directory"])
         for item in unit["files"]:
             if not (directory / item).is_file():
@@ -241,6 +243,8 @@ def execute(unit, status_row):
                 check=False,
             )
             raise
+    elif driver == "plane_compose":
+        run([sys.executable, "/opt/edge-maintenance/scripts/update-plane"])
     elif driver == "nextcloud_compose":
         run([
             sys.executable,

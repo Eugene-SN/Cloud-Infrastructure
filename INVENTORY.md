@@ -2,18 +2,21 @@
 
 ## Current runtime override — 2026-10-01
 
-OpenProject = **DECOMMISSIONED**. Final workstream verification is recorded in `OPENPROJECT_DECOMMISSION_ACCEPTANCE_2026-10-01.md`; server-side decommission is COMPLETE / ACCEPTED with `OPENPROJECT_EDGE_DECOMMISSION=PASS`.
+Plane Community Part 1 is **COMPLETE / ACCEPTED** with `PLANE_PART1_CORE_DEPLOYMENT=PASS`. Authoritative record: `PLANE_PART_1_ACCEPTANCE_2026-10-01.md`; deployment/recovery contract: `deployments/plane/README.md`. This current override supersedes earlier project-management runtime descriptions below.
 
-- No OpenProject containers, owned networks, volume, application directory, database/role, nginx vhost, portal tile, n8n integration objects, Mattermost bot/channel/token, Stalwart account or Semaphore update template remains.
-- The operator-authorized single PostgreSQL container recreation removed obsolete OpenProject Env entries while preserving the exact image, data/init mounts, network and unrelated Env values. Shared cluster/data were retained.
-- Shared PostgreSQL retains two application databases/roles: `mattermost` and `nextcloud`; administrative `postgres` remains. `/srv/postgres` and `postgres_net` are retained.
-- `postgres_net` members: postgres, Mattermost, Nextcloud app and cron. `edge_internal` members: n8n and Mattermost.
-- Nine production containers and eight images remain; monitor expects exactly nine containers. Backup preparation stages Mattermost/Nextcloud DB state and shared globals without OpenProject. Maintenance has 15 manual targets, 8 Docker units and 22 monitored components.
-- `projects.escloud.us` DNS/shared TLS namespace is reserved for future Plane; no nginx vhost/backend or placeholder service handles it. Plane deployment is NOT_STARTED.
-- Historical OpenProject data recovery is available from the matched DB/opdata pair in Restic snapshot `79ac237d`; recovery/reference documents and historical decisions remain preserved.
-- Apple Calendar/iCloud subscription is external client-side state and requires a manual check. The GitHub OpenProject webhook is deleted.
+- Plane v1.4.2 (official release ID 375236829, published 2026-08-23T14:39:21Z) serves `https://projects.escloud.us` through existing Xray/nginx/shared TLS with Plane-native authentication. Native administrator `es@escloud.us` is active; password is outside Git.
+- Official vendor Compose remains unmodified at `/opt/plane/plane-app/docker-compose.yaml`. Site override, protected `plane.env` and sole transparent `/usr/local/sbin/plane-compose` wrapper enforce the accepted layout.
+- Ten persistent Plane services: web, api, admin, space, live, worker, beat-worker, plane-redis (Valkey), plane-mq (RabbitMQ, stable hostname), plane-minio. Official migrator is one-shot. Embedded plane-db and bundled proxy are absent from normal startup; no Plane pgdata or public direct container ports.
+- Shared PostgreSQL 18.6 retains existing Mattermost/Nextcloud plus dedicated `plane` database/login-owner role. Plane role is non-superuser, no CREATEDB/CREATEROLE. Existing postgres container identity/Env/data are unchanged by Plane deployment.
+- `postgres_net` members: postgres, Mattermost, Nextcloud app/cron, Plane api/worker/beat-worker; migrator joins only during migration. `edge_internal`: n8n, Mattermost, Plane api/worker, with `plane-api`, `plane-worker`, `n8n` aliases. Other Plane services stay on `plane_default` only. Backend webhook hostname allowlist is exactly `n8n`, with empty IP allowlist.
+- Loopback ingress: 18110 web:3000; 18111 api:8000; 18112 admin:3000; 18113 space:3000; 18114 live:3000; 18115 MinIO:9000. nginx routes `/`, `/api/`, `/auth/`, `/static/`, `/god-mode/`, `/spaces/`, `/live/`, `/uploads/`; WebSockets and native upload signatures passed.
+- Plane named volumes: plane_uploads, plane_redisdata, plane_rabbitmq_data, plane_logs_api, plane_logs_worker, plane_logs_beat-worker, plane_logs_migrator. DB/uploads/protected runtime and immutable image identities enter the existing Backrest edge-state recovery set. Valkey cache and RabbitMQ task queues persist normally but are reconstructed for historical recovery; no shared physical DB rollback.
+- Nineteen production containers / sixteen images. Monitor expects nineteen persistent containers and reports one correlated Plane service incident. Current Edge/overall state is OK. Maintenance has 16 manual targets, 9 Docker units, 23 monitored components; PLANE installed/latest v1.4.2 CURRENT, updater preflight PASS. Semaphore Update Plane template 21; no scheduled Plane update.
+- Portal has nine service tiles, including Plane, using current design and live monitor status. Desktop/tablet/mobile render passed. Temporary workspace/entities/uploads/auth sessions were removed after CRUD, worker and full-container-recreate persistence acceptance.
+- SMTP, webhooks/tokens/workflows, GitHub/Mattermost/Hermes/Nextcloud/Knowledge/calendar/intake integrations, MCP service and AI/OpenSearch were not enabled. Part 2 evaluates useful integrations separately on the accepted network foundation.
+- OpenProject remains **DECOMMISSIONED**, with zero active runtime/integration residue. Historical records/recovery artifacts remain unchanged; historical matched DB/opdata recovery is in Restic snapshot `79ac237d`. External Apple Calendar subscription remains a manual client-side check from the decommission workstream.
 
-All earlier dated deployment/integration/rollback facts involving OpenProject below are **HISTORICAL_REFERENCE**, superseded by this current override. They must not be interpreted as current topology, credentials, monitoring, backup or Maintenance contracts.
+All earlier dated OpenProject deployment/integration/rollback descriptions are **HISTORICAL_REFERENCE**. The decommission acceptance record describes its own earlier checkpoint; its `PLANE_DEPLOYMENT=NOT_STARTED` marker is historical and superseded by this Plane acceptance.
 
 
 ## Semantics

@@ -1,0 +1,5 @@
+#!/bin/bash
+set -Eeuo pipefail
+cd /opt/plane/plane-app
+exec docker compose --project-name plane --env-file plane.env \
+  -f docker-compose.yaml -f docker-compose.edge.yml "$@"

@@ -79,6 +79,7 @@ def main():
         "compose",
         "nextcloud_compose",
         "stalwart_compose",
+        "plane_compose",
     )
 
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
@@ -88,9 +89,12 @@ def main():
         if unit.get("driver") not in COMPOSE_DRIVERS:
             continue
         compose_units += 1
-        compose = ["docker", "compose"]
-        for filename in unit["files"]:
-            compose.extend(["-f", filename])
+        if unit["driver"] == "plane_compose":
+            compose = ["/usr/local/sbin/plane-compose"]
+        else:
+            compose = ["docker", "compose"]
+            for filename in unit["files"]:
+                compose.extend(["-f", filename])
         services = unit.get("health_services") or unit.get("services") or [unit["service"]]
         for service in services:
             compose_services += 1

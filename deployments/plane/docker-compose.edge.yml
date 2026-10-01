@@ -1,0 +1,110 @@
+services:
+  web:
+    deploy: !override {replicas: 1}
+    restart: unless-stopped
+    ports: !override
+      - "127.0.0.1:18110:3000"
+  space:
+    deploy: !override {replicas: 1}
+    restart: unless-stopped
+    ports: !override
+      - "127.0.0.1:18113:3000"
+  admin:
+    deploy: !override {replicas: 1}
+    restart: unless-stopped
+    ports: !override
+      - "127.0.0.1:18112:3000"
+  live:
+    deploy: !override {replicas: 1}
+    restart: unless-stopped
+    ports: !override
+      - "127.0.0.1:18114:3000"
+  api:
+    deploy: !override {replicas: 1}
+    restart: unless-stopped
+    ports: !override
+      - "127.0.0.1:18111:8000"
+    depends_on: !override
+      plane-redis: {condition: service_started}
+      plane-mq: {condition: service_started}
+    networks:
+      default: {}
+      postgres_net: {}
+      edge_internal:
+        aliases: [plane-api]
+  worker:
+    deploy: !override {replicas: 1}
+    restart: unless-stopped
+    depends_on: !override
+      api: {condition: service_started}
+      plane-redis: {condition: service_started}
+      plane-mq: {condition: service_started}
+    networks:
+      default: {}
+      postgres_net: {}
+      edge_internal:
+        aliases: [plane-worker]
+  beat-worker:
+    deploy: !override {replicas: 1}
+    restart: unless-stopped
+    depends_on: !override
+      api: {condition: service_started}
+      plane-redis: {condition: service_started}
+      plane-mq: {condition: service_started}
+    networks:
+      default: {}
+      postgres_net: {}
+  plane-redis:
+    deploy: !override {replicas: 1}
+    restart: unless-stopped
+  plane-mq:
+    hostname: plane-mq
+    deploy: !override {replicas: 1}
+    restart: unless-stopped
+  plane-minio:
+    deploy: !override {replicas: 1}
+    restart: unless-stopped
+    # The image declares /data, while the official Plane command uses /export.
+    # Cover the unused image path without creating an anonymous durable volume.
+    tmpfs:
+      - /data
+    ports: !override
+      - "127.0.0.1:18115:9000"
+  migrator:
+    deploy: !override {replicas: 1}
+    restart: "no"
+    depends_on: !override
+      plane-redis: {condition: service_started}
+    networks:
+      default: {}
+      postgres_net: {}
+    profiles: [migration]
+  plane-db:
+    profiles: [disabled-vendor]
+    volumes: !reset []
+  proxy:
+    profiles: [disabled-vendor]
+    ports: !reset []
+    volumes: !reset []
+networks:
+  postgres_net:
+    external: true
+    name: postgres_net
+  edge_internal:
+    external: true
+    name: edge_internal
+volumes: !override
+  redisdata:
+    name: plane_redisdata
+  uploads:
+    name: plane_uploads
+  logs_api:
+    name: plane_logs_api
+  logs_worker:
+    name: plane_logs_worker
+  logs_beat-worker:
+    name: plane_logs_beat-worker
+  logs_migrator:
+    name: plane_logs_migrator
+  rabbitmq_data:
+    name: plane_rabbitmq_data

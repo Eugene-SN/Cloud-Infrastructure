@@ -702,3 +702,10 @@ Final markers: `STAGE07_2_CORRECTIVE_MIGRATION=PASS`, `STAGE07_2_FINAL_MASTER_BA
 Authoritative record: `STAGE_07_2_FINAL_CURRENT_STATE_ACCEPTANCE_2026-09-23.md`.
 
 The earlier v4 acceptance record is retained only as superseded historical evidence.
+
+
+## 2026-10-01 — Plane Community Part 1 core deployment
+
+**COMPLETE / ACCEPTED**, `PLANE_PART1_CORE_DEPLOYMENT=PASS`. Operator-provided Part 1 requirements explicitly accepted the production composition and execution after OpenProject decommission. Official current stable Community v1.4.2, shared PostgreSQL 18.6 isolated DB/role, Plane-owned Valkey/RabbitMQ/MinIO, external nginx, native auth and complete ten-service graph were deployed and verified. Backrest, monitor, manual Maintenance/Semaphore and portal are included in this completed scope. CRUD, uploads, worker/beat, Pages/cycles/modules, full recreate persistence, private n8n network readiness and shared-service non-regression passed; temporary data was removed.
+
+Authoritative acceptance: `PLANE_PART_1_ACCEPTANCE_2026-10-01.md`. Part 2 remains future independent evaluation/implementation: Stalwart SMTP, Plane Webhooks v2→n8n, n8n→Plane API v2, Mattermost notifications, GitHub (actual Community-native capability or n8n), Hermes API/MCP stdio, Knowledge/Obsidian workflows, useful Nextcloud/calendar work, optional intake email after architecture review. Part 1 creates no such integration objects; AI/OpenSearch is outside this requested core scope.

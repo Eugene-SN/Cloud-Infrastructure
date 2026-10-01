@@ -10,7 +10,7 @@
 
 | Сервис / Компонент | Манифест в Canonical Repo | Фактический путь на узле `edge` | Описание |
 | :--- | :--- | :--- | :--- |
-| **PostgreSQL 18** | `deployments/edge/postgres/compose.yaml` | `/opt/postgres/compose.yaml` | Единый сервис PostgreSQL 18 для Nextcloud и Mattermost |
+| **PostgreSQL 18** | `deployments/edge/postgres/compose.yaml` | `/opt/postgres/compose.yaml` | Единый сервис PostgreSQL 18 для Nextcloud, Mattermost и Plane |
 | **PostgreSQL Init** | `deployments/edge/postgres/init/01-init.sh` | `/opt/postgres/init/01-init.sh` | Инициализация баз, ролей без elevated privileges и расширений |
 | **PostgreSQL Env** | `deployments/edge/postgres/.env.example` | `/opt/postgres/.env` | Шаблон переменных окружения и учетных данных баз |
 | **Mattermost** | `deployments/edge/mattermost/docker-compose.edge.yml` | `/opt/mattermost/docker-compose.edge.yml` | Edge-override: отключение embedded postgres, монтирование внешней `postgres_net` |
@@ -23,7 +23,7 @@
 1. **Единый PostgreSQL 18 (`postgres`)**:
    - Сервис работает в контейнере `postgres:18`, данные хранятся в `/srv/postgres` (`/var/lib/postgresql`).
    - Изолированная внешняя Docker-сеть `postgres_net`. Порт PostgreSQL на внешний интерфейс хоста не публикуется.
-   - Раздельные базы данных (`mattermost`, `nextcloud`) и выделенные непривилегированные роли.
+   - Раздельные базы данных (`mattermost`, `nextcloud`, `plane`) и выделенные непривилегированные роли. Plane Part 1 добавляет DB/роль отдельно по `deployments/plane/README.md`; его секреты остаются в Plane env и не добавляются в immutable Env общего postgres.
 2. **Чистота Upstream Repositories**:
    - Upstream-репозиторий `/opt/mattermost` (`main`) сохраняется в абсолютно чистом состоянии (tracked files соответствуют `origin/HEAD`).
    - Все кастомизации вынесены в файлы переопределений: `docker-compose.edge.yml`.

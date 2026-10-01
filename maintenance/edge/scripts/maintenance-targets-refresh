@@ -48,6 +48,7 @@ DOCKER_COMPONENTS = [
     ("BULWARK", "Bulwark"),
     ("NEXTCLOUD", "Nextcloud"),
     ("NEXTCLOUD_REDIS", "Redis (Nextcloud)"),
+    ("PLANE", "Plane"),
 ]
 
 CLI_COMPONENTS = []

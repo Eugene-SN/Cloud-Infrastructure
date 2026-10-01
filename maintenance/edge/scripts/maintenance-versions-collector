@@ -892,3 +892,15 @@ echo "GIT_PULL_EXECUTED=NO"
 echo "SERVICE_RESTART_EXECUTED=NO"
 echo "TARGET_FILES_MODIFIED=0"
 echo "VERSION_MONITOR=PASS"
+
+# Plane is one coherent official-release unit, not independently updated helpers.
+plane_discovery="$(/opt/edge-maintenance/scripts/update-plane --discovery)"
+plane_rc=$?
+if [ "$plane_rc" -eq 0 ]; then
+    printf '%s' "$plane_discovery" | python3 -c '
+import json,sys
+x=json.load(sys.stdin)
+print("VERSION|SCOPE=EDGE|COMPONENT=PLANE|INSTALLED="+x["installed"].lstrip("v")+"|STABLE="+x["available"].lstrip("v")+"|APPLICATION_VERSION="+x["installed"].lstrip("v")+"|AVAILABLE_VERSION="+x["available"].lstrip("v")+"|IMAGE_REPOSITORY=makeplane/plane-backend|IMAGE_TAG="+x["available"]+"|RUNNING_DIGEST="+x["running_digest"]+"|REMOTE_DIGEST="+x["remote_digest"]+"|UPDATE_REASON="+x["reason"]+"|STATUS="+x["status"]+"|SOURCE=PLANE_OFFICIAL_STABLE_RELEASE")'
+else
+    printf '%s\n' 'VERSION|SCOPE=EDGE|COMPONENT=PLANE|INSTALLED=UNRESOLVED|STABLE=UNRESOLVED|APPLICATION_VERSION=UNRESOLVED|AVAILABLE_VERSION=UNRESOLVED|IMAGE_REPOSITORY=makeplane/plane-backend|IMAGE_TAG=UNRESOLVED|RUNNING_DIGEST=-|REMOTE_DIGEST=-|UPDATE_REASON=CHECK_FAILED|STATUS=STABLE_UNRESOLVED|SOURCE=PLANE_OFFICIAL_STABLE_RELEASE'
+fi

@@ -25,14 +25,14 @@ assert maintenance["target_model"] == "update_units_v5"
 assert manifest["schema"] == 2
 assert manifest["ownership_mode"] == "native_first_hybrid"
 assert "monitor_only" not in manifest
-assert len(manual) == 15
+assert len(manual) == 16
 assert native == {"HERMES", "CODEX", "UBUNTU_SECURITY", "ANTIGRAVITY"}
 assert set(index) == manual
 assert "HERMES" not in index
 assert "CODEX" not in index
 assert "ANTIGRAVITY" not in index
-assert maintenance["summary"]["TOTAL"] == 15
-assert maintenance["summary"]["ACTIONABLE_TARGETS"] == 15
+assert maintenance["summary"]["TOTAL"] == 16
+assert maintenance["summary"]["ACTIONABLE_TARGETS"] == 16
 assert maintenance["summary"]["CLI_TARGETS"] == 0
 assert "MONITOR_ONLY_TARGETS" not in maintenance["summary"]
 assert maintenance["summary"]["APT_MANAGED_COMPONENTS"] == 8
@@ -42,7 +42,7 @@ for target in manual:
     assert index[target]["update_owner"] == "maintenance_manual"
 
 docker = [r for r in rows if r["type"] == "DOCKER"]
-assert len(docker) == 8
+assert len(docker) == 9
 required = {
     "application_version",
     "available_application_version",
@@ -136,9 +136,9 @@ assert "DOCKER_UNITS=" in health_source
 assert "DOCKER_SERVICES=" in health_source
 
 # Master health coverage verification
-COMPOSE_DRIVERS = ("compose", "nextcloud_compose", "stalwart_compose")
+COMPOSE_DRIVERS = ("compose", "nextcloud_compose", "stalwart_compose", "plane_compose")
 compose_family_units = [u for u in manifest["units"] if u.get("driver") in COMPOSE_DRIVERS]
-assert len(compose_family_units) == 8
+assert len(compose_family_units) == 9
 
 
 nc_manifest = next(u for u in manifest["units"] if u["id"] == "NEXTCLOUD")

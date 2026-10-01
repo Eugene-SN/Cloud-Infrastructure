@@ -663,9 +663,39 @@ An explicit stable Docker bridge network `edge_internal` provides direct, intern
 This network separates application-level communication from database infrastructure:
 - `postgres_net` (`172.26.0.0/16`) remains strictly dedicated to PostgreSQL database connections.
 - `edge_internal` (`172.30.0.0/24`) hosts inter-service application APIs and webhooks.
-- Current member services: `n8n` (alias `n8n`) and `mattermost-mattermost-1` (alias `mattermost`), verified 2026-10-01.
+- Current member services: `n8n` (alias `n8n`), `mattermost-mattermost-1` (alias `mattermost`), `plane-api-1` (alias `plane-api`) and `plane-worker-1` (alias `plane-worker`), verified 2026-10-01 after Plane Part 1 acceptance.
 - Host-native integrations (such as `Hermes` gateway) connect to application services via their dedicated loopback port bindings (e.g. `127.0.0.1:18065` for Mattermost), eliminating same-host hairpin traffic through public DNS and reverse proxy infrastructure.
 
 ### Project-management decommission — 2026-10-01
 
-OpenProject runtime and its integration paths are removed. Shared PostgreSQL serves Mattermost and Nextcloud; `edge_internal` retains n8n and Mattermost. No project-management backend is deployed. Plane deployment has not started. Historical OpenProject design/acceptance evidence remains in dated decisions, the pre-decommission audit, the adaptive rebuild contract and Git history. Current verification is recorded in `OPENPROJECT_DECOMMISSION_ACCEPTANCE_2026-10-01.md`.
+OpenProject runtime and its integration paths are removed. That accepted decommission checkpoint precedes the separately accepted Plane deployment below. Historical OpenProject design/acceptance evidence remains in dated decisions, the pre-decommission audit, the adaptive rebuild contract and Git history; `OPENPROJECT_DECOMMISSION_ACCEPTANCE_2026-10-01.md` remains unchanged.
+
+
+### Plane Community Part 1 — 2026-10-01
+
+COMPLETE / ACCEPTED: `PLANE_PART1_CORE_DEPLOYMENT=PASS`. Plane-native authenticated project management at `projects.escloud.us`, official Community v1.4.2, ten persistent services, one-shot official migrator, no embedded database/Caddy proxy. Existing public Xray/nginx/TLS path routes six loopback targets. Shared PostgreSQL 18.6 owns isolated Plane database/role alongside Mattermost and Nextcloud; only four migration-time DB consumers join `postgres_net`. Only api/worker join `edge_internal`; private dependency services use `plane_default`. No Part 2 integration objects exist.
+
+```mermaid
+flowchart LR
+  Client --> Xray --> Nginx
+  Nginx --> Web[web / 18110]
+  Nginx --> API[api / 18111]
+  Nginx --> Admin[admin / 18112]
+  Nginx --> Space[space / 18113]
+  Nginx --> Live[live / 18114 / WebSocket]
+  Nginx --> MinIO[MinIO / 18115 / uploads]
+  API --> PG[Shared PostgreSQL / plane DB]
+  Worker --> PG
+  Beat --> PG
+  Migrator[one-shot migrator] --> PG
+  API --> Valkey
+  Worker --> RabbitMQ
+  Beat --> RabbitMQ
+  API --> MinIO
+  API -. edge_internal readiness .-> n8n
+  Worker -. edge_internal readiness .-> n8n
+```
+
+Stable vendor Valkey/RabbitMQ/uploads/log volumes are retained. Historical recovery uses logical Plane DB + matched uploads + protected runtime + immutable image identities through existing Backrest, reconstructing cache/queues without restoring unrelated DBs. Manual Maintenance/Semaphore updater checks official stable releases, native merged/unmerged topology and route/variable drift, requires a real pre-update backup, and leaves the new generation stopped on migrator failure. Monitoring covers actual persistent graph and three availability probes with a single correlated Plane incident. Portal exposes Plane after core acceptance.
+
+Exact layout, route map, update/recovery mechanism, references and limitations: `deployments/plane/README.md`; production evidence: `PLANE_PART_1_ACCEPTANCE_2026-10-01.md`. Part 2 SMTP/API/webhook/GitHub/Mattermost/Hermes/Knowledge/Nextcloud/calendar/intake work remains separately authorized future scope.

@@ -1,0 +1,267 @@
+#!/usr/bin/env python3
+"""Official Plane release lifecycle with the edge Compose/ingress contract."""
+import argparse
+import hashlib
+import json
+import os
+import pathlib
+import re
+import subprocess
+import sys
+import tempfile
+import time
+import urllib.request
+
+APP = pathlib.Path('/opt/plane/plane-app')
+WRAPPER = '/usr/local/sbin/plane-compose'
+PERSISTENT = {'web', 'api', 'admin', 'space', 'live', 'worker', 'beat-worker', 'plane-redis', 'plane-mq', 'plane-minio'}
+DB = {'api', 'worker', 'beat-worker', 'migrator'}
+ROUTES = {'web': (18110, 3000), 'api': (18111, 8000), 'admin': (18112, 3000),
+          'space': (18113, 3000), 'live': (18114, 3000), 'plane-minio': (18115, 9000)}
+
+def run(argv, **kwargs):
+    return subprocess.run(argv, check=True, **kwargs)
+
+def output(argv):
+    return run(argv, capture_output=True, text=True).stdout
+
+def get(url):
+    headers = {'User-Agent': 'Edge-Plane-Maintenance'}
+    credential = pathlib.Path('/etc/edge-maintenance/github-api-token')
+    if url.startswith('https://api.github.com/') and credential.exists():
+        headers['Authorization'] = 'Bearer ' + credential.read_text().strip()
+    with urllib.request.urlopen(urllib.request.Request(url, headers=headers), timeout=40) as response:
+        return response.read()
+
+def env_values(path):
+    return dict(line.split('=', 1) for line in path.read_text().splitlines()
+                if line and not line.startswith('#') and '=' in line)
+
+def latest():
+    release = json.loads(get('https://api.github.com/repos/makeplane/plane/releases/latest'))
+    if release['draft'] or release['prerelease'] or not re.fullmatch(r'v\d+\.\d+\.\d+', release['tag_name']):
+        raise RuntimeError('official stable release is unresolved')
+    return release
+
+def installed():
+    version = env_values(APP / 'plane.env')['APP_RELEASE']
+    image = output(['docker', 'inspect', 'plane-api-1', '--format', '{{.Config.Image}}']).strip()
+    if image != 'makeplane/plane-backend:' + version:
+        raise RuntimeError('installed release/runtime identity drift')
+    return version
+
+def config(candidate=None, env=None, migration=True):
+    if candidate is None:
+        argv = [WRAPPER]
+    else:
+        argv = ['docker', 'compose', '--project-name', 'plane', '--project-directory', str(APP),
+                '--env-file', str(env), '-f', str(candidate), '-f', str(APP / 'docker-compose.edge.yml')]
+    if migration:
+        argv += ['--profile', 'migration']
+    return json.loads(output(argv + ['config', '--format', 'json']))
+
+def validate_topology(data):
+    services = data['services']
+    if set(services) != PERSISTENT | {'migrator'}:
+        raise RuntimeError('public/persistent vendor service graph changed')
+    if 'pgdata' in data.get('volumes', {}):
+        raise RuntimeError('embedded pgdata is present')
+    for name, service in services.items():
+        networks = set(service.get('networks', {}))
+        expected = {'default'} | ({'postgres_net'} if name in DB else set())
+        expected |= {'edge_internal'} if name in {'api', 'worker'} else set()
+        if networks != expected or 'plane-db' in service.get('depends_on', {}):
+            raise RuntimeError(f'network/dependency contract changed: {name}')
+        ports = service.get('ports', [])
+        if name in ROUTES:
+            host, target = ROUTES[name]
+            if len(ports) != 1 or ports[0].get('host_ip') != '127.0.0.1' or int(ports[0]['published']) != host or ports[0]['target'] != target:
+                raise RuntimeError(f'loopback route contract changed: {name}')
+        elif ports:
+            raise RuntimeError(f'unexpected published service: {name}')
+        environment = service.get('environment', {})
+        if name in DB and (environment.get('WEBHOOK_ALLOWED_HOSTS') != 'n8n' or environment.get('WEBHOOK_ALLOWED_IPS')):
+            raise RuntimeError(f'webhook allowlist changed: {name}')
+        if name in {'api', 'worker'} and 'plane-' + name not in service['networks']['edge_internal'].get('aliases', []):
+            raise RuntimeError(f'integration DNS alias changed: {name}')
+    api = services['api']['environment']
+    if api['PGHOST'] != 'postgres' or api['PGDATABASE'] != 'plane' or api['AWS_S3_BUCKET_NAME'] != 'uploads':
+        raise RuntimeError('database/bucket route contract changed')
+    if api['WEB_URL'] != 'https://projects.escloud.us' or api['CORS_ALLOWED_ORIGINS'] != api['WEB_URL']:
+        raise RuntimeError('public URL contract changed')
+
+def topology_signature(data):
+    # Native Compose supplies parsing, interpolation and merge semantics.
+    return {name: {key: service.get(key) for key in ('command', 'depends_on', 'ports', 'networks', 'volumes', 'tmpfs', 'hostname')}
+            for name, service in data['services'].items()}
+
+def rpc(method, payload, timeout=30):
+    request = urllib.request.Request('http://127.0.0.1:9898/v1.Backrest/' + method,
+        data=json.dumps(payload).encode(), headers={'Content-Type': 'application/json'})
+    with urllib.request.urlopen(request, timeout=timeout) as response:
+        return json.load(response)
+
+def backup_operations():
+    return rpc('GetOperations', {'selector': {'planId': 'edge-state'}, 'lastN': 12}).get('operations', [])
+
+def recent_backup():
+    snapshots = rpc('ListSnapshots', {'repoId': 'edge-state-local', 'planId': 'edge-state'}).get('snapshots', [])
+    snapshots = sorted(snapshots, key=lambda s: int(s['unixTimeMs']), reverse=True)
+    freshness = json.loads(pathlib.Path('/etc/edge-monitor/config.json').read_text())['backrest']['degraded_after_s']
+    if not snapshots or time.time() * 1000 - int(snapshots[0]['unixTimeMs']) > freshness * 1000:
+        raise RuntimeError('no current edge-state recovery snapshot')
+    dump = pathlib.Path('/var/lib/backrest-staging/edge-state/current/plane/postgres/plane.dump')
+    if not dump.is_file() or not dump.stat().st_size:
+        raise RuntimeError('Plane logical dump is absent from recovery staging')
+    with dump.open('rb') as stream:
+        run(['docker', 'exec', '-i', 'postgres', 'pg_restore', '-l'], stdin=stream, stdout=subprocess.DEVNULL)
+    if not pathlib.Path('/var/lib/backrest-staging/edge-state/current/plane/runtime/plane-app/plane.env').is_file():
+        raise RuntimeError('protected Plane runtime recovery is absent')
+    snapshot_id = snapshots[0]['id']
+    base = '/var/lib/backrest-staging/edge-state/current/plane'
+    for directory, filename in (('postgres', 'plane.dump'), ('runtime/plane-app', 'plane.env'), ('runtime', 'images.json')):
+        entries = rpc('ListSnapshotFiles', {'repoId': 'edge-state-local',
+            'snapshotId': snapshot_id, 'path': base + '/' + directory}).get('entries', [])
+        if not any(e.get('type') == 'file' and e.get('name') == filename and int(e.get('size', 0)) > 0 for e in entries):
+            raise RuntimeError('Plane recovery file absent from actual snapshot: ' + filename)
+    return snapshot_id
+
+def health():
+    ids = output([WRAPPER, 'ps', '-q']).split()
+    containers = json.loads(output(['docker', 'inspect', *ids])) if ids else []
+    if {c['Config']['Labels']['com.docker.compose.service'] for c in containers} != PERSISTENT:
+        raise RuntimeError('persistent Plane inventory mismatch')
+    for container in containers:
+        state = container['State']
+        if not state['Running'] or state.get('Health', {}).get('Status', 'healthy') != 'healthy':
+            raise RuntimeError('unhealthy Plane container: ' + container['Name'])
+    for url in ('http://127.0.0.1:18111/', 'http://127.0.0.1:18115/minio/health/ready',
+                'https://projects.escloud.us/api/instances/'):
+        with urllib.request.urlopen(url, timeout=20) as response:
+            if response.status != 200:
+                raise RuntimeError('Plane endpoint health failed')
+    run([WRAPPER, 'exec', '-T', 'api', 'python', 'manage.py', 'migrate', '--check'], stdout=subprocess.DEVNULL)
+    run([WRAPPER, 'exec', '-T', 'worker', 'celery', '-A', 'plane', 'inspect', 'ping', '--timeout', '10'], stdout=subprocess.DEVNULL)
+
+def discover(release):
+    current, available = installed(), release['tag_name']
+    image = 'makeplane/plane-backend:' + available
+    digest = json.loads(output(['docker', 'buildx', 'imagetools', 'inspect', image, '--format', '{{json .Manifest.Digest}}']))
+    image_id = output(['docker', 'inspect', 'plane-api-1', '--format', '{{.Image}}']).strip()
+    digests = json.loads(output(['docker', 'image', 'inspect', image_id]))[0]['RepoDigests']
+    local = next(d.split('@', 1)[1] for d in digests if d.startswith('makeplane/plane-backend@'))
+    changed = current != available or local != digest
+    return {'installed': current, 'available': available, 'status': 'UPDATE_AVAILABLE' if changed else 'CURRENT',
+            'running_digest': local, 'remote_digest': digest,
+            'reason': 'VERSION_UPDATE' if current != available else 'IMAGE_DIGEST_UPDATE' if changed else 'CURRENT'}
+
+def preflight(release, directory):
+    baseline = json.loads((APP / 'vendor-reference.json').read_text())
+    if hashlib.sha256((APP / 'docker-compose.yaml').read_bytes()).hexdigest() != baseline['assets']['docker-compose.yml']['sha256']:
+        raise RuntimeError('vendor Compose was locally modified')
+    assets = {a['name']: a for a in release['assets']}
+    for filename in ('docker-compose.yml', 'variables.env', 'setup.sh'):
+        (directory / filename).write_bytes(get(assets[filename]['browser_download_url']))
+    route = get(f"https://raw.githubusercontent.com/makeplane/plane/{release['tag_name']}/apps/proxy/Caddyfile.ce")
+    if route != (APP / 'Caddyfile.vendor-ce').read_bytes():
+        raise RuntimeError('upstream public routes changed; reconcile nginx consciously')
+    template = env_values(directory / 'variables.env')
+    if set(template) != set(env_values(APP / 'variables.vendor.env')):
+        raise RuntimeError('upstream variables changed; reconcile runtime environment consciously')
+    candidate_env = directory / 'plane.env'
+    values = env_values(APP / 'plane.env'); values['APP_RELEASE'] = release['tag_name']
+    candidate_env.write_text(''.join(f'{k}={v}\n' for k,v in values.items())); candidate_env.chmod(0o600)
+    current = config(); candidate = config(directory / 'docker-compose.yml', candidate_env)
+    validate_topology(current); validate_topology(candidate)
+    if topology_signature(current) != topology_signature(candidate):
+        raise RuntimeError('vendor topology changed; reconcile site override consciously')
+    # Inspect the unmerged vendor graph too: reset tags must not hide newly
+    # introduced dependencies or storage from the compatibility audit.
+    def vendor_config(path, environment):
+        return json.loads(output(['docker', 'compose', '--project-directory', str(APP),
+            '--env-file', str(environment), '-f', str(path), 'config', '--format', 'json']))
+    old_vendor = vendor_config(APP / 'docker-compose.yaml', APP / 'plane.env')
+    new_vendor = vendor_config(directory / 'docker-compose.yml', candidate_env)
+    if topology_signature(old_vendor) != topology_signature(new_vendor):
+        raise RuntimeError('unmerged vendor graph changed; reconcile dependency/storage/route contract')
+    for name in old_vendor['services']:
+        if set(old_vendor['services'][name].get('environment', {})) != set(new_vendor['services'][name].get('environment', {})):
+            raise RuntimeError('vendor environment propagation changed: ' + name)
+    health()
+    snapshot = recent_backup()
+    print('PLANE_UPDATE_PREFLIGHT=PASS|RECOVERY_SNAPSHOT=' + snapshot, flush=True)
+    return candidate_env
+
+def backup_now():
+    before = max((int(o['id']) for o in backup_operations()), default=0)
+    # Backrest v1.14.1 waits for the task; a client timeout does not cancel it.
+    rpc('Backup', {'value': 'edge-state'}, timeout=1800)
+    for _ in range(360):
+        ops = [o for o in backup_operations() if int(o['id']) > before]
+        backups = [o for o in ops if 'operationBackup' in o and o['status'] != 'STATUS_PENDING']
+        flow = [o for o in ops if backups and o['flowId'] == backups[0]['flowId']]
+        if any(o['status'] in ('STATUS_ERROR', 'STATUS_WARNING', 'STATUS_SYSTEM_CANCELLED', 'STATUS_USER_CANCELLED') for o in flow):
+            raise RuntimeError('pre-update Backrest flow failed')
+        if backups and backups[0]['status'] == 'STATUS_SUCCESS' and all(o['status'] == 'STATUS_SUCCESS' for o in flow):
+            return recent_backup()
+        time.sleep(5)
+    raise RuntimeError('pre-update Backrest flow did not finish')
+
+def main():
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--discovery', action='store_true')
+    parser.add_argument('--preflight', action='store_true')
+    args=parser.parse_args()
+    release=latest()
+    if args.discovery:
+        print(json.dumps(discover(release))); return
+    with tempfile.TemporaryDirectory(prefix='plane-update-', dir='/tmp') as temporary:
+        directory=pathlib.Path(temporary)
+        candidate_env=preflight(release, directory)
+        if args.preflight: return
+        discovery=discover(release)
+        if discovery['status'] == 'CURRENT':
+            print('PLANE_UPDATE=NO_UPDATE_AVAILABLE'); return
+        snapshot=backup_now()
+        print('PLANE_PRE_UPDATE_SNAPSHOT=' + snapshot, flush=True)
+        # No schema-changing work begins until a real recovery flow completes.
+        old_references = output([WRAPPER, 'images', '-q']).split()
+        old_ids = {image['Id'] for image in json.loads(output(['docker', 'image', 'inspect', *old_references]))} if old_references else set()
+        run([WRAPPER, 'stop', '--timeout', '30'])
+        for source, destination in ((directory/'docker-compose.yml', APP/'docker-compose.yaml'),
+                                    (candidate_env, APP/'plane.env'),
+                                    (directory/'setup.sh', APP.parent/'setup.sh'),
+                                    (directory/'variables.env', APP/'variables.vendor.env')):
+            target=destination.with_name(destination.name+'.incoming')
+            target.write_bytes(source.read_bytes()); target.chmod(0o600 if destination.name=='plane.env' else 0o755 if destination.name=='setup.sh' else 0o644)
+            target.replace(destination)
+        metadata={'release':release['tag_name'], 'release_id':release['id'], 'url':release['html_url'],
+                  'published_at':release['published_at'], 'assets':{name:{'url':assets_url, 'sha256':hashlib.sha256((directory/name).read_bytes()).hexdigest()}
+                  for name,assets_url in ((a['name'],a['browser_download_url']) for a in release['assets']) if name in ('setup.sh','docker-compose.yml','variables.env')}}
+        (APP/'vendor-reference.json').write_text(json.dumps(metadata,indent=2)+'\n')
+        run([WRAPPER, '--profile', 'migration', 'pull', '--quiet'])
+        run([WRAPPER, 'up', '-d', 'plane-redis', 'plane-mq', 'plane-minio'])
+        # An exception here leaves the new application generation stopped.
+        run([WRAPPER, '--profile', 'migration', 'run', '--rm', '--no-deps', 'migrator'])
+        run([WRAPPER, 'up', '-d', '--wait', '--wait-timeout', '180'])
+        for attempt in range(36):
+            try:
+                health(); break
+            except Exception:
+                if attempt==35: raise
+                time.sleep(5)
+        # Retire only former Plane images with zero remaining container users.
+        all_ids = output(['docker', 'ps', '-aq']).split()
+        used = {c['Image'] for c in json.loads(output(['docker', 'inspect', *all_ids]))} if all_ids else set()
+        for old in old_ids - used:
+            image = json.loads(output(['docker', 'image', 'inspect', old]))[0]
+            tags = image.get('RepoTags') or []
+            run(['docker', 'image', 'rm', *(tags or [old])])
+        print('PLANE_UPDATE=PASS|RECOVERY_SNAPSHOT=' + snapshot)
+
+if __name__=='__main__':
+    try: main()
+    except Exception as exc:
+        # Do not dump effective configuration or credentials on failure.
+        print('PLANE_UPDATE_PREFLIGHT_OR_EXECUTION=FAIL|REASON=' + type(exc).__name__ + ':' + str(exc)[:240], file=sys.stderr)
+        raise SystemExit(3)

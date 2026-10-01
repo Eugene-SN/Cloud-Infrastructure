@@ -14,6 +14,7 @@ INJECT_FAILURE="${EDGE_STATE_PREPARE_INJECT_FAILURE:-}"
 MATTERMOST_STOPPED=0
 BULWARK_STOPPED=0
 STALWART_STOPPED=0
+PLANE_STOPPED=0
 COMMITTED=0
 
 mkdir -p "$STAGING_ROOT"
@@ -23,6 +24,14 @@ flock -w 600 9
 
 recover_services() {
   rc=$?
+
+  if [ "$PLANE_STOPPED" -eq 1 ]; then
+    if /usr/local/sbin/plane-compose start plane-minio api worker beat-worker live >/dev/null; then
+      PLANE_STOPPED=0
+    else
+      printf 'RECOVERY_FAIL|service=plane\n' >&2
+    fi
+  fi
 
   if [ "$STALWART_STOPPED" -eq 1 ]; then
     if docker start stalwart >/dev/null; then
@@ -388,6 +397,56 @@ docker exec -i postgres \
 
 printf 'NEXTCLOUD_STAGE_GATE=PASS\n'
 
+printf '\n--- Plane database and uploads quiesce ---\n'
+
+# Keep shared PostgreSQL and unrelated applications outside Plane's quiesce.
+# Mark recovery before stopping, so a partial stop is recovered too.
+PLANE_STOPPED=1
+/usr/local/sbin/plane-compose stop --timeout 30 api worker beat-worker live plane-minio >/dev/null
+
+mkdir -p "$NEXT/plane/postgres" "$NEXT/plane/uploads" "$NEXT/plane/runtime"
+docker exec postgres pg_dump -U postgres -d plane -Fc >"$NEXT/plane/postgres/plane.dump"
+test -s "$NEXT/plane/postgres/plane.dump"
+docker exec -i postgres pg_restore -l <"$NEXT/plane/postgres/plane.dump" >/dev/null
+
+PLANE_UPLOADS="$(docker volume inspect plane_uploads --format '{{.Mountpoint}}')"
+test "$PLANE_UPLOADS" = '/var/lib/docker/volumes/plane_uploads/_data'
+rsync -a "$PLANE_UPLOADS/" "$NEXT/plane/uploads/"
+rsync -a /opt/plane/ "$NEXT/plane/runtime/"
+cp /usr/local/sbin/plane-compose "$NEXT/plane/runtime/plane-compose"
+cp /etc/nginx/sites-available/projects-escloud-us.conf "$NEXT/plane/runtime/projects-escloud-us.conf"
+python3 - "$NEXT/plane/runtime/images.json" <<'PY'
+import json
+import pathlib
+import subprocess
+import sys
+
+ids = subprocess.check_output(
+    ['/usr/local/sbin/plane-compose', 'ps', '-a', '-q'], text=True,
+).split()
+containers = json.loads(subprocess.check_output(['docker', 'inspect', *ids], text=True))
+expected = {'web', 'api', 'admin', 'space', 'live', 'worker', 'beat-worker', 'plane-redis', 'plane-mq', 'plane-minio'}
+assert {c['Config']['Labels']['com.docker.compose.service'] for c in containers} == expected
+images = json.loads(subprocess.check_output(
+    ['docker', 'image', 'inspect', *sorted({c['Image'] for c in containers})], text=True,
+))
+image_index = {i['Id']: i for i in images}
+manifest = {c['Config']['Labels']['com.docker.compose.service']: {
+    'reference': c['Config']['Image'], 'image_id': c['Image'],
+    'repo_digests': image_index[c['Image']]['RepoDigests'],
+} for c in containers}
+assert all(item['repo_digests'] for item in manifest.values())
+path = pathlib.Path(sys.argv[1])
+path.write_text(json.dumps(manifest, indent=2) + '\n')
+path.chmod(0o600)
+print('PLANE_RECOVERY_IMAGE_IDENTITIES=PASS')
+PY
+chmod 0600 "$NEXT/plane/postgres/plane.dump"
+
+/usr/local/sbin/plane-compose start plane-minio api worker beat-worker live >/dev/null
+PLANE_STOPPED=0
+printf 'PLANE_STAGE_GATE=PASS\n'
+
 printf '\n--- Manifest ---\n'
 
 cat >"$NEXT/MANIFEST.txt" <<EOF
@@ -401,6 +460,9 @@ mattermost=consolidated_postgres_pg_dump_plus_quiesced_app_files
 mail=quiesced_full_tree
 agent_sqlite=consistent_overlay
 nextcloud=consolidated_postgres_pg_dump_consistent
+plane=quiesced_logical_postgres_dump_plus_uploads_and_runtime
+plane_valkey=cache_pubsub_reconstructed_not_historical_state
+plane_rabbitmq=task_queue_reconstructed_not_historical_state
 EOF
 
 chmod 0600 "$NEXT/MANIFEST.txt"

@@ -1765,6 +1765,26 @@ def build_incidents(snapshot):
         ],
         docker_dependent=True,
     )
+    plane_containers = [
+        'plane-' + name + '-1' for name in (
+            'web', 'api', 'admin', 'space', 'live', 'worker', 'beat-worker',
+            'plane-redis', 'plane-mq', 'plane-minio',
+        )
+    ]
+    plane_state = _worst_state(
+        *[_item_state(apps.get(probe) or {}) for probe in ('plane', 'plane_api', 'plane_live')],
+        *[_item_state(docker.get(name) or {}) for name in plane_containers],
+    )
+    incidents['plane'] = _make_incident(
+        'plane', plane_state, 'Plane', 'EDGE', 'Application',
+        'projects.escloud.us project management may be unavailable.',
+        'Plane public/API/live/persistent runtime checks',
+        [_http_evidence('Plane public API', apps.get('plane') or {}),
+         _http_evidence('Plane local API', apps.get('plane_api') or {})]
+        + [_container_evidence(name, docker.get(name) or {}) for name in plane_containers],
+        confirmation='2 consecutive probes' if plane_state == 'FAIL' else None,
+        suppressed=bool(docker_parent_failed and plane_state != 'OK'),
+    )
     add_http_service(
         "projects-webdav",
         "webdav",

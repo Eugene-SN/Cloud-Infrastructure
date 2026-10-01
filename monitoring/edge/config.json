@@ -34,7 +34,17 @@
     "postgres",
     "nextcloud-app-1",
     "nextcloud-cron-1",
-    "nextcloud-redis-1"
+    "nextcloud-redis-1",
+    "plane-web-1",
+    "plane-api-1",
+    "plane-admin-1",
+    "plane-space-1",
+    "plane-live-1",
+    "plane-worker-1",
+    "plane-beat-worker-1",
+    "plane-plane-redis-1",
+    "plane-plane-mq-1",
+    "plane-plane-minio-1"
   ],
   "http_probes": {
     "n8n": "http://127.0.0.1:15678/healthz",
@@ -44,7 +54,10 @@
     "maintenance": "http://127.0.0.1:18070/status/",
     "nextcloud": "http://127.0.0.1:18080/status.php",
     "webdav": "http://127.0.0.1:18081/",
-    "t3_code": "http://127.0.0.1:3773/"
+    "t3_code": "http://127.0.0.1:3773/",
+    "plane": "https://projects.escloud.us/api/instances/",
+    "plane_api": "http://127.0.0.1:18111/",
+    "plane_live": "http://127.0.0.1:18114/live/health/"
   },
   "pve": {
     "host": "192.168.1.3",
