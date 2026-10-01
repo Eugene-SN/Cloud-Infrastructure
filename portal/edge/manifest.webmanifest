@@ -1,0 +1,17 @@
+{
+  "name": "ESCLOUD Control Deck",
+  "short_name": "ES Cloud",
+  "description": "Sovereign cloud infrastructure and edge telemetry control deck",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#121513",
+  "theme_color": "#121513",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

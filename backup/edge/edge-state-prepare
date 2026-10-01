@@ -1,0 +1,436 @@
+#!/bin/bash
+set -Eeuo pipefail
+
+STAGING_ROOT='/var/lib/backrest-staging/edge-state'
+
+RUN_ID="$(date '+%Y%m%dT%H%M%S').$$"
+
+NEXT="$STAGING_ROOT/next.$RUN_ID"
+CURRENT="$STAGING_ROOT/current"
+PREVIOUS="$STAGING_ROOT/previous"
+
+INJECT_FAILURE="${EDGE_STATE_PREPARE_INJECT_FAILURE:-}"
+
+MATTERMOST_STOPPED=0
+BULWARK_STOPPED=0
+STALWART_STOPPED=0
+COMMITTED=0
+
+mkdir -p "$STAGING_ROOT"
+
+exec 9>/run/lock/edge-state-prepare.lock
+flock -w 600 9
+
+recover_services() {
+  rc=$?
+
+  if [ "$STALWART_STOPPED" -eq 1 ]; then
+    if docker start stalwart >/dev/null; then
+      STALWART_STOPPED=0
+    else
+      printf 'RECOVERY_FAIL|container=stalwart\n' >&2
+    fi
+  fi
+
+  if [ "$BULWARK_STOPPED" -eq 1 ]; then
+    if docker start bulwark >/dev/null; then
+      BULWARK_STOPPED=0
+    else
+      printf 'RECOVERY_FAIL|container=bulwark\n' >&2
+    fi
+  fi
+
+  if [ "$MATTERMOST_STOPPED" -eq 1 ]; then
+    if docker start mattermost-mattermost-1 >/dev/null; then
+      MATTERMOST_STOPPED=0
+    else
+      printf 'RECOVERY_FAIL|container=mattermost-mattermost-1\n' >&2
+    fi
+  fi
+
+  if [ "$COMMITTED" -eq 0 ]; then
+    rm -rf "$NEXT"
+  fi
+
+  return "$rc"
+}
+
+trap recover_services EXIT
+
+rm -rf "$NEXT"
+mkdir -p "$NEXT"
+
+printf 'PREPARE_RUN_ID=%s\n' "$RUN_ID"
+
+printf '\n--- n8n ---\n'
+
+mkdir -p "$NEXT/n8n"
+
+rsync -a \
+  --exclude='database.sqlite' \
+  --exclude='database.sqlite-wal' \
+  --exclude='database.sqlite-shm' \
+  /srv/n8n/ \
+  "$NEXT/n8n/"
+
+python3 - \
+  /srv/n8n/database.sqlite \
+  "$NEXT/n8n/database.sqlite" <<'PY'
+import os
+import sqlite3
+import stat
+import sys
+
+src, dst = sys.argv[1:3]
+
+source = sqlite3.connect(
+    f"file:{src}?mode=ro",
+    uri=True,
+    timeout=60,
+)
+
+target = sqlite3.connect(dst)
+
+with target:
+    source.backup(target)
+
+result = target.execute(
+    "PRAGMA integrity_check"
+).fetchone()[0]
+
+source.close()
+target.close()
+
+if result != "ok":
+    raise SystemExit(
+        f"N8N_SQLITE_INTEGRITY_FAIL={result}"
+    )
+
+st = os.stat(src)
+os.chown(dst, st.st_uid, st.st_gid)
+os.chmod(dst, stat.S_IMODE(st.st_mode))
+
+print("N8N_STAGE_GATE=PASS")
+PY
+
+printf '\n--- Authelia ---\n'
+
+mkdir -p "$NEXT/authelia"
+
+rsync -a \
+  --exclude='data/db.sqlite3' \
+  --exclude='data/db.sqlite3-wal' \
+  --exclude='data/db.sqlite3-shm' \
+  /srv/authelia/ \
+  "$NEXT/authelia/"
+
+mkdir -p "$NEXT/authelia/data"
+
+python3 - \
+  /srv/authelia/data/db.sqlite3 \
+  "$NEXT/authelia/data/db.sqlite3" <<'PY'
+import os
+import sqlite3
+import stat
+import sys
+
+src, dst = sys.argv[1:3]
+
+source = sqlite3.connect(
+    f"file:{src}?mode=ro",
+    uri=True,
+    timeout=60,
+)
+
+target = sqlite3.connect(dst)
+
+with target:
+    source.backup(target)
+
+result = target.execute(
+    "PRAGMA integrity_check"
+).fetchone()[0]
+
+source.close()
+target.close()
+
+if result != "ok":
+    raise SystemExit(
+        f"AUTHELIA_SQLITE_INTEGRITY_FAIL={result}"
+    )
+
+st = os.stat(src)
+os.chown(dst, st.st_uid, st.st_gid)
+os.chmod(dst, stat.S_IMODE(st.st_mode))
+
+print("AUTHELIA_STAGE_GATE=PASS")
+PY
+
+printf '\n--- Consolidated PostgreSQL globals ---\n'
+
+mkdir -p "$NEXT/postgres"
+
+docker exec postgres \
+  pg_dumpall \
+  -U postgres \
+  --globals-only \
+  >"$NEXT/postgres/globals.sql"
+
+if [ ! -s "$NEXT/postgres/globals.sql" ]; then
+  printf 'POSTGRES_GLOBALS_EMPTY\n' >&2
+  exit 1
+fi
+
+chmod 0600 "$NEXT/postgres/globals.sql"
+
+printf 'POSTGRES_GLOBALS_STAGE_GATE=PASS\n'
+
+printf '\n--- Mattermost quiesce ---\n'
+
+docker stop \
+  --time 30 \
+  mattermost-mattermost-1 \
+  >/dev/null
+
+MATTERMOST_STOPPED=1
+
+if [ "$INJECT_FAILURE" = 'after-mattermost-stop' ]; then
+  printf 'INJECTED_FAILURE=after-mattermost-stop\n' >&2
+  exit 97
+fi
+
+mkdir -p \
+  "$NEXT/mattermost/app" \
+  "$NEXT/mattermost/postgres"
+
+docker exec postgres \
+  pg_dump \
+  -U postgres \
+  -d mattermost \
+  -Fc \
+  >"$NEXT/mattermost/postgres/mattermost.dump"
+
+if [ ! -s "$NEXT/mattermost/postgres/mattermost.dump" ]; then
+  printf 'MATTERMOST_DUMP_EMPTY\n' >&2
+  exit 1
+fi
+
+docker exec -i postgres \
+  pg_restore -l \
+  <"$NEXT/mattermost/postgres/mattermost.dump" \
+  >/dev/null
+
+rsync -a \
+  /srv/mattermost/volumes/app/mattermost/ \
+  "$NEXT/mattermost/app/"
+
+docker start mattermost-mattermost-1 >/dev/null
+MATTERMOST_STOPPED=0
+
+printf 'MATTERMOST_STAGE_GATE=PASS\n'
+
+printf '\n--- Mail quiesce ---\n'
+
+docker stop \
+  --time 30 \
+  bulwark \
+  >/dev/null
+BULWARK_STOPPED=1
+
+docker stop \
+  --time 30 \
+  stalwart \
+  >/dev/null
+STALWART_STOPPED=1
+
+if [ "$INJECT_FAILURE" = 'after-mail-stop' ]; then
+  printf 'INJECTED_FAILURE=after-mail-stop\n' >&2
+  exit 98
+fi
+
+mkdir -p "$NEXT/mail"
+
+rsync -a \
+  /srv/mail/ \
+  "$NEXT/mail/"
+
+docker start stalwart >/dev/null
+STALWART_STOPPED=0
+
+docker start bulwark >/dev/null
+BULWARK_STOPPED=0
+
+printf 'MAIL_STAGE_GATE=PASS\n'
+
+printf '\n--- Agent SQLite overlay ---\n'
+
+python3 - "$NEXT/sqlite-overlay" <<'PY'
+import os
+import pathlib
+import sqlite3
+import stat
+import sys
+
+dest_root = pathlib.Path(sys.argv[1])
+
+roots = [
+    pathlib.Path("/home/core/.hermes"),
+    pathlib.Path("/home/core/.codex"),
+    pathlib.Path("/home/core/.gemini"),
+]
+
+candidates = []
+
+for root in roots:
+    if not root.exists():
+        continue
+
+    for path in root.rglob("*"):
+        if not path.is_file():
+            continue
+
+        if path.name.endswith(("-wal", "-shm")):
+            continue
+
+        if path.suffix.lower() in {
+            ".db",
+            ".sqlite",
+            ".sqlite3",
+        }:
+            candidates.append(path)
+
+count = 0
+
+for src in sorted(candidates):
+    rel = pathlib.Path(str(src).lstrip("/"))
+    dst = dest_root / rel
+
+    dst.parent.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    source = sqlite3.connect(
+        f"file:{src}?mode=ro",
+        uri=True,
+        timeout=60,
+    )
+
+    target = sqlite3.connect(dst)
+
+    with target:
+        source.backup(target)
+
+    result = target.execute(
+        "PRAGMA integrity_check"
+    ).fetchone()[0]
+
+    source.close()
+    target.close()
+
+    if result != "ok":
+        raise RuntimeError(
+            f"{src}: integrity={result}"
+        )
+
+    st = os.stat(src)
+
+    os.chown(
+        dst,
+        st.st_uid,
+        st.st_gid,
+    )
+
+    os.chmod(
+        dst,
+        stat.S_IMODE(st.st_mode),
+    )
+
+    print(
+        f"SQLITE_STAGE"
+        f"|source={src}"
+        f"|target={dst}"
+        f"|integrity=ok"
+    )
+
+    count += 1
+
+print(f"AGENT_SQLITE_STAGE_COUNT={count}")
+
+if count == 0:
+    raise SystemExit(
+        "AGENT_SQLITE_STAGE_GATE=FAIL"
+    )
+
+print("AGENT_SQLITE_STAGE_GATE=PASS")
+PY
+
+printf '\n--- Nextcloud database dump ---\n'
+
+mkdir -p "$NEXT/nextcloud/postgres"
+
+docker exec postgres \
+  pg_dump \
+  -U postgres \
+  -d nextcloud \
+  -Fc \
+  >"$NEXT/nextcloud/postgres/nextcloud.dump"
+
+if [ ! -s "$NEXT/nextcloud/postgres/nextcloud.dump" ]; then
+  printf 'NEXTCLOUD_DUMP_EMPTY\n' >&2
+  exit 1
+fi
+
+docker exec -i postgres \
+  pg_restore -l \
+  <"$NEXT/nextcloud/postgres/nextcloud.dump" \
+  >/dev/null
+
+printf 'NEXTCLOUD_STAGE_GATE=PASS\n'
+
+printf '\n--- Manifest ---\n'
+
+cat >"$NEXT/MANIFEST.txt" <<EOF
+schema=edge-state-staging-v1
+created_at=$(date --iso-8601=seconds)
+hostname=$(hostname -s)
+n8n=consistent_sqlite_plus_files
+authelia=consistent_sqlite_plus_files
+postgres_globals=pg_dumpall_globals_only
+mattermost=consolidated_postgres_pg_dump_plus_quiesced_app_files
+mail=quiesced_full_tree
+agent_sqlite=consistent_overlay
+nextcloud=consolidated_postgres_pg_dump_consistent
+EOF
+
+chmod 0600 "$NEXT/MANIFEST.txt"
+
+printf '\n--- Commit staging generation ---\n'
+
+rm -rf "$PREVIOUS"
+
+if [ -e "$CURRENT" ]; then
+  mv "$CURRENT" "$PREVIOUS"
+fi
+
+if mv "$NEXT" "$CURRENT"; then
+  COMMITTED=1
+else
+  rc=$?
+
+  if [ -e "$PREVIOUS" ] &&
+     [ ! -e "$CURRENT" ]
+  then
+    mv "$PREVIOUS" "$CURRENT"
+  fi
+
+  exit "$rc"
+fi
+
+rm -rf "$PREVIOUS"
+
+printf 'STAGING_COMMIT_GATE=PASS\n'
+printf 'STAGING_CURRENT=%s\n' "$CURRENT"
+
+trap - EXIT
+exit 0

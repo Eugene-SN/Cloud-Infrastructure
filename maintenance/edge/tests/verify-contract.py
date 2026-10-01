@@ -25,14 +25,14 @@ assert maintenance["target_model"] == "update_units_v5"
 assert manifest["schema"] == 2
 assert manifest["ownership_mode"] == "native_first_hybrid"
 assert "monitor_only" not in manifest
-assert len(manual) == 16
+assert len(manual) == 15
 assert native == {"HERMES", "CODEX", "UBUNTU_SECURITY", "ANTIGRAVITY"}
 assert set(index) == manual
 assert "HERMES" not in index
 assert "CODEX" not in index
 assert "ANTIGRAVITY" not in index
-assert maintenance["summary"]["TOTAL"] == 16
-assert maintenance["summary"]["ACTIONABLE_TARGETS"] == 16
+assert maintenance["summary"]["TOTAL"] == 15
+assert maintenance["summary"]["ACTIONABLE_TARGETS"] == 15
 assert maintenance["summary"]["CLI_TARGETS"] == 0
 assert "MONITOR_ONLY_TARGETS" not in maintenance["summary"]
 assert maintenance["summary"]["APT_MANAGED_COMPONENTS"] == 8
@@ -42,7 +42,7 @@ for target in manual:
     assert index[target]["update_owner"] == "maintenance_manual"
 
 docker = [r for r in rows if r["type"] == "DOCKER"]
-assert len(docker) == 9
+assert len(docker) == 8
 required = {
     "application_version",
     "available_application_version",
@@ -77,19 +77,7 @@ assert postgresql_unit["service"] == "postgres"
 print("POSTGRESQL_IMAGE_TRACK=18")
 print("POSTGRESQL_MAJOR_UPGRADE_DISCOVERY=DISABLED")
 
-openproject = next(r for r in docker if r["component"] == "OPENPROJECT")
-assert openproject["image_track"] == "17-slim"
-assert openproject["source"] == "OPENPROJECT_UPSTREAM_STABLE_AND_OFFICIAL_DOCKER"
-assert openproject["application_version"].startswith("17.")
-assert openproject["available_application_version"].startswith("17.")
-openproject_unit = next(u for u in manifest["units"] if u["id"] == "OPENPROJECT")
-assert openproject_unit["driver"] == "openproject_compose"
-assert openproject_unit["directory"] == "/opt/openproject"
-assert openproject_unit["branch"] == "stable/17"
-assert openproject_unit["files"] == ["docker-compose.yml", "docker-compose.override.yml"]
-assert (root / "scripts/update-openproject").is_file()
 assert not (root / "playbooks/updates/nextcloud-postgresql.yml").exists()
-assert (root / "playbooks/updates/openproject.yml").exists()
 
 stalwart = next(r for r in docker if r["component"] == "STALWART")
 stalwart_available = stalwart["available_application_version"]
@@ -122,13 +110,11 @@ assert all(enablement["enabled"].values())
 
 assert 'enablement.get("schema") != 1' not in manual_update_source
 assert manual_update_source.count('enablement.get("schema") != 2') >= 1
-assert 'driver in ("compose", "nextcloud_compose", "stalwart_compose", "openproject_compose")' in manual_update_source
+assert 'driver in ("compose", "nextcloud_compose", "stalwart_compose")' in manual_update_source
 assert 'elif driver == "nextcloud_compose":' in manual_update_source
 assert 'elif driver == "stalwart_compose":' in manual_update_source
-assert 'elif driver == "openproject_compose":' in manual_update_source
 assert actions["components"]["NEXTCLOUD"]["managed_by"] == "docker"
 assert actions["components"]["STALWART"]["managed_by"] == "docker"
-assert actions["components"]["OPENPROJECT"]["managed_by"] == "docker"
 assert "NEXTCLOUD_POSTGRESQL" not in actions["components"]
 assert "NEXTCLOUD_POSTGRESQL" not in {u["id"] for u in manifest["units"]}
 assert "NEXTCLOUD_POSTGRESQL" not in templates["components"]
@@ -146,18 +132,14 @@ assert '"projects-webdav.service"' in health_source
 assert 'unit.get("health_services")' in health_source
 assert '"nextcloud_compose"' in health_source
 assert '"stalwart_compose"' in health_source
-assert '"openproject_compose"' in health_source
 assert "DOCKER_UNITS=" in health_source
 assert "DOCKER_SERVICES=" in health_source
 
 # Master health coverage verification
-COMPOSE_DRIVERS = ("compose", "nextcloud_compose", "stalwart_compose", "openproject_compose")
+COMPOSE_DRIVERS = ("compose", "nextcloud_compose", "stalwart_compose")
 compose_family_units = [u for u in manifest["units"] if u.get("driver") in COMPOSE_DRIVERS]
-assert len(compose_family_units) == 9
+assert len(compose_family_units) == 8
 
-op_manifest = next(u for u in manifest["units"] if u["id"] == "OPENPROJECT")
-assert "seeder" not in op_manifest["health_services"]
-assert set(op_manifest["health_services"]) == {"web", "worker", "cron", "cache", "proxy", "autoheal"}
 
 nc_manifest = next(u for u in manifest["units"] if u["id"] == "NEXTCLOUD")
 assert set(nc_manifest["health_services"]) == {"app", "cron"}
@@ -165,11 +147,7 @@ assert set(nc_manifest["health_services"]) == {"app", "cron"}
 sw_manifest = next(u for u in manifest["units"] if u["id"] == "STALWART")
 assert set(sw_manifest["health_services"]) == {"stalwart"}
 
-# OpenProject fail-closed discovery verification
 collector_source = (root / "scripts/maintenance-versions-collector").read_text(encoding="utf-8")
-assert 'version = "17.8.0"' not in collector_source
-assert "version = '17.8.0'" not in collector_source
-assert 're.match(r"^17\\.[0-9]+(\\.[0-9]+)?$", tag_name)' in collector_source
 
 # n8n stable aliases can move beyond the first Docker Hub Tags API page when
 # nightly tags are published. Discovery must paginate without a version fallback.
@@ -178,30 +156,12 @@ assert "while not any(" in collector_source
 assert 'next_url = page.get("next")' in collector_source
 assert "page_count >= n8n_alias_page_limit" in collector_source
 
-# OpenProject update helper verification
-update_op_source = (root / "scripts/update-openproject").read_text(encoding="utf-8")
-assert "--remove-orphans" not in update_op_source
-assert "--target-version" in update_op_source
-assert "--target-track" in update_op_source
-assert "--target-digest" in update_op_source
-assert "pinned_image_id" in update_op_source
-assert "web_image_id" in update_op_source
-assert "web_image_id != pinned_image_id" in update_op_source
-assert "openproject-db-1" in update_op_source
-assert "openproject-hocuspocus-1" in update_op_source
 
-# Verify manual-update passes target identity to openproject helper
 assert '"--target-version"' in manual_update_source
 assert '"--target-track"' in manual_update_source
 assert '"--target-digest"' in manual_update_source
 
-# Regression test: helper argument rejection
 import subprocess
-op_script = str(root / "scripts/update-openproject")
-assert subprocess.run([sys.executable, op_script], capture_output=True).returncode != 0
-assert subprocess.run([sys.executable, op_script, "--target-version", "18.0.0", "--target-track", "17-slim", "--target-digest", "sha256:" + "a" * 64], capture_output=True).returncode != 0
-assert subprocess.run([sys.executable, op_script, "--target-version", "17.8.0", "--target-track", "17", "--target-digest", "sha256:" + "a" * 64], capture_output=True).returncode != 0
-assert subprocess.run([sys.executable, op_script, "--target-version", "17.8.0", "--target-track", "17-slim", "--target-digest", "invalid"], capture_output=True).returncode != 0
 
 assert actions["schema"] == 10
 assert actions["target_model"] == "update_units_v5"
@@ -226,7 +186,6 @@ assert not (root / "playbooks/updates/antigravity.yml").exists()
 for path in (
     "rclone.yml",
     "nextcloud.yml",
-    "openproject.yml",
     "nextcloud-redis.yml",
 ):
     assert (root / "playbooks/updates" / path).is_file()

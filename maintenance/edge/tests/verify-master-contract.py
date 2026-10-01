@@ -18,7 +18,7 @@ manual = [u["id"] for u in manifest["units"]]
 assert manifest["schema"] == 2
 assert enablement["schema"] == 2
 assert enablement["master"] is True
-assert len(manual) == 16
+assert len(manual) == 15
 assert set(manual) == set(manifest["master_order"])
 assert set(enablement["enabled"]) == set(manual)
 assert manifest["master_order"][-1] == "APT_EDGE"
@@ -43,10 +43,10 @@ def fixture(status="CURRENT"):
         "generated_at": now.isoformat(),
         "rows": rows,
         "summary": {
-            "TOTAL": 16,
-            "ACTIONABLE_TARGETS": 16,
-            "CURRENT": 16 if status == "CURRENT" else 0,
-            "UPDATE_AVAILABLE": 0 if status == "CURRENT" else 16,
+            "TOTAL": 15,
+            "ACTIONABLE_TARGETS": 15,
+            "CURRENT": 15 if status == "CURRENT" else 0,
+            "UPDATE_AVAILABLE": 0 if status == "CURRENT" else 15,
             "CHECK_FAILED": 0,
             "REBOOT_REQUIRED": 0,
         },
@@ -73,7 +73,7 @@ assert "--plan-only" in help_result.stdout
 one_update = fixture()
 target = "AUTHELIA"
 next(r for r in one_update["rows"] if r["component"] == target)["status"] = "UPDATE_AVAILABLE"
-one_update["summary"]["CURRENT"] = 15
+one_update["summary"]["CURRENT"] = 14
 one_update["summary"]["UPDATE_AVAILABLE"] = 1
 assert master["validate_plan"](manifest, one_update, now)[2][target]["status"] == "UPDATE_AVAILABLE"
 assert post["validate"](manifest, one_update, now)[0] is False

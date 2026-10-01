@@ -3106,3 +3106,22 @@ The isolated `selflearning` experiment proved that Hermes can create and reuse a
 
 **Supersedes:** the previous sequencing that required Plane acceptance before irreversible OpenProject cleanup. It does not supersede the OpenProject historical rebuild contract.
 
+---
+
+## 2026-10-01T18:55:12+03:00 — OpenProject edge decommission and clean-state acceptance
+
+**Status:** ACCEPTED
+
+**Decision:** Complete OpenProject decommission before any Plane deployment. Remove the six service containers, three owned networks, opdata volume, dedicated database/role, unused application/proxy/cache/autoheal images, application/secrets tree, ingress, dedicated GitHub/n8n/Mattermost/Stalwart objects, backup/monitoring/Maintenance/Semaphore/provisioning hooks and portal tile. Additional proven test/orphan/Buildx residue is removed. No stopped rollback runtime is retained.
+
+The operator explicitly authorized one recreation of the shared PostgreSQL container to remove immutable OpenProject Env metadata. The exact image, data/init mounts, network, remaining Env values and existing cluster were preserved; only the obsolete entries disappeared. Shared infrastructure and unrelated service/integration objects remain intact.
+
+**Acceptance basis:** Independent current-state residue sweep has zero active OpenProject references. PostgreSQL/Mattermost/Nextcloud logical gates, expected shared network membership, n8n/Stalwart/Hermes, all remaining public ingress, portal responsive rendering, real Backrest flow 353/snapshot `723f16c9`, Edge Monitor, Maintenance Refresh/contract tests and Master Health PASS. Full evidence: `OPENPROJECT_DECOMMISSION_ACCEPTANCE_2026-10-01.md`.
+
+**Recovery:** Preserve both OpenProject recovery documents, historical acceptances/decisions and Git history unchanged. Matched historical DB dump/opdata recovery remains available in Restic snapshot `79ac237d`; no ad-hoc runtime rollback copies remain.
+
+**External state:** GitHub webhook 689080899 deleted and verified absent. Apple Calendar/iCloud subscription requires an external manual client-side check. `projects.escloud.us` DNS/shared TLS namespace remains reserved for future Plane, with no project-management backend/vhost/placeholder. `PLANE_DEPLOYMENT=NOT_STARTED`.
+
+**Final marker:** `OPENPROJECT_EDGE_DECOMMISSION=PASS`.
+
+**Supersession:** This completes the accepted 2026-10-01 clean-decommission-before-Plane decision and supersedes prior OpenProject facts only as current/runtime state. Historical decisions and recovery references remain valid historical evidence.

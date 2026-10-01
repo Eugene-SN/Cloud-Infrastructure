@@ -1,0 +1,2855 @@
+#!/usr/bin/env python3
+
+import concurrent.futures
+import http.client
+import json
+import os
+import shutil
+import signal
+import socket
+import sqlite3
+import subprocess
+import time
+import xml.etree.ElementTree as ET
+
+from datetime import datetime, timezone
+from pathlib import Path
+from urllib.parse import urlsplit
+
+
+CONFIG_PATH=Path("/etc/edge-monitor/config.json")
+WEBHOOK_PATH=Path(
+    "/etc/edge-monitor/mattermost-webhook.url"
+)
+
+RUN_DIR=Path("/run/edge-monitor")
+SNAPSHOT_PATH=RUN_DIR / "snapshot.json"
+
+STATE_DIR=Path("/var/lib/edge-monitor")
+STATE_PATH=STATE_DIR / "state.json"
+
+STOP=False
+START_MONOTONIC=time.monotonic()
+
+
+def stop_handler(signum, frame):
+    global STOP
+    STOP=True
+
+
+signal.signal(signal.SIGTERM, stop_handler)
+signal.signal(signal.SIGINT, stop_handler)
+
+
+def iso_now():
+    return datetime.now(
+        timezone.utc
+    ).isoformat()
+
+
+def atomic_json_write(path, data, mode=0o644):
+    path.parent.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    tmp=path.with_name(
+        path.name + ".tmp"
+    )
+
+    tmp.write_text(
+        json.dumps(
+            data,
+            ensure_ascii=False,
+            separators=(",",":"),
+        ) + "\n",
+        encoding="utf-8",
+    )
+
+    os.chmod(tmp, mode)
+    os.replace(tmp, path)
+
+
+def load_json(path, default):
+    try:
+        return json.loads(
+            path.read_text(
+                encoding="utf-8"
+            )
+        )
+    except Exception:
+        return default
+
+
+def run_text(argv, timeout=5):
+    proc=None
+
+    try:
+        proc=subprocess.Popen(
+            argv,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            start_new_session=True,
+        )
+
+        try:
+            stdout,stderr=proc.communicate(
+                timeout=timeout
+            )
+
+        except subprocess.TimeoutExpired:
+            try:
+                os.killpg(
+                    proc.pid,
+                    signal.SIGTERM,
+                )
+            except Exception:
+                pass
+
+            try:
+                stdout,stderr=proc.communicate(
+                    timeout=0.5
+                )
+            except Exception:
+                try:
+                    os.killpg(
+                        proc.pid,
+                        signal.SIGKILL,
+                    )
+                except Exception:
+                    pass
+
+                stdout,stderr=proc.communicate()
+
+            return None
+
+        if proc.returncode != 0:
+            return None
+
+        return stdout
+
+    except Exception:
+        return None
+
+
+def probe_tcp(host, port, timeout=2):
+    started=time.monotonic()
+
+    try:
+        with socket.create_connection(
+            (host, int(port)),
+            timeout=timeout,
+        ):
+            pass
+
+        return {
+            "ok":True,
+            "latency_ms":round(
+                (
+                    time.monotonic()
+                    - started
+                ) * 1000
+            ),
+            "error":None,
+        }
+
+    except Exception as exc:
+        return {
+            "ok":False,
+            "latency_ms":round(
+                (
+                    time.monotonic()
+                    - started
+                ) * 1000
+            ),
+            "error":
+                (
+                    f"{type(exc).__name__}: "
+                    f"{exc}"
+                )[:180],
+        }
+
+
+def http_get(url, timeout=2):
+    parsed=urlsplit(url)
+
+    port=parsed.port
+    if port is None:
+        port=443 if parsed.scheme == "https" else 80
+
+    path=parsed.path or "/"
+
+    if parsed.query:
+        path += "?" + parsed.query
+
+    conn=None
+    started=time.monotonic()
+
+    try:
+        if parsed.scheme == "https":
+            import ssl
+
+            context=ssl._create_unverified_context()
+
+            conn=http.client.HTTPSConnection(
+                parsed.hostname,
+                port,
+                timeout=timeout,
+                context=context,
+            )
+
+        else:
+            conn=http.client.HTTPConnection(
+                parsed.hostname,
+                port,
+                timeout=timeout,
+            )
+
+        conn.request(
+            "GET",
+            path,
+            headers={
+                "User-Agent":
+                    "edge-monitor/1.0",
+
+                "Connection":"close",
+            },
+        )
+
+        response=conn.getresponse()
+        body=response.read(1024 * 1024)
+
+        code=int(response.status)
+
+        ok=(
+            200 <= code < 400
+            or code in (401,403)
+        )
+
+        return {
+            "ok":ok,
+            "code":code,
+            "body":body,
+            "latency_ms":round(
+                (
+                    time.monotonic()
+                    - started
+                ) * 1000
+            ),
+            "error":None,
+        }
+
+    except Exception as exc:
+        return {
+            "ok":False,
+            "code":None,
+            "body":b"",
+            "latency_ms":round(
+                (
+                    time.monotonic()
+                    - started
+                ) * 1000
+            ),
+            "error":
+                (
+                    f"{type(exc).__name__}: "
+                    f"{exc}"
+                )[:180],
+        }
+
+    finally:
+        if conn is not None:
+            try:
+                conn.close()
+            except Exception:
+                pass
+
+
+def http_json(url, headers=None, timeout=3):
+    parsed=urlsplit(url)
+
+    port=parsed.port
+    if port is None:
+        port=443 if parsed.scheme == "https" else 80
+
+    path=parsed.path or "/"
+
+    if parsed.query:
+        path += "?" + parsed.query
+
+    conn=None
+
+    try:
+        if parsed.scheme == "https":
+            import ssl
+
+            context=ssl._create_unverified_context()
+
+            conn=http.client.HTTPSConnection(
+                parsed.hostname,
+                port,
+                timeout=timeout,
+                context=context,
+            )
+
+        else:
+            conn=http.client.HTTPConnection(
+                parsed.hostname,
+                port,
+                timeout=timeout,
+            )
+
+        h={
+            "User-Agent":"edge-monitor/1.0",
+            "Connection":"close",
+        }
+
+        if headers:
+            h.update(headers)
+
+        conn.request(
+            "GET",
+            path,
+            headers=h,
+        )
+
+        response=conn.getresponse()
+        raw=response.read(
+            4 * 1024 * 1024
+        )
+
+        if not (
+            200 <= int(response.status) < 300
+        ):
+            return None
+
+        return json.loads(
+            raw.decode(
+                "utf-8",
+                errors="strict",
+            )
+        )
+
+    except Exception:
+        return None
+
+    finally:
+        if conn is not None:
+            try:
+                conn.close()
+            except Exception:
+                pass
+
+
+def state_rank(value):
+    return {
+        "OK":0,
+        "DEGRADED":1,
+        "FAIL":2,
+    }.get(value,2)
+
+
+def aggregate(states):
+    if not states:
+        return "OK"
+
+    return max(
+        states,
+        key=state_rank,
+    )
+
+
+class ProbeTracker:
+    def __init__(self, threshold):
+        self.threshold=threshold
+        self.entries={}
+
+    def observe(
+        self,
+        key,
+        ok,
+        detail=None,
+    ):
+        prev=self.entries.get(
+            key,
+            {
+                "state":None,
+                "failures":0,
+                "last_success_at":None,
+            },
+        )
+
+        now=iso_now()
+
+        if ok:
+            failures=0
+            state="OK"
+            last_success=now
+
+        else:
+            failures=(
+                int(
+                    prev.get(
+                        "failures",
+                        0,
+                    )
+                )
+                + 1
+            )
+
+            if failures >= self.threshold:
+                state="FAIL"
+            else:
+                state=prev.get("state")
+
+                if state is None:
+                    state="OK"
+
+            last_success=prev.get(
+                "last_success_at"
+            )
+
+        entry={
+            "state":state,
+            "failures":failures,
+            "last_probe_at":now,
+            "last_success_at":last_success,
+            "detail":detail,
+        }
+
+        self.entries[key]=entry
+        return dict(entry)
+
+
+PREV_CPU_BUSY = None
+PREV_CPU_TOTAL = None
+
+
+def read_cpu_times():
+    try:
+        lines = (
+            Path("/proc/stat")
+            .read_text(encoding="utf-8")
+            .splitlines()
+        )
+        for line in lines:
+            if line.startswith("cpu "):
+                parts = [float(x) for x in line.split()[1:]]
+                user, nice, system, idle, iowait, irq, softirq, steal = parts[:8]
+                idle_time = idle + iowait
+                busy_time = user + nice + system + irq + softirq + steal
+                total = idle_time + busy_time
+                return busy_time, total
+    except Exception:
+        pass
+    return None, None
+
+
+def read_cpu_percent():
+    global PREV_CPU_BUSY, PREV_CPU_TOTAL
+    busy, total = read_cpu_times()
+    if busy is None or total is None:
+        return None
+
+    pct = None
+    if PREV_CPU_BUSY is not None and PREV_CPU_TOTAL is not None:
+        delta_total = total - PREV_CPU_TOTAL
+        delta_busy = busy - PREV_CPU_BUSY
+        if delta_total > 0:
+            pct = round(
+                max(0.0, min(100.0, (delta_busy / delta_total) * 100.0)),
+                1,
+            )
+
+    PREV_CPU_BUSY = busy
+    PREV_CPU_TOTAL = total
+    return pct
+
+
+def read_memory():
+    values={}
+
+    try:
+        lines=Path(
+            "/proc/meminfo"
+        ).read_text(
+            encoding="utf-8"
+        ).splitlines()
+
+        for line in lines:
+            if ":" not in line:
+                continue
+
+            key,value=line.split(
+                ":",
+                1,
+            )
+
+            fields=value.strip().split()
+
+            if fields:
+                values[key]=int(
+                    fields[0]
+                ) * 1024
+
+    except Exception:
+        return {}
+
+    total=values.get("MemTotal")
+    available=values.get(
+        "MemAvailable"
+    )
+
+    used_percent=None
+
+    if total and available is not None:
+        used_percent=round(
+            (
+                total - available
+            ) * 100 / total,
+            2,
+        )
+
+    return {
+        "total_bytes":total,
+        "available_bytes":available,
+        "used_percent":used_percent,
+    }
+
+
+def collect_fast(config):
+    load=[]
+
+    try:
+        fields=Path(
+            "/proc/loadavg"
+        ).read_text(
+            encoding="utf-8"
+        ).split()
+
+        load=[
+            float(fields[0]),
+            float(fields[1]),
+            float(fields[2]),
+        ]
+    except Exception:
+        pass
+
+    root=shutil.disk_usage("/")
+    cores=os.cpu_count() or 2
+    cpu_pct=read_cpu_percent()
+
+    return {
+        "updated_at":iso_now(),
+
+        "uptime_s":round(
+            time.monotonic()
+            - START_MONOTONIC,
+            1,
+        ),
+
+        "cpu":{
+            "used_percent":cpu_pct,
+            "cores":cores,
+        },
+
+        "load":load,
+
+        "memory":read_memory(),
+
+        "root_fs":{
+            "total_bytes":root.total,
+            "used_bytes":root.used,
+            "free_bytes":root.free,
+            "used_percent":round(
+                root.used
+                * 100
+                / root.total,
+                2,
+            ),
+        },
+    }
+
+
+def collect_system_units(
+    config,
+    tracker,
+):
+    result={}
+
+    for unit in config[
+        "system_units"
+    ]:
+        raw=run_text(
+            [
+                "systemctl",
+                "is-active",
+                unit,
+            ],
+            timeout=3,
+        )
+
+        active=(
+            isinstance(raw,str)
+            and raw.strip() == "active"
+        )
+
+        result[unit]=tracker.observe(
+            "system:" + unit,
+            active,
+            {
+                "active":
+                    active
+            },
+        )
+
+    return result
+
+
+def collect_user_units(
+    config,
+    tracker,
+):
+    result={}
+
+    for unit in config[
+        "core_user_units"
+    ]:
+        raw=run_text(
+            [
+                "runuser",
+                "-u",
+                "core",
+                "--",
+                "env",
+                "XDG_RUNTIME_DIR=/run/user/1000",
+                "systemctl",
+                "--user",
+                "is-active",
+                unit,
+            ],
+            timeout=3,
+        )
+
+        active=(
+            isinstance(raw,str)
+            and raw.strip() == "active"
+        )
+
+        result[unit]=tracker.observe(
+            "user-systemd:" + unit,
+            active,
+            {
+                "active":
+                    active
+            },
+        )
+
+    return result
+
+
+def collect_docker(
+    config,
+    tracker,
+):
+    result={}
+
+    for name in config[
+        "docker_containers"
+    ]:
+        raw=run_text(
+            [
+                "docker",
+                "inspect",
+                "--format",
+                (
+                    "{{.State.Status}}|"
+                    "{{if .State.Health}}"
+                    "{{.State.Health.Status}}"
+                    "{{end}}"
+                ),
+                name,
+            ],
+            timeout=4,
+        )
+
+        status=None
+        health=None
+
+        if isinstance(raw,str):
+            fields=raw.strip().split(
+                "|",
+                1,
+            )
+
+            status=fields[0]
+
+            if len(fields) > 1:
+                health=fields[1] or None
+
+        ok=(
+            status == "running"
+            and health not in (
+                "unhealthy",
+                "starting",
+            )
+        )
+
+        result[name]=tracker.observe(
+            "docker:" + name,
+            ok,
+            {
+                "status":status,
+                "health":health,
+            },
+        )
+
+    return result
+
+
+def collect_http_probes(
+    config,
+    tracker,
+):
+    urls=config[
+        "http_probes"
+    ]
+
+    raw_results={}
+
+    with concurrent.futures.ThreadPoolExecutor(
+        max_workers=max(
+            1,
+            len(urls),
+        )
+    ) as pool:
+
+        futures={
+            pool.submit(
+                http_get,
+                url,
+                2,
+            ): key
+
+            for key,url
+            in urls.items()
+        }
+
+        for future in concurrent.futures.as_completed(
+            futures
+        ):
+            key=futures[future]
+
+            try:
+                raw_results[key]=future.result()
+            except Exception as exc:
+                raw_results[key]={
+                    "ok":False,
+                    "code":None,
+                    "latency_ms":None,
+                    "error":
+                        (
+                            f"{type(exc).__name__}: "
+                            f"{exc}"
+                        )[:180],
+                }
+
+    public={}
+
+    for key in urls:
+        r=raw_results[key]
+
+        public[key]=tracker.observe(
+            "http:" + key,
+            bool(r.get("ok")),
+            {
+                "code":r.get("code"),
+                "latency_ms":
+                    r.get("latency_ms"),
+                "error":r.get("error"),
+            },
+        )
+
+    return public
+
+
+def collect_cross_site(
+    config,
+    tracker,
+):
+    pve=config["pve"]
+    ai=config["ai_node"]
+
+    pve_raw=probe_tcp(
+        pve["host"],
+        pve["port"],
+        timeout=2,
+    )
+
+    ai_raw=probe_tcp(
+        ai["host"],
+        ai["port"],
+        timeout=2,
+    )
+
+    result={
+        "pve":
+            tracker.observe(
+                "cross-site:pve",
+                pve_raw["ok"],
+                pve_raw,
+            ),
+
+        "ai_node":
+            tracker.observe(
+                "cross-site:ai-node",
+                ai_raw["ok"],
+                ai_raw,
+            ),
+    }
+
+    vllm_detail={
+        "mode":"unknown",
+        "model":None,
+    }
+
+    if ai_raw["ok"]:
+        sleeping=False
+        sleep_known=False
+
+        sleep_response=http_get(
+            ai["base_url"]
+            + "/is_sleeping",
+            timeout=2,
+        )
+
+        if sleep_response.get("ok"):
+            text=(
+                sleep_response.get(
+                    "body",
+                    b"",
+                )
+                .decode(
+                    "utf-8",
+                    errors="ignore",
+                )
+                .strip()
+                .lower()
+            )
+
+            if text in (
+                "true",
+                "1",
+                '"true"',
+            ):
+                sleeping=True
+                sleep_known=True
+
+            elif text in (
+                "false",
+                "0",
+                '"false"',
+            ):
+                sleep_known=True
+
+            else:
+                try:
+                    value=json.loads(text)
+
+                    if isinstance(value,bool):
+                        sleeping=value
+                        sleep_known=True
+
+                    elif isinstance(value,dict):
+                        for key in (
+                            "is_sleeping",
+                            "sleeping",
+                        ):
+                            if isinstance(
+                                value.get(key),
+                                bool,
+                            ):
+                                sleeping=value[key]
+                                sleep_known=True
+                                break
+                except Exception:
+                    pass
+
+        if sleeping:
+            vllm_ok=True
+            vllm_detail["mode"]="sleeping"
+
+        else:
+            models=http_json(
+                ai["base_url"]
+                + "/v1/models",
+                timeout=3,
+            )
+
+            ids=[]
+
+            if isinstance(models,dict):
+                for item in (
+                    models.get("data")
+                    or []
+                ):
+                    if isinstance(item,dict):
+                        model_id=item.get("id")
+
+                        if isinstance(
+                            model_id,
+                            str,
+                        ):
+                            ids.append(
+                                model_id
+                            )
+
+            vllm_ok=(
+                ai["expected_model"]
+                in ids
+            )
+
+            vllm_detail["mode"]=(
+                "awake"
+                if sleep_known
+                else "available"
+            )
+
+            if ids:
+                vllm_detail["model"]=ids[0]
+
+    else:
+        vllm_ok=False
+
+    result["vllm"]=tracker.observe(
+        "cross-site:vllm",
+        vllm_ok,
+        vllm_detail,
+    )
+
+    return result
+
+
+def syncthing_api_key(config):
+    for raw in config[
+        "syncthing"
+    ][
+        "config_candidates"
+    ]:
+        p=Path(raw)
+
+        if not p.is_file():
+            continue
+
+        try:
+            root=ET.parse(p).getroot()
+
+            key=root.findtext(
+                "./gui/apikey"
+            )
+
+            if key:
+                return key.strip()
+
+        except Exception:
+            continue
+
+    return None
+
+
+def collect_syncthing(
+    config,
+    tracker,
+):
+    st=config["syncthing"]
+    key=syncthing_api_key(
+        config
+    )
+
+    if not key:
+        entry=tracker.observe(
+            "syncthing:api",
+            False,
+            {
+                "error":
+                    "api key unavailable"
+            },
+        )
+
+        return {
+            "state":entry["state"],
+            "api":entry,
+        }
+
+    headers={
+        "X-API-Key":key,
+    }
+
+    connections=http_json(
+        st["base_url"]
+        + "/rest/system/connections",
+        headers=headers,
+        timeout=3,
+    )
+
+    folder=http_json(
+        st["base_url"]
+        + "/rest/db/status?folder="
+        + st["folder_id"],
+        headers=headers,
+        timeout=3,
+    )
+
+    api_ok=(
+        isinstance(connections,dict)
+        and isinstance(folder,dict)
+    )
+
+    api_state=tracker.observe(
+        "syncthing:api",
+        api_ok,
+        {
+            "error":
+                None
+                if api_ok
+                else "REST API unavailable",
+        },
+    )
+
+    remote_connected=None
+
+    if isinstance(connections,dict):
+        rows=(
+            connections.get(
+                "connections"
+            )
+            or {}
+        )
+
+        if isinstance(rows,dict):
+            remote_connected=any(
+                isinstance(value,dict)
+                and value.get(
+                    "connected"
+                ) is True
+
+                for value
+                in rows.values()
+            )
+
+    peer_state=tracker.observe(
+        "syncthing:pve-peer",
+        remote_connected is True,
+        {
+            "connected":
+                remote_connected
+        },
+    )
+
+    pull_errors=None
+    need_files=None
+    need_bytes=None
+    folder_state=None
+
+    if isinstance(folder,dict):
+        folder_state=folder.get(
+            "state"
+        )
+
+        pull_errors=folder.get(
+            "pullErrors"
+        )
+
+        need_files=folder.get(
+            "needFiles"
+        )
+
+        need_bytes=folder.get(
+            "needBytes"
+        )
+
+    error_free=(
+        pull_errors in (
+            None,
+            0,
+            [],
+            {},
+        )
+    )
+
+    folder_health=tracker.observe(
+        "syncthing:folder",
+        bool(
+            isinstance(folder,dict)
+            and error_free
+        ),
+        {
+            "state":folder_state,
+            "pull_errors":pull_errors,
+            "need_files":need_files,
+            "need_bytes":need_bytes,
+        },
+    )
+
+    return {
+        "state":
+            aggregate([
+                api_state["state"],
+                peer_state["state"],
+                folder_health["state"],
+            ]),
+
+        "api":api_state,
+        "pve_peer":peer_state,
+        "folder":folder_health,
+    }
+
+
+def collect_netbird(tracker):
+    raw=run_text(
+        [
+            "netbird",
+            "status",
+        ],
+        timeout=5,
+    )
+
+    management=None
+    signal=None
+
+    if isinstance(raw,str):
+        lower=raw.lower()
+
+        management=(
+            "management: connected"
+            in lower
+            or "management connected"
+            in lower
+        )
+
+        signal=(
+            "signal: connected"
+            in lower
+            or "signal connected"
+            in lower
+        )
+
+    ok=(
+        isinstance(raw,str)
+        and management is not False
+        and signal is not False
+    )
+
+    return tracker.observe(
+        "netbird:control",
+        ok,
+        {
+            "management_connected":
+                management,
+
+            "signal_connected":
+                signal,
+        },
+    )
+
+
+def collect_backrest(config):
+    result={}
+
+    p=Path(
+        config[
+            "backrest"
+        ][
+            "oplog"
+        ]
+    )
+
+    now_ms=int(
+        time.time() * 1000
+    )
+
+    for plan in config[
+        "backrest"
+    ][
+        "plans"
+    ]:
+        item={
+            "state":"FAIL",
+            "last_success_at":None,
+            "age_s":None,
+            "snapshot_id":None,
+            "error":None,
+        }
+
+        try:
+            con=sqlite3.connect(
+                f"file:{p}?mode=ro",
+                uri=True,
+                timeout=2,
+            )
+
+            try:
+                row=con.execute(
+                    """
+                    SELECT
+                        o.start_time_ms,
+                        o.snapshot_id
+                    FROM operations o
+                    JOIN operation_groups g
+                      ON g.ogid = o.ogid
+                    WHERE g.plan_id = ?
+                      AND o.status = 3
+                      AND o.snapshot_id <> ''
+                    ORDER BY
+                        o.start_time_ms DESC,
+                        o.id DESC
+                    LIMIT 1
+                    """,
+                    (plan,),
+                ).fetchone()
+
+            finally:
+                con.close()
+
+            if row is None:
+                item["error"] = (
+                    "no successful snapshot"
+                )
+
+            else:
+                ts_ms=int(row[0])
+                age_s=max(
+                    0,
+                    round(
+                        (
+                            now_ms
+                            - ts_ms
+                        ) / 1000,
+                        1,
+                    ),
+                )
+
+                dt=datetime.fromtimestamp(
+                    ts_ms / 1000,
+                    tz=timezone.utc,
+                )
+
+                item[
+                    "last_success_at"
+                ]=dt.isoformat()
+
+                item["age_s"]=age_s
+                item["snapshot_id"]=row[1]
+
+                if (
+                    age_s
+                    <= config[
+                        "backrest"
+                    ][
+                        "degraded_after_s"
+                    ]
+                ):
+                    item["state"]="OK"
+
+                elif (
+                    age_s
+                    <= config[
+                        "backrest"
+                    ][
+                        "fail_after_s"
+                    ]
+                ):
+                    item[
+                        "state"
+                    ]="DEGRADED"
+
+                else:
+                    item["state"]="FAIL"
+
+        except Exception as exc:
+            item["error"]=(
+                f"{type(exc).__name__}: "
+                f"{exc}"
+            )[:180]
+
+        result[plan]=item
+
+    return {
+        "state":
+            aggregate([
+                x["state"]
+                for x in result.values()
+            ]),
+
+        "plans":result,
+    }
+
+
+def find_key_recursive(obj, wanted):
+    if isinstance(obj,dict):
+        for key,value in obj.items():
+            if str(key).upper() == wanted:
+                return value
+
+        for value in obj.values():
+            found=find_key_recursive(
+                value,
+                wanted,
+            )
+
+            if found is not None:
+                return found
+
+    elif isinstance(obj,list):
+        for value in obj:
+            found=find_key_recursive(
+                value,
+                wanted,
+            )
+
+            if found is not None:
+                return found
+
+    return None
+
+
+def as_int(value):
+    try:
+        return int(value)
+    except Exception:
+        return 0
+
+
+def collect_maintenance(config):
+    data=None
+    source=None
+
+    for raw in config[
+        "maintenance"
+    ][
+        "status_candidates"
+    ]:
+        p=Path(raw)
+
+        if not p.is_file():
+            continue
+
+        try:
+            data=json.loads(
+                p.read_text(
+                    encoding="utf-8"
+                )
+            )
+            source=str(p)
+            break
+        except Exception:
+            continue
+
+    if data is None:
+        return {
+            "state":"DEGRADED",
+            "source":None,
+            "check_failed":None,
+            "reboot_required":None,
+            "update_available":None,
+            "generated_at":None,
+            "error":
+                "maintenance status unavailable",
+        }
+
+    check_failed=as_int(
+        find_key_recursive(
+            data,
+            "CHECK_FAILED",
+        )
+    )
+
+    reboot_required=as_int(
+        find_key_recursive(
+            data,
+            "REBOOT_REQUIRED",
+        )
+    )
+
+    update_available=as_int(
+        find_key_recursive(
+            data,
+            "UPDATE_AVAILABLE",
+        )
+    )
+
+    generated_at=(
+        find_key_recursive(
+            data,
+            "GENERATED_AT",
+        )
+        or find_key_recursive(
+            data,
+            "GENERATED",
+        )
+    )
+
+    state=(
+        "DEGRADED"
+        if (
+            check_failed > 0
+            or reboot_required > 0
+        )
+        else "OK"
+    )
+
+    return {
+        "state":state,
+        "source":source,
+        "check_failed":check_failed,
+        "reboot_required":reboot_required,
+        "update_available":update_available,
+        "generated_at":generated_at,
+        "error":None,
+    }
+
+
+def load_notification_state():
+    data=load_json(
+        STATE_PATH,
+        {},
+    )
+
+    if not isinstance(data,dict):
+        return {}
+
+    return data
+
+
+def save_notification_state(data):
+    atomic_json_write(
+        STATE_PATH,
+        data,
+        mode=0o600,
+    )
+
+
+def webhook_url():
+    return WEBHOOK_PATH.read_text(
+        encoding="utf-8"
+    ).strip()
+
+
+def _state_rank(value):
+    return {"OK": 0, "DEGRADED": 1, "FAIL": 2}.get(value, 2)
+
+
+def _worst_state(*values):
+    states = [value for value in values if value in ("OK", "DEGRADED", "FAIL")]
+    if not states:
+        return "OK"
+    return max(states, key=_state_rank)
+
+
+def _item_state(item):
+    if isinstance(item, dict):
+        value = item.get("state")
+        if value in ("OK", "DEGRADED", "FAIL"):
+            return value
+    return "OK"
+
+
+def _detail(item):
+    if isinstance(item, dict):
+        value = item.get("detail")
+        if isinstance(value, dict):
+            return value
+    return {}
+
+
+def _fmt_time(value):
+    if not value:
+        return "unknown"
+    try:
+        dt = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        return dt.astimezone().strftime("%d %b %H:%M:%S %Z")
+    except Exception:
+        return str(value)
+
+
+def _duration_s(started_at, ended_at=None):
+    if not started_at:
+        return None
+    try:
+        start = datetime.fromisoformat(str(started_at).replace("Z", "+00:00"))
+        if start.tzinfo is None:
+            start = start.replace(tzinfo=timezone.utc)
+        if ended_at:
+            end = datetime.fromisoformat(str(ended_at).replace("Z", "+00:00"))
+            if end.tzinfo is None:
+                end = end.replace(tzinfo=timezone.utc)
+        else:
+            end = datetime.now(timezone.utc)
+        return max(0, int((end - start).total_seconds()))
+    except Exception:
+        return None
+
+
+def _human_duration(seconds):
+    if seconds is None:
+        return "unknown"
+    seconds = max(0, int(seconds))
+    days, rem = divmod(seconds, 86400)
+    hours, rem = divmod(rem, 3600)
+    minutes, secs = divmod(rem, 60)
+    parts = []
+    if days:
+        parts.append(f"{days}d")
+    if hours:
+        parts.append(f"{hours}h")
+    if minutes:
+        parts.append(f"{minutes}m")
+    if secs or not parts:
+        parts.append(f"{secs}s")
+    return " ".join(parts[:2])
+
+
+def _http_cause(name, item):
+    detail = _detail(item)
+    error = detail.get("error")
+    code = detail.get("code")
+    if error:
+        return f"{name} probe failed: {error}"
+    if code is not None:
+        return f"{name} probe returned HTTP {code}"
+    return f"{name} health probe failed"
+
+
+def _http_evidence(name, item):
+    detail = _detail(item)
+    code = detail.get("code")
+    latency = detail.get("latency_ms")
+    error = detail.get("error")
+    bits = []
+    if code is not None:
+        bits.append(f"HTTP {code}")
+    if latency is not None:
+        bits.append(f"{latency} ms")
+    if error:
+        bits.append(str(error))
+    if not bits:
+        bits.append(_item_state(item))
+    return f"{name}: " + " · ".join(bits)
+
+
+def _unit_evidence(name, item):
+    detail = _detail(item)
+    active = detail.get("active")
+    if active is True:
+        status = "active"
+    elif active is False:
+        status = "inactive"
+    else:
+        status = _item_state(item)
+    return f"{name}: {status}"
+
+
+def _container_evidence(name, item):
+    detail = _detail(item)
+    status = detail.get("status")
+    health = detail.get("health")
+    bits = []
+    if status is not None:
+        bits.append(str(status))
+    if health is not None:
+        bits.append(str(health))
+    if not bits:
+        bits.append(_item_state(item))
+    return f"{name}: " + " · ".join(bits)
+
+
+def _make_incident(
+    incident_id,
+    state,
+    name,
+    scope,
+    category,
+    impact,
+    cause,
+    diagnostics=None,
+    confirmation=None,
+    suppressed=False,
+):
+    return {
+        "id": incident_id,
+        "state": state,
+        "name": name,
+        "scope": scope,
+        "category": category,
+        "impact": impact,
+        "cause": cause,
+        "diagnostics": [x for x in (diagnostics or []) if x],
+        "confirmation": confirmation,
+        "suppressed": bool(suppressed),
+    }
+
+
+def build_incidents(snapshot):
+    incidents = {}
+
+    edge = snapshot.get("edge") or {}
+    system = edge.get("system_units") or {}
+    user_units = edge.get("core_user_units") or {}
+    docker = edge.get("docker") or {}
+    apps = snapshot.get("applications") or {}
+    home = snapshot.get("home_pai") or {}
+    knowledge = snapshot.get("knowledge") or {}
+    operations = snapshot.get("operations") or {}
+
+    nginx = system.get("nginx.service") or {}
+    xray = system.get("xray.service") or {}
+    ingress_state = _worst_state(_item_state(nginx), _item_state(xray))
+    failed_ingress = [
+        name
+        for name, item in (("nginx", nginx), ("xray", xray))
+        if _item_state(item) != "OK"
+    ]
+    incidents["edge-ingress"] = _make_incident(
+        "edge-ingress",
+        ingress_state,
+        "Edge public web ingress",
+        "EDGE",
+        "Ingress",
+        "Public HTTPS services may be unreachable through the edge ingress.",
+        (
+            "Ingress component failure: " + ", ".join(failed_ingress)
+            if failed_ingress
+            else "Ingress runtime is healthy"
+        ),
+        [
+            _unit_evidence("nginx", nginx),
+            _unit_evidence("xray", xray),
+        ],
+    )
+
+    hysteria = system.get("hysteria-server.service") or {}
+    incidents["hysteria2"] = _make_incident(
+        "hysteria2",
+        _item_state(hysteria),
+        "Hysteria2",
+        "EDGE",
+        "Network service",
+        "Hysteria2 service is unavailable.",
+        "hysteria-server.service is not active",
+        [_unit_evidence("hysteria-server.service", hysteria)],
+    )
+
+    docker_service = system.get("docker.service") or {}
+    containerd_service = system.get("containerd.service") or {}
+    docker_state = _worst_state(
+        _item_state(docker_service),
+        _item_state(containerd_service),
+    )
+    docker_failed = [
+        name
+        for name, item in (
+            ("docker.service", docker_service),
+            ("containerd.service", containerd_service),
+        )
+        if _item_state(item) != "OK"
+    ]
+    incidents["docker-runtime"] = _make_incident(
+        "docker-runtime",
+        docker_state,
+        "Docker runtime",
+        "EDGE",
+        "Runtime",
+        "Docker-backed services may be unavailable.",
+        (
+            "Runtime component failure: " + ", ".join(docker_failed)
+            if docker_failed
+            else "Docker runtime is healthy"
+        ),
+        [
+            _unit_evidence("docker.service", docker_service),
+            _unit_evidence("containerd.service", containerd_service),
+        ],
+    )
+    docker_parent_failed = docker_state != "OK"
+
+    def add_http_service(
+        incident_id,
+        probe_name,
+        name,
+        category,
+        impact,
+        diagnostics,
+        docker_dependent=False,
+    ):
+        item = apps.get(probe_name) or {}
+        state = _item_state(item)
+        incidents[incident_id] = _make_incident(
+            incident_id,
+            state,
+            name,
+            "EDGE",
+            category,
+            impact,
+            _http_cause(name, item),
+            [_http_evidence(name, item)] + diagnostics,
+            confirmation="2 consecutive probes" if state == "FAIL" else None,
+            suppressed=bool(docker_dependent and docker_parent_failed and state != "OK"),
+        )
+
+    add_http_service(
+        "mattermost",
+        "mattermost",
+        "Mattermost",
+        "Application",
+        "chat.escloud.us is unavailable.",
+        [
+            _container_evidence(
+                "Mattermost container",
+                docker.get("mattermost-mattermost-1") or {},
+            ),
+            _container_evidence(
+                "Shared PostgreSQL",
+                docker.get("postgres") or {},
+            ),
+        ],
+        docker_dependent=True,
+    )
+    add_http_service(
+        "n8n",
+        "n8n",
+        "n8n",
+        "Automation",
+        "n8n automation service is unavailable.",
+        [_container_evidence("n8n container", docker.get("n8n") or {})],
+        docker_dependent=True,
+    )
+    add_http_service(
+        "authelia",
+        "authelia",
+        "Authelia",
+        "Authentication",
+        "Authelia authentication service is unavailable.",
+        [_container_evidence("Authelia container", docker.get("authelia") or {})],
+        docker_dependent=True,
+    )
+    add_http_service(
+        "semaphore",
+        "semaphore",
+        "Semaphore",
+        "Operations",
+        "Semaphore UI/API is unavailable.",
+        [_unit_evidence("semaphore.service", system.get("semaphore.service") or {})],
+    )
+    add_http_service(
+        "maintenance-ui",
+        "maintenance",
+        "Maintenance UI",
+        "Operations",
+        "The maintenance status backend is unavailable.",
+        [],
+    )
+    add_http_service(
+        "nextcloud",
+        "nextcloud",
+        "Nextcloud",
+        "Application",
+        "cloud.escloud.us service backend is unavailable.",
+        [
+            _container_evidence("Nextcloud app", docker.get("nextcloud-app-1") or {}),
+            _container_evidence("Nextcloud cron", docker.get("nextcloud-cron-1") or {}),
+            _container_evidence("Shared PostgreSQL", docker.get("postgres") or {}),
+            _container_evidence("Nextcloud Redis", docker.get("nextcloud-redis-1") or {}),
+        ],
+        docker_dependent=True,
+    )
+    add_http_service(
+        "projects-webdav",
+        "webdav",
+        "Projects WebDAV",
+        "Workspace",
+        "go.escloud.us workspace backend is unavailable.",
+        [_unit_evidence("projects-webdav.service", user_units.get("projects-webdav.service") or {})],
+    )
+    add_http_service(
+        "t3-code",
+        "t3_code",
+        "T3 Code",
+        "Developer service",
+        "T3 Code service is unavailable.",
+        [_unit_evidence("t3code.service", user_units.get("t3code.service") or {})],
+    )
+
+    for incident_id, container_name, label, impact in (
+        (
+            "stalwart-mail",
+            "stalwart",
+            "Stalwart mail runtime",
+            "Stalwart mail runtime is unavailable.",
+        ),
+        (
+            "bulwark",
+            "bulwark",
+            "Bulwark",
+            "Bulwark runtime is unavailable.",
+        ),
+    ):
+        item = docker.get(container_name) or {}
+        state = _item_state(item)
+        incidents[incident_id] = _make_incident(
+            incident_id,
+            state,
+            label,
+            "EDGE",
+            "Mail",
+            impact,
+            _container_evidence(label, item),
+            [_container_evidence(label, item)],
+            suppressed=bool(docker_parent_failed and state != "OK"),
+        )
+
+    for incident_id, unit_name, label, category, impact in (
+        (
+            "hermes-gateway",
+            "hermes-gateway.service",
+            "Hermes gateway",
+            "Agent runtime",
+            "Hermes gateway is unavailable.",
+        ),
+        (
+            "hermes-dashboard",
+            "hermes-dashboard.service",
+            "Hermes dashboard",
+            "Agent runtime",
+            "Hermes dashboard runtime is unavailable.",
+        ),
+        (
+            "antigravity-daemon",
+            "antigravity-cli-daemon.service",
+            "Antigravity daemon",
+            "Agent runtime",
+            "Antigravity CLI daemon is unavailable.",
+        ),
+    ):
+        item = user_units.get(unit_name) or {}
+        incidents[incident_id] = _make_incident(
+            incident_id,
+            _item_state(item),
+            label,
+            "EDGE",
+            category,
+            impact,
+            f"{unit_name} is not active",
+            [_unit_evidence(unit_name, item)],
+        )
+
+    netbird_semantic = home.get("netbird") or {}
+    netbird_unit = system.get("netbird.service") or {}
+    netbird_state = _worst_state(
+        _item_state(netbird_semantic),
+        _item_state(netbird_unit),
+    )
+    nb_detail = _detail(netbird_semantic)
+    nb_diag = [
+        _unit_evidence("netbird.service", netbird_unit),
+        "Management: " + ("connected" if nb_detail.get("management_connected") else "disconnected"),
+        "Signal: " + ("connected" if nb_detail.get("signal_connected") else "disconnected"),
+    ]
+    incidents["home-pai-overlay"] = _make_incident(
+        "home-pai-overlay",
+        netbird_state,
+        "Home/PAI overlay connectivity",
+        "HOME / PAI",
+        "Connectivity",
+        "edge connectivity to Home/PAI over NetBird is degraded or unavailable.",
+        "NetBird control/data connectivity is not healthy",
+        nb_diag,
+    )
+    netbird_parent_failed = netbird_state != "OK"
+
+    pve = home.get("pve") or {}
+    pve_state = _item_state(pve)
+    incidents["pve"] = _make_incident(
+        "pve",
+        pve_state,
+        "PVE reachability",
+        "HOME / PAI",
+        "Infrastructure",
+        "edge cannot reach the PVE management endpoint.",
+        _http_cause("PVE", pve),
+        [_http_evidence("PVE", pve)],
+        confirmation="2 consecutive probes" if pve_state == "FAIL" else None,
+        suppressed=bool(netbird_parent_failed and pve_state != "OK"),
+    )
+
+    ai_node = home.get("ai_node") or {}
+    ai_state = _item_state(ai_node)
+    incidents["ai-node"] = _make_incident(
+        "ai-node",
+        ai_state,
+        "AI node reachability",
+        "HOME / PAI",
+        "Infrastructure",
+        "edge cannot reach the ai-node service endpoint.",
+        _http_cause("ai-node", ai_node),
+        [_http_evidence("ai-node", ai_node)],
+        confirmation="2 consecutive probes" if ai_state == "FAIL" else None,
+        suppressed=bool(netbird_parent_failed and ai_state != "OK"),
+    )
+
+    vllm = home.get("vllm") or {}
+    vllm_state = _item_state(vllm)
+    vllm_detail = _detail(vllm)
+    vllm_diag = []
+    if vllm_detail.get("mode") is not None:
+        vllm_diag.append(f"Mode: {vllm_detail.get('mode')}")
+    if vllm_detail.get("model") is not None:
+        vllm_diag.append(f"Model: {vllm_detail.get('model')}")
+    if vllm_detail.get("error"):
+        vllm_diag.append(f"Error: {vllm_detail.get('error')}")
+    incidents["vllm"] = _make_incident(
+        "vllm",
+        vllm_state,
+        "vLLM inference",
+        "HOME / PAI",
+        "AI service",
+        "The configured local inference service/model is unavailable.",
+        (
+            str(vllm_detail.get("error"))
+            if vllm_detail.get("error")
+            else "vLLM health/model check failed"
+        ),
+        vllm_diag,
+        suppressed=bool((netbird_parent_failed or ai_state != "OK") and vllm_state != "OK"),
+    )
+
+    syncthing = knowledge.get("syncthing") or {}
+    knowledge_state = _item_state(syncthing) if syncthing else knowledge.get("state", "OK")
+    api = syncthing.get("api") or {}
+    peer = syncthing.get("pve_peer") or {}
+    folder = syncthing.get("folder") or {}
+    api_state = _item_state(api)
+    peer_state = _item_state(peer)
+    folder_state = _item_state(folder)
+    knowledge_state = _worst_state(knowledge_state, api_state, peer_state, folder_state)
+    folder_detail = _detail(folder)
+    peer_detail = _detail(peer)
+    api_detail = _detail(api)
+    knowledge_diag = [
+        "Syncthing API: " + (
+            str(api_detail.get("error")) if api_detail.get("error") else api_state
+        ),
+        "PVE peer: " + (
+            "connected" if peer_detail.get("connected") else "disconnected"
+        ),
+        "Folder: " + str(folder_detail.get("state", folder_state))
+        + f" · pull_errors={folder_detail.get('pull_errors', 0)}"
+        + f" · need_files={folder_detail.get('need_files', 0)}",
+        _unit_evidence("syncthing@core.service", system.get("syncthing@core.service") or {}),
+    ]
+    if api_state != "OK":
+        knowledge_cause = "Syncthing API is unhealthy"
+    elif folder_state != "OK" or folder_detail.get("pull_errors", 0):
+        knowledge_cause = "Knowledge folder synchronization is unhealthy"
+    elif peer_state != "OK":
+        knowledge_cause = "PVE Syncthing peer is disconnected"
+    else:
+        knowledge_cause = "Knowledge replication is healthy"
+    knowledge_only_peer_failure = (
+        knowledge_state != "OK"
+        and api_state == "OK"
+        and folder_state == "OK"
+        and peer_state != "OK"
+    )
+    incidents["knowledge-replication"] = _make_incident(
+        "knowledge-replication",
+        knowledge_state,
+        "Knowledge replication",
+        "KNOWLEDGE",
+        "Replication",
+        "Knowledge replication between edge and PVE is degraded or unavailable.",
+        knowledge_cause,
+        knowledge_diag,
+        suppressed=bool(netbird_parent_failed and knowledge_only_peer_failure),
+    )
+
+    backrest_unit = system.get("backrest.service") or {}
+    backrest_runtime_state = _item_state(backrest_unit)
+    incidents["backrest-runtime"] = _make_incident(
+        "backrest-runtime",
+        backrest_runtime_state,
+        "Backrest runtime",
+        "OPERATIONS",
+        "Backup runtime",
+        "Backrest backup runtime is unavailable.",
+        "backrest.service is not active",
+        [_unit_evidence("backrest.service", backrest_unit)],
+    )
+
+    backrest = operations.get("backrest") or {}
+    for plan_id, label in (
+        ("edge-state", "Edge state backup"),
+        ("edge-knowledge-local", "Edge Knowledge backup"),
+    ):
+        plan = (backrest.get("plans") or {}).get(plan_id) or {}
+        state = _item_state(plan)
+        age = plan.get("age_s")
+        last_success = plan.get("last_success_at")
+        error = plan.get("error")
+        if error:
+            cause = str(error)
+        elif age is not None:
+            cause = f"Last successful snapshot is {_human_duration(age)} old"
+        else:
+            cause = "No successful snapshot freshness data"
+        diagnostics = [
+            f"Plan: {plan_id}",
+            f"Last success: {_fmt_time(last_success)}",
+            f"Age: {_human_duration(age)}",
+        ]
+        if error:
+            diagnostics.append(f"Error: {error}")
+        incidents["backup-" + plan_id] = _make_incident(
+            "backup-" + plan_id,
+            state,
+            label,
+            "OPERATIONS",
+            "Backup freshness",
+            f"Backup plan {plan_id} is outside its accepted freshness state.",
+            cause,
+            diagnostics,
+            suppressed=bool(backrest_runtime_state != "OK" and state != "OK"),
+        )
+
+    maintenance = operations.get("maintenance") or {}
+    maintenance_state = _item_state(maintenance)
+    check_failed = maintenance.get("check_failed")
+    reboot_required = maintenance.get("reboot_required")
+    reasons = []
+    if check_failed:
+        reasons.append(f"maintenance checks failed: {check_failed}")
+    if reboot_required:
+        reasons.append(f"reboot required: {reboot_required}")
+    incidents["maintenance-health"] = _make_incident(
+        "maintenance-health",
+        maintenance_state,
+        "Maintenance health",
+        "OPERATIONS",
+        "Maintenance state",
+        "Maintenance requires operator attention.",
+        "; ".join(reasons) if reasons else "Maintenance semantic state is healthy",
+        [
+            f"CHECK_FAILED={check_failed}",
+            f"REBOOT_REQUIRED={reboot_required}",
+            f"UPDATE_AVAILABLE={maintenance.get('update_available')}",
+            f"Generated: {_fmt_time(maintenance.get('generated_at'))}",
+        ],
+    )
+
+    return incidents
+
+
+def _event_visual(state, recovery=False):
+    if recovery:
+        return "✅", "good", "RECOVERED"
+    if state == "FAIL":
+        return "🔴", "danger", "INCIDENT"
+    return "⚠️", "warning", "DEGRADED"
+
+
+def _event_title(incident, recovery=False):
+    name = incident.get("name") or incident.get("id") or "Service"
+    if recovery:
+        return f"{name} recovered"
+    if incident.get("state") == "FAIL":
+        return f"{name} unavailable"
+    return f"{name} degraded"
+
+
+def _text_block(text, subtle=False, size=None):
+    block = {"type": "text", "text": str(text)}
+    if subtle:
+        block["is_subtle"] = True
+    if size:
+        block["size"] = size
+    return block
+
+
+def _metric_column(label, value):
+    return {
+        "type": "column",
+        "width": "stretch",
+        "items": [
+            _text_block(f"**{label}**", subtle=True, size="small"),
+            _text_block(str(value)),
+        ],
+    }
+
+
+def render_event_payload(
+    incident,
+    recovery=False,
+    started_at=None,
+    ended_at=None,
+    previous_state=None,
+):
+    icon, accent, event_class = _event_visual(
+        incident.get("state"),
+        recovery=recovery,
+    )
+    title = _event_title(incident, recovery=recovery)
+    scope = incident.get("scope") or "EDGE"
+    category = incident.get("category") or "Service"
+    impact = incident.get("impact") or "Operational state changed."
+    if recovery:
+        impact = f"{incident.get('name') or incident.get('id') or 'Service'} is responding normally again."
+    diagnostics = list(incident.get("diagnostics") or [])
+
+    if recovery:
+        duration = _human_duration(_duration_s(started_at, ended_at))
+        fallback = (
+            f"{icon} **{title}**\n"
+            f"{scope} · {category}\n"
+            f"{impact}\n"
+            f"Downtime/degradation: {duration}\n"
+            f"Recovered: {_fmt_time(ended_at or iso_now())}"
+        )
+        body = [
+            _text_block(f"### {icon} {title}"),
+            _text_block(f"{scope} · {category}", subtle=True, size="small"),
+            _text_block(impact),
+            {"type": "divider"},
+            _text_block("DURATION", subtle=True, size="small"),
+            _text_block(duration),
+            _text_block("RECOVERED", subtle=True, size="small"),
+            _text_block(_fmt_time(ended_at or iso_now())),
+        ]
+    else:
+        confirmation = incident.get("confirmation")
+        fallback = (
+            f"{icon} **{title}**\n"
+            f"{scope} · {category}\n"
+            f"{impact}\n"
+            f"Cause: {incident.get('cause') or 'unknown'}\n"
+            f"Started: {_fmt_time(started_at or iso_now())}"
+        )
+        body = [
+            _text_block(f"### {icon} {title}"),
+            _text_block(f"{scope} · {category}", subtle=True, size="small"),
+            _text_block(impact),
+            {"type": "divider"},
+            _text_block("CAUSE", subtle=True, size="small"),
+            _text_block(incident.get("cause") or "Unknown cause"),
+            {"type": "divider"},
+            _text_block("STARTED", subtle=True, size="small"),
+            _text_block(_fmt_time(started_at or iso_now())),
+        ]
+        if confirmation:
+            body.extend(
+                [
+                    _text_block("CONFIRMED", subtle=True, size="small"),
+                    _text_block(confirmation),
+                ]
+            )
+
+    if diagnostics:
+        diag_text = "\n".join(f"- {line}" for line in diagnostics[:12])
+        body.append(
+            {
+                "type": "collapsible",
+                "collapsed": True,
+                "header": [_text_block("**Diagnostics**")],
+                "content": [_text_block(diag_text, subtle=True, size="small")],
+            }
+        )
+
+    payload = {
+        "props": {
+            "mm_blocks": [
+                {
+                    "type": "container",
+                    "content": body,
+                    "border": True,
+                    "accent_color": accent,
+                    "background": "gray",
+                    "flow": "vertical",
+                    "gap": "small",
+                }
+            ]
+        },
+    }
+    return payload
+
+
+def post_mattermost(payload):
+    url = webhook_url()
+    parsed = urlsplit(url)
+    conn = None
+
+    if isinstance(payload, str):
+        payload = {"text": payload}
+
+    body_bytes = json.dumps(
+        payload,
+        ensure_ascii=False,
+    ).encode("utf-8")
+
+    try:
+        conn = http.client.HTTPConnection(
+            parsed.hostname,
+            parsed.port or 80,
+            timeout=3,
+        )
+        conn.request(
+            "POST",
+            parsed.path,
+            body=body_bytes,
+            headers={
+                "Content-Type": "application/json",
+                "Content-Length": str(len(body_bytes)),
+                "Connection": "close",
+            },
+        )
+        response = conn.getresponse()
+        response_body = response.read(4096)
+        return response.status == 200 and response_body.strip() == b"ok"
+    except Exception:
+        return False
+    finally:
+        if conn is not None:
+            try:
+                conn.close()
+            except Exception:
+                pass
+
+
+def update_notifications(incidents, durable):
+    now = iso_now()
+    changed = False
+
+    legacy = durable.pop("notified", None)
+    if legacy is not None:
+        changed = True
+
+    records = durable.setdefault("incidents", {})
+    if not isinstance(records, dict):
+        records = {}
+        durable["incidents"] = records
+        changed = True
+
+    current_ids = set(incidents)
+    for stale_id in list(records):
+        if stale_id not in current_ids:
+            del records[stale_id]
+            changed = True
+
+    first_v2_run = durable.get("notification_model") != 2
+
+    for incident_id, current in incidents.items():
+        state = current.get("state")
+        if state not in ("OK", "DEGRADED", "FAIL"):
+            continue
+
+        suppressed = bool(current.get("suppressed"))
+        previous = records.get(incident_id)
+
+        if not isinstance(previous, dict):
+            records[incident_id] = {
+                "state": state,
+                "started_at": now if state != "OK" else None,
+                "notified_active": False,
+                "suppressed": suppressed,
+            }
+            changed = True
+            continue
+
+        previous_state = previous.get("state", "OK")
+        started_at = previous.get("started_at")
+        notified_active = bool(previous.get("notified_active"))
+
+        if state == "OK":
+            if previous_state != "OK" and notified_active:
+                payload = render_event_payload(
+                    current,
+                    recovery=True,
+                    started_at=started_at,
+                    ended_at=now,
+                    previous_state=previous_state,
+                )
+                if not post_mattermost(payload):
+                    continue
+
+            if (
+                previous_state != "OK"
+                or started_at is not None
+                or notified_active
+                or previous.get("suppressed") != suppressed
+            ):
+                records[incident_id] = {
+                    "state": "OK",
+                    "started_at": None,
+                    "notified_active": False,
+                    "suppressed": suppressed,
+                }
+                changed = True
+            continue
+
+        if previous_state == "OK":
+            started_at = now
+
+        should_notify = False
+        if not suppressed:
+            if previous_state == "OK":
+                should_notify = True
+            elif not notified_active:
+                should_notify = True
+            elif previous_state != state:
+                should_notify = True
+
+        if should_notify and not first_v2_run:
+            payload = render_event_payload(
+                current,
+                recovery=False,
+                started_at=started_at,
+                previous_state=previous_state,
+            )
+            if not post_mattermost(payload):
+                continue
+            notified_active = True
+
+        records[incident_id] = {
+            "state": state,
+            "started_at": started_at,
+            "notified_active": notified_active,
+            "suppressed": suppressed,
+        }
+        changed = True
+
+    if first_v2_run:
+        durable["notification_model"] = 2
+        changed = True
+
+    if changed:
+        durable["updated_at"] = now
+        save_notification_state(durable)
+
+
+def check_summary(snapshot):
+    return build_incidents(snapshot)
+
+
+
+def main():
+    config=load_json(
+        CONFIG_PATH,
+        None,
+    )
+
+    if not isinstance(config,dict):
+        raise RuntimeError(
+            "invalid configuration"
+        )
+
+    intervals=config[
+        "intervals_s"
+    ]
+
+    tracker=ProbeTracker(
+        int(
+            config.get(
+                "fail_threshold",
+                2,
+            )
+        )
+    )
+
+    RUN_DIR.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    STATE_DIR.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    durable=load_notification_state()
+
+    caches={
+        "fast":{},
+        "system_units":{},
+        "user_units":{},
+        "docker":{},
+        "applications":{},
+        "home_pai":{},
+        "netbird":{},
+        "syncthing":{},
+        "backrest":{},
+        "maintenance":{},
+    }
+
+    executor=(
+        concurrent.futures
+        .ThreadPoolExecutor(
+            max_workers=3,
+            thread_name_prefix=
+                "edge-monitor",
+        )
+    )
+
+    normal_future=None
+    slow_future=None
+    operations_future=None
+
+    sequence=0
+
+    next_fast=0.0
+    next_normal=0.0
+    next_slow=0.0
+    next_operations=0.0
+    next_snapshot=0.0
+
+    read_cpu_percent()
+    time.sleep(0.08)
+
+    def normal_bundle():
+        return {
+            "system_units":
+                collect_system_units(
+                    config,
+                    tracker,
+                ),
+
+            "user_units":
+                collect_user_units(
+                    config,
+                    tracker,
+                ),
+
+            "docker":
+                collect_docker(
+                    config,
+                    tracker,
+                ),
+
+            "applications":
+                collect_http_probes(
+                    config,
+                    tracker,
+                ),
+
+            "home_pai":
+                collect_cross_site(
+                    config,
+                    tracker,
+                ),
+        }
+
+    def slow_bundle():
+        return {
+            "netbird":
+                collect_netbird(
+                    tracker
+                ),
+
+            "syncthing":
+                collect_syncthing(
+                    config,
+                    tracker,
+                ),
+        }
+
+    def operations_bundle():
+        return {
+            "backrest":
+                collect_backrest(
+                    config
+                ),
+
+            "maintenance":
+                collect_maintenance(
+                    config
+                ),
+        }
+
+    try:
+        while not STOP:
+            now=time.monotonic()
+
+            if (
+                normal_future is not None
+                and normal_future.done()
+            ):
+                try:
+                    caches.update(
+                        normal_future.result()
+                    )
+                except Exception as exc:
+                    print(
+                        "NORMAL_COLLECT_ERROR="
+                        f"{type(exc).__name__}:"
+                        f"{exc}",
+                        flush=True,
+                    )
+
+                normal_future=None
+
+            if (
+                slow_future is not None
+                and slow_future.done()
+            ):
+                try:
+                    caches.update(
+                        slow_future.result()
+                    )
+                except Exception as exc:
+                    print(
+                        "SLOW_COLLECT_ERROR="
+                        f"{type(exc).__name__}:"
+                        f"{exc}",
+                        flush=True,
+                    )
+
+                slow_future=None
+
+            if (
+                operations_future is not None
+                and operations_future.done()
+            ):
+                try:
+                    caches.update(
+                        operations_future.result()
+                    )
+                except Exception as exc:
+                    print(
+                        "OPERATIONS_COLLECT_ERROR="
+                        f"{type(exc).__name__}:"
+                        f"{exc}",
+                        flush=True,
+                    )
+
+                operations_future=None
+
+            if now >= next_fast:
+                caches["fast"]=(
+                    collect_fast(
+                        config
+                    )
+                )
+
+                next_fast=(
+                    time.monotonic()
+                    + intervals["fast"]
+                )
+
+            now=time.monotonic()
+
+            if (
+                now >= next_normal
+                and normal_future is None
+            ):
+                normal_future=executor.submit(
+                    normal_bundle
+                )
+
+                next_normal=(
+                    now
+                    + intervals["normal"]
+                )
+
+            now=time.monotonic()
+
+            if (
+                now >= next_slow
+                and slow_future is None
+            ):
+                slow_future=executor.submit(
+                    slow_bundle
+                )
+
+                next_slow=(
+                    now
+                    + intervals["slow"]
+                )
+
+            now=time.monotonic()
+
+            if (
+                now >= next_operations
+                and operations_future is None
+            ):
+                operations_future=executor.submit(
+                    operations_bundle
+                )
+
+                next_operations=(
+                    now
+                    + intervals[
+                        "operations"
+                    ]
+                )
+
+            now=time.monotonic()
+
+            if now >= next_snapshot:
+                sequence += 1
+
+                system_states=[
+                    x["state"]
+                    for x in (
+                        caches[
+                            "system_units"
+                        ]
+                    ).values()
+                ]
+
+                user_states=[
+                    x["state"]
+                    for x in (
+                        caches[
+                            "user_units"
+                        ]
+                    ).values()
+                ]
+
+                docker_states=[
+                    x["state"]
+                    for x in (
+                        caches[
+                            "docker"
+                        ]
+                    ).values()
+                ]
+
+                app_states=[
+                    x["state"]
+                    for x in (
+                        caches[
+                            "applications"
+                        ]
+                    ).values()
+                ]
+
+                home_states=[
+                    x["state"]
+                    for x in (
+                        caches[
+                            "home_pai"
+                        ]
+                    ).values()
+                ]
+
+                knowledge_state=(
+                    caches[
+                        "syncthing"
+                    ].get(
+                        "state",
+                        "OK",
+                    )
+                    if caches[
+                        "syncthing"
+                    ]
+                    else "OK"
+                )
+
+                backrest_state=(
+                    caches[
+                        "backrest"
+                    ].get(
+                        "state",
+                        "OK",
+                    )
+                    if caches[
+                        "backrest"
+                    ]
+                    else "OK"
+                )
+
+                maintenance_state=(
+                    caches[
+                        "maintenance"
+                    ].get(
+                        "state",
+                        "OK",
+                    )
+                    if caches[
+                        "maintenance"
+                    ]
+                    else "OK"
+                )
+
+                snapshot={
+                    "schema_version":1,
+                    "sequence":sequence,
+                    "generated_at":iso_now(),
+
+                    "agent":{
+                        "name":"edge-monitor",
+                        "version":"1.0",
+                        "uptime_s":round(
+                            time.monotonic()
+                            - START_MONOTONIC,
+                            1,
+                        ),
+                    },
+
+                    "intervals_s":
+                        intervals,
+
+                    "edge":{
+                        "state":
+                            aggregate(
+                                system_states
+                                + user_states
+                                + docker_states
+                            ),
+
+                        "host":
+                            caches["fast"],
+
+                        "system_units":
+                            caches[
+                                "system_units"
+                            ],
+
+                        "core_user_units":
+                            caches[
+                                "user_units"
+                            ],
+
+                        "docker":
+                            caches["docker"],
+                    },
+
+                    "applications":{
+                        **caches[
+                            "applications"
+                        ]
+                    },
+
+                    "home_pai":{
+                        "state":
+                            aggregate(
+                                home_states
+                                + (
+                                    [
+                                        caches[
+                                            "netbird"
+                                        ][
+                                            "state"
+                                        ]
+                                    ]
+                                    if caches[
+                                        "netbird"
+                                    ]
+                                    else []
+                                )
+                            ),
+
+                        **caches[
+                            "home_pai"
+                        ],
+
+                        "netbird":
+                            caches[
+                                "netbird"
+                            ],
+                    },
+
+                    "knowledge":{
+                        "state":
+                            knowledge_state,
+
+                        "syncthing":
+                            caches[
+                                "syncthing"
+                            ],
+                    },
+
+                    "operations":{
+                        "state":
+                            aggregate([
+                                backrest_state,
+                                maintenance_state,
+                            ]),
+
+                        "backrest":
+                            caches[
+                                "backrest"
+                            ],
+
+                        "maintenance":
+                            caches[
+                                "maintenance"
+                            ],
+                    },
+                }
+
+                domain_states=[
+                    snapshot[
+                        "edge"
+                    ][
+                        "state"
+                    ],
+
+                    aggregate(
+                        app_states
+                    ),
+
+                    snapshot[
+                        "home_pai"
+                    ][
+                        "state"
+                    ],
+
+                    snapshot[
+                        "knowledge"
+                    ][
+                        "state"
+                    ],
+
+                    snapshot[
+                        "operations"
+                    ][
+                        "state"
+                    ],
+                ]
+
+                snapshot[
+                    "overall_state"
+                ]=aggregate(
+                    domain_states
+                )
+
+                atomic_json_write(
+                    SNAPSHOT_PATH,
+                    snapshot,
+                )
+
+                checks=check_summary(
+                    snapshot
+                )
+
+                update_notifications(
+                    checks,
+                    durable,
+                )
+
+                next_snapshot=(
+                    now
+                    + intervals["fast"]
+                )
+
+            time.sleep(0.10)
+
+    finally:
+        executor.shutdown(
+            wait=True,
+            cancel_futures=True,
+        )
+
+
+if __name__ == "__main__":
+    main()

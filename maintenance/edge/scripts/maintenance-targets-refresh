@@ -48,7 +48,6 @@ DOCKER_COMPONENTS = [
     ("BULWARK", "Bulwark"),
     ("NEXTCLOUD", "Nextcloud"),
     ("NEXTCLOUD_REDIS", "Redis (Nextcloud)"),
-    ("OPENPROJECT", "OpenProject"),
 ]
 
 CLI_COMPONENTS = []

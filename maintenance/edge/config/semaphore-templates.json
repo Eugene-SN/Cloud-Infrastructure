@@ -63,10 +63,6 @@
     "NEXTCLOUD_REDIS": {
       "template_id": 20,
       "label": "Update Nextcloud (Redis)"
-    },
-    "OPENPROJECT": {
-      "template_id": 19,
-      "label": "Update OpenProject"
     }
   }
 }

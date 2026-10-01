@@ -79,7 +79,6 @@ def main():
         "compose",
         "nextcloud_compose",
         "stalwart_compose",
-        "openproject_compose",
     )
 
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))

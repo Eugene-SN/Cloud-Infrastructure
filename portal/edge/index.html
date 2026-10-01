@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#e9ecf0">
+  <meta name="description" content="ESCLOUD Sovereign Infrastructure Console">
+  <title>ESCLOUD · Sovereign Console</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="alternate icon" href="/favicon.ico">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="stylesheet" href="/app.css">
+</head>
+<body>
+  <div class="smoky-ambient"></div>
+  <div class="console-shell">
+    <!-- Top Glass Header (Translucent Minimalist Chrome) -->
+    <header class="console-header">
+      <div class="header-left">
+        <a href="/" class="brand-link" aria-label="ESCLOUD Home">
+          <div class="brand-icon-box">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+            </svg>
+          </div>
+          <span class="brand-name">ESCLOUD</span>
+        </a>
+        <span class="nav-sep">/</span>
+        <span class="nav-context">Sovereign Console</span>
+      </div>
+
+      <div class="header-right">
+
+
+        <!-- Integrated Monospace Clock -->
+        <div class="header-clock font-mono" id="header-datetime" aria-label="System Time">
+          <span id="live-date">-- --- ----</span>
+          <span class="clock-sep">·</span>
+          <span id="live-clock" class="clock-time">--:--:--</span>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="header-actions">
+          <button id="theme-toggle" class="icon-btn" type="button" title="Toggle theme (T)" aria-label="Toggle theme">
+            <svg class="theme-icon-sun" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <svg class="theme-icon-moon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </button>
+
+          <button id="refresh-btn" class="icon-btn refresh-btn" type="button" title="Sync telemetry (R)" aria-label="Sync telemetry">
+            <svg class="sync-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M21 2v6h-6M3 22v-6h6M2.5 11.5a10 10 0 0 1 18.8-4.3M21.5 12.5a10 10 0 0 1-18.8 4.2"/>
+            </svg>
+          </button>
+
+          <a id="maintenance-button" class="icon-btn" href="https://update.escloud.us/status/" target="_blank" rel="noopener noreferrer" title="Maintenance Hub" aria-label="Maintenance Hub">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 3v12M8 11l4 4 4-4"></path>
+              <path d="M4 14v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"></path>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="console-main">
+
+      <!-- Strip 1: Edge Node Telemetry (Full-width Horizontal Glass Strip) -->
+      <section class="apple-card horizontal-strip telemetry-strip" aria-label="Edge Node Telemetry">
+        <div class="strip-header">
+          <div class="strip-title-group">
+            <div class="strip-icon">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="4" y="4" width="16" height="16" rx="2"></rect>
+                <rect x="9" y="9" width="6" height="6"></rect>
+                <line x1="9" y1="1" x2="9" y2="4"></line>
+                <line x1="15" y1="1" x2="15" y2="4"></line>
+                <line x1="9" y1="20" x2="9" y2="23"></line>
+                <line x1="15" y1="20" x2="15" y2="23"></line>
+                <line x1="20" y1="9" x2="23" y2="9"></line>
+                <line x1="20" y1="14" x2="23" y2="14"></line>
+                <line x1="1" y1="9" x2="4" y2="9"></line>
+                <line x1="1" y1="14" x2="4" y2="14"></line>
+              </svg>
+            </div>
+            <h2 class="strip-title">Edge Node Telemetry</h2>
+          </div>
+          <span class="apple-tag font-mono">AMD EPYC · 2 vCPU</span>
+        </div>
+
+        <div class="strip-metrics-grid">
+          <!-- CPU Metric -->
+          <div class="strip-metric-item">
+            <div class="metric-top">
+              <span class="metric-label">CPU Usage</span>
+              <span class="metric-stat font-mono" id="cpu-pct">20% · 2 vCPU</span>
+            </div>
+            <div class="apple-track">
+              <div class="apple-fill fill-cpu" id="cpu-bar" style="transform: scaleX(0.20);"></div>
+            </div>
+            <span class="metric-meta font-mono" id="cpu-load-val">Load avg: 0.40 · 0.28 · 0.27</span>
+          </div>
+
+          <div class="strip-sep"></div>
+
+          <!-- RAM Metric -->
+          <div class="strip-metric-item">
+            <div class="metric-top">
+              <span class="metric-label">Memory</span>
+              <span class="metric-stat font-mono" id="ram-used-pct">19.2% · 12.6 GiB free</span>
+            </div>
+            <div class="apple-track">
+              <div class="apple-fill fill-ram" id="ram-bar" style="transform: scaleX(0.192);"></div>
+            </div>
+            <span class="metric-meta font-mono" id="ram-detail">3.0 GiB used of 15.6 GiB total</span>
+          </div>
+
+          <div class="strip-sep"></div>
+
+          <!-- NVMe Metric -->
+          <div class="strip-metric-item">
+            <div class="metric-top">
+              <span class="metric-label">NVMe Storage</span>
+              <span class="metric-stat font-mono" id="disk-used-pct">21.4% · 121.0 GiB free</span>
+            </div>
+            <div class="apple-track">
+              <div class="apple-fill fill-nvme" id="disk-bar" style="transform: scaleX(0.214);"></div>
+            </div>
+            <span class="metric-meta font-mono" id="disk-detail">33.0 GiB used of 154.0 GiB total</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Strip 2: Hybrid Fabric & AI Compute (Full-width Horizontal Glass Strip Underneath) -->
+      <section class="apple-card horizontal-strip fabric-strip" aria-label="Hybrid Fabric & AI Compute">
+        <div class="strip-header">
+          <div class="strip-title-group">
+            <div class="strip-icon">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="2" y1="12" x2="22" y2="12"></line>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+              </svg>
+            </div>
+            <h2 class="strip-title">Hybrid Fabric & AI Compute</h2>
+          </div>
+          <span class="apple-tag green font-mono" id="fabric-overall-tag">Mesh Connected</span>
+        </div>
+
+        <div class="strip-fabric-grid">
+          <!-- Fabric Item 1: Private AI -->
+          <div class="fabric-box">
+            <div class="fabric-box-top">
+              <span class="fabric-box-title">Private AI Cluster</span>
+              <span class="status-pill green font-mono" id="pai-badge"><span class="pip green"></span>Online · 41 ms</span>
+            </div>
+            <p class="fabric-box-desc">vLLM <span class="font-mono" id="vllm-model-label">qwen3.8-27b-fp8</span> on Proxmox VE</p>
+          </div>
+
+          <div class="strip-sep"></div>
+
+          <!-- Fabric Item 2: Knowledge Sync -->
+          <div class="fabric-box">
+            <div class="fabric-box-top">
+              <span class="fabric-box-title">Knowledge Vault Sync</span>
+              <span class="status-pill green font-mono" id="knowledge-badge"><span class="pip green"></span>Synchronized</span>
+            </div>
+            <p class="fabric-box-desc">Syncthing continuous replication · Obsidian vault</p>
+          </div>
+
+          <div class="strip-sep"></div>
+
+          <!-- Fabric Item 3: Edge Host Services -->
+          <div class="fabric-box">
+            <div class="fabric-box-top">
+              <span class="fabric-box-title">Edge Host Services</span>
+              <span class="status-pill green font-mono" id="edge-badge"><span class="pip green"></span>14 Units · 10 Docker</span>
+            </div>
+            <p class="fabric-box-desc">Systemd daemons & container runtime nominal</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 2: Services & Workspaces Ingress Grid (Smoky Glass Squircles) -->
+      <section class="apple-card services-section">
+        <div class="section-header-bar">
+          <div>
+            <h2 class="section-title">Services & Workspaces</h2>
+            <p class="section-subtitle">Direct ingress to sovereign applications and local runtimes</p>
+          </div>
+          <span class="apple-tag font-mono">8 available</span>
+        </div>
+
+        <div class="apple-grid-3x3">
+          <!-- 1. Hermes Agent -->
+          <a href="https://hermes.escloud.us" target="_blank" rel="noopener noreferrer" class="app-tile" id="svc-hermes">
+            <div class="app-squircle">
+              <img src="/icons/hermes.svg" alt="Hermes Agent" class="service-logo" />
+            </div>
+            <div class="app-info">
+              <div class="app-head-row">
+                <span class="app-name">Hermes Agent</span>
+                <span class="status-pill green font-mono" data-probe="hermes"><span class="pip green"></span>Online</span>
+              </div>
+              <p class="app-desc">AI runtime gateway & operator console</p>
+              <div class="app-foot-row">
+                <span class="app-route font-mono">hermes.escloud.us</span>
+                <span class="link-arrow">↗</span>
+              </div>
+            </div>
+          </a>
+
+          <!-- 2. T3 Code -->
+          <a href="https://code.escloud.us" target="_blank" rel="noopener noreferrer" class="app-tile" id="svc-t3code">
+            <div class="app-squircle">
+              <img src="/icons/vscode.svg" alt="T3 Code" class="service-logo" />
+            </div>
+            <div class="app-info">
+              <div class="app-head-row">
+                <span class="app-name">T3 Code</span>
+                <span class="status-pill green font-mono" data-probe="t3_code"><span class="pip green"></span>Ready</span>
+              </div>
+              <p class="app-desc">Persistent cloud IDE & code workspace</p>
+              <div class="app-foot-row">
+                <span class="app-route font-mono">code.escloud.us</span>
+                <span class="link-arrow">↗</span>
+              </div>
+            </div>
+          </a>
+
+          <!-- 3. n8n Automation -->
+          <a href="https://n8n.escloud.us" target="_blank" rel="noopener noreferrer" class="app-tile" id="svc-n8n">
+            <div class="app-squircle">
+              <img src="/icons/n8n.svg" alt="n8n Automation" class="service-logo" />
+            </div>
+            <div class="app-info">
+              <div class="app-head-row">
+                <span class="app-name">n8n Automation</span>
+                <span class="status-pill green font-mono" data-probe="n8n"><span class="pip green"></span>Active</span>
+              </div>
+              <p class="app-desc">Workflow engine & webhook runner</p>
+              <div class="app-foot-row">
+                <span class="app-route font-mono">n8n.escloud.us</span>
+                <span class="link-arrow">↗</span>
+              </div>
+            </div>
+          </a>
+
+          <!-- 4. Mattermost Chat -->
+          <a href="https://chat.escloud.us" target="_blank" rel="noopener noreferrer" class="app-tile" id="svc-mattermost">
+            <div class="app-squircle">
+              <img src="/icons/mattermost.svg" alt="Mattermost Chat" class="service-logo" />
+            </div>
+            <div class="app-info">
+              <div class="app-head-row">
+                <span class="app-name">Mattermost Chat</span>
+                <span class="status-pill green font-mono" data-probe="mattermost"><span class="pip green"></span>Online</span>
+              </div>
+              <p class="app-desc">Team communication & notifications</p>
+              <div class="app-foot-row">
+                <span class="app-route font-mono">chat.escloud.us</span>
+                <span class="link-arrow">↗</span>
+              </div>
+            </div>
+          </a>
+
+          <!-- 5. Stalwart Webmail (Shifted to row 2 center) -->
+          <a href="https://mail.escloud.us" target="_blank" rel="noopener noreferrer" class="app-tile" id="svc-mail">
+            <div class="app-squircle">
+              <img src="/icons/stalwart.svg" alt="Stalwart Webmail" class="service-logo" />
+            </div>
+            <div class="app-info">
+              <div class="app-head-row">
+                <span class="app-name">Stalwart Webmail</span>
+                <span class="status-pill green font-mono" data-probe="stalwart"><span class="pip green"></span>Active</span>
+              </div>
+              <p class="app-desc">Sovereign mail client (JMAP / IMAP)</p>
+              <div class="app-foot-row">
+                <span class="app-route font-mono">mail.escloud.us</span>
+                <span class="link-arrow">↗</span>
+              </div>
+            </div>
+          </a>
+
+          <!-- 6. Stalwart Mail Admin (Shifted to row 2 right) -->
+          <a href="https://mail.escloud.us/admin/" target="_blank" rel="noopener noreferrer" class="app-tile" id="svc-stalwart-admin">
+            <div class="app-squircle stalwart-admin-squircle">
+              <img src="/icons/stalwart.svg" alt="Stalwart Mail Admin" class="service-logo admin-variant" />
+              <span class="squircle-badge font-mono">ADM</span>
+            </div>
+            <div class="app-info">
+              <div class="app-head-row">
+                <span class="app-name">Mail Admin</span>
+                <span class="status-pill green font-mono" data-probe="stalwart_admin"><span class="pip green"></span>Directory ready</span>
+              </div>
+              <p class="app-desc">Directory management & mail routing</p>
+              <div class="app-foot-row">
+                <span class="app-route font-mono">mail.escloud.us/admin</span>
+                <span class="link-arrow">↗</span>
+              </div>
+            </div>
+          </a>
+
+          <!-- 7. Nextcloud Drive (Placed on the left in bottom row) -->
+          <a href="https://cloud.escloud.us" target="_blank" rel="noopener noreferrer" class="app-tile" id="svc-nextcloud">
+            <div class="app-squircle">
+              <img src="/icons/nextcloud.svg" alt="Nextcloud Drive" class="service-logo" />
+            </div>
+            <div class="app-info">
+              <div class="app-head-row">
+                <span class="app-name">Nextcloud Drive</span>
+                <span class="status-pill green font-mono" data-probe="nextcloud"><span class="pip green"></span>Healthy</span>
+              </div>
+              <p class="app-desc">File storage, calendar & contacts sync</p>
+              <div class="app-foot-row">
+                <span class="app-route font-mono">cloud.escloud.us</span>
+                <span class="link-arrow">↗</span>
+              </div>
+            </div>
+          </a>
+
+          <!-- 9. Backrest Vaults -->
+          <a href="https://backup.escloud.us" target="_blank" rel="noopener noreferrer" class="app-tile" id="svc-backrest">
+            <div class="app-squircle">
+              <img src="/icons/backrest.png" alt="Backrest Vaults" class="service-logo" />
+            </div>
+            <div class="app-info">
+              <div class="app-head-row">
+                <span class="app-name">Backrest Vaults</span>
+                <span class="status-pill green font-mono" data-probe="backrest"><span class="pip green"></span>Synced</span>
+              </div>
+              <p class="app-desc">Snapshot repositories & retention rules</p>
+              <div class="app-foot-row">
+                <span class="app-route font-mono">backup.escloud.us</span>
+                <span class="link-arrow">↗</span>
+              </div>
+            </div>
+          </a>
+        </div>
+      </section>
+
+      <!-- Section 3: Dual Deck (Apple Inset Grouped Panels) -->
+      <div class="dual-deck-row">
+        <!-- Panel 1: Endpoint Probes -->
+        <section class="apple-card panel-endpoints">
+          <div class="section-header-bar">
+            <div>
+              <h3 class="panel-title">Endpoint Probes</h3>
+              <p class="panel-subtitle">Local HTTP ingress health check via edge-monitor daemon</p>
+            </div>
+            <span class="apple-tag font-mono" id="apps-count">8/8 operational</span>
+          </div>
+
+          <div class="apple-inset-list" id="applications">
+            <!-- Dynamically populated rows -->
+          </div>
+        </section>
+
+        <!-- Panel 2: Mesh Subsystems & Daemon Services -->
+        <section class="apple-card panel-subsystems">
+          <div class="section-header-bar">
+            <div>
+              <h3 class="panel-title">Subsystems & Mesh Fabric</h3>
+              <p class="panel-subtitle">WireGuard hybrid nodes and container runtime status</p>
+            </div>
+            <span class="apple-tag font-mono" id="subsystem-counts">14 units, 10 containers</span>
+          </div>
+
+          <div class="subsystems-container">
+            <!-- Remote Fabric Nodes -->
+            <div class="sub-group">
+              <span class="sub-group-title">Remote Fabric Nodes (NetBird Mesh)</span>
+              <div class="apple-inset-list" id="home-pai">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+
+            <!-- Operations & Vaults -->
+            <div class="sub-group">
+              <span class="sub-group-title">Backup Vaults & Maintenance</span>
+              <div class="apple-inset-list" id="operations">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+
+            <!-- Systemd Services -->
+            <div class="sub-group">
+              <span class="sub-group-title">Host Systemd Services (14 active)</span>
+              <div class="apple-tags-cloud" id="units-list">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Glass Footer -->
+    <footer class="console-footer">
+      <div class="foot-left">
+        <span class="brand-text">ESCLOUD Sovereign Platform</span>
+        <span class="foot-sep">·</span>
+        <span class="font-mono">edge.escloud.us</span>
+      </div>
+      <div class="foot-right">
+        <span class="font-mono" id="footer-uptime">Uptime: 0m</span>
+        <span class="foot-sep">·</span>
+        <span class="font-mono" id="footer-seq">Fast loop: 5s</span>
+      </div>
+    </footer>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>

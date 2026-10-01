@@ -136,7 +136,7 @@ def normalized_image_reference(reference):
 
 def preflight(unit):
     driver = unit["driver"]
-    if driver in ("compose", "nextcloud_compose", "stalwart_compose", "openproject_compose"):
+    if driver in ("compose", "nextcloud_compose", "stalwart_compose"):
         directory = pathlib.Path(unit["directory"])
         for item in unit["files"]:
             if not (directory / item).is_file():
@@ -150,11 +150,6 @@ def preflight(unit):
             helper = pathlib.Path("/opt/edge-maintenance/scripts/update-stalwart")
             if not helper.is_file():
                 raise RuntimeError(f"missing Stalwart update helper: {helper}")
-            run([sys.executable, str(helper), "--preflight"])
-        elif driver == "openproject_compose":
-            helper = pathlib.Path("/opt/edge-maintenance/scripts/update-openproject")
-            if not helper.is_file():
-                raise RuntimeError(f"missing OpenProject update helper: {helper}")
             run([sys.executable, str(helper), "--preflight"])
     elif driver == "user_cli":
         if not pathlib.Path(unit["binary"]).is_file():
@@ -260,25 +255,6 @@ def execute(unit, status_row):
         run([
             sys.executable,
             "/opt/edge-maintenance/scripts/update-stalwart",
-            "--target-version",
-            target,
-            "--target-track",
-            track,
-            "--target-digest",
-            digest,
-        ])
-    elif driver == "openproject_compose":
-        helper = pathlib.Path("/opt/edge-maintenance/scripts/update-openproject")
-        if not helper.is_file():
-            raise RuntimeError(f"missing OpenProject update helper: {helper}")
-        target = str(status_row.get("available_application_version") or "").strip()
-        track = str(status_row.get("image_track") or "").strip()
-        digest = str(status_row.get("remote_image_digest") or "").strip()
-        if not target or not track or not digest.startswith("sha256:"):
-            raise RuntimeError("fresh OpenProject target identity is incomplete")
-        run([
-            sys.executable,
-            str(helper),
             "--target-version",
             target,
             "--target-track",

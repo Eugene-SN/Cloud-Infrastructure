@@ -1,5 +1,21 @@
 # Cloud Infrastructure — Current State
 
+## Current runtime override — 2026-10-01
+
+OpenProject = **DECOMMISSIONED**. Final workstream verification is recorded in `OPENPROJECT_DECOMMISSION_ACCEPTANCE_2026-10-01.md`; server-side decommission is COMPLETE / ACCEPTED with `OPENPROJECT_EDGE_DECOMMISSION=PASS`.
+
+- No OpenProject containers, owned networks, volume, application directory, database/role, nginx vhost, portal tile, n8n integration objects, Mattermost bot/channel/token, Stalwart account or Semaphore update template remains.
+- The operator-authorized single PostgreSQL container recreation removed obsolete OpenProject Env entries while preserving the exact image, data/init mounts, network and unrelated Env values. Shared cluster/data were retained.
+- Shared PostgreSQL retains two application databases/roles: `mattermost` and `nextcloud`; administrative `postgres` remains. `/srv/postgres` and `postgres_net` are retained.
+- `postgres_net` members: postgres, Mattermost, Nextcloud app and cron. `edge_internal` members: n8n and Mattermost.
+- Nine production containers and eight images remain; monitor expects exactly nine containers. Backup preparation stages Mattermost/Nextcloud DB state and shared globals without OpenProject. Maintenance has 15 manual targets, 8 Docker units and 22 monitored components.
+- `projects.escloud.us` DNS/shared TLS namespace is reserved for future Plane; no nginx vhost/backend or placeholder service handles it. Plane deployment is NOT_STARTED.
+- Historical OpenProject data recovery is available from the matched DB/opdata pair in Restic snapshot `79ac237d`; recovery/reference documents and historical decisions remain preserved.
+- Apple Calendar/iCloud subscription is external client-side state and requires a manual check. The GitHub OpenProject webhook is deleted.
+
+All earlier dated deployment/integration/rollback facts involving OpenProject below are **HISTORICAL_REFERENCE**, superseded by this current override. They must not be interpreted as current topology, credentials, monitoring, backup or Maintenance contracts.
+
+
 ## Canonical checkpoint
 
 **Stage 0 — COMPLETE / ACCEPTED**  

@@ -15,7 +15,6 @@
     "BULWARK": true,
     "NEXTCLOUD": true,
     "NEXTCLOUD_REDIS": true,
-    "OPENPROJECT": true,
     "SEMAPHORE": true,
     "APT_EDGE": true
   }

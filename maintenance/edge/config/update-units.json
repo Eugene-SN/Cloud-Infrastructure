@@ -35,7 +35,6 @@
     "BULWARK",
     "NEXTCLOUD",
     "NEXTCLOUD_REDIS",
-    "OPENPROJECT",
     "SEMAPHORE",
     "APT_EDGE"
   ],
@@ -204,35 +203,6 @@
       "service": "redis",
       "health_services": [
         "redis"
-      ]
-    },
-    {
-      "id": "OPENPROJECT",
-      "group": "docker",
-      "driver": "openproject_compose",
-      "directory": "/opt/openproject",
-      "files": [
-        "docker-compose.yml",
-        "docker-compose.override.yml"
-      ],
-      "service": "web",
-      "services": [
-        "web",
-        "worker",
-        "cron",
-        "cache",
-        "proxy",
-        "autoheal",
-        "seeder"
-      ],
-      "branch": "stable/17",
-      "health_services": [
-        "web",
-        "worker",
-        "cron",
-        "cache",
-        "proxy",
-        "autoheal"
       ]
     }
   ]

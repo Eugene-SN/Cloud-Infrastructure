@@ -1,5 +1,7 @@
 # Edge Maintenance
 
+Current contract (2026-10-01): 15 manual targets, 8 Docker units, 22 monitored components. Project-management update unit/helper/playbook/template/discovery has been removed. Shared PostgreSQL and every other update driver remain. Earlier stage target counts below are historical checkpoints.
+
 Current source for the single `edge` maintenance/update subsystem.
 
 ## Ownership model
