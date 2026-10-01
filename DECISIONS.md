@@ -3082,3 +3082,27 @@ The isolated `selflearning` experiment proved that Hermes can create and reuse a
 
 **Final marker:** `OPINT6_FINAL_ACCEPTANCE=PASS`.
 
+---
+
+## 2026-10-01T17:38:00+03:00 — Replace OpenProject with Plane: clean decommission before deployment
+
+**Status:** ACCEPTED
+
+**Context:** The operator revised the replacement workflow. The previous plan retained stopped OpenProject as a rollback/reference runtime while Plane was deployed. The pre-decommission audit and adaptive rebuild contract are now preserved separately, so retaining the live OpenProject deployment during Plane installation is no longer required and would make dependency ownership and residue detection less clear.
+
+**Decision:**
+
+- fully decommission OpenProject from edge before beginning Plane deployment;
+- use the accepted OpenProject audit/rebuild documents as the recovery reference instead of retaining stopped OpenProject runtime state;
+- remove OpenProject-owned runtime, persistent data, database/role, ingress, external integrations, monitoring, backup, Maintenance/Semaphore logic, portal/current-state references, credentials and other proven OpenProject-only residue;
+- preserve shared infrastructure and verify it independently: PostgreSQL service/storage, `postgres_net`, `edge_internal`, nginx base ingress, Stalwart, Mattermost, n8n, Backrest, Edge Monitor and Maintenance framework;
+- after decommission, run a dedicated residue audit and require zero active/runtime OpenProject references except intentional historical/rebuild documentation and Git history;
+- only after the clean-decommission audit passes, begin Plane deployment;
+- for Plane, do not deploy another PostgreSQL container by default. Use a dedicated Plane database and non-superuser role in the existing shared PostgreSQL service if the current Plane release successfully migrates and operates against that service;
+- treat the existing PostgreSQL major version as runtime state, not as assumed Plane compatibility. Validate with the current Plane migrator/application against the current shared PostgreSQL before acceptance; introduce a separate database service only if a concrete incompatibility is observed;
+- use current stable Plane/upstream-supported deployment paths and do not carry OpenProject-specific topology or workarounds into Plane unless independently required.
+
+**Recovery reference:** `OPENPROJECT_PRE_DECOMMISSION_AUDIT_2026-10-01.md` and `OPENPROJECT_REBUILD_CONTRACT.md`.
+
+**Supersedes:** the previous sequencing that required Plane acceptance before irreversible OpenProject cleanup. It does not supersede the OpenProject historical rebuild contract.
+
