@@ -95,3 +95,8 @@ Native n8n definitions in `integrations/n8n/` contain credential references/obje
 Bounded rollback uses native workflow unpublish/delete, exact Data Table/credential lifecycle, exact webhook deletion and PAT revoke; restore only the audited alias/allowlist/config values when explicitly rolling back. Mattermost's existing bot/credential is shared and must remain. Exact private channel may be removed only after checking references/data; existing operator identity/mailbox/services are not rollback targets. Existing Backrest captures Plane DB/settings/PAT/webhook, native n8n database/credentials, Hermes config/env, Mattermost and mail. Final one flow384, snapshot3977cc69, was read back successfully.
 
 Knowledge is deferred pending a concrete trigger/note schema; Nextcloud/calendar/intake workflows remain deferred and do not block core acceptance. Detailed verification, upstream API deletion boundary, cleanup and final gates: `PLANE_PART_2_CORE_INTEGRATIONS_ACCEPTANCE_2026-10-02.md`.
+
+
+### Mattermost interaction surfaces
+
+The private Plane channel carries proactive notifications through n8n. Interactive agent conversations use the existing Hermes Agent DM, whose agent now has Plane MCP/project context. There is no dedicated Plane DM bot or command handler in this deployment. The retired OpenProject conversation is hidden by eugene's native `direct_channel_show=false` preference; do not recreate its bot to clean the sidebar. The post-acceptance correction is recorded in the combined Part 2 acceptance record.
