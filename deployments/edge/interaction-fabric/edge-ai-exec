@@ -1,0 +1,92 @@
+#!/usr/bin/python3
+"""One-shot host CLI execution. No shell expansion, listener, or fallback."""
+import base64,fcntl,json,os,pathlib,re,signal,subprocess,sys,tempfile,time,uuid
+STATE=pathlib.Path('/home/core/.local/state/edge-ai-exec')
+MAX_CONCURRENT=2
+
+def output(**v):
+    print(json.dumps(v,ensure_ascii=False),flush=True)
+
+def stop_group(proc):
+    if proc.poll() is None:
+        os.killpg(proc.pid,signal.SIGTERM)
+        try:proc.wait(timeout=5)
+        except subprocess.TimeoutExpired:os.killpg(proc.pid,signal.SIGKILL);proc.wait()
+
+def execute(p):
+    rid=p.get('request_id') or str(uuid.uuid4())
+    if not isinstance(rid,str) or not re.fullmatch(r'[A-Za-z0-9_-]{1,80}',rid):raise ValueError('invalid request_id')
+    STATE.mkdir(mode=0o700,parents=True,exist_ok=True)
+    record=STATE/(rid+'.json')
+    if p.get('action')=='cancel':
+        if not record.exists():output(ok=False,status='not_running',request_id=rid);return
+        d=json.loads(record.read_text())
+        # Verify PID identity before signalling; cancellation addresses this helper only.
+        if pathlib.Path('/proc/'+str(d['pid'])+'/stat').read_text().split()[21]!=d['start_ticks']:raise ValueError('PID identity changed')
+        os.kill(d['pid'],signal.SIGTERM);output(ok=True,status='cancel_requested',request_id=rid);return
+    backend=p.get('backend');task=p.get('task');cwd=p.get('cwd','/home/core/projects/cloud-infrastructure');timeout=p.get('timeout',300)
+    if backend not in ('codex','antigravity'):raise ValueError('unsupported CLI backend')
+    if not isinstance(task,str) or not task.strip():raise ValueError('task must be a non-empty string')
+    if not isinstance(cwd,str) or not pathlib.Path(cwd).is_absolute() or not pathlib.Path(cwd).is_dir():raise ValueError('cwd must be an existing absolute directory')
+    if isinstance(timeout,bool) or not isinstance(timeout,(int,float)) or not 1<=timeout<=3600:raise ValueError('timeout must be 1..3600 seconds')
+    mode=p.get('output_mode','text');schema=p.get('schema')
+    if mode not in ('text','json'):raise ValueError('output_mode must be text or json')
+    if schema is not None and not isinstance(schema,dict):raise ValueError('schema must be JSON object')
+    lock=None
+    for slot in range(MAX_CONCURRENT):
+        candidate=open(STATE/('slot-'+str(slot)+'.lock'),'a+')
+        try:fcntl.flock(candidate,fcntl.LOCK_EX|fcntl.LOCK_NB);lock=candidate;break
+        except BlockingIOError:candidate.close()
+    if lock is None:output(ok=False,status='busy',exit_code=75,request_id=rid,backend=backend);return
+    proc=None;record_created=False;cancelled=False;start=time.monotonic()
+    def cancel(sig,frame):
+        nonlocal cancelled
+        cancelled=True
+        if proc is not None:stop_group(proc)
+    for sig in (signal.SIGTERM,signal.SIGHUP,signal.SIGINT):signal.signal(sig,cancel)
+    try:
+        # Exclusive request IDs prevent one call replacing another cancellation record.
+        with record.open('x') as rf:
+            record_created=True;os.chmod(record,0o600);json.dump({'pid':os.getpid(),'start_ticks':pathlib.Path('/proc/self/stat').read_text().split()[21]},rf)
+        with tempfile.TemporaryDirectory(prefix='edge-ai-') as td:
+            td=pathlib.Path(td);sp=td/'schema.json';last=td/'result.txt'
+            if schema is not None:sp.write_text(json.dumps(schema));sp.chmod(0o600)
+            if backend=='codex':
+                argv=['/home/core/.local/bin/codex','exec','--sandbox','danger-full-access','-c','approval_policy="never"','--ephemeral','--json','--color','never','--skip-git-repo-check','-C',cwd,'-o',str(last)]
+                if schema is not None:argv+=['--output-schema',str(sp)]
+                if p.get('model'):argv+=['--model',str(p['model'])]
+                if p.get('effort'):argv+=['-c','model_reasoning_effort='+json.dumps(p['effort'])]
+                argv+=['-'];stdin=task
+            else:
+                argv=['/home/core/.local/bin/agy','-p',task,'--output-format','json','--print-timeout',str(int(timeout))+'s','--mode','accept-edits','--dangerously-skip-permissions']
+                if schema is not None:argv+=['--json-schema',str(sp)]
+                if p.get('model'):argv+=['--model',str(p['model'])]
+                if p.get('effort'):argv+=['--effort',str(p['effort'])]
+                stdin=None
+            proc=subprocess.Popen(argv,cwd=cwd,stdin=subprocess.PIPE if stdin is not None else subprocess.DEVNULL,stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True,start_new_session=True)
+            status='completed'
+            try:stdout,stderr=proc.communicate(stdin,timeout=timeout)
+            except subprocess.TimeoutExpired:stop_group(proc);stdout,stderr=proc.communicate();status='timeout'
+            if cancelled:status='canceled'
+            elif proc.returncode and status=='completed':status='error'
+            result=last.read_text() if backend=='codex' and last.exists() else stdout
+            native=None
+            if backend=='antigravity' and stdout:
+                try:
+                    native=json.loads(stdout);result=(native.get('structured_output') if schema is not None and native.get('structured_output') is not None else native.get('result',native.get('response',native))) if isinstance(native,dict) else native
+                except json.JSONDecodeError:
+                    if status=='completed':status='invalid_json'
+            if mode=='json' and isinstance(result,str) and status=='completed':
+                try:result=json.loads(result)
+                except json.JSONDecodeError:status='invalid_json'
+            output(ok=status=='completed',status=status,backend=backend,request_id=rid,exit_code=proc.returncode,duration_s=round(time.monotonic()-start,3),result=result,stderr=stderr[-16384:],native=native)
+    finally:
+        if proc is not None:stop_group(proc)
+        if record_created:record.unlink(missing_ok=True)
+        lock.close()
+
+if __name__=='__main__':
+    try:
+        payload=json.loads(base64.b64decode(sys.argv[1],validate=True))
+        execute(payload)
+    except Exception as exc:output(ok=False,status='invalid_request',exit_code=64,error=str(exc))

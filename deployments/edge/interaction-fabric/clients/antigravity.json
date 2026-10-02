@@ -1,0 +1,58 @@
+{
+  "mcpServers": {
+    "plane": {
+      "command": "/home/core/.hermes/bin/uvx",
+      "args": [
+        "plane-mcp-server",
+        "stdio"
+      ],
+      "env": {
+        "PLANE_BASE_URL": "http://127.0.0.1:18111",
+        "PLANE_WORKSPACE_SLUG": "personal",
+        "LOG_PAYLOADS": "false",
+        "PLANE_API_KEY": "<ANTIGRAVITY_PLANE_PAT>"
+      },
+      "disabledTools": [
+        "collection",
+        "customer",
+        "customer_property",
+        "customer_request",
+        "get_pql_reference",
+        "initiative",
+        "intake",
+        "milestone",
+        "page",
+        "release",
+        "release_label",
+        "release_tag",
+        "template",
+        "work_log",
+        "workitem_property",
+        "workitem_type",
+        "workspace"
+      ]
+    },
+    "n8n": {
+      "headers": {
+        "Authorization": "Bearer <N8N_OPERATOR_MCP_KEY>"
+      },
+      "serverUrl": "http://127.0.0.1:15678/mcp-server/http"
+    },
+    "github": {
+      "command": "/usr/local/bin/edge-github-mcp",
+      "args": []
+    },
+    "playwright": {
+      "command": "/usr/bin/npx",
+      "args": [
+        "--yes",
+        "@playwright/mcp@latest",
+        "--headless",
+        "--isolated",
+        "--executable-path",
+        "/home/core/.cache/ms-playwright/chromium-1243/chrome-linux64/chrome",
+        "--no-sandbox"
+      ]
+    }
+  }
+}

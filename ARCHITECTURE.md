@@ -1,5 +1,14 @@
 # Cloud Infrastructure — Architecture State
 
+## Accepted interaction/AI tool fabric — 2026-10-02
+
+Post-infrastructure foundation: all three agent clients use native Plane/n8n/GitHub/Playwright MCP; OpenAI Docs is Codex-only. n8n is the deterministic workflow/builder/Data Table plane. AIExecution01 explicitly selects direct private vLLM, direct host Codex/Antigravity via native SSH, or the accepted private Hermes API. Hermes remains the persistent reasoning/tool plane; Hermes4FMachine01 stays unchanged. One small one-shot CLI helper and one GitHub stdio launcher have no listener/service; existing networks suffice.
+
+Nextcloud's existing operator/app password powers native file/share tools, while bundled native webhook listeners and cron deliver four file events to a header-authenticated n8n durable inbox. Both Nextcloud containers join existing edge_internal. Native n8n MCP retains all35 core tools, global autoexposure is off, and the two parameterized AI/Nextcloud tool workflows are explicitly exposed. This is the generic foundation, not implementation of user-specific workflows.
+
+Exact architecture/authentication/lifecycle/recovery contract and source references: `deployments/edge/interaction-fabric/README.md`; consolidated evidence: `EDGE_INTERACTION_AI_TOOL_FABRIC_ACCEPTANCE_2026-10-02.md`. Earlier optional-foundation deferrals below are superseded only for this completed scope.
+
+
 ## Status
 
 **Stage 0:** COMPLETE / ACCEPTED  

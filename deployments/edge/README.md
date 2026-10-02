@@ -27,3 +27,7 @@
 2. **Чистота Upstream Repositories**:
    - Upstream-репозиторий `/opt/mattermost` (`main`) сохраняется в абсолютно чистом состоянии (tracked files соответствуют `origin/HEAD`).
    - Все кастомизации вынесены в файлы переопределений: `docker-compose.edge.yml`.
+
+## Interaction/AI tool and Nextcloud automation foundation — 2026-10-02
+
+Canonical contract: [interaction-fabric/README.md](interaction-fabric/README.md). Native n8n exports and secret-free client definitions accompany the two one-shot helpers. Nextcloud app and cron join existing edge_internal (app alias nextcloud.edge.internal) for native WebDAV/OCS and cron webhook delivery; existing default/postgres networks and public OIDC/HTTPS remain. No added persistent service/network. Consolidated acceptance: `EDGE_INTERACTION_AI_TOOL_FABRIC_ACCEPTANCE_2026-10-02.md` at repository root.

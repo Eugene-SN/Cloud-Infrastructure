@@ -100,3 +100,9 @@ Knowledge is deferred pending a concrete trigger/note schema; Nextcloud/calendar
 ### Mattermost interaction surfaces
 
 The private Plane channel carries proactive notifications through n8n. Interactive agent conversations use the existing Hermes Agent DM, whose agent now has Plane MCP/project context. There is no dedicated Plane DM bot or command handler in this deployment. The retired OpenProject conversation is hidden by eugene's native `direct_channel_show=false` preference; do not recreate its bot to clean the sidebar. The post-acceptance correction is recorded in the combined Part 2 acceptance record.
+
+## 2026-10-02 interaction-fabric supersession
+
+`PlaneDeletionReconcile01` now paginates from `$request.url` and native next_cursor, avoiding paired-item lookup after pagination. Save/publish, real API deletion→reconcile→Mattermost and repeated scheduled runs passed. Its canonical workflow export is updated in place.
+
+Existing Hermes CE13 MCP is preserved and the same native client filters are added for Codex/Antigravity with independent PATs under the existing operator. Existing webhook/GitHub/Mattermost/SMTP paths remain accepted. Generic monitor freshness/failure checks now cover the three scheduled integration workflows. Unified evidence and shared tool/execution/Nextcloud recovery contract: `../../EDGE_INTERACTION_AI_TOOL_FABRIC_ACCEPTANCE_2026-10-02.md` and `../edge/interaction-fabric/README.md`.

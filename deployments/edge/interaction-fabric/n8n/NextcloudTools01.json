@@ -1,0 +1,816 @@
+{
+  "id": "G0WysKToqsel8yL2",
+  "name": "NextcloudTools01",
+  "nodes": [
+    {
+      "id": "569f4858-96d9-4fc4-ad5a-ee381116ca2f",
+      "name": "Tool Input",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "nextcloud-tools",
+        "authentication": "headerAuth",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "webhookId": "a9f651e8-b5a9-4853-8818-1d7bc2a71332",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "HtTb0Doigwexj4re",
+          "name": "Edge foundation tool ingress"
+        }
+      }
+    },
+    {
+      "id": "df637dc1-338a-47a4-97eb-8c1b65fecbf5",
+      "name": "Subworkflow Input",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        200,
+        0
+      ],
+      "parameters": {
+        "inputSource": "passthrough"
+      }
+    },
+    {
+      "id": "8b5c7554-b588-4499-a4f4-8d6948f8e991",
+      "name": "Validate Operation",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        400,
+        0
+      ],
+      "parameters": {
+        "jsCode": "const p=$json.body ?? $json;\nconst ops=['list','find','metadata','upload','download','mkdir','move','copy','share','revoke_share','delete'];\nif (!ops.includes(p.operation)) throw new Error('Unsupported Nextcloud operation');\nconst path=p.path ?? '/';\nif (typeof path!=='string' || path.split('/').some(s=>s==='..') || /[?#\\\\]/.test(path)) throw new Error('path must be a relative vault file path without query/fragment/traversal');\nif (['move','copy'].includes(p.operation) && (typeof p.to_path!=='string' || p.to_path.split('/').some(s=>s==='..') || /[?#\\\\]/.test(p.to_path))) throw new Error('valid to_path required');\nif (p.operation==='upload' && typeof p.content!=='string' && typeof p.content_base64!=='string') throw new Error('content or content_base64 required');\nif (p.operation==='revoke_share' && !/^\\d+$/.test(String(p.share_id))) throw new Error('numeric share_id required');\nreturn [{json:{...p,path,encoded_path:path.split('/').map(encodeURIComponent).join('/'),native_operation:{find:'list',mkdir:'create'}[p.operation] ?? p.operation,resource:['list','find','mkdir'].includes(p.operation) ? 'folder':'file'}}];"
+      }
+    },
+    {
+      "id": "9fb059c5-0643-4a29-9278-ad35b6c72ffb",
+      "name": "Operation",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        600,
+        0
+      ],
+      "parameters": {
+        "mode": "expression",
+        "numberOutputs": 11,
+        "output": "={{ ['list','find','metadata','upload','download','mkdir','move','copy','share','revoke_share','delete'].indexOf($json.operation) }}"
+      }
+    },
+    {
+      "id": "358a7327-a2e7-42fd-80fc-b84982fab298",
+      "name": "WebDAV Metadata",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1000,
+        0
+      ],
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "nextCloudApi",
+        "sendHeaders": true,
+        "options": {
+          "timeout": 30000,
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "text"
+            }
+          }
+        },
+        "method": "PROPFIND",
+        "url": "={{ \"http://nextcloud.edge.internal/remote.php/webdav/\" + $json.encoded_path.replace(/^\\//,\"\") }}",
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Depth",
+              "value": "0"
+            }
+          ]
+        }
+      },
+      "credentials": {
+        "nextCloudApi": {
+          "id": "6MEdI2Cs7tEUiM7o",
+          "name": "Nextcloud - operator automation"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "69c6c65e-b8bc-44ed-9021-69d410f61e93",
+      "name": "Revoke Share",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1200,
+        0
+      ],
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "nextCloudApi",
+        "sendHeaders": true,
+        "options": {
+          "timeout": 30000,
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "text"
+            }
+          }
+        },
+        "method": "DELETE",
+        "url": "={{ \"http://nextcloud.edge.internal/ocs/v2.php/apps/files_sharing/api/v1/shares/\" + $json.share_id + \"?format=json\" }}",
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "OCS-APIRequest",
+              "value": "true"
+            }
+          ]
+        }
+      },
+      "credentials": {
+        "nextCloudApi": {
+          "id": "6MEdI2Cs7tEUiM7o",
+          "name": "Nextcloud - operator automation"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "903781df-3f0c-4407-bd10-4b72e0a5ff04",
+      "name": "Binary Upload Input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1400,
+        0
+      ],
+      "parameters": {
+        "jsCode": "const b=typeof $json.content_base64 === 'string' ? Buffer.from($json.content_base64,'base64') : Buffer.from($json.content,'utf8');return [{json:$json,binary:{data:await this.helpers.prepareBinaryData(b,$json.path.split('/').pop(),$json.mime_type ?? 'application/octet-stream')}}];"
+      }
+    },
+    {
+      "id": "63665d17-f44a-40ee-8f9a-09b65ef0d37a",
+      "name": "Tool Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1800,
+        0
+      ],
+      "parameters": {
+        "jsCode": "const p=$('Validate Operation').first().json;const rows=$input.all();\nlet result=rows.map(x=>x.json);let error=result.find(x=>x.error || (x.statusCode && (x.statusCode<200 || x.statusCode>=300)));\nif (p.operation==='download' && !error) {\n const b=await this.helpers.getBinaryDataBuffer(0,'data');\n result={content_base64:b.toString('base64'),content:b.toString('utf8'),size:b.length,mime_type:rows[0].binary?.data?.mimeType};\n} else if (p.operation==='find') result=result.filter(x=>JSON.stringify(x).toLowerCase().includes(String(p.query ?? '').toLowerCase()));\nelse if (result.length===1) result=result[0];\nif (p.operation==='metadata') { const http=$('WebDAV Metadata').first().json; error=error ?? (http.statusCode<200 || http.statusCode>=300 ? http : undefined); result={http_status:http.statusCode,webdav:result}; }\nelse if (['mkdir','upload','move','copy','delete','revoke_share'].includes(p.operation)) result={http_status:result.statusCode,response:result.data ?? result.body};\nreturn [{json:{operation:p.operation,path:p.path,ok:!error,result,...(error?{error}:{} )}}];"
+      }
+    },
+    {
+      "id": "da115eba-c4cb-4b2a-ab4a-15c07f733553",
+      "name": "Nextcloud list",
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        800,
+        0
+      ],
+      "parameters": {
+        "authentication": "accessToken",
+        "resource": "folder",
+        "operation": "list",
+        "path": "={{ $json.path.replace(/^\\/+/, \"\") }}"
+      },
+      "credentials": {
+        "nextCloudApi": {
+          "id": "6MEdI2Cs7tEUiM7o",
+          "name": "Nextcloud - operator automation"
+        }
+      },
+      "alwaysOutputData": true,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "id": "cd306798-1f45-4f65-8f40-d56b10148c79",
+      "name": "Nextcloud find",
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        800,
+        180
+      ],
+      "parameters": {
+        "authentication": "accessToken",
+        "resource": "folder",
+        "operation": "list",
+        "path": "={{ $json.path.replace(/^\\/+/, \"\") }}"
+      },
+      "credentials": {
+        "nextCloudApi": {
+          "id": "6MEdI2Cs7tEUiM7o",
+          "name": "Nextcloud - operator automation"
+        }
+      },
+      "alwaysOutputData": true,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "id": "eecdd889-c2e9-4e39-85ef-6173da2457aa",
+      "name": "Nextcloud upload",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        800,
+        540
+      ],
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "nextCloudApi",
+        "method": "PUT",
+        "url": "={{ \"http://nextcloud.edge.internal/remote.php/webdav/\" + $json.encoded_path.replace(/^\\//,\"\") }}",
+        "options": {
+          "timeout": 30000,
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "text"
+            }
+          }
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "data"
+      },
+      "credentials": {
+        "nextCloudApi": {
+          "id": "6MEdI2Cs7tEUiM7o",
+          "name": "Nextcloud - operator automation"
+        }
+      },
+      "alwaysOutputData": true,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "id": "ee917873-7beb-4a90-b7e7-3a76478e1058",
+      "name": "Nextcloud download",
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        800,
+        720
+      ],
+      "parameters": {
+        "authentication": "accessToken",
+        "resource": "file",
+        "operation": "download",
+        "path": "={{ $json.path.replace(/^\\/+/, \"\") }}"
+      },
+      "credentials": {
+        "nextCloudApi": {
+          "id": "6MEdI2Cs7tEUiM7o",
+          "name": "Nextcloud - operator automation"
+        }
+      },
+      "alwaysOutputData": true,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "id": "17ef5423-66a0-44ed-8650-b4d16307978f",
+      "name": "Nextcloud mkdir",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        800,
+        900
+      ],
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "nextCloudApi",
+        "method": "MKCOL",
+        "url": "={{ \"http://nextcloud.edge.internal/remote.php/webdav/\" + $json.encoded_path.replace(/^\\//,\"\") }}",
+        "options": {
+          "timeout": 30000,
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "text"
+            }
+          }
+        }
+      },
+      "credentials": {
+        "nextCloudApi": {
+          "id": "6MEdI2Cs7tEUiM7o",
+          "name": "Nextcloud - operator automation"
+        }
+      },
+      "alwaysOutputData": true,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "id": "36bef43b-abf0-400f-b61b-00852c6dc52c",
+      "name": "Nextcloud move",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        800,
+        1080
+      ],
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "nextCloudApi",
+        "method": "MOVE",
+        "url": "={{ \"http://nextcloud.edge.internal/remote.php/webdav/\" + $json.encoded_path.replace(/^\\//,\"\") }}",
+        "options": {
+          "timeout": 30000,
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "text"
+            }
+          }
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Destination",
+              "value": "={{ \"http://nextcloud.edge.internal/remote.php/webdav/\" + $json.to_path.replace(/^\\//,\"\").split(\"/\").map(encodeURIComponent).join(\"/\") }}"
+            }
+          ]
+        }
+      },
+      "credentials": {
+        "nextCloudApi": {
+          "id": "6MEdI2Cs7tEUiM7o",
+          "name": "Nextcloud - operator automation"
+        }
+      },
+      "alwaysOutputData": true,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "id": "abac31fc-537b-4cc3-84b4-013aeddffb14",
+      "name": "Nextcloud copy",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        800,
+        1260
+      ],
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "nextCloudApi",
+        "method": "COPY",
+        "url": "={{ \"http://nextcloud.edge.internal/remote.php/webdav/\" + $json.encoded_path.replace(/^\\//,\"\") }}",
+        "options": {
+          "timeout": 30000,
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "text"
+            }
+          }
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Destination",
+              "value": "={{ \"http://nextcloud.edge.internal/remote.php/webdav/\" + $json.to_path.replace(/^\\//,\"\").split(\"/\").map(encodeURIComponent).join(\"/\") }}"
+            }
+          ]
+        }
+      },
+      "credentials": {
+        "nextCloudApi": {
+          "id": "6MEdI2Cs7tEUiM7o",
+          "name": "Nextcloud - operator automation"
+        }
+      },
+      "alwaysOutputData": true,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "id": "69d7cced-5d2c-477d-9501-ec729c21cbae",
+      "name": "Nextcloud share",
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        800,
+        1440
+      ],
+      "parameters": {
+        "authentication": "accessToken",
+        "resource": "file",
+        "operation": "share",
+        "path": "={{ $json.path.replace(/^\\/+/, \"\") }}",
+        "shareType": 3,
+        "options": {}
+      },
+      "credentials": {
+        "nextCloudApi": {
+          "id": "6MEdI2Cs7tEUiM7o",
+          "name": "Nextcloud - operator automation"
+        }
+      },
+      "alwaysOutputData": true,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "id": "afded091-be2b-4630-91e0-541232b3770b",
+      "name": "Nextcloud delete",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        800,
+        1800
+      ],
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "nextCloudApi",
+        "method": "DELETE",
+        "url": "={{ \"http://nextcloud.edge.internal/remote.php/webdav/\" + $json.encoded_path.replace(/^\\//,\"\") }}",
+        "options": {
+          "timeout": 30000,
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "text"
+            }
+          }
+        }
+      },
+      "credentials": {
+        "nextCloudApi": {
+          "id": "6MEdI2Cs7tEUiM7o",
+          "name": "Nextcloud - operator automation"
+        }
+      },
+      "alwaysOutputData": true,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "id": "e300cb7e-c273-435c-8bd6-4fde5d82495e",
+      "name": "Parse WebDAV Metadata",
+      "type": "n8n-nodes-base.xml",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        400
+      ],
+      "parameters": {
+        "mode": "xmlToJson",
+        "dataPropertyName": "data",
+        "options": {
+          "explicitArray": false,
+          "mergeAttrs": true
+        }
+      },
+      "onError": "continueRegularOutput"
+    }
+  ],
+  "connections": {
+    "Tool Input": {
+      "main": [
+        [
+          {
+            "node": "Validate Operation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Subworkflow Input": {
+      "main": [
+        [
+          {
+            "node": "Validate Operation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Operation": {
+      "main": [
+        [
+          {
+            "node": "Operation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Operation": {
+      "main": [
+        [
+          {
+            "node": "Nextcloud list",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Nextcloud find",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WebDAV Metadata",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Binary Upload Input",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Nextcloud download",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Nextcloud mkdir",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Nextcloud move",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Nextcloud copy",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Nextcloud share",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Revoke Share",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Nextcloud delete",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Binary Upload Input": {
+      "main": [
+        [
+          {
+            "node": "Nextcloud upload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WebDAV Metadata": {
+      "main": [
+        [
+          {
+            "node": "Parse WebDAV Metadata",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Revoke Share": {
+      "main": [
+        [
+          {
+            "node": "Tool Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nextcloud list": {
+      "main": [
+        [
+          {
+            "node": "Tool Result",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Tool Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nextcloud find": {
+      "main": [
+        [
+          {
+            "node": "Tool Result",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Tool Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nextcloud upload": {
+      "main": [
+        [
+          {
+            "node": "Tool Result",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Tool Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nextcloud download": {
+      "main": [
+        [
+          {
+            "node": "Tool Result",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Tool Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nextcloud mkdir": {
+      "main": [
+        [
+          {
+            "node": "Tool Result",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Tool Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nextcloud move": {
+      "main": [
+        [
+          {
+            "node": "Tool Result",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Tool Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nextcloud copy": {
+      "main": [
+        [
+          {
+            "node": "Tool Result",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Tool Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nextcloud share": {
+      "main": [
+        [
+          {
+            "node": "Tool Result",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Tool Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nextcloud delete": {
+      "main": [
+        [
+          {
+            "node": "Tool Result",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Tool Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse WebDAV Metadata": {
+      "main": [
+        [
+          {
+            "node": "Tool Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionTimeout": 300,
+    "availableInMCP": true
+  },
+  "description": "Reusable operator Nextcloud tool. POST body operation=list/find/metadata/upload/download/mkdir/move/copy/share/revoke_share/delete; path relative to operator files (default /), query for find, content or content_base64+mime_type for upload, to_path for move/copy, share_id for revoke_share. Native list/find/download/share nodes; native HTTP Request with the same encrypted credential for WebDAV writes/metadata and OCS revocation; native XML metadata parser; encrypted shared native Nextcloud credential. Return ok/result. MCP execute Tool Input with webhookData.body. Changes are explicit; delete uses native trash lifecycle."
+}

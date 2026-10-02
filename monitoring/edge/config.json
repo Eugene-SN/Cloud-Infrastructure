@@ -90,5 +90,24 @@
     "status_candidates": [
       "/var/www/maintenance-status/maintenance.json"
     ]
+  },
+  "n8n_workflows": {
+    "database": "/srv/n8n/database.sqlite",
+    "consecutive_failure_threshold": 3,
+    "stale_cadence_multiplier": 3,
+    "workflows": [
+      {
+        "id": "PlaneMattermost01",
+        "cadence_s": 30
+      },
+      {
+        "id": "PlaneDeletionReconcile01",
+        "cadence_s": 300
+      },
+      {
+        "id": "PlaneGitHubPoll01",
+        "cadence_s": 900
+      }
+    ]
   }
 }

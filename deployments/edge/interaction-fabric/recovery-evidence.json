@@ -1,0 +1,50 @@
+{
+  "flow_id": 395,
+  "snapshot_id": "78d8c27cfe06be6ad31e3e7b0ec441832ea8e5c6aadefc7727ba8df084bb3007",
+  "operations": [
+    395,
+    396,
+    397,
+    398
+  ],
+  "all_operations": "STATUS_SUCCESS",
+  "dumped_paths": [
+    "/home/core/.codex/config.toml",
+    "/home/core/.hermes/config.yaml",
+    "/home/core/.hermes/.env",
+    "/home/core/.gemini/config/mcp_config.json",
+    "/home/core/.gemini/GEMINI.md",
+    "/home/core/.ssh/authorized_keys",
+    "/usr/local/bin/edge-ai-exec",
+    "/usr/local/bin/edge-github-mcp",
+    "/etc/edge-monitor/config.json",
+    "/usr/local/sbin/edge-monitor",
+    "/opt/nextcloud/compose.yaml",
+    "/srv/nextcloud/data/config/config.php",
+    "/var/lib/backrest-staging/edge-state/current/n8n/config",
+    "/var/lib/backrest-staging/edge-state/current/n8n/database.sqlite",
+    "/var/lib/backrest-staging/edge-state/current/plane/postgres/plane.dump",
+    "/var/lib/backrest-staging/edge-state/current/nextcloud/postgres/nextcloud.dump"
+  ],
+  "static_file_bytes": "MATCH",
+  "n8n_integrity": "ok",
+  "n8n_workflow_export_match": "PASS",
+  "n8n_mcp_settings": "PASS",
+  "n8n_mcp_native_key": "PRESENT",
+  "encrypted_credential_native_decryption": "PASS",
+  "logical_postgres_tables": [
+    "api_tokens",
+    "oc_authtoken",
+    "oc_webhook_listeners"
+  ],
+  "nextcloud_inbox_test_rows": 0,
+  "request_count": 1,
+  "d5_snapshot_readback": [
+    {
+      "id": "8e3b3c07bbe19661120d1d3af3c1799e8baa408db471929c03326434849c39ab",
+      "original": "78d8c27cfe06be6ad31e3e7b0ec441832ea8e5c6aadefc7727ba8df084bb3007",
+      "time": "2026-10-02T08:17:36.72287173+03:00"
+    }
+  ],
+  "snapshot_encryption_key_matches_live_n8n_config": "PASS"
+}

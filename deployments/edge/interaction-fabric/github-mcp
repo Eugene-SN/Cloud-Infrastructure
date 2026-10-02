@@ -1,0 +1,24 @@
+#!/bin/bash
+set -euo pipefail
+export GITHUB_PERSONAL_ACCESS_TOKEN
+GITHUB_PERSONAL_ACCESS_TOKEN=$(/usr/bin/gh auth token --hostname github.com)
+runtime_dir=$(mktemp -d /tmp/edge-github-mcp.XXXXXXXX)
+cleanup() {
+  if [[ -s "$runtime_dir/container-id" ]]; then
+    IFS= read -r container_id < "$runtime_dir/container-id"
+    if [[ "$container_id" =~ ^[a-f0-9]{64}$ ]]; then
+      /usr/bin/sudo -n /usr/bin/docker stop --timeout 5 "$container_id" >/dev/null 2>&1 || true
+    fi
+  fi
+  rm -rf -- "$runtime_dir"
+}
+trap cleanup EXIT
+trap 'exit 143' TERM HUP
+trap 'exit 130' INT
+/usr/bin/sudo -n --preserve-env=GITHUB_PERSONAL_ACCESS_TOKEN /usr/bin/docker run --rm -i --pull=always \
+ --cidfile "$runtime_dir/container-id" \
+ -e GITHUB_PERSONAL_ACCESS_TOKEN \
+ -e GITHUB_TOOLSETS=repos,issues,pull_requests,actions \
+ -e GITHUB_TOOLS=get_me \
+ ghcr.io/github/github-mcp-server:latest <&0 &
+wait "$!"

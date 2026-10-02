@@ -1,0 +1,27 @@
+[mcp_servers.plane]
+command = "/home/core/.hermes/bin/uvx"
+args = ["plane-mcp-server", "stdio"]
+enabled_tools = ["project", "workitem", "workitem_comment", "workitem_link", "workitem_relation", "workitem_activity", "workitem_attachment", "state", "label", "member", "cycle", "module", "project_estimate"]
+
+[mcp_servers.plane.env]
+"PLANE_BASE_URL" = "http://127.0.0.1:18111"
+"PLANE_WORKSPACE_SLUG" = "personal"
+"LOG_PAYLOADS" = "false"
+"PLANE_API_KEY" = "<CODEX_PLANE_PAT>"
+
+[mcp_servers.n8n]
+url = "http://127.0.0.1:15678/mcp-server/http"
+
+[mcp_servers.n8n.http_headers]
+"Authorization" = "Bearer <N8N_OPERATOR_MCP_KEY>"
+
+[mcp_servers.github]
+command = "/usr/local/bin/edge-github-mcp"
+args = []
+
+[mcp_servers.playwright]
+command = "/usr/bin/npx"
+args = ["--yes", "@playwright/mcp@latest", "--headless", "--isolated", "--executable-path", "/home/core/.cache/ms-playwright/chromium-1243/chrome-linux64/chrome", "--no-sandbox"]
+
+[mcp_servers.openai_docs]
+url = "https://developers.openai.com/mcp"

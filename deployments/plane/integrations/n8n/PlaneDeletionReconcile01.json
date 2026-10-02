@@ -93,7 +93,7 @@
           "pagination": {
             "pagination": {
               "paginationMode": "responseContainsNextURL",
-              "nextURL": "={{ 'http://plane-api:8000/api/v1/workspaces/personal/projects/0be26f75-fc5b-4e15-9d69-efc4cca4e65d/work-items/' + $('Each Cached Item').item.json.issue_id + '/activities/?per_page=100&order_by=-created_at&cursor=' + encodeURIComponent($response.body.next_cursor) }}",
+              "nextURL": "={{ $request.url.split('&cursor=')[0] + '&cursor=' + encodeURIComponent($response.body.next_cursor) }}",
               "paginationCompleteWhen": "other",
               "completeExpression": "={{ !$response.body.next_page_results }}",
               "limitPagesFetched": false,

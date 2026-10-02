@@ -774,6 +774,85 @@ def collect_http_probes(
     return public
 
 
+def collect_n8n_workflows(config, now=None):
+    """Read only the selected scheduled workflows; manual tests cannot mask failures."""
+    settings = config.get("n8n_workflows")
+    if not settings:
+        return {"state": "OK", "detail": {"workflows": [], "reasons": []}}
+    now = time.time() if now is None else now
+    results, reasons = [], []
+    try:
+        with sqlite3.connect(
+            Path(settings["database"]).as_uri() + "?mode=ro", uri=True, timeout=2
+        ) as db:
+            db.execute("PRAGMA query_only=ON")
+            for spec in settings["workflows"]:
+                wid = spec["id"]
+                row = db.execute(
+                    "SELECT name, active, nodes, settings, createdAt FROM workflow_entity WHERE id=?",
+                    (wid,),
+                ).fetchone()
+                if row is None:
+                    reasons.append(wid + ": workflow missing")
+                    continue
+                name, active, nodes, workflow_settings, created = row
+                schedules = [
+                    node for node in json.loads(nodes)
+                    if node["type"] == "n8n-nodes-base.scheduleTrigger" and not node.get("disabled")
+                ]
+                cadence = None
+                if len(schedules) == 1:
+                    intervals = schedules[0]["parameters"]["rule"]["interval"]
+                    if len(intervals) == 1:
+                        rule = intervals[0]
+                        field = rule.get("field", "days")
+                        scale = {"seconds": 1, "minutes": 60, "hours": 3600}.get(field)
+                        if scale:
+                            cadence = scale * int(rule.get(field + "Interval", 1))
+                contract_ok = bool(active) and cadence == spec["cadence_s"]
+                if not contract_ok:
+                    reasons.append(wid + ": active schedule differs from monitored contract")
+                cadence = spec["cadence_s"]
+                success = db.execute(
+                    "SELECT startedAt FROM execution_entity WHERE workflowId=? AND mode='trigger' "
+                    "AND status='success' ORDER BY startedAt DESC LIMIT 1", (wid,),
+                ).fetchone()
+                completed = db.execute(
+                    "SELECT status FROM execution_entity WHERE workflowId=? AND mode='trigger' "
+                    "AND status NOT IN ('new','running','waiting') ORDER BY startedAt DESC LIMIT ?",
+                    (wid, settings["consecutive_failure_threshold"]),
+                ).fetchall()
+                failures = 0
+                for (status,) in completed:
+                    if status not in ("error", "crashed", "canceled"):
+                        break
+                    failures += 1
+                timestamp = success[0] if success else created
+                parsed = datetime.fromisoformat(timestamp.replace("Z", "+00:00"))
+                if parsed.tzinfo is None:
+                    parsed = parsed.replace(tzinfo=timezone.utc)
+                age = max(0, now - parsed.timestamp())
+                timeout = int(json.loads(workflow_settings or "{}").get("executionTimeout", 0))
+                stale_after = cadence * settings["stale_cadence_multiplier"] + max(0, timeout)
+                state = "OK" if contract_ok else "DEGRADED"
+                if failures >= settings["consecutive_failure_threshold"]:
+                    reasons.append(f"{wid}: {failures} consecutive scheduled failures")
+                    state = "DEGRADED"
+                if age > stale_after:
+                    reasons.append(f"{wid}: {'no success' if not success else 'last success stale'} "
+                                   f"({round(age)}s > {stale_after}s)")
+                    state = "DEGRADED"
+                results.append({"id": wid, "name": name, "state": state, "cadence_s": cadence,
+                                "last_success": success[0] if success else None,
+                                "success_age_s": round(age), "stale_after_s": stale_after,
+                                "consecutive_failures": failures})
+        return {"state": "DEGRADED" if reasons else "OK",
+                "detail": {"workflows": results, "reasons": reasons}}
+    except (sqlite3.Error, OSError, ValueError, KeyError, TypeError) as exc:
+        return {"state": "FAIL", "detail": {"workflows": results,
+                "reasons": ["Execution-state read failed: " + str(exc)[:180]]}}
+
+
 def collect_cross_site(
     config,
     tracker,
@@ -1603,6 +1682,19 @@ def build_incidents(snapshot):
     home = snapshot.get("home_pai") or {}
     knowledge = snapshot.get("knowledge") or {}
     operations = snapshot.get("operations") or {}
+
+    workflow_health = apps.get("n8n_workflows") or {}
+    workflow_detail = _detail(workflow_health)
+    incidents["n8n-workflow-health"] = _make_incident(
+        "n8n-workflow-health", _item_state(workflow_health),
+        "Critical n8n scheduled workflows", "EDGE", "Integration",
+        "Scheduled application integrations are degraded.",
+        "; ".join(workflow_detail.get("reasons", [])) or "Scheduled integrations are healthy",
+        [f"{x['id']}: {x['state']} · failures={x['consecutive_failures']} · "
+         f"success age={x['success_age_s']}s / {x['stale_after_s']}s"
+         for x in workflow_detail.get("workflows", [])],
+        suppressed=_item_state(apps.get("n8n") or {}) != "OK",
+    )
 
     nginx = system.get("nginx.service") or {}
     xray = system.get("xray.service") or {}
@@ -2455,10 +2547,10 @@ def main():
                 ),
 
             "applications":
-                collect_http_probes(
+                {**collect_http_probes(
                     config,
                     tracker,
-                ),
+                ), "n8n_workflows": collect_n8n_workflows(config)},
 
             "home_pai":
                 collect_cross_site(

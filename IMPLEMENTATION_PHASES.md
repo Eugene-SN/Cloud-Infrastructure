@@ -735,3 +735,9 @@ This accepted operator scope supersedes the preceding proposed separate P2-2a/P2
 Completed: n8n internal FQDN + Plane hostname allowlist; two PATs under the existing operator; current CE raw-body HMAC webhook/API v1 bus and native idempotency; private Mattermost channel through existing n8n bot; GitHub scheduled PR association/comment synchronization; current official Hermes MCP stdio and project-scoped CE context. Confirmed API/MCP deletion webhook emission gap is covered by native API v1 activity reconciliation every5min. Core marker `PLANE_PART2_CORE_INTEGRATIONS=PASS`; record `PLANE_PART_2_CORE_INTEGRATIONS_ACCEPTANCE_2026-10-02.md`.
 
 Knowledge workflow: `DEFERRED_PENDING_CONCRETE_USE_CASE`; Nextcloud/external calendar/intake email: `DEFERRED`. They do not create additional mandatory acceptance stages. No current core Part 2 implementation scope remains incomplete; future optional workflow design starts only for a concrete use case.
+
+## 2026-10-02 — Interaction/AI tool foundation — COMPLETE / ACCEPTED
+
+The operator-authorized unified post-infrastructure workstream repairs Plane reconciliation, adds generic critical-workflow monitoring, connects native MCP tool surfaces for Hermes/Codex/Antigravity, implements explicit direct vLLM/CLI/Hermes AI execution and completes the generic Nextcloud file/event/agent-tool foundation. This supersedes only the earlier generic Nextcloud-foundation deferral; Knowledge-specific workflows, calendars/intake and operator automations require concrete use cases. No new finite infrastructure stage or automatic next deployment is inferred.
+
+Single acceptance and recovery evidence: `EDGE_INTERACTION_AI_TOOL_FABRIC_ACCEPTANCE_2026-10-02.md`. Canonical definitions and contract: `deployments/edge/interaction-fabric/README.md`. Current Stage0–13 and Plane Part2 accepted baseline remain in force.

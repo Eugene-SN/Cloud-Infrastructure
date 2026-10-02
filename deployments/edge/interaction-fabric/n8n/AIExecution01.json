@@ -1,0 +1,272 @@
+{
+  "id": "wQ9ZqMisMCGadGEE",
+  "name": "AIExecution01",
+  "nodes": [
+    {
+      "id": "de48c4ce-c3fb-42c0-898b-0bb32c69a124",
+      "name": "Tool Input",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "edge-ai-execution",
+        "authentication": "headerAuth",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "webhookId": "8731686a-a3c3-4d34-8a5c-ff4e72ea827b",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "HtTb0Doigwexj4re",
+          "name": "Edge foundation tool ingress"
+        }
+      }
+    },
+    {
+      "id": "a799f112-d143-41b3-99e0-ec956c0d1e87",
+      "name": "Subworkflow Input",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        220,
+        0
+      ],
+      "parameters": {
+        "inputSource": "passthrough"
+      }
+    },
+    {
+      "id": "f32b9440-c6dd-434f-b347-812cfe5b0b04",
+      "name": "Validate Contract",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ],
+      "parameters": {
+        "jsCode": "const p=$json.body ?? $json;\nif (!['vllm','codex','antigravity','hermes'].includes(p.backend)) throw new Error('backend must be explicitly vllm, codex, antigravity, or hermes');\nif (p.action !== 'cancel' && (typeof p.task !== 'string' || !p.task.trim())) throw new Error('task required');\nif (p.action === 'cancel' && !['codex','antigravity'].includes(p.backend)) throw new Error('cancel supported for CLI requests');\nconst timeout=p.timeout ?? 300;\nif (!Number.isFinite(timeout) || timeout<1 || timeout>3600) throw new Error('timeout must be 1..3600 seconds');\nconst output_mode=p.output_mode ?? 'text';\nif (!['text','json'].includes(output_mode)) throw new Error('output_mode must be text or json');\nif (p.schema !== undefined && (!p.schema || typeof p.schema!=='object' || Array.isArray(p.schema))) throw new Error('schema must be JSON object');\nconst q={...p,timeout,output_mode,cwd:p.cwd ?? '/home/core/projects/cloud-infrastructure'};\nq.vllm_body={model:q.model ?? 'qwen3.8-27b-fp8',messages:[{role:'user',content:q.task}],max_tokens:q.max_tokens ?? 1024};\nif (q.output_mode==='json') q.vllm_body.response_format=q.schema ? {type:'json_schema',json_schema:{name:'edge_result',strict:true,schema:q.schema}} : {type:'json_object'};\nreturn [{json:{...q,payload:Buffer.from(JSON.stringify(q)).toString('base64')}}];"
+      }
+    },
+    {
+      "id": "e1f01b88-4491-43a5-ad36-356201f3c7b2",
+      "name": "Explicit Backend",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        660,
+        0
+      ],
+      "parameters": {
+        "mode": "expression",
+        "numberOutputs": 3,
+        "output": "={{ [\"vllm\",\"hermes\"].includes($json.backend) ? ($json.backend === \"vllm\" ? 0 : 1) : 2 }}"
+      }
+    },
+    {
+      "id": "85d5227a-308d-412f-9b58-74e0d0e279d7",
+      "name": "Direct vLLM",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        880,
+        0
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "http://192.168.1.30:8000/v1/chat/completions",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.vllm_body) }}",
+        "options": {
+          "timeout": "={{ $json.timeout * 1000 }}",
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "1c36a653-b169-43b7-811f-ba3a5852626e",
+      "name": "Direct Hermes",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1100,
+        0
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "http://172.19.0.1:8642/v1/responses",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({model:'hermes-agent',input:$json.task + ($json.output_mode==='json' ? '\\nReturn ONLY JSON matching this schema: '+JSON.stringify($json.schema ?? {}) : ''),store:true}) }}",
+        "options": {
+          "timeout": "={{ $json.timeout * 1000 }}",
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "Hermes4FAuth01",
+          "name": "Hermes API - private n8n bridge"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "0471ebb8-2514-43c9-b9cc-fe1cb778e28c",
+      "name": "Direct Host CLI",
+      "type": "n8n-nodes-base.ssh",
+      "typeVersion": 1,
+      "position": [
+        1320,
+        0
+      ],
+      "parameters": {
+        "authentication": "privateKey",
+        "resource": "command",
+        "operation": "execute",
+        "cwd": "/home/core",
+        "command": "={{ \"/usr/local/bin/edge-ai-exec \" + $json.payload }}"
+      },
+      "credentials": {
+        "sshPrivateKey": {
+          "id": "OsTkP0IAXod5QjbI",
+          "name": "SSH - n8n core edge AI execution"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "ba7e2c6f-5bb9-4e69-9a0c-95b03bc33aed",
+      "name": "Execution Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1540,
+        0
+      ],
+      "parameters": {
+        "jsCode": "const p=$('Validate Contract').first().json;\nlet out;\nif (['codex','antigravity'].includes(p.backend)) {\n try {out=JSON.parse($json.stdout);} catch {out={ok:false,status:'transport_error',error:$json.error ?? $json.stderr ?? 'Invalid SSH result'};}\n} else {\n const r=$json.body ?? $json; const status=$json.statusCode;\n if ($json.error || (status && (status<200 || status>=300)) || r.error) out={ok:false,status:'backend_error',http_status:status ?? null,error:$json.error ?? r.error};\n else {\n  let text=p.backend==='vllm' ? r.choices?.[0]?.message?.content : r.output?.flatMap(x=>x.content ?? []).filter(x=>x.type==='output_text').map(x=>x.text).join('\\n');\n  if (p.backend==='vllm' && r.choices?.[0]?.finish_reason==='length') out={ok:false,status:'token_limit',result:text};\n  else if (typeof text!=='string') out={ok:false,status:'invalid_backend_response',result:r};\n  else if (p.output_mode==='json') { try {out={ok:true,status:'completed',result:JSON.parse(text),usage:r.usage};} catch {out={ok:false,status:'invalid_json',result:text};} }\n  else out={ok:true,status:'completed',result:text,usage:r.usage};\n }\n}\nreturn [{json:{backend:p.backend,...out}}];"
+      }
+    }
+  ],
+  "connections": {
+    "Tool Input": {
+      "main": [
+        [
+          {
+            "node": "Validate Contract",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Subworkflow Input": {
+      "main": [
+        [
+          {
+            "node": "Validate Contract",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Contract": {
+      "main": [
+        [
+          {
+            "node": "Explicit Backend",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Explicit Backend": {
+      "main": [
+        [
+          {
+            "node": "Direct vLLM",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Direct Hermes",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Direct Host CLI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Direct vLLM": {
+      "main": [
+        [
+          {
+            "node": "Execution Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Direct Hermes": {
+      "main": [
+        [
+          {
+            "node": "Execution Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Direct Host CLI": {
+      "main": [
+        [
+          {
+            "node": "Execution Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionTimeout": 3660,
+    "saveDataSuccessExecution": "all",
+    "saveDataErrorExecution": "all",
+    "availableInMCP": true
+  },
+  "description": "Explicit backend AI foundation. POST body: backend (vllm/codex/antigravity/hermes), task, optional cwd (existing absolute host directory), timeout seconds 1..3600 (default300), output_mode text/json, schema object, model, effort, max_tokens (vLLM). CLI action=cancel with backend and request_id cancels that request. No automatic routing or fallback. Return backend, ok, status, result, error/exit_code. SSH concurrency=2; busy returns75. MCP execute Tool Input with webhookData.body."
+}
