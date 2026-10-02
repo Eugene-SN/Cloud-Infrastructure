@@ -1,0 +1,371 @@
+{
+  "baseline_commit": "b65ffdbc4551fdb1dcd815a5c11a11fa737231b0",
+  "versions": {
+    "hermes": "v0.21.5+5635.g5bba024 (2026.9.24)",
+    "hermes_source": "5bba024d8ddd388f56f354c1f789be825e3d8a3c",
+    "codex": "0.160.0",
+    "antigravity": "1.2.14"
+  },
+  "default": {
+    "status": "completed",
+    "result": "HERMES_DEFAULT_QWEN_20261002",
+    "usage": {
+      "input_tokens": 16798,
+      "output_tokens": 142,
+      "total_tokens": 16940
+    },
+    "native_session": {
+      "id": "7e01c1de-441a-49e8-a2de-d4efb4850b34",
+      "model": "qwen3.8-27b-fp8",
+      "billing_provider": "custom",
+      "billing_base_url": "http://192.168.1.30:8000/v1",
+      "tool_call_count": 0,
+      "api_call_count": 1
+    },
+    "new_specialist_pids": [],
+    "stored_response": false,
+    "gateway_state": "running",
+    "mattermost": "connected"
+  },
+  "native_cli": {
+    "ok": true,
+    "status": "completed",
+    "result": "HERMES_NATIVE_CODEX_COMMAND_20261002",
+    "backend": "codex",
+    "dispatch": "native_plugin_command",
+    "selected_by": "operator",
+    "cwd": "/home/core/projects/cloud-infrastructure",
+    "home": "/home/core",
+    "permission_mode": "read-only",
+    "pid": 2581934,
+    "hermes_inference_turns": 0
+  },
+  "native_command_dispatch": {
+    "codex-success": {
+      "ok": true,
+      "status": "completed",
+      "backend": "codex",
+      "exit_code": 0,
+      "pid": 2571729,
+      "cwd": "/tmp/hermes-executors.c0pfQ4E5/project",
+      "home": "/home/core",
+      "permission_mode": "read-only",
+      "hermes_inference_turns": 0,
+      "selected_by": "operator",
+      "duration_s": 14.606,
+      "result": {
+        "marker": "EDGE_EXECUTOR_READBACK_20261002",
+        "cwd": "/tmp/hermes-executors.c0pfQ4E5/project"
+      },
+      "observed_processes": [
+        {
+          "pid": 2571729,
+          "exe": "/home/core/.codex/packages/standalone/releases/0.160.0-x86_64-unknown-linux-musl/bin/codex",
+          "cwd": "/tmp/hermes-executors.c0pfQ4E5/project",
+          "fd0": "pipe:[58247021]",
+          "flags": [
+            "--sandbox",
+            "--ephemeral",
+            "--json",
+            "--color",
+            "--skip-git-repo-check",
+            "--output-schema"
+          ],
+          "backend": "codex"
+        }
+      ],
+      "label": "codex-success"
+    },
+    "codex-nonzero": {
+      "ok": false,
+      "status": "error",
+      "backend": "codex",
+      "exit_code": 1,
+      "pid": 2576803,
+      "cwd": "/tmp/hermes-executors.c0pfQ4E5/project",
+      "home": "/home/core",
+      "permission_mode": "read-only",
+      "hermes_inference_turns": 0,
+      "selected_by": "operator",
+      "duration_s": 6.029,
+      "observed_processes": [
+        {
+          "pid": 2576803,
+          "exe": "/home/core/.codex/packages/standalone/releases/0.160.0-x86_64-unknown-linux-musl/bin/codex",
+          "cwd": "/tmp/hermes-executors.c0pfQ4E5/project",
+          "fd0": "pipe:[58267272]",
+          "flags": [
+            "--sandbox",
+            "--ephemeral",
+            "--json",
+            "--color",
+            "--skip-git-repo-check",
+            "--output-schema",
+            "--model"
+          ],
+          "backend": "codex"
+        }
+      ],
+      "label": "codex-nonzero"
+    },
+    "codex-timeout": {
+      "ok": false,
+      "status": "timeout",
+      "backend": "codex",
+      "exit_code": -15,
+      "pid": 2577261,
+      "cwd": "/tmp/hermes-executors.c0pfQ4E5/project",
+      "home": "/home/core",
+      "permission_mode": "read-only",
+      "hermes_inference_turns": 0,
+      "selected_by": "operator",
+      "duration_s": 1.132,
+      "observed_processes": [
+        {
+          "pid": 2577261,
+          "exe": "/home/core/.codex/packages/standalone/releases/0.160.0-x86_64-unknown-linux-musl/bin/codex",
+          "cwd": "/tmp/hermes-executors.c0pfQ4E5/project",
+          "fd0": "pipe:[58270267]",
+          "flags": [
+            "--sandbox",
+            "--ephemeral",
+            "--json",
+            "--color",
+            "--skip-git-repo-check",
+            "--output-schema"
+          ],
+          "backend": "codex"
+        }
+      ],
+      "label": "codex-timeout"
+    },
+    "antigravity-success": {
+      "ok": true,
+      "status": "completed",
+      "backend": "antigravity",
+      "exit_code": 0,
+      "pid": 2572403,
+      "cwd": "/tmp/hermes-executors.c0pfQ4E5/project",
+      "home": "/home/core",
+      "permission_mode": "read-only",
+      "hermes_inference_turns": 0,
+      "selected_by": "operator",
+      "duration_s": 15.671,
+      "result": {
+        "cwd": "/tmp/hermes-executors.c0pfQ4E5/project",
+        "marker": "EDGE_EXECUTOR_READBACK_20261002"
+      },
+      "observed_processes": [
+        {
+          "pid": 2572403,
+          "exe": "/home/core/.local/bin/agy",
+          "cwd": "/tmp/hermes-executors.c0pfQ4E5/project",
+          "fd0": "/dev/null",
+          "flags": [
+            "--output-format",
+            "--print-timeout",
+            "--mode",
+            "--sandbox",
+            "--json-schema"
+          ],
+          "backend": "antigravity"
+        }
+      ],
+      "label": "antigravity-success",
+      "native_status": "SUCCESS",
+      "conversation_id": "ceecf337-6d0a-46c7-bb48-92b5444c5a20"
+    },
+    "antigravity-nonzero": {
+      "ok": false,
+      "status": "error",
+      "backend": "antigravity",
+      "exit_code": 1,
+      "pid": 2577538,
+      "cwd": "/tmp/hermes-executors.c0pfQ4E5/project",
+      "home": "/home/core",
+      "permission_mode": "read-only",
+      "hermes_inference_turns": 0,
+      "selected_by": "operator",
+      "duration_s": 4.527,
+      "observed_processes": [
+        {
+          "pid": 2577538,
+          "exe": "/home/core/.local/bin/agy",
+          "cwd": "/tmp/hermes-executors.c0pfQ4E5/project",
+          "fd0": "/dev/null",
+          "flags": [
+            "--output-format",
+            "--print-timeout",
+            "--mode",
+            "--sandbox",
+            "--json-schema",
+            "--model"
+          ],
+          "backend": "antigravity"
+        }
+      ],
+      "label": "antigravity-nonzero",
+      "native_status": "ERROR",
+      "conversation_id": ""
+    },
+    "antigravity-timeout": {
+      "ok": false,
+      "status": "timeout",
+      "backend": "antigravity",
+      "exit_code": -15,
+      "pid": 2577827,
+      "cwd": "/tmp/hermes-executors.c0pfQ4E5/project",
+      "home": "/home/core",
+      "permission_mode": "read-only",
+      "hermes_inference_turns": 0,
+      "selected_by": "operator",
+      "duration_s": 1.108,
+      "observed_processes": [
+        {
+          "pid": 2577827,
+          "exe": "/home/core/.local/bin/agy",
+          "cwd": "/tmp/hermes-executors.c0pfQ4E5/project",
+          "fd0": "/dev/null",
+          "flags": [
+            "--output-format",
+            "--print-timeout",
+            "--mode",
+            "--sandbox",
+            "--json-schema"
+          ],
+          "backend": "antigravity"
+        }
+      ],
+      "label": "antigravity-timeout"
+    }
+  },
+  "mcp": [
+    {
+      "server": "plane",
+      "tools": 30,
+      "server_version": "3.2.0",
+      "call": "project",
+      "pass": true
+    },
+    {
+      "server": "n8n",
+      "tools": 35,
+      "server_version": "1.1.0",
+      "call": "get_workflow_details",
+      "pass": true
+    },
+    {
+      "server": "github",
+      "tools": 44,
+      "server_version": "v1.13.0",
+      "call": "get_me",
+      "pass": true
+    },
+    {
+      "server": "playwright",
+      "tools": 25,
+      "server_version": "1.64.0-alpha-1790635538000",
+      "call": "browser_navigate",
+      "pass": true
+    },
+    {
+      "server": "openai_docs",
+      "client": "codex_only",
+      "tools": 5,
+      "pass": true
+    }
+  ],
+  "final_runtime": {
+    "observed_at_utc": "2026-10-02T08:16:49.303741+00:00",
+    "AIExecution01_active": true,
+    "AIExecution01_definition_sha256": "f63f0e5c8d6a667518694932e87b02cf1f5edf074eef0c3fb1237abeacb633e6",
+    "AIExecution01_hash_format": "SHA256(json.dumps([nodes,connections,settings], separators=(comma,colon)))",
+    "EDGE_STATE": "OK",
+    "OVERALL_STATE": "OK",
+    "applications": {
+      "n8n": "OK",
+      "mattermost": "OK",
+      "authelia": "OK",
+      "semaphore": "OK",
+      "maintenance": "OK",
+      "nextcloud": "OK",
+      "webdav": "OK",
+      "t3_code": "OK",
+      "plane": "OK",
+      "plane_api": "OK",
+      "plane_live": "OK",
+      "n8n_workflows": "OK"
+    },
+    "backrest": {
+      "plan": "edge-state",
+      "paths": [
+        "/etc",
+        "/home/core",
+        "/root",
+        "/opt",
+        "/srv",
+        "/usr/local",
+        "/var/lib",
+        "/var/spool",
+        "/var/www"
+      ],
+      "schedule": {
+        "clock": "CLOCK_LOCAL",
+        "cron": "0 1,7,13,19 * * *"
+      },
+      "manual_flow_issued": false
+    },
+    "monitor_generated_at": "2026-10-02T08:16:44.564488+00:00"
+  },
+  "offline_properties": {
+    "native_rc0_non_success_and_denials_are_failures": "PASS",
+    "operator_codex_modes": "PASS",
+    "legacy_n8n_full_access_default_preserved": "PASS"
+  },
+  "config_changed_top_level_keys": [
+    "agent",
+    "plugins"
+  ],
+  "protected_byte_unchanged": {
+    "/home/core/.hermes/.env": "8222b52ab6a342f53fe636f0783861ee78aa237c39c1403729be55926a19f9e9",
+    "/home/core/.codex/config.toml": "12ffbca571e13900f0916f1000f4f5b9b41d1cbc49c71d5ae23cf95cf5a080d4",
+    "/home/core/.gemini/config/mcp_config.json": "e83925faffb64dd5a98ccfd0671d29fd648a4aab6a7237a975755dce1ca2835c"
+  },
+  "runtime_sha256": {
+    "/usr/local/bin/edge-ai-exec": "2103c8369277c7ae05b2d63855b1c967323a7af87d8354541e83d0f0177ce2a2",
+    "/home/core/.hermes/plugins/edge-explicit-executors/plugin.yaml": "a2fb1404f4fe357610f14eec70ad6af6d48e3a9c1b485d476773d28ace25a2c3",
+    "/home/core/.hermes/plugins/edge-explicit-executors/__init__.py": "97b54f27937b1c674a8bc916c41f95b202adc93b859370dffeaa6825682dbd2f",
+    "/home/core/.hermes/skills/autonomous-ai-agents/codex/SKILL.md": "13d300a9497a5c8f3df5c3bfc2489b79fa0cec6ff0a89b4e77c917723f04df61",
+    "/home/core/.hermes/skills/autonomous-ai-agents/antigravity/SKILL.md": "bc92667eb764339b82edd66d4802bb4d563d5e11ab08ec743886a2e1dc371254"
+  },
+  "activation": {
+    "gateway_native_hotload": true,
+    "adapters_rewired": 2,
+    "dashboard_restarted_once": true,
+    "gateway_restarted": false,
+    "dashboard_active": true,
+    "dashboard_backend_oidc_unauthenticated_http": 401,
+    "public_dashboard_oidc_login_reachable": true,
+    "gateway_state": "running",
+    "mattermost": "connected"
+  },
+  "legacy": {
+    "name": "Hermes4FMachine01",
+    "active": true,
+    "role": "dormant retained compatibility interface",
+    "durable_workflows_audited": 9,
+    "current_workflow_callers": [],
+    "retained_execution_rows": 0,
+    "active_host_callers_found": false,
+    "definition_changed": false
+  },
+  "cleanup": {
+    "AGY_fixture_cache_pointer_removed": true,
+    "repo_test_bytecode_removed": true,
+    "active_request_records": 0,
+    "native_conversation_auth_history": "retained: native lifecycle",
+    "exact_fixture_directory_removed": true,
+    "specialist_test_pids_remaining": 0,
+    "verified_at_utc": "2026-10-02T08:15:05.662063+00:00"
+  }
+}

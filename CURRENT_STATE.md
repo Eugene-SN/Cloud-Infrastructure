@@ -1,5 +1,15 @@
 # Cloud Infrastructure — Current State
 
+## Current Hermes explicit executors — 2026-10-02
+
+Bounded reconciliation is **COMPLETE / ACCEPTED**, `EDGE_HERMES_EXPLICIT_EXECUTOR_RECONCILIATION=PASS`. Record: `EDGE_HERMES_EXPLICIT_EXECUTOR_RECONCILIATION_ACCEPTANCE_2026-10-02.md`; exact operator/deployment/recovery contract: `deployments/edge/interaction-fabric/hermes-executors/README.md`.
+
+- Hermes default remains custom ai-node vLLM/Qwen `qwen3.8-27b-fp8`. Explicit native `/codex` and `/antigravity` commands invoke independent standalone CLIs through the existing one-shot helper, with no Hermes inference on this command path, automatic selection/fallback/fan-out/review or new provider/daemon. `/skill` is guidance; `/v1/responses` remains an inference endpoint.
+- Fresh versions: Hermes `v0.21.5+5635.g5bba024`, source `5bba024d8ddd388f56f354c1f789be825e3d8a3c`; Codex0.160.0; AGY1.2.14. Native source/update ownership is unchanged. Local Codex guidance is corrected and an AGY skill added through the supported user-skill lifecycle.
+- Hermes commands always specify a permission mode: Codex defaults read-only, write/full access is explicit; AGY defaults native plan+sandbox, which is not filesystem-immutable. Existing n8n callers omitting the new optional mode retain their accepted full-access contract. Helper completion now rejects AGY partial/non-SUCCESS/denied results and enforces its host deadline before AGY's partial timeout.
+- AIExecution01 is active and definition-unchanged; all accepted service MCPs and Codex-only Docs remain. Hermes4FMachine01 is active but dormant compatibility state: no caller found among current workflows, retained executions or scoped active host references; its historical prompt branches remain unchanged, outside the new command contract.
+- Native plugin validated/enabled, Gateway hotloaded two adapters without restart; Dashboard restarted once, auth/unit unchanged. Real default, native CLI/dispatcher specialist success, non-zero and timeout gates passed. Gateway/Dashboard active, Mattermost connected, Edge/overall OK. All new nonsecret state is in Git; existing scheduled Backrest edge-state coverage is verified, no manual flow issued. Exact test artifacts/cache pointer removed.
+
 ## Current interaction/AI tool foundation — 2026-10-02
 
 The unified interaction/AI tool fabric is complete, with final recovery verification recorded in `EDGE_INTERACTION_AI_TOOL_FABRIC_ACCEPTANCE_2026-10-02.md`. It supersedes earlier deferral of the generic Nextcloud automation foundation; user-specific Knowledge/calendar/intake/business workflows remain future concrete-use work. Stage0–13 acceptance and the Plane Part2 core remain accepted.

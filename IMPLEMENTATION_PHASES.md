@@ -741,3 +741,10 @@ Knowledge workflow: `DEFERRED_PENDING_CONCRETE_USE_CASE`; Nextcloud/external cal
 The operator-authorized unified post-infrastructure workstream repairs Plane reconciliation, adds generic critical-workflow monitoring, connects native MCP tool surfaces for Hermes/Codex/Antigravity, implements explicit direct vLLM/CLI/Hermes AI execution and completes the generic Nextcloud file/event/agent-tool foundation. This supersedes only the earlier generic Nextcloud-foundation deferral; Knowledge-specific workflows, calendars/intake and operator automations require concrete use cases. No new finite infrastructure stage or automatic next deployment is inferred.
 
 Single acceptance and recovery evidence: `EDGE_INTERACTION_AI_TOOL_FABRIC_ACCEPTANCE_2026-10-02.md`. Canonical definitions and contract: `deployments/edge/interaction-fabric/README.md`. Current Stage0–13 and Plane Part2 accepted baseline remain in force.
+
+
+## 2026-10-02 — Hermes explicit executor reconciliation — COMPLETE / ACCEPTED
+
+Bounded follow-up to accepted interaction/AI foundation b65ffdbc4551fdb1dcd815a5c11a11fa737231b0: current upstream/runtime reconciliation, native operator-selected /codex and /antigravity command-only plugin, shared helper permission/completion fixes, supported local executor skills, real success/failure/timeout tests and relevant non-regression. Hermes default remains private vLLM/Qwen; no automatic routing/fallback/review, inter-executor orchestration, new provider/daemon or second execution fabric. AIExecution01 and accepted service MCP definitions remain intact. Active Hermes4FMachine01 is classified as dormant retained compatibility state after the caller audit.
+
+Single new acceptance: EDGE_HERMES_EXPLICIT_EXECUTOR_RECONCILIATION_ACCEPTANCE_2026-10-02.md, marker EDGE_HERMES_EXPLICIT_EXECUTOR_RECONCILIATION=PASS. Canonical deployment/recovery contract and sanitized evidence: deployments/edge/interaction-fabric/hermes-executors/. Git plus verified existing scheduled Backrest coverage suffice; no new manual snapshot. Exact cleanup and Edge/overall OK complete this scope. No new finite infrastructure stage or next deployment is inferred.

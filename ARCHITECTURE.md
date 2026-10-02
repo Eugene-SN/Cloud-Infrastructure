@@ -1,5 +1,17 @@
 # Cloud Infrastructure — Architecture State
 
+## Accepted Hermes explicit executor contract — 2026-10-02
+
+Hermes uses vLLM/Qwen as its default model. Codex and Antigravity are independent specialist executors selected explicitly by the operator. Hermes does not autonomously route, fall back, fan out, cross-review, or substitute one executor for another.
+
+n8n retains the accepted explicit AIExecution01 backend fabric. This workstream does not introduce a second routing layer.
+
+Native user plugin `edge-explicit-executors` registers `/codex` and `/antigravity`: command name fixes backend → existing one-shot `edge-ai-exec` → standalone CLI → direct output, without Hermes inference. Native CLI/Gateway/Desktop command dispatch takes precedence over model-facing skills; Dashboard terminal chat uses the native CLI. No tools/hooks/providers/listener or managed-source patch is added. Plain/default Hermes requests remain on custom ai-node Qwen. Private `/v1/responses` is still inference, not command dispatch.
+
+Codex commands default read-only; write/full access requires explicit operator JSON. AGY plan+sandbox is read-oriented and not immutable filesystem isolation. Accepted n8n helper callers keep their prior omitted-mode behavior. The active dormant Hermes4FMachine01 remains unchanged after no current caller was found; its historical prompt branches are not this specialist contract. Accepted service MCPs, topology/auth/storage and lifecycle remain intact.
+
+Exact contract, native boundaries and recovery: `deployments/edge/interaction-fabric/hermes-executors/README.md`; consolidated acceptance: `EDGE_HERMES_EXPLICIT_EXECUTOR_RECONCILIATION_ACCEPTANCE_2026-10-02.md`.
+
 ## Accepted interaction/AI tool fabric — 2026-10-02
 
 Post-infrastructure foundation: all three agent clients use native Plane/n8n/GitHub/Playwright MCP; OpenAI Docs is Codex-only. n8n is the deterministic workflow/builder/Data Table plane. AIExecution01 explicitly selects direct private vLLM, direct host Codex/Antigravity via native SSH, or the accepted private Hermes API. Hermes remains the persistent reasoning/tool plane; Hermes4FMachine01 stays unchanged. One small one-shot CLI helper and one GitHub stdio launcher have no listener/service; existing networks suffice.

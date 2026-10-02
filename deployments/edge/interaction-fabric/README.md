@@ -3,6 +3,8 @@
 Accepted workstream: `EDGE_INTERACTION_AI_TOOL_FABRIC_ACCEPTANCE_2026-10-02.md`.
 This foundation extends the accepted applications; operator-specific workflows remain future work.
 
+The later bounded Hermes specialist reconciliation is accepted in `EDGE_HERMES_EXPLICIT_EXECUTOR_RECONCILIATION_ACCEPTANCE_2026-10-02.md`. Native commands, permission boundaries, updated helper completion and exact lifecycle/recovery are canonical in [hermes-executors/README.md](hermes-executors/README.md). It preserves this foundation and AIExecution01 definitions.
+
 ## Runtime and credential ownership
 
 | Component | Native runtime / transport | Ownership |
@@ -31,14 +33,14 @@ Playwright v0.0.83 uses existing Chromium153 at `/home/core/.cache/ms-playwright
 
 Native workflow ID: `wQ9ZqMisMCGadGEE`. Export: `n8n/AIExecution01.json`.
 
-Inputs: required explicit `backend` (`vllm`, `codex`, `antigravity`, `hermes`) and `task`; optional absolute existing `cwd` (default project directory), `timeout`1–3600 seconds (default300), `output_mode` (`text` or `json`), JSON `schema`, CLI `model`/`effort`, vLLM `model`/`max_tokens`, `request_id`. `action=cancel` plus `request_id` addresses a running CLI request. There is no automatic selection, quota inference or fallback.
+Inputs: required explicit `backend` (`vllm`, `codex`, `antigravity`, `hermes`) and `task`; optional absolute existing `cwd` (default project directory), `timeout`1–3600 seconds (default300), `output_mode` (`text` or `json`), JSON `schema`, CLI `model`/`effort`/`permission_mode`, vLLM `model`/`max_tokens`, `request_id`. `action=cancel` plus `request_id` addresses a running CLI request. There is no automatic selection, quota inference or fallback. Existing payload forwarding accepts the new optional permission field without workflow modification; omitted mode retains the accepted n8n full-access behavior. Hermes's separate native command path always supplies a mode, defaulting to read-only.
 
 MCP callers first read workflow details, then call native `execute_workflow` with `executionMode=production`, `triggerNodeName="Tool Input"`, and `inputs.webhookData={method:"POST",body:{...}}`. Native subworkflow callers use `Subworkflow Input`. The direct HTTP webhook requires the encrypted `Edge foundation tool ingress` header credential; it introduces no nginx/public ingress exemption.
 
 - vLLM calls the existing private `192.168.1.30:8000/v1/chat/completions` directly, current served model `qwen3.8-27b-fp8`. Native JSON-schema output was tested against the real model. HTTP timeout, non-2xx/model/context errors, token-limit termination and invalid JSON produce explicit failure results.
 - Hermes calls the existing authenticated private `172.19.0.1:8642/v1/responses`, using its configured agent/model. JSON mode supplies a schema prompt and parses the result; it is not a claim of native constrained decoding. The accepted `Hermes4FMachine01` definition/credential remain unchanged and were retested.
 - Codex/Antigravity use native encrypted SSH credential `OsTkP0IAXod5QjbI`. Dedicated public-key comment is `n8n-core-edge-ai-execution`; there is no extra Linux user. Install `edge-ai-exec` as root755 at `/usr/local/bin/edge-ai-exec`.
-- The SSH command carries base64 JSON; the helper constructs argument arrays without a shell. Codex uses `exec --sandbox danger-full-access -c approval_policy="never" --ephemeral --json`, stdin task, native result file and optional output schema. Antigravity uses `-p`, native JSON/schema, `--print-timeout`, `--mode accept-edits --dangerously-skip-permissions`; model/effort are supplied only when requested.
+- The SSH command carries base64 JSON; the helper constructs argument arrays without a shell and fixes core HOME. Codex uses `exec`, a mode-selected sandbox, `approval_policy="never"`, `--ephemeral --json`, stdin task, native final-message file and optional output schema. Antigravity uses `-p`, native JSON/schema, explicit native mode/sandbox semantics and a native print timeout longer than the authoritative host deadline. Omitted-mode n8n calls retain full access; Hermes command defaults and explicit write/full-access modes are documented in the specialist contract. RC0 requires a nonempty Codex final message or AGY native SUCCESS without denied_actions; partial/denied output is a failure. Model/effort are supplied only when requested.
 - Two native flock slots bound concurrent CLI execution. A full pool returns `busy`/75; no extra queue exists. Timeout/cancellation terminate the process group, escalating after5s, and return status, real process exit code and bounded stderr (16KiB). Structured Antigravity results use native `structured_output`.
 - `/home/core/.local/state/edge-ai-exec` contains current coordination slot locks and running request records only. Request records and protected `/tmp/edge-ai-*` payload/result files are removed on completion, timeout and cancellation. HTTP timeout bounds the HTTP request; the cancellation command is specifically for CLI process groups.
 

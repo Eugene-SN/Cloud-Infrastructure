@@ -1,0 +1,5 @@
+name: edge-explicit-executors
+version: 1.0.0
+description: Operator-selected standalone Codex and Antigravity commands
+author: Cloud Infrastructure
+license: MIT

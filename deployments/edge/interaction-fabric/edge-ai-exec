@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """One-shot host CLI execution. No shell expansion, listener, or fallback."""
-import base64,fcntl,json,os,pathlib,re,signal,subprocess,sys,tempfile,time,uuid
+import base64,fcntl,json,math,os,pathlib,re,signal,subprocess,sys,tempfile,time,uuid
 STATE=pathlib.Path('/home/core/.local/state/edge-ai-exec')
 MAX_CONCURRENT=2
 
@@ -32,6 +32,11 @@ def execute(p):
     mode=p.get('output_mode','text');schema=p.get('schema')
     if mode not in ('text','json'):raise ValueError('output_mode must be text or json')
     if schema is not None and not isinstance(schema,dict):raise ValueError('schema must be JSON object')
+    # Preserve accepted n8n legacy callers. Hermes commands always supply read-only
+    # unless the operator explicitly supplies a write/full-access contract.
+    permission=p.get('permission_mode','full-access')
+    if permission not in ('read-only','workspace-write','full-access'):raise ValueError('permission_mode must be read-only, workspace-write, or full-access')
+    if backend=='antigravity' and permission=='workspace-write':raise ValueError('Antigravity has no Codex-equivalent workspace-write policy; choose read-only (native plan) or explicitly authorized full-access')
     lock=None
     for slot in range(MAX_CONCURRENT):
         candidate=open(STATE/('slot-'+str(slot)+'.lock'),'a+')
@@ -52,34 +57,43 @@ def execute(p):
             td=pathlib.Path(td);sp=td/'schema.json';last=td/'result.txt'
             if schema is not None:sp.write_text(json.dumps(schema));sp.chmod(0o600)
             if backend=='codex':
-                argv=['/home/core/.local/bin/codex','exec','--sandbox','danger-full-access','-c','approval_policy="never"','--ephemeral','--json','--color','never','--skip-git-repo-check','-C',cwd,'-o',str(last)]
+                sandbox='danger-full-access' if permission=='full-access' else permission
+                argv=['/home/core/.local/bin/codex','exec','--sandbox',sandbox,'-c','approval_policy="never"','--ephemeral','--json','--color','never','--skip-git-repo-check','-C',cwd,'-o',str(last)]
                 if schema is not None:argv+=['--output-schema',str(sp)]
                 if p.get('model'):argv+=['--model',str(p['model'])]
                 if p.get('effort'):argv+=['-c','model_reasoning_effort='+json.dumps(p['effort'])]
                 argv+=['-'];stdin=task
             else:
-                argv=['/home/core/.local/bin/agy','-p',task,'--output-format','json','--print-timeout',str(int(timeout))+'s','--mode','accept-edits','--dangerously-skip-permissions']
+                # The host deadline wins over AGY's native partial-output timeout.
+                argv=['/home/core/.local/bin/agy','-p',task,'--output-format','json','--print-timeout',str(math.ceil(timeout)+5)+'s','--mode','plan' if permission=='read-only' else 'accept-edits']
+                if permission=='full-access':argv+=['--dangerously-skip-permissions']
+                else:argv+=['--sandbox']
                 if schema is not None:argv+=['--json-schema',str(sp)]
                 if p.get('model'):argv+=['--model',str(p['model'])]
                 if p.get('effort'):argv+=['--effort',str(p['effort'])]
                 stdin=None
-            proc=subprocess.Popen(argv,cwd=cwd,stdin=subprocess.PIPE if stdin is not None else subprocess.DEVNULL,stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True,start_new_session=True)
+            env=os.environ.copy();env['HOME']='/home/core'
+            proc=subprocess.Popen(argv,cwd=cwd,env=env,stdin=subprocess.PIPE if stdin is not None else subprocess.DEVNULL,stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True,start_new_session=True)
             status='completed'
             try:stdout,stderr=proc.communicate(stdin,timeout=timeout)
             except subprocess.TimeoutExpired:stop_group(proc);stdout,stderr=proc.communicate();status='timeout'
             if cancelled:status='canceled'
             elif proc.returncode and status=='completed':status='error'
             result=last.read_text() if backend=='codex' and last.exists() else stdout
+            if backend=='codex' and status=='completed' and (not last.exists() or not result.strip()):status='missing_final_output'
             native=None
             if backend=='antigravity' and stdout:
                 try:
                     native=json.loads(stdout);result=(native.get('structured_output') if schema is not None and native.get('structured_output') is not None else native.get('result',native.get('response',native))) if isinstance(native,dict) else native
+                    if status=='completed' and (not isinstance(native,dict) or native.get('status')!='SUCCESS'):status='native_error'
+                    if status=='completed' and native.get('denied_actions'):status='permission_denied'
                 except json.JSONDecodeError:
                     if status=='completed':status='invalid_json'
+            elif backend=='antigravity' and status=='completed':status='missing_final_output'
             if mode=='json' and isinstance(result,str) and status=='completed':
                 try:result=json.loads(result)
                 except json.JSONDecodeError:status='invalid_json'
-            output(ok=status=='completed',status=status,backend=backend,request_id=rid,exit_code=proc.returncode,duration_s=round(time.monotonic()-start,3),result=result,stderr=stderr[-16384:],native=native)
+            output(ok=status=='completed',status=status,backend=backend,request_id=rid,exit_code=proc.returncode,duration_s=round(time.monotonic()-start,3),result=result,stderr=stderr[-16384:],native=native,pid=proc.pid,cwd=cwd,home=env['HOME'],permission_mode=permission)
     finally:
         if proc is not None:stop_group(proc)
         if record_created:record.unlink(missing_ok=True)

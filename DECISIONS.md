@@ -3181,3 +3181,18 @@ Direct Codex/Antigravity use the existing SSH/core trust contract, one dedicated
 Nextcloud uses the existing OIDC operator's native app password, native n8n credential and nodes; supported HTTP Request with that same credential handles the installed node's empty-body write-response defect, WebDAV metadata and OCS revocation. Native XML handles metadata. Bundled webhook listeners provide four unfiltered file classes because installed pre-DAV session filtering otherwise suppresses those events; existing cron supplies durable delivery to n8n storage-before204. App/cron join existing edge_internal, native trusted-domain/private-HTTP options enable that path, and public OIDC/Nextcloud→Mattermost stay unchanged.
 
 Recovery/validation/lifecycle details: `deployments/edge/interaction-fabric/README.md`; single authoritative final record: `EDGE_INTERACTION_AI_TOOL_FABRIC_ACCEPTANCE_2026-10-02.md`. User-specific workflows remain deferred pending concrete use; earlier generic Nextcloud foundation deferrals are superseded.
+
+
+## 2026-10-02 — Hermes explicit executor reconciliation — ACCEPTED
+
+Hermes uses vLLM/Qwen as its default model. Codex and Antigravity are independent specialist executors selected explicitly by the operator. Hermes does not autonomously route, fall back, fan out, cross-review, or substitute one executor for another.
+
+n8n retains the accepted explicit AIExecution01 backend fabric. This workstream does not introduce a second routing layer.
+
+Fresh installed native command dispatch supports a general user plugin with two explicit slash commands, /codex and /antigravity. Each fixes its backend before parsing and reuses the accepted one-shot helper directly; no model inference, n8n/MCP transport, hooks/tools, new provider/daemon/router or managed-source patch is involved. Same-name skills are guidance and native command precedence wins. Private /v1/responses remains inference, not slash dispatch.
+
+Hermes always supplies a permission mode: default Codex read-only; authorized write/full access requires operator JSON. AGY defaults native plan+sandbox without blanket bypass, but this is not filesystem-immutable or equivalent to Codex read-only. No automatic sandbox escalation or enterprise approval layer is added. The shared helper retains the already-accepted full-access default for n8n callers omitting the new optional mode and strengthens native completion/denial/host-timeout checks. AIExecution01 stays definition-unchanged.
+
+The bounded caller audit classifies active Hermes4FMachine01 as dormant compatibility state with no current dependency found. Its historical prompt branches remain unchanged and are not the new explicit command contract; neither speculative mapping nor deletion is justified. Accepted service MCPs, default inference, auth/topology/storage and native lifecycle stay intact. Local modified Codex guidance and a custom AGY skill use supported native ownership; upstream source is clean.
+
+All new nonsecret artifacts and config merge instructions are versioned; existing scheduled Backrest edge-state coverage of the protected runtime is verified. No manual Backrest flow was issued. Real default/native-command CLI/dispatcher success, non-zero/timeout and relevant MCP/n8n/runtime non-regression passed; exact test artifacts were removed, Edge/overall OK. Acceptance: EDGE_HERMES_EXPLICIT_EXECUTOR_RECONCILIATION_ACCEPTANCE_2026-10-02.md. Canonical contract: deployments/edge/interaction-fabric/hermes-executors/README.md.
