@@ -80,7 +80,7 @@ def validate_topology(data):
         elif ports:
             raise RuntimeError(f'unexpected published service: {name}')
         environment = service.get('environment', {})
-        if name in DB and (environment.get('WEBHOOK_ALLOWED_HOSTS') != 'n8n' or environment.get('WEBHOOK_ALLOWED_IPS')):
+        if name in DB and (environment.get('WEBHOOK_ALLOWED_HOSTS') != 'n8n.edge.internal' or environment.get('WEBHOOK_ALLOWED_IPS')):
             raise RuntimeError(f'webhook allowlist changed: {name}')
         if name in {'api', 'worker'} and 'plane-' + name not in service['networks']['edge_internal'].get('aliases', []):
             raise RuntimeError(f'integration DNS alias changed: {name}')

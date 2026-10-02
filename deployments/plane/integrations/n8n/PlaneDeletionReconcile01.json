@@ -1,0 +1,305 @@
+{
+  "id": "PlaneDeletionReconcile01",
+  "name": "Plane API deletion reconciliation",
+  "nodes": [
+    {
+      "id": "1fd7866a-9b84-4888-bf8b-8ce9db15f9d1",
+      "name": "Deletion Schedule",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        100
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 5
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "08106308-f02b-40b9-b2bd-b16142b737b1",
+      "name": "Read Cached Items",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        220,
+        100
+      ],
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "5gGP9oUlIe17CoRg",
+          "mode": "id"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": []
+        },
+        "options": {},
+        "returnAll": true
+      }
+    },
+    {
+      "id": "67be0ab2-a959-4f58-89a1-f2cf69f388d1",
+      "name": "Pending Live Items",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        100
+      ],
+      "parameters": {
+        "jsCode": "return $input.all().filter(x=>x.json.context && x.json.last_action!==\"delete\");",
+        "mode": "runOnceForAllItems"
+      }
+    },
+    {
+      "id": "47cc8c7c-283b-4844-b7fe-a07f87663d44",
+      "name": "Each Cached Item",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        660,
+        100
+      ],
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      }
+    },
+    {
+      "id": "1b502129-5270-4ed6-829d-ef1888562d00",
+      "name": "Read Native Activities",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        880,
+        100
+      ],
+      "parameters": {
+        "url": "={{ 'http://plane-api:8000/api/v1/workspaces/personal/projects/0be26f75-fc5b-4e15-9d69-efc4cca4e65d/work-items/' + $json.issue_id + '/activities/?per_page=100&order_by=-created_at' }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {
+          "timeout": 10000,
+          "pagination": {
+            "pagination": {
+              "paginationMode": "responseContainsNextURL",
+              "nextURL": "={{ 'http://plane-api:8000/api/v1/workspaces/personal/projects/0be26f75-fc5b-4e15-9d69-efc4cca4e65d/work-items/' + $('Each Cached Item').item.json.issue_id + '/activities/?per_page=100&order_by=-created_at&cursor=' + encodeURIComponent($response.body.next_cursor) }}",
+              "paginationCompleteWhen": "other",
+              "completeExpression": "={{ !$response.body.next_page_results }}",
+              "limitPagesFetched": false,
+              "requestInterval": 0
+            }
+          }
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "2ViDHEcRCHBygLnv",
+          "name": "PlaneAPI01"
+        }
+      }
+    },
+    {
+      "id": "f5644efd-0b7b-4a12-b0d3-9ac837f3aa0e",
+      "name": "Confirmed Deletion Only",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        100
+      ],
+      "parameters": {
+        "jsCode": "const row=$('Each Cached Item').item.json;const a=$input.all().flatMap(x=>x.json.results||[]).find(x=>x.verb==='deleted'&&x.field==='issue'&&x.issue===row.issue_id&&x.project==='0be26f75-fc5b-4e15-9d69-efc4cca4e65d');const b={event:'issue',action:'delete',data:{id:row.issue_id},activity:a||null,workspace_id:'efd9a5ab-d149-44b4-ad64-60e8d3c8e19a',workspace_slug:'personal',source:'api-v1-deletion-activity'};return [{json:{confirmed:Boolean(a),issue_id:row.issue_id,event_key:row.issue_id+':delete',action:'delete',payload:JSON.stringify(b)}}];",
+        "mode": "runOnceForAllItems"
+      }
+    },
+    {
+      "id": "f568d447-32ea-4134-bee3-f14d9f507932",
+      "name": "Deletion Confirmed",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1320,
+        100
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "3028b9b3-0b46-486c-888a-cbcd21b4bba3",
+              "leftValue": "={{ $json.confirmed }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "b5833446-28c8-45c4-8651-d044a2a2b203",
+      "name": "Queue Confirmed Delete",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        1540,
+        100
+      ],
+      "parameters": {
+        "resource": "row",
+        "operation": "upsert",
+        "dataTableId": {
+          "__rl": true,
+          "value": "a7XaH434xzlQVgcA",
+          "mode": "id"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "event_key",
+              "condition": "eq",
+              "keyValue": "={{ $json.event_key }}"
+            }
+          ]
+        },
+        "options": {},
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "event_key": "={{ $json.event_key }}",
+            "issue_id": "={{ $json.issue_id }}",
+            "action": "={{ $json.action }}",
+            "payload": "={{ $json.payload }}"
+          }
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Deletion Schedule": {
+      "main": [
+        [
+          {
+            "node": "Read Cached Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Cached Items": {
+      "main": [
+        [
+          {
+            "node": "Pending Live Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pending Live Items": {
+      "main": [
+        [
+          {
+            "node": "Each Cached Item",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Native Activities": {
+      "main": [
+        [
+          {
+            "node": "Confirmed Deletion Only",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Confirmed Deletion Only": {
+      "main": [
+        [
+          {
+            "node": "Deletion Confirmed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Deletion Confirmed": {
+      "main": [
+        [
+          {
+            "node": "Queue Confirmed Delete",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Each Cached Item",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Queue Confirmed Delete": {
+      "main": [
+        [
+          {
+            "node": "Each Cached Item",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Each Cached Item": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Read Native Activities",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataSuccessExecution": "all",
+    "saveDataErrorExecution": "all",
+    "executionTimeout": 120
+  },
+  "description": "CE v1.4.2 API/MCP DELETE records IssueActivity verb=deleted field=issue but does not emit workspace webhook. Every 5 minutes read native API v1 deletion activities for cached live PERSO items and enqueue confirmed deletes in same native inbox. A 404 alone is never treated as deletion; archiving/permissions cannot produce deletion notifications."
+}

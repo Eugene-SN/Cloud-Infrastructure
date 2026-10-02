@@ -1,0 +1,206 @@
+{
+  "id": "PlaneGitHubSync01",
+  "name": "GitHub PR → Plane Item",
+  "nodes": [
+    {
+      "id": "67201e3a-1de2-4049-bc87-fd822a32e150",
+      "name": "Associated PR",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        100
+      ],
+      "parameters": {
+        "inputSource": "passthrough"
+      }
+    },
+    {
+      "id": "1c040cf0-60a5-4942-b059-6c3ac1b91a1a",
+      "name": "Resolve Plane Item",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        220,
+        100
+      ],
+      "parameters": {
+        "url": "={{ 'http://plane-api:8000/api/v1/workspaces/personal/work-items/' + $json.identifier + '/' }}",
+        "method": "GET",
+        "authentication": "genericCredentialType",
+        "options": {
+          "timeout": 20000,
+          "response": {
+            "response": {
+              "neverError": true,
+              "fullResponse": true,
+              "responseFormat": "json"
+            }
+          }
+        },
+        "genericAuthType": "httpHeaderAuth"
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "2ViDHEcRCHBygLnv",
+          "name": "PlaneAPI01"
+        }
+      }
+    },
+    {
+      "id": "8efc8401-9dc6-4b2d-b8b3-641d08d04163",
+      "name": "Existing Item Only",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        100
+      ],
+      "parameters": {
+        "jsCode": "const r=$input.first().json;const pr=$('Associated PR').first().json;if(r.statusCode===404)return [];if(r.statusCode!==200)throw Error('Plane lookup HTTP '+r.statusCode);if(r.body.project!=='0be26f75-fc5b-4e15-9d69-efc4cca4e65d')return [];return [{json:{...pr,issue_id:r.body.id}}];",
+        "mode": "runOnceForAllItems"
+      }
+    },
+    {
+      "id": "821c7b32-4503-48e8-98a3-b7a782833376",
+      "name": "Read Existing PR Comment",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        660,
+        100
+      ],
+      "parameters": {
+        "url": "={{ 'http://plane-api:8000/api/v1/workspaces/personal/projects/0be26f75-fc5b-4e15-9d69-efc4cca4e65d/work-items/' + $json.issue_id + '/comments/?per_page=100' }}",
+        "method": "GET",
+        "authentication": "genericCredentialType",
+        "options": {
+          "timeout": 20000,
+          "pagination": {
+            "pagination": {
+              "paginationMode": "responseContainsNextURL",
+              "nextURL": "={{ 'http://plane-api:8000/api/v1/workspaces/personal/projects/0be26f75-fc5b-4e15-9d69-efc4cca4e65d/work-items/' + $('Existing Item Only').first().json.issue_id + '/comments/?per_page=100&cursor=' + encodeURIComponent($response.body.next_cursor) }}",
+              "paginationCompleteWhen": "other",
+              "completeExpression": "={{ !$response.body.next_page_results }}",
+              "limitPagesFetched": false,
+              "requestInterval": 0
+            }
+          }
+        },
+        "genericAuthType": "httpHeaderAuth"
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "2ViDHEcRCHBygLnv",
+          "name": "PlaneAPI01"
+        }
+      }
+    },
+    {
+      "id": "64e06cb2-1074-49a1-babe-f6836b7ecaf4",
+      "name": "Idempotent Comment",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        100
+      ],
+      "parameters": {
+        "jsCode": "const pr=$('Existing Item Only').first().json;const external_id='Eugene-SN/Cloud-Infrastructure#'+pr.number;const all=$input.all().flatMap(x=>x.json.results||[]);const old=all.find(x=>x.external_source==='github'&&x.external_id===external_id);\nconst esc=x=>String(x??'').replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',\"'\":'&#39;'}[c]));const state=pr.merged_at?'merged':pr.state;\nconst comment_html='<p><strong>GitHub PR #'+pr.number+' — '+esc(pr.title)+'</strong></p><p>Status: '+esc(state)+'</p><p><a href=\"'+esc(pr.html_url)+'\">'+esc(pr.html_url)+'</a></p>';\nif(old?.comment_html===comment_html)return [];return [{json:{...pr,comment_id:old?.id||'',method:old?'PATCH':'POST',body:{comment_html,external_source:'github',external_id}}}];",
+        "mode": "runOnceForAllItems"
+      }
+    },
+    {
+      "id": "6c3d1aec-b8cc-478f-97ff-7b0f3e36c182",
+      "name": "Create or Update PR Comment",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        1100,
+        100
+      ],
+      "parameters": {
+        "url": "={{ 'http://plane-api:8000/api/v1/workspaces/personal/projects/0be26f75-fc5b-4e15-9d69-efc4cca4e65d/work-items/' + $json.issue_id + '/comments/' + ($json.comment_id ? $json.comment_id+'/' : '') }}",
+        "method": "={{ $json.method }}",
+        "authentication": "genericCredentialType",
+        "options": {
+          "timeout": 20000
+        },
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.body }}"
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "2ViDHEcRCHBygLnv",
+          "name": "PlaneAPI01"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Associated PR": {
+      "main": [
+        [
+          {
+            "node": "Resolve Plane Item",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resolve Plane Item": {
+      "main": [
+        [
+          {
+            "node": "Existing Item Only",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Existing Item Only": {
+      "main": [
+        [
+          {
+            "node": "Read Existing PR Comment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Existing PR Comment": {
+      "main": [
+        [
+          {
+            "node": "Idempotent Comment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Idempotent Comment": {
+      "main": [
+        [
+          {
+            "node": "Create or Update PR Comment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataSuccessExecution": "all",
+    "saveDataErrorExecution": "all",
+    "executionTimeout": 120
+  },
+  "description": "One explicit PERSO identifier, API v1 lookup, native comment external_source=github/external_id=Eugene-SN/Cloud-Infrastructure#N. Create once or update changed status/title/URL. Never transition issue state."
+}

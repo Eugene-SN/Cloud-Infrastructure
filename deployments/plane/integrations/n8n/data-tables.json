@@ -1,0 +1,23 @@
+{
+  "projectId": "O9C85OVLEuW5PgOk",
+  "tables": {
+    "PlaneEventInbox01": {
+      "id": "a7XaH434xzlQVgcA",
+      "columns": [
+        "event_key",
+        "issue_id",
+        "action",
+        "payload"
+      ]
+    },
+    "PlaneIssueState01": {
+      "id": "5gGP9oUlIe17CoRg",
+      "columns": [
+        "issue_id",
+        "context",
+        "fingerprint",
+        "last_action"
+      ]
+    }
+  }
+}

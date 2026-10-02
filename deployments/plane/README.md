@@ -1,6 +1,6 @@
 # Plane Community on edge
 
-Current acceptance: `PLANE_PART_1_ACCEPTANCE_2026-10-01.md`. This is the operator-authorized Part 1 core deployment; Part 2 integrations are separate future work.
+Current acceptance: `PLANE_PART_1_ACCEPTANCE_2026-10-01.md`, `PLANE_P2_1_SMTP_ACCEPTANCE_2026-10-02.md` and `PLANE_PART_2_CORE_INTEGRATIONS_ACCEPTANCE_2026-10-02.md`. Core deployment, SMTP and unified Part 2 core integrations are COMPLETE / ACCEPTED. Optional workflows are deferred.
 
 ## Authoritative deployment inputs
 
@@ -30,7 +30,7 @@ Use `plane-compose` for lifecycle operations. A raw invocation of the vendor Com
 
 All six host bindings are 127.0.0.1 only. Public HTTPS stays Xray → host nginx 127.0.0.1:8080 with proxy_protocol and the existing shared certificate. HTTP redirects to HTTPS, retaining the existing ACME route. Plane uses native email/password authentication; no Authelia gate. Forwarded proto/host/port and request path are preserved, including S3 signature-sensitive upload paths. `client_max_body_size 5m` matches the 5,242,880-byte limit. The canonical route source is `projects-escloud-us.conf`.
 
-All ten services retain `plane_default`. Direct database consumers api, worker and beat-worker also join existing `postgres_net`; migration-time migrator joins the same database network. Only api and worker join existing `edge_internal`, with aliases `plane-api` and `plane-worker`. n8n retains alias `n8n`. `WEBHOOK_ALLOWED_HOSTS=n8n`, `WEBHOOK_ALLOWED_IPS=` propagates through the official backend environment. No actual webhook/token/workflow is created.
+All ten services retain `plane_default`. Direct database consumers api, worker and beat-worker also join existing `postgres_net`; migration-time migrator joins the same database network. Only api and worker join existing `edge_internal`, with aliases `plane-api` and `plane-worker`. n8n retains alias `n8n` and adds `n8n.edge.internal` in its existing `/opt/n8n/compose.yaml` edge_internal alias list. `WEBHOOK_ALLOWED_HOSTS=n8n.edge.internal`, `WEBHOOK_ALLOWED_IPS=` propagates through the official backend environment; the maintenance topology validator uses the same contract. Current Part 2 owns one issue-only workspace webhook and native operator PAT/n8n/MCP consumers, described below.
 
 Dedicated database `plane`, login/owner role `plane`, shared PostgreSQL 18.6. Role is non-superuser, cannot create databases/roles. Password/DATABASE_URL live in Plane env; shared postgres container Env is unchanged. Database migrations on PostgreSQL 18 passed in this production installation.
 
@@ -66,7 +66,7 @@ Native God Mode owns these runtime database settings: `ENABLE_SMTP=1`, `EMAIL_HO
 
 Native endpoints are `/api/instances/configurations/` (PATCH) and `/api/instances/email-credentials-check/` (POST with `receiver_email`). The test endpoint has the fixed subject `Email Notification from Plane`; identify a verification email by sender, recipient, send window and Message-ID. Its successful native send was independently verified in Stalwart queue/delivery logs and the recipient Inbox through JMAP, then the single test message was precisely deleted.
 
-SMTP rollback uses the same native settings endpoint to restore previous effective values. Remove only the new Plane mailbox if explicitly rolling back this stage, after reference/data checks. Existing Backrest already captures Stalwart state and Plane DB/runtime. No additional snapshot was manufactured. Evidence: `PLANE_P2_1_SMTP_ACCEPTANCE_2026-10-02.md`. This acceptance does not enable intake/IMAP, webhooks, API tokens, n8n workflows or other Part 2 integrations.
+SMTP rollback uses the same native settings endpoint to restore previous effective values. Remove only the new Plane mailbox if explicitly rolling back this stage, after reference/data checks. Existing Backrest already captures Stalwart state and Plane DB/runtime. No additional snapshot was manufactured. Evidence: `PLANE_P2_1_SMTP_ACCEPTANCE_2026-10-02.md`. The P2-1 SMTP acceptance alone did not enable intake/IMAP or integration objects; the current unified Part 2 core acceptance below supplies webhooks, API tokens and n8n workflows.
 
 ## Bounded rollback/recovery
 
@@ -81,3 +81,17 @@ Recovery is an explicitly requested operator action, not an automatic migration-
 - [Exact public route source](https://github.com/makeplane/plane/blob/v1.4.2/apps/proxy/Caddyfile.ce)
 - [Exact model deletion semantics](https://github.com/makeplane/plane/blob/v1.4.2/apps/api/plane/db/mixins.py)
 - [Backrest v1.14.1 synchronous Backup RPC](https://github.com/garethgeorge/backrest/blob/v1.14.1/internal/api/backresthandler.go)
+
+## Unified Part 2 core integrations
+
+Current workspace personal, project personal/PERSO (`0be26f75-fc5b-4e15-9d69-efc4cca4e65d`). One native issue-only webhook targets `http://n8n.edge.internal:5678/webhook/plane-events`. Separate PATs under existing es@escloud.us authenticate n8n and Hermes through API v1; protected consumers own their secrets, not this repository.
+
+Native n8n definitions in `integrations/n8n/` contain credential references/object IDs only. They are canonical implementation evidence; recovery restores the matching native SQLite/config generation, preserving IDs, ownership, published versions, encrypted credentials, and the two Data Tables. Re-importing definitions into another n8n instance requires native credential/table mapping rather than treating the metadata JSON as a credential export.
+
+`PlaneEventIngress01` validates raw-byte HMAC and persists accepted work before quick204. `PlaneMattermost01` drains every30s with semantic-state dedup, through the existing n8n Mattermost bot to private plane. `PlaneDeletionReconcile01` reads confirmed API v1 deleted activities every5min because installed CE API/MCP DELETE does not emit a workspace webhook. `PlaneGitHubPoll01` polls all repository PRs every15min; `PlaneGitHubSync01` creates/updates one externally identified native comment for one unambiguous PERSO identifier. No task completion automation, public callback or separate mapping database.
+
+`integrations/hermes-plane-mcp.yaml` is a secret-free fragment of native protected Hermes config. Existing managed uvx runs current official plane-mcp-server stdio against service origin127.0.0.1:18111, personal workspace and project context. The PAT resides in protected Hermes .env. No standalone MCP service/HTTP endpoint; Pages/commercial groups are excluded. Keep other Hermes settings during restoration.
+
+Bounded rollback uses native workflow unpublish/delete, exact Data Table/credential lifecycle, exact webhook deletion and PAT revoke; restore only the audited alias/allowlist/config values when explicitly rolling back. Mattermost's existing bot/credential is shared and must remain. Exact private channel may be removed only after checking references/data; existing operator identity/mailbox/services are not rollback targets. Existing Backrest captures Plane DB/settings/PAT/webhook, native n8n database/credentials, Hermes config/env, Mattermost and mail. Final one flow384, snapshot3977cc69, was read back successfully.
+
+Knowledge is deferred pending a concrete trigger/note schema; Nextcloud/calendar/intake workflows remain deferred and do not block core acceptance. Detailed verification, upstream API deletion boundary, cleanup and final gates: `PLANE_PART_2_CORE_INTEGRATIONS_ACCEPTANCE_2026-10-02.md`.

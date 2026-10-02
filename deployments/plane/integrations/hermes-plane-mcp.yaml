@@ -1,0 +1,32 @@
+mcp_servers:
+  plane:
+    command: /home/core/.hermes/bin/uvx
+    args:
+    - plane-mcp-server
+    - stdio
+    env:
+      PLANE_API_KEY: ${PLANE_API_KEY}
+      PLANE_BASE_URL: http://127.0.0.1:18111
+      PLANE_WORKSPACE_SLUG: personal
+      LOG_PAYLOADS: 'false'
+    tools:
+      include:
+      - project
+      - workitem
+      - workitem_comment
+      - workitem_link
+      - workitem_relation
+      - workitem_activity
+      - workitem_attachment
+      - state
+      - label
+      - member
+      - cycle
+      - module
+      - project_estimate
+agent:
+  system_prompt: 'Plane task context: workspace personal; project personal, identifier
+    PERSO, project_id 0be26f75-fc5b-4e15-9d69-efc4cca4e65d. For Plane Community MCP
+    workitem list/read/create and related operations, supply this project_id; workspace-wide/PQL/Pages
+    operations are not supported by this CE API. Plane holds task/execution state;
+    Obsidian holds durable knowledge and decisions.'

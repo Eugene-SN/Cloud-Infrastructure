@@ -1,0 +1,146 @@
+{
+  "id": "PlaneGitHubPoll01",
+  "name": "GitHub → Plane Polling",
+  "nodes": [
+    {
+      "id": "0196ed43-5aa7-4256-9ac1-a6b6b7145707",
+      "name": "PR Poll Schedule",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        100
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 15
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "40747c42-bfb7-4b11-a878-5611842e3f5b",
+      "name": "Read Repository PRs",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        220,
+        100
+      ],
+      "parameters": {
+        "url": "https://api.github.com/repos/Eugene-SN/Cloud-Infrastructure/pulls?state=all&sort=updated&direction=desc&per_page=100",
+        "method": "GET",
+        "authentication": "predefinedCredentialType",
+        "options": {
+          "timeout": 20000,
+          "pagination": {
+            "pagination": {
+              "paginationMode": "updateAParameterInEachRequest",
+              "parameters": {
+                "parameters": [
+                  {
+                    "type": "qs",
+                    "name": "page",
+                    "value": "={{ $pageCount + 1 }}"
+                  }
+                ]
+              },
+              "paginationCompleteWhen": "responseIsEmpty",
+              "limitPagesFetched": false,
+              "requestInterval": 100
+            }
+          }
+        },
+        "nodeCredentialType": "githubApi"
+      },
+      "credentials": {
+        "githubApi": {
+          "id": "akETYuAX0iaYCE6K",
+          "name": "GitHub API - existing edge operator"
+        }
+      }
+    },
+    {
+      "id": "9190f31d-2c5a-4a2d-9515-3fd5cd33e115",
+      "name": "Explicit Plane Association",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        100
+      ],
+      "parameters": {
+        "jsCode": "return $input.all().flatMap(({json:p})=>{const text=[p.title||'',p.body||'',p.head?.ref||''].join('\\n');const ids=[...new Set([...text.matchAll(/(?<![A-Za-z0-9])PERSO-([1-9][0-9]*)(?![A-Za-z0-9])/g)].map(m=>'PERSO-'+m[1]))];return ids.length===1?[{json:{identifier:ids[0],number:p.number,title:p.title,html_url:p.html_url,state:p.state,merged_at:p.merged_at}}]:[];});",
+        "mode": "runOnceForAllItems"
+      }
+    },
+    {
+      "id": "c4e5f6fe-3a91-4988-978f-e08386937236",
+      "name": "Synchronize Associated PR",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        660,
+        100
+      ],
+      "parameters": {
+        "source": "database",
+        "workflowId": {
+          "__rl": true,
+          "value": "PlaneGitHubSync01",
+          "mode": "id"
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      }
+    }
+  ],
+  "connections": {
+    "PR Poll Schedule": {
+      "main": [
+        [
+          {
+            "node": "Read Repository PRs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Repository PRs": {
+      "main": [
+        [
+          {
+            "node": "Explicit Plane Association",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Explicit Plane Association": {
+      "main": [
+        [
+          {
+            "node": "Synchronize Associated PR",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataSuccessExecution": "all",
+    "saveDataErrorExecution": "all",
+    "executionTimeout": 300
+  },
+  "description": "Every 15 minutes, paginate all open/closed/merged PRs in Eugene-SN/Cloud-Infrastructure using existing authorized edge operator OAuth token stored as native encrypted githubApi. Only one unambiguous PERSO-N in title/body/head branch is associated."
+}

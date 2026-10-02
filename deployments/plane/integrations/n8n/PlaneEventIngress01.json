@@ -1,0 +1,294 @@
+{
+  "id": "PlaneEventIngress01",
+  "name": "Plane Event Ingress",
+  "nodes": [
+    {
+      "id": "60f18d85-179d-4097-b7c0-391bdcc9a42d",
+      "name": "Plane Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        100
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "plane-events",
+        "responseMode": "responseNode",
+        "options": {
+          "rawBody": true
+        }
+      },
+      "webhookId": "3a4f669c-cc98-495b-a439-9e3b9f7ae610"
+    },
+    {
+      "id": "62fc737d-d8b8-4796-bc69-d23bcbb07065",
+      "name": "Raw HMAC SHA256",
+      "type": "n8n-nodes-base.crypto",
+      "typeVersion": 2,
+      "position": [
+        220,
+        100
+      ],
+      "parameters": {
+        "action": "hmac",
+        "type": "SHA256",
+        "binaryData": true,
+        "binaryPropertyName": "data",
+        "dataPropertyName": "computedHmac",
+        "encoding": "hex"
+      },
+      "credentials": {
+        "crypto": {
+          "id": "FZAUjrHzuRzKQml4",
+          "name": "PlaneWebhookHMAC01"
+        }
+      }
+    },
+    {
+      "id": "8b3e0f57-9c58-4176-9a15-4834dce09658",
+      "name": "Verify and Normalize",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        100
+      ],
+      "parameters": {
+        "jsCode": "const x=$input.first().json;const supplied=String(x.headers?.['x-plane-signature']||'').toLowerCase();const expected=String(x.computedHmac||'');let diff=0;for(let i=0;i<64;i++)diff|=(supplied.charCodeAt(i)||0)^(expected.charCodeAt(i)||0);const valid=/^[a-f0-9]{64}$/.test(supplied)&&expected.length===64&&diff===0;\nconst b=x.body||{};const action=({created:'create',updated:'update',deleted:'delete',create:'create',update:'update',delete:'delete'})[b.action];const project=b.data?.project?.id||b.data?.project||b.data?.project_id;const accepted=valid&&b.event==='issue'&&x.headers?.['x-plane-event']==='issue'&&b.workspace_id==='efd9a5ab-d149-44b4-ad64-60e8d3c8e19a'&&b.workspace_slug==='personal'&&b.webhook_id==='e5b6c10c-d447-4fd0-90b9-a761998d3234'&&action&&b.data?.id&&(action==='delete'||project==='0be26f75-fc5b-4e15-9d69-efc4cca4e65d');\nreturn [{json:{valid,accepted:Boolean(accepted),event_key:accepted?b.data.id+':'+action:'',issue_id:b.data?.id||'',action:action||'',payload:JSON.stringify({...b,action})}}];",
+        "mode": "runOnceForAllItems"
+      }
+    },
+    {
+      "id": "8daf9e80-b3d5-40e7-8142-7f971e45c893",
+      "name": "Signature Valid",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        660,
+        100
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "3bab3e76-0afe-48bb-af05-446532d0310b",
+              "leftValue": "={{ $json.valid }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "da05cfee-b6ac-4cca-b3e7-3604e933cadc",
+      "name": "Unauthorized",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        880,
+        100
+      ],
+      "parameters": {
+        "respondWith": "noData",
+        "options": {
+          "responseCode": 401
+        }
+      }
+    },
+    {
+      "id": "d3c80652-42b2-4a76-94de-f168e79d0419",
+      "name": "Accepted",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1100,
+        100
+      ],
+      "parameters": {
+        "respondWith": "noData",
+        "options": {
+          "responseCode": 204
+        }
+      }
+    },
+    {
+      "id": "a18b3601-9be0-4bef-8bd7-b0a106e25d4e",
+      "name": "Coalesce Issue Action",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        1540,
+        100
+      ],
+      "parameters": {
+        "resource": "row",
+        "operation": "upsert",
+        "dataTableId": {
+          "__rl": true,
+          "value": "a7XaH434xzlQVgcA",
+          "mode": "id"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "event_key",
+              "condition": "eq",
+              "keyValue": "={{ $json.event_key }}"
+            }
+          ]
+        },
+        "options": {},
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "event_key": "={{ $json.event_key }}",
+            "issue_id": "={{ $json.issue_id }}",
+            "action": "={{ $json.action }}",
+            "payload": "={{ $json.payload }}"
+          }
+        }
+      }
+    },
+    {
+      "id": "345a52d3-de0c-47da-9db1-0c79d0a6eebb",
+      "name": "Production Project Event",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        100
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "2d0b8f3f-59b7-40aa-be88-8bf03ea0f954",
+              "leftValue": "={{ $json.accepted }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    }
+  ],
+  "connections": {
+    "Plane Webhook": {
+      "main": [
+        [
+          {
+            "node": "Raw HMAC SHA256",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Raw HMAC SHA256": {
+      "main": [
+        [
+          {
+            "node": "Verify and Normalize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify and Normalize": {
+      "main": [
+        [
+          {
+            "node": "Signature Valid",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Signature Valid": {
+      "main": [
+        [
+          {
+            "node": "Production Project Event",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Unauthorized",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Accepted": {
+      "main": []
+    },
+    "Production Project Event": {
+      "main": [
+        [
+          {
+            "node": "Coalesce Issue Action",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Accepted",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Coalesce Issue Action": {
+      "main": [
+        [
+          {
+            "node": "Accepted",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataSuccessExecution": "all",
+    "saveDataErrorExecution": "all",
+    "executionTimeout": 25
+  },
+  "description": "Private native raw-byte HMAC validation: 401 fail closed. Normalize/filter and persist coalesced native inbox before quick 204. PlaneMattermost01 handles downstream asynchronously."
+}

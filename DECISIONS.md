@@ -3159,3 +3159,11 @@ Temporary Stalwart recovery-admin provisioning used two Stalwart-only recreation
 **Final marker:** `PLANE_P2_1_SMTP=PASS`.
 
 **Remaining scope:** P2-2a/P2-2b and later integration stages remain separately authorized. The accepted capability audit reconciles the installed CE contract to API v1/current webhooks; SMTP completion does not implement their DNS-alias/allowlist prerequisite or any integration objects. Historical OpenProject and Part 1 acceptance entries remain unchanged.
+
+## 2026-10-02 — Plane Part 2 combined core integrations
+
+**Status:** ACCEPTED. Operator authorization supersedes the preceding separate proposed P2 stage sequence. One workstream implements the internal FQDN correction, operator-owned separate revocable n8n/Hermes PATs, API v1/current issue webhook, native raw-byte HMAC/durable Data Table inbox, asynchronous filtered notifications through the existing n8n bot, scheduled GitHub PR association/comment sync, and official Hermes MCP stdio. No second identity/mailbox, public callback, new service/network/database, Silo or hosted MCP daemon.
+
+Existing `edge_internal` n8n alias `n8n.edge.internal` is the sole Plane webhook hostname allowlist; IP list remains empty. Private Mattermost `plane` channel has exactly eugene+n8n. Notifications coalesce every30s; native API deletion-activity reconciliation every5min covers the confirmed CE v1.4.2 API/MCP DELETE emission gap, without treating 404 as deletion or patching Plane. GitHub polling every15min uses the existing authorized edge operator credential and one native externally identified comment per unambiguous PERSO/PR association, without closing tasks. Hermes uses project-scoped CE tools with Pages excluded and confirmed project context.
+
+Knowledge is ready through n8n/API but deferred until a concrete trigger/note schema; Nextcloud/calendar/intake are deferred, not core acceptance blockers. Exact native test objects/temporary state were cleaned. One final Backrest flow384 and actual snapshot readback passed; final Edge/overall OK. Marker `PLANE_PART2_CORE_INTEGRATIONS=PASS`; authoritative record `PLANE_PART_2_CORE_INTEGRATIONS_ACCEPTANCE_2026-10-02.md`. Historical decisions/records remain unchanged.

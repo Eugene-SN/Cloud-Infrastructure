@@ -707,3 +707,22 @@ COMPLETE / ACCEPTED: `PLANE_P2_1_SMTP=PASS`. Plane native God Mode/runtime datab
 Settings are consumed dynamically by API and worker. SMTP credentials do not belong in `plane.env` or Git. Native God Mode PATCH encrypts the password in Plane's database. Stalwart uses its native Account/User password credential. Plane was not restarted. Temporary recovery-admin access required two Stalwart-only recreations on the unchanged image; the final environment and Compose are identical to the pre-stage configuration.
 
 Recovery is bounded to restoring the previous effective SMTP settings through the same native endpoint and deleting only the newly created mailbox when an explicit rollback requires it. Existing Backrest preparation already captures the quiesced mail tree and Plane logical DB/runtime; no new recovery subsystem or ad-hoc persistent backup copy was added. Acceptance and delivery/cleanup evidence: `PLANE_P2_1_SMTP_ACCEPTANCE_2026-10-02.md`.
+
+### Plane Part 2 core integration contract — 2026-10-02
+
+COMPLETE / ACCEPTED: `PLANE_PART2_CORE_INTEGRATIONS=PASS`. This supersedes earlier future-only Part 2 integration descriptions. API v1/current CE workspace issue webhook and two separately revocable PATs belong to the existing trusted operator. n8n's existing `edge_internal` gains `n8n.edge.internal`; Plane's hostname allowlist contains only that name, with an empty IP list. No new public ingress route or Docker network.
+
+```mermaid
+flowchart LR
+  Worker[Plane worker] -->|raw-body signed issue webhook| Bus[n8n durable native inbox]
+  API[Plane API v1] -->|confirmed deletion activities every5min| Bus
+  Bus -->|coalesced semantic changes every30s| MM[Private Mattermost plane / existing n8n bot]
+  GH[GitHub repository PRs] -->|poll every15min| Poll[n8n explicit PERSO association]
+  Poll -->|idempotent PR comment| API
+  Hermes -->|native stdio / separate PAT| MCP[Official Plane MCP / CE tools]
+  MCP -->|loopback service origin| API
+```
+
+Inbox and issue-context/fingerprint state use native n8n Data Tables in existing SQLite. HMAC is over original bytes; invalid/missing signatures fail401, accepted project payloads are durably queued before quick204. Mattermost work does not delay ingress. API/MCP DELETE's confirmed v1.4.2 emission gap is covered by native deletion-activity polling, not a 404 heuristic. GitHub comments use external_source/external_id and never change issue completion.
+
+Hermes-managed MCP stdio uses `http://127.0.0.1:18111` origin, personal workspace and explicit PERSO project UUID; Pages/commercial groups are excluded. No hosted MCP server or direct executor MCP configuration. Existing Backrest logical dumps/SQLite staging/protected host configuration recover the whole graph; final flow384 snapshot readback passed. Plane is task state; Obsidian is durable knowledge. Optional Knowledge/Nextcloud/calendar/intake workflows remain deferred. Exact object inventory/evidence: `PLANE_PART_2_CORE_INTEGRATIONS_ACCEPTANCE_2026-10-02.md`; secret-free native definitions: `deployments/plane/integrations/`.

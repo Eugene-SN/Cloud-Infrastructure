@@ -727,3 +727,11 @@ The operator accepted the Part 2A capability audit and authorized only P2-1 impl
 | P2-8 | Intake email only when justified; evaluate existing Stalwart -> n8n -> API | DEFERRED |
 
 P2-1 evidence: `PLANE_P2_1_SMTP_ACCEPTANCE_2026-10-02.md`. Dedicated `plane@escloud.us` remains; exact native test mail and temporary administrative state were cleaned. No Plane restart/env modification or additional mail infrastructure. P2-2a/P2-2b and subsequent stages must not begin automatically after this completion.
+
+## 2026-10-02 — Unified Plane Part 2 core workstream — COMPLETE / ACCEPTED
+
+This accepted operator scope supersedes the preceding proposed separate P2-2a/P2-2b/P2-3/P2-4/P2-5 gates. They were internal checkpoints of one continuous workstream, with one final acceptance, Backrest flow384 and canonical persistence cycle. No intermediate acceptance records/commits.
+
+Completed: n8n internal FQDN + Plane hostname allowlist; two PATs under the existing operator; current CE raw-body HMAC webhook/API v1 bus and native idempotency; private Mattermost channel through existing n8n bot; GitHub scheduled PR association/comment synchronization; current official Hermes MCP stdio and project-scoped CE context. Confirmed API/MCP deletion webhook emission gap is covered by native API v1 activity reconciliation every5min. Core marker `PLANE_PART2_CORE_INTEGRATIONS=PASS`; record `PLANE_PART_2_CORE_INTEGRATIONS_ACCEPTANCE_2026-10-02.md`.
+
+Knowledge workflow: `DEFERRED_PENDING_CONCRETE_USE_CASE`; Nextcloud/external calendar/intake email: `DEFERRED`. They do not create additional mandatory acceptance stages. No current core Part 2 implementation scope remains incomplete; future optional workflow design starts only for a concrete use case.

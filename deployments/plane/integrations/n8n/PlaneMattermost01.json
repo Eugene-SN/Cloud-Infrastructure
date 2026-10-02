@@ -1,0 +1,385 @@
+{
+  "id": "PlaneMattermost01",
+  "name": "Plane → Mattermost",
+  "nodes": [
+    {
+      "id": "794f8aee-51dc-41c7-9c84-6cbd0d0f1030",
+      "name": "Notification Schedule",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        100
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "seconds",
+              "secondsInterval": 30
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "5be88ad2-89c0-4618-87d4-9ce4125d588d",
+      "name": "Read Inbox",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        220,
+        100
+      ],
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "a7XaH434xzlQVgcA",
+          "mode": "id"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": []
+        },
+        "options": {},
+        "returnAll": true
+      }
+    },
+    {
+      "id": "54f4415f-0e32-41eb-bbd5-81dce0c50de2",
+      "name": "Order Events",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        100
+      ],
+      "parameters": {
+        "jsCode": "return $input.all().sort((a,b)=>String(a.json.createdAt).localeCompare(String(b.json.createdAt)) || ({create:0,update:1,delete:2}[a.json.action]-{create:0,update:1,delete:2}[b.json.action]));",
+        "mode": "runOnceForAllItems"
+      }
+    },
+    {
+      "id": "45dcd444-3ac5-4fd1-b5b0-5313b69d1657",
+      "name": "Each Event",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        660,
+        100
+      ],
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      }
+    },
+    {
+      "id": "8bb3b7ce-1ebf-471a-92d8-326b4bbe111f",
+      "name": "Read Issue State",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        880,
+        100
+      ],
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "5gGP9oUlIe17CoRg",
+          "mode": "id"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "issue_id",
+              "condition": "eq",
+              "keyValue": "={{ $json.issue_id }}"
+            }
+          ]
+        },
+        "options": {},
+        "returnAll": true
+      },
+      "alwaysOutputData": true
+    },
+    {
+      "id": "c7dac83a-a608-43dd-9dde-a93cb0821e3a",
+      "name": "Prepare Notification",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        100
+      ],
+      "parameters": {
+        "jsCode": "const row=$('Each Event').first().json;const b=JSON.parse(row.payload);const previous=$input.first().json;const old=previous.context?JSON.parse(previous.context):null;const d=b.action==='delete'?old:b.data;const project=d?.project?.id||d?.project||d?.project_id;\nconst idOf=x=>x?.id||x||null;const label=x=>x?.name||x?.display_name||x?.email||x?.id||x||'none';\nconst semantic=x=>({name:x.name||'',state:idOf(x.state),priority:x.priority||'none',assignees:(x.assignees||x.assignee_ids||[]).map(idOf).sort(),due:x.target_date||x.due_date||null});\nlet notify=false,message='',fingerprint=previous.fingerprint||'',context=previous.context||'',last_action=previous.last_action||'';\nconst stale=b.action!=='delete'&&old&&d?.updated_at&&old.updated_at&&Date.parse(d.updated_at)<Date.parse(old.updated_at);\nif(!stale&&d&&project==='0be26f75-fc5b-4e15-9d69-efc4cca4e65d'){const current=semantic(d);fingerprint=JSON.stringify(current);context=JSON.stringify(d);last_action=b.action;let changes=[];if(old){const a=semantic(old);for(const k of Object.keys(current))if(JSON.stringify(a[k])!==JSON.stringify(current[k]))changes.push(k==='state'?'state: '+label(d.state):k==='assignees'?'assignees: '+(d.assignees||[]).map(label).join(', '):k+': '+String(current[k]??'none'));}\nnotify=b.action==='create'?previous.last_action!=='create'||previous.fingerprint!==fingerprint:b.action==='delete'?previous.last_action!=='delete':changes.length>0;\nconst action={create:'Created',update:'Updated',delete:'Deleted'}[b.action];const ident='PERSO-'+d.sequence_id;message=action+' **'+ident+' — '+String(d.name||'').replace(/\\n/g,' ')+'**'+(changes.length?'\\n'+changes.join('; '):'')+'\\nhttps://projects.escloud.us/personal/projects/0be26f75-fc5b-4e15-9d69-efc4cca4e65d/issues/'+row.issue_id;\n}\nreturn [{json:{...row,notify,message,fingerprint,context,last_action}}];",
+        "mode": "runOnceForAllItems"
+      }
+    },
+    {
+      "id": "8c695436-aaa2-4cf5-85c2-b2143db716c0",
+      "name": "Meaningful Change",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1320,
+        100
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "ae745048-42e9-4adb-a9a6-fc42e5ba7781",
+              "leftValue": "={{ $json.notify }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "f1a41913-2e3e-4e27-bede-2232b0cef4c0",
+      "name": "Notify Plane Channel",
+      "type": "n8n-nodes-base.mattermost",
+      "typeVersion": 1,
+      "position": [
+        1540,
+        100
+      ],
+      "parameters": {
+        "resource": "message",
+        "operation": "post",
+        "channelId": "adkccukmsf8gffz6uimiqewk7r",
+        "message": "={{ $json.message }}",
+        "attachments": [],
+        "otherOptions": {}
+      },
+      "credentials": {
+        "mattermostApi": {
+          "id": "16a0a988ad514ab1",
+          "name": "Mattermost API - edge internal"
+        }
+      }
+    },
+    {
+      "id": "f87c5aad-898d-4466-938f-fa7a623b685c",
+      "name": "Persist Issue State",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        1760,
+        100
+      ],
+      "parameters": {
+        "resource": "row",
+        "operation": "upsert",
+        "dataTableId": {
+          "__rl": true,
+          "value": "5gGP9oUlIe17CoRg",
+          "mode": "id"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "issue_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Prepare Notification').item.json.issue_id }}"
+            }
+          ]
+        },
+        "options": {},
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "issue_id": "={{ $('Prepare Notification').item.json.issue_id }}",
+            "context": "={{ $('Prepare Notification').item.json.context }}",
+            "fingerprint": "={{ $('Prepare Notification').item.json.fingerprint }}",
+            "last_action": "={{ $('Prepare Notification').item.json.last_action }}"
+          }
+        }
+      }
+    },
+    {
+      "id": "0e6bff15-0f70-487a-9615-427bc227b0db",
+      "name": "Remove Processed Version",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        1980,
+        100
+      ],
+      "parameters": {
+        "resource": "row",
+        "operation": "deleteRows",
+        "dataTableId": {
+          "__rl": true,
+          "value": "a7XaH434xzlQVgcA",
+          "mode": "id"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "event_key",
+              "condition": "eq",
+              "keyValue": "={{ $('Prepare Notification').item.json.event_key }}"
+            },
+            {
+              "keyName": "payload",
+              "condition": "eq",
+              "keyValue": "={{ $('Prepare Notification').item.json.payload }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "alwaysOutputData": true
+    }
+  ],
+  "connections": {
+    "Notification Schedule": {
+      "main": [
+        [
+          {
+            "node": "Read Inbox",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Inbox": {
+      "main": [
+        [
+          {
+            "node": "Order Events",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Order Events": {
+      "main": [
+        [
+          {
+            "node": "Each Event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Issue State": {
+      "main": [
+        [
+          {
+            "node": "Prepare Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Notification": {
+      "main": [
+        [
+          {
+            "node": "Meaningful Change",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Meaningful Change": {
+      "main": [
+        [
+          {
+            "node": "Notify Plane Channel",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Persist Issue State",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify Plane Channel": {
+      "main": [
+        [
+          {
+            "node": "Persist Issue State",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Persist Issue State": {
+      "main": [
+        [
+          {
+            "node": "Remove Processed Version",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Processed Version": {
+      "main": [
+        [
+          {
+            "node": "Each Event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Each Event": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Read Issue State",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataSuccessExecution": "all",
+    "saveDataErrorExecution": "all",
+    "executionTimeout": 25
+  },
+  "description": "Every 30 seconds, drain/coalesce native inbox serially. Persist semantic issue state; post only create/delete/significant differences. Exact compare-and-delete keeps a concurrent newer payload. Delete requires cached project context."
+}
