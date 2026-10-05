@@ -125,3 +125,82 @@ above. The current live state is:
 
 Current marker: N8N_PILOT_RESEARCH_ARTIFACTS=ABSENT;
 N8N_RETIRED_TEST_EXECUTIONS=ABSENT; N8N_RETIRED_TEST_RESIDUE_CLEANUP=PASS.
+
+## Subsequent operator decision — three value-audit candidates removed
+
+Status: **COMPLETE / ACCEPTED**, N8N_WORKFLOW_VALUE_CLEANUP=PASS.
+The operator explicitly authorized removal after the extended value audit.
+This supersedes retention of these three at the earlier ten-workflow checkpoint.
+
+### Exact removal and normalization
+
+- Native archive + permanent delete: PlaneGitHubPoll01, PlaneGitHubSync01,
+  bxsXXufaaXuubA3Z (operator-renamed NextcloudEventIngress). Workflow/history/
+  shared-workflow/webhook/execution records are absent; zero archived retention.
+- 610 retained executions before deletion: polling295, sync0, Nextcloud315.
+  Native deletion removed their payloads; zero orphan execution_data rows remain.
+- Native Nextcloud OCS removed exactly registrations1–4 after URI/event/ID audit.
+  All targeted nextcloud-events registrations and pending WebhookCall jobs are absent.
+- Native n8n DELETE removed NextcloudEventInbox01/pZDk2S89xgYGSXEO, 343 rows,
+  four column metadata records and its physical user table.
+- Two proven-exclusive credentials deleted: akETYuAX0iaYCE6K and dju3iGLC4SWK191K;
+  shared records absent. No gh authorization revoke: gh api user succeeds.
+- Live/canonical monitor now covers only PlaneMattermost01 and
+  PlaneDeletionReconcile01; only the monitoring agent was restarted.
+- Canonical retired exports removed: PlaneGitHubPoll01.json, PlaneGitHubSync01.json,
+  NextcloudEventIngress01.json and its dedicated data-tables.json.
+- Event-only allow_local_remote_servers override deleted through native occ.
+  Retained Nextcloud Mattermost URL is public HTTPS; native channels GET200 works
+  after restoring the upstream false default.
+- Cron's event-only edge_internal membership removed from Docker and Compose;
+  default/postgres_net endpoints remain. Native Compose parser verified that
+  only this membership changed. App retains its required file-tool alias/network.
+  No Nextcloud/n8n container recreation, image update or shared network deletion.
+
+### Current seven-workflow inventory
+
+| Display name | Stable ID | Role |
+|---|---|---|
+| AIExecution | wQ9ZqMisMCGadGEE | Explicit AI backend tool |
+| NextcloudTools | G0WysKToqsel8yL2 | Eleven file/share operations |
+| LenovoPdfCleanup | ENo9jFkwcE4PFOyL | Sequential PDF cleanup child |
+| TechnicalDocumentationSync | QouVaVNhAqSiYq5D | Daily07:00 Minsk source sync and cleanup caller |
+| Plane Event Ingress | PlaneEventIngress01 | Signed Plane intake |
+| Plane → Mattermost | PlaneMattermost01 | Significant changes every30s |
+| Plane API deletion reconciliation | PlaneDeletionReconcile01 | Confirmed deletion activities every5min |
+
+SQLite and native MCP both report seven active/published workflows, four MCP-exposed.
+Before mutation the operator renamed AIExecution01/NextcloudTools01. Canonical
+exports now reflect the current labels; stable IDs and webhook paths did not change.
+At the post-cleanup13:04UTC hash checkpoint, retained graph/settings/description/
+pins/meta/node-groups/publication, seven credentials and both Plane tables matched
+baseline. All82 library files (78 originals, two cleaned PDFs, INDEX.html and INDEX.md)
+matched the pre-cleanup aggregate path/content hash at that checkpoint.
+Subsequent parallel operator-authorized catalogue-date work, commit9148be1,
+republished TechnicalDocumentationSync as758bcab2-aa27-4c55-b158-932b74d1a4ac
+and updated the index. It is preserved and belongs to that separate accepted scope;
+this cleanup does not restore earlier graphs or file content.
+
+Nextcloud app/cron native status:35.0.1, maintenancefalse, needsDbUpgradefalse.
+App-password WebDAV PROPFIND207; native Mattermost channel GET200. n8n readiness200/
+Dockerhealthy; both retained scheduled workflows have fresh successful runs and
+monitorOK, including post-cleanup deletion reconciliation at13:00UTC.
+Retired references are absent from active graphs/settings/current monitor/tool
+config. Historical decisions, accepted evidence and native backup/audit/token
+lifecycles remain required and preserved. No backup, test data or export copy added.
+
+A read-only table audit initially used unsupported item GET and received editor HTML:
+assistant verifier defect, no runtime failure/mutation. Installed controller
+established collection GET and exact item DELETE, which passed. A standalone PHP
+bootstrap verifier did not reliably emit output and was discarded; installed native
+authenticated HTTP channels GET supplied actual verification. A Markdown helper
+syntax error was rejected before execution and caused no file/runtime mutation.
+Exact final mutation shell/Python/JavaScript passed separate syntax preflight.
+Temporary trusted-owner sessions were logged out; HTTP401 replay proved revocation.
+
+N8N_VALUE_CLEANUP_WORKFLOWS=7
+N8N_VALUE_CLEANUP_CREDENTIALS=7
+N8N_VALUE_CLEANUP_DATATABLES=2
+N8N_RETIRED_VALUE_ARTIFACTS=ABSENT
+N8N_RETAINED_BUSINESS_STATE=UNCHANGED
+N8N_WORKFLOW_VALUE_CLEANUP=PASS

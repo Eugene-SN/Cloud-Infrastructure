@@ -139,3 +139,10 @@ GitHub documents both repository PR listing and `pull_request` webhooks. These s
 **INFERENCE:** the strongest concrete automation outcomes in the supplied scope are maintained technical documentation and the Plane notification chain when those notifications matter to the operator. AI/file tools are useful on-demand adapters if callers use their contracts. A Nextcloud inbox without a consumer has the clearest gap between event collection and a practical outcome. The PR pair needs alignment with the operator's real repository practices rather than an assumption that all software work involves pull requests.
 
 Before making any keep/disable/consolidate choice, correlate dependencies, recent meaningful effects, operator intent and retained-history limits. Distinguish low traffic from absent purpose, a checked source from a changed source, and available future capability from an enabled workflow with no chosen outcome. Source-supported alternatives above are options for the operator; no replacement, retirement, schedule change, publication or service mutation is accepted by this audit.
+
+## Subsequent operator decision — 2026-10-05
+
+The operator approved deletion of all three candidates after this research.
+They and their exact unused supporting state are now permanently removed.
+Seven workflows remain. This report preserves the research snapshot; current
+mutation verification is N8N_WORKFLOW_CLEANUP_ACCEPTANCE_2026-10-05.md.

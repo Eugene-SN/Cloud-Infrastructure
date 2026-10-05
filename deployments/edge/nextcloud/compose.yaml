@@ -59,7 +59,6 @@ services:
     networks:
     - default
     - postgres_net
-    - edge_internal
 networks:
   default: null
   postgres_net:

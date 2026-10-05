@@ -1,5 +1,21 @@
 # Cloud Infrastructure — Architecture State
 
+## Current workflow scope — 2026-10-05 value cleanup
+
+Operator-approved retirement supersedes the GitHub PR association pair and
+consumer-free Nextcloud event intake in earlier accepted scope. Seven published
+workflows remain, four MCP-exposed: AIExecution, NextcloudTools, LenovoPdfCleanup,
+TechnicalDocumentationSync, Plane Event Ingress, Plane → Mattermost and Plane API
+deletion reconciliation. Stable IDs remain; cleanup preserved business graphs/publication at verification.
+Four registrations, 343-row event inbox, two exclusive credentials and retired
+execution/history/exports are absent. Monitor covers two scheduled Plane workflows.
+Nextcloud app retains edge_internal for file tools; cron retains default/postgres_net.
+Event-only cron edge_internal membership and allow_local_remote_servers override
+are removed. Shared GitHub MCP/gh, file credentials, Plane/Mattermost, document
+library and accepted backup/audit lifecycle remain required. Current verification:
+N8N_WORKFLOW_CLEANUP_ACCEPTANCE_2026-10-05.md. Older dated records retain chronology.
+
+
 ## Accepted Hermes explicit executor contract — 2026-10-02
 
 Hermes uses vLLM/Qwen as its default model. Codex and Antigravity are independent specialist executors selected explicitly by the operator. Hermes does not autonomously route, fall back, fan out, cross-review, or substitute one executor for another.
@@ -16,7 +32,7 @@ Exact contract, native boundaries and recovery: `deployments/edge/interaction-fa
 
 Post-infrastructure foundation: all three agent clients use native Plane/n8n/GitHub/Playwright MCP; OpenAI Docs is Codex-only. n8n is the deterministic workflow/builder/Data Table plane. AIExecution01 explicitly selects direct private vLLM, direct host Codex/Antigravity via native SSH, or the accepted private Hermes API. Hermes remains the persistent reasoning/tool plane; the unused Hermes4FMachine01 compatibility workflow was retired on 2026-10-05. One small one-shot CLI helper and one GitHub stdio launcher have no listener/service; existing networks suffice.
 
-Nextcloud's existing operator/app password powers native file/share tools, while bundled native webhook listeners and cron deliver four file events to a header-authenticated n8n durable inbox. Both Nextcloud containers join existing edge_internal. Native n8n MCP retains all35 core tools, global autoexposure is off, and the two parameterized AI/Nextcloud tool workflows are explicitly exposed. This is the generic foundation, not implementation of user-specific workflows.
+Nextcloud's existing operator/app password powers native file/share tools. Event intake was retired on 2026-10-05. App retains edge_internal for inbound tools; cron retains default/postgres_net. Native n8n MCP retains all35 core tools, global autoexposure is off, and four retained workflows are explicitly exposed. This is the generic foundation, not implementation of user-specific workflows.
 
 Exact architecture/authentication/lifecycle/recovery contract and source references: `deployments/edge/interaction-fabric/README.md`; consolidated evidence: `EDGE_INTERACTION_AI_TOOL_FABRIC_ACCEPTANCE_2026-10-02.md`. Earlier optional-foundation deferrals below are superseded only for this completed scope.
 
@@ -738,12 +754,10 @@ flowchart LR
   Worker[Plane worker] -->|raw-body signed issue webhook| Bus[n8n durable native inbox]
   API[Plane API v1] -->|confirmed deletion activities every5min| Bus
   Bus -->|coalesced semantic changes every30s| MM[Private Mattermost plane / existing n8n bot]
-  GH[GitHub repository PRs] -->|poll every15min| Poll[n8n explicit PERSO association]
-  Poll -->|idempotent PR comment| API
   Hermes -->|native stdio / separate PAT| MCP[Official Plane MCP / CE tools]
   MCP -->|loopback service origin| API
 ```
 
-Inbox and issue-context/fingerprint state use native n8n Data Tables in existing SQLite. HMAC is over original bytes; invalid/missing signatures fail401, accepted project payloads are durably queued before quick204. Mattermost work does not delay ingress. API/MCP DELETE's confirmed v1.4.2 emission gap is covered by native deletion-activity polling, not a 404 heuristic. GitHub comments use external_source/external_id and never change issue completion.
+Inbox and issue-context/fingerprint state use native n8n Data Tables in existing SQLite. HMAC is over original bytes; invalid/missing signatures fail401, accepted project payloads are durably queued before quick204. Mattermost work does not delay ingress. API/MCP DELETE's confirmed v1.4.2 emission gap is covered by native deletion-activity polling, not a 404 heuristic. GitHub PR association/comment sync was retired by operator decision on 2026-10-05; native GitHub MCP remains.
 
 Hermes-managed MCP stdio uses `http://127.0.0.1:18111` origin, personal workspace and explicit PERSO project UUID; Pages/commercial groups are excluded. No hosted MCP server or direct executor MCP configuration. Existing Backrest logical dumps/SQLite staging/protected host configuration recover the whole graph; final flow384 snapshot readback passed. Plane is task state; Obsidian is durable knowledge. Optional Knowledge/Nextcloud/calendar/intake workflows remain deferred. Exact object inventory/evidence: `PLANE_PART_2_CORE_INTEGRATIONS_ACCEPTANCE_2026-10-02.md`; secret-free native definitions: `deployments/plane/integrations/`.

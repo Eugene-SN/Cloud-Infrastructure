@@ -3294,3 +3294,26 @@ manually populated edition column. Use the replaced record's source date, retain
 in INDEX.html as previous_source_updated; show — when no previous date is known.
 Do not reconstruct unrecorded history from edition labels or file timestamps.
 Keep the current source-date column and cleanup details. No nodes are added.
+
+## 2026-10-05T16:04:00+03:00 — Workflow value cleanup — ACCEPTED
+
+**Decision:** After the extended value audit, the operator authorized permanent
+deletion of PlaneGitHubPoll01, PlaneGitHubSync01 and bxsXXufaaXuubA3Z with their
+exact unused supporting state. No ad-hoc backup/export is retained.
+
+**Confirmed result:** seven published workflows, seven required credentials, two
+Plane Data Tables, four MCP-exposed workflows. All retained business definitions/
+publication and 82 cloud-library files match baseline. Native archive/delete,
+Nextcloud OCS delete, n8n table/credential delete and logout/revocation passed.
+Monitor is OK for both remaining scheduled Plane workflows. Native WebDAV207,
+Nextcloud Mattermost channel GET200 and gh API user read passed. Event-only cron
+network membership and local-remote override are removed; app file access remains.
+
+**Names:** operator-renamed AIExecution and NextcloudTools are recorded by stable
+IDs. Changing a display name preserves ID-based calls, monitoring and existing
+webhook paths; this cleanup did not rename retained runtime workflows.
+
+**Supersedes:** earlier GitHub PR polling/comment and Nextcloud event intake/inbox
+requirements only. Plane notifications/reconciliation, AI/file tools, documents,
+Stage0–13 and shared products remain. Verification:
+N8N_WORKFLOW_CLEANUP_ACCEPTANCE_2026-10-05.md.

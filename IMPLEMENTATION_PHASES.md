@@ -826,3 +826,15 @@ The existing 17-node monitor preserves its download/index/cleanup sequence and
 schedule. Date rollover and browser checks passed; published no-change run12073
 performed no writes or cleanup. Evidence: previous-date-evidence.json in the
 technical-documentation deployment directory. No new infrastructure scope.
+
+## 2026-10-05 — Workflow value cleanup — COMPLETE / ACCEPTED
+
+Operator authorized permanent removal of GitHub polling/comment sync and
+consumer-free Nextcloud event intake. Their four registrations, 343-row inbox,
+two exclusive credentials, execution/history/exports and GitHub monitor rule
+are absent. Seven published workflows remain; retained business definitions/
+publication and 82 cloud-library files are unchanged. Native WebDAV/Mattermost
+reads, n8n health and both retained scheduled Plane workflows pass. Event-only
+cron network membership/local-remote override are absent. Stage13 remains the
+infrastructure checkpoint. Record: N8N_WORKFLOW_CLEANUP_ACCEPTANCE_2026-10-05.md;
+N8N_WORKFLOW_VALUE_CLEANUP=PASS.

@@ -103,10 +103,6 @@
       {
         "id": "PlaneDeletionReconcile01",
         "cadence_s": 300
-      },
-      {
-        "id": "PlaneGitHubPoll01",
-        "cadence_s": 900
       }
     ]
   }
