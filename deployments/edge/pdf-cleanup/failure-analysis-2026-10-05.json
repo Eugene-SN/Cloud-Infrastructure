@@ -1,0 +1,1093 @@
+{
+  "date": "2026-10-05",
+  "scope": "Diagnosis only; no production CLI, adapter, image, cloud publication or workflow mutation",
+  "image_id": "sha256:3ff39309bab88fca2d28edb606879afbe5ce18fa366d48ade3e9440cbd82c06e",
+  "core_sha256": "4b29b752fe9dcc3b8f8d08f509b5c840e354ecb0a398fe72bea092fdd4cb4c72",
+  "pymupdf": "1.28.2",
+  "mupdf": "1.28.2",
+  "manuals": [
+    {
+      "file": "wa7780-user",
+      "sha256": "1718c6d1094bf50a54550fdb191f628875da094b0fbda8f2f147305dbc740f4b",
+      "pages": 100,
+      "needs_pass": 0,
+      "encrypted": true,
+      "error": "Page 46: footer candidate overlaps table text",
+      "physical_page": 46,
+      "selected": [
+        {
+          "index": 1,
+          "role": "page_number_sequence",
+          "text": "40",
+          "bbox": [
+            24.944900512695312,
+            748.5534057617188,
+            35.26430130004883,
+            758.0033569335938
+          ],
+          "y": 756.6533813476562,
+          "size": 8.5381498336792,
+          "fonts": [
+            "DFSongGB5Std-W5"
+          ],
+          "dir": [
+            1.0,
+            0.0
+          ]
+        }
+      ],
+      "page_candidates": [
+        {
+          "p": 45,
+          "i": 1,
+          "n": [
+            "decimal",
+            40
+          ],
+          "template": "<PAGE>",
+          "y": 756.6533813476562,
+          "size": 8.5381498336792,
+          "height": 792.0,
+          "width": 612.0,
+          "fonts": [
+            "DFSongGB5Std-W5"
+          ]
+        }
+      ],
+      "anchor": {
+        "text": "40",
+        "bbox": [
+          24.944900512695312,
+          748.5534057617188,
+          35.26430130004883,
+          758.0033569335938
+        ],
+        "y": 756.6533813476562,
+        "size": 8.5381498336792,
+        "fonts": [
+          "DFSongGB5Std-W5"
+        ],
+        "dir": [
+          1.0,
+          0.0
+        ]
+      },
+      "conflicting_line": {
+        "text": "WA7780 G3 服務器用戶手冊",
+        "bbox": [
+          44.78379821777344,
+          748.57421875,
+          161.0631103515625,
+          758.024169921875
+        ],
+        "y": 756.6741943359375,
+        "size": 9.0,
+        "fonts": [
+          "DFHeiGB5Std-W5"
+        ],
+        "dir": [
+          1.0,
+          0.0
+        ]
+      },
+      "native_points": [],
+      "source_hash_unchanged": true,
+      "related_candidates_sample": [],
+      "matching_drawings": [
+        {
+          "rect": "Rect(47.921199798583984, 733.0433349609375, 254.13121032714844, 759.4813232421875)",
+          "type": "s",
+          "fill": "None",
+          "color": "(0.5772945880889893, 0.5855344533920288, 0.5958037972450256)",
+          "closePath": "False"
+        },
+        {
+          "rect": "Rect(47.66438293457031, 732.4675903320312, 301.98138427734375, 793.7285766601562)",
+          "type": "fs",
+          "fill": "(1.0, 1.0, 1.0)",
+          "color": "(0.13669031858444214, 0.12195010483264923, 0.1252918243408203)",
+          "closePath": "False"
+        },
+        {
+          "rect": "Rect(62.70920181274414, 756.3438720703125, 98.10820007324219, 789.9508666992188)",
+          "type": "s",
+          "fill": "None",
+          "color": "(0.5772945880889893, 0.5855344533920288, 0.5958037972450256)",
+          "closePath": "False"
+        },
+        {
+          "rect": "Rect(54.1941032409668, 736.304931640625, 89.55709838867188, 772.6968994140625)",
+          "type": "fs",
+          "fill": "(1.0, 1.0, 1.0)",
+          "color": "(0.13669031858444214, 0.12195010483264923, 0.1252918243408203)",
+          "closePath": "False"
+        },
+        {
+          "rect": "Rect(51.049800872802734, 747.050048828125, 93.4207992553711, 789.5360107421875)",
+          "type": "fs",
+          "fill": "(1.0, 1.0, 1.0)",
+          "color": "(0.13669031858444214, 0.12195010483264923, 0.1252918243408203)",
+          "closePath": "False"
+        },
+        {
+          "rect": "Rect(38.05650329589844, 743.5909423828125, 81.8905029296875, 782.4799194335938)",
+          "type": "fs",
+          "fill": "(1.0, 1.0, 1.0)",
+          "color": "(0.13669031858444214, 0.12195010483264923, 0.1252918243408203)",
+          "closePath": "False"
+        },
+        {
+          "rect": "Rect(58.22829818725586, 732.4984741210938, 107.43930053710938, 761.1614990234375)",
+          "type": "fs",
+          "fill": "(1.0, 1.0, 1.0)",
+          "color": "(0.13669031858444214, 0.12195010483264923, 0.1252918243408203)",
+          "closePath": "False"
+        },
+        {
+          "rect": "Rect(58.9473991394043, 732.5946044921875, 107.1033935546875, 759.4325561523438)",
+          "type": "s",
+          "fill": "None",
+          "color": "(0.5772945880889893, 0.5855344533920288, 0.5958037972450256)",
+          "closePath": "False"
+        },
+        {
+          "rect": "Rect(123.01380157470703, 740.1641235351562, 154.4298095703125, 758.7711181640625)",
+          "type": "fs",
+          "fill": "(0.0, 0.32396429777145386, 0.60776686668396)",
+          "color": "(1.0, 1.0, 1.0)",
+          "closePath": "False"
+        },
+        {
+          "rect": "Rect(50.146202087402344, 756.1398315429688, 93.9802017211914, 795.02880859375)",
+          "type": "fs",
+          "fill": "(1.0, 1.0, 1.0)",
+          "color": "(0.13669031858444214, 0.12195010483264923, 0.1252918243408203)",
+          "closePath": "False"
+        },
+        {
+          "rect": "Rect(113.36270141601562, 755.557373046875, 149.58470153808594, 784.9853515625)",
+          "type": "fs",
+          "fill": "(1.0, 1.0, 1.0)",
+          "color": "(0.13669031858444214, 0.12195010483264923, 0.1252918243408203)",
+          "closePath": "False"
+        }
+      ],
+      "nearby_footer_lines": [
+        {
+          "page": 45,
+          "lines": [
+            "第 3 章. 硬件更換過程",
+            "39"
+          ]
+        },
+        {
+          "page": 46,
+          "lines": [
+            "WA7780 G3 服務器用戶手冊",
+            "40",
+            "圖 16. 取下右側 PCIe 擴展卡托架"
+          ]
+        },
+        {
+          "page": 47,
+          "lines": [
+            "第 3 章. 硬件更換過程",
+            "41"
+          ]
+        },
+        {
+          "page": 48,
+          "lines": [
+            "WA7780 G3 服務器用戶手冊",
+            "42"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "wa7785a-user",
+      "sha256": "3a1f7a48df92df1fd415741656cc5294ca26a8e5ab4f3839da557c0189c0e35e",
+      "pages": 98,
+      "needs_pass": 0,
+      "encrypted": true,
+      "error": "Page 34: footer candidate overlaps table text",
+      "physical_page": 34,
+      "selected": [
+        {
+          "index": 1,
+          "role": "page_number_sequence",
+          "text": "28",
+          "bbox": [
+            24.944900512695312,
+            748.2742919921875,
+            33.95210266113281,
+            759.353271484375
+          ],
+          "y": 756.644287109375,
+          "size": 8.5381498336792,
+          "fonts": [
+            "Helvetica"
+          ],
+          "dir": [
+            1.0,
+            0.0
+          ]
+        }
+      ],
+      "page_candidates": [
+        {
+          "p": 33,
+          "i": 1,
+          "n": [
+            "decimal",
+            28
+          ],
+          "template": "<PAGE>",
+          "y": 756.644287109375,
+          "size": 8.5381498336792,
+          "height": 792.0,
+          "width": 612.0,
+          "fonts": [
+            "Helvetica"
+          ]
+        }
+      ],
+      "anchor": {
+        "text": "28",
+        "bbox": [
+          24.944900512695312,
+          748.2742919921875,
+          33.95210266113281,
+          759.353271484375
+        ],
+        "y": 756.644287109375,
+        "size": 8.5381498336792,
+        "fonts": [
+          "Helvetica"
+        ],
+        "dir": [
+          1.0,
+          0.0
+        ]
+      },
+      "conflicting_line": {
+        "text": "WA7785a G3 服務器用戶手冊",
+        "bbox": [
+          44.78379821777344,
+          748.57421875,
+          165.62600708007812,
+          758.024169921875
+        ],
+        "y": 756.6741943359375,
+        "size": 9.0,
+        "fonts": [
+          "DFHeiGB5Std-W5"
+        ],
+        "dir": [
+          1.0,
+          0.0
+        ]
+      },
+      "native_points": [],
+      "source_hash_unchanged": true,
+      "related_candidates_sample": [],
+      "matching_drawings": [
+        {
+          "rect": "Rect(45.3468017578125, 558.5570068359375, 304.4497985839844, 796.1630249023438)",
+          "type": "fs",
+          "fill": "(1.0, 1.0, 1.0)",
+          "color": "(0.8202029466629028, 0.8260013461112976, 0.8322880864143372)",
+          "closePath": "False"
+        },
+        {
+          "rect": "Rect(47.043609619140625, 639.8336791992188, 219.9665985107422, 795.0297241210938)",
+          "type": "s",
+          "fill": "None",
+          "color": "(0.8202029466629028, 0.8260013461112976, 0.8322880864143372)",
+          "closePath": "False"
+        },
+        {
+          "rect": "Rect(105.360595703125, 736.1942749023438, 145.9055938720703, 767.21630859375)",
+          "type": "fs",
+          "fill": "(1.0, 1.0, 1.0)",
+          "color": "(0.8202029466629028, 0.8260013461112976, 0.8322880864143372)",
+          "closePath": "False"
+        },
+        {
+          "rect": "Rect(142.36839294433594, 752.7418212890625, 173.24740600585938, 780.2748413085938)",
+          "type": "fs",
+          "fill": "(1.0, 1.0, 1.0)",
+          "color": "(0.8202029466629028, 0.8260013461112976, 0.8322880864143372)",
+          "closePath": "False"
+        },
+        {
+          "rect": "Rect(83.01499938964844, 718.94091796875, 171.55099487304688, 762.1459350585938)",
+          "type": "fs",
+          "fill": "(1.0, 1.0, 1.0)",
+          "color": "(0.8202029466629028, 0.8260013461112976, 0.8322880864143372)",
+          "closePath": "False"
+        },
+        {
+          "rect": "Rect(129.36669921875, 741.681396484375, 162.35870361328125, 759.7454223632812)",
+          "type": "f",
+          "fill": "(1.0, 1.0, 1.0)",
+          "color": "None",
+          "closePath": "False"
+        },
+        {
+          "rect": "Rect(129.36669921875, 741.681396484375, 162.35870361328125, 759.7454223632812)",
+          "type": "s",
+          "fill": "None",
+          "color": "(0.8202029466629028, 0.8260013461112976, 0.8322880864143372)",
+          "closePath": "False"
+        },
+        {
+          "rect": "Rect(42.87919998168945, 689.4766845703125, 208.09719848632812, 763.1616821289062)",
+          "type": "fs",
+          "fill": "(1.0, 1.0, 1.0)",
+          "color": "(0.13669031858444214, 0.12195010483264923, 0.1252918243408203)",
+          "closePath": "False"
+        },
+        {
+          "rect": "Rect(43.97719955444336, 695.1185913085938, 199.52120971679688, 758.3676147460938)",
+          "type": "s",
+          "fill": "None",
+          "color": "(0.5772945880889893, 0.5855344533920288, 0.5958037972450256)",
+          "closePath": "False"
+        }
+      ],
+      "nearby_footer_lines": [
+        {
+          "page": 33,
+          "lines": [
+            "第 3 章. 硬件更換過程",
+            "27"
+          ]
+        },
+        {
+          "page": 34,
+          "lines": [
+            "WA7785a G3 服務器用戶手冊",
+            "28"
+          ]
+        },
+        {
+          "page": 35,
+          "lines": [
+            "第 3 章. 硬件更換過程",
+            "29",
+            "圖 8. 找到並握住服務器握把"
+          ]
+        },
+        {
+          "page": 36,
+          "lines": [
+            "WA7785a G3 服務器用戶手冊",
+            "30"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "wa7780-bios",
+      "sha256": "ff73d1e9ccc954f7e64173874a55dc7fe52569c9fe85c8669527933e81843d39",
+      "pages": 36,
+      "needs_pass": 0,
+      "encrypted": false,
+      "error": "Page 2: unverified numbering in footer frame",
+      "physical_page": 2,
+      "selected": [],
+      "page_candidates": [
+        {
+          "p": 1,
+          "i": 0,
+          "n": [
+            "decimal",
+            2025
+          ],
+          "template": "© Copyright Lenovo <PAGE>",
+          "y": 756.6533813476562,
+          "size": 9.0,
+          "height": 792.0,
+          "width": 612.0,
+          "fonts": [
+            "DFYuanGB5Std-W5"
+          ]
+        },
+        {
+          "p": 1,
+          "i": 1,
+          "n": [
+            "roman",
+            1
+          ],
+          "template": "<PAGE>",
+          "y": 756.6533813476562,
+          "size": 8.5381498336792,
+          "height": 792.0,
+          "width": 612.0,
+          "fonts": [
+            "DFSongGB5Std-W5"
+          ]
+        }
+      ],
+      "unverified_candidate": {
+        "p": 1,
+        "i": 1,
+        "n": [
+          "roman",
+          1
+        ],
+        "template": "<PAGE>",
+        "y": 756.6533813476562,
+        "size": 8.5381498336792,
+        "height": 792.0,
+        "width": 612.0,
+        "fonts": [
+          "DFSongGB5Std-W5"
+        ]
+      },
+      "native_points": [],
+      "source_hash_unchanged": true,
+      "related_candidates_sample": [
+        {
+          "p": 2,
+          "i": 1,
+          "n": [
+            "decimal",
+            1
+          ],
+          "template": "<PAGE>",
+          "y": 756.6533813476562,
+          "size": 8.5381498336792,
+          "height": 792.0,
+          "width": 612.0,
+          "fonts": [
+            "DFSongGB5Std-W5"
+          ]
+        },
+        {
+          "p": 3,
+          "i": 1,
+          "n": [
+            "decimal",
+            2
+          ],
+          "template": "<PAGE>",
+          "y": 756.6533813476562,
+          "size": 8.5381498336792,
+          "height": 792.0,
+          "width": 612.0,
+          "fonts": [
+            "DFSongGB5Std-W5"
+          ]
+        },
+        {
+          "p": 4,
+          "i": 1,
+          "n": [
+            "decimal",
+            3
+          ],
+          "template": "<PAGE>",
+          "y": 756.6533813476562,
+          "size": 8.5381498336792,
+          "height": 792.0,
+          "width": 612.0,
+          "fonts": [
+            "DFSongGB5Std-W5"
+          ]
+        }
+      ],
+      "matching_drawings": [],
+      "nearby_footer_lines": [
+        {
+          "page": 1,
+          "lines": []
+        },
+        {
+          "page": 2,
+          "lines": [
+            "© Copyright Lenovo 2025",
+            "i",
+            "處理器設置（Processor Configuration）.............23",
+            "常用的 RefCode 設置...................................................25",
+            "Uncore 設置（Uncore Configuration）................25",
+            "內存設置.............................................................................26",
+            "IIO 設置（IIO Configuration）...................................27",
+            "高級電源管理設置..........................................................28"
+          ]
+        },
+        {
+          "page": 3,
+          "lines": [
+            "第一章. 簡介",
+            "1"
+          ]
+        },
+        {
+          "page": 4,
+          "lines": [
+            "WA7780 G3 服務器用戶手冊",
+            "2"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "wa7785a-bios",
+      "sha256": "c129642ccf27022ed6ab2ec88597e0c905c361c7a8008de29a58d2a373f1e073",
+      "pages": 27,
+      "needs_pass": 0,
+      "encrypted": true,
+      "error": "Page 2: unverified numbering in footer frame",
+      "physical_page": 2,
+      "selected": [],
+      "page_candidates": [
+        {
+          "p": 1,
+          "i": 0,
+          "n": [
+            "decimal",
+            2025
+          ],
+          "template": "© Copyright Lenovo <PAGE>",
+          "y": 756.6533813476562,
+          "size": 9.0,
+          "height": 792.0,
+          "width": 612.0,
+          "fonts": [
+            "DFYuanGB5Std-W5"
+          ]
+        },
+        {
+          "p": 1,
+          "i": 1,
+          "n": [
+            "roman",
+            1
+          ],
+          "template": "<PAGE>",
+          "y": 756.6533813476562,
+          "size": 8.5381498336792,
+          "height": 792.0,
+          "width": 612.0,
+          "fonts": [
+            "DFSongGB5Std-W5"
+          ]
+        }
+      ],
+      "unverified_candidate": {
+        "p": 1,
+        "i": 1,
+        "n": [
+          "roman",
+          1
+        ],
+        "template": "<PAGE>",
+        "y": 756.6533813476562,
+        "size": 8.5381498336792,
+        "height": 792.0,
+        "width": 612.0,
+        "fonts": [
+          "DFSongGB5Std-W5"
+        ]
+      },
+      "native_points": [],
+      "source_hash_unchanged": true,
+      "related_candidates_sample": [
+        {
+          "p": 2,
+          "i": 1,
+          "n": [
+            "decimal",
+            1
+          ],
+          "template": "<PAGE>",
+          "y": 756.6533813476562,
+          "size": 8.5381498336792,
+          "height": 792.0,
+          "width": 612.0,
+          "fonts": [
+            "DFSongGB5Std-W5"
+          ]
+        },
+        {
+          "p": 3,
+          "i": 1,
+          "n": [
+            "decimal",
+            2
+          ],
+          "template": "<PAGE>",
+          "y": 756.6533813476562,
+          "size": 8.5381498336792,
+          "height": 792.0,
+          "width": 612.0,
+          "fonts": [
+            "DFSongGB5Std-W5"
+          ]
+        },
+        {
+          "p": 4,
+          "i": 1,
+          "n": [
+            "decimal",
+            3
+          ],
+          "template": "<PAGE>",
+          "y": 756.6533813476562,
+          "size": 8.5381498336792,
+          "height": 792.0,
+          "width": 612.0,
+          "fonts": [
+            "DFSongGB5Std-W5"
+          ]
+        }
+      ],
+      "matching_drawings": [],
+      "nearby_footer_lines": [
+        {
+          "page": 1,
+          "lines": []
+        },
+        {
+          "page": 2,
+          "lines": [
+            "© Copyright Lenovo 2025",
+            "i"
+          ]
+        },
+        {
+          "page": 3,
+          "lines": [
+            "第一章. 簡介",
+            "1"
+          ]
+        },
+        {
+          "page": 4,
+          "lines": [
+            "WA7785a G3 服務器用戶手冊",
+            "2"
+          ]
+        }
+      ]
+    }
+  ],
+  "manuals_log": "{\"seconds\": 0.023, \"event\": \"inspect_start\", \"file\": \"wa7780-user\"}\n{\"seconds\": 43.13, \"event\": \"inspect_done\", \"file\": \"wa7780-user\", \"elapsed\": 43.107}\n{\"seconds\": 69.81, \"event\": \"manual_result\", \"file\": \"wa7780-user\", \"error\": \"Page 46: footer candidate overlaps table text\", \"pages\": 100, \"source_hash_unchanged\": true}\n{\"seconds\": 69.845, \"event\": \"inspect_start\", \"file\": \"wa7785a-user\"}\n{\"seconds\": 115.271, \"event\": \"inspect_done\", \"file\": \"wa7785a-user\", \"elapsed\": 45.426}\n{\"seconds\": 137.349, \"event\": \"manual_result\", \"file\": \"wa7785a-user\", \"error\": \"Page 34: footer candidate overlaps table text\", \"pages\": 98, \"source_hash_unchanged\": true}\n{\"seconds\": 137.353, \"event\": \"inspect_start\", \"file\": \"wa7780-bios\"}\n{\"seconds\": 138.829, \"event\": \"inspect_done\", \"file\": \"wa7780-bios\", \"elapsed\": 1.476}\n{\"seconds\": 140.231, \"event\": \"manual_result\", \"file\": \"wa7780-bios\", \"error\": \"Page 2: unverified numbering in footer frame\", \"pages\": 36, \"source_hash_unchanged\": true}\n{\"seconds\": 140.233, \"event\": \"inspect_start\", \"file\": \"wa7785a-bios\"}\n{\"seconds\": 141.471, \"event\": \"inspect_done\", \"file\": \"wa7785a-bios\", \"elapsed\": 1.238}\n{\"seconds\": 142.131, \"event\": \"manual_result\", \"file\": \"wa7785a-bios\", \"error\": \"Page 2: unverified numbering in footer frame\", \"pages\": 27, \"source_hash_unchanged\": true}\n",
+  "redfish": {
+    "pages": 423,
+    "source_size_bytes": 8326662,
+    "xref_length": 113763,
+    "links": {
+      "/Dest": 107,
+      "/URI": 26
+    },
+    "production_execution": "12232",
+    "production_cli_duration_ms": 906117,
+    "production_error": "Cleanup exceeded 900 seconds",
+    "production_rc": -15,
+    "control_inspection_seconds": 33.666,
+    "control_analysis_seconds": 13.569,
+    "control_repeated_save_stack_samples": 3,
+    "control_trace": "{\"seconds\": 0.059, \"event\": \"metadata\", \"pages\": 423, \"metadata\": {\"format\": \"PDF 1.7\", \"title\": \"\", \"author\": \"Yongliang YL27 Zhao\", \"subject\": \"\", \"keywords\": \"\", \"creator\": \"Microsoft® Word 适用于 Microsoft 365\", \"producer\": \"Microsoft® Word 适用于 Microsoft 365\", \"creationDate\": \"D:20260403111600+08'00'\", \"modDate\": \"D:20260403111600+08'00'\", \"trapped\": \"\", \"encryption\": null}, \"needs_pass\": 0, \"size\": 8326662}\n{\"seconds\": 0.102, \"event\": \"stage_start\", \"stage\": \"inspect_pdf\"}\n{\"seconds\": 4.07, \"event\": \"extract_progress\", \"call\": 25, \"elapsed\": 0.079, \"chars\": 1531}\n{\"seconds\": 5.829, \"event\": \"extract_progress\", \"call\": 50, \"elapsed\": 0.065, \"chars\": 1061}\n{\"seconds\": 8.095, \"event\": \"extract_progress\", \"call\": 75, \"elapsed\": 0.087, \"chars\": 1492}\n{\"seconds\": 10.23, \"event\": \"extract_progress\", \"call\": 100, \"elapsed\": 0.107, \"chars\": 713}\n{\"seconds\": 12.413, \"event\": \"extract_progress\", \"call\": 125, \"elapsed\": 0.129, \"chars\": 1186}\n{\"seconds\": 14.321, \"event\": \"extract_progress\", \"call\": 150, \"elapsed\": 0.076, \"chars\": 772}\n{\"seconds\": 15.641, \"event\": \"extract_progress\", \"call\": 175, \"elapsed\": 0.05, \"chars\": 686}\n{\"seconds\": 17.133, \"event\": \"extract_progress\", \"call\": 200, \"elapsed\": 0.062, \"chars\": 893}\n{\"seconds\": 18.977, \"event\": \"extract_progress\", \"call\": 225, \"elapsed\": 0.05, \"chars\": 934}\n{\"seconds\": 20.815, \"event\": \"extract_progress\", \"call\": 250, \"elapsed\": 0.06, \"chars\": 939}\n{\"seconds\": 22.526, \"event\": \"extract_progress\", \"call\": 275, \"elapsed\": 0.078, \"chars\": 729}\n{\"seconds\": 24.608, \"event\": \"extract_progress\", \"call\": 300, \"elapsed\": 0.104, \"chars\": 900}\n{\"seconds\": 26.194, \"event\": \"extract_progress\", \"call\": 325, \"elapsed\": 0.075, \"chars\": 1184}\n{\"seconds\": 28.198, \"event\": \"extract_progress\", \"call\": 350, \"elapsed\": 0.144, \"chars\": 1022}\n{\"seconds\": 30.867, \"event\": \"extract_progress\", \"call\": 375, \"elapsed\": 0.171, \"chars\": 1118}\n{\"seconds\": 32.757, \"event\": \"extract_progress\", \"call\": 400, \"elapsed\": 0.07, \"chars\": 1077}\n{\"seconds\": 33.769, \"event\": \"stage_end\", \"stage\": \"inspect_pdf\", \"elapsed\": 33.666}\n{\"seconds\": 33.81, \"event\": \"stage_start\", \"stage\": \"analyze\"}\nTimeout (0:00:45)!\nThread 0x00007c9b2fbcc380 [python] (most recent call first):\n  File \"/usr/local/lib/python3.14/site-packages/pymupdf/__init__.py\", line 14796 in __init__\n  File \"/usr/local/lib/python3.14/site-packages/pymupdf/__init__.py\", line 11718 in get_drawings\n  File \"/usr/local/lib/python3.14/site-packages/pdf_cleanup/core.py\", line 126 in drawing_signature\n  File \"/usr/local/lib/python3.14/site-packages/pdf_cleanup/core.py\", line 195 in analyze\n  File \"/audit/diagnose.py\", line 66 in timed\n  File \"/usr/local/lib/python3.14/site-packages/pdf_cleanup/core.py\", line 260 in cleanup\n  File \"/audit/diagnose.py\", line 79 in redfish\n  File \"/audit/diagnose.py\", line 89 in <module>\n{\"seconds\": 47.379, \"event\": \"stage_end\", \"stage\": \"analyze\", \"elapsed\": 13.569}\nTimeout (0:00:45)!\nThread 0x00007c9b2fbcc380 [python] (most recent call first):\n  File \"/usr/local/lib/python3.14/site-packages/pymupdf/mupdf.py\", line 60655 in pdf_save_document\n  File \"/usr/local/lib/python3.14/site-packages/pymupdf/__init__.py\", line 6644 in save\n  File \"/usr/local/lib/python3.14/site-packages/pdf_cleanup/core.py\", line 291 in cleanup\n  File \"/audit/diagnose.py\", line 79 in redfish\n  File \"/audit/diagnose.py\", line 89 in <module>\nTimeout (0:00:45)!\nThread 0x00007c9b2fbcc380 [python] (most recent call first):\n  File \"/usr/local/lib/python3.14/site-packages/pymupdf/mupdf.py\", line 60655 in pdf_save_document\n  File \"/usr/local/lib/python3.14/site-packages/pymupdf/__init__.py\", line 6644 in save\n  File \"/usr/local/lib/python3.14/site-packages/pdf_cleanup/core.py\", line 291 in cleanup\n  File \"/audit/diagnose.py\", line 79 in redfish\n  File \"/audit/diagnose.py\", line 89 in <module>\nTimeout (0:00:45)!\nThread 0x00007c9b2fbcc380 [python] (most recent call first):\n  File \"/usr/local/lib/python3.14/site-packages/pymupdf/mupdf.py\", line 60655 in pdf_save_document\n  File \"/usr/local/lib/python3.14/site-packages/pymupdf/__init__.py\", line 6644 in save\n  File \"/usr/local/lib/python3.14/site-packages/pdf_cleanup/core.py\", line 291 in cleanup\n  File \"/audit/diagnose.py\", line 79 in redfish\n  File \"/audit/diagnose.py\", line 89 in <module>\n",
+    "control_stopped_explicitly_after_repeated_save_samples": true,
+    "experiment": "Same installed core and guards, original read-only; runtime-only save wrapper changes garbage=3 to garbage=2; outputs exclusively /tmp",
+    "experiment_events": [
+      {
+        "seconds": 0.097,
+        "event": "metadata",
+        "pages": 423,
+        "metadata": {
+          "format": "PDF 1.7",
+          "title": "",
+          "author": "Yongliang YL27 Zhao",
+          "subject": "",
+          "keywords": "",
+          "creator": "Microsoft® Word 适用于 Microsoft 365",
+          "producer": "Microsoft® Word 适用于 Microsoft 365",
+          "creationDate": "D:20260403111600+08'00'",
+          "modDate": "D:20260403111600+08'00'",
+          "trapped": "",
+          "encryption": null
+        },
+        "needs_pass": 0,
+        "size": 8326662
+      },
+      {
+        "seconds": 0.153,
+        "event": "stage_start",
+        "stage": "inspect_pdf"
+      },
+      {
+        "seconds": 2.681,
+        "event": "extract_progress",
+        "call": 25,
+        "elapsed": 0.086,
+        "chars": 1531
+      },
+      {
+        "seconds": 4.398,
+        "event": "extract_progress",
+        "call": 50,
+        "elapsed": 0.06,
+        "chars": 1061
+      },
+      {
+        "seconds": 6.08,
+        "event": "extract_progress",
+        "call": 75,
+        "elapsed": 0.072,
+        "chars": 1492
+      },
+      {
+        "seconds": 7.894,
+        "event": "extract_progress",
+        "call": 100,
+        "elapsed": 0.06,
+        "chars": 713
+      },
+      {
+        "seconds": 9.456,
+        "event": "extract_progress",
+        "call": 125,
+        "elapsed": 0.056,
+        "chars": 1186
+      },
+      {
+        "seconds": 11.018,
+        "event": "extract_progress",
+        "call": 150,
+        "elapsed": 0.043,
+        "chars": 772
+      },
+      {
+        "seconds": 12.498,
+        "event": "extract_progress",
+        "call": 175,
+        "elapsed": 0.059,
+        "chars": 686
+      },
+      {
+        "seconds": 14.904,
+        "event": "extract_progress",
+        "call": 200,
+        "elapsed": 0.066,
+        "chars": 893
+      },
+      {
+        "seconds": 16.846,
+        "event": "extract_progress",
+        "call": 225,
+        "elapsed": 0.062,
+        "chars": 934
+      },
+      {
+        "seconds": 18.755,
+        "event": "extract_progress",
+        "call": 250,
+        "elapsed": 0.066,
+        "chars": 939
+      },
+      {
+        "seconds": 20.564,
+        "event": "extract_progress",
+        "call": 275,
+        "elapsed": 0.087,
+        "chars": 729
+      },
+      {
+        "seconds": 22.493,
+        "event": "extract_progress",
+        "call": 300,
+        "elapsed": 0.08,
+        "chars": 900
+      },
+      {
+        "seconds": 24.22,
+        "event": "extract_progress",
+        "call": 325,
+        "elapsed": 0.067,
+        "chars": 1184
+      },
+      {
+        "seconds": 25.989,
+        "event": "extract_progress",
+        "call": 350,
+        "elapsed": 0.07,
+        "chars": 1022
+      },
+      {
+        "seconds": 27.905,
+        "event": "extract_progress",
+        "call": 375,
+        "elapsed": 0.1,
+        "chars": 1118
+      },
+      {
+        "seconds": 29.715,
+        "event": "extract_progress",
+        "call": 400,
+        "elapsed": 0.058,
+        "chars": 1077
+      },
+      {
+        "seconds": 30.612,
+        "event": "stage_end",
+        "stage": "inspect_pdf",
+        "elapsed": 30.458
+      },
+      {
+        "seconds": 30.644,
+        "event": "stage_start",
+        "stage": "analyze"
+      },
+      {
+        "seconds": 44.258,
+        "event": "stage_end",
+        "stage": "analyze",
+        "elapsed": 13.614
+      },
+      {
+        "seconds": 44.355,
+        "event": "save_start",
+        "garbage": 2,
+        "xref_length": 113763
+      },
+      {
+        "seconds": 44.831,
+        "event": "save_end",
+        "elapsed": 0.476
+      },
+      {
+        "seconds": 44.861,
+        "event": "stage_start",
+        "stage": "validate_output"
+      },
+      {
+        "seconds": 57.681,
+        "event": "stage_start",
+        "stage": "inspect_pdf"
+      },
+      {
+        "seconds": 58.664,
+        "event": "extract_progress",
+        "call": 425,
+        "elapsed": 0.021,
+        "chars": 110
+      },
+      {
+        "seconds": 61.438,
+        "event": "extract_progress",
+        "call": 450,
+        "elapsed": 0.068,
+        "chars": 880
+      },
+      {
+        "seconds": 63.217,
+        "event": "extract_progress",
+        "call": 475,
+        "elapsed": 0.085,
+        "chars": 854
+      },
+      {
+        "seconds": 65.008,
+        "event": "extract_progress",
+        "call": 500,
+        "elapsed": 0.137,
+        "chars": 983
+      },
+      {
+        "seconds": 66.695,
+        "event": "extract_progress",
+        "call": 525,
+        "elapsed": 0.053,
+        "chars": 706
+      },
+      {
+        "seconds": 68.37,
+        "event": "extract_progress",
+        "call": 550,
+        "elapsed": 0.108,
+        "chars": 1721
+      },
+      {
+        "seconds": 70.463,
+        "event": "extract_progress",
+        "call": 575,
+        "elapsed": 0.038,
+        "chars": 666
+      },
+      {
+        "seconds": 71.738,
+        "event": "extract_progress",
+        "call": 600,
+        "elapsed": 0.051,
+        "chars": 805
+      },
+      {
+        "seconds": 73.296,
+        "event": "extract_progress",
+        "call": 625,
+        "elapsed": 0.068,
+        "chars": 923
+      },
+      {
+        "seconds": 74.926,
+        "event": "extract_progress",
+        "call": 650,
+        "elapsed": 0.063,
+        "chars": 804
+      },
+      {
+        "seconds": 76.649,
+        "event": "extract_progress",
+        "call": 675,
+        "elapsed": 0.095,
+        "chars": 1746
+      },
+      {
+        "seconds": 78.715,
+        "event": "extract_progress",
+        "call": 700,
+        "elapsed": 0.056,
+        "chars": 771
+      },
+      {
+        "seconds": 80.442,
+        "event": "extract_progress",
+        "call": 725,
+        "elapsed": 0.055,
+        "chars": 863
+      },
+      {
+        "seconds": 82.039,
+        "event": "extract_progress",
+        "call": 750,
+        "elapsed": 0.051,
+        "chars": 830
+      },
+      {
+        "seconds": 83.502,
+        "event": "extract_progress",
+        "call": 775,
+        "elapsed": 0.063,
+        "chars": 1706
+      },
+      {
+        "seconds": 85.857,
+        "event": "extract_progress",
+        "call": 800,
+        "elapsed": 0.056,
+        "chars": 1050
+      },
+      {
+        "seconds": 87.37,
+        "event": "extract_progress",
+        "call": 825,
+        "elapsed": 0.067,
+        "chars": 1019
+      },
+      {
+        "seconds": 88.057,
+        "event": "stage_end",
+        "stage": "inspect_pdf",
+        "elapsed": 30.376
+      },
+      {
+        "seconds": 88.061,
+        "event": "stage_end",
+        "stage": "validate_output",
+        "elapsed": 43.2
+      },
+      {
+        "seconds": 88.693,
+        "event": "result",
+        "summary": {
+          "schema_version": 1,
+          "tool_version": "0.1.3",
+          "source_commit": "8257cb36be7856a0abe89ea27562f847fcf45a8e",
+          "input": "/input/redfish.pdf",
+          "output": "/out/redfish-cleaned.pdf",
+          "input_sha256": "456897573c42b3e7eb767b248e3c588a987b7f23b2a0c70a344e816b91837ee8",
+          "pages": 423,
+          "header_footer_fragments": 0,
+          "removed_header_rows": 0,
+          "removed_footer_rows": 0,
+          "footer_pages": 0,
+          "removed_links": {
+            "/Dest": 107,
+            "/URI": 26
+          },
+          "removed_widgets": 0,
+          "cleanup_method": "text_redaction",
+          "status": "cleaned",
+          "output_sha256": "826bc4b52167b131a0748a330f252037067627f879f50a79838b8fb865f446bc",
+          "validation": "passed"
+        }
+      },
+      {
+        "seconds": 88.702,
+        "event": "source_hash",
+        "unchanged": true,
+        "sha256": "456897573c42b3e7eb767b248e3c588a987b7f23b2a0c70a344e816b91837ee8"
+      }
+    ],
+    "experiment_validation": {
+      "schema_version": 1,
+      "tool_version": "0.1.3",
+      "source_commit": "8257cb36be7856a0abe89ea27562f847fcf45a8e",
+      "input": "/input/redfish.pdf",
+      "output": "/out/redfish-cleaned.pdf",
+      "input_sha256": "456897573c42b3e7eb767b248e3c588a987b7f23b2a0c70a344e816b91837ee8",
+      "pages": 423,
+      "header_footer_fragments": 0,
+      "removed_header_rows": 0,
+      "removed_footer_rows": 0,
+      "footer_pages": 0,
+      "removed_links": {
+        "/Dest": 107,
+        "/URI": 26
+      },
+      "removed_widgets": 0,
+      "cleanup_method": "text_redaction",
+      "status": "cleaned",
+      "output_sha256": "826bc4b52167b131a0748a330f252037067627f879f50a79838b8fb865f446bc",
+      "validation": "passed"
+    },
+    "experiment_output_bytes": 17340426
+  },
+  "original_hashes": [
+    {
+      "path": "WA7780 G3/lenovo_wentian_wa7780g3_user_guide.pdf",
+      "sha256": "1718c6d1094bf50a54550fdb191f628875da094b0fbda8f2f147305dbc740f4b",
+      "unchanged": true
+    },
+    {
+      "path": "WA7785a G3/lenovo_wentian_wa7785ag3_user_guide.pdf",
+      "sha256": "3a1f7a48df92df1fd415741656cc5294ca26a8e5ab4f3839da557c0189c0e35e",
+      "unchanged": true
+    },
+    {
+      "path": "WA7780 G3/lenovo_wentian_wa7780g3_bios_user_guide.pdf",
+      "sha256": "ff73d1e9ccc954f7e64173874a55dc7fe52569c9fe85c8669527933e81843d39",
+      "unchanged": true
+    },
+    {
+      "path": "WA7785a G3/lenovo_wentian_wa7785ag3_bios_user_guide.pdf",
+      "sha256": "c129642ccf27022ed6ab2ec88597e0c905c361c7a8008de29a58d2a373f1e073",
+      "unchanged": true
+    },
+    {
+      "path": "WA5480 G3/lenovo_bmc_g3_redfish_guide_v11.pdf",
+      "sha256": "456897573c42b3e7eb767b248e3c588a987b7f23b2a0c70a344e816b91837ee8",
+      "unchanged": true
+    }
+  ],
+  "upstream_references": [
+    "https://pymupdf.readthedocs.io/en/latest/page.html#Page.get_drawings",
+    "https://pymupdf.readthedocs.io/en/latest/document.html#Document.save",
+    "https://raw.githubusercontent.com/ArtifexSoftware/mupdf/1.28.2/source/pdf/pdf-write.c"
+  ]
+}
