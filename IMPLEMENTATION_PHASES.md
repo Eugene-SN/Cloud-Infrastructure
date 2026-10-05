@@ -748,3 +748,22 @@ Single acceptance and recovery evidence: `EDGE_INTERACTION_AI_TOOL_FABRIC_ACCEPT
 Bounded follow-up to accepted interaction/AI foundation b65ffdbc4551fdb1dcd815a5c11a11fa737231b0: current upstream/runtime reconciliation, native operator-selected /codex and /antigravity command-only plugin, shared helper permission/completion fixes, supported local executor skills, real success/failure/timeout tests and relevant non-regression. Hermes default remains private vLLM/Qwen; no automatic routing/fallback/review, inter-executor orchestration, new provider/daemon or second execution fabric. AIExecution01 and accepted service MCP definitions remain intact. Active Hermes4FMachine01 is classified as dormant retained compatibility state after the caller audit.
 
 Single new acceptance: EDGE_HERMES_EXPLICIT_EXECUTOR_RECONCILIATION_ACCEPTANCE_2026-10-02.md, marker EDGE_HERMES_EXPLICIT_EXECUTOR_RECONCILIATION=PASS. Canonical deployment/recovery contract and sanitized evidence: deployments/edge/interaction-fabric/hermes-executors/. Git plus verified existing scheduled Backrest coverage suffice; no new manual snapshot. Exact cleanup and Edge/overall OK complete this scope. No new finite infrastructure stage or next deployment is inferred.
+
+## 2026-10-05 — Daily source monitoring / originals catalogue — DEPLOYED / VERIFIED
+
+The operator separately authorized a simple daily source monitor and explicitly
+selected original Lenovo filenames with removal of superseded filenames, plus
+both Lenovo ASP and Lenovo Press monitoring. `TechnicalDocumentationSync01`
+is published and active at 07:00 `Europe/Minsk`, currently only WR5220 G3.
+
+Completed scope: current-family selection, source date/URL/ETag monitoring,
+native Nextcloud download/replacement and INDEX.html maintenance. Initial
+download added three missing PDFs; fifteen current documents are indexed.
+No-change manual and production runs pass without writes. The model list and
+stable display labels are configured in one node for later model onboarding.
+Evidence: `deployments/edge/technical-documentation/evidence.json`.
+
+This implements the source-monitoring scope previously deferred alongside the
+cleanup candidate. Cleanup acceptance/publication and model-path integration,
+translation and enabling additional models remain independent future work.
+The original-protection contract of the autonomous cleanup CLI is unchanged.

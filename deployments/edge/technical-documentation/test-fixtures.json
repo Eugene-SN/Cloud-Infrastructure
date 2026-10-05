@@ -1,0 +1,370 @@
+{
+  "catalog": {
+    "generated_at": "2026-10-05T13:09+03:00",
+    "folders": [
+      "WR5220 G3"
+    ],
+    "documents": [
+      {
+        "key": "WR5220 G3/product-guide",
+        "title": "Product Guide Lenovo Wentian WR5220 G3",
+        "source_title": "Lenovo Press LP1705",
+        "folder": "WR5220 G3",
+        "path": "WR5220 G3/lp1705.pdf",
+        "source_url": "https://lenovopress.lenovo.com/lp1705.pdf",
+        "edition": null,
+        "source_updated": "2026-09-30",
+        "saved_at": null,
+        "size": 5056741,
+        "pages": 78,
+        "language": "zh",
+        "remote_validator": {
+          "etag": null,
+          "last_modified": "Wed, 30 Sep 2026 15:22:09 GMT",
+          "content_length": 5056741
+        }
+      },
+      {
+        "key": "WR5220 G3/user-manual",
+        "title": "User Manual Lenovo Wentian WR5220 G3",
+        "source_title": "联想问天 WR5220 G3 WR5228 G3 服务器用户手册",
+        "folder": "WR5220 G3",
+        "path": "WR5220 G3/lenovo_wentian_wr5220g3_user_guide_v18.pdf",
+        "source_url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_wentian_wr5220g3_user_guide_v18.pdf",
+        "edition": "18-я редакция · 2026-09",
+        "source_updated": "2026-09-17",
+        "saved_at": null,
+        "size": 30511980,
+        "pages": 397,
+        "language": "zh",
+        "remote_validator": {
+          "etag": "\"ac81274a7046dd1:0\"",
+          "last_modified": "Thu, 17 Sep 2026 06:46:38 GMT",
+          "content_length": 30511980
+        }
+      },
+      {
+        "key": "WR5220 G3/os-installation-guide",
+        "title": "OS Installation Guide Lenovo Wentian",
+        "source_title": "联想问天服务器操作系统安装指南",
+        "folder": "WR5220 G3",
+        "path": "WR5220 G3/lenovo_wentian_os_installation_guide.pdf",
+        "source_url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_wentian_os_installation_guide.pdf",
+        "edition": "5-я редакция · 2026-05",
+        "source_updated": "2026-03-23",
+        "saved_at": null,
+        "size": 13673279,
+        "pages": 179,
+        "language": "zh",
+        "remote_validator": {
+          "etag": "\"d04a778c55ecdc1:0\"",
+          "last_modified": "Mon, 25 May 2026 14:48:28 GMT",
+          "content_length": 13673279
+        }
+      },
+      {
+        "key": "WR5220 G3/bmc-ipmi-specification",
+        "title": "IPMI Command Specification Lenovo BMC",
+        "source_title": "Lenovo BMC IPMI 命令规范",
+        "folder": "WR5220 G3",
+        "path": "WR5220 G3/lenovo_bmc_g3_commands_guide_v2.pdf",
+        "source_url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_bmc_g3_commands_guide_v2.pdf",
+        "edition": "2-я редакция · 2026-04",
+        "source_updated": "2026-04-13",
+        "saved_at": null,
+        "size": 1158155,
+        "pages": 46,
+        "language": "zh",
+        "remote_validator": {
+          "etag": "\"7e1bb483e8cadc1:0\"",
+          "last_modified": "Mon, 13 Apr 2026 01:54:50 GMT",
+          "content_length": 1158155
+        }
+      },
+      {
+        "key": "WR5220 G3/bmc-event-reference",
+        "title": "Event Reference Guide Lenovo BMC",
+        "source_title": "Lenovo BMC 日志参考手册",
+        "folder": "WR5220 G3",
+        "path": "WR5220 G3/lenovo_bmc_event_reference_guide_g5_v4.pdf",
+        "source_url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_bmc_event_reference_guide_g5_v4.pdf",
+        "edition": "4-я редакция · 2026-07",
+        "source_updated": "2026-07-31",
+        "saved_at": null,
+        "size": 1751445,
+        "pages": 116,
+        "language": "zh",
+        "remote_validator": {
+          "etag": "\"59f1bfa1cc20dd1:0\"",
+          "last_modified": "Fri, 31 Jul 2026 09:11:55 GMT",
+          "content_length": 1751445
+        }
+      },
+      {
+        "key": "WR5220 G3/bmc-snmp-reference",
+        "title": "SNMP Reference Guide Lenovo BMC",
+        "source_title": "Lenovo BMC SNMP 参考手册",
+        "folder": "WR5220 G3",
+        "path": "WR5220 G3/lenovo_snmp_ug_g3.pdf",
+        "source_url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_snmp_ug_g3.pdf",
+        "edition": null,
+        "source_updated": "2026-04-10",
+        "saved_at": null,
+        "size": 1136366,
+        "pages": 46,
+        "language": "zh",
+        "remote_validator": {
+          "etag": "\"47d6311d30d1dc1:0\"",
+          "last_modified": "Tue, 21 Apr 2026 01:42:29 GMT",
+          "content_length": 1136366
+        }
+      },
+      {
+        "key": "WR5220 G3/bmc-enterprise-user-guide",
+        "title": "User Guide Lenovo BMC Enterprise G3",
+        "source_title": "Lenovo BMC 企业版用户操作指南 G3",
+        "folder": "WR5220 G3",
+        "path": "WR5220 G3/bmc_user_guide_v14.pdf",
+        "source_url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/bmc_user_guide_v14.pdf",
+        "edition": "14-я редакция · 2026-04",
+        "source_updated": "2026-04-10",
+        "saved_at": null,
+        "size": 4197674,
+        "pages": 132,
+        "language": "zh",
+        "remote_validator": {
+          "etag": "\"b84edba8dc8dc1:0\"",
+          "last_modified": "Fri, 10 Apr 2026 01:59:56 GMT",
+          "content_length": 4197674
+        }
+      },
+      {
+        "key": "WR5220 G3/bmc-redfish-specification",
+        "title": "Redfish Interface Specification Lenovo BMC G3",
+        "source_title": "Lenovo BMC G3 REDFISH 接口规范",
+        "folder": "WR5220 G3",
+        "path": "WR5220 G3/lenovo_bmc_g3_redfish_guide_v11.pdf",
+        "source_url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_bmc_g3_redfish_guide_v11.pdf",
+        "edition": "11-я редакция · 2026-04",
+        "source_updated": "2026-04-10",
+        "saved_at": null,
+        "size": 8326662,
+        "pages": 423,
+        "language": "zh",
+        "remote_validator": {
+          "etag": "\"e7fe6bbd8dc8dc1:0\"",
+          "last_modified": "Fri, 10 Apr 2026 02:00:00 GMT",
+          "content_length": 8326662
+        }
+      },
+      {
+        "key": "WR5220 G3/bomc-user-guide",
+        "title": "User Guide Lenovo XClarity Essentials BoMC cPlus",
+        "source_title": "Lenovo XClarity Essentials BoMC cPlus 用户指南",
+        "folder": "WR5220 G3",
+        "path": "WR5220 G3/lxce_bomc_cplus_ug.pdf",
+        "source_url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lxce_bomc_cplus_ug.pdf",
+        "edition": "1-я редакция · 2026-08; версия 2026.1",
+        "source_updated": "2026-08-27",
+        "saved_at": null,
+        "size": 638956,
+        "pages": 22,
+        "language": "zh",
+        "remote_validator": {
+          "etag": "\"22864df4e935dd1:0\"",
+          "last_modified": "Thu, 27 Aug 2026 06:04:43 GMT",
+          "content_length": 638956
+        }
+      },
+      {
+        "key": "WR5220 G3/onecli-user-guide",
+        "title": "User Guide Lenovo XClarity Essentials OneCLI cPlus",
+        "source_title": "Lenovo XClarity Essentials OneCLI cPlus 用户指南",
+        "folder": "WR5220 G3",
+        "path": "WR5220 G3/lxce_onecli_cplus_ug.pdf",
+        "source_url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lxce_onecli_cplus_ug.pdf",
+        "edition": "1-я редакция · 2026-08; версия 1.0.0",
+        "source_updated": "2026-08-27",
+        "saved_at": null,
+        "size": 856757,
+        "pages": 138,
+        "language": "zh",
+        "remote_validator": {
+          "etag": "\"b2ea11f4e935dd1:0\"",
+          "last_modified": "Thu, 27 Aug 2026 06:04:42 GMT",
+          "content_length": 856757
+        }
+      },
+      {
+        "key": "WR5220 G3/updatexpress-user-guide",
+        "title": "User Guide Lenovo XClarity Essentials UpdateXpress cPlus",
+        "source_title": "Lenovo XClarity Essentials UpdateXpress cPlus 用户指南",
+        "folder": "WR5220 G3",
+        "path": "WR5220 G3/lxce_ux_cplus_ug.pdf",
+        "source_url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lxce_ux_cplus_ug.pdf",
+        "edition": "1-я редакция · 2026-08; версия 2026.1",
+        "source_updated": "2026-08-27",
+        "saved_at": null,
+        "size": 778902,
+        "pages": 43,
+        "language": "zh",
+        "remote_validator": {
+          "etag": "\"5f2fa0f5e935dd1:0\"",
+          "last_modified": "Thu, 27 Aug 2026 06:04:45 GMT",
+          "content_length": 778902
+        }
+      },
+      {
+        "key": "WR5220 G3/lxpm-user-guide",
+        "title": "User Guide Lenovo XClarity Provisioning Manager Wentian",
+        "source_title": "Lenovo XClarity Provisioning Manager WenTian 用户指南",
+        "folder": "WR5220 G3",
+        "path": "WR5220 G3/lxpm_wentian_ug-v2.pdf",
+        "source_url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lxpm_wentian_ug-v2.pdf",
+        "edition": "2-я редакция · 2026-02; версия 2.00",
+        "source_updated": "2026-02-04",
+        "saved_at": null,
+        "size": 2508949,
+        "pages": 42,
+        "language": "zh",
+        "remote_validator": {
+          "etag": "\"dc3e3c4a395dc1:0\"",
+          "last_modified": "Wed, 04 Feb 2026 06:59:11 GMT",
+          "content_length": 2508949
+        }
+      }
+    ]
+  },
+  "asp": {
+    "msg": "success",
+    "status": 200,
+    "data": [
+      {
+        "title": "联想问天 WR5220 G3 WR5228 G3 服务器用户手册",
+        "updated": "2026-09-17",
+        "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_wentian_wr5220g3_user_guide_v18.pdf",
+        "isChinese": true,
+        "sourceLanguage": "zc"
+      },
+      {
+        "title": "Lenovo XClarity Essentials OneCLI cPlus 用户指南",
+        "updated": "2026-08-27",
+        "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lxce_onecli_cplus_ug.pdf",
+        "isChinese": true,
+        "sourceLanguage": "zc"
+      },
+      {
+        "title": "Lenovo XClarity Essentials BoMC cPlus 用户指南",
+        "updated": "2026-08-27",
+        "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lxce_bomc_cplus_ug.pdf",
+        "isChinese": true,
+        "sourceLanguage": "zc"
+      },
+      {
+        "title": "Lenovo XClarity Essentials UpdateXpress cPlus 用户指南 ",
+        "updated": "2026-08-27",
+        "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lxce_ux_cplus_ug.pdf",
+        "isChinese": true,
+        "sourceLanguage": "zc"
+      },
+      {
+        "title": "Lenovo BMC 日志参考手册",
+        "updated": "2026-07-31",
+        "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_bmc_event_reference_guide_g5_v4.pdf",
+        "isChinese": true,
+        "sourceLanguage": "zc"
+      },
+      {
+        "title": "WR5220 G3 BIOS Setup Spec V2.13",
+        "updated": "2026-04-21",
+        "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/wr5220g3_bios_setup_spec_v2.13.pdf",
+        "isChinese": false,
+        "sourceLanguage": "en"
+      },
+      {
+        "title": "Lenovo BMC IPMI 命令规范",
+        "updated": "2026-04-13",
+        "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_bmc_g3_commands_guide_v2.pdf",
+        "isChinese": true,
+        "sourceLanguage": "zc"
+      },
+      {
+        "title": "Lenovo BMC 企业版用户操作指南 G3",
+        "updated": "2026-04-10",
+        "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/bmc_user_guide_v14.pdf",
+        "isChinese": true,
+        "sourceLanguage": "zc"
+      },
+      {
+        "title": "Lenovo BMC SNMP 参考手册",
+        "updated": "2026-04-10",
+        "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_snmp_ug_g3.pdf",
+        "isChinese": true,
+        "sourceLanguage": "zc"
+      },
+      {
+        "title": "Lenovo BMC G3 REDFISH 接口规范",
+        "updated": "2026-04-10",
+        "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_bmc_g3_redfish_guide_v11.pdf",
+        "isChinese": true,
+        "sourceLanguage": "zc"
+      },
+      {
+        "title": "Lenovo BMC G3 日志参考手册",
+        "updated": "2026-04-10",
+        "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_bmc_event_reference_guide_g3_v3.pdf",
+        "isChinese": true,
+        "sourceLanguage": "zc"
+      },
+      {
+        "title": "联想问天服务器操作系统安装指南",
+        "updated": "2026-03-23",
+        "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_wentian_os_installation_guide.pdf",
+        "isChinese": true,
+        "sourceLanguage": "zc"
+      },
+      {
+        "title": " Lenovo XClarity Provisioning Manager WenTian 用户指南",
+        "updated": "2026-02-04",
+        "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lxpm_wentian_ug-v2.pdf",
+        "isChinese": true,
+        "sourceLanguage": "zc"
+      },
+      {
+        "title": " Lenovo XClarity Provisioning Manager WenTian 用户指南",
+        "updated": "2026-02-04",
+        "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lxpm_wentian_ug-v2.pdf",
+        "isChinese": true,
+        "sourceLanguage": "zc"
+      },
+      {
+        "title": " Lenovo XClarity Provisioning Manager WenTian 用户指南",
+        "updated": "2025-09-19",
+        "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lxpm_wentian_ug_v2.pdf",
+        "isChinese": true,
+        "sourceLanguage": "zc"
+      },
+      {
+        "title": "联想服务器电源标签",
+        "updated": "2025-05-06",
+        "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/psu_label_matrix.pdf",
+        "isChinese": true,
+        "sourceLanguage": "zc"
+      },
+      {
+        "title": " Lenovo XClarity Provisioning Manager WenTian 用户指南",
+        "updated": "2024-03-14",
+        "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lxpm_wentian_ug_v2.pdf",
+        "isChinese": true,
+        "sourceLanguage": "zc"
+      },
+      {
+        "title": "VMware Code Recipe File 3.0",
+        "updated": "2023-10-30",
+        "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/vmware_code_recipe_file.pdf",
+        "isChinese": false,
+        "sourceLanguage": "en"
+      }
+    ]
+  }
+}

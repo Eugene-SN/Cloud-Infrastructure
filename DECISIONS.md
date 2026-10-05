@@ -3196,3 +3196,24 @@ Hermes always supplies a permission mode: default Codex read-only; authorized wr
 The bounded caller audit classifies active Hermes4FMachine01 as dormant compatibility state with no current dependency found. Its historical prompt branches remain unchanged and are not the new explicit command contract; neither speculative mapping nor deletion is justified. Accepted service MCPs, default inference, auth/topology/storage and native lifecycle stay intact. Local modified Codex guidance and a custom AGY skill use supported native ownership; upstream source is clean.
 
 All new nonsecret artifacts and config merge instructions are versioned; existing scheduled Backrest edge-state coverage of the protected runtime is verified. No manual Backrest flow was issued. Real default/native-command CLI/dispatcher success, non-zero/timeout and relevant MCP/n8n/runtime non-regression passed; exact test artifacts were removed, Edge/overall OK. Acceptance: EDGE_HERMES_EXPLICIT_EXECUTOR_RECONCILIATION_ACCEPTANCE_2026-10-02.md. Canonical contract: deployments/edge/interaction-fabric/hermes-executors/README.md.
+
+## 2026-10-05 — Technical-documentation monitoring scope — ACCEPTED DESIGN
+
+The operator authorized a simple daily n8n monitor: detect a new source version,
+download/replace the original and update INDEX.html. The first collection is
+WR5220 G3; the operator explicitly selected both Lenovo ASP and Lenovo Press.
+Original vendor filenames are retained. When a revision changes the filename,
+save the new PDF first and remove the previous filename afterwards.
+
+Documents are grouped by model under the agreed originals/cleaned/translated
+tree. The daily monitor currently owns only originals and INDEX.html. INDEX.md
+is retained. Stable short display labels survive version updates. Additional
+models are a subsequent operator scope, using the same workflow configuration.
+
+The deployed implementation uses native n8n HTTP requests with the existing
+Nextcloud credential and stores version markers in INDEX.html. It adds no backup,
+separate database, service, notification or cleanup integration. The independent
+cleanup CLI retains its protection of the actual originals tree; this intake
+workflow is allowed to replace original versions. Design acceptance does not
+accept or publish the separate cleanup candidate. Verified runtime and evidence:
+`deployments/edge/technical-documentation/`.

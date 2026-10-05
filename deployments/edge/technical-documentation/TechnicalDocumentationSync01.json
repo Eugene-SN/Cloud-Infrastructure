@@ -1,0 +1,558 @@
+{
+  "id": "QouVaVNhAqSiYq5D",
+  "name": "TechnicalDocumentationSync01",
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": true,
+    "timezone": "Europe/Minsk"
+  },
+  "nodes": [
+    {
+      "id": "f64eda74-3808-4a1d-8ae8-8b406ec6c292",
+      "name": "Daily 07:00",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "days",
+              "daysInterval": 1,
+              "triggerAtHour": 7,
+              "triggerAtMinute": 0
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "260bf53c-0ee5-41f9-92d1-47e2286a7c8d",
+      "name": "Read INDEX",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        220,
+        0
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "http://nextcloud.edge.internal/remote.php/webdav/technical-documentation/lenovo/originals/INDEX.html",
+        "options": {
+          "timeout": 120000,
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "text",
+              "neverError": false
+            }
+          }
+        },
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "nextCloudApi"
+      },
+      "credentials": {
+        "nextCloudApi": {
+          "id": "6MEdI2Cs7tEUiM7o",
+          "name": "Nextcloud - operator automation"
+        }
+      }
+    },
+    {
+      "id": "26c481c0-5fa5-4636-858e-c1600277013e",
+      "name": "Models and Index",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "\nconst models = [{\n  folder: 'WR5220 G3',\n  fullGuid: '339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/5D07DC93-3C2A-4986-BBB4-A04A44FAB99E',\n  press: [{key:'product-guide', title:'Product Guide Lenovo Wentian WR5220 G3', url:'https://lenovopress.lenovo.com/lp1705.pdf', language:'zh'}],\n  labels: {\n    'lenovo_wentian_wr5220g3_user_guide': ['user-manual', 'User Manual Lenovo Wentian WR5220 G3'],\n    'lenovo_wentian_os_installation_guide': ['os-installation-guide', 'OS Installation Guide Lenovo Wentian'],\n    'lenovo_bmc_g3_commands_guide': ['bmc-ipmi-specification', 'IPMI Command Specification Lenovo BMC'],\n    'lenovo_bmc_event_reference_guide': ['bmc-event-reference', 'Event Reference Guide Lenovo BMC'],\n    'lenovo_snmp_ug_g3': ['bmc-snmp-reference', 'SNMP Reference Guide Lenovo BMC'],\n    'bmc_user_guide': ['bmc-enterprise-user-guide', 'User Guide Lenovo BMC Enterprise G3'],\n    'lenovo_bmc_g3_redfish_guide': ['bmc-redfish-specification', 'Redfish Interface Specification Lenovo BMC G3'],\n    'lxce_bomc_cplus_ug': ['bomc-user-guide', 'User Guide Lenovo XClarity Essentials BoMC cPlus'],\n    'lxce_onecli_cplus_ug': ['onecli-user-guide', 'User Guide Lenovo XClarity Essentials OneCLI cPlus'],\n    'lxce_ux_cplus_ug': ['updatexpress-user-guide', 'User Guide Lenovo XClarity Essentials UpdateXpress cPlus'],\n    'lxpm_wentian_ug': ['lxpm-user-guide', 'User Guide Lenovo XClarity Provisioning Manager Wentian'],\n    'wr5220g3_bios_setup_spec': ['bios-setup-specification', 'BIOS Setup Specification Lenovo Wentian WR5220 G3'],\n    'psu_label_matrix': ['psu-label-matrix', 'PSU Label Matrix Lenovo'],\n    'vmware_code_recipe_file': ['vmware-code-recipe', 'VMware Code Recipe File']\n  }\n}];\nreturn models.map(model => ({json:{model}}));\n"
+      }
+    },
+    {
+      "id": "033c05f2-fd4f-4a94-bf8f-0baa2fedb06d",
+      "name": "Read Lenovo ASP",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        660,
+        0
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.asp.atlenovo.com/asp/isg/infomartion/getUserGuide",
+        "options": {
+          "timeout": 120000,
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "json",
+              "neverError": false
+            }
+          }
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "fullGuid",
+              "value": "={{ $json.model.fullGuid }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "5165881d-e985-43a6-b919-205d52fc3874",
+      "name": "Latest Document Families",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "\nconst result = [];\nfor (const [i, item] of $input.all().entries()) {\n  const model = $('Models and Index').all()[i].json.model;\n  const families = new Map();\n  for (const row of item.json.body.data) {\n    const filename = decodeURIComponent(row.url.split('?')[0].split('/').pop());\n    let family = filename.toLowerCase().replace(/\\.pdf$/, '').replace(/[_-]v\\d+(?:\\.\\d+)*$/, '');\n    if (/^lenovo_bmc_event_reference_guide_g[35]$/.test(family)) family = 'lenovo_bmc_event_reference_guide';\n    const label = model.labels[family] ?? [family, row.title.trim().replace(/\\s+V?\\d+(?:\\.\\d+)*$/i, '')];\n    const doc = {key:model.folder+'/'+label[0], title:label[1], folder:model.folder,\n      source_title:row.title.trim(), source_updated:row.updated, source_url:row.url,\n      path:model.folder+'/'+filename, language:row.isChinese ? 'zh' : 'en', source:'asp'};\n    const old = families.get(doc.key);\n    if (!old || doc.source_updated > old.source_updated) families.set(doc.key, doc);\n  }\n  for (const doc of families.values()) result.push({json:doc, pairedItem:{item:i}});\n  for (const press of model.press) result.push({json:{key:model.folder+'/'+press.key,\n    title:press.title, folder:model.folder, path:model.folder+'/'+press.url.split('?')[0].split('/').pop(),\n    source_title:'Lenovo Press '+press.key, source_url:press.url, source_updated:null,\n    language:press.language, source:'press'}, pairedItem:{item:i}});\n}\nreturn result;\n"
+      }
+    },
+    {
+      "id": "64570da1-0822-4b43-a8a2-2404b9caabff",
+      "name": "Read Remote Version",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1100,
+        0
+      ],
+      "parameters": {
+        "method": "HEAD",
+        "url": "={{ $json.source_url }}",
+        "options": {
+          "timeout": 120000,
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "text",
+              "neverError": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "7231f615-b4da-4101-98c1-be8b9d955057",
+      "name": "Changed Documents",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1320,
+        0
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "\nconst html = $('Read INDEX').first().json.data;\nconst catalog = JSON.parse(html.match(/<script id=\"catalog-data\" type=\"application\\/json\">([\\s\\S]*?)<\\/script>/)[1]);\nconst previous = new Map(catalog.documents.map(d => [d.key, d]));\nconst candidates = $('Latest Document Families').all();\nconst result = [];\nfor (const [i,item] of $input.all().entries()) {\n  const doc = {...candidates[i].json};\n  const h = item.json.headers;\n  doc.remote_validator = {etag:h.etag ?? null, last_modified:h['last-modified'] ?? null,\n    content_length:Number(h['content-length']) || null};\n  if (doc.source === 'press') doc.source_updated = h['last-modified'] ? new Date(h['last-modified']).toISOString().slice(0,10) : null;\n  const old = previous.get(doc.key);\n  const v = old?.remote_validator;\n  const sameBytes = v && (doc.remote_validator.etag && v.etag\n    ? doc.remote_validator.etag === v.etag\n    : doc.remote_validator.last_modified === v.last_modified && doc.remote_validator.content_length === v.content_length);\n  if (old && old.source_url === doc.source_url && old.source_updated === doc.source_updated && sameBytes) continue;\n  doc.title = old?.title ?? doc.title;\n  doc.old_path = old?.path !== doc.path ? old?.path ?? null : null;\n  const dav = 'http://nextcloud.edge.internal/remote.php/webdav/technical-documentation/lenovo/originals/';\n  doc.destination_url = dav + doc.path.split('/').map(encodeURIComponent).join('/');\n  doc.old_url = doc.old_path ? dav + doc.old_path.split('/').map(encodeURIComponent).join('/') : null;\n  result.push({json:doc, pairedItem:{item:i}});\n}\nreturn result;\n"
+      }
+    },
+    {
+      "id": "c3cdf218-9455-439c-bdaf-ecf7bcb72ae7",
+      "name": "Update INDEX",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        700
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "\nlet html = $('Read INDEX').first().json.data;\nconst pattern = /(<script id=\"catalog-data\" type=\"application\\/json\">)([\\s\\S]*?)(<\\/script>)/;\nconst catalog = JSON.parse(html.match(pattern)[2]);\nconst documents = new Map(catalog.documents.map(d => [d.key,d]));\nfor (const item of $input.all()) documents.set(item.json.key, item.json);\ncatalog.documents = [...documents.values()];\ncatalog.folders = [...new Set([...catalog.folders, ...catalog.documents.map(d=>d.folder)])].sort();\ncatalog.generated_at = $now.toISO();\nconst data = JSON.stringify(catalog, null, 2).replace(/</g,'\\\\u003c');\nhtml = html.replace(pattern, (_,a,b,c)=>a+data+c);\nconst escape = s => String(s).replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',\"'\":'&#39;'}[c]));\nconst folders = catalog.folders.map(folder => {\n  const docs = catalog.documents.filter(d => d.folder === folder);\n  return '<details><summary>'+escape(folder)+' — '+docs.length+' документов</summary><ul>'+docs.map(d=>\n    '<li><a href=\"'+escape(d.path.split('/').map(encodeURIComponent).join('/'))+'\">'+escape(d.title)+'</a></li>').join('')+'</ul></details>';\n}).join('');\nhtml = html.replace(/<div class=\"noscript\">[\\s\\S]*?<\\/div>/, '<div class=\"noscript\">'+folders+'<p>Для поиска и постраничного просмотра включите JavaScript.</p></div>');\nhtml = html.replace('Дата источника — дата обновления в каталоге производителя.', 'Дата источника — дата обновления в каталоге производителя; для Lenovo Press — Last-Modified PDF.');\nreturn [{json:{html, updated:$input.all().length, documents:catalog.documents.length}}];\n"
+      }
+    },
+    {
+      "id": "ffed022e-8de4-4ef9-a413-599d6caf7be6",
+      "name": "Save INDEX",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        440,
+        700
+      ],
+      "parameters": {
+        "method": "PUT",
+        "url": "http://nextcloud.edge.internal/remote.php/webdav/technical-documentation/lenovo/originals/INDEX.html",
+        "options": {
+          "timeout": 120000,
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "autodetect",
+              "neverError": false
+            }
+          }
+        },
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "nextCloudApi",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "text/html; charset=utf-8",
+        "body": "={{ $json.html }}"
+      },
+      "credentials": {
+        "nextCloudApi": {
+          "id": "6MEdI2Cs7tEUiM7o",
+          "name": "Nextcloud - operator automation"
+        }
+      }
+    },
+    {
+      "id": "b055be77-da6d-47e1-b010-c745db4283a9",
+      "name": "Download PDF",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        220,
+        440
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $json.source_url }}",
+        "options": {
+          "timeout": 120000,
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "file",
+              "neverError": false,
+              "outputPropertyName": "data"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "c70ccc77-bda4-4b29-bf55-07a2d48a23a0",
+      "name": "Save Original",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        440,
+        440
+      ],
+      "parameters": {
+        "method": "PUT",
+        "url": "={{ $('Each Changed PDF').item.json.destination_url }}",
+        "options": {
+          "timeout": 120000,
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "text",
+              "neverError": false
+            }
+          }
+        },
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "nextCloudApi",
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "data"
+      },
+      "credentials": {
+        "nextCloudApi": {
+          "id": "6MEdI2Cs7tEUiM7o",
+          "name": "Nextcloud - operator automation"
+        }
+      }
+    },
+    {
+      "id": "b95a6065-4d39-40bc-b6ae-4469a307c6af",
+      "name": "Filename Changed",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        660,
+        440
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ Boolean($('Each Changed PDF').item.json.old_path) }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      }
+    },
+    {
+      "id": "467bc59b-bda8-4878-b58a-2da2c2d2f6c5",
+      "name": "Remove Previous Filename",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        880,
+        340
+      ],
+      "parameters": {
+        "method": "DELETE",
+        "url": "={{ $('Each Changed PDF').item.json.old_url }}",
+        "options": {
+          "timeout": 120000,
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "text",
+              "neverError": true
+            }
+          }
+        },
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "nextCloudApi"
+      },
+      "credentials": {
+        "nextCloudApi": {
+          "id": "6MEdI2Cs7tEUiM7o",
+          "name": "Nextcloud - operator automation"
+        }
+      }
+    },
+    {
+      "id": "0c6493ac-8881-4e14-8c2d-028bc4345f09",
+      "name": "Saved Document",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        440
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "\nconst response = $input.first().json;\nif (response.statusCode >= 300 && response.statusCode !== 404) throw new Error('WebDAV deletion failed: '+response.statusCode);\nconst doc = {...$('Each Changed PDF').item.json};\nconst h = $('Download PDF').item.json.headers;\ndoc.remote_validator = {etag:h.etag ?? null, last_modified:h['last-modified'] ?? null,\n  content_length:Number(h['content-length']) || doc.remote_validator.content_length};\ndoc.size = doc.remote_validator.content_length;\ndoc.saved_at = $now.toISO();\ndoc.edition = null;\ndoc.pages = null;\ndelete doc.old_path; delete doc.old_url; delete doc.destination_url;\nreturn [{json:doc}];\n"
+      }
+    },
+    {
+      "id": "0a256b90-1c39-4292-b3bf-e32378da78da",
+      "name": "Each Changed PDF",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        0,
+        440
+      ],
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      }
+    },
+    {
+      "id": "3e31ce6d-96db-4cdd-a651-ab73dd61c087",
+      "name": "Manual Start",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        160
+      ],
+      "parameters": {}
+    }
+  ],
+  "connections": {
+    "Daily 07:00": {
+      "main": [
+        [
+          {
+            "node": "Read INDEX",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Models and Index": {
+      "main": [
+        [
+          {
+            "node": "Read Lenovo ASP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Lenovo ASP": {
+      "main": [
+        [
+          {
+            "node": "Latest Document Families",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Latest Document Families": {
+      "main": [
+        [
+          {
+            "node": "Read Remote Version",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Remote Version": {
+      "main": [
+        [
+          {
+            "node": "Changed Documents",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Changed Documents": {
+      "main": [
+        [
+          {
+            "node": "Each Changed PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update INDEX": {
+      "main": [
+        [
+          {
+            "node": "Save INDEX",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download PDF": {
+      "main": [
+        [
+          {
+            "node": "Save Original",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Original": {
+      "main": [
+        [
+          {
+            "node": "Filename Changed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filename Changed": {
+      "main": [
+        [
+          {
+            "node": "Remove Previous Filename",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Saved Document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Previous Filename": {
+      "main": [
+        [
+          {
+            "node": "Saved Document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Saved Document": {
+      "main": [
+        [
+          {
+            "node": "Each Changed PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Each Changed PDF": {
+      "main": [
+        [
+          {
+            "node": "Update INDEX",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Download PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manual Start": {
+      "main": [
+        [
+          {
+            "node": "Read INDEX",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read INDEX": {
+      "main": [
+        [
+          {
+            "node": "Models and Index",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "versionId": "4949672a-7e59-47e2-9977-0883df390ad6",
+  "activeVersionId": "4949672a-7e59-47e2-9977-0883df390ad6"
+}

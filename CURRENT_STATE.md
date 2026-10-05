@@ -1491,3 +1491,28 @@ Final markers:
 - `SECRET_DISCLOSURE=NONE`
 - `OPINT6_FINAL_ACCEPTANCE=PASS`
 
+## 2026-10-05 — Daily technical-documentation monitor — DEPLOYED / VERIFIED
+
+Operator-authorized `TechnicalDocumentationSync01` (`QouVaVNhAqSiYq5D`) is
+published and active, daily at 07:00 `Europe/Minsk`. Current monitored collection
+is WR5220 G3, with Lenovo ASP and Lenovo Press LP1705. Model configuration is in
+one node; no new infrastructure stage, service, credential or database exists.
+
+New/updated originals are written through native Nextcloud WebDAV into
+`/srv/cloud/technical-documentation/lenovo/originals/WR5220 G3/`. On a filename
+change, the new Lenovo filename is saved before the previous filename is
+deleted. INDEX.html stores version markers and is updated after successful
+transfers; INDEX.md is unchanged. Stable short labels survive revisions.
+No backup or cleanup/translation integration was added to this workflow.
+
+Initial sync downloaded the three genuinely missing documents and updated
+INDEX.html to fifteen current documents. Twelve previous PDFs remain
+byte-identical. Corrected index PUT succeeded with HTTP 204 (11552); full
+manual no-change sync 11553 and published production path 11559 succeeded with
+zero writes. Native pinned filename-change test 11556 passed without external
+writes. The cleanup candidate remains unpublished and otherwise unchanged.
+
+Contract, deployed definition and sanitized evidence:
+`deployments/edge/technical-documentation/`. Finite infrastructure checkpoint
+remains Stage 13 COMPLETE / ACCEPTED; this entry records verified runtime,
+without accepting the separate cleanup candidate.

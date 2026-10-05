@@ -1,0 +1,69 @@
+{
+  "date": "2026-10-05",
+  "status": "DEPLOYED / VERIFIED",
+  "workflow_id": "QouVaVNhAqSiYq5D",
+  "active_version": "4949672a-7e59-47e2-9977-0883df390ad6",
+  "schedule": "07:00 Europe/Minsk daily",
+  "scope": [
+    "WR5220 G3",
+    "Lenovo ASP",
+    "Lenovo Press LP1705"
+  ],
+  "source_records": 18,
+  "asp_current_families": 14,
+  "total_current_documents": 15,
+  "baseline": "12 existing documents confirmed byte-identical to source; remote validators initialized in INDEX.html through native Nextcloud upload 11540.",
+  "executions": {
+    "11542": {
+      "status": "error",
+      "phase": "Changed Documents",
+      "cause": "Assistant code used body instead of data for native text response; no PDF writes."
+    },
+    "11547": {
+      "status": "error",
+      "effects": "Three PDFs saved successfully and INDEX.html updated to 15 documents.",
+      "cause": "Native HTTP Request 4.4 raw body + explicit text response leaves stream unresolved; empty HTTP204 conversion fails. Verified in exact installed source."
+    },
+    "11552": {
+      "status": "success",
+      "phase": "Targeted INDEX read/PUT",
+      "http": 204,
+      "fix": "Native response autodetect resolves stream; temporary draft wiring immediately restored."
+    },
+    "11553": {
+      "status": "success",
+      "phase": "Full manual no-change sync",
+      "changed": 0,
+      "last_node": "Changed Documents"
+    },
+    "11556": {
+      "status": "success",
+      "phase": "Native pinned v18-to-v19 routing and INDEX merge",
+      "real_writes": false
+    },
+    "11559": {
+      "status": "success",
+      "mode": "trigger",
+      "phase": "Published Daily 07:00 production path",
+      "changed": 0,
+      "last_node": "Changed Documents"
+    }
+  },
+  "verification": {
+    "INDEX_md_sha256": "27d907f1597543bd2e10e4edbe23afa124d3cf8196685ec3f32e784db62a814f",
+    "INDEX_html_sha256": "a28e606edcb8611c22c3d4cf38ac78236224d626f87cc1c143a05596c2784332",
+    "new_file_hashes_match_prior_source_audit": true,
+    "original_count": 15,
+    "logic_tests": "PASS",
+    "existing_cleanup_workflow_unmodified": true,
+    "existing_NextcloudTools01_unmodified": true,
+    "tests_do_not_persist_pin_data": "Verified exact n8n MCP test-workflow.tool.js; pin data exists only in the manual execution.",
+    "previous_originals_12_sha256_unchanged": true,
+    "temporary_artifacts_removed": true
+  },
+  "limitations": [
+    "Lenovo ASP endpoint is the site's observed internal API, without a published compatibility contract.",
+    "Edition/page count are reset to unknown when PDF bytes change; there is no PDF text extraction step.",
+    "Future model onboarding adds its configuration and creates its model folder once through Nextcloud."
+  ]
+}
