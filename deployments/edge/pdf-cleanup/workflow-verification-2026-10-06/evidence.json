@@ -1,0 +1,4366 @@
+{
+  "checked_at": "2026-10-05T21:33:24.905931+00:00",
+  "status": "passed",
+  "production_workflows": {
+    "TechnicalDocumentationSync": {
+      "id": "QouVaVNhAqSiYq5D",
+      "active_version": "6ed111f3-306d-4cf1-8dc4-2a107c2c1b26",
+      "nodes": 17,
+      "groups": 3,
+      "changed": false
+    },
+    "LenovoPdfCleanup": {
+      "id": "ENo9jFkwcE4PFOyL",
+      "active_version_before": "382fc37d-61ec-4311-8c80-0bcb774a2221",
+      "active_version_after": "ef2dce4e-e4fe-4ac3-bf00-7bee56c0f8c8",
+      "nodes": 17,
+      "groups": 3,
+      "business_change": {
+        "node": "Remove Previous Cleaned PDF",
+        "setting": "onError",
+        "value": "continueRegularOutput"
+      },
+      "connections_unchanged": true,
+      "existing_draft_layout_published": true,
+      "description_normalized": true
+    }
+  },
+  "parent_production_executions": {
+    "initial": {
+      "execution": {
+        "id": "13157",
+        "workflowId": "QouVaVNhAqSiYq5D",
+        "mode": "manual",
+        "status": "success",
+        "startedAt": "2026-10-05T21:00:06.188Z",
+        "stoppedAt": "2026-10-05T21:00:11.438Z",
+        "retryOf": null,
+        "retrySuccessId": null,
+        "waitTill": null
+      },
+      "nodes": {
+        "Daily 07:00": [
+          {
+            "executionTime": 1,
+            "itemCounts": [
+              1
+            ],
+            "error": null
+          }
+        ],
+        "Read INDEX": [
+          {
+            "executionTime": 210,
+            "itemCounts": [
+              1
+            ],
+            "error": null
+          }
+        ],
+        "Models and Index": [
+          {
+            "executionTime": 43,
+            "itemCounts": [
+              1
+            ],
+            "error": null
+          }
+        ],
+        "Read Lenovo ASP": [
+          {
+            "executionTime": 2866,
+            "itemCounts": [
+              1
+            ],
+            "error": null
+          }
+        ],
+        "Latest Document Families": [
+          {
+            "executionTime": 26,
+            "itemCounts": [
+              1
+            ],
+            "error": null
+          }
+        ],
+        "Read Remote Version": [
+          {
+            "executionTime": 2014,
+            "itemCounts": [
+              1
+            ],
+            "error": null
+          }
+        ],
+        "Changed Documents": [
+          {
+            "executionTime": 58,
+            "itemCounts": [
+              0
+            ],
+            "error": null
+          }
+        ]
+      }
+    },
+    "initial_full_counts": {
+      "execution": {
+        "id": "13157",
+        "workflowId": "QouVaVNhAqSiYq5D",
+        "mode": "manual",
+        "status": "success",
+        "startedAt": "2026-10-05T21:00:06.188Z",
+        "stoppedAt": "2026-10-05T21:00:11.438Z",
+        "retryOf": null,
+        "retrySuccessId": null,
+        "waitTill": null
+      },
+      "nodes": {
+        "Latest Document Families": [
+          {
+            "executionTime": 26,
+            "itemCounts": [
+              95
+            ],
+            "error": null
+          }
+        ],
+        "Read Remote Version": [
+          {
+            "executionTime": 2014,
+            "itemCounts": [
+              95
+            ],
+            "error": null
+          }
+        ],
+        "Changed Documents": [
+          {
+            "executionTime": 58,
+            "itemCounts": [
+              0
+            ],
+            "error": null
+          }
+        ]
+      }
+    },
+    "after_publish": {
+      "execution": {
+        "id": "13223",
+        "workflowId": "QouVaVNhAqSiYq5D",
+        "mode": "manual",
+        "status": "success",
+        "startedAt": "2026-10-05T21:29:55.817Z",
+        "stoppedAt": "2026-10-05T21:30:02.379Z",
+        "retryOf": null,
+        "retrySuccessId": null,
+        "waitTill": null
+      },
+      "nodes": {
+        "Latest Document Families": [
+          {
+            "executionTime": 38,
+            "itemCounts": [
+              95
+            ],
+            "error": null
+          }
+        ],
+        "Read Remote Version": [
+          {
+            "executionTime": 3551,
+            "itemCounts": [
+              95
+            ],
+            "error": null
+          }
+        ],
+        "Changed Documents": [
+          {
+            "executionTime": 39,
+            "itemCounts": [
+              0
+            ],
+            "error": null
+          }
+        ]
+      }
+    },
+    "note": "initial summary uses n8n truncateData=1; initial_full_counts and after_publish contain actual 95-item counts."
+  },
+  "child_execution_scope": "Isolated SQLite clone in the exact deployed n8n 2.40.7 image, native Execute Workflow node; live production Nextcloud/SSH/cleanup CLI; IDs >=1000000000 are NOT production execution records.",
+  "child_cases": [
+    {
+      "id": 1000000002,
+      "workflowId": "ENo9jFkwcE4PFOyL",
+      "status": "success",
+      "mode": "integrated",
+      "startedAt": "2026-10-05 21:12:59.814",
+      "stoppedAt": "2026-10-05 21:14:58.796",
+      "result": {
+        "lastNode": "Each PDF",
+        "error": null,
+        "nodes": {
+          "Subworkflow Input": [
+            {
+              "startTime": 1791234781204,
+              "executionTime": 2,
+              "error": null,
+              "itemCounts": [
+                1
+              ]
+            }
+          ],
+          "Normalize Request": [
+            {
+              "startTime": 1791234781206,
+              "executionTime": 861,
+              "error": null,
+              "itemCounts": [
+                2
+              ],
+              "outputs": [
+                [
+                  {
+                    "path": "WA5680 G5/lp2506.pdf",
+                    "previous_path": "WA5680 G5/previous-cleanup-test-utlj8uvf.pdf",
+                    "execution_id": "1000000002"
+                  },
+                  {
+                    "path": "WR5220 G3/lenovo_bmc_g3_redfish_guide_v11.pdf",
+                    "previous_path": null,
+                    "execution_id": "1000000002"
+                  }
+                ]
+              ]
+            }
+          ],
+          "Each PDF": [
+            {
+              "startTime": 1791234782067,
+              "executionTime": 2,
+              "error": null,
+              "itemCounts": [
+                0,
+                1
+              ],
+              "outputs": [
+                [],
+                [
+                  {
+                    "path": "WA5680 G5/lp2506.pdf",
+                    "previous_path": "WA5680 G5/previous-cleanup-test-utlj8uvf.pdf",
+                    "execution_id": "1000000002"
+                  }
+                ]
+              ]
+            },
+            {
+              "startTime": 1791234793500,
+              "executionTime": 0,
+              "error": null,
+              "itemCounts": [
+                0,
+                1
+              ],
+              "outputs": [
+                [],
+                [
+                  {
+                    "path": "WR5220 G3/lenovo_bmc_g3_redfish_guide_v11.pdf",
+                    "previous_path": null,
+                    "execution_id": "1000000002"
+                  }
+                ]
+              ]
+            },
+            {
+              "startTime": 1791234898794,
+              "executionTime": 0,
+              "error": null,
+              "itemCounts": [
+                2,
+                0
+              ],
+              "outputs": [
+                [
+                  {
+                    "statusCode": 204
+                  },
+                  {
+                    "statusCode": 204
+                  }
+                ],
+                []
+              ]
+            }
+          ],
+          "Download Original Snapshot": [
+            {
+              "startTime": 1791234782069,
+              "executionTime": 385,
+              "error": null,
+              "itemCounts": [
+                1
+              ]
+            },
+            {
+              "startTime": 1791234793500,
+              "executionTime": 147,
+              "error": null,
+              "itemCounts": [
+                1
+              ]
+            }
+          ],
+          "Create Temporary Job": [
+            {
+              "startTime": 1791234782454,
+              "executionTime": 1226,
+              "error": null,
+              "itemCounts": [
+                1
+              ],
+              "outputs": [
+                [
+                  {
+                    "code": 0,
+                    "stdout": "{\"ok\": true, \"job_dir\": \"/tmp/pdf-cleanup-qt480tan\", \"execution_id\": \"1000000002\"}",
+                    "stderr": ""
+                  }
+                ]
+              ]
+            },
+            {
+              "startTime": 1791234793647,
+              "executionTime": 462,
+              "error": null,
+              "itemCounts": [
+                1
+              ],
+              "outputs": [
+                [
+                  {
+                    "code": 0,
+                    "stdout": "{\"ok\": true, \"job_dir\": \"/tmp/pdf-cleanup-iau305z4\", \"execution_id\": \"1000000002\"}",
+                    "stderr": ""
+                  }
+                ]
+              ]
+            }
+          ],
+          "Capture Job": [
+            {
+              "startTime": 1791234783680,
+              "executionTime": 54,
+              "error": null,
+              "itemCounts": [
+                1
+              ],
+              "outputs": [
+                [
+                  {
+                    "path": "WA5680 G5/lp2506.pdf",
+                    "previous_path": "WA5680 G5/previous-cleanup-test-utlj8uvf.pdf",
+                    "execution_id": "1000000002",
+                    "job_dir": "/tmp/pdf-cleanup-qt480tan",
+                    "ok": true
+                  }
+                ]
+              ]
+            },
+            {
+              "startTime": 1791234794109,
+              "executionTime": 32,
+              "error": null,
+              "itemCounts": [
+                1
+              ],
+              "outputs": [
+                [
+                  {
+                    "path": "WR5220 G3/lenovo_bmc_g3_redfish_guide_v11.pdf",
+                    "previous_path": null,
+                    "execution_id": "1000000002",
+                    "job_dir": "/tmp/pdf-cleanup-iau305z4",
+                    "ok": true
+                  }
+                ]
+              ]
+            }
+          ],
+          "Upload Working Copy": [
+            {
+              "startTime": 1791234783734,
+              "executionTime": 1675,
+              "error": null,
+              "itemCounts": [
+                1
+              ]
+            },
+            {
+              "startTime": 1791234794141,
+              "executionTime": 901,
+              "error": null,
+              "itemCounts": [
+                1
+              ]
+            }
+          ],
+          "Run PDF Cleanup CLI": [
+            {
+              "startTime": 1791234785410,
+              "executionTime": 5211,
+              "error": null,
+              "itemCounts": [
+                1
+              ],
+              "outputs": [
+                [
+                  {
+                    "code": 0,
+                    "stdout": "{\"ok\": true, \"cli_rc\": 0, \"summary\": {\"schema_version\": 1, \"tool_version\": \"0.1.3\", \"source_commit\": \"9c9bbb375751f85ca1e6f737504f3e99a68fd3d5\", \"input\": \"/tmp/pdf-cleanup-qt480tan/input/source.pdf\", \"output\": \"/tmp/pdf-cleanup-qt480tan/output/cleaned.pdf\", \"input_sha256\": \"966fc8ea9efda6f9f416ddf55c0c291f41583dd0a97a6d8b44cb87da3f2eaa5c\", \"pages\": 2, \"header_footer_fragments\": 0, \"removed_header_rows\": 0, \"removed_footer_rows\": 0, \"footer_pages\": 0, \"removed_links\": {}, \"removed_widgets\": 1, \"cleanup_method\": \"text_show_operations\", \"status\": \"cleaned\", \"output_sha256\": \"3184934f75df1545dc4d0687425f4208888da5ab2297eb5b5ac76f8621220ec0\", \"validation\": \"passed\"}, \"stderr\": \"\", \"status\": \"cleaned\", \"cleaned\": true}",
+                    "stderr": ""
+                  }
+                ]
+              ]
+            },
+            {
+              "startTime": 1791234795042,
+              "executionTime": 101515,
+              "error": null,
+              "itemCounts": [
+                1
+              ],
+              "outputs": [
+                [
+                  {
+                    "code": 0,
+                    "stdout": "{\"ok\": true, \"cli_rc\": 0, \"summary\": {\"schema_version\": 1, \"tool_version\": \"0.1.3\", \"source_commit\": \"9c9bbb375751f85ca1e6f737504f3e99a68fd3d5\", \"input\": \"/tmp/pdf-cleanup-iau305z4/input/source.pdf\", \"output\": \"/tmp/pdf-cleanup-iau305z4/output/cleaned.pdf\", \"input_sha256\": \"456897573c42b3e7eb767b248e3c588a987b7f23b2a0c70a344e816b91837ee8\", \"pages\": 423, \"header_footer_fragments\": 0, \"removed_header_rows\": 0, \"removed_footer_rows\": 0, \"footer_pages\": 0, \"removed_links\": {\"/Dest\": 107, \"/URI\": 26}, \"removed_widgets\": 0, \"cleanup_method\": \"text_show_operations\", \"status\": \"cleaned\", \"output_sha256\": \"d69d59c5633e242289898cdd87f06c463170a4d7fb9268a5ff96989fea7f08b5\", \"validation\": \"passed\"}, \"stderr\": \"\", \"status\": \"cleaned\", \"cleaned\": true}",
+                    "stderr": ""
+                  }
+                ]
+              ]
+            }
+          ],
+          "CLI Succeeded": [
+            {
+              "startTime": 1791234790622,
+              "executionTime": 32,
+              "error": null,
+              "itemCounts": [
+                1,
+                0
+              ]
+            },
+            {
+              "startTime": 1791234896557,
+              "executionTime": 15,
+              "error": null,
+              "itemCounts": [
+                1,
+                0
+              ]
+            }
+          ],
+          "Download Cleaned PDF": [
+            {
+              "startTime": 1791234790654,
+              "executionTime": 1352,
+              "error": null,
+              "itemCounts": [
+                1
+              ]
+            },
+            {
+              "startTime": 1791234896573,
+              "executionTime": 1200,
+              "error": null,
+              "itemCounts": [
+                1
+              ]
+            }
+          ],
+          "Publish Cleaned PDF": [
+            {
+              "startTime": 1791234792006,
+              "executionTime": 549,
+              "error": null,
+              "itemCounts": [
+                1
+              ],
+              "outputs": [
+                [
+                  {
+                    "statusCode": 204
+                  }
+                ]
+              ]
+            },
+            {
+              "startTime": 1791234897773,
+              "executionTime": 254,
+              "error": null,
+              "itemCounts": [
+                1
+              ],
+              "outputs": [
+                [
+                  {
+                    "statusCode": 204
+                  }
+                ]
+              ]
+            }
+          ],
+          "Previous Cleaned Filename": [
+            {
+              "startTime": 1791234792555,
+              "executionTime": 16,
+              "error": null,
+              "itemCounts": [
+                1,
+                0
+              ],
+              "outputs": [
+                [
+                  {
+                    "statusCode": 204
+                  }
+                ],
+                []
+              ]
+            },
+            {
+              "startTime": 1791234898027,
+              "executionTime": 3,
+              "error": null,
+              "itemCounts": [
+                0,
+                1
+              ],
+              "outputs": [
+                [],
+                [
+                  {
+                    "statusCode": 204
+                  }
+                ]
+              ]
+            }
+          ],
+          "Remove Previous Cleaned PDF": [
+            {
+              "startTime": 1791234792571,
+              "executionTime": 104,
+              "error": null,
+              "itemCounts": [
+                1
+              ],
+              "outputs": [
+                [
+                  {
+                    "statusCode": 404
+                  }
+                ]
+              ]
+            }
+          ],
+          "Remove Temporary Job": [
+            {
+              "startTime": 1791234792675,
+              "executionTime": 459,
+              "error": null,
+              "itemCounts": [
+                1
+              ],
+              "outputs": [
+                [
+                  {
+                    "code": 0,
+                    "stdout": "{\"ok\": true, \"job_removed\": true}",
+                    "stderr": ""
+                  }
+                ]
+              ]
+            },
+            {
+              "startTime": 1791234898030,
+              "executionTime": 444,
+              "error": null,
+              "itemCounts": [
+                1
+              ],
+              "outputs": [
+                [
+                  {
+                    "code": 0,
+                    "stdout": "{\"ok\": true, \"job_removed\": true}",
+                    "stderr": ""
+                  }
+                ]
+              ]
+            }
+          ],
+          "Read Cleanup INDEX": [
+            {
+              "startTime": 1791234793134,
+              "executionTime": 123,
+              "error": null,
+              "itemCounts": [
+                1
+              ]
+            },
+            {
+              "startTime": 1791234898474,
+              "executionTime": 104,
+              "error": null,
+              "itemCounts": [
+                1
+              ]
+            }
+          ],
+          "Return Result": [
+            {
+              "startTime": 1791234793257,
+              "executionTime": 65,
+              "error": null,
+              "itemCounts": [
+                1
+              ],
+              "outputs": [
+                [
+                  {
+                    "path": "WA5680 G5/lp2506.pdf",
+                    "ok": true,
+                    "status": "cleaned",
+                    "summary": {
+                      "schema_version": 1,
+                      "tool_version": "0.1.3",
+                      "source_commit": "9c9bbb375751f85ca1e6f737504f3e99a68fd3d5",
+                      "input": "/tmp/pdf-cleanup-qt480tan/input/source.pdf",
+                      "output": "/tmp/pdf-cleanup-qt480tan/output/cleaned.pdf",
+                      "input_sha256": "966fc8ea9efda6f9f416ddf55c0c291f41583dd0a97a6d8b44cb87da3f2eaa5c",
+                      "pages": 2,
+                      "header_footer_fragments": 0,
+                      "removed_header_rows": 0,
+                      "removed_footer_rows": 0,
+                      "footer_pages": 0,
+                      "removed_links": {},
+                      "removed_widgets": 1,
+                      "cleanup_method": "text_show_operations",
+                      "status": "cleaned",
+                      "output_sha256": "3184934f75df1545dc4d0687425f4208888da5ab2297eb5b5ac76f8621220ec0",
+                      "validation": "passed"
+                    },
+                    "temporary_job_removed": true,
+                    "cleaned_at": "2026-10-06T00:13:13.304+03:00"
+                  }
+                ]
+              ]
+            },
+            {
+              "startTime": 1791234898578,
+              "executionTime": 58,
+              "error": null,
+              "itemCounts": [
+                1
+              ],
+              "outputs": [
+                [
+                  {
+                    "path": "WR5220 G3/lenovo_bmc_g3_redfish_guide_v11.pdf",
+                    "ok": true,
+                    "status": "cleaned",
+                    "summary": {
+                      "schema_version": 1,
+                      "tool_version": "0.1.3",
+                      "source_commit": "9c9bbb375751f85ca1e6f737504f3e99a68fd3d5",
+                      "input": "/tmp/pdf-cleanup-iau305z4/input/source.pdf",
+                      "output": "/tmp/pdf-cleanup-iau305z4/output/cleaned.pdf",
+                      "input_sha256": "456897573c42b3e7eb767b248e3c588a987b7f23b2a0c70a344e816b91837ee8",
+                      "pages": 423,
+                      "header_footer_fragments": 0,
+                      "removed_header_rows": 0,
+                      "removed_footer_rows": 0,
+                      "footer_pages": 0,
+                      "removed_links": {
+                        "/Dest": 107,
+                        "/URI": 26
+                      },
+                      "removed_widgets": 0,
+                      "cleanup_method": "text_show_operations",
+                      "status": "cleaned",
+                      "output_sha256": "d69d59c5633e242289898cdd87f06c463170a4d7fb9268a5ff96989fea7f08b5",
+                      "validation": "passed"
+                    },
+                    "temporary_job_removed": true,
+                    "cleaned_at": "2026-10-06T00:14:58.622+03:00"
+                  }
+                ]
+              ]
+            }
+          ],
+          "Save Cleanup INDEX": [
+            {
+              "startTime": 1791234793322,
+              "executionTime": 178,
+              "error": null,
+              "itemCounts": [
+                1
+              ],
+              "outputs": [
+                [
+                  {
+                    "statusCode": 204
+                  }
+                ]
+              ]
+            },
+            {
+              "startTime": 1791234898637,
+              "executionTime": 157,
+              "error": null,
+              "itemCounts": [
+                1
+              ],
+              "outputs": [
+                [
+                  {
+                    "statusCode": 204
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": 1000000008,
+      "workflowId": "ENo9jFkwcE4PFOyL",
+      "status": "error",
+      "mode": "integrated",
+      "startedAt": "2026-10-05 21:26:56.731",
+      "stoppedAt": "2026-10-05 21:27:08.236",
+      "result": {
+        "lastNode": "Remove Previous Cleaned PDF",
+        "error": {
+          "message": "The service refused the connection - perhaps it is offline"
+        },
+        "nodes": {
+          "Subworkflow Input": [
+            {
+              "startTime": 1791235617708,
+              "executionTime": 3,
+              "error": null,
+              "itemCounts": [
+                1
+              ]
+            }
+          ],
+          "Normalize Request": [
+            {
+              "startTime": 1791235617711,
+              "executionTime": 1152,
+              "error": null,
+              "itemCounts": [
+                1
+              ],
+              "outputs": [
+                [
+                  {
+                    "path": "WA5680 G5/lp2506.pdf",
+                    "previous_path": "WA5680 G5/previous-cleanup-test-utlj8uvf.pdf",
+                    "execution_id": "1000000008"
+                  }
+                ]
+              ]
+            }
+          ],
+          "Each PDF": [
+            {
+              "startTime": 1791235618863,
+              "executionTime": 2,
+              "error": null,
+              "itemCounts": [
+                0,
+                1
+              ],
+              "outputs": [
+                [],
+                [
+                  {
+                    "path": "WA5680 G5/lp2506.pdf",
+                    "previous_path": "WA5680 G5/previous-cleanup-test-utlj8uvf.pdf",
+                    "execution_id": "1000000008"
+                  }
+                ]
+              ]
+            }
+          ],
+          "Download Original Snapshot": [
+            {
+              "startTime": 1791235618865,
+              "executionTime": 397,
+              "error": null,
+              "itemCounts": [
+                1
+              ]
+            }
+          ],
+          "Create Temporary Job": [
+            {
+              "startTime": 1791235619262,
+              "executionTime": 504,
+              "error": null,
+              "itemCounts": [
+                1
+              ],
+              "outputs": [
+                [
+                  {
+                    "code": 0,
+                    "stdout": "{\"ok\": true, \"job_dir\": \"/tmp/pdf-cleanup-e8be908s\", \"execution_id\": \"1000000008\"}",
+                    "stderr": ""
+                  }
+                ]
+              ]
+            }
+          ],
+          "Capture Job": [
+            {
+              "startTime": 1791235619766,
+              "executionTime": 41,
+              "error": null,
+              "itemCounts": [
+                1
+              ],
+              "outputs": [
+                [
+                  {
+                    "path": "WA5680 G5/lp2506.pdf",
+                    "previous_path": "WA5680 G5/previous-cleanup-test-utlj8uvf.pdf",
+                    "execution_id": "1000000008",
+                    "job_dir": "/tmp/pdf-cleanup-e8be908s",
+                    "ok": true
+                  }
+                ]
+              ]
+            }
+          ],
+          "Upload Working Copy": [
+            {
+              "startTime": 1791235619808,
+              "executionTime": 1234,
+              "error": null,
+              "itemCounts": [
+                1
+              ]
+            }
+          ],
+          "Run PDF Cleanup CLI": [
+            {
+              "startTime": 1791235621042,
+              "executionTime": 4670,
+              "error": null,
+              "itemCounts": [
+                1
+              ],
+              "outputs": [
+                [
+                  {
+                    "code": 0,
+                    "stdout": "{\"ok\": true, \"cli_rc\": 0, \"summary\": {\"schema_version\": 1, \"tool_version\": \"0.1.3\", \"source_commit\": \"9c9bbb375751f85ca1e6f737504f3e99a68fd3d5\", \"input\": \"/tmp/pdf-cleanup-e8be908s/input/source.pdf\", \"output\": \"/tmp/pdf-cleanup-e8be908s/output/cleaned.pdf\", \"input_sha256\": \"966fc8ea9efda6f9f416ddf55c0c291f41583dd0a97a6d8b44cb87da3f2eaa5c\", \"pages\": 2, \"header_footer_fragments\": 0, \"removed_header_rows\": 0, \"removed_footer_rows\": 0, \"footer_pages\": 0, \"removed_links\": {}, \"removed_widgets\": 1, \"cleanup_method\": \"text_show_operations\", \"status\": \"cleaned\", \"output_sha256\": \"2313c1b13b89728251af6f7ebcbc0e5368daaffe666af708ff99d41d47ec90f4\", \"validation\": \"passed\"}, \"stderr\": \"\", \"status\": \"cleaned\", \"cleaned\": true}",
+                    "stderr": ""
+                  }
+                ]
+              ]
+            }
+          ],
+          "CLI Succeeded": [
+            {
+              "startTime": 1791235625713,
+              "executionTime": 29,
+              "error": null,
+              "itemCounts": [
+                1,
+                0
+              ]
+            }
+          ],
+          "Download Cleaned PDF": [
+            {
+              "startTime": 1791235625742,
+              "executionTime": 2001,
+              "error": null,
+              "itemCounts": [
+                1
+              ]
+            }
+          ],
+          "Publish Cleaned PDF": [
+            {
+              "startTime": 1791235627743,
+              "executionTime": 452,
+              "error": null,
+              "itemCounts": [
+                1
+              ],
+              "outputs": [
+                [
+                  {
+                    "statusCode": 204
+                  }
+                ]
+              ]
+            }
+          ],
+          "Previous Cleaned Filename": [
+            {
+              "startTime": 1791235628195,
+              "executionTime": 12,
+              "error": null,
+              "itemCounts": [
+                1,
+                0
+              ],
+              "outputs": [
+                [
+                  {
+                    "statusCode": 204
+                  }
+                ],
+                []
+              ]
+            }
+          ],
+          "Remove Previous Cleaned PDF": [
+            {
+              "startTime": 1791235628208,
+              "executionTime": 28,
+              "error": {
+                "message": "The service refused the connection - perhaps it is offline"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": 1000000010,
+      "workflowId": "ENo9jFkwcE4PFOyL",
+      "status": "error",
+      "mode": "integrated",
+      "startedAt": "2026-10-05 21:28:28.655",
+      "stoppedAt": "2026-10-05 21:28:40.780",
+      "result": {
+        "lastNode": "Return Result",
+        "error": {
+          "message": "Previous cleaned PDF deletion failed: {\"message\":\"The service refused the connection - perhaps it is offline\",\"timestamp\":1791235720043,\"name\":\"NodeApiError\",\"context\":{},\"cause\":{\"name\":\"Error\",\"message\":\"connect ECONNREFUSED 127.0.0.1:9\"}} [line 19]"
+        },
+        "nodes": {
+          "Subworkflow Input": [
+            {
+              "startTime": 1791235709616,
+              "executionTime": 1,
+              "error": null,
+              "itemCounts": [
+                1
+              ]
+            }
+          ],
+          "Normalize Request": [
+            {
+              "startTime": 1791235709617,
+              "executionTime": 1140,
+              "error": null,
+              "itemCounts": [
+                1
+              ],
+              "outputs": [
+                [
+                  {
+                    "path": "WA5680 G5/lp2506.pdf",
+                    "previous_path": "WA5680 G5/previous-cleanup-test-utlj8uvf.pdf",
+                    "execution_id": "1000000010"
+                  }
+                ]
+              ]
+            }
+          ],
+          "Each PDF": [
+            {
+              "startTime": 1791235710757,
+              "executionTime": 1,
+              "error": null,
+              "itemCounts": [
+                0,
+                1
+              ],
+              "outputs": [
+                [],
+                [
+                  {
+                    "path": "WA5680 G5/lp2506.pdf",
+                    "previous_path": "WA5680 G5/previous-cleanup-test-utlj8uvf.pdf",
+                    "execution_id": "1000000010"
+                  }
+                ]
+              ]
+            }
+          ],
+          "Download Original Snapshot": [
+            {
+              "startTime": 1791235710758,
+              "executionTime": 327,
+              "error": null,
+              "itemCounts": [
+                1
+              ]
+            }
+          ],
+          "Create Temporary Job": [
+            {
+              "startTime": 1791235711085,
+              "executionTime": 963,
+              "error": null,
+              "itemCounts": [
+                1
+              ],
+              "outputs": [
+                [
+                  {
+                    "code": 0,
+                    "stdout": "{\"ok\": true, \"job_dir\": \"/tmp/pdf-cleanup-8f1zinm0\", \"execution_id\": \"1000000010\"}",
+                    "stderr": ""
+                  }
+                ]
+              ]
+            }
+          ],
+          "Capture Job": [
+            {
+              "startTime": 1791235712048,
+              "executionTime": 37,
+              "error": null,
+              "itemCounts": [
+                1
+              ],
+              "outputs": [
+                [
+                  {
+                    "path": "WA5680 G5/lp2506.pdf",
+                    "previous_path": "WA5680 G5/previous-cleanup-test-utlj8uvf.pdf",
+                    "execution_id": "1000000010",
+                    "job_dir": "/tmp/pdf-cleanup-8f1zinm0",
+                    "ok": true
+                  }
+                ]
+              ]
+            }
+          ],
+          "Upload Working Copy": [
+            {
+              "startTime": 1791235712086,
+              "executionTime": 1279,
+              "error": null,
+              "itemCounts": [
+                1
+              ]
+            }
+          ],
+          "Run PDF Cleanup CLI": [
+            {
+              "startTime": 1791235713365,
+              "executionTime": 4805,
+              "error": null,
+              "itemCounts": [
+                1
+              ],
+              "outputs": [
+                [
+                  {
+                    "code": 0,
+                    "stdout": "{\"ok\": true, \"cli_rc\": 0, \"summary\": {\"schema_version\": 1, \"tool_version\": \"0.1.3\", \"source_commit\": \"9c9bbb375751f85ca1e6f737504f3e99a68fd3d5\", \"input\": \"/tmp/pdf-cleanup-8f1zinm0/input/source.pdf\", \"output\": \"/tmp/pdf-cleanup-8f1zinm0/output/cleaned.pdf\", \"input_sha256\": \"966fc8ea9efda6f9f416ddf55c0c291f41583dd0a97a6d8b44cb87da3f2eaa5c\", \"pages\": 2, \"header_footer_fragments\": 0, \"removed_header_rows\": 0, \"removed_footer_rows\": 0, \"footer_pages\": 0, \"removed_links\": {}, \"removed_widgets\": 1, \"cleanup_method\": \"text_show_operations\", \"status\": \"cleaned\", \"output_sha256\": \"c4a297f7fbbacfa717997fd1671c6e0fc48094e71d0e6bec5a6596d15f0da4a0\", \"validation\": \"passed\"}, \"stderr\": \"\", \"status\": \"cleaned\", \"cleaned\": true}",
+                    "stderr": ""
+                  }
+                ]
+              ]
+            }
+          ],
+          "CLI Succeeded": [
+            {
+              "startTime": 1791235718172,
+              "executionTime": 32,
+              "error": null,
+              "itemCounts": [
+                1,
+                0
+              ]
+            }
+          ],
+          "Download Cleaned PDF": [
+            {
+              "startTime": 1791235718204,
+              "executionTime": 1256,
+              "error": null,
+              "itemCounts": [
+                1
+              ]
+            }
+          ],
+          "Publish Cleaned PDF": [
+            {
+              "startTime": 1791235719460,
+              "executionTime": 538,
+              "error": null,
+              "itemCounts": [
+                1
+              ],
+              "outputs": [
+                [
+                  {
+                    "statusCode": 204
+                  }
+                ]
+              ]
+            }
+          ],
+          "Previous Cleaned Filename": [
+            {
+              "startTime": 1791235719998,
+              "executionTime": 17,
+              "error": null,
+              "itemCounts": [
+                1,
+                0
+              ],
+              "outputs": [
+                [
+                  {
+                    "statusCode": 204
+                  }
+                ],
+                []
+              ]
+            }
+          ],
+          "Remove Previous Cleaned PDF": [
+            {
+              "startTime": 1791235720015,
+              "executionTime": 34,
+              "error": null,
+              "itemCounts": [
+                1
+              ],
+              "outputs": [
+                [
+                  {
+                    "error": {
+                      "message": "The service refused the connection - perhaps it is offline",
+                      "timestamp": 1791235720043,
+                      "name": "NodeApiError",
+                      "context": {},
+                      "cause": {
+                        "name": "Error",
+                        "message": "connect ECONNREFUSED 127.0.0.1:9"
+                      }
+                    }
+                  }
+                ]
+              ]
+            }
+          ],
+          "Remove Temporary Job": [
+            {
+              "startTime": 1791235720049,
+              "executionTime": 505,
+              "error": null,
+              "itemCounts": [
+                1
+              ],
+              "outputs": [
+                [
+                  {
+                    "code": 0,
+                    "stdout": "{\"ok\": true, \"job_removed\": true}",
+                    "stderr": ""
+                  }
+                ]
+              ]
+            }
+          ],
+          "Read Cleanup INDEX": [
+            {
+              "startTime": 1791235720554,
+              "executionTime": 136,
+              "error": null,
+              "itemCounts": [
+                1
+              ]
+            }
+          ],
+          "Return Result": [
+            {
+              "startTime": 1791235720690,
+              "executionTime": 89,
+              "error": {
+                "message": "Previous cleaned PDF deletion failed: {\"message\":\"The service refused the connection - perhaps it is offline\",\"timestamp\":1791235720043,\"name\":\"NodeApiError\",\"context\":{},\"cause\":{\"name\":\"Error\",\"message\":\"connect ECONNREFUSED 127.0.0.1:9\"}} [line 19]"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": 1000000012,
+      "workflowId": "ENo9jFkwcE4PFOyL",
+      "status": "success",
+      "mode": "integrated",
+      "startedAt": "2026-10-05 21:30:41.205",
+      "stoppedAt": "2026-10-05 21:30:53.492",
+      "result": {
+        "lastNode": "Each PDF",
+        "error": null,
+        "nodes": {
+          "Subworkflow Input": [
+            {
+              "startTime": 1791235842116,
+              "executionTime": 2,
+              "error": null,
+              "itemCounts": [
+                1
+              ]
+            }
+          ],
+          "Normalize Request": [
+            {
+              "startTime": 1791235842118,
+              "executionTime": 1410,
+              "error": null,
+              "itemCounts": [
+                1
+              ],
+              "outputs": [
+                [
+                  {
+                    "path": "WA5680 G5/lp2506.pdf",
+                    "previous_path": "WA5680 G5/previous-cleanup-test-utlj8uvf.pdf",
+                    "execution_id": "1000000012"
+                  }
+                ]
+              ]
+            }
+          ],
+          "Each PDF": [
+            {
+              "startTime": 1791235843528,
+              "executionTime": 1,
+              "error": null,
+              "itemCounts": [
+                0,
+                1
+              ],
+              "outputs": [
+                [],
+                [
+                  {
+                    "path": "WA5680 G5/lp2506.pdf",
+                    "previous_path": "WA5680 G5/previous-cleanup-test-utlj8uvf.pdf",
+                    "execution_id": "1000000012"
+                  }
+                ]
+              ]
+            },
+            {
+              "startTime": 1791235853491,
+              "executionTime": 0,
+              "error": null,
+              "itemCounts": [
+                1,
+                0
+              ],
+              "outputs": [
+                [
+                  {
+                    "statusCode": 204
+                  }
+                ],
+                []
+              ]
+            }
+          ],
+          "Download Original Snapshot": [
+            {
+              "startTime": 1791235843529,
+              "executionTime": 339,
+              "error": null,
+              "itemCounts": [
+                1
+              ]
+            }
+          ],
+          "Create Temporary Job": [
+            {
+              "startTime": 1791235843868,
+              "executionTime": 1015,
+              "error": null,
+              "itemCounts": [
+                1
+              ],
+              "outputs": [
+                [
+                  {
+                    "code": 0,
+                    "stdout": "{\"ok\": true, \"job_dir\": \"/tmp/pdf-cleanup-8q65jm04\", \"execution_id\": \"1000000012\"}",
+                    "stderr": ""
+                  }
+                ]
+              ]
+            }
+          ],
+          "Capture Job": [
+            {
+              "startTime": 1791235844884,
+              "executionTime": 32,
+              "error": null,
+              "itemCounts": [
+                1
+              ],
+              "outputs": [
+                [
+                  {
+                    "path": "WA5680 G5/lp2506.pdf",
+                    "previous_path": "WA5680 G5/previous-cleanup-test-utlj8uvf.pdf",
+                    "execution_id": "1000000012",
+                    "job_dir": "/tmp/pdf-cleanup-8q65jm04",
+                    "ok": true
+                  }
+                ]
+              ]
+            }
+          ],
+          "Upload Working Copy": [
+            {
+              "startTime": 1791235844916,
+              "executionTime": 1062,
+              "error": null,
+              "itemCounts": [
+                1
+              ]
+            }
+          ],
+          "Run PDF Cleanup CLI": [
+            {
+              "startTime": 1791235845978,
+              "executionTime": 4884,
+              "error": null,
+              "itemCounts": [
+                1
+              ],
+              "outputs": [
+                [
+                  {
+                    "code": 0,
+                    "stdout": "{\"ok\": true, \"cli_rc\": 0, \"summary\": {\"schema_version\": 1, \"tool_version\": \"0.1.3\", \"source_commit\": \"9c9bbb375751f85ca1e6f737504f3e99a68fd3d5\", \"input\": \"/tmp/pdf-cleanup-8q65jm04/input/source.pdf\", \"output\": \"/tmp/pdf-cleanup-8q65jm04/output/cleaned.pdf\", \"input_sha256\": \"966fc8ea9efda6f9f416ddf55c0c291f41583dd0a97a6d8b44cb87da3f2eaa5c\", \"pages\": 2, \"header_footer_fragments\": 0, \"removed_header_rows\": 0, \"removed_footer_rows\": 0, \"footer_pages\": 0, \"removed_links\": {}, \"removed_widgets\": 1, \"cleanup_method\": \"text_show_operations\", \"status\": \"cleaned\", \"output_sha256\": \"9abe6b54224e6b8060b6752e7d39420be67117da4489c4a7f5a21b2bd4928588\", \"validation\": \"passed\"}, \"stderr\": \"\", \"status\": \"cleaned\", \"cleaned\": true}",
+                    "stderr": ""
+                  }
+                ]
+              ]
+            }
+          ],
+          "CLI Succeeded": [
+            {
+              "startTime": 1791235850862,
+              "executionTime": 20,
+              "error": null,
+              "itemCounts": [
+                1,
+                0
+              ]
+            }
+          ],
+          "Download Cleaned PDF": [
+            {
+              "startTime": 1791235850882,
+              "executionTime": 1222,
+              "error": null,
+              "itemCounts": [
+                1
+              ]
+            }
+          ],
+          "Publish Cleaned PDF": [
+            {
+              "startTime": 1791235852104,
+              "executionTime": 464,
+              "error": null,
+              "itemCounts": [
+                1
+              ],
+              "outputs": [
+                [
+                  {
+                    "statusCode": 204
+                  }
+                ]
+              ]
+            }
+          ],
+          "Previous Cleaned Filename": [
+            {
+              "startTime": 1791235852568,
+              "executionTime": 12,
+              "error": null,
+              "itemCounts": [
+                1,
+                0
+              ],
+              "outputs": [
+                [
+                  {
+                    "statusCode": 204
+                  }
+                ],
+                []
+              ]
+            }
+          ],
+          "Remove Previous Cleaned PDF": [
+            {
+              "startTime": 1791235852580,
+              "executionTime": 97,
+              "error": null,
+              "itemCounts": [
+                1
+              ],
+              "outputs": [
+                [
+                  {
+                    "statusCode": 404
+                  }
+                ]
+              ]
+            }
+          ],
+          "Remove Temporary Job": [
+            {
+              "startTime": 1791235852677,
+              "executionTime": 476,
+              "error": null,
+              "itemCounts": [
+                1
+              ],
+              "outputs": [
+                [
+                  {
+                    "code": 0,
+                    "stdout": "{\"ok\": true, \"job_removed\": true}",
+                    "stderr": ""
+                  }
+                ]
+              ]
+            }
+          ],
+          "Read Cleanup INDEX": [
+            {
+              "startTime": 1791235853153,
+              "executionTime": 105,
+              "error": null,
+              "itemCounts": [
+                1
+              ]
+            }
+          ],
+          "Return Result": [
+            {
+              "startTime": 1791235853258,
+              "executionTime": 46,
+              "error": null,
+              "itemCounts": [
+                1
+              ],
+              "outputs": [
+                [
+                  {
+                    "path": "WA5680 G5/lp2506.pdf",
+                    "ok": true,
+                    "status": "cleaned",
+                    "summary": {
+                      "schema_version": 1,
+                      "tool_version": "0.1.3",
+                      "source_commit": "9c9bbb375751f85ca1e6f737504f3e99a68fd3d5",
+                      "input": "/tmp/pdf-cleanup-8q65jm04/input/source.pdf",
+                      "output": "/tmp/pdf-cleanup-8q65jm04/output/cleaned.pdf",
+                      "input_sha256": "966fc8ea9efda6f9f416ddf55c0c291f41583dd0a97a6d8b44cb87da3f2eaa5c",
+                      "pages": 2,
+                      "header_footer_fragments": 0,
+                      "removed_header_rows": 0,
+                      "removed_footer_rows": 0,
+                      "footer_pages": 0,
+                      "removed_links": {},
+                      "removed_widgets": 1,
+                      "cleanup_method": "text_show_operations",
+                      "status": "cleaned",
+                      "output_sha256": "9abe6b54224e6b8060b6752e7d39420be67117da4489c4a7f5a21b2bd4928588",
+                      "validation": "passed"
+                    },
+                    "temporary_job_removed": true,
+                    "cleaned_at": "2026-10-06T00:30:53.288+03:00"
+                  }
+                ]
+              ]
+            }
+          ],
+          "Save Cleanup INDEX": [
+            {
+              "startTime": 1791235853304,
+              "executionTime": 187,
+              "error": null,
+              "itemCounts": [
+                1
+              ],
+              "outputs": [
+                [
+                  {
+                    "statusCode": 204
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "failure_fix_checks": {
+    "job_absent": true,
+    "release_ran": true,
+    "failed_at_existing_result_node": true,
+    "index_write_not_run": true,
+    "index_hash_unchanged": true,
+    "actual_fault_url": true
+  },
+  "final_normal_checks": {
+    "success": true,
+    "same_explicit_params": true,
+    "same_onerror": true,
+    "same_connections": true,
+    "404_old_filename": true,
+    "index_written": true
+  },
+  "manual_release_unfixed_case": {
+    "job_dir": "/tmp/pdf-cleanup-e8be908s",
+    "existed_before": true,
+    "release": {
+      "ok": true,
+      "job_removed": true
+    },
+    "absent_after": true
+  },
+  "file_baseline": [
+    {
+      "path": "cleaned/WA5480 G3/bmc_user_guide_v14.pdf",
+      "sha256": "c34af885bdec14908065fddedb0caeba70264b5a424afef623995bfa439a55aa",
+      "uid": 33,
+      "gid": 33,
+      "size": 4161508
+    },
+    {
+      "path": "cleaned/WA5480 G3/lenovo_bmc_event_reference_guide_g5_v4.pdf",
+      "sha256": "309eec78fb16527ffadc41f36f914daa30dee4d2611be8ded6e3bae48e584a35",
+      "uid": 33,
+      "gid": 33,
+      "size": 1173852
+    },
+    {
+      "path": "cleaned/WA5480 G3/lenovo_bmc_g3_redfish_guide_v11.pdf",
+      "sha256": "c099a089649a5b829313c88807c821347065b62ea9e6e527af78235d4268ddbb",
+      "uid": 33,
+      "gid": 33,
+      "size": 5894615
+    },
+    {
+      "path": "cleaned/WA5480 G3/lenovo_snmp_ug_g3.pdf",
+      "sha256": "f399f7650ee0409124da028ee14c9ecfdb7fa22974abc44c72aaa547088274cd",
+      "uid": 33,
+      "gid": 33,
+      "size": 864830
+    },
+    {
+      "path": "cleaned/WA5480 G3/lenovo_wentian_os_installation_guide.pdf",
+      "sha256": "69359bf50e7594b523adef81803b1d8c814de6f52f11454838cefd87b6c88772",
+      "uid": 33,
+      "gid": 33,
+      "size": 13569816
+    },
+    {
+      "path": "cleaned/WA5480 G3/lenovo_wentian_wa5480g3_user_guide_v8.pdf",
+      "sha256": "314f4547c5783804601b45cab1eefbd352f63de938d7eb562733995545dd5ced",
+      "uid": 33,
+      "gid": 33,
+      "size": 26810434
+    },
+    {
+      "path": "cleaned/WA5480 G3/lxce_bomc_cplus_ug.pdf",
+      "sha256": "60c6b653597e57d8c72b4c17600cee49a947a51280d7e383eb7d55ad501cb643",
+      "uid": 33,
+      "gid": 33,
+      "size": 569176
+    },
+    {
+      "path": "cleaned/WA5480 G3/lxce_onecli_cplus_ug.pdf",
+      "sha256": "a8adb8f575f2cc09e4785e0d3818350cdb27e71bc7639ad4291bffc2957ead54",
+      "uid": 33,
+      "gid": 33,
+      "size": 798671
+    },
+    {
+      "path": "cleaned/WA5480 G3/lxce_ux_cplus_ug.pdf",
+      "sha256": "f9f85798921033459a32167c57133cf2b5e9f2fe670dea18036017fd90bd708c",
+      "uid": 33,
+      "gid": 33,
+      "size": 646940
+    },
+    {
+      "path": "cleaned/WA5480 G3/lxpm_wentian_ug-v2.pdf",
+      "sha256": "a4a12d116e035a0d4608dc3f1552e144e609ab2cc27b62eac0f61d203abfb863",
+      "uid": 33,
+      "gid": 33,
+      "size": 2456967
+    },
+    {
+      "path": "cleaned/WA5480 G3/psu_label_matrix.pdf",
+      "sha256": "7cc5a1a11cce7c8b626e1869f1685b8294c61df3934496a272839fc3b5f44938",
+      "uid": 33,
+      "gid": 33,
+      "size": 1674780
+    },
+    {
+      "path": "cleaned/WA5480 G5/lenovo_bmc_commands_g5_v3.pdf",
+      "sha256": "a03c3395e1a7b3eadc8f194524f74d7ea17cb36a1dc57331c3a9c13f4e80415a",
+      "uid": 33,
+      "gid": 33,
+      "size": 877304
+    },
+    {
+      "path": "cleaned/WA5480 G5/lenovo_bmc_event_reference_guide_g5_v4.pdf",
+      "sha256": "9531ce92a261412a8589a55dac04c6da449defd9526d4d5cb41fcea13e84fc97",
+      "uid": 33,
+      "gid": 33,
+      "size": 1173852
+    },
+    {
+      "path": "cleaned/WA5480 G5/lenovo_bmc_redfish_guide_g5_v4.pdf",
+      "sha256": "6f7a76bd562b38cf87b916c2a791aad1a1ff31f42fbed2b48a85d916eaaf1cbe",
+      "uid": 33,
+      "gid": 33,
+      "size": 6576275
+    },
+    {
+      "path": "cleaned/WA5480 G5/lenovo_bmc_snmp_guide_g5.pdf",
+      "sha256": "bba2fb0e3a964d5520a6fbbdccb3ee8e03c73148503572abec440f72a49e4700",
+      "uid": 33,
+      "gid": 33,
+      "size": 915547
+    },
+    {
+      "path": "cleaned/WA5480 G5/lenovo_bmc_user_guide_g5_v6.pdf",
+      "sha256": "4638ec4f75df818daece3e98808c823be07e114e9784da1081d2aff56854aea4",
+      "uid": 33,
+      "gid": 33,
+      "size": 13695843
+    },
+    {
+      "path": "cleaned/WA5480 G5/lenovo_wentian_os_installation_guide.pdf",
+      "sha256": "710602623b8aa3af6fb0e5db737e0bc1785f3a56de445cd7afeaf9edb07e3720",
+      "uid": 33,
+      "gid": 33,
+      "size": 13569816
+    },
+    {
+      "path": "cleaned/WA5480 G5/lenovo_wentian_wa5480g5_user_guide_v5.pdf",
+      "sha256": "329510f927629e5d551cdd0e4b62766e04384adc05fccda9062df05d0a13695f",
+      "uid": 33,
+      "gid": 33,
+      "size": 43531360
+    },
+    {
+      "path": "cleaned/WA5480 G5/lxce_bomc_cplus_ug.pdf",
+      "sha256": "a823acbec51afb4f7c3984cd8b0a3ff4887dbf55fe42cc05bb84318ddf1182fb",
+      "uid": 33,
+      "gid": 33,
+      "size": 569176
+    },
+    {
+      "path": "cleaned/WA5480 G5/lxce_onecli_cplus_ug.pdf",
+      "sha256": "d1f14c9c904b1dd9f1f3a8f04c1654de203880ff1cb84e41668f75e529195d13",
+      "uid": 33,
+      "gid": 33,
+      "size": 798671
+    },
+    {
+      "path": "cleaned/WA5480 G5/lxce_ux_cplus_ug.pdf",
+      "sha256": "68ac4f3c322a5e774e1bb144c7c70a7ebb3c4993694f20c8dbe85d485d7a60e2",
+      "uid": 33,
+      "gid": 33,
+      "size": 646940
+    },
+    {
+      "path": "cleaned/WA5480 G5/lxpm_wentian_ug-v2.pdf",
+      "sha256": "e994356c5d580732d20c2f2239338687216eb2a6c1ed01f1c9e82de51d6805f6",
+      "uid": 33,
+      "gid": 33,
+      "size": 2456967
+    },
+    {
+      "path": "cleaned/WA5480 G5/psu_label_matrix.pdf",
+      "sha256": "a5ab8eb678d2f5d0a9e52a99ca6b895dad09147ed0ae84003b6a5fad4510d3ed",
+      "uid": 33,
+      "gid": 33,
+      "size": 1674780
+    },
+    {
+      "path": "cleaned/WA5480 G5/wa5480g5_bios_setup_spec.pdf",
+      "sha256": "9ad66fcdfcf8003330f6467ad381addb0ce20de38ed118dedf991952e11af81c",
+      "uid": 33,
+      "gid": 33,
+      "size": 8171181
+    },
+    {
+      "path": "cleaned/WA5680 G3/lenovo_wentian_wa5680g3_user_guide.pdf",
+      "sha256": "9930d731a8502be1c2bb49519cc156978c1096c94bf35fea136244ea5e8d0835",
+      "uid": 33,
+      "gid": 33,
+      "size": 25315487
+    },
+    {
+      "path": "cleaned/WA5680 G5/lenovo_wentian_wa5680g5_bios_setup_spec_v2.4.pdf",
+      "sha256": "428cef2be3142ee414a856fb15c5b80f69c395b4b9d5a08c9239f713c06bb800",
+      "uid": 33,
+      "gid": 33,
+      "size": 6277296
+    },
+    {
+      "path": "cleaned/WA5680 G5/lenovo_wentian_wa5680g5_user_guide.pdf",
+      "sha256": "65a1f94a6cb487f6da33231dfb04092f307b4de30b437ad7811cb3382dd022b5",
+      "uid": 33,
+      "gid": 33,
+      "size": 29363793
+    },
+    {
+      "path": "cleaned/WA5680 G5/lp2469.pdf",
+      "sha256": "f5a1dbf70d22a2cd654271ec01065407577ab84be25a4bba9f885ef9aa620aae",
+      "uid": 33,
+      "gid": 33,
+      "size": 7157849
+    },
+    {
+      "path": "cleaned/WA5680 G5/lp2506.pdf",
+      "sha256": "b3e1074c7eeca7ec4887f1c3bef2524ba9aa70f92be927fa4df371e79ee2270c",
+      "uid": 33,
+      "gid": 33,
+      "size": 15365177
+    },
+    {
+      "path": "cleaned/WA5685 G5/lp2399.pdf",
+      "sha256": "abbdf828f9655246f85186913b6a651d75458d7dc9ce88ddde8429e6bffc7a7b",
+      "uid": 33,
+      "gid": 33,
+      "size": 3456597
+    },
+    {
+      "path": "cleaned/WA5685 G5/lp2507.pdf",
+      "sha256": "423abc70567744ec2a818860e028e494eabecc4bbc71435482914d7b7db1460d",
+      "uid": 33,
+      "gid": 33,
+      "size": 2662190
+    },
+    {
+      "path": "cleaned/WA5685 G5/wa5685g5_user_guide.pdf",
+      "sha256": "4c9dadea314b4be8a80d7108b1437c1d09b6c5ca3f51759561a587c0de69d4e7",
+      "uid": 33,
+      "gid": 33,
+      "size": 15355183
+    },
+    {
+      "path": "cleaned/WA7780 G3/lenovo_wentian_wa7780g3_bios_user_guide.pdf",
+      "sha256": "ead4334a90200edfbec7be25c38a7c64f1698c0647b22133fef28028b74e47ea",
+      "uid": 33,
+      "gid": 33,
+      "size": 786239
+    },
+    {
+      "path": "cleaned/WA7780 G3/lenovo_wentian_wa7780g3_user_guide.pdf",
+      "sha256": "15aff549912ec8e4f0902e1e69e962995236b70a424f2a3a57049b37ffbf1918",
+      "uid": 33,
+      "gid": 33,
+      "size": 9162601
+    },
+    {
+      "path": "cleaned/WA7785a G3/lenovo_wentian_wa7785ag3_bios_user_guide.pdf",
+      "sha256": "3a3b32b5f3066002e7d7b632eaef13f25ec050fb69bb136234bceef14acb17f8",
+      "uid": 33,
+      "gid": 33,
+      "size": 866356
+    },
+    {
+      "path": "cleaned/WA7785a G3/lenovo_wentian_wa7785ag3_user_guide.pdf",
+      "sha256": "a7ced612178b1f7d1597154f8002b731ca03cb7b5d043c37f0256a8c1a50e327",
+      "uid": 33,
+      "gid": 33,
+      "size": 8099721
+    },
+    {
+      "path": "cleaned/WA7880a G3/lenovo_wentian_wa7880ag3_user_guide.pdf",
+      "sha256": "379c06c3343cf8a374f151743273d721152e7d427eb04b4f8a0a246b99ad5e1d",
+      "uid": 33,
+      "gid": 33,
+      "size": 15796317
+    },
+    {
+      "path": "cleaned/WR3220 G5/lenovo_wentian_wr3220g5_user_guide.pdf",
+      "sha256": "400e2d995fbca81730947a7ab33893b1843c27d68a524bfd8ba3f82b95d862d9",
+      "uid": 33,
+      "gid": 33,
+      "size": 17669332
+    },
+    {
+      "path": "cleaned/WR3220 G5/lp2440.pdf",
+      "sha256": "f83bc11ba7f755cc4c950674ccdd869fd7e839b2d2de47c99b7b4086e181b822",
+      "uid": 33,
+      "gid": 33,
+      "size": 4661528
+    },
+    {
+      "path": "cleaned/WR3220 G5/lxce_bomc_cplus_ug.pdf",
+      "sha256": "ed4d38288f798486b49167a7667e85ed03ecc8e5e7b5ad1bb38fdec1c77485b7",
+      "uid": 33,
+      "gid": 33,
+      "size": 569176
+    },
+    {
+      "path": "cleaned/WR3220 G5/lxce_onecli_cplus_ug.pdf",
+      "sha256": "dfa65dc5702712225cb321bce93a8913e8c2df1c83290074ec61fa211c8e9c8c",
+      "uid": 33,
+      "gid": 33,
+      "size": 798671
+    },
+    {
+      "path": "cleaned/WR3220 G5/lxce_ux_cplus_ug.pdf",
+      "sha256": "ec2e2062c2f501208b0751ce34412e60a358bdf0048c8619b58e3364d88ab9e5",
+      "uid": 33,
+      "gid": 33,
+      "size": 646940
+    },
+    {
+      "path": "cleaned/WR5215 G5/lenovo_bmc_commands_g5_v3.pdf",
+      "sha256": "f59f8a251740c43a1012411df1d0a0347a178ea99c113043f86b17c299357221",
+      "uid": 33,
+      "gid": 33,
+      "size": 877304
+    },
+    {
+      "path": "cleaned/WR5215 G5/lenovo_bmc_redfish_guide_g5_v4.pdf",
+      "sha256": "06401df6de23740950fd1f439dd21e7b1fa45095e108d37b0713a90520e22cd7",
+      "uid": 33,
+      "gid": 33,
+      "size": 6576275
+    },
+    {
+      "path": "cleaned/WR5215 G5/lenovo_bmc_snmp_guide_g5.pdf",
+      "sha256": "37287c081369038eb9437568c277ae6cbfe2fb02160a254b0ced6e6ffb5a2351",
+      "uid": 33,
+      "gid": 33,
+      "size": 915547
+    },
+    {
+      "path": "cleaned/WR5215 G5/lenovo_bmc_user_guide_g5_v6.pdf",
+      "sha256": "0e42031e02433e0d6e4a99e6c294ca19ffc5fbb15114246f1a923a49d6b24baf",
+      "uid": 33,
+      "gid": 33,
+      "size": 13695843
+    },
+    {
+      "path": "cleaned/WR5215 G5/lenovo_wentian_wr5215g5_user_guide_v2.pdf",
+      "sha256": "698925b2dd241478e497771607185e11f43453905e4d52177329fa7beaca86a9",
+      "uid": 33,
+      "gid": 33,
+      "size": 27777871
+    },
+    {
+      "path": "cleaned/WR5215 G5/lp2356.pdf",
+      "sha256": "e0be54cbadb5fb9c189e071530ac332fd560d478345b5ecb76aa697632730727",
+      "uid": 33,
+      "gid": 33,
+      "size": 2050481
+    },
+    {
+      "path": "cleaned/WR5215 G5/lxce_bomc_cplus_ug.pdf",
+      "sha256": "4182f753d9e4a73a7353da9cf5169fa781ed97eafbaba2da225318a7efd28a91",
+      "uid": 33,
+      "gid": 33,
+      "size": 569176
+    },
+    {
+      "path": "cleaned/WR5215 G5/lxce_onecli_cplus_ug.pdf",
+      "sha256": "e717fa465f2c2f6adf4d8a401626c37a2588e731f49cbe60098bb46e491f2df1",
+      "uid": 33,
+      "gid": 33,
+      "size": 798671
+    },
+    {
+      "path": "cleaned/WR5215 G5/lxce_ux_cplus_ug.pdf",
+      "sha256": "da46a049cb32fea1c3d98a099e3a4d025d8cc4d7a66b95be2d9e26c1afc1fa35",
+      "uid": 33,
+      "gid": 33,
+      "size": 646940
+    },
+    {
+      "path": "cleaned/WR5220 G3/bmc_user_guide_v14.pdf",
+      "sha256": "20ec5884e9b786191198a287a4ed662a8252debb0aae975188efddfabe2d7dd1",
+      "uid": 33,
+      "gid": 33,
+      "size": 4161508
+    },
+    {
+      "path": "cleaned/WR5220 G3/lenovo_bmc_event_reference_guide_g5_v4.pdf",
+      "sha256": "46b912c28d80e0cce632513a5725ee11b938113d33e0811a4e6b40ea6a434b0c",
+      "uid": 33,
+      "gid": 33,
+      "size": 1173852
+    },
+    {
+      "path": "cleaned/WR5220 G3/lenovo_bmc_g3_commands_guide_v2.pdf",
+      "sha256": "20acc4298d05d62bdb5d5fd73878089fa1f3c3d8495f9052cb4dea781779987f",
+      "uid": 33,
+      "gid": 33,
+      "size": 850373
+    },
+    {
+      "path": "cleaned/WR5220 G3/lenovo_bmc_g3_redfish_guide_v11.pdf",
+      "sha256": "6979b95f8b4ecba24125035fd62473abd09761922d8be35c2b3bd38c35f0edcd",
+      "uid": 33,
+      "gid": 33,
+      "size": 5894615
+    },
+    {
+      "path": "cleaned/WR5220 G3/lenovo_snmp_ug_g3.pdf",
+      "sha256": "815ccf9a6b99ac10ed516cfd3afcc0d4aec06403a7c2704308e720383bfe15b8",
+      "uid": 33,
+      "gid": 33,
+      "size": 864830
+    },
+    {
+      "path": "cleaned/WR5220 G3/lenovo_wentian_os_installation_guide.pdf",
+      "sha256": "0499f649be8d4fe657ba9a0611064605bffc8f2165e8192053cb1bb84d98b751",
+      "uid": 33,
+      "gid": 33,
+      "size": 13569816
+    },
+    {
+      "path": "cleaned/WR5220 G3/lenovo_wentian_wr5220g3_user_guide_v18.pdf",
+      "sha256": "480239e5f9845b060e27f93744fcff05e82af69d00b1e2a3b876e434c39da120",
+      "uid": 33,
+      "gid": 33,
+      "size": 30375612
+    },
+    {
+      "path": "cleaned/WR5220 G3/lp1705.pdf",
+      "sha256": "c69803224f5d2734542c07b26b752063779407d50081a5576e92b288c524e115",
+      "uid": 33,
+      "gid": 33,
+      "size": 3495511
+    },
+    {
+      "path": "cleaned/WR5220 G3/lxce_bomc_cplus_ug.pdf",
+      "sha256": "c781b95ce1a727527101131fb168b57a47bfe80212e8b8a4140f69765b7438d4",
+      "uid": 33,
+      "gid": 33,
+      "size": 569176
+    },
+    {
+      "path": "cleaned/WR5220 G3/lxce_onecli_cplus_ug.pdf",
+      "sha256": "694a42ede6d56c737f596c160a5a01389da0a4531036fdaa4f3645964afd1c98",
+      "uid": 33,
+      "gid": 33,
+      "size": 798671
+    },
+    {
+      "path": "cleaned/WR5220 G3/lxce_ux_cplus_ug.pdf",
+      "sha256": "b65dc7abba08525722954f9519db081952e9c18a5d4fed4bb50272ae633057f0",
+      "uid": 33,
+      "gid": 33,
+      "size": 646940
+    },
+    {
+      "path": "cleaned/WR5220 G3/lxpm_wentian_ug-v2.pdf",
+      "sha256": "2b0dca497cfe5f6c6103ac3c57dc7e3a25a50cd65bf8b655f4cc891186cbbc5d",
+      "uid": 33,
+      "gid": 33,
+      "size": 2456967
+    },
+    {
+      "path": "cleaned/WR5220 G3/psu_label_matrix.pdf",
+      "sha256": "51446f4ead44df066c33b54001d7f98ae4c21c0f8daae59a1d72be9f8203bae5",
+      "uid": 33,
+      "gid": 33,
+      "size": 1674780
+    },
+    {
+      "path": "cleaned/WR5220 G3/vmware_code_recipe_file.pdf",
+      "sha256": "ec5707c952d6074f0cdd69b82ee706f9111bbcc8ee0f3d5d6620732354fa118a",
+      "uid": 33,
+      "gid": 33,
+      "size": 441705
+    },
+    {
+      "path": "cleaned/WR5220 G3/wr5220g3_bios_setup_spec_v2.13.pdf",
+      "sha256": "96a8846dc4e263231b1cfa73eb67d4b957586ccd21b1bee9e9a888904e5d69e8",
+      "uid": 33,
+      "gid": 33,
+      "size": 13541602
+    },
+    {
+      "path": "cleaned/WR5220 G5/lenovo_bmc_commands_g5_v3.pdf",
+      "sha256": "e619a2f39bcb1c7ad9caa46cc00743d20a3216873667c395972d785678343a09",
+      "uid": 33,
+      "gid": 33,
+      "size": 877304
+    },
+    {
+      "path": "cleaned/WR5220 G5/lenovo_bmc_event_reference_guide_g5_v4.pdf",
+      "sha256": "385342e05b311cae55be1bf20e74acd43ee54de2f2f2940d6f2dce8f86db1b0b",
+      "uid": 33,
+      "gid": 33,
+      "size": 1173852
+    },
+    {
+      "path": "cleaned/WR5220 G5/lenovo_bmc_redfish_guide_g5_v4.pdf",
+      "sha256": "3d572be0f1b63070b79177a4ff169b3d4918ed0fbfc1291ff123a8cc9010c3cb",
+      "uid": 33,
+      "gid": 33,
+      "size": 6576275
+    },
+    {
+      "path": "cleaned/WR5220 G5/lenovo_bmc_snmp_guide_g5.pdf",
+      "sha256": "70f888317df2b74dfec25cab2b3fd7d7d610019b6f798496546e988add334df8",
+      "uid": 33,
+      "gid": 33,
+      "size": 915547
+    },
+    {
+      "path": "cleaned/WR5220 G5/lenovo_bmc_user_guide_g5_v6.pdf",
+      "sha256": "ec77234795b01bfbbbfd149f2488b77a9228b50a6859ef916504bdae3c484c8b",
+      "uid": 33,
+      "gid": 33,
+      "size": 13695843
+    },
+    {
+      "path": "cleaned/WR5220 G5/lenovo_wentian_os_installation_guide.pdf",
+      "sha256": "796c627de0c6be2946a825b73c25026df007e6c8a23b8784b9af041c04b06a8d",
+      "uid": 33,
+      "gid": 33,
+      "size": 13569816
+    },
+    {
+      "path": "cleaned/WR5220 G5/lenovo_wentian_wr5220g5_user_guide_v7.pdf",
+      "sha256": "8c210f769287a385e1d495bf8ae1193cb53eb3add66c2dc17a97527c375ff700",
+      "uid": 33,
+      "gid": 33,
+      "size": 46154057
+    },
+    {
+      "path": "cleaned/WR5220 G5/lp1728.pdf",
+      "sha256": "f612607c1e8c52a9d390b99d7a73b0c9739169d97d6343f192e343178f805d3f",
+      "uid": 33,
+      "gid": 33,
+      "size": 131695
+    },
+    {
+      "path": "cleaned/WR5220 G5/lp2014.pdf",
+      "sha256": "0808f4e28ed4971a10a31a6610ad1ed5f4dd5ac40e9259732405f23f5cff79db",
+      "uid": 33,
+      "gid": 33,
+      "size": 4588262
+    },
+    {
+      "path": "cleaned/WR5220 G5/lxce_bomc_cplus_ug.pdf",
+      "sha256": "31e3853ad3bcc30c1ddb4a65bb4c67d7bcbe82ff631fe07c21ae4f6248213b21",
+      "uid": 33,
+      "gid": 33,
+      "size": 569176
+    },
+    {
+      "path": "cleaned/WR5220 G5/lxce_onecli_cplus_ug.pdf",
+      "sha256": "8b0395868fbb66e9ffea75e83d3c509ed13eea5739f2a5db64c1d9c319972e9b",
+      "uid": 33,
+      "gid": 33,
+      "size": 798671
+    },
+    {
+      "path": "cleaned/WR5220 G5/lxce_ux_cplus_ug.pdf",
+      "sha256": "7155d43daae1b4abdda124e55bbdcfcba25a3732d9361baa6703440df515d157",
+      "uid": 33,
+      "gid": 33,
+      "size": 646940
+    },
+    {
+      "path": "cleaned/WR5220 G5/lxpm_wentian_ug-v2.pdf",
+      "sha256": "1b754efea25735678258795dc66dcbb4f72f00f6c8d631bcf1dd6a09fac4882c",
+      "uid": 33,
+      "gid": 33,
+      "size": 2456967
+    },
+    {
+      "path": "cleaned/WR5220 G5/psu_label_matrix.pdf",
+      "sha256": "239356fa953880d965a20194062c9d4d95072eb92a0311a05e6daf7c056a0b9b",
+      "uid": 33,
+      "gid": 33,
+      "size": 1674780
+    },
+    {
+      "path": "cleaned/WR5225 G3/lenovo_bmc_event_reference_guide_g5_v4.pdf",
+      "sha256": "8634d18045b237706ef6095aec23844782f961f6e2f369a85a73770d248cd021",
+      "uid": 33,
+      "gid": 33,
+      "size": 1173852
+    },
+    {
+      "path": "cleaned/WR5225 G3/lenovo_bmc_g3_redfish_guide_v11.pdf",
+      "sha256": "69b2f60f87a200fb2e50b7280b7cb256e69a7b42aeafe50fd81f48c11c70aaa8",
+      "uid": 33,
+      "gid": 33,
+      "size": 5894615
+    },
+    {
+      "path": "cleaned/WR5225 G3/lenovo_snmp_ug_g3.pdf",
+      "sha256": "93e0ef606afa5d4f7551d7833b5a95b322103645c2bf68f0a5cb83b2306c449d",
+      "uid": 33,
+      "gid": 33,
+      "size": 864830
+    },
+    {
+      "path": "cleaned/WR5225 G3/lenovo_wentian_os_installation_guide.pdf",
+      "sha256": "da7b2d744c5033ee6ce9ca444f94284249b4082afdeb29b7b98738ed5b23e528",
+      "uid": 33,
+      "gid": 33,
+      "size": 13569816
+    },
+    {
+      "path": "cleaned/WR5225 G3/lp2129.pdf",
+      "sha256": "c16d804e033de6d2aa9bd57a512cbb57d8625df9573306ba01748ce675742daf",
+      "uid": 33,
+      "gid": 33,
+      "size": 3381481
+    },
+    {
+      "path": "cleaned/WR5225 G3/lxce_bomc_cplus_ug.pdf",
+      "sha256": "75cd27a7b4d76bd77df16c4974c17dc2e888fc172c4958b2896b5c145b049a15",
+      "uid": 33,
+      "gid": 33,
+      "size": 569176
+    },
+    {
+      "path": "cleaned/WR5225 G3/lxce_onecli_cplus_ug.pdf",
+      "sha256": "b4b974fb374d92334ae254f921b2c6a104b4953097ecb03d52cfd0342bf16a7b",
+      "uid": 33,
+      "gid": 33,
+      "size": 798671
+    },
+    {
+      "path": "cleaned/WR5225 G3/lxce_ux_cplus_ug.pdf",
+      "sha256": "814cbb5cd34c12cbe4f3c07d33631941b16b4fdefc811d24a0aedf9f4e213402",
+      "uid": 33,
+      "gid": 33,
+      "size": 646940
+    },
+    {
+      "path": "cleaned/WR5225 G3/psu_label_matrix.pdf",
+      "sha256": "f4299e719461d8b61da426a3e0e7335897608c82e73fbe90cd9bde721fe165f1",
+      "uid": 33,
+      "gid": 33,
+      "size": 1674780
+    },
+    {
+      "path": "cleaned/WR5225 G3/wr5225g3_bios_setup_spec_v2.9-turin.pdf",
+      "sha256": "afe446123c4c87ceec196261b6129efbde64424d36cc9c68a13bfcb3fe2fbc60",
+      "uid": 33,
+      "gid": 33,
+      "size": 9176799
+    },
+    {
+      "path": "cleaned/WR5225 G3/wr5225g3_bios_setup_spec_v3.0-genoa.pdf",
+      "sha256": "94f80695c80cbcbe6c417dd972a683c983b3a5666ff74219665e8482e54db4a7",
+      "uid": 33,
+      "gid": 33,
+      "size": 8779071
+    },
+    {
+      "path": "cleaned/WR5225 G3/wr5225g3_user_guide_v6.pdf",
+      "sha256": "d53d18343d19081f2ee66d5bd29e9d70aaea3bde4785b29e98e002b83167040a",
+      "uid": 33,
+      "gid": 33,
+      "size": 29020986
+    },
+    {
+      "path": "cleaned/WR6220 G5/lenovo_wentian_wr6220g5_user_guide.pdf",
+      "sha256": "84f4a0929aff74ee3bb585b7faae8dfca8fdb388e8c33aa30f4a1dd7a5bc96b9",
+      "uid": 33,
+      "gid": 33,
+      "size": 23903440
+    },
+    {
+      "path": "cleaned/WR6220 G5/lp2468.pdf",
+      "sha256": "56bfc645802dc48a87ef27c7ac3de5a5974f4582132ca877a7299403bc6cc375",
+      "uid": 33,
+      "gid": 33,
+      "size": 8216501
+    },
+    {
+      "path": "cleaned/WR6220 G5/lp2502.pdf",
+      "sha256": "4af236e9cf7e8649a6566a4024610581e1c329cba316825ac4a630c7e0722be1",
+      "uid": 33,
+      "gid": 33,
+      "size": 10157094
+    },
+    {
+      "path": "originals/INDEX.html",
+      "sha256": "d40a6f05ccdb4cd06bcce99d8be773b77c6a313b2800a65f67f77d58616b7afe",
+      "uid": 33,
+      "gid": 33,
+      "size": 119110
+    },
+    {
+      "path": "originals/INDEX.md",
+      "sha256": "27d907f1597543bd2e10e4edbe23afa124d3cf8196685ec3f32e784db62a814f",
+      "uid": 33,
+      "gid": 33,
+      "size": 6168
+    },
+    {
+      "path": "originals/WA5480 G3/bmc_user_guide_v14.pdf",
+      "sha256": "acba1574ddaf24faa0eb69644e9114be553ee44f45ce2960d0bcefb66a4539d4",
+      "uid": 33,
+      "gid": 33,
+      "size": 4197674
+    },
+    {
+      "path": "originals/WA5480 G3/lenovo_bmc_event_reference_guide_g5_v4.pdf",
+      "sha256": "fc4a694ce1574db865fe41a904d185bc85092598a5b6a6d0cbbff739c75411ef",
+      "uid": 33,
+      "gid": 33,
+      "size": 1751445
+    },
+    {
+      "path": "originals/WA5480 G3/lenovo_bmc_g3_redfish_guide_v11.pdf",
+      "sha256": "456897573c42b3e7eb767b248e3c588a987b7f23b2a0c70a344e816b91837ee8",
+      "uid": 33,
+      "gid": 33,
+      "size": 8326662
+    },
+    {
+      "path": "originals/WA5480 G3/lenovo_snmp_ug_g3.pdf",
+      "sha256": "54364f7a996ac070098bfa4d0b8de530660edc2aaacd73550584c57373b8256e",
+      "uid": 33,
+      "gid": 33,
+      "size": 1136366
+    },
+    {
+      "path": "originals/WA5480 G3/lenovo_wentian_os_installation_guide.pdf",
+      "sha256": "f5d59ae8c6bfc792ae28160790ce0f673b8d940de86f98ed7e326fb40cfaec17",
+      "uid": 33,
+      "gid": 33,
+      "size": 13673279
+    },
+    {
+      "path": "originals/WA5480 G3/lenovo_wentian_wa5480g3_user_guide_v8.pdf",
+      "sha256": "a73e5e450d7b3c9bce074f3d54d9ff249f2f58a71eac214bc2a168ba1e4fecd7",
+      "uid": 33,
+      "gid": 33,
+      "size": 26904246
+    },
+    {
+      "path": "originals/WA5480 G3/lxce_bomc_cplus_ug.pdf",
+      "sha256": "c41b84786be486e197ab7604f58b63be062948a8e73455f0c17fb013158959e8",
+      "uid": 33,
+      "gid": 33,
+      "size": 638956
+    },
+    {
+      "path": "originals/WA5480 G3/lxce_onecli_cplus_ug.pdf",
+      "sha256": "dba774fbccfbd4c2e7e84819f2c213a37af77862be9143344db0f64e7f5e3440",
+      "uid": 33,
+      "gid": 33,
+      "size": 856757
+    },
+    {
+      "path": "originals/WA5480 G3/lxce_ux_cplus_ug.pdf",
+      "sha256": "db4f1f0c538d2e623a2b9b9f9de76ad7cc64776076d3246a5cd562c6d0c5576c",
+      "uid": 33,
+      "gid": 33,
+      "size": 778902
+    },
+    {
+      "path": "originals/WA5480 G3/lxpm_wentian_ug-v2.pdf",
+      "sha256": "7508bcd4c26266887f92c7c803a57cc9cc9d277229909af94f3cb60023844bdc",
+      "uid": 33,
+      "gid": 33,
+      "size": 2508949
+    },
+    {
+      "path": "originals/WA5480 G3/psu_label_matrix.pdf",
+      "sha256": "8ca145a1ab7450891da9af84933fdebe3042f9624ae25974bb34fb72782c1f39",
+      "uid": 33,
+      "gid": 33,
+      "size": 1676894
+    },
+    {
+      "path": "originals/WA5480 G5/lenovo_bmc_commands_g5_v3.pdf",
+      "sha256": "2cabbcdf52506fa99915939d223a7e7fa5535989ca8c4970528244b7464e58f9",
+      "uid": 33,
+      "gid": 33,
+      "size": 1100987
+    },
+    {
+      "path": "originals/WA5480 G5/lenovo_bmc_event_reference_guide_g5_v4.pdf",
+      "sha256": "fc4a694ce1574db865fe41a904d185bc85092598a5b6a6d0cbbff739c75411ef",
+      "uid": 33,
+      "gid": 33,
+      "size": 1751445
+    },
+    {
+      "path": "originals/WA5480 G5/lenovo_bmc_redfish_guide_g5_v4.pdf",
+      "sha256": "4b9324d1688973cab77c554228600d94a7b1e9cfbc4ba4d6cc91c6f8c28e4656",
+      "uid": 33,
+      "gid": 33,
+      "size": 9387990
+    },
+    {
+      "path": "originals/WA5480 G5/lenovo_bmc_snmp_guide_g5.pdf",
+      "sha256": "4ff96dfa2f3c88ceb4ab913617a41f9980eab3966c6a611bff006574f9be1dbf",
+      "uid": 33,
+      "gid": 33,
+      "size": 1196218
+    },
+    {
+      "path": "originals/WA5480 G5/lenovo_bmc_user_guide_g5_v6.pdf",
+      "sha256": "f98dcb710ae5f9fa900b3a786afec813f847dde32ca0ea255e7f417148fe9bf1",
+      "uid": 33,
+      "gid": 33,
+      "size": 13737664
+    },
+    {
+      "path": "originals/WA5480 G5/lenovo_wentian_os_installation_guide.pdf",
+      "sha256": "f5d59ae8c6bfc792ae28160790ce0f673b8d940de86f98ed7e326fb40cfaec17",
+      "uid": 33,
+      "gid": 33,
+      "size": 13673279
+    },
+    {
+      "path": "originals/WA5480 G5/lenovo_wentian_wa5480g5_user_guide_v5.pdf",
+      "sha256": "cd3117ca607c691f2dc57213b9dcecf1d394a8af69cb66bc83094816d74ab89c",
+      "uid": 33,
+      "gid": 33,
+      "size": 43635630
+    },
+    {
+      "path": "originals/WA5480 G5/lxce_bomc_cplus_ug.pdf",
+      "sha256": "c41b84786be486e197ab7604f58b63be062948a8e73455f0c17fb013158959e8",
+      "uid": 33,
+      "gid": 33,
+      "size": 638956
+    },
+    {
+      "path": "originals/WA5480 G5/lxce_onecli_cplus_ug.pdf",
+      "sha256": "dba774fbccfbd4c2e7e84819f2c213a37af77862be9143344db0f64e7f5e3440",
+      "uid": 33,
+      "gid": 33,
+      "size": 856757
+    },
+    {
+      "path": "originals/WA5480 G5/lxce_ux_cplus_ug.pdf",
+      "sha256": "db4f1f0c538d2e623a2b9b9f9de76ad7cc64776076d3246a5cd562c6d0c5576c",
+      "uid": 33,
+      "gid": 33,
+      "size": 778902
+    },
+    {
+      "path": "originals/WA5480 G5/lxpm_wentian_ug-v2.pdf",
+      "sha256": "7508bcd4c26266887f92c7c803a57cc9cc9d277229909af94f3cb60023844bdc",
+      "uid": 33,
+      "gid": 33,
+      "size": 2508949
+    },
+    {
+      "path": "originals/WA5480 G5/psu_label_matrix.pdf",
+      "sha256": "8ca145a1ab7450891da9af84933fdebe3042f9624ae25974bb34fb72782c1f39",
+      "uid": 33,
+      "gid": 33,
+      "size": 1676894
+    },
+    {
+      "path": "originals/WA5480 G5/wa5480g5_bios_setup_spec.pdf",
+      "sha256": "99dfa6d7f2e6f5d459202047f5ea0a405ced71dd5de8114b447ef0f2afb4325f",
+      "uid": 33,
+      "gid": 33,
+      "size": 8593551
+    },
+    {
+      "path": "originals/WA5680 G3/lenovo_wentian_wa5680g3_user_guide.pdf",
+      "sha256": "fe6bafcd127777fe95f0f46fcea690d22ab78331853450d6b990f674575774d2",
+      "uid": 33,
+      "gid": 33,
+      "size": 25638397
+    },
+    {
+      "path": "originals/WA5680 G5/lenovo_wentian_wa5680g5_bios_setup_spec_v2.4.pdf",
+      "sha256": "3c609ad9bf3030f51bba4df5bdf18ead5671b77273903a4073db75fa2d132a45",
+      "uid": 33,
+      "gid": 33,
+      "size": 6590361
+    },
+    {
+      "path": "originals/WA5680 G5/lenovo_wentian_wa5680g5_user_guide.pdf",
+      "sha256": "832ee58c3b7faf06dc746ba1289128abc71ff1147945504f9c86ebe888cacf1b",
+      "uid": 33,
+      "gid": 33,
+      "size": 29430273
+    },
+    {
+      "path": "originals/WA5680 G5/lp2469.pdf",
+      "sha256": "3b6c0e4abca685abe7685eba74fe129d2806d243daa52f90380d5d74652f33c1",
+      "uid": 33,
+      "gid": 33,
+      "size": 7295204
+    },
+    {
+      "path": "originals/WA5680 G5/lp2506.pdf",
+      "sha256": "966fc8ea9efda6f9f416ddf55c0c291f41583dd0a97a6d8b44cb87da3f2eaa5c",
+      "uid": 33,
+      "gid": 33,
+      "size": 15383514
+    },
+    {
+      "path": "originals/WA5685 G5/lp2399.pdf",
+      "sha256": "7961a03be1e76faa6fcc10bd2cac2520381c00f41243a1aa6b718d7242da4fd1",
+      "uid": 33,
+      "gid": 33,
+      "size": 4631912
+    },
+    {
+      "path": "originals/WA5685 G5/lp2507.pdf",
+      "sha256": "e57262389e68449ca7700dd441d57aee294ccb932279af9c0e2090aa2ba98189",
+      "uid": 33,
+      "gid": 33,
+      "size": 2691105
+    },
+    {
+      "path": "originals/WA5685 G5/wa5685g5_user_guide.pdf",
+      "sha256": "f37f6776f2ad81999742d5e01b5d9b78060cb762de5fff910b2f3be1d760b421",
+      "uid": 33,
+      "gid": 33,
+      "size": 15968209
+    },
+    {
+      "path": "originals/WA7780 G3/lenovo_wentian_wa7780g3_bios_user_guide.pdf",
+      "sha256": "ff73d1e9ccc954f7e64173874a55dc7fe52569c9fe85c8669527933e81843d39",
+      "uid": 33,
+      "gid": 33,
+      "size": 940977
+    },
+    {
+      "path": "originals/WA7780 G3/lenovo_wentian_wa7780g3_user_guide.pdf",
+      "sha256": "1718c6d1094bf50a54550fdb191f628875da094b0fbda8f2f147305dbc740f4b",
+      "uid": 33,
+      "gid": 33,
+      "size": 10001885
+    },
+    {
+      "path": "originals/WA7785a G3/lenovo_wentian_wa7785ag3_bios_user_guide.pdf",
+      "sha256": "c129642ccf27022ed6ab2ec88597e0c905c361c7a8008de29a58d2a373f1e073",
+      "uid": 33,
+      "gid": 33,
+      "size": 969234
+    },
+    {
+      "path": "originals/WA7785a G3/lenovo_wentian_wa7785ag3_user_guide.pdf",
+      "sha256": "3a1f7a48df92df1fd415741656cc5294ca26a8e5ab4f3839da557c0189c0e35e",
+      "uid": 33,
+      "gid": 33,
+      "size": 8814630
+    },
+    {
+      "path": "originals/WA7880a G3/lenovo_wentian_wa7880ag3_user_guide.pdf",
+      "sha256": "59de6ab16247b3c5dde9fbb612103ee046b9a377c0280544f16eb9e62dd28cf8",
+      "uid": 33,
+      "gid": 33,
+      "size": 15985420
+    },
+    {
+      "path": "originals/WR3220 G5/lenovo_wentian_wr3220g5_user_guide.pdf",
+      "sha256": "99efac6f9ffd874876c250ecf117e94d0ee8259b4cbcab1b735c432c1268b11b",
+      "uid": 33,
+      "gid": 33,
+      "size": 17747834
+    },
+    {
+      "path": "originals/WR3220 G5/lp2440.pdf",
+      "sha256": "71dc6f591f4cbee1e237fda4ef716499b3024d7336c56349e076e1ae979eb591",
+      "uid": 33,
+      "gid": 33,
+      "size": 4763959
+    },
+    {
+      "path": "originals/WR3220 G5/lxce_bomc_cplus_ug.pdf",
+      "sha256": "c41b84786be486e197ab7604f58b63be062948a8e73455f0c17fb013158959e8",
+      "uid": 33,
+      "gid": 33,
+      "size": 638956
+    },
+    {
+      "path": "originals/WR3220 G5/lxce_onecli_cplus_ug.pdf",
+      "sha256": "dba774fbccfbd4c2e7e84819f2c213a37af77862be9143344db0f64e7f5e3440",
+      "uid": 33,
+      "gid": 33,
+      "size": 856757
+    },
+    {
+      "path": "originals/WR3220 G5/lxce_ux_cplus_ug.pdf",
+      "sha256": "db4f1f0c538d2e623a2b9b9f9de76ad7cc64776076d3246a5cd562c6d0c5576c",
+      "uid": 33,
+      "gid": 33,
+      "size": 778902
+    },
+    {
+      "path": "originals/WR5215 G5/lenovo_bmc_commands_g5_v3.pdf",
+      "sha256": "2cabbcdf52506fa99915939d223a7e7fa5535989ca8c4970528244b7464e58f9",
+      "uid": 33,
+      "gid": 33,
+      "size": 1100987
+    },
+    {
+      "path": "originals/WR5215 G5/lenovo_bmc_redfish_guide_g5_v4.pdf",
+      "sha256": "4b9324d1688973cab77c554228600d94a7b1e9cfbc4ba4d6cc91c6f8c28e4656",
+      "uid": 33,
+      "gid": 33,
+      "size": 9387990
+    },
+    {
+      "path": "originals/WR5215 G5/lenovo_bmc_snmp_guide_g5.pdf",
+      "sha256": "4ff96dfa2f3c88ceb4ab913617a41f9980eab3966c6a611bff006574f9be1dbf",
+      "uid": 33,
+      "gid": 33,
+      "size": 1196218
+    },
+    {
+      "path": "originals/WR5215 G5/lenovo_bmc_user_guide_g5_v6.pdf",
+      "sha256": "f98dcb710ae5f9fa900b3a786afec813f847dde32ca0ea255e7f417148fe9bf1",
+      "uid": 33,
+      "gid": 33,
+      "size": 13737664
+    },
+    {
+      "path": "originals/WR5215 G5/lenovo_wentian_wr5215g5_user_guide_v2.pdf",
+      "sha256": "cab45cdf5408097b3eeef87c0eee393139aef48a53252cf354b9d90c455275b9",
+      "uid": 33,
+      "gid": 33,
+      "size": 27880323
+    },
+    {
+      "path": "originals/WR5215 G5/lp2356.pdf",
+      "sha256": "d709da2a8fe20d4b0cc6653f3e1428fad558032f9ecd5b48db653d8ccdf76b9c",
+      "uid": 33,
+      "gid": 33,
+      "size": 2562644
+    },
+    {
+      "path": "originals/WR5215 G5/lxce_bomc_cplus_ug.pdf",
+      "sha256": "c41b84786be486e197ab7604f58b63be062948a8e73455f0c17fb013158959e8",
+      "uid": 33,
+      "gid": 33,
+      "size": 638956
+    },
+    {
+      "path": "originals/WR5215 G5/lxce_onecli_cplus_ug.pdf",
+      "sha256": "dba774fbccfbd4c2e7e84819f2c213a37af77862be9143344db0f64e7f5e3440",
+      "uid": 33,
+      "gid": 33,
+      "size": 856757
+    },
+    {
+      "path": "originals/WR5215 G5/lxce_ux_cplus_ug.pdf",
+      "sha256": "db4f1f0c538d2e623a2b9b9f9de76ad7cc64776076d3246a5cd562c6d0c5576c",
+      "uid": 33,
+      "gid": 33,
+      "size": 778902
+    },
+    {
+      "path": "originals/WR5220 G3/bmc_user_guide_v14.pdf",
+      "sha256": "acba1574ddaf24faa0eb69644e9114be553ee44f45ce2960d0bcefb66a4539d4",
+      "uid": 33,
+      "gid": 33,
+      "size": 4197674
+    },
+    {
+      "path": "originals/WR5220 G3/lenovo_bmc_event_reference_guide_g5_v4.pdf",
+      "sha256": "fc4a694ce1574db865fe41a904d185bc85092598a5b6a6d0cbbff739c75411ef",
+      "uid": 33,
+      "gid": 33,
+      "size": 1751445
+    },
+    {
+      "path": "originals/WR5220 G3/lenovo_bmc_g3_commands_guide_v2.pdf",
+      "sha256": "7273f8d5c3336bfdffe70e3b056d74d0ec08a75856cdb25b65daa3b66cedec46",
+      "uid": 33,
+      "gid": 33,
+      "size": 1158155
+    },
+    {
+      "path": "originals/WR5220 G3/lenovo_bmc_g3_redfish_guide_v11.pdf",
+      "sha256": "456897573c42b3e7eb767b248e3c588a987b7f23b2a0c70a344e816b91837ee8",
+      "uid": 33,
+      "gid": 33,
+      "size": 8326662
+    },
+    {
+      "path": "originals/WR5220 G3/lenovo_snmp_ug_g3.pdf",
+      "sha256": "54364f7a996ac070098bfa4d0b8de530660edc2aaacd73550584c57373b8256e",
+      "uid": 33,
+      "gid": 33,
+      "size": 1136366
+    },
+    {
+      "path": "originals/WR5220 G3/lenovo_wentian_os_installation_guide.pdf",
+      "sha256": "f5d59ae8c6bfc792ae28160790ce0f673b8d940de86f98ed7e326fb40cfaec17",
+      "uid": 33,
+      "gid": 33,
+      "size": 13673279
+    },
+    {
+      "path": "originals/WR5220 G3/lenovo_wentian_wr5220g3_user_guide_v18.pdf",
+      "sha256": "15b16176143792fd24287d10f29e46cc039660e802a0e2070cc14128f5ea53e6",
+      "uid": 33,
+      "gid": 33,
+      "size": 30511980
+    },
+    {
+      "path": "originals/WR5220 G3/lp1705.pdf",
+      "sha256": "f3b4f9d125fee56c228b36354a30198ddd14933cb755fdc7dc1ef2d4af8442e7",
+      "uid": 33,
+      "gid": 33,
+      "size": 5056741
+    },
+    {
+      "path": "originals/WR5220 G3/lxce_bomc_cplus_ug.pdf",
+      "sha256": "c41b84786be486e197ab7604f58b63be062948a8e73455f0c17fb013158959e8",
+      "uid": 33,
+      "gid": 33,
+      "size": 638956
+    },
+    {
+      "path": "originals/WR5220 G3/lxce_onecli_cplus_ug.pdf",
+      "sha256": "dba774fbccfbd4c2e7e84819f2c213a37af77862be9143344db0f64e7f5e3440",
+      "uid": 33,
+      "gid": 33,
+      "size": 856757
+    },
+    {
+      "path": "originals/WR5220 G3/lxce_ux_cplus_ug.pdf",
+      "sha256": "db4f1f0c538d2e623a2b9b9f9de76ad7cc64776076d3246a5cd562c6d0c5576c",
+      "uid": 33,
+      "gid": 33,
+      "size": 778902
+    },
+    {
+      "path": "originals/WR5220 G3/lxpm_wentian_ug-v2.pdf",
+      "sha256": "7508bcd4c26266887f92c7c803a57cc9cc9d277229909af94f3cb60023844bdc",
+      "uid": 33,
+      "gid": 33,
+      "size": 2508949
+    },
+    {
+      "path": "originals/WR5220 G3/psu_label_matrix.pdf",
+      "sha256": "8ca145a1ab7450891da9af84933fdebe3042f9624ae25974bb34fb72782c1f39",
+      "uid": 33,
+      "gid": 33,
+      "size": 1676894
+    },
+    {
+      "path": "originals/WR5220 G3/vmware_code_recipe_file.pdf",
+      "sha256": "b92580f11c67c86dedd6984cfaf11b13c3bb3ee7730ea7845f6aa1a94b7715df",
+      "uid": 33,
+      "gid": 33,
+      "size": 508079
+    },
+    {
+      "path": "originals/WR5220 G3/wr5220g3_bios_setup_spec_v2.13.pdf",
+      "sha256": "4d0754555ef1c4ae4f41225e6fdc210d502abc902371025caeb6b8cc8b313c1d",
+      "uid": 33,
+      "gid": 33,
+      "size": 13620825
+    },
+    {
+      "path": "originals/WR5220 G5/lenovo_bmc_commands_g5_v3.pdf",
+      "sha256": "2cabbcdf52506fa99915939d223a7e7fa5535989ca8c4970528244b7464e58f9",
+      "uid": 33,
+      "gid": 33,
+      "size": 1100987
+    },
+    {
+      "path": "originals/WR5220 G5/lenovo_bmc_event_reference_guide_g5_v4.pdf",
+      "sha256": "fc4a694ce1574db865fe41a904d185bc85092598a5b6a6d0cbbff739c75411ef",
+      "uid": 33,
+      "gid": 33,
+      "size": 1751445
+    },
+    {
+      "path": "originals/WR5220 G5/lenovo_bmc_redfish_guide_g5_v4.pdf",
+      "sha256": "4b9324d1688973cab77c554228600d94a7b1e9cfbc4ba4d6cc91c6f8c28e4656",
+      "uid": 33,
+      "gid": 33,
+      "size": 9387990
+    },
+    {
+      "path": "originals/WR5220 G5/lenovo_bmc_snmp_guide_g5.pdf",
+      "sha256": "4ff96dfa2f3c88ceb4ab913617a41f9980eab3966c6a611bff006574f9be1dbf",
+      "uid": 33,
+      "gid": 33,
+      "size": 1196218
+    },
+    {
+      "path": "originals/WR5220 G5/lenovo_bmc_user_guide_g5_v6.pdf",
+      "sha256": "f98dcb710ae5f9fa900b3a786afec813f847dde32ca0ea255e7f417148fe9bf1",
+      "uid": 33,
+      "gid": 33,
+      "size": 13737664
+    },
+    {
+      "path": "originals/WR5220 G5/lenovo_wentian_os_installation_guide.pdf",
+      "sha256": "f5d59ae8c6bfc792ae28160790ce0f673b8d940de86f98ed7e326fb40cfaec17",
+      "uid": 33,
+      "gid": 33,
+      "size": 13673279
+    },
+    {
+      "path": "originals/WR5220 G5/lenovo_wentian_wr5220g5_user_guide_v7.pdf",
+      "sha256": "c73297846d184c5033c92058dd0925f41093178d1ea35f7b287c19a4e5cf5f34",
+      "uid": 33,
+      "gid": 33,
+      "size": 46290483
+    },
+    {
+      "path": "originals/WR5220 G5/lp1728.pdf",
+      "sha256": "270eeadc4cc0f802e3b2c939e4abda15683fc65aed5716f9c1bf9aa955083e5d",
+      "uid": 33,
+      "gid": 33,
+      "size": 267600
+    },
+    {
+      "path": "originals/WR5220 G5/lp2014.pdf",
+      "sha256": "9697a67c0223b29c2b6050101b0eef6c61e7c3c85b3cb4ad63488887e09d2c70",
+      "uid": 33,
+      "gid": 33,
+      "size": 6048115
+    },
+    {
+      "path": "originals/WR5220 G5/lxce_bomc_cplus_ug.pdf",
+      "sha256": "c41b84786be486e197ab7604f58b63be062948a8e73455f0c17fb013158959e8",
+      "uid": 33,
+      "gid": 33,
+      "size": 638956
+    },
+    {
+      "path": "originals/WR5220 G5/lxce_onecli_cplus_ug.pdf",
+      "sha256": "dba774fbccfbd4c2e7e84819f2c213a37af77862be9143344db0f64e7f5e3440",
+      "uid": 33,
+      "gid": 33,
+      "size": 856757
+    },
+    {
+      "path": "originals/WR5220 G5/lxce_ux_cplus_ug.pdf",
+      "sha256": "db4f1f0c538d2e623a2b9b9f9de76ad7cc64776076d3246a5cd562c6d0c5576c",
+      "uid": 33,
+      "gid": 33,
+      "size": 778902
+    },
+    {
+      "path": "originals/WR5220 G5/lxpm_wentian_ug-v2.pdf",
+      "sha256": "7508bcd4c26266887f92c7c803a57cc9cc9d277229909af94f3cb60023844bdc",
+      "uid": 33,
+      "gid": 33,
+      "size": 2508949
+    },
+    {
+      "path": "originals/WR5220 G5/psu_label_matrix.pdf",
+      "sha256": "8ca145a1ab7450891da9af84933fdebe3042f9624ae25974bb34fb72782c1f39",
+      "uid": 33,
+      "gid": 33,
+      "size": 1676894
+    },
+    {
+      "path": "originals/WR5225 G3/lenovo_bmc_event_reference_guide_g5_v4.pdf",
+      "sha256": "fc4a694ce1574db865fe41a904d185bc85092598a5b6a6d0cbbff739c75411ef",
+      "uid": 33,
+      "gid": 33,
+      "size": 1751445
+    },
+    {
+      "path": "originals/WR5225 G3/lenovo_bmc_g3_redfish_guide_v11.pdf",
+      "sha256": "456897573c42b3e7eb767b248e3c588a987b7f23b2a0c70a344e816b91837ee8",
+      "uid": 33,
+      "gid": 33,
+      "size": 8326662
+    },
+    {
+      "path": "originals/WR5225 G3/lenovo_snmp_ug_g3.pdf",
+      "sha256": "54364f7a996ac070098bfa4d0b8de530660edc2aaacd73550584c57373b8256e",
+      "uid": 33,
+      "gid": 33,
+      "size": 1136366
+    },
+    {
+      "path": "originals/WR5225 G3/lenovo_wentian_os_installation_guide.pdf",
+      "sha256": "f5d59ae8c6bfc792ae28160790ce0f673b8d940de86f98ed7e326fb40cfaec17",
+      "uid": 33,
+      "gid": 33,
+      "size": 13673279
+    },
+    {
+      "path": "originals/WR5225 G3/lp2129.pdf",
+      "sha256": "4359185edbc9e46fb5108fe99fb0e6253148357afeb29ff3f8b6d938bba70403",
+      "uid": 33,
+      "gid": 33,
+      "size": 5222978
+    },
+    {
+      "path": "originals/WR5225 G3/lxce_bomc_cplus_ug.pdf",
+      "sha256": "c41b84786be486e197ab7604f58b63be062948a8e73455f0c17fb013158959e8",
+      "uid": 33,
+      "gid": 33,
+      "size": 638956
+    },
+    {
+      "path": "originals/WR5225 G3/lxce_onecli_cplus_ug.pdf",
+      "sha256": "dba774fbccfbd4c2e7e84819f2c213a37af77862be9143344db0f64e7f5e3440",
+      "uid": 33,
+      "gid": 33,
+      "size": 856757
+    },
+    {
+      "path": "originals/WR5225 G3/lxce_ux_cplus_ug.pdf",
+      "sha256": "db4f1f0c538d2e623a2b9b9f9de76ad7cc64776076d3246a5cd562c6d0c5576c",
+      "uid": 33,
+      "gid": 33,
+      "size": 778902
+    },
+    {
+      "path": "originals/WR5225 G3/psu_label_matrix.pdf",
+      "sha256": "8ca145a1ab7450891da9af84933fdebe3042f9624ae25974bb34fb72782c1f39",
+      "uid": 33,
+      "gid": 33,
+      "size": 1676894
+    },
+    {
+      "path": "originals/WR5225 G3/wr5225g3_bios_setup_spec_v2.9-turin.pdf",
+      "sha256": "683e4a61ad09ed4a676d063878096127141cddf1128c469b8534853236f52247",
+      "uid": 33,
+      "gid": 33,
+      "size": 9515895
+    },
+    {
+      "path": "originals/WR5225 G3/wr5225g3_bios_setup_spec_v3.0-genoa.pdf",
+      "sha256": "d242cfa85dcc029ccb129fe5d2e61f0a051c6b2c664d95d66a7d1ee48dd5ac08",
+      "uid": 33,
+      "gid": 33,
+      "size": 9121666
+    },
+    {
+      "path": "originals/WR5225 G3/wr5225g3_user_guide_v6.pdf",
+      "sha256": "8cfc8781da9c75bdab2b3477a6564cba1b06009d553530cd3a026014f4b677af",
+      "uid": 33,
+      "gid": 33,
+      "size": 31015607
+    },
+    {
+      "path": "originals/WR6220 G5/lenovo_wentian_wr6220g5_user_guide.pdf",
+      "sha256": "8921606e9e9fcc6b199f2c360787dc228f3180bd2448423d40bd1d101c13be71",
+      "uid": 33,
+      "gid": 33,
+      "size": 25588950
+    },
+    {
+      "path": "originals/WR6220 G5/lp2468.pdf",
+      "sha256": "1c346cc68cc75a84dbf27f21d5f25c2806f3a666c963afe807713ab6a11e23b0",
+      "uid": 33,
+      "gid": 33,
+      "size": 9353267
+    },
+    {
+      "path": "originals/WR6220 G5/lp2502.pdf",
+      "sha256": "dfafab00543396b843a9daac753c9962f8366a4752a121442a62e056b0ae4f25",
+      "uid": 33,
+      "gid": 33,
+      "size": 10174586
+    }
+  ],
+  "final_file_audit": {
+    "checked_at": "2026-10-05T21:31:49.182549+00:00",
+    "checks": {
+      "path_set_unchanged": true,
+      "95_originals_unchanged": true,
+      "only_two_cleaned_and_index_changed": true,
+      "ownership_preserved": true,
+      "95_matching_cleaned_paths": true,
+      "95_cleaned_markers": true,
+      "index_static_html_unchanged": true,
+      "document_source_title_previous_date_preserved": true,
+      "all_own_jobs_absent": true,
+      "final_normal_success": true,
+      "two_input_snapshot_hashes_match_originals": true,
+      "two_published_hashes_match_cli_outputs": true,
+      "two_outputs_native_validation_passed": true
+    },
+    "changed_paths": [
+      "cleaned/WA5680 G5/lp2506.pdf",
+      "cleaned/WR5220 G3/lenovo_bmc_g3_redfish_guide_v11.pdf",
+      "originals/INDEX.html"
+    ],
+    "jobs": {
+      "/tmp/pdf-cleanup-qt480tan": true,
+      "/tmp/pdf-cleanup-iau305z4": true,
+      "/tmp/pdf-cleanup-irjtke9y": true,
+      "/tmp/pdf-cleanup-sewr_23l": true,
+      "/tmp/pdf-cleanup-e8be908s": true,
+      "/tmp/pdf-cleanup-8f1zinm0": true,
+      "/tmp/pdf-cleanup-8q65jm04": true
+    },
+    "latest_success_summaries": {
+      "WA5680 G5/lp2506.pdf": {
+        "schema_version": 1,
+        "tool_version": "0.1.3",
+        "source_commit": "9c9bbb375751f85ca1e6f737504f3e99a68fd3d5",
+        "input": "/tmp/pdf-cleanup-8q65jm04/input/source.pdf",
+        "output": "/tmp/pdf-cleanup-8q65jm04/output/cleaned.pdf",
+        "input_sha256": "966fc8ea9efda6f9f416ddf55c0c291f41583dd0a97a6d8b44cb87da3f2eaa5c",
+        "pages": 2,
+        "header_footer_fragments": 0,
+        "removed_header_rows": 0,
+        "removed_footer_rows": 0,
+        "footer_pages": 0,
+        "removed_links": {},
+        "removed_widgets": 1,
+        "cleanup_method": "text_show_operations",
+        "status": "cleaned",
+        "output_sha256": "9abe6b54224e6b8060b6752e7d39420be67117da4489c4a7f5a21b2bd4928588",
+        "validation": "passed"
+      },
+      "WR5220 G3/lenovo_bmc_g3_redfish_guide_v11.pdf": {
+        "schema_version": 1,
+        "tool_version": "0.1.3",
+        "source_commit": "9c9bbb375751f85ca1e6f737504f3e99a68fd3d5",
+        "input": "/tmp/pdf-cleanup-iau305z4/input/source.pdf",
+        "output": "/tmp/pdf-cleanup-iau305z4/output/cleaned.pdf",
+        "input_sha256": "456897573c42b3e7eb767b248e3c588a987b7f23b2a0c70a344e816b91837ee8",
+        "pages": 423,
+        "header_footer_fragments": 0,
+        "removed_header_rows": 0,
+        "removed_footer_rows": 0,
+        "footer_pages": 0,
+        "removed_links": {
+          "/Dest": 107,
+          "/URI": 26
+        },
+        "removed_widgets": 0,
+        "cleanup_method": "text_show_operations",
+        "status": "cleaned",
+        "output_sha256": "d69d59c5633e242289898cdd87f06c463170a4d7fb9268a5ff96989fea7f08b5",
+        "validation": "passed"
+      }
+    },
+    "file_count": 192,
+    "files": [
+      {
+        "path": "cleaned/WA5480 G3/bmc_user_guide_v14.pdf",
+        "sha256": "c34af885bdec14908065fddedb0caeba70264b5a424afef623995bfa439a55aa",
+        "uid": 33,
+        "gid": 33,
+        "size": 4161508
+      },
+      {
+        "path": "cleaned/WA5480 G3/lenovo_bmc_event_reference_guide_g5_v4.pdf",
+        "sha256": "309eec78fb16527ffadc41f36f914daa30dee4d2611be8ded6e3bae48e584a35",
+        "uid": 33,
+        "gid": 33,
+        "size": 1173852
+      },
+      {
+        "path": "cleaned/WA5480 G3/lenovo_bmc_g3_redfish_guide_v11.pdf",
+        "sha256": "c099a089649a5b829313c88807c821347065b62ea9e6e527af78235d4268ddbb",
+        "uid": 33,
+        "gid": 33,
+        "size": 5894615
+      },
+      {
+        "path": "cleaned/WA5480 G3/lenovo_snmp_ug_g3.pdf",
+        "sha256": "f399f7650ee0409124da028ee14c9ecfdb7fa22974abc44c72aaa547088274cd",
+        "uid": 33,
+        "gid": 33,
+        "size": 864830
+      },
+      {
+        "path": "cleaned/WA5480 G3/lenovo_wentian_os_installation_guide.pdf",
+        "sha256": "69359bf50e7594b523adef81803b1d8c814de6f52f11454838cefd87b6c88772",
+        "uid": 33,
+        "gid": 33,
+        "size": 13569816
+      },
+      {
+        "path": "cleaned/WA5480 G3/lenovo_wentian_wa5480g3_user_guide_v8.pdf",
+        "sha256": "314f4547c5783804601b45cab1eefbd352f63de938d7eb562733995545dd5ced",
+        "uid": 33,
+        "gid": 33,
+        "size": 26810434
+      },
+      {
+        "path": "cleaned/WA5480 G3/lxce_bomc_cplus_ug.pdf",
+        "sha256": "60c6b653597e57d8c72b4c17600cee49a947a51280d7e383eb7d55ad501cb643",
+        "uid": 33,
+        "gid": 33,
+        "size": 569176
+      },
+      {
+        "path": "cleaned/WA5480 G3/lxce_onecli_cplus_ug.pdf",
+        "sha256": "a8adb8f575f2cc09e4785e0d3818350cdb27e71bc7639ad4291bffc2957ead54",
+        "uid": 33,
+        "gid": 33,
+        "size": 798671
+      },
+      {
+        "path": "cleaned/WA5480 G3/lxce_ux_cplus_ug.pdf",
+        "sha256": "f9f85798921033459a32167c57133cf2b5e9f2fe670dea18036017fd90bd708c",
+        "uid": 33,
+        "gid": 33,
+        "size": 646940
+      },
+      {
+        "path": "cleaned/WA5480 G3/lxpm_wentian_ug-v2.pdf",
+        "sha256": "a4a12d116e035a0d4608dc3f1552e144e609ab2cc27b62eac0f61d203abfb863",
+        "uid": 33,
+        "gid": 33,
+        "size": 2456967
+      },
+      {
+        "path": "cleaned/WA5480 G3/psu_label_matrix.pdf",
+        "sha256": "7cc5a1a11cce7c8b626e1869f1685b8294c61df3934496a272839fc3b5f44938",
+        "uid": 33,
+        "gid": 33,
+        "size": 1674780
+      },
+      {
+        "path": "cleaned/WA5480 G5/lenovo_bmc_commands_g5_v3.pdf",
+        "sha256": "a03c3395e1a7b3eadc8f194524f74d7ea17cb36a1dc57331c3a9c13f4e80415a",
+        "uid": 33,
+        "gid": 33,
+        "size": 877304
+      },
+      {
+        "path": "cleaned/WA5480 G5/lenovo_bmc_event_reference_guide_g5_v4.pdf",
+        "sha256": "9531ce92a261412a8589a55dac04c6da449defd9526d4d5cb41fcea13e84fc97",
+        "uid": 33,
+        "gid": 33,
+        "size": 1173852
+      },
+      {
+        "path": "cleaned/WA5480 G5/lenovo_bmc_redfish_guide_g5_v4.pdf",
+        "sha256": "6f7a76bd562b38cf87b916c2a791aad1a1ff31f42fbed2b48a85d916eaaf1cbe",
+        "uid": 33,
+        "gid": 33,
+        "size": 6576275
+      },
+      {
+        "path": "cleaned/WA5480 G5/lenovo_bmc_snmp_guide_g5.pdf",
+        "sha256": "bba2fb0e3a964d5520a6fbbdccb3ee8e03c73148503572abec440f72a49e4700",
+        "uid": 33,
+        "gid": 33,
+        "size": 915547
+      },
+      {
+        "path": "cleaned/WA5480 G5/lenovo_bmc_user_guide_g5_v6.pdf",
+        "sha256": "4638ec4f75df818daece3e98808c823be07e114e9784da1081d2aff56854aea4",
+        "uid": 33,
+        "gid": 33,
+        "size": 13695843
+      },
+      {
+        "path": "cleaned/WA5480 G5/lenovo_wentian_os_installation_guide.pdf",
+        "sha256": "710602623b8aa3af6fb0e5db737e0bc1785f3a56de445cd7afeaf9edb07e3720",
+        "uid": 33,
+        "gid": 33,
+        "size": 13569816
+      },
+      {
+        "path": "cleaned/WA5480 G5/lenovo_wentian_wa5480g5_user_guide_v5.pdf",
+        "sha256": "329510f927629e5d551cdd0e4b62766e04384adc05fccda9062df05d0a13695f",
+        "uid": 33,
+        "gid": 33,
+        "size": 43531360
+      },
+      {
+        "path": "cleaned/WA5480 G5/lxce_bomc_cplus_ug.pdf",
+        "sha256": "a823acbec51afb4f7c3984cd8b0a3ff4887dbf55fe42cc05bb84318ddf1182fb",
+        "uid": 33,
+        "gid": 33,
+        "size": 569176
+      },
+      {
+        "path": "cleaned/WA5480 G5/lxce_onecli_cplus_ug.pdf",
+        "sha256": "d1f14c9c904b1dd9f1f3a8f04c1654de203880ff1cb84e41668f75e529195d13",
+        "uid": 33,
+        "gid": 33,
+        "size": 798671
+      },
+      {
+        "path": "cleaned/WA5480 G5/lxce_ux_cplus_ug.pdf",
+        "sha256": "68ac4f3c322a5e774e1bb144c7c70a7ebb3c4993694f20c8dbe85d485d7a60e2",
+        "uid": 33,
+        "gid": 33,
+        "size": 646940
+      },
+      {
+        "path": "cleaned/WA5480 G5/lxpm_wentian_ug-v2.pdf",
+        "sha256": "e994356c5d580732d20c2f2239338687216eb2a6c1ed01f1c9e82de51d6805f6",
+        "uid": 33,
+        "gid": 33,
+        "size": 2456967
+      },
+      {
+        "path": "cleaned/WA5480 G5/psu_label_matrix.pdf",
+        "sha256": "a5ab8eb678d2f5d0a9e52a99ca6b895dad09147ed0ae84003b6a5fad4510d3ed",
+        "uid": 33,
+        "gid": 33,
+        "size": 1674780
+      },
+      {
+        "path": "cleaned/WA5480 G5/wa5480g5_bios_setup_spec.pdf",
+        "sha256": "9ad66fcdfcf8003330f6467ad381addb0ce20de38ed118dedf991952e11af81c",
+        "uid": 33,
+        "gid": 33,
+        "size": 8171181
+      },
+      {
+        "path": "cleaned/WA5680 G3/lenovo_wentian_wa5680g3_user_guide.pdf",
+        "sha256": "9930d731a8502be1c2bb49519cc156978c1096c94bf35fea136244ea5e8d0835",
+        "uid": 33,
+        "gid": 33,
+        "size": 25315487
+      },
+      {
+        "path": "cleaned/WA5680 G5/lenovo_wentian_wa5680g5_bios_setup_spec_v2.4.pdf",
+        "sha256": "428cef2be3142ee414a856fb15c5b80f69c395b4b9d5a08c9239f713c06bb800",
+        "uid": 33,
+        "gid": 33,
+        "size": 6277296
+      },
+      {
+        "path": "cleaned/WA5680 G5/lenovo_wentian_wa5680g5_user_guide.pdf",
+        "sha256": "65a1f94a6cb487f6da33231dfb04092f307b4de30b437ad7811cb3382dd022b5",
+        "uid": 33,
+        "gid": 33,
+        "size": 29363793
+      },
+      {
+        "path": "cleaned/WA5680 G5/lp2469.pdf",
+        "sha256": "f5a1dbf70d22a2cd654271ec01065407577ab84be25a4bba9f885ef9aa620aae",
+        "uid": 33,
+        "gid": 33,
+        "size": 7157849
+      },
+      {
+        "path": "cleaned/WA5680 G5/lp2506.pdf",
+        "sha256": "9abe6b54224e6b8060b6752e7d39420be67117da4489c4a7f5a21b2bd4928588",
+        "uid": 33,
+        "gid": 33,
+        "size": 15365177
+      },
+      {
+        "path": "cleaned/WA5685 G5/lp2399.pdf",
+        "sha256": "abbdf828f9655246f85186913b6a651d75458d7dc9ce88ddde8429e6bffc7a7b",
+        "uid": 33,
+        "gid": 33,
+        "size": 3456597
+      },
+      {
+        "path": "cleaned/WA5685 G5/lp2507.pdf",
+        "sha256": "423abc70567744ec2a818860e028e494eabecc4bbc71435482914d7b7db1460d",
+        "uid": 33,
+        "gid": 33,
+        "size": 2662190
+      },
+      {
+        "path": "cleaned/WA5685 G5/wa5685g5_user_guide.pdf",
+        "sha256": "4c9dadea314b4be8a80d7108b1437c1d09b6c5ca3f51759561a587c0de69d4e7",
+        "uid": 33,
+        "gid": 33,
+        "size": 15355183
+      },
+      {
+        "path": "cleaned/WA7780 G3/lenovo_wentian_wa7780g3_bios_user_guide.pdf",
+        "sha256": "ead4334a90200edfbec7be25c38a7c64f1698c0647b22133fef28028b74e47ea",
+        "uid": 33,
+        "gid": 33,
+        "size": 786239
+      },
+      {
+        "path": "cleaned/WA7780 G3/lenovo_wentian_wa7780g3_user_guide.pdf",
+        "sha256": "15aff549912ec8e4f0902e1e69e962995236b70a424f2a3a57049b37ffbf1918",
+        "uid": 33,
+        "gid": 33,
+        "size": 9162601
+      },
+      {
+        "path": "cleaned/WA7785a G3/lenovo_wentian_wa7785ag3_bios_user_guide.pdf",
+        "sha256": "3a3b32b5f3066002e7d7b632eaef13f25ec050fb69bb136234bceef14acb17f8",
+        "uid": 33,
+        "gid": 33,
+        "size": 866356
+      },
+      {
+        "path": "cleaned/WA7785a G3/lenovo_wentian_wa7785ag3_user_guide.pdf",
+        "sha256": "a7ced612178b1f7d1597154f8002b731ca03cb7b5d043c37f0256a8c1a50e327",
+        "uid": 33,
+        "gid": 33,
+        "size": 8099721
+      },
+      {
+        "path": "cleaned/WA7880a G3/lenovo_wentian_wa7880ag3_user_guide.pdf",
+        "sha256": "379c06c3343cf8a374f151743273d721152e7d427eb04b4f8a0a246b99ad5e1d",
+        "uid": 33,
+        "gid": 33,
+        "size": 15796317
+      },
+      {
+        "path": "cleaned/WR3220 G5/lenovo_wentian_wr3220g5_user_guide.pdf",
+        "sha256": "400e2d995fbca81730947a7ab33893b1843c27d68a524bfd8ba3f82b95d862d9",
+        "uid": 33,
+        "gid": 33,
+        "size": 17669332
+      },
+      {
+        "path": "cleaned/WR3220 G5/lp2440.pdf",
+        "sha256": "f83bc11ba7f755cc4c950674ccdd869fd7e839b2d2de47c99b7b4086e181b822",
+        "uid": 33,
+        "gid": 33,
+        "size": 4661528
+      },
+      {
+        "path": "cleaned/WR3220 G5/lxce_bomc_cplus_ug.pdf",
+        "sha256": "ed4d38288f798486b49167a7667e85ed03ecc8e5e7b5ad1bb38fdec1c77485b7",
+        "uid": 33,
+        "gid": 33,
+        "size": 569176
+      },
+      {
+        "path": "cleaned/WR3220 G5/lxce_onecli_cplus_ug.pdf",
+        "sha256": "dfa65dc5702712225cb321bce93a8913e8c2df1c83290074ec61fa211c8e9c8c",
+        "uid": 33,
+        "gid": 33,
+        "size": 798671
+      },
+      {
+        "path": "cleaned/WR3220 G5/lxce_ux_cplus_ug.pdf",
+        "sha256": "ec2e2062c2f501208b0751ce34412e60a358bdf0048c8619b58e3364d88ab9e5",
+        "uid": 33,
+        "gid": 33,
+        "size": 646940
+      },
+      {
+        "path": "cleaned/WR5215 G5/lenovo_bmc_commands_g5_v3.pdf",
+        "sha256": "f59f8a251740c43a1012411df1d0a0347a178ea99c113043f86b17c299357221",
+        "uid": 33,
+        "gid": 33,
+        "size": 877304
+      },
+      {
+        "path": "cleaned/WR5215 G5/lenovo_bmc_redfish_guide_g5_v4.pdf",
+        "sha256": "06401df6de23740950fd1f439dd21e7b1fa45095e108d37b0713a90520e22cd7",
+        "uid": 33,
+        "gid": 33,
+        "size": 6576275
+      },
+      {
+        "path": "cleaned/WR5215 G5/lenovo_bmc_snmp_guide_g5.pdf",
+        "sha256": "37287c081369038eb9437568c277ae6cbfe2fb02160a254b0ced6e6ffb5a2351",
+        "uid": 33,
+        "gid": 33,
+        "size": 915547
+      },
+      {
+        "path": "cleaned/WR5215 G5/lenovo_bmc_user_guide_g5_v6.pdf",
+        "sha256": "0e42031e02433e0d6e4a99e6c294ca19ffc5fbb15114246f1a923a49d6b24baf",
+        "uid": 33,
+        "gid": 33,
+        "size": 13695843
+      },
+      {
+        "path": "cleaned/WR5215 G5/lenovo_wentian_wr5215g5_user_guide_v2.pdf",
+        "sha256": "698925b2dd241478e497771607185e11f43453905e4d52177329fa7beaca86a9",
+        "uid": 33,
+        "gid": 33,
+        "size": 27777871
+      },
+      {
+        "path": "cleaned/WR5215 G5/lp2356.pdf",
+        "sha256": "e0be54cbadb5fb9c189e071530ac332fd560d478345b5ecb76aa697632730727",
+        "uid": 33,
+        "gid": 33,
+        "size": 2050481
+      },
+      {
+        "path": "cleaned/WR5215 G5/lxce_bomc_cplus_ug.pdf",
+        "sha256": "4182f753d9e4a73a7353da9cf5169fa781ed97eafbaba2da225318a7efd28a91",
+        "uid": 33,
+        "gid": 33,
+        "size": 569176
+      },
+      {
+        "path": "cleaned/WR5215 G5/lxce_onecli_cplus_ug.pdf",
+        "sha256": "e717fa465f2c2f6adf4d8a401626c37a2588e731f49cbe60098bb46e491f2df1",
+        "uid": 33,
+        "gid": 33,
+        "size": 798671
+      },
+      {
+        "path": "cleaned/WR5215 G5/lxce_ux_cplus_ug.pdf",
+        "sha256": "da46a049cb32fea1c3d98a099e3a4d025d8cc4d7a66b95be2d9e26c1afc1fa35",
+        "uid": 33,
+        "gid": 33,
+        "size": 646940
+      },
+      {
+        "path": "cleaned/WR5220 G3/bmc_user_guide_v14.pdf",
+        "sha256": "20ec5884e9b786191198a287a4ed662a8252debb0aae975188efddfabe2d7dd1",
+        "uid": 33,
+        "gid": 33,
+        "size": 4161508
+      },
+      {
+        "path": "cleaned/WR5220 G3/lenovo_bmc_event_reference_guide_g5_v4.pdf",
+        "sha256": "46b912c28d80e0cce632513a5725ee11b938113d33e0811a4e6b40ea6a434b0c",
+        "uid": 33,
+        "gid": 33,
+        "size": 1173852
+      },
+      {
+        "path": "cleaned/WR5220 G3/lenovo_bmc_g3_commands_guide_v2.pdf",
+        "sha256": "20acc4298d05d62bdb5d5fd73878089fa1f3c3d8495f9052cb4dea781779987f",
+        "uid": 33,
+        "gid": 33,
+        "size": 850373
+      },
+      {
+        "path": "cleaned/WR5220 G3/lenovo_bmc_g3_redfish_guide_v11.pdf",
+        "sha256": "d69d59c5633e242289898cdd87f06c463170a4d7fb9268a5ff96989fea7f08b5",
+        "uid": 33,
+        "gid": 33,
+        "size": 5894615
+      },
+      {
+        "path": "cleaned/WR5220 G3/lenovo_snmp_ug_g3.pdf",
+        "sha256": "815ccf9a6b99ac10ed516cfd3afcc0d4aec06403a7c2704308e720383bfe15b8",
+        "uid": 33,
+        "gid": 33,
+        "size": 864830
+      },
+      {
+        "path": "cleaned/WR5220 G3/lenovo_wentian_os_installation_guide.pdf",
+        "sha256": "0499f649be8d4fe657ba9a0611064605bffc8f2165e8192053cb1bb84d98b751",
+        "uid": 33,
+        "gid": 33,
+        "size": 13569816
+      },
+      {
+        "path": "cleaned/WR5220 G3/lenovo_wentian_wr5220g3_user_guide_v18.pdf",
+        "sha256": "480239e5f9845b060e27f93744fcff05e82af69d00b1e2a3b876e434c39da120",
+        "uid": 33,
+        "gid": 33,
+        "size": 30375612
+      },
+      {
+        "path": "cleaned/WR5220 G3/lp1705.pdf",
+        "sha256": "c69803224f5d2734542c07b26b752063779407d50081a5576e92b288c524e115",
+        "uid": 33,
+        "gid": 33,
+        "size": 3495511
+      },
+      {
+        "path": "cleaned/WR5220 G3/lxce_bomc_cplus_ug.pdf",
+        "sha256": "c781b95ce1a727527101131fb168b57a47bfe80212e8b8a4140f69765b7438d4",
+        "uid": 33,
+        "gid": 33,
+        "size": 569176
+      },
+      {
+        "path": "cleaned/WR5220 G3/lxce_onecli_cplus_ug.pdf",
+        "sha256": "694a42ede6d56c737f596c160a5a01389da0a4531036fdaa4f3645964afd1c98",
+        "uid": 33,
+        "gid": 33,
+        "size": 798671
+      },
+      {
+        "path": "cleaned/WR5220 G3/lxce_ux_cplus_ug.pdf",
+        "sha256": "b65dc7abba08525722954f9519db081952e9c18a5d4fed4bb50272ae633057f0",
+        "uid": 33,
+        "gid": 33,
+        "size": 646940
+      },
+      {
+        "path": "cleaned/WR5220 G3/lxpm_wentian_ug-v2.pdf",
+        "sha256": "2b0dca497cfe5f6c6103ac3c57dc7e3a25a50cd65bf8b655f4cc891186cbbc5d",
+        "uid": 33,
+        "gid": 33,
+        "size": 2456967
+      },
+      {
+        "path": "cleaned/WR5220 G3/psu_label_matrix.pdf",
+        "sha256": "51446f4ead44df066c33b54001d7f98ae4c21c0f8daae59a1d72be9f8203bae5",
+        "uid": 33,
+        "gid": 33,
+        "size": 1674780
+      },
+      {
+        "path": "cleaned/WR5220 G3/vmware_code_recipe_file.pdf",
+        "sha256": "ec5707c952d6074f0cdd69b82ee706f9111bbcc8ee0f3d5d6620732354fa118a",
+        "uid": 33,
+        "gid": 33,
+        "size": 441705
+      },
+      {
+        "path": "cleaned/WR5220 G3/wr5220g3_bios_setup_spec_v2.13.pdf",
+        "sha256": "96a8846dc4e263231b1cfa73eb67d4b957586ccd21b1bee9e9a888904e5d69e8",
+        "uid": 33,
+        "gid": 33,
+        "size": 13541602
+      },
+      {
+        "path": "cleaned/WR5220 G5/lenovo_bmc_commands_g5_v3.pdf",
+        "sha256": "e619a2f39bcb1c7ad9caa46cc00743d20a3216873667c395972d785678343a09",
+        "uid": 33,
+        "gid": 33,
+        "size": 877304
+      },
+      {
+        "path": "cleaned/WR5220 G5/lenovo_bmc_event_reference_guide_g5_v4.pdf",
+        "sha256": "385342e05b311cae55be1bf20e74acd43ee54de2f2f2940d6f2dce8f86db1b0b",
+        "uid": 33,
+        "gid": 33,
+        "size": 1173852
+      },
+      {
+        "path": "cleaned/WR5220 G5/lenovo_bmc_redfish_guide_g5_v4.pdf",
+        "sha256": "3d572be0f1b63070b79177a4ff169b3d4918ed0fbfc1291ff123a8cc9010c3cb",
+        "uid": 33,
+        "gid": 33,
+        "size": 6576275
+      },
+      {
+        "path": "cleaned/WR5220 G5/lenovo_bmc_snmp_guide_g5.pdf",
+        "sha256": "70f888317df2b74dfec25cab2b3fd7d7d610019b6f798496546e988add334df8",
+        "uid": 33,
+        "gid": 33,
+        "size": 915547
+      },
+      {
+        "path": "cleaned/WR5220 G5/lenovo_bmc_user_guide_g5_v6.pdf",
+        "sha256": "ec77234795b01bfbbbfd149f2488b77a9228b50a6859ef916504bdae3c484c8b",
+        "uid": 33,
+        "gid": 33,
+        "size": 13695843
+      },
+      {
+        "path": "cleaned/WR5220 G5/lenovo_wentian_os_installation_guide.pdf",
+        "sha256": "796c627de0c6be2946a825b73c25026df007e6c8a23b8784b9af041c04b06a8d",
+        "uid": 33,
+        "gid": 33,
+        "size": 13569816
+      },
+      {
+        "path": "cleaned/WR5220 G5/lenovo_wentian_wr5220g5_user_guide_v7.pdf",
+        "sha256": "8c210f769287a385e1d495bf8ae1193cb53eb3add66c2dc17a97527c375ff700",
+        "uid": 33,
+        "gid": 33,
+        "size": 46154057
+      },
+      {
+        "path": "cleaned/WR5220 G5/lp1728.pdf",
+        "sha256": "f612607c1e8c52a9d390b99d7a73b0c9739169d97d6343f192e343178f805d3f",
+        "uid": 33,
+        "gid": 33,
+        "size": 131695
+      },
+      {
+        "path": "cleaned/WR5220 G5/lp2014.pdf",
+        "sha256": "0808f4e28ed4971a10a31a6610ad1ed5f4dd5ac40e9259732405f23f5cff79db",
+        "uid": 33,
+        "gid": 33,
+        "size": 4588262
+      },
+      {
+        "path": "cleaned/WR5220 G5/lxce_bomc_cplus_ug.pdf",
+        "sha256": "31e3853ad3bcc30c1ddb4a65bb4c67d7bcbe82ff631fe07c21ae4f6248213b21",
+        "uid": 33,
+        "gid": 33,
+        "size": 569176
+      },
+      {
+        "path": "cleaned/WR5220 G5/lxce_onecli_cplus_ug.pdf",
+        "sha256": "8b0395868fbb66e9ffea75e83d3c509ed13eea5739f2a5db64c1d9c319972e9b",
+        "uid": 33,
+        "gid": 33,
+        "size": 798671
+      },
+      {
+        "path": "cleaned/WR5220 G5/lxce_ux_cplus_ug.pdf",
+        "sha256": "7155d43daae1b4abdda124e55bbdcfcba25a3732d9361baa6703440df515d157",
+        "uid": 33,
+        "gid": 33,
+        "size": 646940
+      },
+      {
+        "path": "cleaned/WR5220 G5/lxpm_wentian_ug-v2.pdf",
+        "sha256": "1b754efea25735678258795dc66dcbb4f72f00f6c8d631bcf1dd6a09fac4882c",
+        "uid": 33,
+        "gid": 33,
+        "size": 2456967
+      },
+      {
+        "path": "cleaned/WR5220 G5/psu_label_matrix.pdf",
+        "sha256": "239356fa953880d965a20194062c9d4d95072eb92a0311a05e6daf7c056a0b9b",
+        "uid": 33,
+        "gid": 33,
+        "size": 1674780
+      },
+      {
+        "path": "cleaned/WR5225 G3/lenovo_bmc_event_reference_guide_g5_v4.pdf",
+        "sha256": "8634d18045b237706ef6095aec23844782f961f6e2f369a85a73770d248cd021",
+        "uid": 33,
+        "gid": 33,
+        "size": 1173852
+      },
+      {
+        "path": "cleaned/WR5225 G3/lenovo_bmc_g3_redfish_guide_v11.pdf",
+        "sha256": "69b2f60f87a200fb2e50b7280b7cb256e69a7b42aeafe50fd81f48c11c70aaa8",
+        "uid": 33,
+        "gid": 33,
+        "size": 5894615
+      },
+      {
+        "path": "cleaned/WR5225 G3/lenovo_snmp_ug_g3.pdf",
+        "sha256": "93e0ef606afa5d4f7551d7833b5a95b322103645c2bf68f0a5cb83b2306c449d",
+        "uid": 33,
+        "gid": 33,
+        "size": 864830
+      },
+      {
+        "path": "cleaned/WR5225 G3/lenovo_wentian_os_installation_guide.pdf",
+        "sha256": "da7b2d744c5033ee6ce9ca444f94284249b4082afdeb29b7b98738ed5b23e528",
+        "uid": 33,
+        "gid": 33,
+        "size": 13569816
+      },
+      {
+        "path": "cleaned/WR5225 G3/lp2129.pdf",
+        "sha256": "c16d804e033de6d2aa9bd57a512cbb57d8625df9573306ba01748ce675742daf",
+        "uid": 33,
+        "gid": 33,
+        "size": 3381481
+      },
+      {
+        "path": "cleaned/WR5225 G3/lxce_bomc_cplus_ug.pdf",
+        "sha256": "75cd27a7b4d76bd77df16c4974c17dc2e888fc172c4958b2896b5c145b049a15",
+        "uid": 33,
+        "gid": 33,
+        "size": 569176
+      },
+      {
+        "path": "cleaned/WR5225 G3/lxce_onecli_cplus_ug.pdf",
+        "sha256": "b4b974fb374d92334ae254f921b2c6a104b4953097ecb03d52cfd0342bf16a7b",
+        "uid": 33,
+        "gid": 33,
+        "size": 798671
+      },
+      {
+        "path": "cleaned/WR5225 G3/lxce_ux_cplus_ug.pdf",
+        "sha256": "814cbb5cd34c12cbe4f3c07d33631941b16b4fdefc811d24a0aedf9f4e213402",
+        "uid": 33,
+        "gid": 33,
+        "size": 646940
+      },
+      {
+        "path": "cleaned/WR5225 G3/psu_label_matrix.pdf",
+        "sha256": "f4299e719461d8b61da426a3e0e7335897608c82e73fbe90cd9bde721fe165f1",
+        "uid": 33,
+        "gid": 33,
+        "size": 1674780
+      },
+      {
+        "path": "cleaned/WR5225 G3/wr5225g3_bios_setup_spec_v2.9-turin.pdf",
+        "sha256": "afe446123c4c87ceec196261b6129efbde64424d36cc9c68a13bfcb3fe2fbc60",
+        "uid": 33,
+        "gid": 33,
+        "size": 9176799
+      },
+      {
+        "path": "cleaned/WR5225 G3/wr5225g3_bios_setup_spec_v3.0-genoa.pdf",
+        "sha256": "94f80695c80cbcbe6c417dd972a683c983b3a5666ff74219665e8482e54db4a7",
+        "uid": 33,
+        "gid": 33,
+        "size": 8779071
+      },
+      {
+        "path": "cleaned/WR5225 G3/wr5225g3_user_guide_v6.pdf",
+        "sha256": "d53d18343d19081f2ee66d5bd29e9d70aaea3bde4785b29e98e002b83167040a",
+        "uid": 33,
+        "gid": 33,
+        "size": 29020986
+      },
+      {
+        "path": "cleaned/WR6220 G5/lenovo_wentian_wr6220g5_user_guide.pdf",
+        "sha256": "84f4a0929aff74ee3bb585b7faae8dfca8fdb388e8c33aa30f4a1dd7a5bc96b9",
+        "uid": 33,
+        "gid": 33,
+        "size": 23903440
+      },
+      {
+        "path": "cleaned/WR6220 G5/lp2468.pdf",
+        "sha256": "56bfc645802dc48a87ef27c7ac3de5a5974f4582132ca877a7299403bc6cc375",
+        "uid": 33,
+        "gid": 33,
+        "size": 8216501
+      },
+      {
+        "path": "cleaned/WR6220 G5/lp2502.pdf",
+        "sha256": "4af236e9cf7e8649a6566a4024610581e1c329cba316825ac4a630c7e0722be1",
+        "uid": 33,
+        "gid": 33,
+        "size": 10157094
+      },
+      {
+        "path": "originals/INDEX.html",
+        "sha256": "59632217eb472153cb80b7c12e430234afd2140b7b46fb31ba62a0c5bb57cb43",
+        "uid": 33,
+        "gid": 33,
+        "size": 119101
+      },
+      {
+        "path": "originals/INDEX.md",
+        "sha256": "27d907f1597543bd2e10e4edbe23afa124d3cf8196685ec3f32e784db62a814f",
+        "uid": 33,
+        "gid": 33,
+        "size": 6168
+      },
+      {
+        "path": "originals/WA5480 G3/bmc_user_guide_v14.pdf",
+        "sha256": "acba1574ddaf24faa0eb69644e9114be553ee44f45ce2960d0bcefb66a4539d4",
+        "uid": 33,
+        "gid": 33,
+        "size": 4197674
+      },
+      {
+        "path": "originals/WA5480 G3/lenovo_bmc_event_reference_guide_g5_v4.pdf",
+        "sha256": "fc4a694ce1574db865fe41a904d185bc85092598a5b6a6d0cbbff739c75411ef",
+        "uid": 33,
+        "gid": 33,
+        "size": 1751445
+      },
+      {
+        "path": "originals/WA5480 G3/lenovo_bmc_g3_redfish_guide_v11.pdf",
+        "sha256": "456897573c42b3e7eb767b248e3c588a987b7f23b2a0c70a344e816b91837ee8",
+        "uid": 33,
+        "gid": 33,
+        "size": 8326662
+      },
+      {
+        "path": "originals/WA5480 G3/lenovo_snmp_ug_g3.pdf",
+        "sha256": "54364f7a996ac070098bfa4d0b8de530660edc2aaacd73550584c57373b8256e",
+        "uid": 33,
+        "gid": 33,
+        "size": 1136366
+      },
+      {
+        "path": "originals/WA5480 G3/lenovo_wentian_os_installation_guide.pdf",
+        "sha256": "f5d59ae8c6bfc792ae28160790ce0f673b8d940de86f98ed7e326fb40cfaec17",
+        "uid": 33,
+        "gid": 33,
+        "size": 13673279
+      },
+      {
+        "path": "originals/WA5480 G3/lenovo_wentian_wa5480g3_user_guide_v8.pdf",
+        "sha256": "a73e5e450d7b3c9bce074f3d54d9ff249f2f58a71eac214bc2a168ba1e4fecd7",
+        "uid": 33,
+        "gid": 33,
+        "size": 26904246
+      },
+      {
+        "path": "originals/WA5480 G3/lxce_bomc_cplus_ug.pdf",
+        "sha256": "c41b84786be486e197ab7604f58b63be062948a8e73455f0c17fb013158959e8",
+        "uid": 33,
+        "gid": 33,
+        "size": 638956
+      },
+      {
+        "path": "originals/WA5480 G3/lxce_onecli_cplus_ug.pdf",
+        "sha256": "dba774fbccfbd4c2e7e84819f2c213a37af77862be9143344db0f64e7f5e3440",
+        "uid": 33,
+        "gid": 33,
+        "size": 856757
+      },
+      {
+        "path": "originals/WA5480 G3/lxce_ux_cplus_ug.pdf",
+        "sha256": "db4f1f0c538d2e623a2b9b9f9de76ad7cc64776076d3246a5cd562c6d0c5576c",
+        "uid": 33,
+        "gid": 33,
+        "size": 778902
+      },
+      {
+        "path": "originals/WA5480 G3/lxpm_wentian_ug-v2.pdf",
+        "sha256": "7508bcd4c26266887f92c7c803a57cc9cc9d277229909af94f3cb60023844bdc",
+        "uid": 33,
+        "gid": 33,
+        "size": 2508949
+      },
+      {
+        "path": "originals/WA5480 G3/psu_label_matrix.pdf",
+        "sha256": "8ca145a1ab7450891da9af84933fdebe3042f9624ae25974bb34fb72782c1f39",
+        "uid": 33,
+        "gid": 33,
+        "size": 1676894
+      },
+      {
+        "path": "originals/WA5480 G5/lenovo_bmc_commands_g5_v3.pdf",
+        "sha256": "2cabbcdf52506fa99915939d223a7e7fa5535989ca8c4970528244b7464e58f9",
+        "uid": 33,
+        "gid": 33,
+        "size": 1100987
+      },
+      {
+        "path": "originals/WA5480 G5/lenovo_bmc_event_reference_guide_g5_v4.pdf",
+        "sha256": "fc4a694ce1574db865fe41a904d185bc85092598a5b6a6d0cbbff739c75411ef",
+        "uid": 33,
+        "gid": 33,
+        "size": 1751445
+      },
+      {
+        "path": "originals/WA5480 G5/lenovo_bmc_redfish_guide_g5_v4.pdf",
+        "sha256": "4b9324d1688973cab77c554228600d94a7b1e9cfbc4ba4d6cc91c6f8c28e4656",
+        "uid": 33,
+        "gid": 33,
+        "size": 9387990
+      },
+      {
+        "path": "originals/WA5480 G5/lenovo_bmc_snmp_guide_g5.pdf",
+        "sha256": "4ff96dfa2f3c88ceb4ab913617a41f9980eab3966c6a611bff006574f9be1dbf",
+        "uid": 33,
+        "gid": 33,
+        "size": 1196218
+      },
+      {
+        "path": "originals/WA5480 G5/lenovo_bmc_user_guide_g5_v6.pdf",
+        "sha256": "f98dcb710ae5f9fa900b3a786afec813f847dde32ca0ea255e7f417148fe9bf1",
+        "uid": 33,
+        "gid": 33,
+        "size": 13737664
+      },
+      {
+        "path": "originals/WA5480 G5/lenovo_wentian_os_installation_guide.pdf",
+        "sha256": "f5d59ae8c6bfc792ae28160790ce0f673b8d940de86f98ed7e326fb40cfaec17",
+        "uid": 33,
+        "gid": 33,
+        "size": 13673279
+      },
+      {
+        "path": "originals/WA5480 G5/lenovo_wentian_wa5480g5_user_guide_v5.pdf",
+        "sha256": "cd3117ca607c691f2dc57213b9dcecf1d394a8af69cb66bc83094816d74ab89c",
+        "uid": 33,
+        "gid": 33,
+        "size": 43635630
+      },
+      {
+        "path": "originals/WA5480 G5/lxce_bomc_cplus_ug.pdf",
+        "sha256": "c41b84786be486e197ab7604f58b63be062948a8e73455f0c17fb013158959e8",
+        "uid": 33,
+        "gid": 33,
+        "size": 638956
+      },
+      {
+        "path": "originals/WA5480 G5/lxce_onecli_cplus_ug.pdf",
+        "sha256": "dba774fbccfbd4c2e7e84819f2c213a37af77862be9143344db0f64e7f5e3440",
+        "uid": 33,
+        "gid": 33,
+        "size": 856757
+      },
+      {
+        "path": "originals/WA5480 G5/lxce_ux_cplus_ug.pdf",
+        "sha256": "db4f1f0c538d2e623a2b9b9f9de76ad7cc64776076d3246a5cd562c6d0c5576c",
+        "uid": 33,
+        "gid": 33,
+        "size": 778902
+      },
+      {
+        "path": "originals/WA5480 G5/lxpm_wentian_ug-v2.pdf",
+        "sha256": "7508bcd4c26266887f92c7c803a57cc9cc9d277229909af94f3cb60023844bdc",
+        "uid": 33,
+        "gid": 33,
+        "size": 2508949
+      },
+      {
+        "path": "originals/WA5480 G5/psu_label_matrix.pdf",
+        "sha256": "8ca145a1ab7450891da9af84933fdebe3042f9624ae25974bb34fb72782c1f39",
+        "uid": 33,
+        "gid": 33,
+        "size": 1676894
+      },
+      {
+        "path": "originals/WA5480 G5/wa5480g5_bios_setup_spec.pdf",
+        "sha256": "99dfa6d7f2e6f5d459202047f5ea0a405ced71dd5de8114b447ef0f2afb4325f",
+        "uid": 33,
+        "gid": 33,
+        "size": 8593551
+      },
+      {
+        "path": "originals/WA5680 G3/lenovo_wentian_wa5680g3_user_guide.pdf",
+        "sha256": "fe6bafcd127777fe95f0f46fcea690d22ab78331853450d6b990f674575774d2",
+        "uid": 33,
+        "gid": 33,
+        "size": 25638397
+      },
+      {
+        "path": "originals/WA5680 G5/lenovo_wentian_wa5680g5_bios_setup_spec_v2.4.pdf",
+        "sha256": "3c609ad9bf3030f51bba4df5bdf18ead5671b77273903a4073db75fa2d132a45",
+        "uid": 33,
+        "gid": 33,
+        "size": 6590361
+      },
+      {
+        "path": "originals/WA5680 G5/lenovo_wentian_wa5680g5_user_guide.pdf",
+        "sha256": "832ee58c3b7faf06dc746ba1289128abc71ff1147945504f9c86ebe888cacf1b",
+        "uid": 33,
+        "gid": 33,
+        "size": 29430273
+      },
+      {
+        "path": "originals/WA5680 G5/lp2469.pdf",
+        "sha256": "3b6c0e4abca685abe7685eba74fe129d2806d243daa52f90380d5d74652f33c1",
+        "uid": 33,
+        "gid": 33,
+        "size": 7295204
+      },
+      {
+        "path": "originals/WA5680 G5/lp2506.pdf",
+        "sha256": "966fc8ea9efda6f9f416ddf55c0c291f41583dd0a97a6d8b44cb87da3f2eaa5c",
+        "uid": 33,
+        "gid": 33,
+        "size": 15383514
+      },
+      {
+        "path": "originals/WA5685 G5/lp2399.pdf",
+        "sha256": "7961a03be1e76faa6fcc10bd2cac2520381c00f41243a1aa6b718d7242da4fd1",
+        "uid": 33,
+        "gid": 33,
+        "size": 4631912
+      },
+      {
+        "path": "originals/WA5685 G5/lp2507.pdf",
+        "sha256": "e57262389e68449ca7700dd441d57aee294ccb932279af9c0e2090aa2ba98189",
+        "uid": 33,
+        "gid": 33,
+        "size": 2691105
+      },
+      {
+        "path": "originals/WA5685 G5/wa5685g5_user_guide.pdf",
+        "sha256": "f37f6776f2ad81999742d5e01b5d9b78060cb762de5fff910b2f3be1d760b421",
+        "uid": 33,
+        "gid": 33,
+        "size": 15968209
+      },
+      {
+        "path": "originals/WA7780 G3/lenovo_wentian_wa7780g3_bios_user_guide.pdf",
+        "sha256": "ff73d1e9ccc954f7e64173874a55dc7fe52569c9fe85c8669527933e81843d39",
+        "uid": 33,
+        "gid": 33,
+        "size": 940977
+      },
+      {
+        "path": "originals/WA7780 G3/lenovo_wentian_wa7780g3_user_guide.pdf",
+        "sha256": "1718c6d1094bf50a54550fdb191f628875da094b0fbda8f2f147305dbc740f4b",
+        "uid": 33,
+        "gid": 33,
+        "size": 10001885
+      },
+      {
+        "path": "originals/WA7785a G3/lenovo_wentian_wa7785ag3_bios_user_guide.pdf",
+        "sha256": "c129642ccf27022ed6ab2ec88597e0c905c361c7a8008de29a58d2a373f1e073",
+        "uid": 33,
+        "gid": 33,
+        "size": 969234
+      },
+      {
+        "path": "originals/WA7785a G3/lenovo_wentian_wa7785ag3_user_guide.pdf",
+        "sha256": "3a1f7a48df92df1fd415741656cc5294ca26a8e5ab4f3839da557c0189c0e35e",
+        "uid": 33,
+        "gid": 33,
+        "size": 8814630
+      },
+      {
+        "path": "originals/WA7880a G3/lenovo_wentian_wa7880ag3_user_guide.pdf",
+        "sha256": "59de6ab16247b3c5dde9fbb612103ee046b9a377c0280544f16eb9e62dd28cf8",
+        "uid": 33,
+        "gid": 33,
+        "size": 15985420
+      },
+      {
+        "path": "originals/WR3220 G5/lenovo_wentian_wr3220g5_user_guide.pdf",
+        "sha256": "99efac6f9ffd874876c250ecf117e94d0ee8259b4cbcab1b735c432c1268b11b",
+        "uid": 33,
+        "gid": 33,
+        "size": 17747834
+      },
+      {
+        "path": "originals/WR3220 G5/lp2440.pdf",
+        "sha256": "71dc6f591f4cbee1e237fda4ef716499b3024d7336c56349e076e1ae979eb591",
+        "uid": 33,
+        "gid": 33,
+        "size": 4763959
+      },
+      {
+        "path": "originals/WR3220 G5/lxce_bomc_cplus_ug.pdf",
+        "sha256": "c41b84786be486e197ab7604f58b63be062948a8e73455f0c17fb013158959e8",
+        "uid": 33,
+        "gid": 33,
+        "size": 638956
+      },
+      {
+        "path": "originals/WR3220 G5/lxce_onecli_cplus_ug.pdf",
+        "sha256": "dba774fbccfbd4c2e7e84819f2c213a37af77862be9143344db0f64e7f5e3440",
+        "uid": 33,
+        "gid": 33,
+        "size": 856757
+      },
+      {
+        "path": "originals/WR3220 G5/lxce_ux_cplus_ug.pdf",
+        "sha256": "db4f1f0c538d2e623a2b9b9f9de76ad7cc64776076d3246a5cd562c6d0c5576c",
+        "uid": 33,
+        "gid": 33,
+        "size": 778902
+      },
+      {
+        "path": "originals/WR5215 G5/lenovo_bmc_commands_g5_v3.pdf",
+        "sha256": "2cabbcdf52506fa99915939d223a7e7fa5535989ca8c4970528244b7464e58f9",
+        "uid": 33,
+        "gid": 33,
+        "size": 1100987
+      },
+      {
+        "path": "originals/WR5215 G5/lenovo_bmc_redfish_guide_g5_v4.pdf",
+        "sha256": "4b9324d1688973cab77c554228600d94a7b1e9cfbc4ba4d6cc91c6f8c28e4656",
+        "uid": 33,
+        "gid": 33,
+        "size": 9387990
+      },
+      {
+        "path": "originals/WR5215 G5/lenovo_bmc_snmp_guide_g5.pdf",
+        "sha256": "4ff96dfa2f3c88ceb4ab913617a41f9980eab3966c6a611bff006574f9be1dbf",
+        "uid": 33,
+        "gid": 33,
+        "size": 1196218
+      },
+      {
+        "path": "originals/WR5215 G5/lenovo_bmc_user_guide_g5_v6.pdf",
+        "sha256": "f98dcb710ae5f9fa900b3a786afec813f847dde32ca0ea255e7f417148fe9bf1",
+        "uid": 33,
+        "gid": 33,
+        "size": 13737664
+      },
+      {
+        "path": "originals/WR5215 G5/lenovo_wentian_wr5215g5_user_guide_v2.pdf",
+        "sha256": "cab45cdf5408097b3eeef87c0eee393139aef48a53252cf354b9d90c455275b9",
+        "uid": 33,
+        "gid": 33,
+        "size": 27880323
+      },
+      {
+        "path": "originals/WR5215 G5/lp2356.pdf",
+        "sha256": "d709da2a8fe20d4b0cc6653f3e1428fad558032f9ecd5b48db653d8ccdf76b9c",
+        "uid": 33,
+        "gid": 33,
+        "size": 2562644
+      },
+      {
+        "path": "originals/WR5215 G5/lxce_bomc_cplus_ug.pdf",
+        "sha256": "c41b84786be486e197ab7604f58b63be062948a8e73455f0c17fb013158959e8",
+        "uid": 33,
+        "gid": 33,
+        "size": 638956
+      },
+      {
+        "path": "originals/WR5215 G5/lxce_onecli_cplus_ug.pdf",
+        "sha256": "dba774fbccfbd4c2e7e84819f2c213a37af77862be9143344db0f64e7f5e3440",
+        "uid": 33,
+        "gid": 33,
+        "size": 856757
+      },
+      {
+        "path": "originals/WR5215 G5/lxce_ux_cplus_ug.pdf",
+        "sha256": "db4f1f0c538d2e623a2b9b9f9de76ad7cc64776076d3246a5cd562c6d0c5576c",
+        "uid": 33,
+        "gid": 33,
+        "size": 778902
+      },
+      {
+        "path": "originals/WR5220 G3/bmc_user_guide_v14.pdf",
+        "sha256": "acba1574ddaf24faa0eb69644e9114be553ee44f45ce2960d0bcefb66a4539d4",
+        "uid": 33,
+        "gid": 33,
+        "size": 4197674
+      },
+      {
+        "path": "originals/WR5220 G3/lenovo_bmc_event_reference_guide_g5_v4.pdf",
+        "sha256": "fc4a694ce1574db865fe41a904d185bc85092598a5b6a6d0cbbff739c75411ef",
+        "uid": 33,
+        "gid": 33,
+        "size": 1751445
+      },
+      {
+        "path": "originals/WR5220 G3/lenovo_bmc_g3_commands_guide_v2.pdf",
+        "sha256": "7273f8d5c3336bfdffe70e3b056d74d0ec08a75856cdb25b65daa3b66cedec46",
+        "uid": 33,
+        "gid": 33,
+        "size": 1158155
+      },
+      {
+        "path": "originals/WR5220 G3/lenovo_bmc_g3_redfish_guide_v11.pdf",
+        "sha256": "456897573c42b3e7eb767b248e3c588a987b7f23b2a0c70a344e816b91837ee8",
+        "uid": 33,
+        "gid": 33,
+        "size": 8326662
+      },
+      {
+        "path": "originals/WR5220 G3/lenovo_snmp_ug_g3.pdf",
+        "sha256": "54364f7a996ac070098bfa4d0b8de530660edc2aaacd73550584c57373b8256e",
+        "uid": 33,
+        "gid": 33,
+        "size": 1136366
+      },
+      {
+        "path": "originals/WR5220 G3/lenovo_wentian_os_installation_guide.pdf",
+        "sha256": "f5d59ae8c6bfc792ae28160790ce0f673b8d940de86f98ed7e326fb40cfaec17",
+        "uid": 33,
+        "gid": 33,
+        "size": 13673279
+      },
+      {
+        "path": "originals/WR5220 G3/lenovo_wentian_wr5220g3_user_guide_v18.pdf",
+        "sha256": "15b16176143792fd24287d10f29e46cc039660e802a0e2070cc14128f5ea53e6",
+        "uid": 33,
+        "gid": 33,
+        "size": 30511980
+      },
+      {
+        "path": "originals/WR5220 G3/lp1705.pdf",
+        "sha256": "f3b4f9d125fee56c228b36354a30198ddd14933cb755fdc7dc1ef2d4af8442e7",
+        "uid": 33,
+        "gid": 33,
+        "size": 5056741
+      },
+      {
+        "path": "originals/WR5220 G3/lxce_bomc_cplus_ug.pdf",
+        "sha256": "c41b84786be486e197ab7604f58b63be062948a8e73455f0c17fb013158959e8",
+        "uid": 33,
+        "gid": 33,
+        "size": 638956
+      },
+      {
+        "path": "originals/WR5220 G3/lxce_onecli_cplus_ug.pdf",
+        "sha256": "dba774fbccfbd4c2e7e84819f2c213a37af77862be9143344db0f64e7f5e3440",
+        "uid": 33,
+        "gid": 33,
+        "size": 856757
+      },
+      {
+        "path": "originals/WR5220 G3/lxce_ux_cplus_ug.pdf",
+        "sha256": "db4f1f0c538d2e623a2b9b9f9de76ad7cc64776076d3246a5cd562c6d0c5576c",
+        "uid": 33,
+        "gid": 33,
+        "size": 778902
+      },
+      {
+        "path": "originals/WR5220 G3/lxpm_wentian_ug-v2.pdf",
+        "sha256": "7508bcd4c26266887f92c7c803a57cc9cc9d277229909af94f3cb60023844bdc",
+        "uid": 33,
+        "gid": 33,
+        "size": 2508949
+      },
+      {
+        "path": "originals/WR5220 G3/psu_label_matrix.pdf",
+        "sha256": "8ca145a1ab7450891da9af84933fdebe3042f9624ae25974bb34fb72782c1f39",
+        "uid": 33,
+        "gid": 33,
+        "size": 1676894
+      },
+      {
+        "path": "originals/WR5220 G3/vmware_code_recipe_file.pdf",
+        "sha256": "b92580f11c67c86dedd6984cfaf11b13c3bb3ee7730ea7845f6aa1a94b7715df",
+        "uid": 33,
+        "gid": 33,
+        "size": 508079
+      },
+      {
+        "path": "originals/WR5220 G3/wr5220g3_bios_setup_spec_v2.13.pdf",
+        "sha256": "4d0754555ef1c4ae4f41225e6fdc210d502abc902371025caeb6b8cc8b313c1d",
+        "uid": 33,
+        "gid": 33,
+        "size": 13620825
+      },
+      {
+        "path": "originals/WR5220 G5/lenovo_bmc_commands_g5_v3.pdf",
+        "sha256": "2cabbcdf52506fa99915939d223a7e7fa5535989ca8c4970528244b7464e58f9",
+        "uid": 33,
+        "gid": 33,
+        "size": 1100987
+      },
+      {
+        "path": "originals/WR5220 G5/lenovo_bmc_event_reference_guide_g5_v4.pdf",
+        "sha256": "fc4a694ce1574db865fe41a904d185bc85092598a5b6a6d0cbbff739c75411ef",
+        "uid": 33,
+        "gid": 33,
+        "size": 1751445
+      },
+      {
+        "path": "originals/WR5220 G5/lenovo_bmc_redfish_guide_g5_v4.pdf",
+        "sha256": "4b9324d1688973cab77c554228600d94a7b1e9cfbc4ba4d6cc91c6f8c28e4656",
+        "uid": 33,
+        "gid": 33,
+        "size": 9387990
+      },
+      {
+        "path": "originals/WR5220 G5/lenovo_bmc_snmp_guide_g5.pdf",
+        "sha256": "4ff96dfa2f3c88ceb4ab913617a41f9980eab3966c6a611bff006574f9be1dbf",
+        "uid": 33,
+        "gid": 33,
+        "size": 1196218
+      },
+      {
+        "path": "originals/WR5220 G5/lenovo_bmc_user_guide_g5_v6.pdf",
+        "sha256": "f98dcb710ae5f9fa900b3a786afec813f847dde32ca0ea255e7f417148fe9bf1",
+        "uid": 33,
+        "gid": 33,
+        "size": 13737664
+      },
+      {
+        "path": "originals/WR5220 G5/lenovo_wentian_os_installation_guide.pdf",
+        "sha256": "f5d59ae8c6bfc792ae28160790ce0f673b8d940de86f98ed7e326fb40cfaec17",
+        "uid": 33,
+        "gid": 33,
+        "size": 13673279
+      },
+      {
+        "path": "originals/WR5220 G5/lenovo_wentian_wr5220g5_user_guide_v7.pdf",
+        "sha256": "c73297846d184c5033c92058dd0925f41093178d1ea35f7b287c19a4e5cf5f34",
+        "uid": 33,
+        "gid": 33,
+        "size": 46290483
+      },
+      {
+        "path": "originals/WR5220 G5/lp1728.pdf",
+        "sha256": "270eeadc4cc0f802e3b2c939e4abda15683fc65aed5716f9c1bf9aa955083e5d",
+        "uid": 33,
+        "gid": 33,
+        "size": 267600
+      },
+      {
+        "path": "originals/WR5220 G5/lp2014.pdf",
+        "sha256": "9697a67c0223b29c2b6050101b0eef6c61e7c3c85b3cb4ad63488887e09d2c70",
+        "uid": 33,
+        "gid": 33,
+        "size": 6048115
+      },
+      {
+        "path": "originals/WR5220 G5/lxce_bomc_cplus_ug.pdf",
+        "sha256": "c41b84786be486e197ab7604f58b63be062948a8e73455f0c17fb013158959e8",
+        "uid": 33,
+        "gid": 33,
+        "size": 638956
+      },
+      {
+        "path": "originals/WR5220 G5/lxce_onecli_cplus_ug.pdf",
+        "sha256": "dba774fbccfbd4c2e7e84819f2c213a37af77862be9143344db0f64e7f5e3440",
+        "uid": 33,
+        "gid": 33,
+        "size": 856757
+      },
+      {
+        "path": "originals/WR5220 G5/lxce_ux_cplus_ug.pdf",
+        "sha256": "db4f1f0c538d2e623a2b9b9f9de76ad7cc64776076d3246a5cd562c6d0c5576c",
+        "uid": 33,
+        "gid": 33,
+        "size": 778902
+      },
+      {
+        "path": "originals/WR5220 G5/lxpm_wentian_ug-v2.pdf",
+        "sha256": "7508bcd4c26266887f92c7c803a57cc9cc9d277229909af94f3cb60023844bdc",
+        "uid": 33,
+        "gid": 33,
+        "size": 2508949
+      },
+      {
+        "path": "originals/WR5220 G5/psu_label_matrix.pdf",
+        "sha256": "8ca145a1ab7450891da9af84933fdebe3042f9624ae25974bb34fb72782c1f39",
+        "uid": 33,
+        "gid": 33,
+        "size": 1676894
+      },
+      {
+        "path": "originals/WR5225 G3/lenovo_bmc_event_reference_guide_g5_v4.pdf",
+        "sha256": "fc4a694ce1574db865fe41a904d185bc85092598a5b6a6d0cbbff739c75411ef",
+        "uid": 33,
+        "gid": 33,
+        "size": 1751445
+      },
+      {
+        "path": "originals/WR5225 G3/lenovo_bmc_g3_redfish_guide_v11.pdf",
+        "sha256": "456897573c42b3e7eb767b248e3c588a987b7f23b2a0c70a344e816b91837ee8",
+        "uid": 33,
+        "gid": 33,
+        "size": 8326662
+      },
+      {
+        "path": "originals/WR5225 G3/lenovo_snmp_ug_g3.pdf",
+        "sha256": "54364f7a996ac070098bfa4d0b8de530660edc2aaacd73550584c57373b8256e",
+        "uid": 33,
+        "gid": 33,
+        "size": 1136366
+      },
+      {
+        "path": "originals/WR5225 G3/lenovo_wentian_os_installation_guide.pdf",
+        "sha256": "f5d59ae8c6bfc792ae28160790ce0f673b8d940de86f98ed7e326fb40cfaec17",
+        "uid": 33,
+        "gid": 33,
+        "size": 13673279
+      },
+      {
+        "path": "originals/WR5225 G3/lp2129.pdf",
+        "sha256": "4359185edbc9e46fb5108fe99fb0e6253148357afeb29ff3f8b6d938bba70403",
+        "uid": 33,
+        "gid": 33,
+        "size": 5222978
+      },
+      {
+        "path": "originals/WR5225 G3/lxce_bomc_cplus_ug.pdf",
+        "sha256": "c41b84786be486e197ab7604f58b63be062948a8e73455f0c17fb013158959e8",
+        "uid": 33,
+        "gid": 33,
+        "size": 638956
+      },
+      {
+        "path": "originals/WR5225 G3/lxce_onecli_cplus_ug.pdf",
+        "sha256": "dba774fbccfbd4c2e7e84819f2c213a37af77862be9143344db0f64e7f5e3440",
+        "uid": 33,
+        "gid": 33,
+        "size": 856757
+      },
+      {
+        "path": "originals/WR5225 G3/lxce_ux_cplus_ug.pdf",
+        "sha256": "db4f1f0c538d2e623a2b9b9f9de76ad7cc64776076d3246a5cd562c6d0c5576c",
+        "uid": 33,
+        "gid": 33,
+        "size": 778902
+      },
+      {
+        "path": "originals/WR5225 G3/psu_label_matrix.pdf",
+        "sha256": "8ca145a1ab7450891da9af84933fdebe3042f9624ae25974bb34fb72782c1f39",
+        "uid": 33,
+        "gid": 33,
+        "size": 1676894
+      },
+      {
+        "path": "originals/WR5225 G3/wr5225g3_bios_setup_spec_v2.9-turin.pdf",
+        "sha256": "683e4a61ad09ed4a676d063878096127141cddf1128c469b8534853236f52247",
+        "uid": 33,
+        "gid": 33,
+        "size": 9515895
+      },
+      {
+        "path": "originals/WR5225 G3/wr5225g3_bios_setup_spec_v3.0-genoa.pdf",
+        "sha256": "d242cfa85dcc029ccb129fe5d2e61f0a051c6b2c664d95d66a7d1ee48dd5ac08",
+        "uid": 33,
+        "gid": 33,
+        "size": 9121666
+      },
+      {
+        "path": "originals/WR5225 G3/wr5225g3_user_guide_v6.pdf",
+        "sha256": "8cfc8781da9c75bdab2b3477a6564cba1b06009d553530cd3a026014f4b677af",
+        "uid": 33,
+        "gid": 33,
+        "size": 31015607
+      },
+      {
+        "path": "originals/WR6220 G5/lenovo_wentian_wr6220g5_user_guide.pdf",
+        "sha256": "8921606e9e9fcc6b199f2c360787dc228f3180bd2448423d40bd1d101c13be71",
+        "uid": 33,
+        "gid": 33,
+        "size": 25588950
+      },
+      {
+        "path": "originals/WR6220 G5/lp2468.pdf",
+        "sha256": "1c346cc68cc75a84dbf27f21d5f25c2806f3a666c963afe807713ab6a11e23b0",
+        "uid": 33,
+        "gid": 33,
+        "size": 9353267
+      },
+      {
+        "path": "originals/WR6220 G5/lp2502.pdf",
+        "sha256": "dfafab00543396b843a9daac753c9962f8366a4752a121442a62e056b0ae4f25",
+        "uid": 33,
+        "gid": 33,
+        "size": 10174586
+      }
+    ],
+    "status": "passed"
+  },
+  "nextcloud_status": {
+    "installed": true,
+    "version": "35.0.1.1",
+    "versionstring": "35.0.1",
+    "edition": "",
+    "maintenance": false,
+    "needsDbUpgrade": false,
+    "productname": "Nextcloud",
+    "extendedSupport": false
+  },
+  "test_harness_notes": [
+    "CLI test caller must start at Manual Trigger; rejected Schedule Trigger harness performed no file processing.",
+    "Logic test incorrectly required explicit ExecuteWorkflow mode; native default once is valid and test now accepts omitted default.",
+    "In 2.40.7 CLI import/publish modified legacy activeVersionId but not workflow_published_version, which the native child loader used. Uninjected cases 1000000004/6 are positive runs, not failure evidence. Only the stopped private clone publication pointer was selected after exact installed-source/schema audit; production publication used MCP and readback.",
+    "An early extraction was attempted while execution data was not yet finalized; extraction resumed after terminal state.",
+    "CLI workflowVersionId metadata may refer to draft; executed explicit node parameters and connections were compared to the published graph, allowing native default expansion."
+  ],
+  "validation": {
+    "all_work_nodes_native_parameter_validation": true,
+    "final_cleanup_sdk_graph": {
+      "valid": true,
+      "nodeCount": 17
+    },
+    "parent_logic": "passed",
+    "child_logic": "passed"
+  },
+  "cleanup": {
+    "test_container_removed": true,
+    "import_container_absent": true,
+    "all_seven_jobs_absent": true,
+    "n8n_healthy": true,
+    "private_sqlite_config_env_directory_absent": true
+  }
+}

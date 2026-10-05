@@ -886,3 +886,23 @@ validation. No new infrastructure stage, workflow node/service/retry/backup or
 operator policy is introduced. Stage13 remains the accepted checkpoint.
 Record: PDF_CLEANUP_PRODUCTION_ACCEPTANCE_2026-10-05.md.
 PDF_CLEANUP_PRODUCTION_VERIFICATION=PASS.
+
+## 2026-10-06 — Documentation workflow integration verification — DEPLOYED / VERIFIED
+
+Current application scope verifies TechnicalDocumentationSync and LenovoPdfCleanup
+without adding a finite infrastructure stage. Two production no-change monitor
+runs check14models/95documents in5–7seconds. Native same-image isolated child
+execution uses live WebDAV/SSH/production CLI; two-document sequential batch,
+423-page Redfish, native output validation and INDEX publication pass.
+
+A targeted network-fault test justifies one existing DELETE node onError setting:
+release temporary job first, then report the failure through existing Return
+Result without false INDEX completion. Final normal flow passes. Child published
+version ef2dce4e-e4fe-4ac3-bf00-7bee56c0f8c8; parent unchanged.17nodes/3groups each,
+originals protection, schedule and CLI remain. All95 originals/93 unaffected
+cleaned files and catalogue metadata are preserved; only two tested derived
+outputs/cleanup timestamps refresh. Seven jobs/private test clone/container
+removed; native validation and service non-regression pass. No retries/backups/
+new component or operator acceptance is inferred. Stage13 remains accepted.
+Record: N8N_DOCUMENTATION_WORKFLOW_VERIFICATION_2026-10-06.md.
+N8N_DOCUMENTATION_WORKFLOW_VERIFICATION=PASS.

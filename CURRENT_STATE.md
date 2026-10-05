@@ -1692,3 +1692,28 @@ PDF formats, not a guarantee for arbitrary future layouts.
 Record: PDF_CLEANUP_PRODUCTION_ACCEPTANCE_2026-10-05.md.
 Evidence: deployments/edge/pdf-cleanup/production-2026-10-05/.
 PDF_CLEANUP_PRODUCTION_VERIFICATION=PASS.
+
+## 2026-10-06 — Documentation n8n workflow verification — DEPLOYED / VERIFIED
+
+Production TechnicalDocumentationSync 13157/13223 passed in 5.25/6.56 seconds:
+14 models/95 documents, zero changes/downloads/INDEX writes/cleanup calls.
+Parent active6ed111f3-306d-4cf1-8dc4-2a107c2c1b26 remains unchanged.
+Native published child was exercised in an isolated same-image n8n clone through
+live Nextcloud/SSH/production CLI: two PDFs, including423-page G3 Redfish, passed
+in118.98 seconds. Clone IDs>=1000000000 are not production execution records.
+
+A reproduced DELETE network error left its temporary job. One existing-node
+onError setting now reaches job release before Return Result reports the error;
+false INDEX success is not written. Fixed error and final positive paths pass.
+LenovoPdfCleanup active/draft ef2dce4e-e4fe-4ac3-bf00-7bee56c0f8c8 is published;
+stale candidate description removed and existing draft layout retained. Both
+schemes keep17nodes/3groups; CLI/paths/guard/credentials/schedule unchanged.
+
+All95 original hashes,93 other cleaned PDFs,INDEX.md/translations/source-title-
+previous-date metadata/ownership remain unchanged. Only two tested cleaned copies
+and their INDEX completion timestamps were refreshed;95 markers remain. Native
+configuration/SDK and meaningful logic tests pass. Seven own jobs, test container
+and private SQLite/config/env copy removed; n8n/Nextcloud non-regression passes.
+No new retry/backup/service or infrastructure stage. Stage13 remains accepted.
+Record: N8N_DOCUMENTATION_WORKFLOW_VERIFICATION_2026-10-06.md.
+N8N_DOCUMENTATION_WORKFLOW_VERIFICATION=PASS.

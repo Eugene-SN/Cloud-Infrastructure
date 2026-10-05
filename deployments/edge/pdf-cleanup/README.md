@@ -219,3 +219,9 @@ it was not deployed at the time of that record. Its candidate has now been
 deployed and all 95 paths rebuilt and independently verified. See the current
 production acceptance record above. The earlier five cleanup failures are
 resolved for the current documents; their historical records are retained.
+
+Current workflow integration verification and one-setting transport-error fix:
+[2026-10-06 report](../../../N8N_DOCUMENTATION_WORKFLOW_VERIFICATION_2026-10-06.md).
+Published child `ef2dce4e-e4fe-4ac3-bf00-7bee56c0f8c8` keeps 17 nodes/three groups.
+Deletion transport failures now reach the existing temporary-job release before
+`Return Result` reports the error. The CLI and originals guard are unchanged.

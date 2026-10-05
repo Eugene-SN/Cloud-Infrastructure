@@ -118,7 +118,7 @@
       "typeVersion": 1,
       "position": [
         672,
-        576
+        688
       ],
       "onError": "continueRegularOutput",
       "credentials": {
@@ -157,7 +157,7 @@
       "typeVersion": 2.2,
       "position": [
         896,
-        576
+        688
       ]
     },
     {
@@ -177,7 +177,7 @@
       "typeVersion": 1,
       "position": [
         1120,
-        480
+        592
       ],
       "onError": "continueRegularOutput",
       "credentials": {
@@ -213,7 +213,7 @@
       "typeVersion": 4.4,
       "position": [
         1344,
-        480
+        592
       ],
       "onError": "continueRegularOutput",
       "credentials": {
@@ -255,7 +255,7 @@
       "typeVersion": 1,
       "position": [
         2016,
-        672
+        784
       ],
       "onError": "continueRegularOutput",
       "credentials": {
@@ -275,7 +275,7 @@
       "typeVersion": 2,
       "position": [
         896,
-        960
+        736
       ]
     },
     {
@@ -320,7 +320,7 @@
       "typeVersion": 2.2,
       "position": [
         1568,
-        480
+        592
       ]
     },
     {
@@ -346,8 +346,9 @@
       "typeVersion": 4.4,
       "position": [
         1792,
-        384
+        496
       ],
+      "onError": "continueRegularOutput",
       "credentials": {
         "nextCloudApi": {
           "id": "6MEdI2Cs7tEUiM7o",
@@ -376,7 +377,7 @@
       "typeVersion": 4.4,
       "position": [
         672,
-        960
+        736
       ],
       "credentials": {
         "nextCloudApi": {
@@ -410,7 +411,7 @@
       "typeVersion": 4.4,
       "position": [
         1120,
-        960
+        736
       ],
       "credentials": {
         "nextCloudApi": {
@@ -629,8 +630,8 @@
     "availableInMCP": true,
     "binaryMode": "separate"
   },
-  "versionId": "382fc37d-61ec-4311-8c80-0bcb774a2221",
-  "activeVersionId": "382fc37d-61ec-4311-8c80-0bcb774a2221",
+  "versionId": "ef2dce4e-e4fe-4ac3-bf00-7bee56c0f8c8",
+  "activeVersionId": "ef2dce4e-e4fe-4ac3-bf00-7bee56c0f8c8",
   "nodeGroups": [
     {
       "id": "ecb5cd40-2a36-43d9-a613-1841478ae22c",
@@ -673,5 +674,6 @@
     "aiBuilderAssisted": true,
     "builderVariant": "mcp"
   },
-  "pinData": {}
+  "pinData": {},
+  "description": "Clean a supplied PDF list with the edge CLI, preserve model folders, and mark completion in INDEX.html through Nextcloud WebDAV. Originals stay unchanged; temporary jobs are removed before reporting errors."
 }

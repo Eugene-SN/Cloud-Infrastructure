@@ -17,11 +17,11 @@ POSITIONS = {
     'Subworkflow Input': [0, 0], 'Normalize Request': [224, 0], 'Each PDF': [448, 0],
     'Download Original Snapshot': [672, 240], 'Create Temporary Job': [896, 240],
     'Capture Job': [1120, 240], 'Upload Working Copy': [1344, 240],
-    'Run PDF Cleanup CLI': [672, 576], 'CLI Succeeded': [896, 576],
-    'Download Cleaned PDF': [1120, 480], 'Publish Cleaned PDF': [1344, 480],
-    'Previous Cleaned Filename': [1568, 480], 'Remove Previous Cleaned PDF': [1792, 384],
-    'Remove Temporary Job': [2016, 672], 'Read Cleanup INDEX': [672, 960],
-    'Return Result': [896, 960], 'Save Cleanup INDEX': [1120, 960],
+    'Run PDF Cleanup CLI': [672, 688], 'CLI Succeeded': [896, 688],
+    'Download Cleaned PDF': [1120, 592], 'Publish Cleaned PDF': [1344, 592],
+    'Previous Cleaned Filename': [1568, 592], 'Remove Previous Cleaned PDF': [1792, 496],
+    'Remove Temporary Job': [2016, 784], 'Read Cleanup INDEX': [672, 736],
+    'Return Result': [896, 736], 'Save Cleanup INDEX': [1120, 736],
 }
 nodes = []
 

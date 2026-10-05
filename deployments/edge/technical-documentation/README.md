@@ -218,3 +218,11 @@ failed documents are not automatically retried; changing their source version
 will trigger processing again. Resolving these CLI layout/performance limitations
 is separate from enabling the source monitor. Exact paths/errors, runtime AES
 and cancellation corrections and verification are in `wa-g3-expansion-evidence.json`.
+
+The historical five cleanup limitations above are superseded by the
+[full-catalogue production verification](../../../PDF_CLEANUP_PRODUCTION_ACCEPTANCE_2026-10-05.md).
+All 95 documents are now cleaned and marked complete. Current
+[workflow verification](../../../N8N_DOCUMENTATION_WORKFLOW_VERIFICATION_2026-10-06.md)
+confirms two no-change monitoring runs, generic batch cleanup through the live
+transport/CLI, and temporary-job release after a deletion transport error.
+TechnicalDocumentationSync itself remains unchanged at 17 nodes/three groups.

@@ -3374,3 +3374,23 @@ This establishes a production baseline for current analogous native PDFs and
 does not promise flawless handling of arbitrary future encodings/layouts.
 No final infrastructure-stage acceptance or new version/update policy is inferred.
 Reference: PDF_CLEANUP_PRODUCTION_ACCEPTANCE_2026-10-05.md.
+
+## 2026-10-06 — Verify documentation workflows and release jobs on DELETE transport failure
+
+**Operator scope:** check both existing n8n workflows for correct execution,
+efficiency and unnecessary complexity.
+
+**Verified correction:** preserve both17-node/3-group graphs and existing transport
+contract. Set continueRegularOutput only on child Remove Previous Cleaned PDF so
+network failures reach the existing temporary-job release; Return Result then
+reports the original failure. Do not add validators/retries/backups/services or
+weaken the autonomous CLI/originals protection. Normalize stale description and
+publish the existing draft layout with the one-setting fix.
+
+**Evidence:** production parent13157/13223success,14models/95documents in5–7seconds;
+exact same-image isolated native child batch uses live Nextcloud/SSH/CLI, including
+423-page Redfish. Actual unfixed/fixed network fault and final normal flow pass
+their expected outcomes.95original hashes unchanged; all95cleaned/INDEX markers
+present. Own jobs/container/private credential-bearing clone removed. Stage13
+remains accepted; no final operator acceptance or new policy is inferred.
+Record: N8N_DOCUMENTATION_WORKFLOW_VERIFICATION_2026-10-06.md.

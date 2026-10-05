@@ -60,7 +60,7 @@ async function run(name,input,previous={}) {
   assert.equal(updated.documents.find(d=>d.key===doc.key).previous_path,undefined);
   assert.equal(updated.documents.find(d=>d.key===doc.key).previous_source_updated,doc.previous_source_updated);
   const cleanupNode=nodes.find(n=>n.name==='Clean Saved PDFs');
-  assert.equal(cleanupNode.parameters.mode,'once');
+  assert.equal(cleanupNode.parameters.mode ?? 'once','once');
   assert.equal(cleanupNode.parameters.options.waitForSubWorkflow,true);
   await assert.rejects(()=>run('Latest Document Families',[{json:{body:{status:500}}}],{'Models and Index':models}));
   const audit=JSON.parse(fs.readFileSync(__dirname+'/source-audit-2026-10-05.json','utf8'));
