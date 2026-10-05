@@ -790,7 +790,9 @@ of the separate cleanup candidate remain independent work.
 Following purpose review, the operator explicitly authorized permanent deletion
 of Oracle Pilot and the legacy Hermes Machine Invocation. Both are removed;
 the prior dormant-Hermes retention is superseded. Oracle-only container settings
-and its obsolete Compose override are removed, while research results remain.
+and its obsolete Compose override are removed. The subsequent operator instruction
+for full residue deletion supersedes research-result retention: /srv/benchmark,
+all 24 pilot child executions and eight old temporary audit files are now absent.
 All remaining workflows retain their definitions/publication; LenovoPdfCleanup
 acceptance remains pending. This bounded housekeeping creates no new stage.
 Full inventory and verification: N8N_WORKFLOW_CLEANUP_ACCEPTANCE_2026-10-05.md.

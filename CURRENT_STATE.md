@@ -1553,7 +1553,10 @@ This supersedes the prior dormant-Hermes retention decision. Ten workflows remai
 nine published/active and the unpublished LenovoPdfCleanup candidate. Retained
 definitions/publication, credentials, Data Table schema and webhooks are unchanged.
 Oracle-only mount/allowlist/Compose override are absent after same-image n8n
-recreation; 2,084 other pilot research files are byte-unchanged. n8n and its
-critical workflows are healthy. Existing ai-node/vLLM monitoring failures predate
+recreation. A subsequent explicit operator instruction superseded pilot-data
+retention: the entire /srv/benchmark tree (2,086 regular files, 165,408,682 bytes),
+24 pilot child executions in AIExecution01 and eight obsolete /tmp audit files
+are permanently removed. All ten workflow definitions/publication, credentials
+and current cloud documents remain unchanged. n8n and critical workflows are healthy. Existing ai-node/vLLM monitoring failures predate
 this work and are outside this cleanup. Inventory, recovery snapshot readback
 and verification: N8N_WORKFLOW_CLEANUP_ACCEPTANCE_2026-10-05.md.

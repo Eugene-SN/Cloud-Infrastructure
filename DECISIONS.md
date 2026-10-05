@@ -3250,3 +3250,15 @@ registrations are unchanged. Pilot results/source materials remain research
 artifacts without an n8n mount. Historical acceptance evidence is preserved.
 No other workflow is retired or published by this decision. Exact verification
 and current inventory: N8N_WORKFLOW_CLEANUP_ACCEPTANCE_2026-10-05.md.
+
+## 2026-10-05 — Full retired-test residue deletion — ACCEPTED
+
+The operator explicitly rejected retention of old testing materials and requested
+complete removal. This supersedes the research-artifact retention in the preceding
+workflow-cleanup decision. The entire /srv/benchmark tree, including five input
+PDFs, pilot Python environment/cache, extracted evidence, exports, results and
+scripts, is deleted. The 24 confirmed child executions of retired pilot runs
+2268/2350 are permanently deleted through the native n8n execution interface.
+Eight verified unused /tmp audit/test files are also removed. No new copy,
+archive or backup flow was created. The ten remaining workflows/publication,
+encrypted credentials and current cloud documentation are unchanged.

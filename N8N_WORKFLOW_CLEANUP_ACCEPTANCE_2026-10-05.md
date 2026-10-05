@@ -94,3 +94,34 @@ N8N_READINESS_AND_CRITICAL_WORKFLOWS=PASS
 N8N_RECOVERY_SNAPSHOT_READBACK=PASS
 N8N_WORKFLOW_CLEANUP=PASS
 ```
+
+## Subsequent operator instruction — complete testing residue deletion
+
+The operator rejected retention of old test materials. This supersedes the
+preserved-pilot-files statements and UNCHANGED marker at the earlier checkpoint
+above. The current live state is:
+
+- Entire /srv/benchmark absent: 2,086 regular files / 165,408,682 bytes removed,
+  including five test-input PDFs and all pilot environments/cache, prepared data,
+  reports, raw exports/results and scripts. No active process/container/workflow
+  dependency was found before deletion; symlinks were removed without following
+  their external targets.
+- Exactly 24 AIExecution01 child runs are absent, with execution payloads removed
+  through native POST /rest/executions/delete. Installed native flatted parsing
+  confirmed all belong to removed pilot parents 2268/2350. IDs:
+  2270, 2273, 2278, 2282, 2286, 2290, 2295, 2299, 2302, 2306, 2309, 2311,
+  2351, 2360, 2368, 2374, 2398, 2411, 2414, 2421, 2426, 2430, 2432, 2434.
+- Eight exact unused temporary files removed after hash/reference/open-FD checks:
+  /tmp/legacy-dir-refs.Krfm3I, /tmp/test_maintenance.json, /tmp/test_status.json,
+  /tmp/mm_swagger.yaml, /tmp/mm_swagger.json,
+  /tmp/hermes-git-config.pre-departialize.nfQCgy,
+  /tmp/installed-skill-names.txt and /tmp/maint_frozen_iris.html.
+- All ten remaining workflow definitions/settings/publication and credentials
+  match the pre-change baseline. All 80 files in the current cloud Lenovo
+  documentation tree are byte-unchanged. Retired workflow/child storage paths
+  are absent. n8n readiness HTTP200 and critical-workflow monitoring OK.
+- No retained test copy/export/archive or new backup flow was created. This
+  cleanup leaves the ordinary accepted backup/audit/service lifecycle intact.
+
+Current marker: N8N_PILOT_RESEARCH_ARTIFACTS=ABSENT;
+N8N_RETIRED_TEST_EXECUTIONS=ABSENT; N8N_RETIRED_TEST_RESIDUE_CLEANUP=PASS.
