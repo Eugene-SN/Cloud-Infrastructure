@@ -767,3 +767,20 @@ This implements the source-monitoring scope previously deferred alongside the
 cleanup candidate. Cleanup acceptance/publication and model-path integration,
 translation and enabling additional models remain independent future work.
 The original-protection contract of the autonomous cleanup CLI is unchanged.
+
+## 2026-10-05 — Additional documentation models — DEPLOYED / VERIFIED
+
+The operator authorized enabling all eight source-audited groups in the existing
+TechnicalDocumentationSync01 workflow; WR5220 G3 remains enabled. The workflow
+now has nine model collections and still sixteen nodes. The only logic extension
+keeps WR5225 G3 Genoa/Turin BIOS families separate while replacing their old
+revision filenames. Lenovo ASP and the configured Lenovo Press PDFs are monitored
+through the existing daily 07:00 Europe/Minsk schedule and Nextcloud credential.
+
+Completed: 32 model directories created through WebDAV across originals, cleaned
+and translated/en/ru; 63 new PDFs downloaded; INDEX.html updated to 78 documents;
+published production no-change run passed without writes; original WR5220 G3
+PDFs and INDEX.md preserved. Configuration and verification are under
+`deployments/edge/technical-documentation/`; execution evidence is
+`model-expansion-evidence.json`. Cleanup/translation integration and acceptance
+of the separate cleanup candidate remain independent work.

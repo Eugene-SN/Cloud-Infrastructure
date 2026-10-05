@@ -3217,3 +3217,20 @@ cleanup CLI retains its protection of the actual originals tree; this intake
 workflow is allowed to replace original versions. Design acceptance does not
 accept or publish the separate cleanup candidate. Verified runtime and evidence:
 `deployments/edge/technical-documentation/`.
+
+## 2026-10-05 — Additional documentation models — ACCEPTED OPERATOR SCOPE
+
+The operator authorized adding the eight source-audited groups to the existing
+TechnicalDocumentationSync01 monitor: WR3220 G5, WR5215 G5, WR5220 G5/WR5228 G5,
+WR5225 G3, WR6220 G5, WA5480 G5/WA5488 G5, WA5680 G5 and WA5685 G5. WR5220 G3
+remains enabled. Both Lenovo ASP and the listed Lenovo Press PDFs are included,
+including the additional SAP certification reference listed for WR5220 G5.
+
+Paired models share the primary model folder. Model directories follow the
+already agreed originals/cleaned/translated/en/translated/ru layout and are
+created once through Nextcloud WebDAV. Daily operation still owns originals
+and INDEX.html only; original vendor filenames and upload-before-old-filename
+deletion are retained. Genoa and Turin BIOS documents for WR5225 G3 are distinct
+version families. No new nodes, credentials, services, backup mechanism, cleanup
+or translation integration are added. Deployed evidence and source configuration:
+`deployments/edge/technical-documentation/`.

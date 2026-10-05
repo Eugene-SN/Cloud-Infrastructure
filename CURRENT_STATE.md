@@ -1516,3 +1516,31 @@ Contract, deployed definition and sanitized evidence:
 `deployments/edge/technical-documentation/`. Finite infrastructure checkpoint
 remains Stage 13 COMPLETE / ACCEPTED; this entry records verified runtime,
 without accepting the separate cleanup candidate.
+
+## 2026-10-05 — Technical-documentation model expansion — DEPLOYED / VERIFIED
+
+This supersedes the earlier single-collection monitoring scope. Published
+TechnicalDocumentationSync01 (`QouVaVNhAqSiYq5D`), version
+`af23c9a9-9b54-495f-b684-f6e37f7b7163`, now monitors nine model collections:
+WR3220 G5, WR5215 G5, WR5220 G3, WR5220 G5, WR5225 G3, WR6220 G5, WA5480 G5,
+WA5680 G5 and WA5685 G5. Paired WR5228/WA5488 model groups use the primary
+WR5220/WA5480 folder. Lenovo ASP catalogues and the audited Lenovo Press PDFs
+are configured in the existing Models and Index node.
+
+The workflow retains sixteen nodes, its existing Nextcloud credential and the
+daily 07:00 Europe/Minsk schedule. Only the model configuration and family-key
+normalization changed; WR5225 Genoa/Turin BIOS revisions update independently.
+Thirty-two model folders were created through WebDAV under the agreed originals,
+cleaned and translated/en/ru tree. No cleanup/translation execution was enabled.
+
+Initial expansion execution 11657 saved 63 PDFs and updated INDEX.html to 78
+documents in nine collections. Published production execution 11773 found zero
+changes and performed no downloads or writes. All fifteen pre-existing PDFs and
+INDEX.md remain byte-identical. Filesystem filenames, sizes and PDF signatures
+agree with the index; authenticated Nextcloud listings agree on all filenames
+and counts. Existing n8n/Nextcloud services remained running. The separate
+LenovoPdfCleanup01 candidate remains unpublished and unchanged.
+
+Configuration, deployed definition, source audit and verification:
+`deployments/edge/technical-documentation/`. No new infrastructure stage or
+service was introduced; Stage 13 remains the accepted finite checkpoint.

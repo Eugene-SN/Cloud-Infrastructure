@@ -2,10 +2,221 @@
   "id": "QouVaVNhAqSiYq5D",
   "name": "TechnicalDocumentationSync01",
   "active": true,
+  "isArchived": false,
+  "versionId": "af23c9a9-9b54-495f-b684-f6e37f7b7163",
+  "activeVersionId": "af23c9a9-9b54-495f-b684-f6e37f7b7163",
+  "triggerCount": 1,
+  "nodeCount": 16,
+  "createdAt": "2026-10-05T10:38:15.787Z",
+  "updatedAt": "2026-10-05T11:23:09.427Z",
   "settings": {
     "executionOrder": "v1",
     "availableInMCP": true,
     "timezone": "Europe/Minsk"
+  },
+  "tags": [],
+  "parentFolderId": null,
+  "description": "Daily WR5220 G3 documentation sync from Lenovo ASP and Lenovo Press. Replace updated originals through Nextcloud WebDAV and maintain the compact INDEX.html; models configured in one node.",
+  "scopes": [
+    "execution:reveal",
+    "workflow:create",
+    "workflow:delete",
+    "workflow:disableRedaction",
+    "workflow:enableRedaction",
+    "workflow:execute",
+    "workflow:execute-chat",
+    "workflow:export",
+    "workflow:import",
+    "workflow:list",
+    "workflow:move",
+    "workflow:publish",
+    "workflow:read",
+    "workflow:share",
+    "workflow:unpublish",
+    "workflow:unshare",
+    "workflow:update"
+  ],
+  "canExecute": true,
+  "connections": {
+    "Daily 07:00": {
+      "main": [
+        [
+          {
+            "node": "Read INDEX",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Models and Index": {
+      "main": [
+        [
+          {
+            "node": "Read Lenovo ASP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Lenovo ASP": {
+      "main": [
+        [
+          {
+            "node": "Latest Document Families",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Latest Document Families": {
+      "main": [
+        [
+          {
+            "node": "Read Remote Version",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Remote Version": {
+      "main": [
+        [
+          {
+            "node": "Changed Documents",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Changed Documents": {
+      "main": [
+        [
+          {
+            "node": "Each Changed PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update INDEX": {
+      "main": [
+        [
+          {
+            "node": "Save INDEX",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download PDF": {
+      "main": [
+        [
+          {
+            "node": "Save Original",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Original": {
+      "main": [
+        [
+          {
+            "node": "Filename Changed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filename Changed": {
+      "main": [
+        [
+          {
+            "node": "Remove Previous Filename",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Saved Document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Previous Filename": {
+      "main": [
+        [
+          {
+            "node": "Saved Document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Saved Document": {
+      "main": [
+        [
+          {
+            "node": "Each Changed PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Each Changed PDF": {
+      "main": [
+        [
+          {
+            "node": "Update INDEX",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Download PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manual Start": {
+      "main": [
+        [
+          {
+            "node": "Read INDEX",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read INDEX": {
+      "main": [
+        [
+          {
+            "node": "Models and Index",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
   },
   "nodes": [
     {
@@ -73,7 +284,7 @@
       ],
       "parameters": {
         "mode": "runOnceForAllItems",
-        "jsCode": "\nconst models = [{\n  folder: 'WR5220 G3',\n  fullGuid: '339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/5D07DC93-3C2A-4986-BBB4-A04A44FAB99E',\n  press: [{key:'product-guide', title:'Product Guide Lenovo Wentian WR5220 G3', url:'https://lenovopress.lenovo.com/lp1705.pdf', language:'zh'}],\n  labels: {\n    'lenovo_wentian_wr5220g3_user_guide': ['user-manual', 'User Manual Lenovo Wentian WR5220 G3'],\n    'lenovo_wentian_os_installation_guide': ['os-installation-guide', 'OS Installation Guide Lenovo Wentian'],\n    'lenovo_bmc_g3_commands_guide': ['bmc-ipmi-specification', 'IPMI Command Specification Lenovo BMC'],\n    'lenovo_bmc_event_reference_guide': ['bmc-event-reference', 'Event Reference Guide Lenovo BMC'],\n    'lenovo_snmp_ug_g3': ['bmc-snmp-reference', 'SNMP Reference Guide Lenovo BMC'],\n    'bmc_user_guide': ['bmc-enterprise-user-guide', 'User Guide Lenovo BMC Enterprise G3'],\n    'lenovo_bmc_g3_redfish_guide': ['bmc-redfish-specification', 'Redfish Interface Specification Lenovo BMC G3'],\n    'lxce_bomc_cplus_ug': ['bomc-user-guide', 'User Guide Lenovo XClarity Essentials BoMC cPlus'],\n    'lxce_onecli_cplus_ug': ['onecli-user-guide', 'User Guide Lenovo XClarity Essentials OneCLI cPlus'],\n    'lxce_ux_cplus_ug': ['updatexpress-user-guide', 'User Guide Lenovo XClarity Essentials UpdateXpress cPlus'],\n    'lxpm_wentian_ug': ['lxpm-user-guide', 'User Guide Lenovo XClarity Provisioning Manager Wentian'],\n    'wr5220g3_bios_setup_spec': ['bios-setup-specification', 'BIOS Setup Specification Lenovo Wentian WR5220 G3'],\n    'psu_label_matrix': ['psu-label-matrix', 'PSU Label Matrix Lenovo'],\n    'vmware_code_recipe_file': ['vmware-code-recipe', 'VMware Code Recipe File']\n  }\n}];\nreturn models.map(model => ({json:{model}}));\n"
+        "jsCode": "const models = [\n  {\n    \"folder\": \"WR3220 G5\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/C342B075-351E-47EA-BE1F-DBAFE95A46A0\",\n    \"press\": [\n      {\n        \"key\": \"product-guide\",\n        \"title\": \"Product Guide Lenovo Wentian WR3220 G5\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2440.pdf\",\n        \"language\": \"unknown\"\n      }\n    ],\n    \"labels\": {\n      \"lenovo_wentian_wr3220g5_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WR3220 G5\"\n      ],\n      \"lxce_bomc_cplus_ug\": [\n        \"bomc-user-guide\",\n        \"User Guide Lenovo XClarity Essentials BoMC cPlus\"\n      ],\n      \"lxce_onecli_cplus_ug\": [\n        \"onecli-user-guide\",\n        \"User Guide Lenovo XClarity Essentials OneCLI cPlus\"\n      ],\n      \"lxce_ux_cplus_ug\": [\n        \"updatexpress-user-guide\",\n        \"User Guide Lenovo XClarity Essentials UpdateXpress cPlus\"\n      ]\n    }\n  },\n  {\n    \"folder\": \"WR5215 G5\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/2965B165-6320-4D06-BD34-8350DBC4B616\",\n    \"press\": [\n      {\n        \"key\": \"product-guide\",\n        \"title\": \"Product Guide Lenovo Wentian WR5215 G5\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2356.pdf\",\n        \"language\": \"unknown\"\n      }\n    ],\n    \"labels\": {\n      \"lenovo_wentian_wr5215g5_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WR5215 G5\"\n      ],\n      \"lenovo_bmc_user_guide_g5\": [\n        \"bmc-enterprise-user-guide\",\n        \"User Guide Lenovo BMC Enterprise G5\"\n      ],\n      \"lenovo_bmc_commands_g5\": [\n        \"bmc-ipmi-specification\",\n        \"IPMI Command Specification Lenovo BMC G5\"\n      ],\n      \"lenovo_bmc_snmp_guide_g5\": [\n        \"bmc-snmp-reference\",\n        \"SNMP Reference Guide Lenovo BMC G5\"\n      ],\n      \"lenovo_bmc_redfish_guide_g5\": [\n        \"bmc-redfish-specification\",\n        \"Redfish Interface Specification Lenovo BMC G5\"\n      ],\n      \"lxce_bomc_cplus_ug\": [\n        \"bomc-user-guide\",\n        \"User Guide Lenovo XClarity Essentials BoMC cPlus\"\n      ],\n      \"lxce_onecli_cplus_ug\": [\n        \"onecli-user-guide\",\n        \"User Guide Lenovo XClarity Essentials OneCLI cPlus\"\n      ],\n      \"lxce_ux_cplus_ug\": [\n        \"updatexpress-user-guide\",\n        \"User Guide Lenovo XClarity Essentials UpdateXpress cPlus\"\n      ]\n    }\n  },\n  {\n    \"folder\": \"WR5220 G3\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/5D07DC93-3C2A-4986-BBB4-A04A44FAB99E\",\n    \"press\": [\n      {\n        \"key\": \"product-guide\",\n        \"title\": \"Product Guide Lenovo Wentian WR5220 G3\",\n        \"url\": \"https://lenovopress.lenovo.com/lp1705.pdf\",\n        \"language\": \"zh\"\n      }\n    ],\n    \"labels\": {\n      \"lenovo_wentian_wr5220g3_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WR5220 G3\"\n      ],\n      \"lenovo_wentian_os_installation_guide\": [\n        \"os-installation-guide\",\n        \"OS Installation Guide Lenovo Wentian\"\n      ],\n      \"lenovo_bmc_g3_commands_guide\": [\n        \"bmc-ipmi-specification\",\n        \"IPMI Command Specification Lenovo BMC\"\n      ],\n      \"lenovo_bmc_event_reference_guide\": [\n        \"bmc-event-reference\",\n        \"Event Reference Guide Lenovo BMC\"\n      ],\n      \"lenovo_snmp_ug_g3\": [\n        \"bmc-snmp-reference\",\n        \"SNMP Reference Guide Lenovo BMC\"\n      ],\n      \"bmc_user_guide\": [\n        \"bmc-enterprise-user-guide\",\n        \"User Guide Lenovo BMC Enterprise G3\"\n      ],\n      \"lenovo_bmc_g3_redfish_guide\": [\n        \"bmc-redfish-specification\",\n        \"Redfish Interface Specification Lenovo BMC G3\"\n      ],\n      \"lxce_bomc_cplus_ug\": [\n        \"bomc-user-guide\",\n        \"User Guide Lenovo XClarity Essentials BoMC cPlus\"\n      ],\n      \"lxce_onecli_cplus_ug\": [\n        \"onecli-user-guide\",\n        \"User Guide Lenovo XClarity Essentials OneCLI cPlus\"\n      ],\n      \"lxce_ux_cplus_ug\": [\n        \"updatexpress-user-guide\",\n        \"User Guide Lenovo XClarity Essentials UpdateXpress cPlus\"\n      ],\n      \"lxpm_wentian_ug\": [\n        \"lxpm-user-guide\",\n        \"User Guide Lenovo XClarity Provisioning Manager Wentian\"\n      ],\n      \"wr5220g3_bios_setup_spec\": [\n        \"bios-setup-specification\",\n        \"BIOS Setup Specification Lenovo Wentian WR5220 G3\"\n      ],\n      \"psu_label_matrix\": [\n        \"psu-label-matrix\",\n        \"PSU Label Matrix Lenovo\"\n      ],\n      \"vmware_code_recipe_file\": [\n        \"vmware-code-recipe\",\n        \"VMware Code Recipe File\"\n      ]\n    }\n  },\n  {\n    \"folder\": \"WR5220 G5\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/EDF3440A-96A1-463B-9A35-C871B3B28AA1\",\n    \"press\": [\n      {\n        \"key\": \"product-guide\",\n        \"title\": \"Product Guide Lenovo Wentian WR5220 G5\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2014.pdf\",\n        \"language\": \"unknown\"\n      },\n      {\n        \"key\": \"sap-certifications\",\n        \"title\": \"SAP Certifications of Lenovo Servers\",\n        \"url\": \"https://lenovopress.lenovo.com/lp1728.pdf\",\n        \"language\": \"en\"\n      }\n    ],\n    \"labels\": {\n      \"lenovo_wentian_wr5220g5_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WR5220 G5\"\n      ],\n      \"lenovo_wentian_os_installation_guide\": [\n        \"os-installation-guide\",\n        \"OS Installation Guide Lenovo Wentian\"\n      ],\n      \"lenovo_bmc_user_guide_g5\": [\n        \"bmc-enterprise-user-guide\",\n        \"User Guide Lenovo BMC Enterprise G5\"\n      ],\n      \"lenovo_bmc_commands_g5\": [\n        \"bmc-ipmi-specification\",\n        \"IPMI Command Specification Lenovo BMC G5\"\n      ],\n      \"lenovo_bmc_snmp_guide_g5\": [\n        \"bmc-snmp-reference\",\n        \"SNMP Reference Guide Lenovo BMC G5\"\n      ],\n      \"lenovo_bmc_redfish_guide_g5\": [\n        \"bmc-redfish-specification\",\n        \"Redfish Interface Specification Lenovo BMC G5\"\n      ],\n      \"lenovo_bmc_event_reference_guide\": [\n        \"bmc-event-reference\",\n        \"Event Reference Guide Lenovo BMC G3/G5\"\n      ],\n      \"lxpm_wentian_ug\": [\n        \"lxpm-user-guide\",\n        \"User Guide Lenovo XClarity Provisioning Manager Wentian\"\n      ],\n      \"lxce_bomc_cplus_ug\": [\n        \"bomc-user-guide\",\n        \"User Guide Lenovo XClarity Essentials BoMC cPlus\"\n      ],\n      \"lxce_onecli_cplus_ug\": [\n        \"onecli-user-guide\",\n        \"User Guide Lenovo XClarity Essentials OneCLI cPlus\"\n      ],\n      \"lxce_ux_cplus_ug\": [\n        \"updatexpress-user-guide\",\n        \"User Guide Lenovo XClarity Essentials UpdateXpress cPlus\"\n      ],\n      \"psu_label_matrix\": [\n        \"psu-label-matrix\",\n        \"PSU Label Matrix Lenovo\"\n      ]\n    }\n  },\n  {\n    \"folder\": \"WR5225 G3\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/738CA58A-E195-47E6-A61D-248870091B2C\",\n    \"press\": [\n      {\n        \"key\": \"product-guide\",\n        \"title\": \"Product Guide Lenovo Wentian WR5225 G3\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2129.pdf\",\n        \"language\": \"unknown\"\n      }\n    ],\n    \"labels\": {\n      \"wr5225g3_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WR5225 G3\"\n      ],\n      \"lenovo_wentian_os_installation_guide\": [\n        \"os-installation-guide\",\n        \"OS Installation Guide Lenovo Wentian\"\n      ],\n      \"wr5225g3_bios_setup_spec-genoa\": [\n        \"bios-setup-specification-genoa\",\n        \"BIOS Setup Specification Lenovo Wentian WR5225 G3 — Genoa\"\n      ],\n      \"wr5225g3_bios_setup_spec-turin\": [\n        \"bios-setup-specification-turin\",\n        \"BIOS Setup Specification Lenovo Wentian WR5225 G3 — Turin\"\n      ],\n      \"lenovo_snmp_ug_g3\": [\n        \"bmc-snmp-reference\",\n        \"SNMP Reference Guide Lenovo BMC G3\"\n      ],\n      \"lenovo_bmc_g3_redfish_guide\": [\n        \"bmc-redfish-specification\",\n        \"Redfish Interface Specification Lenovo BMC G3\"\n      ],\n      \"lenovo_bmc_event_reference_guide\": [\n        \"bmc-event-reference\",\n        \"Event Reference Guide Lenovo BMC G3/G5\"\n      ],\n      \"lxce_bomc_cplus_ug\": [\n        \"bomc-user-guide\",\n        \"User Guide Lenovo XClarity Essentials BoMC cPlus\"\n      ],\n      \"lxce_onecli_cplus_ug\": [\n        \"onecli-user-guide\",\n        \"User Guide Lenovo XClarity Essentials OneCLI cPlus\"\n      ],\n      \"lxce_ux_cplus_ug\": [\n        \"updatexpress-user-guide\",\n        \"User Guide Lenovo XClarity Essentials UpdateXpress cPlus\"\n      ],\n      \"psu_label_matrix\": [\n        \"psu-label-matrix\",\n        \"PSU Label Matrix Lenovo\"\n      ]\n    }\n  },\n  {\n    \"folder\": \"WR6220 G5\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/96C91746-0B94-43FD-9679-AEE8D447ECFB\",\n    \"press\": [\n      {\n        \"key\": \"product-guide\",\n        \"title\": \"Product Guide Lenovo Wentian WR6220 G5\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2468.pdf\",\n        \"language\": \"unknown\"\n      },\n      {\n        \"key\": \"datasheet\",\n        \"title\": \"Datasheet Lenovo Wentian WR6220 G5\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2502.pdf\",\n        \"language\": \"unknown\"\n      }\n    ],\n    \"labels\": {\n      \"lenovo_wentian_wr6220g5_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WR6220 G5\"\n      ]\n    }\n  },\n  {\n    \"folder\": \"WA5480 G5\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/FA7C53C0-E6C1-494C-9581-EA0B9EC4937F\",\n    \"press\": [],\n    \"labels\": {\n      \"lenovo_wentian_wa5480g5_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WA5480 G5\"\n      ],\n      \"lenovo_wentian_os_installation_guide\": [\n        \"os-installation-guide\",\n        \"OS Installation Guide Lenovo Wentian\"\n      ],\n      \"wa5480g5_bios_setup_spec\": [\n        \"bios-setup-specification\",\n        \"BIOS Setup Specification Lenovo Wentian WA5480 G5\"\n      ],\n      \"lenovo_bmc_user_guide_g5\": [\n        \"bmc-enterprise-user-guide\",\n        \"User Guide Lenovo BMC Enterprise G5\"\n      ],\n      \"lenovo_bmc_commands_g5\": [\n        \"bmc-ipmi-specification\",\n        \"IPMI Command Specification Lenovo BMC G5\"\n      ],\n      \"lenovo_bmc_snmp_guide_g5\": [\n        \"bmc-snmp-reference\",\n        \"SNMP Reference Guide Lenovo BMC G5\"\n      ],\n      \"lenovo_bmc_redfish_guide_g5\": [\n        \"bmc-redfish-specification\",\n        \"Redfish Interface Specification Lenovo BMC G5\"\n      ],\n      \"lenovo_bmc_event_reference_guide\": [\n        \"bmc-event-reference\",\n        \"Event Reference Guide Lenovo BMC G3/G5\"\n      ],\n      \"lxpm_wentian_ug\": [\n        \"lxpm-user-guide\",\n        \"User Guide Lenovo XClarity Provisioning Manager Wentian\"\n      ],\n      \"lxce_bomc_cplus_ug\": [\n        \"bomc-user-guide\",\n        \"User Guide Lenovo XClarity Essentials BoMC cPlus\"\n      ],\n      \"lxce_onecli_cplus_ug\": [\n        \"onecli-user-guide\",\n        \"User Guide Lenovo XClarity Essentials OneCLI cPlus\"\n      ],\n      \"lxce_ux_cplus_ug\": [\n        \"updatexpress-user-guide\",\n        \"User Guide Lenovo XClarity Essentials UpdateXpress cPlus\"\n      ],\n      \"psu_label_matrix\": [\n        \"psu-label-matrix\",\n        \"PSU Label Matrix Lenovo\"\n      ]\n    }\n  },\n  {\n    \"folder\": \"WA5680 G5\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/F5C5B634-8B65-4226-84B1-4C05F13160D9\",\n    \"press\": [\n      {\n        \"key\": \"product-guide\",\n        \"title\": \"Product Guide Lenovo Wentian WA5680 G5\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2469.pdf\",\n        \"language\": \"unknown\"\n      },\n      {\n        \"key\": \"datasheet\",\n        \"title\": \"Datasheet Lenovo Wentian WA5680 G5\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2506.pdf\",\n        \"language\": \"unknown\"\n      }\n    ],\n    \"labels\": {\n      \"lenovo_wentian_wa5680g5_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WA5680 G5\"\n      ],\n      \"lenovo_wentian_wa5680g5_bios_setup_spec\": [\n        \"bios-setup-specification\",\n        \"BIOS Setup Specification Lenovo Wentian WA5680 G5\"\n      ]\n    }\n  },\n  {\n    \"folder\": \"WA5685 G5\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/A9383A8C-EAA4-4DE9-BD5A-44E26ACF44D5\",\n    \"press\": [\n      {\n        \"key\": \"product-guide\",\n        \"title\": \"Product Guide Lenovo Wentian WA5685 G5\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2399.pdf\",\n        \"language\": \"unknown\"\n      },\n      {\n        \"key\": \"datasheet\",\n        \"title\": \"Datasheet Lenovo Wentian WA5685 G5\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2507.pdf\",\n        \"language\": \"unknown\"\n      }\n    ],\n    \"labels\": {\n      \"wa5685g5_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WA5685 G5\"\n      ]\n    }\n  }\n];\nreturn models.map(model => ({json:{model}}));\n"
       }
     },
     {
@@ -120,7 +331,7 @@
       ],
       "parameters": {
         "mode": "runOnceForAllItems",
-        "jsCode": "\nconst result = [];\nfor (const [i, item] of $input.all().entries()) {\n  const model = $('Models and Index').all()[i].json.model;\n  const families = new Map();\n  for (const row of item.json.body.data) {\n    const filename = decodeURIComponent(row.url.split('?')[0].split('/').pop());\n    let family = filename.toLowerCase().replace(/\\.pdf$/, '').replace(/[_-]v\\d+(?:\\.\\d+)*$/, '');\n    if (/^lenovo_bmc_event_reference_guide_g[35]$/.test(family)) family = 'lenovo_bmc_event_reference_guide';\n    const label = model.labels[family] ?? [family, row.title.trim().replace(/\\s+V?\\d+(?:\\.\\d+)*$/i, '')];\n    const doc = {key:model.folder+'/'+label[0], title:label[1], folder:model.folder,\n      source_title:row.title.trim(), source_updated:row.updated, source_url:row.url,\n      path:model.folder+'/'+filename, language:row.isChinese ? 'zh' : 'en', source:'asp'};\n    const old = families.get(doc.key);\n    if (!old || doc.source_updated > old.source_updated) families.set(doc.key, doc);\n  }\n  for (const doc of families.values()) result.push({json:doc, pairedItem:{item:i}});\n  for (const press of model.press) result.push({json:{key:model.folder+'/'+press.key,\n    title:press.title, folder:model.folder, path:model.folder+'/'+press.url.split('?')[0].split('/').pop(),\n    source_title:'Lenovo Press '+press.key, source_url:press.url, source_updated:null,\n    language:press.language, source:'press'}, pairedItem:{item:i}});\n}\nreturn result;\n"
+        "jsCode": "\nconst result = [];\nfor (const [i, item] of $input.all().entries()) {\n  const model = $('Models and Index').all()[i].json.model;\n  const families = new Map();\n  for (const row of item.json.body.data) {\n    const filename = decodeURIComponent(row.url.split('?')[0].split('/').pop());\n    let family = filename.toLowerCase().replace(/\\.pdf$/, '').replace(/[_-]v\\d+(?:\\.\\d+)*$/, '');\n    family = family.replace(/[_-]v\\d+(?:\\.\\d+)*-(genoa|turin)$/, '-$1');\n    if (/^lenovo_bmc_event_reference_guide_g[35]$/.test(family)) family = 'lenovo_bmc_event_reference_guide';\n    const label = model.labels[family] ?? [family, row.title.trim().replace(/\\s+V?\\d+(?:\\.\\d+)*$/i, '')];\n    const doc = {key:model.folder+'/'+label[0], title:label[1], folder:model.folder,\n      source_title:row.title.trim(), source_updated:row.updated, source_url:row.url,\n      path:model.folder+'/'+filename, language:row.isChinese ? 'zh' : 'en', source:'asp'};\n    const old = families.get(doc.key);\n    if (!old || doc.source_updated > old.source_updated) families.set(doc.key, doc);\n  }\n  for (const doc of families.values()) result.push({json:doc, pairedItem:{item:i}});\n  for (const press of model.press) result.push({json:{key:model.folder+'/'+press.key,\n    title:press.title, folder:model.folder, path:model.folder+'/'+press.url.split('?')[0].split('/').pop(),\n    source_title:'Lenovo Press '+press.key, source_url:press.url, source_updated:null,\n    language:press.language, source:'press'}, pairedItem:{item:i}});\n}\nreturn result;\n"
       }
     },
     {
@@ -372,187 +583,12 @@
       "parameters": {}
     }
   ],
-  "connections": {
-    "Daily 07:00": {
-      "main": [
-        [
-          {
-            "node": "Read INDEX",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Models and Index": {
-      "main": [
-        [
-          {
-            "node": "Read Lenovo ASP",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Read Lenovo ASP": {
-      "main": [
-        [
-          {
-            "node": "Latest Document Families",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Latest Document Families": {
-      "main": [
-        [
-          {
-            "node": "Read Remote Version",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Read Remote Version": {
-      "main": [
-        [
-          {
-            "node": "Changed Documents",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Changed Documents": {
-      "main": [
-        [
-          {
-            "node": "Each Changed PDF",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Update INDEX": {
-      "main": [
-        [
-          {
-            "node": "Save INDEX",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Download PDF": {
-      "main": [
-        [
-          {
-            "node": "Save Original",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Save Original": {
-      "main": [
-        [
-          {
-            "node": "Filename Changed",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Filename Changed": {
-      "main": [
-        [
-          {
-            "node": "Remove Previous Filename",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Saved Document",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Remove Previous Filename": {
-      "main": [
-        [
-          {
-            "node": "Saved Document",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Saved Document": {
-      "main": [
-        [
-          {
-            "node": "Each Changed PDF",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Each Changed PDF": {
-      "main": [
-        [
-          {
-            "node": "Update INDEX",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Download PDF",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Manual Start": {
-      "main": [
-        [
-          {
-            "node": "Read INDEX",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Read INDEX": {
-      "main": [
-        [
-          {
-            "node": "Models and Index",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    }
+  "nodeGroups": [],
+  "activeVersion": {
+    "sameAsDraft": true
   },
-  "versionId": "4949672a-7e59-47e2-9977-0883df390ad6",
-  "activeVersionId": "4949672a-7e59-47e2-9977-0883df390ad6"
+  "meta": {
+    "aiBuilderAssisted": true,
+    "builderVariant": "mcp"
+  }
 }

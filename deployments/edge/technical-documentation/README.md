@@ -6,9 +6,12 @@ operator automation, independent of the unpublished PDF cleanup candidate.
 
 - Workflow: https://n8n.escloud.us/workflow/QouVaVNhAqSiYq5D
 - Schedule: daily at 07:00, workflow timezone `Europe/Minsk` (UTC+3).
-- Sources: Lenovo ASP WR5220 G3 / WR5228 G3 catalogue and Lenovo Press LP1705.
-- Current model folder: `WR5220 G3`.
-- Files: `/srv/cloud/technical-documentation/lenovo/originals/WR5220 G3/`.
+- Sources: Lenovo ASP catalogues and configured Lenovo Press PDFs for nine model
+  collections; the enabled source definitions are in `models.json`.
+- Model folders: WR3220 G5, WR5215 G5, WR5220 G3, WR5220 G5, WR5225 G3,
+  WR6220 G5, WA5480 G5, WA5680 G5 and WA5685 G5. WR5220/WR5228 and
+  WA5480/WA5488 paired model groups use the primary model's folder.
+- Files: `/srv/cloud/technical-documentation/lenovo/originals/<model>/`.
 - Index: `/srv/cloud/technical-documentation/lenovo/originals/INDEX.html`.
 - Existing `INDEX.md` remains unchanged.
 
@@ -31,6 +34,8 @@ are explicitly handled. The BMC alias applies only to that confirmed family.
 New families are added automatically. Short display titles already stored in
 the index remain stable across revisions; known family labels are configured
 once in `Models and Index`. Other new families initially use the source title.
+WR5225 G3 BIOS families retain their Genoa/Turin platform suffix and remove
+only the revision number, so those two manuals update independently.
 
 Version state is `remote_validator` inside the existing `catalog-data` JSON
 block in INDEX.html. Comparison uses source URL/date and ETag, with
@@ -58,14 +63,18 @@ The [2026-10-05 source audit](source-audit-2026-10-05.md) lists candidate PDFs
 for eight additional model groups, sorted by model and document type, with
 download links, catalogue dates and duplicate/older-edition exclusions.
 [Machine-readable source evidence](source-audit-2026-10-05.json) accompanies it.
-This is a read-only inventory: none of those models has been added to the
-workflow, model folders or INDEX.html.
+That report records the read-only discovery step. The operator subsequently
+authorized enabling all eight groups in this same workflow, including the
+additional SAP certification reference listed for WR5220 G5.
 
-Create the model folder once through Nextcloud and append a model object in
-`Models and Index`: `folder`, Lenovo ASP `fullGuid`, optional `press` PDFs and
-stable `labels`. The model folder is part of every document key/path, so shared
-manuals remain independent between model collections. No other workflow nodes
-need to change. Currently only WR5220 G3 is enabled.
+Create the model folders once through Nextcloud under originals, cleaned and
+translated/en and translated/ru. Append a model object in `models.json`:
+`folder`, Lenovo ASP `fullGuid`, optional `press` PDFs and stable `labels`.
+`build.py` embeds this configuration into `Models and Index`; no runtime file
+dependency is added to n8n. The model folder is part of every document key/path,
+so shared manuals remain independent between model collections. No additional
+workflow nodes are needed. This monitor writes only originals and INDEX.html;
+cleaned/translated folders are prepared for later processing.
 
 The current legacy WebDAV endpoint does not register Nextcloud's modern
 Auto-Mkcol plugin. Do not assume that an auto-folder header works on this path.
@@ -85,6 +94,20 @@ v19 input. That test makes no external writes and persists no workflow pin data.
 Offline tests also cover source duplicates, same-URL ETag changes, stable labels,
 model isolation and HTML escaping. Sanitized execution evidence: `evidence.json`.
 
+The operator-authorized eight-model expansion added 63 PDFs in execution 11657
+and updated INDEX.html to 78 documents across nine collections. All 63 uploads
+returned HTTP 201 and the index PUT returned HTTP 204. Published production run
+11773 found zero changes and performed no downloads or writes. Filesystem and
+authenticated Nextcloud listings agree on every model filename/count; PDF
+signatures and sizes agree with the index, and shared source copies have equal
+hashes. All fifteen pre-existing WR5220 G3 PDFs and INDEX.md remain byte-identical.
+Thirty-two model directories were created through WebDAV, including empty
+cleaned/en/ru output folders. Only the model configuration and document-family
+code changed; the workflow still has sixteen nodes and the same credentials
+and daily schedule. Recovery can use the previous native version
+`4949672a-7e59-47e2-9977-0883df390ad6` and the prior repository definition;
+downloaded originals remain persistent data. Evidence: `model-expansion-evidence.json`.
+
 An initial assistant text-field error and an installed HTTP Request raw/text
 response incompatibility were corrected. The index PUT now uses native response
 `autodetect`, verified against the actual empty HTTP 204 response. The transient
@@ -102,6 +125,9 @@ No task-specific backup was introduced.
 To regenerate/validate the source locally, run `build.py --validation-output`
 with a temporary JSON path and pass its containing directory to `test-logic.js`.
 `test-fixtures.json` contains fixed, public source/catalogue data for those tests.
+`test-fixtures-models.json` contains the nine fresh model catalogues used to
+verify the expansion. `model-expansion-evidence.json` records the first sync,
+the published no-change run and filesystem/WebDAV verification.
 
 Authoritative mechanisms:
 

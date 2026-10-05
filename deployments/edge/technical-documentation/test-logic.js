@@ -15,7 +15,9 @@ async function run(name,input,previous={}) {
   return JSON.parse(JSON.stringify(await vm.runInContext('(async function(){'+source+'})()',context)));
 }
 (async()=>{
-  const models = await run('Models and Index',[]);
+  const allModels = await run('Models and Index',[]);
+  const models = allModels.filter(item=>item.json.model.folder==='WR5220 G3');
+  assert.equal(allModels.length,9);
   const families = await run('Latest Document Families',[{json:{body:asp}}],{'Models and Index':models});
   assert.equal(families.length,15);
   assert.equal(families.find(d=>d.json.key.endsWith('/bmc-event-reference')).json.path,'WR5220 G3/lenovo_bmc_event_reference_guide_g5_v4.pdf');
@@ -45,5 +47,36 @@ async function run(name,input,previous={}) {
   assert.equal(updated.documents.length,12);
   assert(updated.documents.find(d=>d.key===doc.key).path.endsWith('v19.pdf'));
   await assert.rejects(()=>run('Latest Document Families',[{json:{body:{status:500}}}],{'Models and Index':models}));
+  const audit=JSON.parse(fs.readFileSync(__dirname+'/source-audit-2026-10-05.json','utf8'));
+  const fresh=JSON.parse(fs.readFileSync(__dirname+'/test-fixtures-models.json','utf8'));
+  const inputs=allModels.map(({json:{model}})=>({json:{body:fresh.find(row=>row.folder===model.folder).body}}));
+  const combined=await run('Latest Document Families',inputs,{'Models and Index':allModels});
+  assert.equal(combined.length,78);
+  assert.equal(new Set(combined.map(item=>item.json.key)).size,78);
+  for (const group of audit.models) {
+    const actual=combined.filter(item=>item.json.folder===group.folder);
+    assert.deepEqual(actual.map(item=>item.json.path.split('/').pop()).sort(),group.documents.map(doc=>doc.filename).sort());
+    for (const item of actual) assert.equal(item.json.title,group.documents.find(doc=>doc.filename===item.json.path.split('/').pop()).display_title);
+  }
+  const wr5225=allModels.filter(item=>item.json.model.folder==='WR5225 G3');
+  const biosRows=fresh.find(row=>row.folder==='WR5225 G3').body.data.filter(row=>/-genoa\.pdf$|-turin\.pdf$/.test(row.url));
+  assert.equal(biosRows.length,2);
+  const future=structuredClone(biosRows[0]);
+  future.url=future.url.replace('v3.0-genoa','v3.1-genoa');future.updated='2026-10-06';
+  const editions=await run('Latest Document Families',[{json:{body:{data:[...biosRows,future]}}}],{'Models and Index':wr5225});
+  const bios=editions.filter(item=>item.json.source==='asp');
+  assert.equal(bios.length,2);
+  const genoa=bios.find(item=>item.json.key.endsWith('/bios-setup-specification-genoa'));
+  const turin=bios.find(item=>item.json.key.endsWith('/bios-setup-specification-turin'));
+  assert(genoa.json.path.endsWith('v3.1-genoa.pdf'));assert(turin.json.path.endsWith('v2.9-turin.pdf'));
+  const oldBios=combined.filter(item=>item.json.folder==='WR5225 G3'&&item.json.key.includes('/bios-'));
+  const biosHtml='<script id="catalog-data" type="application/json">'+JSON.stringify({documents:oldBios.map(item=>({...item.json,remote_validator:{etag:'"bios"'}}))})+'</script>';
+  const biosChanges=await run('Changed Documents',bios.map(()=>({json:{headers:{etag:'"bios"'}}})),{'Read INDEX':[{json:{data:biosHtml}}],'Latest Document Families':bios});
+  assert.equal(biosChanges.length,1);
+  assert(biosChanges[0].json.old_path.endsWith('v3.0-genoa.pdf'));
+  assert(biosChanges[0].json.path.endsWith('v3.1-genoa.pdf'));
+  assert.equal(biosChanges[0].json.title,oldBios.find(item=>item.json.key.endsWith('-genoa')).json.title);
+  fs.writeFileSync(directory+'/expected-documents.json',JSON.stringify(combined.map(item=>item.json),null,2)+'\n');
+  console.log('PASS: nine-model mapping, 78 unique model/document keys, audited current filenames/titles, independent Genoa/Turin updates and replacement paths');
   console.log('PASS: current-family deduplication, missing documents, same-URL ETag replacement, versioned filename replacement, stable labels, model isolation, HTML escaping, source failure stops processing');
 })().catch(error=>{console.error(error);process.exitCode=1});

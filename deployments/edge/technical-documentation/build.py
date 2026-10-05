@@ -49,30 +49,9 @@ add('daily', 'Daily 07:00', 'scheduleTrigger', {'rule': {'interval': [
 add('manual', 'Manual Start', 'manualTrigger', {}, position=[0, 180])
 http('read', 'Read INDEX', 'GET',
      'http://nextcloud.edge.internal/remote.php/webdav/technical-documentation/lenovo/originals/INDEX.html', True)
-code('models', 'Models and Index', r'''
-const models = [{
-  folder: 'WR5220 G3',
-  fullGuid: '339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/5D07DC93-3C2A-4986-BBB4-A04A44FAB99E',
-  press: [{key:'product-guide', title:'Product Guide Lenovo Wentian WR5220 G3', url:'https://lenovopress.lenovo.com/lp1705.pdf', language:'zh'}],
-  labels: {
-    'lenovo_wentian_wr5220g3_user_guide': ['user-manual', 'User Manual Lenovo Wentian WR5220 G3'],
-    'lenovo_wentian_os_installation_guide': ['os-installation-guide', 'OS Installation Guide Lenovo Wentian'],
-    'lenovo_bmc_g3_commands_guide': ['bmc-ipmi-specification', 'IPMI Command Specification Lenovo BMC'],
-    'lenovo_bmc_event_reference_guide': ['bmc-event-reference', 'Event Reference Guide Lenovo BMC'],
-    'lenovo_snmp_ug_g3': ['bmc-snmp-reference', 'SNMP Reference Guide Lenovo BMC'],
-    'bmc_user_guide': ['bmc-enterprise-user-guide', 'User Guide Lenovo BMC Enterprise G3'],
-    'lenovo_bmc_g3_redfish_guide': ['bmc-redfish-specification', 'Redfish Interface Specification Lenovo BMC G3'],
-    'lxce_bomc_cplus_ug': ['bomc-user-guide', 'User Guide Lenovo XClarity Essentials BoMC cPlus'],
-    'lxce_onecli_cplus_ug': ['onecli-user-guide', 'User Guide Lenovo XClarity Essentials OneCLI cPlus'],
-    'lxce_ux_cplus_ug': ['updatexpress-user-guide', 'User Guide Lenovo XClarity Essentials UpdateXpress cPlus'],
-    'lxpm_wentian_ug': ['lxpm-user-guide', 'User Guide Lenovo XClarity Provisioning Manager Wentian'],
-    'wr5220g3_bios_setup_spec': ['bios-setup-specification', 'BIOS Setup Specification Lenovo Wentian WR5220 G3'],
-    'psu_label_matrix': ['psu-label-matrix', 'PSU Label Matrix Lenovo'],
-    'vmware_code_recipe_file': ['vmware-code-recipe', 'VMware Code Recipe File']
-  }
-}];
-return models.map(model => ({json:{model}}));
-''')
+code('models', 'Models and Index',
+     'const models = ' + (ROOT / 'models.json').read_text().strip() + ';\n'
+     'return models.map(model => ({json:{model}}));\n')
 http('asp', 'Read Lenovo ASP', 'GET', 'https://api.asp.atlenovo.com/asp/isg/infomartion/getUserGuide',
      format='json', extra={'sendQuery': True, 'queryParameters': {'parameters': [
          {'name': 'fullGuid', 'value': '={{ $json.model.fullGuid }}'}]}})
@@ -84,6 +63,7 @@ for (const [i, item] of $input.all().entries()) {
   for (const row of item.json.body.data) {
     const filename = decodeURIComponent(row.url.split('?')[0].split('/').pop());
     let family = filename.toLowerCase().replace(/\.pdf$/, '').replace(/[_-]v\d+(?:\.\d+)*$/, '');
+    family = family.replace(/[_-]v\d+(?:\.\d+)*-(genoa|turin)$/, '-$1');
     if (/^lenovo_bmc_event_reference_guide_g[35]$/.test(family)) family = 'lenovo_bmc_event_reference_guide';
     const label = model.labels[family] ?? [family, row.title.trim().replace(/\s+V?\d+(?:\.\d+)*$/i, '')];
     const doc = {key:model.folder+'/'+label[0], title:label[1], folder:model.folder,
