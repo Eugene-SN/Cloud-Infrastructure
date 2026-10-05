@@ -54,6 +54,13 @@ later index-write failure can be transferred again on that retry.
 
 ## Adding models
 
+The [2026-10-05 source audit](source-audit-2026-10-05.md) lists candidate PDFs
+for eight additional model groups, sorted by model and document type, with
+download links, catalogue dates and duplicate/older-edition exclusions.
+[Machine-readable source evidence](source-audit-2026-10-05.json) accompanies it.
+This is a read-only inventory: none of those models has been added to the
+workflow, model folders or INDEX.html.
+
 Create the model folder once through Nextcloud and append a model object in
 `Models and Index`: `folder`, Lenovo ASP `fullGuid`, optional `press` PDFs and
 stable `labels`. The model folder is part of every document key/path, so shared
