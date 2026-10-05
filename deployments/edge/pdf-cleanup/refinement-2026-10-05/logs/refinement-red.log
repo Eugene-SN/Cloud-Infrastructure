@@ -1,0 +1,36 @@
+test_inline_footer_without_large_gap_is_removed (test_refinement.RefinementTests.test_inline_footer_without_large_gap_is_removed) ... ok
+test_interior_numbered_settings_are_not_pagination (test_refinement.RefinementTests.test_interior_numbered_settings_are_not_pagination) ... FAIL
+test_numbered_server_port_captions_are_preserved (test_refinement.RefinementTests.test_numbered_server_port_captions_are_preserved) ... FAIL
+test_removal_keeps_every_other_stream_byte (test_refinement.RefinementTests.test_removal_keeps_every_other_stream_byte) ... FAIL
+
+======================================================================
+FAIL: test_interior_numbered_settings_are_not_pagination (test_refinement.RefinementTests.test_interior_numbered_settings_are_not_pagination)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/audit/test_refinement.py", line 20, in test_interior_numbered_settings_are_not_pagination
+    self.assertEqual(result['header_footer_fragments'],0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0
+
+======================================================================
+FAIL: test_numbered_server_port_captions_are_preserved (test_refinement.RefinementTests.test_numbered_server_port_captions_are_preserved)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/audit/test_refinement.py", line 25, in test_numbered_server_port_captions_are_preserved
+    self.assertEqual(result['header_footer_fragments'],0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0
+
+======================================================================
+FAIL: test_removal_keeps_every_other_stream_byte (test_refinement.RefinementTests.test_removal_keeps_every_other_stream_byte)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/audit/test_refinement.py", line 48, in test_removal_keeps_every_other_stream_byte
+    self.assertEqual(page.read_contents(),expected)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: b'q\n1 0 0 1 0 0 cm\nBT\n/helv 11 Tf\n1 0 0[253 chars]nQ\n' != b'% keep unusual lexical precision\nq 1.000[291 chars]nQ\n'
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.124s
+
+FAILED (failures=3)

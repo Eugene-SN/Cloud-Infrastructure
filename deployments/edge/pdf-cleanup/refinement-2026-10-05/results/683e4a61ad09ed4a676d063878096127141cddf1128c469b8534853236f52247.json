@@ -1,0 +1,53 @@
+{
+  "path": "WR5225 G3/wr5225g3_bios_setup_spec_v2.9-turin.pdf",
+  "sha256": "683e4a61ad09ed4a676d063878096127141cddf1128c469b8534853236f52247",
+  "size": 9515895,
+  "phase": "holdout",
+  "candidate_hashes": {
+    "core.py": "2eaa182b11a5f9e5be766c5cf9d9b53712a23c13cdb292a9ba7bfc2b22487047",
+    "native.py": "d8b11bcc7c7726a1d31667c1d17cb159b280fe4146d1550dd38227c34971f331",
+    "lexical.py": "bde6b55e1dfc8f25f37f90bd39b5d1fc7d12357e5ded6f0a0a2bd056dafb2a0c"
+  },
+  "cleanup_seconds": 16.753,
+  "result": {
+    "schema_version": 1,
+    "tool_version": "0.1.3",
+    "source_commit": "uncommitted",
+    "input": "/input/683e4a61ad09ed4a676d063878096127141cddf1128c469b8534853236f52247.pdf",
+    "output": "/out/results/683e4a61ad09ed4a676d063878096127141cddf1128c469b8534853236f52247.pdf",
+    "input_sha256": "683e4a61ad09ed4a676d063878096127141cddf1128c469b8534853236f52247",
+    "pages": 81,
+    "header_footer_fragments": 3,
+    "removed_header_rows": 0,
+    "removed_footer_rows": 1,
+    "footer_pages": 1,
+    "removed_links": {
+      "/Dest": 51
+    },
+    "removed_widgets": 0,
+    "cleanup_method": "text_show_operations",
+    "status": "cleaned",
+    "output_sha256": "0c1a9b6bf8b1eeea58253621eab8d90a934c12229fd31c2c6c8eec60aacd458e",
+    "validation": "passed"
+  },
+  "independent": {
+    "status": "passed",
+    "engine": "156.0.8076.0",
+    "pypdfium2": "5.14.0",
+    "dpi": 144,
+    "pages": 81,
+    "body_glyphs": 60717,
+    "changed_pixels_total": 5414,
+    "pixels_outside_masks": 0,
+    "failures": [],
+    "document_property_changes": [],
+    "elapsed_seconds": 10.035
+  },
+  "second_pass": {
+    "status": "no_targets",
+    "targets": []
+  },
+  "source_sha256_after": "683e4a61ad09ed4a676d063878096127141cddf1128c469b8534853236f52247",
+  "status": "passed",
+  "total_seconds": 31.695
+}

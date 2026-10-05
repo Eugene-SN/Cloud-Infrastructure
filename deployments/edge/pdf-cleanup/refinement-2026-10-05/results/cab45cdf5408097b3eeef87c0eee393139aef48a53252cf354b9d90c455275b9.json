@@ -1,0 +1,54 @@
+{
+  "path": "WR5215 G5/lenovo_wentian_wr5215g5_user_guide_v2.pdf",
+  "sha256": "cab45cdf5408097b3eeef87c0eee393139aef48a53252cf354b9d90c455275b9",
+  "size": 27880323,
+  "phase": "holdout",
+  "candidate_hashes": {
+    "core.py": "2eaa182b11a5f9e5be766c5cf9d9b53712a23c13cdb292a9ba7bfc2b22487047",
+    "native.py": "d8b11bcc7c7726a1d31667c1d17cb159b280fe4146d1550dd38227c34971f331",
+    "lexical.py": "bde6b55e1dfc8f25f37f90bd39b5d1fc7d12357e5ded6f0a0a2bd056dafb2a0c"
+  },
+  "cleanup_seconds": 70.601,
+  "result": {
+    "schema_version": 1,
+    "tool_version": "0.1.3",
+    "source_commit": "uncommitted",
+    "input": "/input/cab45cdf5408097b3eeef87c0eee393139aef48a53252cf354b9d90c455275b9.pdf",
+    "output": "/out/results/cab45cdf5408097b3eeef87c0eee393139aef48a53252cf354b9d90c455275b9.pdf",
+    "input_sha256": "cab45cdf5408097b3eeef87c0eee393139aef48a53252cf354b9d90c455275b9",
+    "pages": 269,
+    "header_footer_fragments": 534,
+    "removed_header_rows": 0,
+    "removed_footer_rows": 267,
+    "footer_pages": 267,
+    "removed_links": {
+      "/URI": 21,
+      "/GoTo": 1735
+    },
+    "removed_widgets": 0,
+    "cleanup_method": "text_show_operations",
+    "status": "cleaned",
+    "output_sha256": "f997c0881e8c657fbf5f6c08824e0fa87d69c00998432096ba035981c4b6a916",
+    "validation": "passed"
+  },
+  "independent": {
+    "status": "passed",
+    "engine": "156.0.8076.0",
+    "pypdfium2": "5.14.0",
+    "dpi": 144,
+    "pages": 269,
+    "body_glyphs": 105088,
+    "changed_pixels_total": 492559,
+    "pixels_outside_masks": 0,
+    "failures": [],
+    "document_property_changes": [],
+    "elapsed_seconds": 29.183
+  },
+  "second_pass": {
+    "status": "no_targets",
+    "targets": []
+  },
+  "source_sha256_after": "cab45cdf5408097b3eeef87c0eee393139aef48a53252cf354b9d90c455275b9",
+  "status": "passed",
+  "total_seconds": 110.784
+}

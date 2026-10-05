@@ -1,0 +1,26 @@
+{
+  "src/pdf_cleanup/core.py": {
+    "base_sha256": "4b29b752fe9dcc3b8f8d08f509b5c840e354ecb0a398fe72bea092fdd4cb4c72",
+    "candidate_sha256": "2eaa182b11a5f9e5be766c5cf9d9b53712a23c13cdb292a9ba7bfc2b22487047"
+  },
+  "src/pdf_cleanup/native.py": {
+    "base_sha256": "17847b1caadfaf1b573e7b4c04a918b818bebbda1601c68ead4c9987b53eb3e0",
+    "candidate_sha256": "d8b11bcc7c7726a1d31667c1d17cb159b280fe4146d1550dd38227c34971f331"
+  },
+  "src/pdf_cleanup/lexical.py": {
+    "base_sha256": null,
+    "candidate_sha256": "bde6b55e1dfc8f25f37f90bd39b5d1fc7d12357e5ded6f0a0a2bd056dafb2a0c"
+  },
+  "tests/test_cleanup.py": {
+    "base_sha256": "4781d3eed8cda3820ad2a85b0049f69cff8760c9ec2ccc41e1ff8d715525807a",
+    "candidate_sha256": "c1437ebbeae01f8e3f18f889a58902a4a15036612c0f0936bb9c9afb04bfa329"
+  },
+  "tests/test_quality.py": {
+    "base_sha256": null,
+    "candidate_sha256": "452d1ac8abeb33006cf379d629aaa3df66f62f7fa4a3e086bc27df596f2902ab"
+  },
+  "tests/test_refinement.py": {
+    "base_sha256": null,
+    "candidate_sha256": "9af53b3c4a1264faafc889fd50b9e092c71bf05504a88a1fc903cd0657ebf4b7"
+  }
+}

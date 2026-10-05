@@ -1,0 +1,44 @@
+{
+  "path": "WA5480 G3/lxce_bomc_cplus_ug.pdf",
+  "sha256": "c41b84786be486e197ab7604f58b63be062948a8e73455f0c17fb013158959e8",
+  "size": 638956,
+  "candidate_hashes": {
+    "core.py": "2eaa182b11a5f9e5be766c5cf9d9b53712a23c13cdb292a9ba7bfc2b22487047",
+    "native.py": "d8b11bcc7c7726a1d31667c1d17cb159b280fe4146d1550dd38227c34971f331",
+    "lexical.py": "bde6b55e1dfc8f25f37f90bd39b5d1fc7d12357e5ded6f0a0a2bd056dafb2a0c"
+  },
+  "result": {
+    "schema_version": 1,
+    "tool_version": "0.1.3",
+    "source_commit": "uncommitted",
+    "input": "/input/c41b84786be486e197ab7604f58b63be062948a8e73455f0c17fb013158959e8.pdf",
+    "output": "/out/results/c41b84786be486e197ab7604f58b63be062948a8e73455f0c17fb013158959e8.pdf",
+    "input_sha256": "c41b84786be486e197ab7604f58b63be062948a8e73455f0c17fb013158959e8",
+    "pages": 22,
+    "header_footer_fragments": 38,
+    "removed_header_rows": 0,
+    "removed_footer_rows": 20,
+    "footer_pages": 20,
+    "removed_links": {
+      "/Dest": 27,
+      "/URI": 1
+    },
+    "removed_widgets": 0,
+    "cleanup_method": "text_show_operations",
+    "status": "cleaned",
+    "output_sha256": "399ac747ca6efee1b782f4151741a06ec2fd4c7f3ba223b6febb1e5d0da3b49e",
+    "validation": "passed"
+  },
+  "inspected_stage_sha256": "399ac747ca6efee1b782f4151741a06ec2fd4c7f3ba223b6febb1e5d0da3b49e",
+  "inspected_stage_path": "/out/results/.pdf-cleanup-buiovp_g.part",
+  "native_evidence_origin": "written_stage_inspected_by_output_validator",
+  "native_evidence_sha256": "dd27871ff22e6be101d71685727e127b6eb1c93f887617d59ae75dd8d6fa0d88",
+  "native_pagination_points": 218,
+  "second_pass": {
+    "status": "no_targets",
+    "targets": []
+  },
+  "source_sha256_after": "c41b84786be486e197ab7604f58b63be062948a8e73455f0c17fb013158959e8",
+  "status": "passed",
+  "elapsed_seconds": 5.58
+}

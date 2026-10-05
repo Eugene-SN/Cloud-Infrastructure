@@ -1,0 +1,43 @@
+{
+  "path": "WA5480 G5/lenovo_bmc_commands_g5_v3.pdf",
+  "sha256": "2cabbcdf52506fa99915939d223a7e7fa5535989ca8c4970528244b7464e58f9",
+  "size": 1100987,
+  "candidate_hashes": {
+    "core.py": "2eaa182b11a5f9e5be766c5cf9d9b53712a23c13cdb292a9ba7bfc2b22487047",
+    "native.py": "d8b11bcc7c7726a1d31667c1d17cb159b280fe4146d1550dd38227c34971f331",
+    "lexical.py": "bde6b55e1dfc8f25f37f90bd39b5d1fc7d12357e5ded6f0a0a2bd056dafb2a0c"
+  },
+  "result": {
+    "schema_version": 1,
+    "tool_version": "0.1.3",
+    "source_commit": "uncommitted",
+    "input": "/input/2cabbcdf52506fa99915939d223a7e7fa5535989ca8c4970528244b7464e58f9.pdf",
+    "output": "/out/results/2cabbcdf52506fa99915939d223a7e7fa5535989ca8c4970528244b7464e58f9.pdf",
+    "input_sha256": "2cabbcdf52506fa99915939d223a7e7fa5535989ca8c4970528244b7464e58f9",
+    "pages": 49,
+    "header_footer_fragments": 49,
+    "removed_header_rows": 0,
+    "removed_footer_rows": 49,
+    "footer_pages": 49,
+    "removed_links": {
+      "/Dest": 129
+    },
+    "removed_widgets": 0,
+    "cleanup_method": "text_show_operations",
+    "status": "cleaned",
+    "output_sha256": "7d745a5ff14e335568361eac283bf87591db6016439b501f15875b9af6cd567d",
+    "validation": "passed"
+  },
+  "inspected_stage_sha256": "7d745a5ff14e335568361eac283bf87591db6016439b501f15875b9af6cd567d",
+  "inspected_stage_path": "/out/results/.pdf-cleanup-v2dmazof.part",
+  "native_evidence_origin": "written_stage_inspected_by_output_validator",
+  "native_evidence_sha256": "2d37f718b53ad29ebb61d7abd0d6fd721ec15629b3c92f4c310f601255e0fd51",
+  "native_pagination_points": 146,
+  "second_pass": {
+    "status": "no_targets",
+    "targets": []
+  },
+  "source_sha256_after": "2cabbcdf52506fa99915939d223a7e7fa5535989ca8c4970528244b7464e58f9",
+  "status": "passed",
+  "elapsed_seconds": 20.646
+}

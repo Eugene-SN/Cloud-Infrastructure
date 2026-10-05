@@ -1,0 +1,56 @@
+{
+  "path": "WA5480 G3/lenovo_bmc_g3_redfish_guide_v11.pdf",
+  "sha256": "456897573c42b3e7eb767b248e3c588a987b7f23b2a0c70a344e816b91837ee8",
+  "size": 8326662,
+  "pages": 423,
+  "reason": "no footers but 133 links; huge xref",
+  "phase": "sample",
+  "candidate_hashes": {
+    "core.py": "2eaa182b11a5f9e5be766c5cf9d9b53712a23c13cdb292a9ba7bfc2b22487047",
+    "native.py": "d8b11bcc7c7726a1d31667c1d17cb159b280fe4146d1550dd38227c34971f331",
+    "lexical.py": "bde6b55e1dfc8f25f37f90bd39b5d1fc7d12357e5ded6f0a0a2bd056dafb2a0c"
+  },
+  "cleanup_seconds": 111.398,
+  "result": {
+    "schema_version": 1,
+    "tool_version": "0.1.3",
+    "source_commit": "uncommitted",
+    "input": "/input/456897573c42b3e7eb767b248e3c588a987b7f23b2a0c70a344e816b91837ee8.pdf",
+    "output": "/out/results/456897573c42b3e7eb767b248e3c588a987b7f23b2a0c70a344e816b91837ee8.pdf",
+    "input_sha256": "456897573c42b3e7eb767b248e3c588a987b7f23b2a0c70a344e816b91837ee8",
+    "pages": 423,
+    "header_footer_fragments": 0,
+    "removed_header_rows": 0,
+    "removed_footer_rows": 0,
+    "footer_pages": 0,
+    "removed_links": {
+      "/Dest": 107,
+      "/URI": 26
+    },
+    "removed_widgets": 0,
+    "cleanup_method": "text_show_operations",
+    "status": "cleaned",
+    "output_sha256": "3e2fd1b33ba8e15bffb8330ab1fdbdcb0fe5c50e7a8fee611d75f9761935c2de",
+    "validation": "passed"
+  },
+  "independent": {
+    "status": "passed",
+    "engine": "156.0.8076.0",
+    "pypdfium2": "5.14.0",
+    "dpi": 144,
+    "pages": 423,
+    "body_glyphs": 328705,
+    "changed_pixels_total": 0,
+    "pixels_outside_masks": 0,
+    "failures": [],
+    "document_property_changes": [],
+    "elapsed_seconds": 47.513
+  },
+  "second_pass": {
+    "status": "no_targets",
+    "targets": []
+  },
+  "source_sha256_after": "456897573c42b3e7eb767b248e3c588a987b7f23b2a0c70a344e816b91837ee8",
+  "status": "passed",
+  "total_seconds": 182.877
+}

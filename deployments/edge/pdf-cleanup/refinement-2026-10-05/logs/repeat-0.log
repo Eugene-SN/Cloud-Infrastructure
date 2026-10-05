@@ -1,0 +1,58 @@
+{"event": "start", "path": "WA5480 G3/bmc_user_guide_v14.pdf"}
+{"event": "complete", "path": "WA5480 G3/bmc_user_guide_v14.pdf", "status": "passed", "error": null, "seconds": 31.29, "targets": []}
+{"event": "start", "path": "WA5480 G3/lenovo_bmc_g3_redfish_guide_v11.pdf"}
+{"event": "complete", "path": "WA5480 G3/lenovo_bmc_g3_redfish_guide_v11.pdf", "status": "passed", "error": null, "seconds": 131.287, "targets": []}
+{"event": "start", "path": "WA5480 G3/lenovo_wentian_os_installation_guide.pdf"}
+{"event": "complete", "path": "WA5480 G3/lenovo_wentian_os_installation_guide.pdf", "status": "passed", "error": null, "seconds": 35.814, "targets": []}
+{"event": "start", "path": "WA5480 G3/lxce_bomc_cplus_ug.pdf"}
+{"event": "complete", "path": "WA5480 G3/lxce_bomc_cplus_ug.pdf", "status": "passed", "error": null, "seconds": 5.58, "targets": []}
+{"event": "start", "path": "WA5480 G3/lxce_ux_cplus_ug.pdf"}
+{"event": "complete", "path": "WA5480 G3/lxce_ux_cplus_ug.pdf", "status": "passed", "error": null, "seconds": 15.382, "targets": []}
+{"event": "start", "path": "WA5480 G3/psu_label_matrix.pdf"}
+{"event": "complete", "path": "WA5480 G3/psu_label_matrix.pdf", "status": "passed", "error": null, "seconds": 1.909, "targets": []}
+{"event": "start", "path": "WA5480 G5/lenovo_bmc_redfish_guide_g5_v4.pdf"}
+{"event": "complete", "path": "WA5480 G5/lenovo_bmc_redfish_guide_g5_v4.pdf", "status": "passed", "error": null, "seconds": 150.731, "targets": []}
+{"event": "start", "path": "WA5480 G5/lenovo_bmc_user_guide_g5_v6.pdf"}
+{"event": "complete", "path": "WA5480 G5/lenovo_bmc_user_guide_g5_v6.pdf", "status": "passed", "error": null, "seconds": 38.708, "targets": []}
+{"event": "start", "path": "WA5480 G5/wa5480g5_bios_setup_spec.pdf"}
+{"event": "complete", "path": "WA5480 G5/wa5480g5_bios_setup_spec.pdf", "status": "passed", "error": null, "seconds": 21.432, "targets": []}
+{"event": "start", "path": "WA5680 G5/lenovo_wentian_wa5680g5_bios_setup_spec_v2.4.pdf"}
+{"event": "complete", "path": "WA5680 G5/lenovo_wentian_wa5680g5_bios_setup_spec_v2.4.pdf", "status": "passed", "error": null, "seconds": 29.877, "targets": []}
+{"event": "start", "path": "WA5680 G5/lp2469.pdf"}
+{"event": "complete", "path": "WA5680 G5/lp2469.pdf", "status": "passed", "error": null, "seconds": 44.004, "targets": []}
+{"event": "start", "path": "WA5685 G5/lp2399.pdf"}
+{"event": "complete", "path": "WA5685 G5/lp2399.pdf", "status": "passed", "error": null, "seconds": 25.862, "targets": []}
+{"event": "start", "path": "WA5685 G5/wa5685g5_user_guide.pdf"}
+{"event": "complete", "path": "WA5685 G5/wa5685g5_user_guide.pdf", "status": "passed", "error": null, "seconds": 43.235, "targets": []}
+{"event": "start", "path": "WA7780 G3/lenovo_wentian_wa7780g3_user_guide.pdf"}
+{"event": "complete", "path": "WA7780 G3/lenovo_wentian_wa7780g3_user_guide.pdf", "status": "passed", "error": null, "seconds": 386.153, "targets": []}
+{"event": "start", "path": "WA7785a G3/lenovo_wentian_wa7785ag3_user_guide.pdf"}
+{"event": "complete", "path": "WA7785a G3/lenovo_wentian_wa7785ag3_user_guide.pdf", "status": "passed", "error": null, "seconds": 312.633, "targets": []}
+{"event": "start", "path": "WR3220 G5/lenovo_wentian_wr3220g5_user_guide.pdf"}
+{"event": "complete", "path": "WR3220 G5/lenovo_wentian_wr3220g5_user_guide.pdf", "status": "passed", "error": null, "seconds": 58.106, "targets": []}
+{"event": "start", "path": "WR5215 G5/lenovo_wentian_wr5215g5_user_guide_v2.pdf"}
+{"event": "complete", "path": "WR5215 G5/lenovo_wentian_wr5215g5_user_guide_v2.pdf", "status": "passed", "error": null, "seconds": 80.227, "targets": []}
+{"event": "start", "path": "WR5220 G3/lenovo_bmc_g3_commands_guide_v2.pdf"}
+{"event": "complete", "path": "WR5220 G3/lenovo_bmc_g3_commands_guide_v2.pdf", "status": "passed", "error": null, "seconds": 20.37, "targets": []}
+{"event": "start", "path": "WR5220 G3/lp1705.pdf"}
+{"event": "complete", "path": "WR5220 G3/lp1705.pdf", "status": "passed", "error": null, "seconds": 39.544, "targets": []}
+{"event": "start", "path": "WR5220 G3/wr5220g3_bios_setup_spec_v2.13.pdf"}
+{"event": "complete", "path": "WR5220 G3/wr5220g3_bios_setup_spec_v2.13.pdf", "status": "passed", "error": null, "seconds": 25.59, "targets": []}
+{"event": "start", "path": "WR5220 G5/lp1728.pdf"}
+{"event": "complete", "path": "WR5220 G5/lp1728.pdf", "status": "passed", "error": null, "seconds": 8.088, "targets": []}
+{"event": "start", "path": "WR5225 G3/lp2129.pdf"}
+{"event": "complete", "path": "WR5225 G3/lp2129.pdf", "status": "passed", "error": null, "seconds": 42.984, "targets": []}
+{"event": "start", "path": "WR5225 G3/wr5225g3_bios_setup_spec_v3.0-genoa.pdf"}
+{"event": "complete", "path": "WR5225 G3/wr5225g3_bios_setup_spec_v3.0-genoa.pdf", "status": "passed", "error": null, "seconds": 19.664, "targets": []}
+{"event": "start", "path": "WR6220 G5/lenovo_wentian_wr6220g5_user_guide.pdf"}
+{"event": "complete", "path": "WR6220 G5/lenovo_wentian_wr6220g5_user_guide.pdf", "status": "passed", "error": null, "seconds": 142.62, "targets": []}
+{"event": "start", "path": "WR6220 G5/lp2502.pdf"}
+fontTools is required to fully parse the encoding of a CFF Type1 font in font dictionary {'/BaseFont': '/TLKWYW+Gotham-Book', '/Encoding': '/WinAnsiEncoding', '/FirstChar': 32, '/FontDescriptor': IndirectObject(112, 0, 132763472796304), '/LastChar': 176, '/Subtype': '/Type1', '/Type': '/Font', '/Widths': [300, 0, 0, 0, 0, 0, 0, 0, 0, 0, 430, 625, 0, 408, 244, 508, 715, 358, 599, 613, 671, 612, 647, 596, 630, 0, 0, 0, 0, 0, 0, 0, 0, 790, 722, 742, 782, 670, 0, 784, 760, 291, 553, 719, 615, 868, 790, 850, 668, 0, 723, 640, 641, 759, 750, 1107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 579, 664, 571, 664, 592, 0, 0, 616, 263, 0, 569, 0, 948, 616, 646, 664, 0, 0, 498, 404, 616, 587, 0, 0, 591, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 445, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 830, 0, 0, 0, 0, 403, 0, 458]}, but is not installed. Consider installing fontTools if you encounter encoding problems.
+fontTools is required to fully parse the encoding of a CFF Type1 font in font dictionary {'/BaseFont': '/ZHKGEK+Gotham-Bold', '/Encoding': '/WinAnsiEncoding', '/FirstChar': 32, '/FontDescriptor': IndirectObject(113, 0, 132763472796304), '/LastChar': 87, '/Subtype': '/Type1', '/Type': '/Font', '/Widths': [300, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 730, 0, 623, 0, 0, 630, 662, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 784, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 723, 0, 0, 0, 0, 1122]}, but is not installed. Consider installing fontTools if you encounter encoding problems.
+fontTools is required to fully parse the encoding of a CFF Type1 font in font dictionary {'/BaseFont': '/TLKWYW+Gotham-Book', '/Encoding': '/WinAnsiEncoding', '/FirstChar': 32, '/FontDescriptor': IndirectObject(112, 0, 132763472796304), '/LastChar': 176, '/Subtype': '/Type1', '/Type': '/Font', '/Widths': [300, 0, 0, 0, 0, 0, 0, 0, 0, 0, 430, 625, 0, 408, 244, 508, 715, 358, 599, 613, 671, 612, 647, 596, 630, 0, 0, 0, 0, 0, 0, 0, 0, 790, 722, 742, 782, 670, 0, 784, 760, 291, 553, 719, 615, 868, 790, 850, 668, 0, 723, 640, 641, 759, 750, 1107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 579, 664, 571, 664, 592, 0, 0, 616, 263, 0, 569, 0, 948, 616, 646, 664, 0, 0, 498, 404, 616, 587, 0, 0, 591, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 445, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 830, 0, 0, 0, 0, 403, 0, 458]}, but is not installed. Consider installing fontTools if you encounter encoding problems.
+fontTools is required to fully parse the encoding of a CFF Type1 font in font dictionary {'/BaseFont': '/WAWOOQ+Gotham-Medium', '/Encoding': '/WinAnsiEncoding', '/FirstChar': 32, '/FontDescriptor': IndirectObject(122, 0, 132763472796304), '/LastChar': 57, '/Subtype': '/Type1', '/Type': '/Font', '/Widths': [300, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 724, 396, 0, 0, 681, 0, 656, 609, 630, 656]}, but is not installed. Consider installing fontTools if you encounter encoding problems.
+fontTools is required to fully parse the encoding of a CFF Type1 font in font dictionary {'/Type': '/Font', '/Subtype': '/Type1', '/BaseFont': '/TLKWYW+Gotham-Book', '/Encoding': '/WinAnsiEncoding', '/FirstChar': 32, '/FontDescriptor': IndirectObject(36, 0, 132763472799184), '/LastChar': 176, '/Widths': [300, 0, 0, 0, 0, 0, 0, 0, 0, 0, 430, 625, 0, 408, 244, 508, 715, 358, 599, 613, 671, 612, 647, 596, 630, 0, 0, 0, 0, 0, 0, 0, 0, 790, 722, 742, 782, 670, 0, 784, 760, 291, 553, 719, 615, 868, 790, 850, 668, 0, 723, 640, 641, 759, 750, 1107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 579, 664, 571, 664, 592, 0, 0, 616, 263, 0, 569, 0, 948, 616, 646, 664, 0, 0, 498, 404, 616, 587, 0, 0, 591, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 445, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 830, 0, 0, 0, 0, 403, 0, 458]}, but is not installed. Consider installing fontTools if you encounter encoding problems.
+fontTools is required to fully parse the encoding of a CFF Type1 font in font dictionary {'/Type': '/Font', '/Subtype': '/Type1', '/BaseFont': '/ZHKGEK+Gotham-Bold', '/Encoding': '/WinAnsiEncoding', '/FirstChar': 32, '/FontDescriptor': IndirectObject(37, 0, 132763472799184), '/LastChar': 87, '/Widths': [300, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 730, 0, 623, 0, 0, 630, 662, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 784, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 723, 0, 0, 0, 0, 1122]}, but is not installed. Consider installing fontTools if you encounter encoding problems.
+fontTools is required to fully parse the encoding of a CFF Type1 font in font dictionary {'/Type': '/Font', '/Subtype': '/Type1', '/BaseFont': '/TLKWYW+Gotham-Book', '/Encoding': '/WinAnsiEncoding', '/FirstChar': 32, '/FontDescriptor': IndirectObject(36, 0, 132763472799184), '/LastChar': 176, '/Widths': [300, 0, 0, 0, 0, 0, 0, 0, 0, 0, 430, 625, 0, 408, 244, 508, 715, 358, 599, 613, 671, 612, 647, 596, 630, 0, 0, 0, 0, 0, 0, 0, 0, 790, 722, 742, 782, 670, 0, 784, 760, 291, 553, 719, 615, 868, 790, 850, 668, 0, 723, 640, 641, 759, 750, 1107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 579, 664, 571, 664, 592, 0, 0, 616, 263, 0, 569, 0, 948, 616, 646, 664, 0, 0, 498, 404, 616, 587, 0, 0, 591, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 445, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 830, 0, 0, 0, 0, 403, 0, 458]}, but is not installed. Consider installing fontTools if you encounter encoding problems.
+fontTools is required to fully parse the encoding of a CFF Type1 font in font dictionary {'/Type': '/Font', '/Subtype': '/Type1', '/BaseFont': '/WAWOOQ+Gotham-Medium', '/Encoding': '/WinAnsiEncoding', '/FirstChar': 32, '/FontDescriptor': IndirectObject(44, 0, 132763472799184), '/LastChar': 57, '/Widths': [300, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 724, 396, 0, 0, 681, 0, 656, 609, 630, 656]}, but is not installed. Consider installing fontTools if you encounter encoding problems.
+{"event": "complete", "path": "WR6220 G5/lp2502.pdf", "status": "passed", "error": null, "seconds": 7.709, "targets": []}

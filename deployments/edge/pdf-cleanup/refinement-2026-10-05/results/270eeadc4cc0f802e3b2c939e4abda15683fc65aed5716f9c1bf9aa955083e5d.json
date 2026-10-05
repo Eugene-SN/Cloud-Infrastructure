@@ -1,0 +1,56 @@
+{
+  "path": "WR5220 G5/lp1728.pdf",
+  "sha256": "270eeadc4cc0f802e3b2c939e4abda15683fc65aed5716f9c1bf9aa955083e5d",
+  "size": 267600,
+  "pages": 12,
+  "reason": "Lenovo Press graphics differences",
+  "phase": "sample",
+  "candidate_hashes": {
+    "core.py": "2eaa182b11a5f9e5be766c5cf9d9b53712a23c13cdb292a9ba7bfc2b22487047",
+    "native.py": "d8b11bcc7c7726a1d31667c1d17cb159b280fe4146d1550dd38227c34971f331",
+    "lexical.py": "bde6b55e1dfc8f25f37f90bd39b5d1fc7d12357e5ded6f0a0a2bd056dafb2a0c"
+  },
+  "cleanup_seconds": 7.662,
+  "result": {
+    "schema_version": 1,
+    "tool_version": "0.1.3",
+    "source_commit": "uncommitted",
+    "input": "/input/270eeadc4cc0f802e3b2c939e4abda15683fc65aed5716f9c1bf9aa955083e5d.pdf",
+    "output": "/out/results/270eeadc4cc0f802e3b2c939e4abda15683fc65aed5716f9c1bf9aa955083e5d.pdf",
+    "input_sha256": "270eeadc4cc0f802e3b2c939e4abda15683fc65aed5716f9c1bf9aa955083e5d",
+    "pages": 12,
+    "header_footer_fragments": 24,
+    "removed_header_rows": 0,
+    "removed_footer_rows": 12,
+    "footer_pages": 12,
+    "removed_links": {
+      "/Dest": 11,
+      "/URI": 19
+    },
+    "removed_widgets": 1,
+    "cleanup_method": "text_show_operations",
+    "status": "cleaned",
+    "output_sha256": "9453fa3074a38049562c2ec39ae9a728f8fd75821713b301c83f9f0d3fe4df9e",
+    "validation": "passed"
+  },
+  "independent": {
+    "status": "passed",
+    "engine": "156.0.8076.0",
+    "pypdfium2": "5.14.0",
+    "dpi": 144,
+    "pages": 12,
+    "body_glyphs": 13456,
+    "changed_pixels_total": 29660,
+    "pixels_outside_masks": 0,
+    "failures": [],
+    "document_property_changes": [],
+    "elapsed_seconds": 1.717
+  },
+  "second_pass": {
+    "status": "no_targets",
+    "targets": []
+  },
+  "source_sha256_after": "270eeadc4cc0f802e3b2c939e4abda15683fc65aed5716f9c1bf9aa955083e5d",
+  "status": "passed",
+  "total_seconds": 10.135
+}

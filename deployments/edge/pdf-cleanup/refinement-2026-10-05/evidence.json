@@ -1,0 +1,442 @@
+{
+  "recorded_at": "2026-10-05T17:54:03.667648+00:00",
+  "status": "passed",
+  "deployment_status": "candidate_not_deployed",
+  "catalogue_paths": 95,
+  "models": 14,
+  "unique_documents": 49,
+  "pages": 6398,
+  "sample": {
+    "documents": 18,
+    "pages": 3132
+  },
+  "holdout": {
+    "documents": 31,
+    "pages": 3266
+  },
+  "candidate_hashes": {
+    "core.py": "2eaa182b11a5f9e5be766c5cf9d9b53712a23c13cdb292a9ba7bfc2b22487047",
+    "native.py": "d8b11bcc7c7726a1d31667c1d17cb159b280fe4146d1550dd38227c34971f331",
+    "lexical.py": "bde6b55e1dfc8f25f37f90bd39b5d1fc7d12357e5ded6f0a0a2bd056dafb2a0c"
+  },
+  "base_and_candidate_files": {
+    "src/pdf_cleanup/core.py": {
+      "base_sha256": "4b29b752fe9dcc3b8f8d08f509b5c840e354ecb0a398fe72bea092fdd4cb4c72",
+      "candidate_sha256": "2eaa182b11a5f9e5be766c5cf9d9b53712a23c13cdb292a9ba7bfc2b22487047"
+    },
+    "src/pdf_cleanup/native.py": {
+      "base_sha256": "17847b1caadfaf1b573e7b4c04a918b818bebbda1601c68ead4c9987b53eb3e0",
+      "candidate_sha256": "d8b11bcc7c7726a1d31667c1d17cb159b280fe4146d1550dd38227c34971f331"
+    },
+    "src/pdf_cleanup/lexical.py": {
+      "base_sha256": null,
+      "candidate_sha256": "bde6b55e1dfc8f25f37f90bd39b5d1fc7d12357e5ded6f0a0a2bd056dafb2a0c"
+    },
+    "tests/test_cleanup.py": {
+      "base_sha256": "4781d3eed8cda3820ad2a85b0049f69cff8760c9ec2ccc41e1ff8d715525807a",
+      "candidate_sha256": "c1437ebbeae01f8e3f18f889a58902a4a15036612c0f0936bb9c9afb04bfa329"
+    },
+    "tests/test_quality.py": {
+      "base_sha256": null,
+      "candidate_sha256": "452d1ac8abeb33006cf379d629aaa3df66f62f7fa4a3e086bc27df596f2902ab"
+    },
+    "tests/test_refinement.py": {
+      "base_sha256": null,
+      "candidate_sha256": "9af53b3c4a1264faafc889fd50b9e092c71bf05504a88a1fc903cd0657ebf4b7"
+    }
+  },
+  "independent": {
+    "engine": "156.0.8076.0",
+    "pypdfium2": "5.14.0",
+    "dpi": 144,
+    "passed_documents": 49,
+    "pixels_outside_masks": 0,
+    "body_glyphs": 3465934,
+    "glyph_or_reading_order_failures": 0,
+    "document_property_changes": 0
+  },
+  "second_detection_targets": 0,
+  "changed_source_snapshots": 0,
+  "tests": {
+    "package": 35,
+    "independent_controls": 7,
+    "actual_cli": 2,
+    "originals_guard_included_in_package": 3
+  },
+  "production_audit": {
+    "status": "passed",
+    "unchanged_files": 115,
+    "production_image_id": "sha256:3ff39309bab88fca2d28edb606879afbe5ce18fa366d48ade3e9440cbd82c06e",
+    "cloud_added_paths": [],
+    "cloud_removed_paths": [],
+    "checked_at": "2026-10-05T18:31:39.924598+00:00"
+  },
+  "temporary_artifact_cleanup": {
+    "status": "completed",
+    "removed_directory": "/tmp/pdf-cleanup-refinement-hya_e3w3",
+    "research_containers_remaining": 0,
+    "checked_at": "2026-10-05T18:33:31.447928+00:00",
+    "repeat_check_directory": "/tmp/pdf-cleanup-repeat-check-ms0d8lpc",
+    "repeat_check_status": "completed",
+    "image_declared_volumes": null
+  },
+  "records": [
+    {
+      "path": "WA5480 G3/bmc_user_guide_v14.pdf",
+      "sha256": "acba1574ddaf24faa0eb69644e9114be553ee44f45ce2960d0bcefb66a4539d4",
+      "phase": "holdout",
+      "status": "passed",
+      "total_seconds": 45.676
+    },
+    {
+      "path": "WA5480 G3/lenovo_bmc_event_reference_guide_g5_v4.pdf",
+      "sha256": "fc4a694ce1574db865fe41a904d185bc85092598a5b6a6d0cbbff739c75411ef",
+      "phase": "sample",
+      "status": "passed",
+      "total_seconds": 57.579
+    },
+    {
+      "path": "WA5480 G3/lenovo_bmc_g3_redfish_guide_v11.pdf",
+      "sha256": "456897573c42b3e7eb767b248e3c588a987b7f23b2a0c70a344e816b91837ee8",
+      "phase": "sample",
+      "status": "passed",
+      "total_seconds": 182.877
+    },
+    {
+      "path": "WA5480 G3/lenovo_snmp_ug_g3.pdf",
+      "sha256": "54364f7a996ac070098bfa4d0b8de530660edc2aaacd73550584c57373b8256e",
+      "phase": "holdout",
+      "status": "passed",
+      "total_seconds": 29.616
+    },
+    {
+      "path": "WA5480 G3/lenovo_wentian_os_installation_guide.pdf",
+      "sha256": "f5d59ae8c6bfc792ae28160790ce0f673b8d940de86f98ed7e326fb40cfaec17",
+      "phase": "sample",
+      "status": "passed",
+      "total_seconds": 54.132
+    },
+    {
+      "path": "WA5480 G3/lenovo_wentian_wa5480g3_user_guide_v8.pdf",
+      "sha256": "a73e5e450d7b3c9bce074f3d54d9ff249f2f58a71eac214bc2a168ba1e4fecd7",
+      "phase": "holdout",
+      "status": "passed",
+      "total_seconds": 124.795
+    },
+    {
+      "path": "WA5480 G3/lxce_bomc_cplus_ug.pdf",
+      "sha256": "c41b84786be486e197ab7604f58b63be062948a8e73455f0c17fb013158959e8",
+      "phase": "holdout",
+      "status": "passed",
+      "total_seconds": 8.163
+    },
+    {
+      "path": "WA5480 G3/lxce_onecli_cplus_ug.pdf",
+      "sha256": "dba774fbccfbd4c2e7e84819f2c213a37af77862be9143344db0f64e7f5e3440",
+      "phase": "sample",
+      "status": "passed",
+      "total_seconds": 58.724
+    },
+    {
+      "path": "WA5480 G3/lxce_ux_cplus_ug.pdf",
+      "sha256": "db4f1f0c538d2e623a2b9b9f9de76ad7cc64776076d3246a5cd562c6d0c5576c",
+      "phase": "holdout",
+      "status": "passed",
+      "total_seconds": 22.168
+    },
+    {
+      "path": "WA5480 G3/lxpm_wentian_ug-v2.pdf",
+      "sha256": "7508bcd4c26266887f92c7c803a57cc9cc9d277229909af94f3cb60023844bdc",
+      "phase": "holdout",
+      "status": "passed",
+      "total_seconds": 10.501
+    },
+    {
+      "path": "WA5480 G3/psu_label_matrix.pdf",
+      "sha256": "8ca145a1ab7450891da9af84933fdebe3042f9624ae25974bb34fb72782c1f39",
+      "phase": "holdout",
+      "status": "passed",
+      "total_seconds": 2.975
+    },
+    {
+      "path": "WA5480 G5/lenovo_bmc_commands_g5_v3.pdf",
+      "sha256": "2cabbcdf52506fa99915939d223a7e7fa5535989ca8c4970528244b7464e58f9",
+      "phase": "holdout",
+      "status": "passed",
+      "total_seconds": 27.286
+    },
+    {
+      "path": "WA5480 G5/lenovo_bmc_redfish_guide_g5_v4.pdf",
+      "sha256": "4b9324d1688973cab77c554228600d94a7b1e9cfbc4ba4d6cc91c6f8c28e4656",
+      "phase": "holdout",
+      "status": "passed",
+      "total_seconds": 214.899
+    },
+    {
+      "path": "WA5480 G5/lenovo_bmc_snmp_guide_g5.pdf",
+      "sha256": "4ff96dfa2f3c88ceb4ab913617a41f9980eab3966c6a611bff006574f9be1dbf",
+      "phase": "holdout",
+      "status": "passed",
+      "total_seconds": 28.661
+    },
+    {
+      "path": "WA5480 G5/lenovo_bmc_user_guide_g5_v6.pdf",
+      "sha256": "f98dcb710ae5f9fa900b3a786afec813f847dde32ca0ea255e7f417148fe9bf1",
+      "phase": "holdout",
+      "status": "passed",
+      "total_seconds": 60.909
+    },
+    {
+      "path": "WA5480 G5/lenovo_wentian_wa5480g5_user_guide_v5.pdf",
+      "sha256": "cd3117ca607c691f2dc57213b9dcecf1d394a8af69cb66bc83094816d74ab89c",
+      "phase": "holdout",
+      "status": "passed",
+      "total_seconds": 130.038
+    },
+    {
+      "path": "WA5480 G5/wa5480g5_bios_setup_spec.pdf",
+      "sha256": "99dfa6d7f2e6f5d459202047f5ea0a405ced71dd5de8114b447ef0f2afb4325f",
+      "phase": "holdout",
+      "status": "passed",
+      "total_seconds": 31.842
+    },
+    {
+      "path": "WA5680 G3/lenovo_wentian_wa5680g3_user_guide.pdf",
+      "sha256": "fe6bafcd127777fe95f0f46fcea690d22ab78331853450d6b990f674575774d2",
+      "phase": "sample",
+      "status": "passed",
+      "total_seconds": 51.671
+    },
+    {
+      "path": "WA5680 G5/lenovo_wentian_wa5680g5_bios_setup_spec_v2.4.pdf",
+      "sha256": "3c609ad9bf3030f51bba4df5bdf18ead5671b77273903a4073db75fa2d132a45",
+      "phase": "holdout",
+      "status": "passed",
+      "total_seconds": 44.178
+    },
+    {
+      "path": "WA5680 G5/lenovo_wentian_wa5680g5_user_guide.pdf",
+      "sha256": "832ee58c3b7faf06dc746ba1289128abc71ff1147945504f9c86ebe888cacf1b",
+      "phase": "holdout",
+      "status": "passed",
+      "total_seconds": 88.954
+    },
+    {
+      "path": "WA5680 G5/lp2469.pdf",
+      "sha256": "3b6c0e4abca685abe7685eba74fe129d2806d243daa52f90380d5d74652f33c1",
+      "phase": "sample",
+      "status": "passed",
+      "total_seconds": 61.82
+    },
+    {
+      "path": "WA5680 G5/lp2506.pdf",
+      "sha256": "966fc8ea9efda6f9f416ddf55c0c291f41583dd0a97a6d8b44cb87da3f2eaa5c",
+      "phase": "holdout",
+      "status": "passed",
+      "total_seconds": 4.292
+    },
+    {
+      "path": "WA5685 G5/lp2399.pdf",
+      "sha256": "7961a03be1e76faa6fcc10bd2cac2520381c00f41243a1aa6b718d7242da4fd1",
+      "phase": "holdout",
+      "status": "passed",
+      "total_seconds": 32.027
+    },
+    {
+      "path": "WA5685 G5/lp2507.pdf",
+      "sha256": "e57262389e68449ca7700dd441d57aee294ccb932279af9c0e2090aa2ba98189",
+      "phase": "sample",
+      "status": "passed",
+      "total_seconds": 2.251
+    },
+    {
+      "path": "WA5685 G5/wa5685g5_user_guide.pdf",
+      "sha256": "f37f6776f2ad81999742d5e01b5d9b78060cb762de5fff910b2f3be1d760b421",
+      "phase": "holdout",
+      "status": "passed",
+      "total_seconds": 57.836
+    },
+    {
+      "path": "WA7780 G3/lenovo_wentian_wa7780g3_bios_user_guide.pdf",
+      "sha256": "ff73d1e9ccc954f7e64173874a55dc7fe52569c9fe85c8669527933e81843d39",
+      "phase": "sample",
+      "status": "passed",
+      "total_seconds": 18.131
+    },
+    {
+      "path": "WA7780 G3/lenovo_wentian_wa7780g3_user_guide.pdf",
+      "sha256": "1718c6d1094bf50a54550fdb191f628875da094b0fbda8f2f147305dbc740f4b",
+      "phase": "sample",
+      "status": "passed",
+      "total_seconds": 396.902
+    },
+    {
+      "path": "WA7785a G3/lenovo_wentian_wa7785ag3_bios_user_guide.pdf",
+      "sha256": "c129642ccf27022ed6ab2ec88597e0c905c361c7a8008de29a58d2a373f1e073",
+      "phase": "sample",
+      "status": "passed",
+      "total_seconds": 15.77
+    },
+    {
+      "path": "WA7785a G3/lenovo_wentian_wa7785ag3_user_guide.pdf",
+      "sha256": "3a1f7a48df92df1fd415741656cc5294ca26a8e5ab4f3839da557c0189c0e35e",
+      "phase": "sample",
+      "status": "passed",
+      "total_seconds": 353.774
+    },
+    {
+      "path": "WA7880a G3/lenovo_wentian_wa7880ag3_user_guide.pdf",
+      "sha256": "59de6ab16247b3c5dde9fbb612103ee046b9a377c0280544f16eb9e62dd28cf8",
+      "phase": "sample",
+      "status": "passed",
+      "total_seconds": 62.385
+    },
+    {
+      "path": "WR3220 G5/lenovo_wentian_wr3220g5_user_guide.pdf",
+      "sha256": "99efac6f9ffd874876c250ecf117e94d0ee8259b4cbcab1b735c432c1268b11b",
+      "phase": "holdout",
+      "status": "passed",
+      "total_seconds": 84.26
+    },
+    {
+      "path": "WR3220 G5/lp2440.pdf",
+      "sha256": "71dc6f591f4cbee1e237fda4ef716499b3024d7336c56349e076e1ae979eb591",
+      "phase": "holdout",
+      "status": "passed",
+      "total_seconds": 34.986
+    },
+    {
+      "path": "WR5215 G5/lenovo_wentian_wr5215g5_user_guide_v2.pdf",
+      "sha256": "cab45cdf5408097b3eeef87c0eee393139aef48a53252cf354b9d90c455275b9",
+      "phase": "holdout",
+      "status": "passed",
+      "total_seconds": 110.784
+    },
+    {
+      "path": "WR5215 G5/lp2356.pdf",
+      "sha256": "d709da2a8fe20d4b0cc6653f3e1428fad558032f9ecd5b48db653d8ccdf76b9c",
+      "phase": "holdout",
+      "status": "passed",
+      "total_seconds": 16.924
+    },
+    {
+      "path": "WR5220 G3/lenovo_bmc_g3_commands_guide_v2.pdf",
+      "sha256": "7273f8d5c3336bfdffe70e3b056d74d0ec08a75856cdb25b65daa3b66cedec46",
+      "phase": "holdout",
+      "status": "passed",
+      "total_seconds": 25.745
+    },
+    {
+      "path": "WR5220 G3/lenovo_wentian_wr5220g3_user_guide_v18.pdf",
+      "sha256": "15b16176143792fd24287d10f29e46cc039660e802a0e2070cc14128f5ea53e6",
+      "phase": "sample",
+      "status": "passed",
+      "total_seconds": 186.697
+    },
+    {
+      "path": "WR5220 G3/lp1705.pdf",
+      "sha256": "f3b4f9d125fee56c228b36354a30198ddd14933cb755fdc7dc1ef2d4af8442e7",
+      "phase": "sample",
+      "status": "passed",
+      "total_seconds": 53.097
+    },
+    {
+      "path": "WR5220 G3/vmware_code_recipe_file.pdf",
+      "sha256": "b92580f11c67c86dedd6984cfaf11b13c3bb3ee7730ea7845f6aa1a94b7715df",
+      "phase": "holdout",
+      "status": "passed",
+      "total_seconds": 8.022
+    },
+    {
+      "path": "WR5220 G3/wr5220g3_bios_setup_spec_v2.13.pdf",
+      "sha256": "4d0754555ef1c4ae4f41225e6fdc210d502abc902371025caeb6b8cc8b313c1d",
+      "phase": "holdout",
+      "status": "passed",
+      "total_seconds": 37.259
+    },
+    {
+      "path": "WR5220 G5/lenovo_wentian_wr5220g5_user_guide_v7.pdf",
+      "sha256": "c73297846d184c5033c92058dd0925f41093178d1ea35f7b287c19a4e5cf5f34",
+      "phase": "sample",
+      "status": "passed",
+      "total_seconds": 169.749
+    },
+    {
+      "path": "WR5220 G5/lp1728.pdf",
+      "sha256": "270eeadc4cc0f802e3b2c939e4abda15683fc65aed5716f9c1bf9aa955083e5d",
+      "phase": "sample",
+      "status": "passed",
+      "total_seconds": 10.135
+    },
+    {
+      "path": "WR5220 G5/lp2014.pdf",
+      "sha256": "9697a67c0223b29c2b6050101b0eef6c61e7c3c85b3cb4ad63488887e09d2c70",
+      "phase": "holdout",
+      "status": "passed",
+      "total_seconds": 46.875
+    },
+    {
+      "path": "WR5225 G3/lp2129.pdf",
+      "sha256": "4359185edbc9e46fb5108fe99fb0e6253148357afeb29ff3f8b6d938bba70403",
+      "phase": "holdout",
+      "status": "passed",
+      "total_seconds": 62.707
+    },
+    {
+      "path": "WR5225 G3/wr5225g3_bios_setup_spec_v2.9-turin.pdf",
+      "sha256": "683e4a61ad09ed4a676d063878096127141cddf1128c469b8534853236f52247",
+      "phase": "holdout",
+      "status": "passed",
+      "total_seconds": 31.695
+    },
+    {
+      "path": "WR5225 G3/wr5225g3_bios_setup_spec_v3.0-genoa.pdf",
+      "sha256": "d242cfa85dcc029ccb129fe5d2e61f0a051c6b2c664d95d66a7d1ee48dd5ac08",
+      "phase": "holdout",
+      "status": "passed",
+      "total_seconds": 30.355
+    },
+    {
+      "path": "WR5225 G3/wr5225g3_user_guide_v6.pdf",
+      "sha256": "8cfc8781da9c75bdab2b3477a6564cba1b06009d553530cd3a026014f4b677af",
+      "phase": "sample",
+      "status": "passed",
+      "total_seconds": 211.632
+    },
+    {
+      "path": "WR6220 G5/lenovo_wentian_wr6220g5_user_guide.pdf",
+      "sha256": "8921606e9e9fcc6b199f2c360787dc228f3180bd2448423d40bd1d101c13be71",
+      "phase": "sample",
+      "status": "passed",
+      "total_seconds": 209.258
+    },
+    {
+      "path": "WR6220 G5/lp2468.pdf",
+      "sha256": "1c346cc68cc75a84dbf27f21d5f25c2806f3a666c963afe807713ab6a11e23b0",
+      "phase": "holdout",
+      "status": "passed",
+      "total_seconds": 38.051
+    },
+    {
+      "path": "WR6220 G5/lp2502.pdf",
+      "sha256": "dfafab00543396b843a9daac753c9962f8366a4752a121442a62e056b0ae4f25",
+      "phase": "holdout",
+      "status": "passed",
+      "total_seconds": 8.958
+    }
+  ],
+  "second_detection_check": {
+    "status": "passed",
+    "documents": 49,
+    "pages": 6398,
+    "native_evidence_origin": "actual validated written stage, or verified identical input/output bytes",
+    "candidate_source_identical_to_quality_series": true,
+    "result_directory": "repeat-results",
+    "recorded_at": "2026-10-05T18:31:37.602121+00:00"
+  },
+  "first_series_second_pass_status": "superseded: source native evidence used by the original harness",
+  "repeat_worker_exit_codes": [
+    0,
+    0
+  ]
+}

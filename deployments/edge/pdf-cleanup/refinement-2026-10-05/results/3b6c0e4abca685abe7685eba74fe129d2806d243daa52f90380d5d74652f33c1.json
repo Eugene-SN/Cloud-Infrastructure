@@ -1,0 +1,56 @@
+{
+  "path": "WA5680 G5/lp2469.pdf",
+  "sha256": "3b6c0e4abca685abe7685eba74fe129d2806d243daa52f90380d5d74652f33c1",
+  "size": 7295204,
+  "pages": 111,
+  "reason": "inline footer number and title",
+  "phase": "sample",
+  "candidate_hashes": {
+    "core.py": "2eaa182b11a5f9e5be766c5cf9d9b53712a23c13cdb292a9ba7bfc2b22487047",
+    "native.py": "d8b11bcc7c7726a1d31667c1d17cb159b280fe4146d1550dd38227c34971f331",
+    "lexical.py": "bde6b55e1dfc8f25f37f90bd39b5d1fc7d12357e5ded6f0a0a2bd056dafb2a0c"
+  },
+  "cleanup_seconds": 42.678,
+  "result": {
+    "schema_version": 1,
+    "tool_version": "0.1.3",
+    "source_commit": "uncommitted",
+    "input": "/input/3b6c0e4abca685abe7685eba74fe129d2806d243daa52f90380d5d74652f33c1.pdf",
+    "output": "/out/results/3b6c0e4abca685abe7685eba74fe129d2806d243daa52f90380d5d74652f33c1.pdf",
+    "input_sha256": "3b6c0e4abca685abe7685eba74fe129d2806d243daa52f90380d5d74652f33c1",
+    "pages": 111,
+    "header_footer_fragments": 111,
+    "removed_header_rows": 0,
+    "removed_footer_rows": 111,
+    "footer_pages": 111,
+    "removed_links": {
+      "/Dest": 135,
+      "/URI": 8
+    },
+    "removed_widgets": 1,
+    "cleanup_method": "text_show_operations",
+    "status": "cleaned",
+    "output_sha256": "093cc488b17e93e524a2bc92318ad873ce1c0b76f36b13f1da62b4a28e29b11f",
+    "validation": "passed"
+  },
+  "independent": {
+    "status": "passed",
+    "engine": "156.0.8076.0",
+    "pypdfium2": "5.14.0",
+    "dpi": 144,
+    "pages": 111,
+    "body_glyphs": 66199,
+    "changed_pixels_total": 222927,
+    "pixels_outside_masks": 0,
+    "failures": [],
+    "document_property_changes": [],
+    "elapsed_seconds": 13.386
+  },
+  "second_pass": {
+    "status": "no_targets",
+    "targets": []
+  },
+  "source_sha256_after": "3b6c0e4abca685abe7685eba74fe129d2806d243daa52f90380d5d74652f33c1",
+  "status": "passed",
+  "total_seconds": 61.82
+}

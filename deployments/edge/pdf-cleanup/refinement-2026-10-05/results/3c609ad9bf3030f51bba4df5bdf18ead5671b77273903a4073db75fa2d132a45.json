@@ -1,0 +1,53 @@
+{
+  "path": "WA5680 G5/lenovo_wentian_wa5680g5_bios_setup_spec_v2.4.pdf",
+  "sha256": "3c609ad9bf3030f51bba4df5bdf18ead5671b77273903a4073db75fa2d132a45",
+  "size": 6590361,
+  "phase": "holdout",
+  "candidate_hashes": {
+    "core.py": "2eaa182b11a5f9e5be766c5cf9d9b53712a23c13cdb292a9ba7bfc2b22487047",
+    "native.py": "d8b11bcc7c7726a1d31667c1d17cb159b280fe4146d1550dd38227c34971f331",
+    "lexical.py": "bde6b55e1dfc8f25f37f90bd39b5d1fc7d12357e5ded6f0a0a2bd056dafb2a0c"
+  },
+  "cleanup_seconds": 26.579,
+  "result": {
+    "schema_version": 1,
+    "tool_version": "0.1.3",
+    "source_commit": "uncommitted",
+    "input": "/input/3c609ad9bf3030f51bba4df5bdf18ead5671b77273903a4073db75fa2d132a45.pdf",
+    "output": "/out/results/3c609ad9bf3030f51bba4df5bdf18ead5671b77273903a4073db75fa2d132a45.pdf",
+    "input_sha256": "3c609ad9bf3030f51bba4df5bdf18ead5671b77273903a4073db75fa2d132a45",
+    "pages": 98,
+    "header_footer_fragments": 0,
+    "removed_header_rows": 0,
+    "removed_footer_rows": 0,
+    "footer_pages": 0,
+    "removed_links": {
+      "/Dest": 56
+    },
+    "removed_widgets": 0,
+    "cleanup_method": "text_show_operations",
+    "status": "cleaned",
+    "output_sha256": "6acc0a0d6a030468b989c974cbf79c7c34e8a752a54b414e936aa6d177abdf69",
+    "validation": "passed"
+  },
+  "independent": {
+    "status": "passed",
+    "engine": "156.0.8076.0",
+    "pypdfium2": "5.14.0",
+    "dpi": 144,
+    "pages": 98,
+    "body_glyphs": 73745,
+    "changed_pixels_total": 0,
+    "pixels_outside_masks": 0,
+    "failures": [],
+    "document_property_changes": [],
+    "elapsed_seconds": 12.336
+  },
+  "second_pass": {
+    "status": "no_targets",
+    "targets": []
+  },
+  "source_sha256_after": "3c609ad9bf3030f51bba4df5bdf18ead5671b77273903a4073db75fa2d132a45",
+  "status": "passed",
+  "total_seconds": 44.178
+}

@@ -192,3 +192,10 @@ and [research artifacts](quality-research-2026-10-05/README.md).
 The experiments expose pagination-classification and independent-rendering
 limitations. The candidate patch is not a production acceptance or a replacement
 for the installed source described above.
+
+Refined candidate and complete-catalogue verification:
+[2026-10-05 refinement report](../../../PDF_CLEANUP_REFINEMENT_2026-10-05.md),
+[18-document selection](../../../PDF_CLEANUP_TEST_SELECTION_2026-10-05.md),
+and [candidate/test artifacts](refinement-2026-10-05/README.md).
+This isolated workstream preserves the production import and originals guard;
+the candidate is not deployed.

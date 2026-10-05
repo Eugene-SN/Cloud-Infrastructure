@@ -1,0 +1,17 @@
+Isolated copy dry-run:
+checking file src/pdf_cleanup/core.py
+checking file src/pdf_cleanup/native.py
+checking file src/pdf_cleanup/lexical.py
+checking file tests/test_cleanup.py
+checking file tests/test_quality.py
+checking file tests/test_refinement.py
+
+Isolated copy apply:
+patching file src/pdf_cleanup/core.py
+patching file src/pdf_cleanup/native.py
+patching file src/pdf_cleanup/lexical.py
+patching file tests/test_cleanup.py
+patching file tests/test_quality.py
+patching file tests/test_refinement.py
+
+All six candidate file hashes match. Temporary verification copy removed.

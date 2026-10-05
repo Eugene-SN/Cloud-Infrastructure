@@ -1,0 +1,43 @@
+{
+  "path": "WR5215 G5/lp2356.pdf",
+  "sha256": "d709da2a8fe20d4b0cc6653f3e1428fad558032f9ecd5b48db653d8ccdf76b9c",
+  "size": 2562644,
+  "candidate_hashes": {
+    "core.py": "2eaa182b11a5f9e5be766c5cf9d9b53712a23c13cdb292a9ba7bfc2b22487047",
+    "native.py": "d8b11bcc7c7726a1d31667c1d17cb159b280fe4146d1550dd38227c34971f331",
+    "lexical.py": "bde6b55e1dfc8f25f37f90bd39b5d1fc7d12357e5ded6f0a0a2bd056dafb2a0c"
+  },
+  "result": {
+    "schema_version": 1,
+    "tool_version": "0.1.3",
+    "source_commit": "uncommitted",
+    "input": "/input/d709da2a8fe20d4b0cc6653f3e1428fad558032f9ecd5b48db653d8ccdf76b9c.pdf",
+    "output": "/out/results/d709da2a8fe20d4b0cc6653f3e1428fad558032f9ecd5b48db653d8ccdf76b9c.pdf",
+    "input_sha256": "d709da2a8fe20d4b0cc6653f3e1428fad558032f9ecd5b48db653d8ccdf76b9c",
+    "pages": 24,
+    "header_footer_fragments": 24,
+    "removed_header_rows": 0,
+    "removed_footer_rows": 24,
+    "footer_pages": 24,
+    "removed_links": {
+      "/URI": 7
+    },
+    "removed_widgets": 1,
+    "cleanup_method": "text_show_operations",
+    "status": "cleaned",
+    "output_sha256": "62ecdc45c7228dc6de3a3a584ec41d9040d37f8b9b771c4a00b51f6c9e0468cd",
+    "validation": "passed"
+  },
+  "inspected_stage_sha256": "62ecdc45c7228dc6de3a3a584ec41d9040d37f8b9b771c4a00b51f6c9e0468cd",
+  "inspected_stage_path": "/out/results/.pdf-cleanup-3jqx9del.part",
+  "native_evidence_origin": "written_stage_inspected_by_output_validator",
+  "native_evidence_sha256": "b37d68a1073d87b9b2b7fd3a38698aae268b40b1a7db8e49003da1297e3dae67",
+  "native_pagination_points": 356,
+  "second_pass": {
+    "status": "no_targets",
+    "targets": []
+  },
+  "source_sha256_after": "d709da2a8fe20d4b0cc6653f3e1428fad558032f9ecd5b48db653d8ccdf76b9c",
+  "status": "passed",
+  "elapsed_seconds": 12.72
+}

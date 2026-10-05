@@ -1,0 +1,547 @@
+--- a/src/pdf_cleanup/core.py
++++ b/src/pdf_cleanup/core.py
+@@ -9,0 +10 @@
++import shutil
+@@ -67,0 +69,31 @@
++def body_signature(lines, selected=()):
++    """Preserve body glyph order and style, in addition to coordinates."""
++    return [{'c':c['c'],'origin':c['origin'],'font':span['font'],
++             'size':span['size'],'flags':span['flags'],'color':span['color'],'alpha':span['alpha'],
++             'dir':line['dir']}
++            for i,line in enumerate(lines) if i not in selected
++            for span in line['spans'] for c in span['chars']]
++
++def body_style_signature(page, lines, selected=()):
++    """Keep semantic text; compare visual style only where a real glyph exists.
++
++    Zero-width semantic characters without a texttrace glyph have no painted
++    font/opacity. MuPDF can assign them the last font used elsewhere on the page.
++    Their Unicode, position and order remain mandatory, including whitespace.
++    """
++    drawn={(round(c[2][0],4),round(c[2][1],4))
++           for span in page.get_texttrace() for c in span['chars']}
++    result=[]
++    for i,line in enumerate(lines):
++        if i in selected: continue
++        for span in line['spans']:
++            for c in span['chars']:
++                item={'c':c['c'],'origin':c['origin']}
++                zero_width=abs(c['bbox'][2]-c['bbox'][0])<=1e-7
++                point=(round(c['origin'][0],4),round(c['origin'][1],4))
++                if not zero_width or point in drawn:
++                    item.update(font=span['font'],size=span['size'],flags=span['flags'],
++                                color=span['color'],alpha=span['alpha'],dir=line['dir'])
++                result.append(item)
++    return result
++
+@@ -82,0 +115,15 @@
++def visible_drawings(page):
++    """Respect nested PDF clipping before testing enclosing drawing frames."""
++    result = []; clips = {}
++    for drawing in page.get_drawings(extended=True):
++        level = drawing['level']
++        clips = {depth:rect for depth,rect in clips.items() if depth < level}
++        if drawing['type'] == 'clip':
++            clips[level] = drawing['scissor']; continue
++        if drawing['type'] == 'group': continue
++        rect = pymupdf.Rect(drawing['rect'])
++        for clip in clips.values(): rect &= clip
++        if not rect.is_empty:
++            result.append(dict(drawing, rect=rect))
++    return result
++
+@@ -86,0 +134,4 @@
++        # One open stroke segment cannot enclose a table. Its bounding box
++        # may cover text that the segment itself does not touch.
++        if drawing.get('type') == 's' and len(drawing.get('items', ())) == 1 and drawing['items'][0][0] == 'l':
++            continue
+@@ -134 +185 @@
+-        tolerance=1e-6 if key in ('fill','color','fill_opacity','stroke_opacity') else 1e-4 if key=='width' else .01
++        tolerance=1e-6 if key in ('fill','color','fill_opacity','stroke_opacity') else 1e-4 if key in ('width','size') else .01
+@@ -146 +197 @@
+-        lines = lines_for(page); drawings = page.get_drawings(); roles = native_roles(page, lines, native[pno])
++        lines = lines_for(page); drawings = visible_drawings(page); roles = native_roles(page, lines, native[pno])
+@@ -151 +202,4 @@
+-            if n and last-line['y'] <= line['size']*.5 and not within_table(line,drawings):
++            # Geometry qualifies pagination candidates; it is never a broad
++            # deletion mask. Consecutive numbers within body text are not enough.
++            marginal=0 <= page.cropbox.height-line['y'] <= page.cropbox.height*.10
++            if n and marginal and last-line['y'] <= line['size']*.5 and not within_table(line,drawings):
+@@ -168,0 +223,14 @@
++    # A single introductory roman i may precede a confirmed decimal 1,2,...
++    # sequence. Require the immediately following page and the same number slot.
++    for c in candidates:
++        if c['n'] != ('roman', 1) or c['i'] in pages[c['p']]['selected']: continue
++        line = pages[c['p']]['lines'][c['i']]
++        for q in candidates:
++            if q['p'] != c['p'] + 1 or q['n'] != ('decimal', 1): continue
++            if q['i'] not in pages[q['p']]['selected']: continue
++            if (q['height'],q['width'],q['fonts']) != (c['height'],c['width'],c['fonts']): continue
++            if abs(q['y']-c['y']) > c['size']*.5: continue
++            other = pages[q['p']]['lines'][q['i']]
++            if abs(sum(line['bbox'][::2])/2-sum(other['bbox'][::2])/2) > max(c['size'],q['size'])*2: continue
++            pages[c['p']]['selected'][c['i']] = 'introductory_roman_page'
++            break
+@@ -187,0 +256 @@
++        p['requires_text_operators']=False
+@@ -192 +261 @@
+-                        raise CleanupError(f'Page {pno+1}: redaction would touch body text')
++                        p['requires_text_operators']=True
+@@ -194,0 +264 @@
++        p['body_signature']=body_style_signature(doc[pno],p['lines'],p['selected'])
+@@ -222,0 +293,2 @@
++            if not geometry_equivalent(body_style_signature(p,lines_for(p)),plan[i]['body_signature']):
++                raise CleanupError(f'Page {i+1}: body glyph style/order changed',4)
+@@ -275,0 +348,8 @@
++            if not entries and not any(p['links'] or p['widgets'] for p in native):
++                shutil.copyfile(inp,stage)
++                if sha256(stage)!=original or sha256(inp)!=original:
++                    raise CleanupError('Source/copy hash changed',4)
++                summary.update(status='cleaned',output_sha256=original,
++                               cleanup_method='exact_copy',validation='passed')
++                os.link(stage,out)
++                return summary
+@@ -289,3 +369,2 @@
+-                for r in p['rects']: page.add_redact_annot(r,fill=False,cross_out=False)
+-                if p['rects']: page.apply_redactions(images=pymupdf.PDF_REDACT_IMAGE_NONE,graphics=pymupdf.PDF_REDACT_LINE_ART_NONE,text=pymupdf.PDF_REDACT_TEXT_REMOVE)
+-            doc.save(stage,garbage=3,deflate=True)
++            remove_text_shows(doc,inp,plan)
++            doc.save(stage,garbage=2,deflate=True,use_objstms=1)
+@@ -293,23 +372,2 @@
+-            method='text_redaction'
+-            try:
+-                with pymupdf.open(inp) as original_doc: validate_output(stage,original_doc,plan,native)
+-            except CleanupError as primary_failure:
+-                if primary_failure.rc!=4: raise
+-                # Re-open the authoritative source, never repair the damaged stage.
+-                with pymupdf.open(inp) as fallback:
+-                    for i,item in enumerate(native):
+-                        page=fallback[i]
+-                        for widget in list(page.widgets() or []):
+-                            if widget.xref in item['widgets']: page.delete_widget(widget)
+-                        page=fallback.reload_page(page)
+-                        kind,array=fallback.xref_get_key(page.xref,'Annots')
+-                        if kind=='xref':array=fallback.xref_object(int(array.split()[0]),compressed=False)
+-                        remaining={int(x) for x in re.findall(r'(\d+)\s+\d+\s+R',array)}
+-                        targets={l['xref'] for l in item['links']}|set(item['widgets'])
+-                        unlink_annotations(fallback,page,targets & remaining)
+-                    remove_text_shows(fallback,inp,plan)
+-                    fallback.save(stage,garbage=3,deflate=True)
+-                with pymupdf.open(inp) as original_doc: validate_output(stage,original_doc,plan,native)
+-                method='text_show_operations'
+-                summary['primary_validation_failure']=str(primary_failure)
+-            summary['cleanup_method']=method
++            with pymupdf.open(inp) as original_doc: validate_output(stage,original_doc,plan,native)
++            summary['cleanup_method']='text_show_operations'
+--- a/src/pdf_cleanup/native.py
++++ b/src/pdf_cleanup/native.py
+@@ -69 +69 @@
+-    """Fallback for mixed BT/ET objects; preserve all non-target operators.
++    """Remove identified text operands while preserving every other program byte.
+@@ -71 +71 @@
+-    pypdf parses/serializes stream syntax only. PyMuPDF owns every PDF write.
++    pypdf parses stream syntax only. PyMuPDF owns every PDF write.
+@@ -74 +74,2 @@
+-    from pypdf.generic import ContentStream, ByteStringObject, ArrayObject
++    from pypdf.generic import ContentStream
++    from .lexical import LocatedContentStream, edited_program
+@@ -79,2 +80,2 @@
+-        positions=[]
+-        leading=0.0; states=[]
++        positions=[]; form_invocations=[]
++        leading=0.0; states=[]; form_depth=0
+@@ -82 +83,8 @@
+-            nonlocal leading
++            nonlocal leading,form_depth
++            # pypdf recurses into Forms with the same visitors. The operations
++            # being rewritten below belong only to the page content stream.
++            # Leave nested body/illustration streams untouched.
++            if op==b'Do':
++                if not form_depth: form_invocations.append((args[0],list(cm)))
++                form_depth+=1; return
++            if form_depth: return
+@@ -93,2 +101,6 @@
+-        reader.pages[i].extract_text(visitor_operand_before=visitor)
+-        stream=ContentStream(reader.pages[i]['/Contents'],reader,forced_encoding='bytes')
++        def after(op,args,cm,tm):
++            nonlocal form_depth
++            if op==b'Do': form_depth-=1
++        reader.pages[i].extract_text(visitor_operand_before=visitor,visitor_operand_after=after)
++        if form_depth: raise ValueError('Unbalanced Form visitor traversal')
++        stream=LocatedContentStream(reader.pages[i]['/Contents'],reader,forced_encoding='bytes')
+@@ -99 +111,35 @@
+-        removed=0
++        def matches(point):
++            return any(abs(line['y']-point.y)<=max(2,line['size']*.35) and line['bbox'][0]-2<=point.x<=line['bbox'][2]+2 for line in selected)
++        def pure_footer_form(name,parent_matrix):
++            resources=reader.pages[i]['/Resources']
++            objects=resources.get('/XObject',{})
++            form=objects.get(name)
++            if form is None:return False
++            form=form.get_object()
++            if form.get('/Subtype')!='/Form':return False
++            content=ContentStream(form,reader,forced_encoding='bytes')
++            allowed={b'q',b'Q',b'cm',b'BT',b'ET',b'Tf',b'Tm',b'Td',b'TD',b'TL',b'Tc',b'Tw',b'Tz',b'Tr',b'Ts',b'T*',b'Tj',b'TJ',b"'",b'"',b'BMC',b'BDC',b'EMC',b'MP',b'DP',b'gs'}
++            # Colour/rendering-intent state alone paints no graphics.
++            allowed.update({b'g',b'G',b'rg',b'RG',b'k',b'K',b'cs',b'CS',b'sc',b'SC',b'scn',b'SCN',b'ri'})
++            if any(op not in allowed for _,op in content.operations):return False
++            proxy=PageObject(pdf=reader)
++            proxy[NameObject('/Contents')]=form
++            proxy[NameObject('/Resources')]=form.get('/Resources',resources)
++            form_matrix=list(form.get('/Matrix',[1,0,0,1,0,0]))
++            outer=mult(form_matrix,parent_matrix);points=[];leading=0.0;states=[]
++            def visit(op,args,cm,tm):
++                nonlocal leading
++                if op==b'q':states.append(leading)
++                elif op==b'Q' and states:leading=states.pop()
++                elif op==b'TL':leading=float(args[0])
++                elif op==b'TD':leading=-float(args[1])
++                if op in (b'Tj',b'TJ',b"'",b'"'):
++                    payload=args[0] if op==b'TJ' else args[-1]
++                    if not any(isinstance(v,(str,bytes)) and len(v) for v in (payload if op==b'TJ' else [payload])):return
++                    tm=list(tm)
++                    if op in (b"'",b'"'):tm[4]-=leading*tm[2];tm[5]-=leading*tm[3]
++                    matrix=mult(mult(tm,cm),outer)
++                    points.append(pymupdf.Point(float(matrix[4]),float(matrix[5]))*doc[i].transformation_matrix)
++            proxy.extract_text(visitor_operand_before=visit)
++            return bool(points) and all(matches(point) for point in points)
++        removed=0; edits=[]
+@@ -101 +147 @@
+-            if any(abs(line['y']-point.y)<=max(2,line['size']*.35) and line['bbox'][0]-2<=point.x<=line['bbox'][2]+2 for line in selected):
++            if matches(point):
+@@ -103,4 +149,2 @@
+-                if op==b'TJ': replacement=[ArrayObject()]
+-                elif op==b'"': replacement=[args[0],args[1],ByteStringObject(b'')]
+-                else: replacement=[ByteStringObject(b'')]
+-                stream.operations[index]=(replacement,op)
++                start,end=stream.operand_ranges[index][-1]
++                edits.append((start,end,b'[]' if op==b'TJ' else b'()'))
+@@ -107,0 +152,12 @@
++        invocations=[j for j,(_,op) in enumerate(stream.operations) if op==b'Do']
++        if len(invocations)!=len(form_invocations):raise ValueError('Form invocation mapping mismatch')
++        removed_forms=set()
++        for index,(name,matrix) in zip(invocations,form_invocations):
++            if stream.operations[index][0][0]!=name:raise ValueError('Form invocation name mismatch')
++            if pure_footer_form(name,matrix):removed_forms.add(index)
++        if removed_forms:
++            for index in removed_forms:
++                start=stream.operand_ranges[index][0][0]
++                end=stream.operator_ranges[index][1]
++                edits.append((start,end,b''))
++            removed+=len(removed_forms)
+@@ -109,3 +165,7 @@
+-        contents=doc[i].get_contents()
+-        if len(contents)!=1: raise ValueError('Multiple page streams require explicit mapping')
+-        doc.update_stream(contents[0],stream.get_data())
++        # The parsed /Contents array already represents one concatenated page
++        # program. Allocate a private stream so shared original streams and all
++        # nested Forms retain their bytes; preserve every non-target operator.
++        xref=doc.get_new_xref()
++        doc.update_object(xref,'<<>>')
++        doc.update_stream(xref,edited_program(stream.original_bytes,edits))
++        doc[i].set_contents(xref)
+--- /dev/null
++++ b/src/pdf_cleanup/lexical.py
+@@ -0,0 +1,50 @@
++"""Locate operands using pypdf's PDF-object and inline-image parsers.
++
++The program retains its original bytes: get_data() after parsing would otherwise
++serialize every number, string and instruction, including untouched body text.
++Parser control flow follows pypdf 6.19.0 ContentStream._parse_content_stream.
++"""
++from pypdf.generic import ContentStream, NameObject, read_object
++from pypdf._utils import read_non_whitespace, read_until_regex
++
++
++class LocatedContentStream(ContentStream):
++    def _parse_content_stream(self, stream):
++        self.original_bytes = stream.getvalue()
++        self.operand_ranges = []
++        self.operator_ranges = []
++        operands = []; ranges = []
++        stream.seek(0)
++        while True:
++            first = read_non_whitespace(stream)
++            if not first: break
++            stream.seek(-1, 1); start = stream.tell()
++            if first == b'%':
++                while first not in (b'\r', b'\n', b''): first = stream.read(1)
++                continue
++            if first.isalpha() or first in (b"'", b'"'):
++                operator = read_until_regex(stream=stream, regex=NameObject.delimiter_pattern,
++                                            length=self._OPERATOR_LENGTH_LIMIT)
++                if operator == b'BI':
++                    if operands: raise ValueError('Unexpected inline-image operands')
++                    operands = self._read_inline_image(stream)
++                    operator = b'INLINE IMAGE'
++                self._operations.append((operands, operator))
++                self.operand_ranges.append(ranges)
++                self.operator_ranges.append((start, stream.tell()))
++                operands = []; ranges = []
++            else:
++                operands.append(read_object(stream, None, self.forced_encoding))
++                ranges.append((start, stream.tell()))
++        if operands: raise ValueError('Trailing content operands without an operator')
++
++
++def edited_program(program, edits):
++    """Replace only proven target operands/invocations, preserving other bytes."""
++    result = bytearray(); previous = 0
++    for start, end, replacement in sorted(edits):
++        if start < previous or end < start or end > len(program):
++            raise ValueError('Overlapping or invalid PDF operand edits')
++        result.extend(program[previous:start]); result.extend(replacement); previous = end
++    result.extend(program[previous:])
++    return bytes(result)
+--- a/tests/test_cleanup.py
++++ b/tests/test_cleanup.py
+@@ -96 +96 @@
+-    def test_body_overlap_fails_before_publication(self):
++    def test_body_overlap_preserves_body_and_removes_only_footer_operators(self):
+@@ -101,2 +101,5 @@
+-        with self.assertRaises(CleanupError):cleanup(modified,out)
+-        self.assertFalse(out.exists())
++        result=cleanup(modified,out)
++        self.assertEqual(result['cleanup_method'],'text_show_operations')
++        with pymupdf.open(out) as doc:
++            self.assertIn('OVERLAPPING BODY',doc[0].get_text())
++            self.assertNotIn('Unique title',doc[0].get_text())
+--- /dev/null
++++ b/tests/test_quality.py
+@@ -0,0 +1,173 @@
++import unittest, tempfile, os
++from pathlib import Path
++import pymupdf
++from pdf_cleanup.core import cleanup, CleanupError, analyze, validate_output
++from pdf_cleanup.native import inspect_pdf
++
++class ResearchTests(unittest.TestCase):
++ def setUp(self): self.temp=tempfile.TemporaryDirectory(dir=os.environ.get('TMPDIR'));self.root=Path(self.temp.name)
++ def tearDown(self): self.temp.cleanup()
++ def create(self,numbers,clipped=False,diagonal=False,real_table=False):
++  doc=pymupdf.open()
++  for i,n in enumerate(numbers):
++   page=doc.new_page(width=612,height=792)
++   page.insert_text((72,100),'USEFUL BODY '+str(i),fontsize=11)
++   page.insert_text((40,755),n,fontsize=9)
++   page.insert_text((350,755),'Footer title',fontsize=8)
++   if diagonal or clipped:
++    page.draw_line((300,700),(560,790))
++    if clipped:
++     xref=page.get_contents()[-1]; data=doc.xref_stream(xref)
++     # PDF coordinates: visible illustration is clipped above page y=720.
++     doc.update_stream(xref,b'q 0 72 612 720 re W n\n'+data+b'\nQ')
++   if real_table:
++    page.draw_rect(pymupdf.Rect(300,720,560,780))
++    page.insert_text((350,738),'REAL TABLE CONTENT',fontsize=10)
++  inp=self.root/'input.pdf';doc.save(inp);doc.close();return inp
++ def test_clipped_illustration_does_not_prevent_footer_cleanup(self):
++  inp=self.create(['1','2'],clipped=True)
++  result=cleanup(inp,self.root/'cleaned.pdf')
++  self.assertEqual(result['removed_footer_rows'],2)
++  with pymupdf.open(self.root/'cleaned.pdf') as doc:
++   self.assertIn('USEFUL BODY',doc[0].get_text());self.assertNotIn('Footer title',doc[0].get_text())
++ def test_diagonal_illustration_bbox_is_not_a_table(self):
++  inp=self.create(['1','2'],diagonal=True)
++  result=cleanup(inp,self.root/'cleaned.pdf')
++  self.assertEqual(result['removed_footer_rows'],2)
++ def test_single_roman_frontmatter_then_decimal_sequence(self):
++  inp=self.create(['i','1','2'])
++  result=cleanup(inp,self.root/'cleaned.pdf')
++  self.assertEqual(result['removed_footer_rows'],3)
++ def test_single_decimal_outlier_is_not_silently_removed(self):
++  inp=self.create(['99','1','2'])
++  with self.assertRaises(CleanupError): cleanup(inp,self.root/'cleaned.pdf')
++ def test_table_row_at_confirmed_footer_height_blocks_removal(self):
++  inp=self.create(['1','2'],real_table=True)
++  with self.assertRaises(CleanupError): cleanup(inp,self.root/'cleaned.pdf')
++ def plain(self,name='plain.pdf',fontsize=11,color=(0,0,0),reverse=False,opacity=1):
++  doc=pymupdf.open();page=doc.new_page(width=612,height=792)
++  pairs=[('A',(72,100)),('B',(72,200))]
++  if reverse: pairs.reverse()
++  for text,point in pairs: page.insert_text(point,text,fontsize=fontsize,color=color,fill_opacity=opacity)
++  path=self.root/name;doc.save(path);doc.close();return path
++ def test_no_targets_preserves_exact_pdf_bytes(self):
++  inp=self.plain();out=self.root/'cleaned.pdf';result=cleanup(inp,out)
++  self.assertEqual(out.read_bytes(),inp.read_bytes())
++  self.assertEqual(result['validation'],'passed')
++ def verify_change_rejected(self,changed):
++  inp=self.plain();native=inspect_pdf(inp)
++  with pymupdf.open(inp) as source:
++   plan=analyze(source,native)
++   with self.assertRaises(CleanupError): validate_output(changed,source,plan,native)
++ def test_validation_rejects_changed_font_size_at_same_origin(self):
++  self.verify_change_rejected(self.plain('changed.pdf',fontsize=20))
++ def test_validation_rejects_changed_text_color(self):
++  self.verify_change_rejected(self.plain('changed.pdf',color=(1,0,0)))
++ def test_validation_rejects_changed_reading_order(self):
++  self.verify_change_rejected(self.plain('changed.pdf',reverse=True))
++ def test_validation_rejects_changed_text_opacity(self):
++  self.verify_change_rejected(self.plain('changed.pdf',opacity=.2))
++ def test_inline_body_parameter_numbers_are_preserved(self):
++  doc=pymupdf.open()
++  for n in (1,2):
++   page=doc.new_page(width=612,height=792)
++   page.insert_text((72,100),'Configuration procedure',fontsize=11)
++   page.insert_text((72,180),'The following setting is required:',fontsize=11)
++   page.insert_text((72,200),f'Required setting {n}',fontsize=11)
++  inp=self.root/'body.pdf';doc.save(inp);doc.close();out=self.root/'cleaned.pdf'
++  result=cleanup(inp,out)
++  self.assertEqual(result['removed_footer_rows'],0)
++  self.assertEqual(inp.read_bytes(),out.read_bytes())
++ def test_geometrically_separated_inline_footer_is_cleaned(self):
++  doc=pymupdf.open()
++  for n in (1,2):
++   page=doc.new_page(width=612,height=792)
++   page.insert_text((72,100),'USEFUL BODY',fontsize=11)
++   page.insert_text((40,755),'Footer title'+' '*55+str(n),fontsize=9)
++  inp=self.root/'inline-footer.pdf';doc.save(inp);doc.close()
++  result=cleanup(inp,self.root/'cleaned.pdf')
++  self.assertEqual(result['removed_footer_rows'],2)
++ def test_fallback_preserves_nested_form_body_and_removes_top_level_footer(self):
++  from pdf_cleanup.native import remove_text_shows
++  form=pymupdf.open();page=form.new_page(width=200,height=200)
++  page.insert_text((20,40),'PRESERVE FORM BODY',fontsize=10)
++  doc=pymupdf.open()
++  for n in (1,2):
++   page=doc.new_page(width=612,height=792)
++   page.show_pdf_page(pymupdf.Rect(72,72,272,272),form,0)
++   page.insert_text((40,755),str(n),fontsize=9)
++   page.insert_text((350,755),'Footer title',fontsize=8)
++  inp=self.root/'forms.pdf';doc.save(inp);doc.close();form.close()
++  native=inspect_pdf(inp)
++  with pymupdf.open(inp) as work:
++   plan=analyze(work,native)
++   xrefs={row[0] for i in range(len(work)) for row in work.get_page_xobjects(i)}
++   streams={xref:work.xref_stream(xref) for xref in xrefs}
++   remove_text_shows(work,inp,plan)
++   self.assertEqual(streams,{xref:work.xref_stream(xref) for xref in xrefs})
++   out=self.root/'cleaned.pdf';work.save(out,garbage=2,deflate=True,use_objstms=1)
++   with pymupdf.open(inp) as source: validate_output(out,source,plan,native)
++  with pymupdf.open(out) as result:
++   self.assertIn('PRESERVE FORM BODY',result[0].get_text())
++   self.assertNotIn('Footer title',result[0].get_text())
++ def test_fallback_refuses_to_guess_targets_inside_a_form(self):
++  from pdf_cleanup.native import remove_text_shows
++  forms=pymupdf.open();doc=pymupdf.open()
++  for n in (1,2):
++   page=forms.new_page(width=612,height=792)
++   page.insert_text((40,755),str(n),fontsize=9)
++   page.insert_text((350,755),'Footer title',fontsize=8)
++  # Finish the source before reusing MuPDF's graft map in show_pdf_page().
++  for n in (1,2):
++   outer=doc.new_page(width=612,height=792)
++   outer.show_pdf_page(outer.rect,forms,n-1)
++   outer.insert_text((72,100),'PROTECTED BODY',fontsize=11)
++  inp=self.root/'nested-footer.pdf';doc.save(inp);doc.close();forms.close()
++  original=inp.read_bytes();native=inspect_pdf(inp)
++  with pymupdf.open(inp) as work:
++   plan=analyze(work,native)
++   with self.assertRaisesRegex(ValueError,'no mapped text-show'):
++    remove_text_shows(work,inp,plan)
++  self.assertEqual(original,inp.read_bytes())
++ def test_body_bbox_overlap_uses_operators_and_preserves_body(self):
++  doc=pymupdf.open()
++  for n in (1,2):
++   page=doc.new_page(width=612,height=792)
++   page.insert_text((72,100),'Main body',fontsize=11)
++   page.insert_text((72,745),'PROTECTED BODY gyp',fontsize=11)
++   page.insert_text((40,755),str(n),fontsize=9)
++   page.insert_text((90,755),'Footer title',fontsize=9)
++  inp=self.root/'overlap.pdf';doc.save(inp);doc.close();out=self.root/'cleaned.pdf'
++  result=cleanup(inp,out)
++  self.assertEqual(result['cleanup_method'],'text_show_operations')
++  with pymupdf.open(out) as output:
++   self.assertIn('PROTECTED BODY gyp',output[0].get_text())
++   self.assertNotIn('Footer title',output[0].get_text())
++ def test_pure_text_footer_form_is_removed_without_changing_its_body_instance(self):
++  from pdf_cleanup.native import remove_text_shows
++  doc=pymupdf.open();form_xrefs=[]
++  for n in (1,2):
++   page=doc.new_page(width=612,height=792)
++   page.insert_text((40,755),str(n),fontsize=9)
++   number_stream=page.get_contents()[0]
++   page.insert_text((90,755),'Shared caption',fontsize=9)
++   title_stream=page.get_contents()[-1]
++   _,resource_ref=doc.xref_get_key(page.xref,'Resources');resources=int(resource_ref.split()[0])
++   form_resources=doc.get_new_xref();doc.update_object(form_resources,doc.xref_object(resources))
++   xref=doc.get_new_xref();doc.update_object(xref,f'<< /Type /XObject /Subtype /Form /BBox [0 0 612 792] /Resources {form_resources} 0 R >>')
++   doc.update_stream(xref,doc.xref_stream(title_stream));form_xrefs.append(xref)
++   doc.xref_set_key(resources,'XObject',f'<< /TestForm {xref} 0 R >>')
++   stream=doc.get_new_xref();doc.update_object(stream,'<<>>')
++   doc.update_stream(stream,b'q 1 0 0 1 0 656 cm /TestForm Do Q\n'+doc.xref_stream(number_stream)+b'\nq /TestForm Do Q\n')
++   page.set_contents(stream)
++  inp=self.root/'shared-footer-form.pdf';doc.save(inp);doc.close();native=inspect_pdf(inp)
++  with pymupdf.open(inp) as work:
++   plan=analyze(work,native);before={x:work.xref_stream(x) for x in form_xrefs}
++   remove_text_shows(work,inp,plan)
++   self.assertEqual(before,{x:work.xref_stream(x) for x in form_xrefs})
++   out=self.root/'cleaned.pdf';work.save(out,garbage=2,deflate=True,use_objstms=1)
++   with pymupdf.open(inp) as source:validate_output(out,source,plan,native)
++  with pymupdf.open(out) as result:self.assertEqual(result[0].get_text().count('Shared caption'),1)
++
++
++if __name__=='__main__': unittest.main(verbosity=2)
+--- /dev/null
++++ b/tests/test_refinement.py
+@@ -0,0 +1,60 @@
++import os,unittest,tempfile
++from pathlib import Path
++import pymupdf
++from pdf_cleanup.core import cleanup,analyze,validate_output
++from pdf_cleanup.native import inspect_pdf,remove_text_shows
++
++class RefinementTests(unittest.TestCase):
++ def setUp(self):
++  self.tmp=tempfile.TemporaryDirectory(dir=os.environ.get('TMPDIR'));self.root=Path(self.tmp.name)
++ def tearDown(self):self.tmp.cleanup()
++ def make(self,baseline,inline):
++  doc=pymupdf.open()
++  for n in (1,2):
++   page=doc.new_page(width=612,height=792);page.insert_text((72,100),'Useful body',fontsize=11)
++   page.insert_text((72,baseline),inline.format(n=n),fontsize=9)
++  path=self.root/'input.pdf';doc.save(path);doc.close();return path
++ def test_interior_numbered_settings_are_not_pagination(self):
++  inp=self.make(200,'Required setting {n}');out=self.root/'out.pdf'
++  result=cleanup(inp,out)
++  self.assertEqual(result['header_footer_fragments'],0)
++  with pymupdf.open(out) as doc:self.assertIn('Required setting 1',doc[0].get_text())
++ def test_numbered_server_port_captions_are_preserved(self):
++  inp=self.make(658,'{n} USB / OCP port');out=self.root/'out.pdf'
++  result=cleanup(inp,out)
++  self.assertEqual(result['header_footer_fragments'],0)
++  with pymupdf.open(out) as doc:self.assertIn('USB / OCP port',doc[0].get_text())
++ def test_inline_footer_without_large_gap_is_removed(self):
++  inp=self.make(755,'Server manual {n}');out=self.root/'out.pdf';cleanup(inp,out)
++  with pymupdf.open(out) as doc:
++   self.assertIn('Useful body',doc[0].get_text());self.assertNotIn('Server manual',doc[0].get_text())
++ def precision_fixture(self):
++  doc=pymupdf.open();streams=[]
++  for n in (1,2):
++   page=doc.new_page(width=612,height=792);page.insert_text((72,100),'Body',fontsize=11)
++   stream=(b'% keep unusual lexical precision\nq 1.0000000000000001 0 0 1 0 0 cm\n'
++           b'BT /helv 11.0000000000000001 Tf 1 0 0 1 72.1234567890123 692 Tm (Energy Perf BIAS) Tj ET\n'
++           b'q 1 0 0 1 72 400 cm BI /W 1 /H 1 /CS /RGB /BPC 8 ID \x01\x02\x03 EI Q\n'
++           b'BT /helv 9 Tf 1 0 0 1 490 37 Tm ('+str(n).encode()+b') Tj ET\n'
++           b'BT /helv 8 Tf 1 0 0 1 350 37 Tm 0.000000000000001 0 (Footer) " ET\nQ\n')
++   doc.update_stream(page.get_contents()[0],stream);streams.append(stream)
++  inp=self.root/'precision.pdf';doc.save(inp);doc.close();return inp,streams
++ def test_cleanup_keeps_every_other_stream_byte(self):
++  inp,streams=self.precision_fixture();out=self.root/'out.pdf';cleanup(inp,out)
++  with pymupdf.open(out) as doc:
++   for i,page in enumerate(doc):
++    expected=streams[i].replace(b'('+str(i+1).encode()+b') Tj',b'() Tj').replace(b'(Footer) "',b'() "')
++    self.assertEqual(page.read_contents(),expected)
++ def test_removal_keeps_every_other_stream_byte(self):
++  inp,streams=self.precision_fixture();native=inspect_pdf(inp)
++  with pymupdf.open(inp) as source:
++   plan=analyze(source,native)
++   with pymupdf.open(inp) as target:
++    remove_text_shows(target,inp,plan)
++    for i,page in enumerate(target):
++     expected=streams[i].replace(b'('+str(i+1).encode()+b') Tj',b'() Tj').replace(b'(Footer) "',b'() "')
++     self.assertEqual(page.read_contents(),expected)
++    out=self.root/'out.pdf';target.save(out,garbage=2,deflate=True,use_objstms=1)
++   validate_output(out,source,plan,native)
++
++if __name__=='__main__':unittest.main(verbosity=2)

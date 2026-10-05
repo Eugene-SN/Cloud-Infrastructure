@@ -1,0 +1,44 @@
+{
+  "path": "WR5225 G3/lp2129.pdf",
+  "sha256": "4359185edbc9e46fb5108fe99fb0e6253148357afeb29ff3f8b6d938bba70403",
+  "size": 5222978,
+  "candidate_hashes": {
+    "core.py": "2eaa182b11a5f9e5be766c5cf9d9b53712a23c13cdb292a9ba7bfc2b22487047",
+    "native.py": "d8b11bcc7c7726a1d31667c1d17cb159b280fe4146d1550dd38227c34971f331",
+    "lexical.py": "bde6b55e1dfc8f25f37f90bd39b5d1fc7d12357e5ded6f0a0a2bd056dafb2a0c"
+  },
+  "result": {
+    "schema_version": 1,
+    "tool_version": "0.1.3",
+    "source_commit": "uncommitted",
+    "input": "/input/4359185edbc9e46fb5108fe99fb0e6253148357afeb29ff3f8b6d938bba70403.pdf",
+    "output": "/out/results/4359185edbc9e46fb5108fe99fb0e6253148357afeb29ff3f8b6d938bba70403.pdf",
+    "input_sha256": "4359185edbc9e46fb5108fe99fb0e6253148357afeb29ff3f8b6d938bba70403",
+    "pages": 74,
+    "header_footer_fragments": 74,
+    "removed_header_rows": 0,
+    "removed_footer_rows": 74,
+    "footer_pages": 74,
+    "removed_links": {
+      "/Dest": 94,
+      "/URI": 2
+    },
+    "removed_widgets": 1,
+    "cleanup_method": "text_show_operations",
+    "status": "cleaned",
+    "output_sha256": "b0ae92ea1806de7a0aac36061064ec3c81c4e509f45a00cafcefecfbc5925c66",
+    "validation": "passed"
+  },
+  "inspected_stage_sha256": "b0ae92ea1806de7a0aac36061064ec3c81c4e509f45a00cafcefecfbc5925c66",
+  "inspected_stage_path": "/out/results/.pdf-cleanup-gtoui10x.part",
+  "native_evidence_origin": "written_stage_inspected_by_output_validator",
+  "native_evidence_sha256": "7de7561352265b62b201593f0408e0250f828aa8f7f40fd627eef7a230e93679",
+  "native_pagination_points": 518,
+  "second_pass": {
+    "status": "no_targets",
+    "targets": []
+  },
+  "source_sha256_after": "4359185edbc9e46fb5108fe99fb0e6253148357afeb29ff3f8b6d938bba70403",
+  "status": "passed",
+  "elapsed_seconds": 42.984
+}

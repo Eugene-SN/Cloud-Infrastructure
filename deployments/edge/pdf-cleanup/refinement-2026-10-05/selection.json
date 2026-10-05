@@ -1,0 +1,131 @@
+{
+  "documents": [
+    {
+      "path": "WA5480 G3/lenovo_bmc_event_reference_guide_g5_v4.pdf",
+      "sha256": "fc4a694ce1574db865fe41a904d185bc85092598a5b6a6d0cbbff739c75411ef",
+      "size": 1751445,
+      "pages": 116,
+      "reason": "body raster difference"
+    },
+    {
+      "path": "WA5480 G3/lenovo_bmc_g3_redfish_guide_v11.pdf",
+      "sha256": "456897573c42b3e7eb767b248e3c588a987b7f23b2a0c70a344e816b91837ee8",
+      "size": 8326662,
+      "pages": 423,
+      "reason": "no footers but 133 links; huge xref"
+    },
+    {
+      "path": "WA5480 G3/lenovo_wentian_os_installation_guide.pdf",
+      "sha256": "f5d59ae8c6bfc792ae28160790ce0f673b8d940de86f98ed7e326fb40cfaec17",
+      "size": 13673279,
+      "pages": 179,
+      "reason": "37 pages with body raster differences"
+    },
+    {
+      "path": "WA5480 G3/lxce_onecli_cplus_ug.pdf",
+      "sha256": "dba774fbccfbd4c2e7e84819f2c213a37af77862be9143344db0f64e7f5e3440",
+      "size": 856757,
+      "pages": 138,
+      "reason": "ambiguous numeral after first cleanup"
+    },
+    {
+      "path": "WA5680 G3/lenovo_wentian_wa5680g3_user_guide.pdf",
+      "sha256": "fe6bafcd127777fe95f0f46fcea690d22ab78331853450d6b990f674575774d2",
+      "size": 25638397,
+      "pages": 128,
+      "reason": "small body raster differences"
+    },
+    {
+      "path": "WA5680 G5/lp2469.pdf",
+      "sha256": "3b6c0e4abca685abe7685eba74fe129d2806d243daa52f90380d5d74652f33c1",
+      "size": 7295204,
+      "pages": 111,
+      "reason": "inline footer number and title"
+    },
+    {
+      "path": "WA5685 G5/lp2507.pdf",
+      "sha256": "e57262389e68449ca7700dd441d57aee294ccb932279af9c0e2090aa2ba98189",
+      "size": 2691105,
+      "pages": 2,
+      "reason": "two-page CFF/font and footerless Widget control"
+    },
+    {
+      "path": "WA7780 G3/lenovo_wentian_wa7780g3_bios_user_guide.pdf",
+      "sha256": "ff73d1e9ccc954f7e64173874a55dc7fe52569c9fe85c8669527933e81843d39",
+      "size": 940977,
+      "pages": 36,
+      "reason": "singleton Roman"
+    },
+    {
+      "path": "WA7780 G3/lenovo_wentian_wa7780g3_user_guide.pdf",
+      "sha256": "1718c6d1094bf50a54550fdb191f628875da094b0fbda8f2f147305dbc740f4b",
+      "size": 10001885,
+      "pages": 100,
+      "reason": "clipped illustration and pure Footer Form"
+    },
+    {
+      "path": "WA7785a G3/lenovo_wentian_wa7785ag3_bios_user_guide.pdf",
+      "sha256": "c129642ccf27022ed6ab2ec88597e0c905c361c7a8008de29a58d2a373f1e073",
+      "size": 969234,
+      "pages": 27,
+      "reason": "singleton Roman and body raster difference"
+    },
+    {
+      "path": "WA7785a G3/lenovo_wentian_wa7785ag3_user_guide.pdf",
+      "sha256": "3a1f7a48df92df1fd415741656cc5294ca26a8e5ab4f3839da557c0189c0e35e",
+      "size": 8814630,
+      "pages": 98,
+      "reason": "clipped illustration and pure Footer Form"
+    },
+    {
+      "path": "WA7880a G3/lenovo_wentian_wa7880ag3_user_guide.pdf",
+      "sha256": "59de6ab16247b3c5dde9fbb612103ee046b9a377c0280544f16eb9e62dd28cf8",
+      "size": 15985420,
+      "pages": 151,
+      "reason": "body raster difference"
+    },
+    {
+      "path": "WR5220 G3/lenovo_wentian_wr5220g3_user_guide_v18.pdf",
+      "sha256": "15b16176143792fd24287d10f29e46cc039660e802a0e2070cc14128f5ea53e6",
+      "size": 30511980,
+      "pages": 397,
+      "reason": "CJK guide and repeat ambiguity"
+    },
+    {
+      "path": "WR5220 G3/lp1705.pdf",
+      "sha256": "f3b4f9d125fee56c228b36354a30198ddd14933cb755fdc7dc1ef2d4af8442e7",
+      "size": 5056741,
+      "pages": 78,
+      "reason": "target Widget overlapping retained body"
+    },
+    {
+      "path": "WR5220 G5/lenovo_wentian_wr5220g5_user_guide_v7.pdf",
+      "sha256": "c73297846d184c5033c92058dd0925f41093178d1ea35f7b287c19a4e5cf5f34",
+      "size": 46290483,
+      "pages": 373,
+      "reason": "USB/OCP body mistaken for footer on repeat"
+    },
+    {
+      "path": "WR5220 G5/lp1728.pdf",
+      "sha256": "270eeadc4cc0f802e3b2c939e4abda15683fc65aed5716f9c1bf9aa955083e5d",
+      "size": 267600,
+      "pages": 12,
+      "reason": "Lenovo Press graphics differences"
+    },
+    {
+      "path": "WR5225 G3/wr5225g3_user_guide_v6.pdf",
+      "sha256": "8cfc8781da9c75bdab2b3477a6564cba1b06009d553530cd3a026014f4b677af",
+      "size": 31015607,
+      "pages": 375,
+      "reason": "body/footer bbox overlap"
+    },
+    {
+      "path": "WR6220 G5/lenovo_wentian_wr6220g5_user_guide.pdf",
+      "sha256": "8921606e9e9fcc6b199f2c360787dc228f3180bd2448423d40bd1d101c13be71",
+      "size": 25588950,
+      "pages": 388,
+      "reason": "body space collapse; operator serialization refusal"
+    }
+  ],
+  "holdout_unique_documents": 31
+}

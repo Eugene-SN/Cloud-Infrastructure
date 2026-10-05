@@ -1,0 +1,12 @@
+{
+  "holdout_worker_1": {
+    "assigned_documents": 15,
+    "completed_passed_documents": 15,
+    "initial_host_client_exit_code": 143,
+    "cause": "unknown; no Docker die events returned for the queried interval",
+    "retained_completed_document_evidence": true,
+    "resume": "same frozen runner skips its 15 existing completed records; terminal exit recorded separately",
+    "resume_exit_code": 0,
+    "resume_reprocessed_documents": 0
+  }
+}

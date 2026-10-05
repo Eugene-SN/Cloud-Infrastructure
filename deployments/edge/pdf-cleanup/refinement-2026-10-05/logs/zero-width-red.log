@@ -1,0 +1,15 @@
+test_nonpainted_zero_width_semantic_character_keeps_text_and_does_not_fail_visual_style (test_real_regression.ActualCorpusRegression.test_nonpainted_zero_width_semantic_character_keeps_text_and_does_not_fail_visual_style) ... FAIL
+
+======================================================================
+FAIL: test_nonpainted_zero_width_semantic_character_keeps_text_and_does_not_fail_visual_style (test_real_regression.ActualCorpusRegression.test_nonpainted_zero_width_semantic_character_keeps_text_and_does_not_fail_visual_style)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/audit/test_real_regression.py", line 27, in test_nonpainted_zero_width_semantic_character_keeps_text_and_does_not_fail_visual_style
+    self.assertTrue(core.geometry_equivalent(before,after))
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+----------------------------------------------------------------------
+Ran 1 test in 0.148s
+
+FAILED (failures=1)

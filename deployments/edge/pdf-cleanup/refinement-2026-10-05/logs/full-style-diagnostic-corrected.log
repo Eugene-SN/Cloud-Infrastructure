@@ -1,0 +1,2 @@
+{"source_reextract_matches": true}
+{"expected_count": 442, "actual_count": 442, "mismatches": 1, "examples": [{"index": 0, "expected": {"c": "表", "origin": [70.8239974975586, 89.53997802734375], "font": "å®ä½", "size": 17.940702438354492, "flags": 4, "color": 0, "alpha": 255, "dir": [1.0, 0.0]}, "actual": {"c": "表", "origin": [70.8239974975586, 89.53997802734375], "font": "Helvetica", "size": 17.940702438354492, "flags": 0, "color": 0, "alpha": 0, "dir": [1.0, 0.0]}}], "selected": ["WR6220 G5服务器用户手册", "8"]}

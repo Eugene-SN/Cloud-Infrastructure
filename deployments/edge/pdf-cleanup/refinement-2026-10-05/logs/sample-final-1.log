@@ -1,0 +1,43 @@
+{"event": "start", "path": "WR5220 G5/lenovo_wentian_wr5220g5_user_guide_v7.pdf", "phase": "sample"}
+{"event": "review_progress", "file": "c73297846d184c5033c92058dd0925f41093178d1ea35f7b287c19a4e5cf5f34.pdf", "page": 50, "pages": 373, "failures": 0}
+{"event": "review_progress", "file": "c73297846d184c5033c92058dd0925f41093178d1ea35f7b287c19a4e5cf5f34.pdf", "page": 100, "pages": 373, "failures": 0}
+{"event": "review_progress", "file": "c73297846d184c5033c92058dd0925f41093178d1ea35f7b287c19a4e5cf5f34.pdf", "page": 150, "pages": 373, "failures": 0}
+{"event": "review_progress", "file": "c73297846d184c5033c92058dd0925f41093178d1ea35f7b287c19a4e5cf5f34.pdf", "page": 200, "pages": 373, "failures": 0}
+{"event": "review_progress", "file": "c73297846d184c5033c92058dd0925f41093178d1ea35f7b287c19a4e5cf5f34.pdf", "page": 250, "pages": 373, "failures": 0}
+{"event": "review_progress", "file": "c73297846d184c5033c92058dd0925f41093178d1ea35f7b287c19a4e5cf5f34.pdf", "page": 300, "pages": 373, "failures": 0}
+{"event": "review_progress", "file": "c73297846d184c5033c92058dd0925f41093178d1ea35f7b287c19a4e5cf5f34.pdf", "page": 350, "pages": 373, "failures": 0}
+{"event": "complete", "path": "WR5220 G5/lenovo_wentian_wr5220g5_user_guide_v7.pdf", "status": "passed", "error": null, "seconds": 169.749, "outside_pixels": 0, "repeat_targets": 0}
+{"event": "start", "path": "WR5220 G3/lenovo_wentian_wr5220g3_user_guide_v18.pdf", "phase": "sample"}
+{"event": "review_progress", "file": "15b16176143792fd24287d10f29e46cc039660e802a0e2070cc14128f5ea53e6.pdf", "page": 50, "pages": 397, "failures": 0}
+{"event": "review_progress", "file": "15b16176143792fd24287d10f29e46cc039660e802a0e2070cc14128f5ea53e6.pdf", "page": 100, "pages": 397, "failures": 0}
+{"event": "review_progress", "file": "15b16176143792fd24287d10f29e46cc039660e802a0e2070cc14128f5ea53e6.pdf", "page": 150, "pages": 397, "failures": 0}
+{"event": "review_progress", "file": "15b16176143792fd24287d10f29e46cc039660e802a0e2070cc14128f5ea53e6.pdf", "page": 200, "pages": 397, "failures": 0}
+{"event": "review_progress", "file": "15b16176143792fd24287d10f29e46cc039660e802a0e2070cc14128f5ea53e6.pdf", "page": 250, "pages": 397, "failures": 0}
+{"event": "review_progress", "file": "15b16176143792fd24287d10f29e46cc039660e802a0e2070cc14128f5ea53e6.pdf", "page": 300, "pages": 397, "failures": 0}
+{"event": "review_progress", "file": "15b16176143792fd24287d10f29e46cc039660e802a0e2070cc14128f5ea53e6.pdf", "page": 350, "pages": 397, "failures": 0}
+{"event": "complete", "path": "WR5220 G3/lenovo_wentian_wr5220g3_user_guide_v18.pdf", "status": "passed", "error": null, "seconds": 186.697, "outside_pixels": 0, "repeat_targets": 0}
+{"event": "start", "path": "WA7785a G3/lenovo_wentian_wa7785ag3_user_guide.pdf", "phase": "sample"}
+{"event": "review_progress", "file": "3a1f7a48df92df1fd415741656cc5294ca26a8e5ab4f3839da557c0189c0e35e.pdf", "page": 50, "pages": 98, "failures": 0}
+{"event": "complete", "path": "WA7785a G3/lenovo_wentian_wa7785ag3_user_guide.pdf", "status": "passed", "error": null, "seconds": 353.774, "outside_pixels": 0, "repeat_targets": 0}
+{"event": "start", "path": "WA5480 G3/lenovo_bmc_event_reference_guide_g5_v4.pdf", "phase": "sample"}
+{"event": "review_progress", "file": "fc4a694ce1574db865fe41a904d185bc85092598a5b6a6d0cbbff739c75411ef.pdf", "page": 50, "pages": 116, "failures": 0}
+{"event": "review_progress", "file": "fc4a694ce1574db865fe41a904d185bc85092598a5b6a6d0cbbff739c75411ef.pdf", "page": 100, "pages": 116, "failures": 0}
+{"event": "complete", "path": "WA5480 G3/lenovo_bmc_event_reference_guide_g5_v4.pdf", "status": "passed", "error": null, "seconds": 57.579, "outside_pixels": 0, "repeat_targets": 0}
+{"event": "start", "path": "WA5480 G3/lenovo_wentian_os_installation_guide.pdf", "phase": "sample"}
+{"event": "review_progress", "file": "f5d59ae8c6bfc792ae28160790ce0f673b8d940de86f98ed7e326fb40cfaec17.pdf", "page": 50, "pages": 179, "failures": 0}
+{"event": "review_progress", "file": "f5d59ae8c6bfc792ae28160790ce0f673b8d940de86f98ed7e326fb40cfaec17.pdf", "page": 100, "pages": 179, "failures": 0}
+{"event": "review_progress", "file": "f5d59ae8c6bfc792ae28160790ce0f673b8d940de86f98ed7e326fb40cfaec17.pdf", "page": 150, "pages": 179, "failures": 0}
+{"event": "complete", "path": "WA5480 G3/lenovo_wentian_os_installation_guide.pdf", "status": "passed", "error": null, "seconds": 54.132, "outside_pixels": 0, "repeat_targets": 0}
+{"event": "start", "path": "WA5680 G5/lp2469.pdf", "phase": "sample"}
+{"event": "review_progress", "file": "3b6c0e4abca685abe7685eba74fe129d2806d243daa52f90380d5d74652f33c1.pdf", "page": 50, "pages": 111, "failures": 0}
+{"event": "review_progress", "file": "3b6c0e4abca685abe7685eba74fe129d2806d243daa52f90380d5d74652f33c1.pdf", "page": 100, "pages": 111, "failures": 0}
+{"event": "complete", "path": "WA5680 G5/lp2469.pdf", "status": "passed", "error": null, "seconds": 61.82, "outside_pixels": 0, "repeat_targets": 0}
+{"event": "start", "path": "WA7780 G3/lenovo_wentian_wa7780g3_bios_user_guide.pdf", "phase": "sample"}
+{"event": "complete", "path": "WA7780 G3/lenovo_wentian_wa7780g3_bios_user_guide.pdf", "status": "passed", "error": null, "seconds": 18.131, "outside_pixels": 0, "repeat_targets": 0}
+{"event": "start", "path": "WA7880a G3/lenovo_wentian_wa7880ag3_user_guide.pdf", "phase": "sample"}
+{"event": "review_progress", "file": "59de6ab16247b3c5dde9fbb612103ee046b9a377c0280544f16eb9e62dd28cf8.pdf", "page": 50, "pages": 151, "failures": 0}
+{"event": "review_progress", "file": "59de6ab16247b3c5dde9fbb612103ee046b9a377c0280544f16eb9e62dd28cf8.pdf", "page": 100, "pages": 151, "failures": 0}
+{"event": "review_progress", "file": "59de6ab16247b3c5dde9fbb612103ee046b9a377c0280544f16eb9e62dd28cf8.pdf", "page": 150, "pages": 151, "failures": 0}
+{"event": "complete", "path": "WA7880a G3/lenovo_wentian_wa7880ag3_user_guide.pdf", "status": "passed", "error": null, "seconds": 62.385, "outside_pixels": 0, "repeat_targets": 0}
+{"event": "start", "path": "WR5220 G5/lp1728.pdf", "phase": "sample"}
+{"event": "complete", "path": "WR5220 G5/lp1728.pdf", "status": "passed", "error": null, "seconds": 10.135, "outside_pixels": 0, "repeat_targets": 0}

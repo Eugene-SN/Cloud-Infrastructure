@@ -1,0 +1,54 @@
+{
+  "path": "WA5480 G3/lenovo_wentian_wa5480g3_user_guide_v8.pdf",
+  "sha256": "a73e5e450d7b3c9bce074f3d54d9ff249f2f58a71eac214bc2a168ba1e4fecd7",
+  "size": 26904246,
+  "phase": "holdout",
+  "candidate_hashes": {
+    "core.py": "2eaa182b11a5f9e5be766c5cf9d9b53712a23c13cdb292a9ba7bfc2b22487047",
+    "native.py": "d8b11bcc7c7726a1d31667c1d17cb159b280fe4146d1550dd38227c34971f331",
+    "lexical.py": "bde6b55e1dfc8f25f37f90bd39b5d1fc7d12357e5ded6f0a0a2bd056dafb2a0c"
+  },
+  "cleanup_seconds": 76.38,
+  "result": {
+    "schema_version": 1,
+    "tool_version": "0.1.3",
+    "source_commit": "uncommitted",
+    "input": "/input/a73e5e450d7b3c9bce074f3d54d9ff249f2f58a71eac214bc2a168ba1e4fecd7.pdf",
+    "output": "/out/results/a73e5e450d7b3c9bce074f3d54d9ff249f2f58a71eac214bc2a168ba1e4fecd7.pdf",
+    "input_sha256": "a73e5e450d7b3c9bce074f3d54d9ff249f2f58a71eac214bc2a168ba1e4fecd7",
+    "pages": 261,
+    "header_footer_fragments": 518,
+    "removed_header_rows": 0,
+    "removed_footer_rows": 259,
+    "footer_pages": 259,
+    "removed_links": {
+      "/URI": 24,
+      "/GoTo": 1511
+    },
+    "removed_widgets": 0,
+    "cleanup_method": "text_show_operations",
+    "status": "cleaned",
+    "output_sha256": "99c8a813180f6dbbc0d04bffbcb10d40e01cd40b3ea3f0a97d3004218443b3b6",
+    "validation": "passed"
+  },
+  "independent": {
+    "status": "passed",
+    "engine": "156.0.8076.0",
+    "pypdfium2": "5.14.0",
+    "dpi": 144,
+    "pages": 261,
+    "body_glyphs": 113390,
+    "changed_pixels_total": 483387,
+    "pixels_outside_masks": 0,
+    "failures": [],
+    "document_property_changes": [],
+    "elapsed_seconds": 33.095
+  },
+  "second_pass": {
+    "status": "no_targets",
+    "targets": []
+  },
+  "source_sha256_after": "a73e5e450d7b3c9bce074f3d54d9ff249f2f58a71eac214bc2a168ba1e4fecd7",
+  "status": "passed",
+  "total_seconds": 124.795
+}

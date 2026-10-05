@@ -1,0 +1,53 @@
+{
+  "path": "WR5220 G3/lenovo_bmc_g3_commands_guide_v2.pdf",
+  "sha256": "7273f8d5c3336bfdffe70e3b056d74d0ec08a75856cdb25b65daa3b66cedec46",
+  "size": 1158155,
+  "phase": "holdout",
+  "candidate_hashes": {
+    "core.py": "2eaa182b11a5f9e5be766c5cf9d9b53712a23c13cdb292a9ba7bfc2b22487047",
+    "native.py": "d8b11bcc7c7726a1d31667c1d17cb159b280fe4146d1550dd38227c34971f331",
+    "lexical.py": "bde6b55e1dfc8f25f37f90bd39b5d1fc7d12357e5ded6f0a0a2bd056dafb2a0c"
+  },
+  "cleanup_seconds": 18.26,
+  "result": {
+    "schema_version": 1,
+    "tool_version": "0.1.3",
+    "source_commit": "uncommitted",
+    "input": "/input/7273f8d5c3336bfdffe70e3b056d74d0ec08a75856cdb25b65daa3b66cedec46.pdf",
+    "output": "/out/results/7273f8d5c3336bfdffe70e3b056d74d0ec08a75856cdb25b65daa3b66cedec46.pdf",
+    "input_sha256": "7273f8d5c3336bfdffe70e3b056d74d0ec08a75856cdb25b65daa3b66cedec46",
+    "pages": 46,
+    "header_footer_fragments": 46,
+    "removed_header_rows": 0,
+    "removed_footer_rows": 46,
+    "footer_pages": 46,
+    "removed_links": {
+      "/Dest": 125
+    },
+    "removed_widgets": 0,
+    "cleanup_method": "text_show_operations",
+    "status": "cleaned",
+    "output_sha256": "bc2d3089d1514a29868d77278c9df4d45811d7bdcef411d4deb651ba67437461",
+    "validation": "passed"
+  },
+  "independent": {
+    "status": "passed",
+    "engine": "156.0.8076.0",
+    "pypdfium2": "5.14.0",
+    "dpi": 144,
+    "pages": 46,
+    "body_glyphs": 34042,
+    "changed_pixels_total": 5450,
+    "pixels_outside_masks": 0,
+    "failures": [],
+    "document_property_changes": [],
+    "elapsed_seconds": 4.85
+  },
+  "second_pass": {
+    "status": "no_targets",
+    "targets": []
+  },
+  "source_sha256_after": "7273f8d5c3336bfdffe70e3b056d74d0ec08a75856cdb25b65daa3b66cedec46",
+  "status": "passed",
+  "total_seconds": 25.745
+}

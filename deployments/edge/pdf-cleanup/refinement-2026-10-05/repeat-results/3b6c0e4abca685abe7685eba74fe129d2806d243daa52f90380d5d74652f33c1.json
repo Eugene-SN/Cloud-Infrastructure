@@ -1,0 +1,44 @@
+{
+  "path": "WA5680 G5/lp2469.pdf",
+  "sha256": "3b6c0e4abca685abe7685eba74fe129d2806d243daa52f90380d5d74652f33c1",
+  "size": 7295204,
+  "candidate_hashes": {
+    "core.py": "2eaa182b11a5f9e5be766c5cf9d9b53712a23c13cdb292a9ba7bfc2b22487047",
+    "native.py": "d8b11bcc7c7726a1d31667c1d17cb159b280fe4146d1550dd38227c34971f331",
+    "lexical.py": "bde6b55e1dfc8f25f37f90bd39b5d1fc7d12357e5ded6f0a0a2bd056dafb2a0c"
+  },
+  "result": {
+    "schema_version": 1,
+    "tool_version": "0.1.3",
+    "source_commit": "uncommitted",
+    "input": "/input/3b6c0e4abca685abe7685eba74fe129d2806d243daa52f90380d5d74652f33c1.pdf",
+    "output": "/out/results/3b6c0e4abca685abe7685eba74fe129d2806d243daa52f90380d5d74652f33c1.pdf",
+    "input_sha256": "3b6c0e4abca685abe7685eba74fe129d2806d243daa52f90380d5d74652f33c1",
+    "pages": 111,
+    "header_footer_fragments": 111,
+    "removed_header_rows": 0,
+    "removed_footer_rows": 111,
+    "footer_pages": 111,
+    "removed_links": {
+      "/Dest": 135,
+      "/URI": 8
+    },
+    "removed_widgets": 1,
+    "cleanup_method": "text_show_operations",
+    "status": "cleaned",
+    "output_sha256": "147fff7a424fdb2cb26c461ad815c4a231a9d05c5e5f9c901ec0e03d1da3f11f",
+    "validation": "passed"
+  },
+  "inspected_stage_sha256": "147fff7a424fdb2cb26c461ad815c4a231a9d05c5e5f9c901ec0e03d1da3f11f",
+  "inspected_stage_path": "/out/results/.pdf-cleanup-ky5erf82.part",
+  "native_evidence_origin": "written_stage_inspected_by_output_validator",
+  "native_evidence_sha256": "15687c786aa500cef7fc2210a81bc46d5339624215fe57769db932aaaf5d87dd",
+  "native_pagination_points": 0,
+  "second_pass": {
+    "status": "no_targets",
+    "targets": []
+  },
+  "source_sha256_after": "3b6c0e4abca685abe7685eba74fe129d2806d243daa52f90380d5d74652f33c1",
+  "status": "passed",
+  "elapsed_seconds": 44.004
+}
