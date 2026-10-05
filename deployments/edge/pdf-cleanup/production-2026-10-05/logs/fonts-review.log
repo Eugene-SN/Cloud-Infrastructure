@@ -1,0 +1,7 @@
+{"event": "verify_start", "path": "WA5680 G5/lp2506.pdf"}
+{"event": "verify_complete", "path": "WA5680 G5/lp2506.pdf", "status": "passed", "seconds": 4.942, "error": null}
+{"event": "verify_start", "path": "WA5685 G5/lp2507.pdf"}
+{"event": "verify_complete", "path": "WA5685 G5/lp2507.pdf", "status": "passed", "seconds": 1.137, "error": null}
+{"event": "verify_start", "path": "WR6220 G5/lp2502.pdf"}
+{"event": "verify_complete", "path": "WR6220 G5/lp2502.pdf", "status": "passed", "seconds": 7.749, "error": null}
+{"verified": 95, "passed": 95}

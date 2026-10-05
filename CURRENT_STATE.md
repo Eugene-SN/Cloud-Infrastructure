@@ -1657,3 +1657,38 @@ zero downloads/index writes/cleanup calls. Own temporary/obsolete runtime
 artifacts are removed; n8n/Nextcloud non-regression passes. Stage 13 stays accepted.
 Record: TECHNICAL_DOCUMENTATION_WA_G3_EXPANSION_2026-10-05.md; sanitized evidence:
 deployments/edge/technical-documentation/wa-g3-expansion-evidence.json.
+
+## 2026-10-05 — Production PDF cleanup full catalogue — DEPLOYED / VERIFIED
+
+Operator-authorized frozen generic refinement is deployed as local source
+9c9bbb375751f85ca1e6f737504f3e99a68fd3d5, one-shot image
+edge/pdf-cleanup:9c9bbb375751-fonts (identity in deployments/edge/pdf-cleanup/deployment.json).
+Python3.14.8/PyMuPDF1.28.2/pypdf6.19.0/cryptography50.0.2/package0.1.3 remain;
+fontTools4.66.1 adds supported CFF Type1 decoding for three observed Press PDFs.
+
+After deleting exactly14 previous derived PDFs through native Nextcloud WebDAV,
+all95 current originals / 14 model folders were independently processed and
+published in matching cleaned paths. All95 / 11,584 pages / 6,579,007 useful glyphs
+pass actual-output native and independent all-page PDFium144dpi verification:
+zero body loss, document-property differences, pixels outside exact target masks
+or repeated cleanup targets. Three font-dependent PDFs were rerun after the
+dependency addition; all final CLI results have empty stderr. All95 original
+SHA256s, INDEX.md, translated and source/title/previous-date metadata remain unchanged.
+INDEX.html has95 completion markers. The previous five WA G3 cleanup limitations
+are resolved for the actual current files; historical partial records are superseded.
+
+Existing TechnicalDocumentationSync and LenovoPdfCleanup graphs/active versions,
+17nodes/3groups, schedule, launcher and job adapter remain unchanged. The dynamic
+manifest selects the new image for subsequent workflow calls. Full rebuild used
+actual production adapter/launcher + native WebDAV directly, not synthetic n8n
+execution records. Portable originals protection and strict body verification
+remain.95 reviews,35 package tests,6 independent and2 console controls pass.
+
+98 own temporary jobs are absent. Own test PDF/deps/credential exports, six build
+cache records and superseded code-only image are removed; the accepted previous
+runtime image remains a referenced build input. n8n/Nextcloud non-regression passes.
+Stage13 remains accepted. This is a verified baseline for current analogous native
+PDF formats, not a guarantee for arbitrary future layouts.
+Record: PDF_CLEANUP_PRODUCTION_ACCEPTANCE_2026-10-05.md.
+Evidence: deployments/edge/pdf-cleanup/production-2026-10-05/.
+PDF_CLEANUP_PRODUCTION_VERIFICATION=PASS.

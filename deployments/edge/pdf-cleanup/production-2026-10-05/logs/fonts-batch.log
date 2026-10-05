@@ -1,0 +1,7 @@
+{"event": "cleanup_start", "number": 29, "total": 95, "path": "WA5680 G5/lp2506.pdf"}
+{"event": "cleanup_complete", "number": 29, "path": "WA5680 G5/lp2506.pdf", "status": "passed", "seconds": 5.156, "error": null}
+{"event": "cleanup_start", "number": 31, "total": 95, "path": "WA5685 G5/lp2507.pdf"}
+{"event": "cleanup_complete", "number": 31, "path": "WA5685 G5/lp2507.pdf", "status": "passed", "seconds": 2.996, "error": null}
+{"event": "cleanup_start", "number": 95, "total": 95, "path": "WR6220 G5/lp2502.pdf"}
+{"event": "cleanup_complete", "number": 95, "path": "WR6220 G5/lp2502.pdf", "status": "passed", "seconds": 8.578, "error": null}
+{"total": 95, "passed": 95}

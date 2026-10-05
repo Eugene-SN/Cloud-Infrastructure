@@ -1,0 +1,32 @@
+{
+  "path": "WA5685 G5/lp2507.pdf",
+  "input_sha256": "e57262389e68449ca7700dd441d57aee294ccb932279af9c0e2090aa2ba98189",
+  "output_sha256": "9e669938e712a8e4025f30b09fe4215d9a7ebb634ecaca20d4c80f0114b3d3d6",
+  "source_hashes": {
+    "core.py": "2eaa182b11a5f9e5be766c5cf9d9b53712a23c13cdb292a9ba7bfc2b22487047",
+    "native.py": "d8b11bcc7c7726a1d31667c1d17cb159b280fe4146d1550dd38227c34971f331",
+    "lexical.py": "bde6b55e1dfc8f25f37f90bd39b5d1fc7d12357e5ded6f0a0a2bd056dafb2a0c"
+  },
+  "native_validation": "passed",
+  "repeat_analysis": {
+    "targets": [],
+    "inspected_sha256": "9e669938e712a8e4025f30b09fe4215d9a7ebb634ecaca20d4c80f0114b3d3d6"
+  },
+  "independent": {
+    "status": "passed",
+    "engine": "156.0.8076.0",
+    "pypdfium2": "5.14.0",
+    "dpi": 144,
+    "pages": 2,
+    "body_glyphs": 1424,
+    "changed_pixels_total": 0,
+    "pixels_outside_masks": 0,
+    "failures": [],
+    "document_property_changes": [],
+    "elapsed_seconds": 0.338
+  },
+  "source_sha256_after": "e57262389e68449ca7700dd441d57aee294ccb932279af9c0e2090aa2ba98189",
+  "status": "passed",
+  "seconds": 1.315,
+  "image_id": "sha256:7ed12f7c2e7d4ea8f62cbc97210e1cd7dd5a0e1d3ad73a944ca17bcbb4b12fa8"
+}

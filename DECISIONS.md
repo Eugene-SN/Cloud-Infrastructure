@@ -3346,3 +3346,31 @@ failures automatically. Their CLI layout/performance handling is separate work.
 Monitoring and zero-change execution 12269 are verified. No new infrastructure
 stage or final operator acceptance is inferred.
 Reference: TECHNICAL_DOCUMENTATION_WA_G3_EXPANSION_2026-10-05.md.
+
+## 2026-10-05 — Apply verified generic PDF cleanup to production and rebuild all originals
+
+**Operator scope:** deploy current frozen cleanup settings, clear cleaned first,
+reprocess every original path and independently verify each output. Preserve
+originals and the accepted per-model directory structure.
+
+**Implemented choice:** retain the existing one-shot Docker adapter/launcher and
+portable originals guard; deploy source9c9bbb375751f85ca1e6f737504f3e99a68fd3d5.
+Precise content-stream editing/Form/clipping/visible-crop refinement replaces
+the previous pagination limitations without filename/model-specific rules or
+weaker content protection. Lossless garbage=2/deflate/object streams are retained.
+Observed CFF Type1 warnings justify pypdf's supported fonts extra (fontTools4.66.1);
+existing Python/PyMuPDF/pypdf/cryptography versions remain. No workflow graph,
+credential, service, retry or backup is added.
+
+**Confirmed result:**95/95 paths in14 model folders rebuilt through actual
+production CLI/native Nextcloud publication;11,584 pages independently checked.
+All original SHA256s unchanged,0 body/property/outside-mask differences,0 repeat
+targets,95 INDEX markers. Three font-dependent PDFs rerun after adding fonts;
+all final CLI results have empty stderr. The prior five cleanup failures are
+resolved for these current documents. The previous runtime is retained only as
+a verified build input; own transient/cached/superseded artifacts are removed.
+
+This establishes a production baseline for current analogous native PDFs and
+does not promise flawless handling of arbitrary future encodings/layouts.
+No final infrastructure-stage acceptance or new version/update policy is inferred.
+Reference: PDF_CLEANUP_PRODUCTION_ACCEPTANCE_2026-10-05.md.

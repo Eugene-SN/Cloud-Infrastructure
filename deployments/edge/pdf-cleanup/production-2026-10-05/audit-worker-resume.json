@@ -1,0 +1,8 @@
+{
+  "at": "2026-10-05T20:17:48.696697+00:00",
+  "action": "Stopped only independent audit container deliberately; production batch continues. Resume skips all completed output reviews. Release cached source plans after their last remaining use. No production algorithm, criteria or source-image change.",
+  "completed_preserved": 68,
+  "before_script_sha256": "a0e1f61af5c5ebb1bdd0b6920c81936b6b6f8d0ae37dbe440c483b471128ef4e",
+  "after_script_sha256": "73ff15471a3a8fafd1cdff12cc3e5725b83754c059811f8e4187e6a795f62a35",
+  "reason": "Audit held source plans after their last use; measured 7.211 GiB audit memory and 3.3 GiB/4 GiB host swap. This is an assistant verifier cache-lifecycle defect, not a production cleanup failure."
+}

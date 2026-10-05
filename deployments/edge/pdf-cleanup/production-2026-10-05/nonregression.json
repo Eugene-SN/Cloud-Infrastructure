@@ -1,0 +1,20 @@
+{
+  "checked_at": "2026-10-05T20:53:56.388623+00:00",
+  "runtime_manifest_matches_repository": true,
+  "98_temporary_jobs_absent": true,
+  "own_containers_absent": true,
+  "own_tmp_mount_references_absent": true,
+  "n8n_health": "healthy",
+  "nextcloud": {
+    "installed": true,
+    "version": "35.0.1.1",
+    "versionstring": "35.0.1",
+    "edition": "",
+    "maintenance": false,
+    "needsDbUpgrade": false,
+    "productname": "Nextcloud",
+    "extendedSupport": false
+  },
+  "container_credential_export_absent": true,
+  "source_git_clean": true
+}

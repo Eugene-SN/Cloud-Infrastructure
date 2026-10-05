@@ -1,0 +1,1 @@
+{"mode": "fonts", "files": 3, "native_evidence_unchanged": true, "all_objects_streams_unchanged": true, "versions": {"pypdf": "6.19.0", "PyMuPDF": "1.28.2", "cryptography": "50.0.2", "fonttools": "4.66.1"}}

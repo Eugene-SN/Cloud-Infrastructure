@@ -861,3 +861,28 @@ originals/content protection are unchanged;14 guard/upstream and five adapter
 tests pass. CLI layout/performance correction is a separate application task,
 not a new finite infrastructure stage. Stage 13 remains the accepted checkpoint.
 Record: TECHNICAL_DOCUMENTATION_WA_G3_EXPANSION_2026-10-05.md.
+
+## 2026-10-05 — Production PDF cleanup full-catalogue application — DEPLOYED / VERIFIED
+
+Explicit operator scope applies the frozen refinement, clears previous cleaned
+PDFs, rebuilds every current original path and checks every output alongside
+processing. Source9c9bbb375751f85ca1e6f737504f3e99a68fd3d5 is deployed with the
+existing portable originals guard and adapter/workflow contracts. Supported
+pypdf fonts extra resolves three observed CFF decoding warnings without changing
+previous library versions or executable module bytes.
+
+All95 paths/14 model folders/11,584 pages pass actual production CLI, native
+WebDAV publication and independent all-page text/property/pixel review.0 body
+loss/outside-mask pixels/repeat targets;95 unchanged original SHA256s; matching
+cleaned structure and95 INDEX.html completion markers. INDEX.md/translations/
+source dates/titles/static interface and17-node n8n graphs remain unchanged.
+The five previous WA G3 cleanup limitations are resolved for these current files.
+
+35 package tests,6 independent and2 console controls pass.98 transient jobs and
+all own test artifacts/credential export are removed; exact own cache/image
+cleanup and n8n/Nextcloud non-regression pass. The verified result is the current
+production baseline for analogous native PDFs; new formats may require separate
+validation. No new infrastructure stage, workflow node/service/retry/backup or
+operator policy is introduced. Stage13 remains the accepted checkpoint.
+Record: PDF_CLEANUP_PRODUCTION_ACCEPTANCE_2026-10-05.md.
+PDF_CLEANUP_PRODUCTION_VERIFICATION=PASS.

@@ -1,0 +1,180 @@
+test_body_overlap_preserves_body_and_removes_only_footer_operators (test_cleanup.CleanupTests.test_body_overlap_preserves_body_and_removes_only_footer_operators) ... ERROR
+test_character_content_and_real_displacement_are_rejected (test_cleanup.CleanupTests.test_character_content_and_real_displacement_are_rejected) ... ERROR
+test_complete_unique_footer_row_and_content (test_cleanup.CleanupTests.test_complete_unique_footer_row_and_content) ... ERROR
+test_coordinate_rounding_boundary_is_not_content_loss (test_cleanup.CleanupTests.test_coordinate_rounding_boundary_is_not_content_loss) ... ERROR
+test_dry_run_creates_no_pdf (test_cleanup.CleanupTests.test_dry_run_creates_no_pdf) ... ERROR
+test_mixed_text_object_quote_footer_keeps_body_position (test_cleanup.CleanupTests.test_mixed_text_object_quote_footer_keeps_body_position) ... ERROR
+test_no_overwrite_or_source_alias (test_cleanup.CleanupTests.test_no_overwrite_or_source_alias) ... ERROR
+test_number_gap_is_not_rewritten (test_cleanup.CleanupTests.test_number_gap_is_not_rewritten) ... ERROR
+test_numbered_table_rows_are_preserved (test_cleanup.CleanupTests.test_numbered_table_rows_are_preserved) ... ERROR
+test_vector_rounding_does_not_hide_geometry_or_style_change (test_cleanup.CleanupTests.test_vector_rounding_does_not_hide_geometry_or_style_change) ... ERROR
+test_widget_is_removed_but_underlying_text_remains (test_cleanup.CleanupTests.test_widget_is_removed_but_underlying_text_remains) ... ERROR
+test_external_snapshot_cannot_write_anywhere_inside_originals (test_edge_guard.EdgeOriginalsGuardTests.test_external_snapshot_cannot_write_anywhere_inside_originals) ... ERROR
+test_missing_or_relative_originals_configuration_rejected (test_edge_guard.EdgeOriginalsGuardTests.test_missing_or_relative_originals_configuration_rejected) ... ERROR
+test_symlink_parent_cannot_bypass_originals_protection (test_edge_guard.EdgeOriginalsGuardTests.test_symlink_parent_cannot_bypass_originals_protection) ... ERROR
+test_body_bbox_overlap_uses_operators_and_preserves_body (test_quality.ResearchTests.test_body_bbox_overlap_uses_operators_and_preserves_body) ... ok
+test_clipped_illustration_does_not_prevent_footer_cleanup (test_quality.ResearchTests.test_clipped_illustration_does_not_prevent_footer_cleanup) ... ok
+test_diagonal_illustration_bbox_is_not_a_table (test_quality.ResearchTests.test_diagonal_illustration_bbox_is_not_a_table) ... ok
+test_fallback_preserves_nested_form_body_and_removes_top_level_footer (test_quality.ResearchTests.test_fallback_preserves_nested_form_body_and_removes_top_level_footer) ... ok
+test_fallback_refuses_to_guess_targets_inside_a_form (test_quality.ResearchTests.test_fallback_refuses_to_guess_targets_inside_a_form) ... ok
+test_geometrically_separated_inline_footer_is_cleaned (test_quality.ResearchTests.test_geometrically_separated_inline_footer_is_cleaned) ... ok
+test_inline_body_parameter_numbers_are_preserved (test_quality.ResearchTests.test_inline_body_parameter_numbers_are_preserved) ... ok
+test_no_targets_preserves_exact_pdf_bytes (test_quality.ResearchTests.test_no_targets_preserves_exact_pdf_bytes) ... ok
+test_pure_text_footer_form_is_removed_without_changing_its_body_instance (test_quality.ResearchTests.test_pure_text_footer_form_is_removed_without_changing_its_body_instance) ... ok
+test_single_decimal_outlier_is_not_silently_removed (test_quality.ResearchTests.test_single_decimal_outlier_is_not_silently_removed) ... ok
+test_single_roman_frontmatter_then_decimal_sequence (test_quality.ResearchTests.test_single_roman_frontmatter_then_decimal_sequence) ... ok
+test_table_row_at_confirmed_footer_height_blocks_removal (test_quality.ResearchTests.test_table_row_at_confirmed_footer_height_blocks_removal) ... ok
+test_validation_rejects_changed_font_size_at_same_origin (test_quality.ResearchTests.test_validation_rejects_changed_font_size_at_same_origin) ... ok
+test_validation_rejects_changed_reading_order (test_quality.ResearchTests.test_validation_rejects_changed_reading_order) ... ok
+test_validation_rejects_changed_text_color (test_quality.ResearchTests.test_validation_rejects_changed_text_color) ... ok
+test_validation_rejects_changed_text_opacity (test_quality.ResearchTests.test_validation_rejects_changed_text_opacity) ... ok
+test_cleanup_keeps_every_other_stream_byte (test_refinement.RefinementTests.test_cleanup_keeps_every_other_stream_byte) ... ok
+test_inline_footer_without_large_gap_is_removed (test_refinement.RefinementTests.test_inline_footer_without_large_gap_is_removed) ... ok
+test_interior_numbered_settings_are_not_pagination (test_refinement.RefinementTests.test_interior_numbered_settings_are_not_pagination) ... ok
+test_numbered_server_port_captions_are_preserved (test_refinement.RefinementTests.test_numbered_server_port_captions_are_preserved) ... ok
+test_removal_keeps_every_other_stream_byte (test_refinement.RefinementTests.test_removal_keeps_every_other_stream_byte) ... ok
+
+======================================================================
+ERROR: test_body_overlap_preserves_body_and_removes_only_footer_operators (test_cleanup.CleanupTests.test_body_overlap_preserves_body_and_removes_only_footer_operators)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/pdf-cleanup/source/tests/test_cleanup.py", line 10, in setUp
+    self.tmp=tempfile.TemporaryDirectory(dir=os.environ['TMPDIR']);self.root=Path(self.tmp.name)
+                                             ~~~~~~~~~~^^^^^^^^^^
+  File "<frozen os>", line 709, in __getitem__
+KeyError: 'TMPDIR'
+
+======================================================================
+ERROR: test_character_content_and_real_displacement_are_rejected (test_cleanup.CleanupTests.test_character_content_and_real_displacement_are_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/pdf-cleanup/source/tests/test_cleanup.py", line 10, in setUp
+    self.tmp=tempfile.TemporaryDirectory(dir=os.environ['TMPDIR']);self.root=Path(self.tmp.name)
+                                             ~~~~~~~~~~^^^^^^^^^^
+  File "<frozen os>", line 709, in __getitem__
+KeyError: 'TMPDIR'
+
+======================================================================
+ERROR: test_complete_unique_footer_row_and_content (test_cleanup.CleanupTests.test_complete_unique_footer_row_and_content)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/pdf-cleanup/source/tests/test_cleanup.py", line 10, in setUp
+    self.tmp=tempfile.TemporaryDirectory(dir=os.environ['TMPDIR']);self.root=Path(self.tmp.name)
+                                             ~~~~~~~~~~^^^^^^^^^^
+  File "<frozen os>", line 709, in __getitem__
+KeyError: 'TMPDIR'
+
+======================================================================
+ERROR: test_coordinate_rounding_boundary_is_not_content_loss (test_cleanup.CleanupTests.test_coordinate_rounding_boundary_is_not_content_loss)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/pdf-cleanup/source/tests/test_cleanup.py", line 10, in setUp
+    self.tmp=tempfile.TemporaryDirectory(dir=os.environ['TMPDIR']);self.root=Path(self.tmp.name)
+                                             ~~~~~~~~~~^^^^^^^^^^
+  File "<frozen os>", line 709, in __getitem__
+KeyError: 'TMPDIR'
+
+======================================================================
+ERROR: test_dry_run_creates_no_pdf (test_cleanup.CleanupTests.test_dry_run_creates_no_pdf)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/pdf-cleanup/source/tests/test_cleanup.py", line 10, in setUp
+    self.tmp=tempfile.TemporaryDirectory(dir=os.environ['TMPDIR']);self.root=Path(self.tmp.name)
+                                             ~~~~~~~~~~^^^^^^^^^^
+  File "<frozen os>", line 709, in __getitem__
+KeyError: 'TMPDIR'
+
+======================================================================
+ERROR: test_mixed_text_object_quote_footer_keeps_body_position (test_cleanup.CleanupTests.test_mixed_text_object_quote_footer_keeps_body_position)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/pdf-cleanup/source/tests/test_cleanup.py", line 10, in setUp
+    self.tmp=tempfile.TemporaryDirectory(dir=os.environ['TMPDIR']);self.root=Path(self.tmp.name)
+                                             ~~~~~~~~~~^^^^^^^^^^
+  File "<frozen os>", line 709, in __getitem__
+KeyError: 'TMPDIR'
+
+======================================================================
+ERROR: test_no_overwrite_or_source_alias (test_cleanup.CleanupTests.test_no_overwrite_or_source_alias)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/pdf-cleanup/source/tests/test_cleanup.py", line 10, in setUp
+    self.tmp=tempfile.TemporaryDirectory(dir=os.environ['TMPDIR']);self.root=Path(self.tmp.name)
+                                             ~~~~~~~~~~^^^^^^^^^^
+  File "<frozen os>", line 709, in __getitem__
+KeyError: 'TMPDIR'
+
+======================================================================
+ERROR: test_number_gap_is_not_rewritten (test_cleanup.CleanupTests.test_number_gap_is_not_rewritten)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/pdf-cleanup/source/tests/test_cleanup.py", line 10, in setUp
+    self.tmp=tempfile.TemporaryDirectory(dir=os.environ['TMPDIR']);self.root=Path(self.tmp.name)
+                                             ~~~~~~~~~~^^^^^^^^^^
+  File "<frozen os>", line 709, in __getitem__
+KeyError: 'TMPDIR'
+
+======================================================================
+ERROR: test_numbered_table_rows_are_preserved (test_cleanup.CleanupTests.test_numbered_table_rows_are_preserved)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/pdf-cleanup/source/tests/test_cleanup.py", line 10, in setUp
+    self.tmp=tempfile.TemporaryDirectory(dir=os.environ['TMPDIR']);self.root=Path(self.tmp.name)
+                                             ~~~~~~~~~~^^^^^^^^^^
+  File "<frozen os>", line 709, in __getitem__
+KeyError: 'TMPDIR'
+
+======================================================================
+ERROR: test_vector_rounding_does_not_hide_geometry_or_style_change (test_cleanup.CleanupTests.test_vector_rounding_does_not_hide_geometry_or_style_change)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/pdf-cleanup/source/tests/test_cleanup.py", line 10, in setUp
+    self.tmp=tempfile.TemporaryDirectory(dir=os.environ['TMPDIR']);self.root=Path(self.tmp.name)
+                                             ~~~~~~~~~~^^^^^^^^^^
+  File "<frozen os>", line 709, in __getitem__
+KeyError: 'TMPDIR'
+
+======================================================================
+ERROR: test_widget_is_removed_but_underlying_text_remains (test_cleanup.CleanupTests.test_widget_is_removed_but_underlying_text_remains)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/pdf-cleanup/source/tests/test_cleanup.py", line 10, in setUp
+    self.tmp=tempfile.TemporaryDirectory(dir=os.environ['TMPDIR']);self.root=Path(self.tmp.name)
+                                             ~~~~~~~~~~^^^^^^^^^^
+  File "<frozen os>", line 709, in __getitem__
+KeyError: 'TMPDIR'
+
+======================================================================
+ERROR: test_external_snapshot_cannot_write_anywhere_inside_originals (test_edge_guard.EdgeOriginalsGuardTests.test_external_snapshot_cannot_write_anywhere_inside_originals)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/pdf-cleanup/source/tests/test_edge_guard.py", line 13, in setUp
+    self.temp = tempfile.TemporaryDirectory(dir=os.environ['TMPDIR'])
+                                                ~~~~~~~~~~^^^^^^^^^^
+  File "<frozen os>", line 709, in __getitem__
+KeyError: 'TMPDIR'
+
+======================================================================
+ERROR: test_missing_or_relative_originals_configuration_rejected (test_edge_guard.EdgeOriginalsGuardTests.test_missing_or_relative_originals_configuration_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/pdf-cleanup/source/tests/test_edge_guard.py", line 13, in setUp
+    self.temp = tempfile.TemporaryDirectory(dir=os.environ['TMPDIR'])
+                                                ~~~~~~~~~~^^^^^^^^^^
+  File "<frozen os>", line 709, in __getitem__
+KeyError: 'TMPDIR'
+
+======================================================================
+ERROR: test_symlink_parent_cannot_bypass_originals_protection (test_edge_guard.EdgeOriginalsGuardTests.test_symlink_parent_cannot_bypass_originals_protection)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/pdf-cleanup/source/tests/test_edge_guard.py", line 13, in setUp
+    self.temp = tempfile.TemporaryDirectory(dir=os.environ['TMPDIR'])
+                                                ~~~~~~~~~~^^^^^^^^^^
+  File "<frozen os>", line 709, in __getitem__
+KeyError: 'TMPDIR'
+
+----------------------------------------------------------------------
+Ran 35 tests in 0.885s
+
+FAILED (errors=14)

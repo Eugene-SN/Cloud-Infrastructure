@@ -1,0 +1,115 @@
+{
+  "mode": "before",
+  "versions": {
+    "pypdf": "6.19.0",
+    "PyMuPDF": "1.28.2",
+    "cryptography": "50.0.2"
+  },
+  "python": "3.14.8",
+  "source_hashes": {
+    "core.py": "2eaa182b11a5f9e5be766c5cf9d9b53712a23c13cdb292a9ba7bfc2b22487047",
+    "native.py": "d8b11bcc7c7726a1d31667c1d17cb159b280fe4146d1550dd38227c34971f331",
+    "lexical.py": "bde6b55e1dfc8f25f37f90bd39b5d1fc7d12357e5ded6f0a0a2bd056dafb2a0c"
+  },
+  "records": [
+    {
+      "path": "WA5680 G5/lp2506.pdf",
+      "source_native": [
+        {
+          "points": [],
+          "links": [],
+          "widgets": [
+            100
+          ],
+          "other": []
+        },
+        {
+          "points": [],
+          "links": [],
+          "widgets": [],
+          "other": []
+        }
+      ],
+      "output_native": [
+        {
+          "points": [],
+          "links": [],
+          "widgets": [],
+          "other": []
+        },
+        {
+          "points": [],
+          "links": [],
+          "widgets": [],
+          "other": []
+        }
+      ]
+    },
+    {
+      "path": "WA5685 G5/lp2507.pdf",
+      "source_native": [
+        {
+          "points": [],
+          "links": [],
+          "widgets": [
+            158
+          ],
+          "other": []
+        },
+        {
+          "points": [],
+          "links": [],
+          "widgets": [],
+          "other": []
+        }
+      ],
+      "output_native": [
+        {
+          "points": [],
+          "links": [],
+          "widgets": [],
+          "other": []
+        },
+        {
+          "points": [],
+          "links": [],
+          "widgets": [],
+          "other": []
+        }
+      ]
+    },
+    {
+      "path": "WR6220 G5/lp2502.pdf",
+      "source_native": [
+        {
+          "points": [],
+          "links": [],
+          "widgets": [
+            101
+          ],
+          "other": []
+        },
+        {
+          "points": [],
+          "links": [],
+          "widgets": [],
+          "other": []
+        }
+      ],
+      "output_native": [
+        {
+          "points": [],
+          "links": [],
+          "widgets": [],
+          "other": []
+        },
+        {
+          "points": [],
+          "links": [],
+          "widgets": [],
+          "other": []
+        }
+      ]
+    }
+  ]
+}

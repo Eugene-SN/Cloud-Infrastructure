@@ -1,0 +1,168 @@
+{
+  "mode": "fonts",
+  "versions": {
+    "pypdf": "6.19.0",
+    "PyMuPDF": "1.28.2",
+    "cryptography": "50.0.2",
+    "fonttools": "4.66.1"
+  },
+  "python": "3.14.8",
+  "source_hashes": {
+    "core.py": "2eaa182b11a5f9e5be766c5cf9d9b53712a23c13cdb292a9ba7bfc2b22487047",
+    "native.py": "d8b11bcc7c7726a1d31667c1d17cb159b280fe4146d1550dd38227c34971f331",
+    "lexical.py": "bde6b55e1dfc8f25f37f90bd39b5d1fc7d12357e5ded6f0a0a2bd056dafb2a0c"
+  },
+  "records": [
+    {
+      "path": "WA5680 G5/lp2506.pdf",
+      "source_native": [
+        {
+          "points": [],
+          "links": [],
+          "widgets": [
+            100
+          ],
+          "other": []
+        },
+        {
+          "points": [],
+          "links": [],
+          "widgets": [],
+          "other": []
+        }
+      ],
+      "output_native": [
+        {
+          "points": [],
+          "links": [],
+          "widgets": [],
+          "other": []
+        },
+        {
+          "points": [],
+          "links": [],
+          "widgets": [],
+          "other": []
+        }
+      ],
+      "reuse": "Previously generated candidate; CLI returned 0 with empty stderr; verifier stopped on trailer-ID comparison",
+      "output_sha256": "370d6ed10ca3b3e256c24f6ef9189cd315653a2664ddd8d711d87695bcd160ae",
+      "expected_sha256": "56c8dab921ca363cddf5c0c72ad530f21022a214b06b81884f24b55f673e7a9d",
+      "all_objects_streams_and_non_ID_trailer_equal": true
+    },
+    {
+      "path": "WA5685 G5/lp2507.pdf",
+      "source_native": [
+        {
+          "points": [],
+          "links": [],
+          "widgets": [
+            158
+          ],
+          "other": []
+        },
+        {
+          "points": [],
+          "links": [],
+          "widgets": [],
+          "other": []
+        }
+      ],
+      "output_native": [
+        {
+          "points": [],
+          "links": [],
+          "widgets": [],
+          "other": []
+        },
+        {
+          "points": [],
+          "links": [],
+          "widgets": [],
+          "other": []
+        }
+      ],
+      "cli_rc": 0,
+      "stderr": "",
+      "summary": {
+        "schema_version": 1,
+        "tool_version": "0.1.3",
+        "source_commit": "9c9bbb375751f85ca1e6f737504f3e99a68fd3d5",
+        "input": "/input/e57262389e68449ca7700dd441d57aee294ccb932279af9c0e2090aa2ba98189.pdf",
+        "output": "/out/fonts-check/030.pdf",
+        "input_sha256": "e57262389e68449ca7700dd441d57aee294ccb932279af9c0e2090aa2ba98189",
+        "pages": 2,
+        "header_footer_fragments": 0,
+        "removed_header_rows": 0,
+        "removed_footer_rows": 0,
+        "footer_pages": 0,
+        "removed_links": {},
+        "removed_widgets": 1,
+        "cleanup_method": "text_show_operations",
+        "status": "cleaned",
+        "output_sha256": "70e5a9d504941124a0ec5b83f5d6036bb3ee5e51b4ab6fd04437fe76b5364427",
+        "validation": "passed"
+      },
+      "output_sha256": "70e5a9d504941124a0ec5b83f5d6036bb3ee5e51b4ab6fd04437fe76b5364427",
+      "expected_sha256": "9e669938e712a8e4025f30b09fe4215d9a7ebb634ecaca20d4c80f0114b3d3d6",
+      "all_objects_streams_and_non_ID_trailer_equal": true
+    },
+    {
+      "path": "WR6220 G5/lp2502.pdf",
+      "source_native": [
+        {
+          "points": [],
+          "links": [],
+          "widgets": [
+            101
+          ],
+          "other": []
+        },
+        {
+          "points": [],
+          "links": [],
+          "widgets": [],
+          "other": []
+        }
+      ],
+      "output_native": [
+        {
+          "points": [],
+          "links": [],
+          "widgets": [],
+          "other": []
+        },
+        {
+          "points": [],
+          "links": [],
+          "widgets": [],
+          "other": []
+        }
+      ],
+      "cli_rc": 0,
+      "stderr": "",
+      "summary": {
+        "schema_version": 1,
+        "tool_version": "0.1.3",
+        "source_commit": "9c9bbb375751f85ca1e6f737504f3e99a68fd3d5",
+        "input": "/input/dfafab00543396b843a9daac753c9962f8366a4752a121442a62e056b0ae4f25.pdf",
+        "output": "/out/fonts-check/094.pdf",
+        "input_sha256": "dfafab00543396b843a9daac753c9962f8366a4752a121442a62e056b0ae4f25",
+        "pages": 2,
+        "header_footer_fragments": 0,
+        "removed_header_rows": 0,
+        "removed_footer_rows": 0,
+        "footer_pages": 0,
+        "removed_links": {},
+        "removed_widgets": 1,
+        "cleanup_method": "text_show_operations",
+        "status": "cleaned",
+        "output_sha256": "6057dc796ae07b9b8cd8acf7b4b12ed68ae5b36b0e0062903368d7b9f473e56b",
+        "validation": "passed"
+      },
+      "output_sha256": "6057dc796ae07b9b8cd8acf7b4b12ed68ae5b36b0e0062903368d7b9f473e56b",
+      "expected_sha256": "65fd7441e12a4232861f7ed85b4f0f6e098bbf1146ae3b7a1d593d47e18127f2",
+      "all_objects_streams_and_non_ID_trailer_equal": true
+    }
+  ]
+}

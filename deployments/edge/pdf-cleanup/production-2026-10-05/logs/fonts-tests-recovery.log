@@ -1,0 +1,19 @@
+test_body_overlap_preserves_body_and_removes_only_footer_operators (test_cleanup.CleanupTests.test_body_overlap_preserves_body_and_removes_only_footer_operators) ... ok
+test_character_content_and_real_displacement_are_rejected (test_cleanup.CleanupTests.test_character_content_and_real_displacement_are_rejected) ... ok
+test_complete_unique_footer_row_and_content (test_cleanup.CleanupTests.test_complete_unique_footer_row_and_content) ... ok
+test_coordinate_rounding_boundary_is_not_content_loss (test_cleanup.CleanupTests.test_coordinate_rounding_boundary_is_not_content_loss) ... ok
+test_dry_run_creates_no_pdf (test_cleanup.CleanupTests.test_dry_run_creates_no_pdf) ... ok
+test_mixed_text_object_quote_footer_keeps_body_position (test_cleanup.CleanupTests.test_mixed_text_object_quote_footer_keeps_body_position) ... ok
+test_no_overwrite_or_source_alias (test_cleanup.CleanupTests.test_no_overwrite_or_source_alias) ... ok
+test_number_gap_is_not_rewritten (test_cleanup.CleanupTests.test_number_gap_is_not_rewritten) ... ok
+test_numbered_table_rows_are_preserved (test_cleanup.CleanupTests.test_numbered_table_rows_are_preserved) ... ok
+test_vector_rounding_does_not_hide_geometry_or_style_change (test_cleanup.CleanupTests.test_vector_rounding_does_not_hide_geometry_or_style_change) ... ok
+test_widget_is_removed_but_underlying_text_remains (test_cleanup.CleanupTests.test_widget_is_removed_but_underlying_text_remains) ... ok
+test_external_snapshot_cannot_write_anywhere_inside_originals (test_edge_guard.EdgeOriginalsGuardTests.test_external_snapshot_cannot_write_anywhere_inside_originals) ... ok
+test_missing_or_relative_originals_configuration_rejected (test_edge_guard.EdgeOriginalsGuardTests.test_missing_or_relative_originals_configuration_rejected) ... ok
+test_symlink_parent_cannot_bypass_originals_protection (test_edge_guard.EdgeOriginalsGuardTests.test_symlink_parent_cannot_bypass_originals_protection) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.576s
+
+OK

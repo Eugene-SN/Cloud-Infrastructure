@@ -1,0 +1,15 @@
+{
+  "python": "3.14.8",
+  "versions": {
+    "PyMuPDF": "1.28.2",
+    "pypdf": "6.19.0",
+    "cryptography": "50.0.2",
+    "fonttools": "4.66.1"
+  },
+  "source_hashes": {
+    "core.py": "2eaa182b11a5f9e5be766c5cf9d9b53712a23c13cdb292a9ba7bfc2b22487047",
+    "native.py": "d8b11bcc7c7726a1d31667c1d17cb159b280fe4146d1550dd38227c34971f331",
+    "lexical.py": "bde6b55e1dfc8f25f37f90bd39b5d1fc7d12357e5ded6f0a0a2bd056dafb2a0c"
+  },
+  "image_id": "sha256:93ca37d01cdfbb68550cba9d0008aefac52f3b2d6e86ca481e5163fde1ca448e"
+}

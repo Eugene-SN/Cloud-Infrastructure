@@ -1,0 +1,53 @@
+{
+  "checked_at": "2026-10-05T20:50:58.455823+00:00",
+  "six_own_cache_records_removed": true,
+  "superseded_code_only_image_removed": true,
+  "runtime_parent_kept": "Referenced by exact Refinement.Dockerfile as verified build input",
+  "details": [
+    {
+      "id": "ftetphun4cpznnfmp2av8qlag",
+      "rc": 0,
+      "stdout": "ID\t\t\t\t\t\tRECLAIMABLE\tSIZE\t\tLAST ACCESSED\nftetphun4cpznnfmp2av8qlag               \ttrue \t\t38.06MB   \t4 minutes ago\nTotal:\t38.06MB\n",
+      "stderr": ""
+    },
+    {
+      "id": "zdy87tkpui4zs8n8qp20vg4vr",
+      "rc": 0,
+      "stdout": "ID\t\t\t\t\t\tRECLAIMABLE\tSIZE\t\tLAST ACCESSED\nzdy87tkpui4zs8n8qp20vg4vr               \ttrue \t\t496.7kB   \t2 hours ago\nTotal:\t496.7kB\n",
+      "stderr": ""
+    },
+    {
+      "id": "b3skcfq9tx2iwyovqlcroae0e",
+      "rc": 0,
+      "stdout": "ID\t\t\t\t\t\tRECLAIMABLE\tSIZE\t\tLAST ACCESSED\nb3skcfq9tx2iwyovqlcroae0e               \ttrue \t\t173.4kB   \t4 minutes ago\nTotal:\t173.4kB\n",
+      "stderr": ""
+    },
+    {
+      "id": "f9tgo94zr1789bm2di377duu2",
+      "rc": 0,
+      "stdout": "ID\t\t\t\t\t\tRECLAIMABLE\tSIZE\t\tLAST ACCESSED\nf9tgo94zr1789bm2di377duu2*              \ttrue \t\t127kB     \t4 minutes ago\nTotal:\t127kB\n",
+      "stderr": ""
+    },
+    {
+      "id": "n166hvmm3t0yjvkety2z7i2ny",
+      "rc": 0,
+      "stdout": "ID\t\t\t\t\t\tRECLAIMABLE\tSIZE\t\tLAST ACCESSED\nn166hvmm3t0yjvkety2z7i2ny*              \ttrue \t\t8.192kB   \t4 minutes ago\nTotal:\t8.192kB\n",
+      "stderr": ""
+    },
+    {
+      "id": "d5yom580gq9os3gizhe185z7h",
+      "rc": 0,
+      "stdout": "ID\t\t\t\t\t\tRECLAIMABLE\tSIZE\t\tLAST ACCESSED\nd5yom580gq9os3gizhe185z7h*              \ttrue \t\t4.096kB   \t4 minutes ago\nTotal:\t4.096kB\n",
+      "stderr": ""
+    },
+    {
+      "removed_image": "sha256:7ed12f7c2e7d4ea8f62cbc97210e1cd7dd5a0e1d3ad73a944ca17bcbb4b12fa8",
+      "rc": 0,
+      "stdout": "Untagged: edge/pdf-cleanup:9c9bbb375751\nDeleted: sha256:7ed12f7c2e7d4ea8f62cbc97210e1cd7dd5a0e1d3ad73a944ca17bcbb4b12fa8\n"
+    }
+  ],
+  "scratch_root_removed": "/tmp/pdf-cleanup-production-qotusqgi",
+  "test_pdfs_deps_and_credential_export_removed": true,
+  "unrelated_operator_edits_preserved": true,
+  "final_cleanup_at": "2026-10-05T20:55:24.289147+00:00"
+}

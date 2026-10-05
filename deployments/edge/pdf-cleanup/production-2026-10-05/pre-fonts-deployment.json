@@ -4,8 +4,8 @@
   "source_commit": "9c9bbb375751f85ca1e6f737504f3e99a68fd3d5",
   "source_provenance": "Verified upstream import + portable originals guard + full-corpus generic refinement; no upstream merge",
   "base_image": "python@sha256:504679006065cdab9a85e983e269140d3c5a279492395a6863b25b1ffb377f86",
-  "image_tag": "edge/pdf-cleanup:9c9bbb375751-fonts",
-  "image_id": "sha256:93ca37d01cdfbb68550cba9d0008aefac52f3b2d6e86ca481e5163fde1ca448e",
+  "image_tag": "edge/pdf-cleanup:9c9bbb375751",
+  "image_id": "sha256:7ed12f7c2e7d4ea8f62cbc97210e1cd7dd5a0e1d3ad73a944ca17bcbb4b12fa8",
   "runtime_user": "core",
   "uid": 1000,
   "gid": 1000,
@@ -27,8 +27,7 @@
     "PyMuPDF": "1.28.2",
     "pypdf": "6.19.0",
     "package": "0.1.3",
-    "cryptography": "50.0.2",
-    "fonttools": "4.66.1"
+    "cryptography": "50.0.2"
   },
   "installed_core_sha256": "2eaa182b11a5f9e5be766c5cf9d9b53712a23c13cdb292a9ba7bfc2b22487047",
   "job_adapter": "/opt/pdf-cleanup/job-command.py",
@@ -37,6 +36,5 @@
   "runtime_parent_tag": "edge/pdf-cleanup:8257cb36be78",
   "installed_native_sha256": "d8b11bcc7c7726a1d31667c1d17cb159b280fe4146d1550dd38227c34971f331",
   "installed_lexical_sha256": "bde6b55e1dfc8f25f37f90bd39b5d1fc7d12357e5ded6f0a0a2bd056dafb2a0c",
-  "refinement_evidence_commit": "afd3dc026b0e215ffca2983af9c91ee7c79c88b5",
-  "font_dependency": "pypdf[fonts], exact installed pypdf 6.19.0; verified CFF Type1 decoding; core/native/lexical bytes unchanged"
+  "refinement_evidence_commit": "afd3dc026b0e215ffca2983af9c91ee7c79c88b5"
 }

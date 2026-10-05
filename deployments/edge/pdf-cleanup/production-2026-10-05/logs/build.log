@@ -1,0 +1,61 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 383B 0.0s done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/edge/pdf-cleanup:8257cb36be78
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [internal] load build context
+#4 DONE 0.0s
+
+#5 [1/3] FROM docker.io/edge/pdf-cleanup:8257cb36be78@sha256:3ff39309bab88fca2d28edb606879afbe5ce18fa366d48ade3e9440cbd82c06e
+#5 resolve docker.io/edge/pdf-cleanup:8257cb36be78@sha256:3ff39309bab88fca2d28edb606879afbe5ce18fa366d48ade3e9440cbd82c06e 0.0s done
+#5 DONE 0.1s
+
+#4 [internal] load build context
+#4 transferring context: 72.79kB done
+#4 DONE 0.0s
+
+#6 [2/3] COPY source /opt/pdf-cleanup/source
+#6 DONE 0.0s
+
+#7 [3/3] RUN python -m pip install --no-cache-dir --no-deps --force-reinstall /opt/pdf-cleanup/source && python -m pip check
+#7 3.170 Processing ./opt/pdf-cleanup/source
+#7 3.176   Installing build dependencies: started
+#7 5.958   Installing build dependencies: finished with status 'done'
+#7 5.960   Getting requirements to build wheel: started
+#7 7.263   Getting requirements to build wheel: finished with status 'done'
+#7 7.265   Preparing metadata (pyproject.toml): started
+#7 8.560   Preparing metadata (pyproject.toml): finished with status 'done'
+#7 8.565 Building wheels for collected packages: documentation-ai-pdf-cleanup
+#7 8.567   Building wheel for documentation-ai-pdf-cleanup (pyproject.toml): started
+#7 9.902   Building wheel for documentation-ai-pdf-cleanup (pyproject.toml): finished with status 'done'
+#7 9.903   Created wheel for documentation-ai-pdf-cleanup: filename=documentation_ai_pdf_cleanup-0.1.3-py3-none-any.whl size=13780 sha256=9001dcecb2f5b1a61003b0635afb0541427b9f68881ebea29851b592364c4438
+#7 9.903   Stored in directory: /tmp/pip-ephem-wheel-cache-m8u7tvuy/wheels/8d/12/84/81fcc682ab81b862264ae83174b9c2292bf58a3d9eb02bf6e6
+#7 9.910 Successfully built documentation-ai-pdf-cleanup
+#7 10.00 Installing collected packages: documentation-ai-pdf-cleanup
+#7 10.00   Attempting uninstall: documentation-ai-pdf-cleanup
+#7 10.01     Found existing installation: documentation-ai-pdf-cleanup 0.1.3
+#7 10.01     Uninstalling documentation-ai-pdf-cleanup-0.1.3:
+#7 10.02       Successfully uninstalled documentation-ai-pdf-cleanup-0.1.3
+#7 10.06 Successfully installed documentation-ai-pdf-cleanup-0.1.3
+#7 10.06 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+#7 11.56 No broken requirements found.
+#7 DONE 11.7s
+
+#8 exporting to image
+#8 exporting layers
+#8 exporting layers 0.2s done
+#8 exporting manifest sha256:b1fd5dcb06bce8d0682a92571fb4d5fa34139c01d98c2cf8dd267bba76797765 0.0s done
+#8 exporting config sha256:145606eff6ce79a3d6577c655ca26d083b99ed1030cc994e8770141ea520ff02 done
+#8 exporting attestation manifest sha256:7d11caaa60f6367de6d6bf814d0c8ff0cfa24ec64fb6b14b929d16f1c35aaee4 done
+#8 exporting manifest list sha256:7ed12f7c2e7d4ea8f62cbc97210e1cd7dd5a0e1d3ad73a944ca17bcbb4b12fa8 done
+#8 naming to docker.io/edge/pdf-cleanup:9c9bbb375751 done
+#8 unpacking to docker.io/edge/pdf-cleanup:9c9bbb375751 0.1s done
+#8 DONE 0.3s

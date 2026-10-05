@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-05T20:51:59.078403+00:00",
+  "production_cli_runs": 98,
+  "first_pass_all_paths": 95,
+  "font_dependency_repeats": 3,
+  "production_cli_failures": 0,
+  "initial_optional_font_warnings": 3,
+  "final_cli_stderr_empty": true,
+  "independent_final_reviews": 95,
+  "independent_completed_review_preserved_on_cache_fix": 68,
+  "resumed_independent_worker_rc": 0,
+  "fonts_batch_rc": 0,
+  "fonts_independent_worker_rc": 0,
+  "original_batch_shell_rc": "UNKNOWN: tool control session 6632 was lost across Codex daemon restart; batch-finished.json and 95 adapter cli_rc=0 results confirm completion, not a host shell exit-code claim",
+  "assistant_harness_defects": [
+    "First BuildKit FROM bare sha256 ID was interpreted as registry repository; recovered with verified local tag before deployment",
+    "Independent reviewer retained source plans beyond last use; stopped only reviewer and resumed unfinished work with eviction, preserving completed PASS records",
+    "Fonts unittest invocation omitted required TMPDIR; 21 completed tests retained, only 14 setup errors rerun with TMPDIR=/tmp and passed",
+    "Candidate comparator incorrectly required stable whole-PDF SHA across save; exact inspection showed only regenerated /ID in xref trailer, comparison corrected for this field; all content objects/streams remain equal"
+  ],
+  "font_dependency_evidence": "Exact deployed pypdf 6.19.0 metadata supports fonts extra; _cmap.py uses fontTools only for CFF Type1 missing-ToUnicode maps. All three warning files have unchanged native evidence and all PDF objects/decoded streams except regenerated trailer ID. Other 92 final files have no CFF dependency warning; source bytes and previous runtime libraries unchanged."
+}

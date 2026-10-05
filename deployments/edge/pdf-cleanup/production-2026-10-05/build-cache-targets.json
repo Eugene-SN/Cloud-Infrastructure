@@ -1,0 +1,86 @@
+[
+  {
+    "CreatedAt": "2026-10-05 19:12:40.633114076 +0000 UTC",
+    "Description": "local source for context",
+    "ID": "d5yom580gq9os3gizhe185z7h",
+    "LastUsedAt": "7 minutes ago",
+    "Mutable": true,
+    "Parents": null,
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "4.096kB",
+    "Type": "source.local",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-05 19:12:27.521408807 +0000 UTC",
+    "Description": "local source for dockerfile",
+    "ID": "n166hvmm3t0yjvkety2z7i2ny",
+    "LastUsedAt": "7 minutes ago",
+    "Mutable": true,
+    "Parents": null,
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "8.192kB",
+    "Type": "source.local",
+    "UsageCount": 2
+  },
+  {
+    "CreatedAt": "2026-10-05 19:12:40.694630387 +0000 UTC",
+    "Description": "local source for context",
+    "ID": "f9tgo94zr1789bm2di377duu2",
+    "LastUsedAt": "7 minutes ago",
+    "Mutable": true,
+    "Parents": null,
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "127kB",
+    "Type": "source.local",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-05 19:12:40.839525796 +0000 UTC",
+    "Description": "[2/3] COPY source /opt/pdf-cleanup/source",
+    "ID": "b3skcfq9tx2iwyovqlcroae0e",
+    "LastUsedAt": "7 minutes ago",
+    "Mutable": false,
+    "Parents": [
+      "oqregz9b0mlx0s731jermomgz"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "173.4kB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-05 19:12:52.521506337 +0000 UTC",
+    "Description": "mount / from exec /bin/sh -c python -m pip install --no-cache-dir --no-deps --force-reinstall /opt/pdf-cleanup/source && python -m pip check",
+    "ID": "zdy87tkpui4zs8n8qp20vg4vr",
+    "LastUsedAt": "7 minutes ago",
+    "Mutable": false,
+    "Parents": [
+      "b3skcfq9tx2iwyovqlcroae0e"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "496.7kB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-05 20:45:56.539908467 +0000 UTC",
+    "Description": "mount / from exec /bin/sh -c python -m pip install --no-cache-dir \"pypdf[fonts]==${PYPDF_VERSION}\" && python -m pip install --no-cache-dir --no-deps --force-reinstall /opt/pdf-cleanup/source && python -m pip check",
+    "ID": "ftetphun4cpznnfmp2av8qlag",
+    "LastUsedAt": "3 minutes ago",
+    "Mutable": false,
+    "Parents": [
+      "b3skcfq9tx2iwyovqlcroae0e"
+    ],
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "38.06MB",
+    "Type": "regular",
+    "UsageCount": 1
+  }
+]

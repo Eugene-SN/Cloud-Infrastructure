@@ -1,0 +1,192 @@
+{"event": "cleaned_cleared", "removed": 14}
+{"event": "cleanup_start", "number": 1, "total": 95, "path": "WA5480 G3/bmc_user_guide_v14.pdf"}
+{"event": "cleanup_complete", "number": 1, "path": "WA5480 G3/bmc_user_guide_v14.pdf", "status": "passed", "seconds": 28.051, "error": null}
+{"event": "cleanup_start", "number": 2, "total": 95, "path": "WA5480 G3/lenovo_bmc_event_reference_guide_g5_v4.pdf"}
+{"event": "cleanup_complete", "number": 2, "path": "WA5480 G3/lenovo_bmc_event_reference_guide_g5_v4.pdf", "status": "passed", "seconds": 43.442, "error": null}
+{"event": "cleanup_start", "number": 3, "total": 95, "path": "WA5480 G3/lenovo_bmc_g3_redfish_guide_v11.pdf"}
+{"event": "cleanup_complete", "number": 3, "path": "WA5480 G3/lenovo_bmc_g3_redfish_guide_v11.pdf", "status": "passed", "seconds": 107.321, "error": null}
+{"event": "cleanup_start", "number": 4, "total": 95, "path": "WA5480 G3/lenovo_snmp_ug_g3.pdf"}
+{"event": "cleanup_complete", "number": 4, "path": "WA5480 G3/lenovo_snmp_ug_g3.pdf", "status": "passed", "seconds": 22.754, "error": null}
+{"event": "cleanup_start", "number": 5, "total": 95, "path": "WA5480 G3/lenovo_wentian_os_installation_guide.pdf"}
+{"event": "cleanup_complete", "number": 5, "path": "WA5480 G3/lenovo_wentian_os_installation_guide.pdf", "status": "passed", "seconds": 32.439, "error": null}
+{"event": "cleanup_start", "number": 6, "total": 95, "path": "WA5480 G3/lenovo_wentian_wa5480g3_user_guide_v8.pdf"}
+{"event": "cleanup_complete", "number": 6, "path": "WA5480 G3/lenovo_wentian_wa5480g3_user_guide_v8.pdf", "status": "passed", "seconds": 86.142, "error": null}
+{"event": "cleanup_start", "number": 7, "total": 95, "path": "WA5480 G3/lxce_bomc_cplus_ug.pdf"}
+{"event": "cleanup_complete", "number": 7, "path": "WA5480 G3/lxce_bomc_cplus_ug.pdf", "status": "passed", "seconds": 8.574, "error": null}
+{"event": "cleanup_start", "number": 8, "total": 95, "path": "WA5480 G3/lxce_onecli_cplus_ug.pdf"}
+{"event": "cleanup_complete", "number": 8, "path": "WA5480 G3/lxce_onecli_cplus_ug.pdf", "status": "passed", "seconds": 42.203, "error": null}
+{"event": "cleanup_start", "number": 9, "total": 95, "path": "WA5480 G3/lxce_ux_cplus_ug.pdf"}
+{"event": "cleanup_complete", "number": 9, "path": "WA5480 G3/lxce_ux_cplus_ug.pdf", "status": "passed", "seconds": 17.486, "error": null}
+{"event": "cleanup_start", "number": 10, "total": 95, "path": "WA5480 G3/lxpm_wentian_ug-v2.pdf"}
+{"event": "cleanup_complete", "number": 10, "path": "WA5480 G3/lxpm_wentian_ug-v2.pdf", "status": "passed", "seconds": 8.178, "error": null}
+{"event": "cleanup_start", "number": 11, "total": 95, "path": "WA5480 G3/psu_label_matrix.pdf"}
+{"event": "cleanup_complete", "number": 11, "path": "WA5480 G3/psu_label_matrix.pdf", "status": "passed", "seconds": 4.904, "error": null}
+{"event": "cleanup_start", "number": 12, "total": 95, "path": "WA5480 G5/lenovo_bmc_commands_g5_v3.pdf"}
+{"event": "cleanup_complete", "number": 12, "path": "WA5480 G5/lenovo_bmc_commands_g5_v3.pdf", "status": "passed", "seconds": 22.658, "error": null}
+{"event": "cleanup_start", "number": 13, "total": 95, "path": "WA5480 G5/lenovo_bmc_event_reference_guide_g5_v4.pdf"}
+{"event": "cleanup_complete", "number": 13, "path": "WA5480 G5/lenovo_bmc_event_reference_guide_g5_v4.pdf", "status": "passed", "seconds": 42.411, "error": null}
+{"event": "cleanup_start", "number": 14, "total": 95, "path": "WA5480 G5/lenovo_bmc_redfish_guide_g5_v4.pdf"}
+{"event": "cleanup_complete", "number": 14, "path": "WA5480 G5/lenovo_bmc_redfish_guide_g5_v4.pdf", "status": "passed", "seconds": 128.776, "error": null}
+{"event": "cleanup_start", "number": 15, "total": 95, "path": "WA5480 G5/lenovo_bmc_snmp_guide_g5.pdf"}
+{"event": "cleanup_complete", "number": 15, "path": "WA5480 G5/lenovo_bmc_snmp_guide_g5.pdf", "status": "passed", "seconds": 23.062, "error": null}
+{"event": "cleanup_start", "number": 16, "total": 95, "path": "WA5480 G5/lenovo_bmc_user_guide_g5_v6.pdf"}
+{"event": "cleanup_complete", "number": 16, "path": "WA5480 G5/lenovo_bmc_user_guide_g5_v6.pdf", "status": "passed", "seconds": 37.827, "error": null}
+{"event": "cleanup_start", "number": 17, "total": 95, "path": "WA5480 G5/lenovo_wentian_os_installation_guide.pdf"}
+{"event": "cleanup_complete", "number": 17, "path": "WA5480 G5/lenovo_wentian_os_installation_guide.pdf", "status": "passed", "seconds": 31.335, "error": null}
+{"event": "cleanup_start", "number": 18, "total": 95, "path": "WA5480 G5/lenovo_wentian_wa5480g5_user_guide_v5.pdf"}
+{"event": "cleanup_complete", "number": 18, "path": "WA5480 G5/lenovo_wentian_wa5480g5_user_guide_v5.pdf", "status": "passed", "seconds": 81.737, "error": null}
+{"event": "cleanup_start", "number": 19, "total": 95, "path": "WA5480 G5/lxce_bomc_cplus_ug.pdf"}
+{"event": "cleanup_complete", "number": 19, "path": "WA5480 G5/lxce_bomc_cplus_ug.pdf", "status": "passed", "seconds": 8.31, "error": null}
+{"event": "cleanup_start", "number": 20, "total": 95, "path": "WA5480 G5/lxce_onecli_cplus_ug.pdf"}
+{"event": "cleanup_complete", "number": 20, "path": "WA5480 G5/lxce_onecli_cplus_ug.pdf", "status": "passed", "seconds": 44.677, "error": null}
+{"event": "cleanup_start", "number": 21, "total": 95, "path": "WA5480 G5/lxce_ux_cplus_ug.pdf"}
+{"event": "cleanup_complete", "number": 21, "path": "WA5480 G5/lxce_ux_cplus_ug.pdf", "status": "passed", "seconds": 16.585, "error": null}
+{"event": "cleanup_start", "number": 22, "total": 95, "path": "WA5480 G5/lxpm_wentian_ug-v2.pdf"}
+{"event": "cleanup_complete", "number": 22, "path": "WA5480 G5/lxpm_wentian_ug-v2.pdf", "status": "passed", "seconds": 8.9, "error": null}
+{"event": "cleanup_start", "number": 23, "total": 95, "path": "WA5480 G5/psu_label_matrix.pdf"}
+{"event": "cleanup_complete", "number": 23, "path": "WA5480 G5/psu_label_matrix.pdf", "status": "passed", "seconds": 4.392, "error": null}
+{"event": "cleanup_start", "number": 24, "total": 95, "path": "WA5480 G5/wa5480g5_bios_setup_spec.pdf"}
+{"event": "cleanup_complete", "number": 24, "path": "WA5480 G5/wa5480g5_bios_setup_spec.pdf", "status": "passed", "seconds": 23.832, "error": null}
+{"event": "cleanup_start", "number": 25, "total": 95, "path": "WA5680 G3/lenovo_wentian_wa5680g3_user_guide.pdf"}
+{"event": "cleanup_complete", "number": 25, "path": "WA5680 G3/lenovo_wentian_wa5680g3_user_guide.pdf", "status": "passed", "seconds": 33.249, "error": null}
+{"event": "cleanup_start", "number": 26, "total": 95, "path": "WA5680 G5/lenovo_wentian_wa5680g5_bios_setup_spec_v2.4.pdf"}
+{"event": "cleanup_complete", "number": 26, "path": "WA5680 G5/lenovo_wentian_wa5680g5_bios_setup_spec_v2.4.pdf", "status": "passed", "seconds": 27.052, "error": null}
+{"event": "cleanup_start", "number": 27, "total": 95, "path": "WA5680 G5/lenovo_wentian_wa5680g5_user_guide.pdf"}
+{"event": "cleanup_complete", "number": 27, "path": "WA5680 G5/lenovo_wentian_wa5680g5_user_guide.pdf", "status": "passed", "seconds": 63.458, "error": null}
+{"event": "cleanup_start", "number": 28, "total": 95, "path": "WA5680 G5/lp2469.pdf"}
+{"event": "cleanup_complete", "number": 28, "path": "WA5680 G5/lp2469.pdf", "status": "passed", "seconds": 42.028, "error": null}
+{"event": "cleanup_start", "number": 29, "total": 95, "path": "WA5680 G5/lp2506.pdf"}
+{"event": "cleanup_complete", "number": 29, "path": "WA5680 G5/lp2506.pdf", "status": "passed", "seconds": 6.903, "error": null}
+{"event": "cleanup_start", "number": 30, "total": 95, "path": "WA5685 G5/lp2399.pdf"}
+{"event": "cleanup_complete", "number": 30, "path": "WA5685 G5/lp2399.pdf", "status": "passed", "seconds": 26.755, "error": null}
+{"event": "cleanup_start", "number": 31, "total": 95, "path": "WA5685 G5/lp2507.pdf"}
+{"event": "cleanup_complete", "number": 31, "path": "WA5685 G5/lp2507.pdf", "status": "passed", "seconds": 3.789, "error": null}
+{"event": "cleanup_start", "number": 32, "total": 95, "path": "WA5685 G5/wa5685g5_user_guide.pdf"}
+{"event": "cleanup_complete", "number": 32, "path": "WA5685 G5/wa5685g5_user_guide.pdf", "status": "passed", "seconds": 40.793, "error": null}
+{"event": "cleanup_start", "number": 33, "total": 95, "path": "WA7780 G3/lenovo_wentian_wa7780g3_bios_user_guide.pdf"}
+{"event": "cleanup_complete", "number": 33, "path": "WA7780 G3/lenovo_wentian_wa7780g3_bios_user_guide.pdf", "status": "passed", "seconds": 17.498, "error": null}
+{"event": "cleanup_start", "number": 34, "total": 95, "path": "WA7780 G3/lenovo_wentian_wa7780g3_user_guide.pdf"}
+{"event": "cleanup_complete", "number": 34, "path": "WA7780 G3/lenovo_wentian_wa7780g3_user_guide.pdf", "status": "passed", "seconds": 352.744, "error": null}
+{"event": "cleanup_start", "number": 35, "total": 95, "path": "WA7785a G3/lenovo_wentian_wa7785ag3_bios_user_guide.pdf"}
+{"event": "cleanup_complete", "number": 35, "path": "WA7785a G3/lenovo_wentian_wa7785ag3_bios_user_guide.pdf", "status": "passed", "seconds": 14.221, "error": null}
+{"event": "cleanup_start", "number": 36, "total": 95, "path": "WA7785a G3/lenovo_wentian_wa7785ag3_user_guide.pdf"}
+{"event": "cleanup_complete", "number": 36, "path": "WA7785a G3/lenovo_wentian_wa7785ag3_user_guide.pdf", "status": "passed", "seconds": 262.86, "error": null}
+{"event": "cleanup_start", "number": 37, "total": 95, "path": "WA7880a G3/lenovo_wentian_wa7880ag3_user_guide.pdf"}
+{"event": "cleanup_complete", "number": 37, "path": "WA7880a G3/lenovo_wentian_wa7880ag3_user_guide.pdf", "status": "passed", "seconds": 41.269, "error": null}
+{"event": "cleanup_start", "number": 38, "total": 95, "path": "WR3220 G5/lenovo_wentian_wr3220g5_user_guide.pdf"}
+{"event": "cleanup_complete", "number": 38, "path": "WR3220 G5/lenovo_wentian_wr3220g5_user_guide.pdf", "status": "passed", "seconds": 61.196, "error": null}
+{"event": "cleanup_start", "number": 39, "total": 95, "path": "WR3220 G5/lp2440.pdf"}
+{"event": "cleanup_complete", "number": 39, "path": "WR3220 G5/lp2440.pdf", "status": "passed", "seconds": 26.822, "error": null}
+{"event": "cleanup_start", "number": 40, "total": 95, "path": "WR3220 G5/lxce_bomc_cplus_ug.pdf"}
+{"event": "cleanup_complete", "number": 40, "path": "WR3220 G5/lxce_bomc_cplus_ug.pdf", "status": "passed", "seconds": 8.94, "error": null}
+{"event": "cleanup_start", "number": 41, "total": 95, "path": "WR3220 G5/lxce_onecli_cplus_ug.pdf"}
+{"event": "cleanup_complete", "number": 41, "path": "WR3220 G5/lxce_onecli_cplus_ug.pdf", "status": "passed", "seconds": 45.539, "error": null}
+{"event": "cleanup_start", "number": 42, "total": 95, "path": "WR3220 G5/lxce_ux_cplus_ug.pdf"}
+{"event": "cleanup_complete", "number": 42, "path": "WR3220 G5/lxce_ux_cplus_ug.pdf", "status": "passed", "seconds": 18.312, "error": null}
+{"event": "cleanup_start", "number": 43, "total": 95, "path": "WR5215 G5/lenovo_bmc_commands_g5_v3.pdf"}
+{"event": "cleanup_complete", "number": 43, "path": "WR5215 G5/lenovo_bmc_commands_g5_v3.pdf", "status": "passed", "seconds": 22.429, "error": null}
+{"event": "cleanup_start", "number": 44, "total": 95, "path": "WR5215 G5/lenovo_bmc_redfish_guide_g5_v4.pdf"}
+{"event": "cleanup_complete", "number": 44, "path": "WR5215 G5/lenovo_bmc_redfish_guide_g5_v4.pdf", "status": "passed", "seconds": 134.755, "error": null}
+{"event": "cleanup_start", "number": 45, "total": 95, "path": "WR5215 G5/lenovo_bmc_snmp_guide_g5.pdf"}
+{"event": "cleanup_complete", "number": 45, "path": "WR5215 G5/lenovo_bmc_snmp_guide_g5.pdf", "status": "passed", "seconds": 36.425, "error": null}
+{"event": "cleanup_start", "number": 46, "total": 95, "path": "WR5215 G5/lenovo_bmc_user_guide_g5_v6.pdf"}
+{"event": "cleanup_complete", "number": 46, "path": "WR5215 G5/lenovo_bmc_user_guide_g5_v6.pdf", "status": "passed", "seconds": 39.428, "error": null}
+{"event": "cleanup_start", "number": 47, "total": 95, "path": "WR5215 G5/lenovo_wentian_wr5215g5_user_guide_v2.pdf"}
+{"event": "cleanup_complete", "number": 47, "path": "WR5215 G5/lenovo_wentian_wr5215g5_user_guide_v2.pdf", "status": "passed", "seconds": 82.738, "error": null}
+{"event": "cleanup_start", "number": 48, "total": 95, "path": "WR5215 G5/lp2356.pdf"}
+{"event": "cleanup_complete", "number": 48, "path": "WR5215 G5/lp2356.pdf", "status": "passed", "seconds": 14.127, "error": null}
+{"event": "cleanup_start", "number": 49, "total": 95, "path": "WR5215 G5/lxce_bomc_cplus_ug.pdf"}
+{"event": "cleanup_complete", "number": 49, "path": "WR5215 G5/lxce_bomc_cplus_ug.pdf", "status": "passed", "seconds": 9.252, "error": null}
+{"event": "cleanup_start", "number": 50, "total": 95, "path": "WR5215 G5/lxce_onecli_cplus_ug.pdf"}
+{"event": "cleanup_complete", "number": 50, "path": "WR5215 G5/lxce_onecli_cplus_ug.pdf", "status": "passed", "seconds": 42.577, "error": null}
+{"event": "cleanup_start", "number": 51, "total": 95, "path": "WR5215 G5/lxce_ux_cplus_ug.pdf"}
+{"event": "cleanup_complete", "number": 51, "path": "WR5215 G5/lxce_ux_cplus_ug.pdf", "status": "passed", "seconds": 18.736, "error": null}
+{"event": "cleanup_start", "number": 52, "total": 95, "path": "WR5220 G3/bmc_user_guide_v14.pdf"}
+{"event": "cleanup_complete", "number": 52, "path": "WR5220 G3/bmc_user_guide_v14.pdf", "status": "passed", "seconds": 31.535, "error": null}
+{"event": "cleanup_start", "number": 53, "total": 95, "path": "WR5220 G3/lenovo_bmc_event_reference_guide_g5_v4.pdf"}
+{"event": "cleanup_complete", "number": 53, "path": "WR5220 G3/lenovo_bmc_event_reference_guide_g5_v4.pdf", "status": "passed", "seconds": 40.823, "error": null}
+{"event": "cleanup_start", "number": 54, "total": 95, "path": "WR5220 G3/lenovo_bmc_g3_commands_guide_v2.pdf"}
+{"event": "cleanup_complete", "number": 54, "path": "WR5220 G3/lenovo_bmc_g3_commands_guide_v2.pdf", "status": "passed", "seconds": 26.945, "error": null}
+{"event": "cleanup_start", "number": 55, "total": 95, "path": "WR5220 G3/lenovo_bmc_g3_redfish_guide_v11.pdf"}
+{"event": "cleanup_complete", "number": 55, "path": "WR5220 G3/lenovo_bmc_g3_redfish_guide_v11.pdf", "status": "passed", "seconds": 115.453, "error": null}
+{"event": "cleanup_start", "number": 56, "total": 95, "path": "WR5220 G3/lenovo_snmp_ug_g3.pdf"}
+{"event": "cleanup_complete", "number": 56, "path": "WR5220 G3/lenovo_snmp_ug_g3.pdf", "status": "passed", "seconds": 22.483, "error": null}
+{"event": "cleanup_start", "number": 57, "total": 95, "path": "WR5220 G3/lenovo_wentian_os_installation_guide.pdf"}
+{"event": "cleanup_complete", "number": 57, "path": "WR5220 G3/lenovo_wentian_os_installation_guide.pdf", "status": "passed", "seconds": 32.091, "error": null}
+{"event": "cleanup_start", "number": 58, "total": 95, "path": "WR5220 G3/lenovo_wentian_wr5220g3_user_guide_v18.pdf"}
+{"event": "cleanup_complete", "number": 58, "path": "WR5220 G3/lenovo_wentian_wr5220g3_user_guide_v18.pdf", "status": "passed", "seconds": 125.245, "error": null}
+{"event": "cleanup_start", "number": 59, "total": 95, "path": "WR5220 G3/lp1705.pdf"}
+{"event": "cleanup_complete", "number": 59, "path": "WR5220 G3/lp1705.pdf", "status": "passed", "seconds": 39.025, "error": null}
+{"event": "cleanup_start", "number": 60, "total": 95, "path": "WR5220 G3/lxce_bomc_cplus_ug.pdf"}
+{"event": "cleanup_complete", "number": 60, "path": "WR5220 G3/lxce_bomc_cplus_ug.pdf", "status": "passed", "seconds": 8.963, "error": null}
+{"event": "cleanup_start", "number": 61, "total": 95, "path": "WR5220 G3/lxce_onecli_cplus_ug.pdf"}
+{"event": "cleanup_complete", "number": 61, "path": "WR5220 G3/lxce_onecli_cplus_ug.pdf", "status": "passed", "seconds": 41.181, "error": null}
+{"event": "cleanup_start", "number": 62, "total": 95, "path": "WR5220 G3/lxce_ux_cplus_ug.pdf"}
+{"event": "cleanup_complete", "number": 62, "path": "WR5220 G3/lxce_ux_cplus_ug.pdf", "status": "passed", "seconds": 17.726, "error": null}
+{"event": "cleanup_start", "number": 63, "total": 95, "path": "WR5220 G3/lxpm_wentian_ug-v2.pdf"}
+{"event": "cleanup_complete", "number": 63, "path": "WR5220 G3/lxpm_wentian_ug-v2.pdf", "status": "passed", "seconds": 7.57, "error": null}
+{"event": "cleanup_start", "number": 64, "total": 95, "path": "WR5220 G3/psu_label_matrix.pdf"}
+{"event": "cleanup_complete", "number": 64, "path": "WR5220 G3/psu_label_matrix.pdf", "status": "passed", "seconds": 4.961, "error": null}
+{"event": "cleanup_start", "number": 65, "total": 95, "path": "WR5220 G3/vmware_code_recipe_file.pdf"}
+{"event": "cleanup_complete", "number": 65, "path": "WR5220 G3/vmware_code_recipe_file.pdf", "status": "passed", "seconds": 8.223, "error": null}
+{"event": "cleanup_start", "number": 66, "total": 95, "path": "WR5220 G3/wr5220g3_bios_setup_spec_v2.13.pdf"}
+{"event": "cleanup_complete", "number": 66, "path": "WR5220 G3/wr5220g3_bios_setup_spec_v2.13.pdf", "status": "passed", "seconds": 32.994, "error": null}
+{"event": "cleanup_start", "number": 67, "total": 95, "path": "WR5220 G5/lenovo_bmc_commands_g5_v3.pdf"}
+{"event": "cleanup_complete", "number": 67, "path": "WR5220 G5/lenovo_bmc_commands_g5_v3.pdf", "status": "passed", "seconds": 24.049, "error": null}
+{"event": "cleanup_start", "number": 68, "total": 95, "path": "WR5220 G5/lenovo_bmc_event_reference_guide_g5_v4.pdf"}
+{"event": "cleanup_complete", "number": 68, "path": "WR5220 G5/lenovo_bmc_event_reference_guide_g5_v4.pdf", "status": "passed", "seconds": 43.506, "error": null}
+{"event": "cleanup_start", "number": 69, "total": 95, "path": "WR5220 G5/lenovo_bmc_redfish_guide_g5_v4.pdf"}
+{"event": "cleanup_complete", "number": 69, "path": "WR5220 G5/lenovo_bmc_redfish_guide_g5_v4.pdf", "status": "passed", "seconds": 137.766, "error": null}
+{"event": "cleanup_start", "number": 70, "total": 95, "path": "WR5220 G5/lenovo_bmc_snmp_guide_g5.pdf"}
+{"event": "cleanup_complete", "number": 70, "path": "WR5220 G5/lenovo_bmc_snmp_guide_g5.pdf", "status": "passed", "seconds": 24.106, "error": null}
+{"event": "cleanup_start", "number": 71, "total": 95, "path": "WR5220 G5/lenovo_bmc_user_guide_g5_v6.pdf"}
+{"event": "cleanup_complete", "number": 71, "path": "WR5220 G5/lenovo_bmc_user_guide_g5_v6.pdf", "status": "passed", "seconds": 38.21, "error": null}
+{"event": "cleanup_start", "number": 72, "total": 95, "path": "WR5220 G5/lenovo_wentian_os_installation_guide.pdf"}
+{"event": "cleanup_complete", "number": 72, "path": "WR5220 G5/lenovo_wentian_os_installation_guide.pdf", "status": "passed", "seconds": 32.751, "error": null}
+{"event": "cleanup_start", "number": 73, "total": 95, "path": "WR5220 G5/lenovo_wentian_wr5220g5_user_guide_v7.pdf"}
+{"event": "cleanup_complete", "number": 73, "path": "WR5220 G5/lenovo_wentian_wr5220g5_user_guide_v7.pdf", "status": "passed", "seconds": 109.66, "error": null}
+{"event": "cleanup_start", "number": 74, "total": 95, "path": "WR5220 G5/lp1728.pdf"}
+{"event": "cleanup_complete", "number": 74, "path": "WR5220 G5/lp1728.pdf", "status": "passed", "seconds": 10.054, "error": null}
+{"event": "cleanup_start", "number": 75, "total": 95, "path": "WR5220 G5/lp2014.pdf"}
+{"event": "cleanup_complete", "number": 75, "path": "WR5220 G5/lp2014.pdf", "status": "passed", "seconds": 35.506, "error": null}
+{"event": "cleanup_start", "number": 76, "total": 95, "path": "WR5220 G5/lxce_bomc_cplus_ug.pdf"}
+{"event": "cleanup_complete", "number": 76, "path": "WR5220 G5/lxce_bomc_cplus_ug.pdf", "status": "passed", "seconds": 9.129, "error": null}
+{"event": "cleanup_start", "number": 77, "total": 95, "path": "WR5220 G5/lxce_onecli_cplus_ug.pdf"}
+{"event": "cleanup_complete", "number": 77, "path": "WR5220 G5/lxce_onecli_cplus_ug.pdf", "status": "passed", "seconds": 45.202, "error": null}
+{"event": "cleanup_start", "number": 78, "total": 95, "path": "WR5220 G5/lxce_ux_cplus_ug.pdf"}
+{"event": "cleanup_complete", "number": 78, "path": "WR5220 G5/lxce_ux_cplus_ug.pdf", "status": "passed", "seconds": 18.411, "error": null}
+{"event": "cleanup_start", "number": 79, "total": 95, "path": "WR5220 G5/lxpm_wentian_ug-v2.pdf"}
+{"event": "cleanup_complete", "number": 79, "path": "WR5220 G5/lxpm_wentian_ug-v2.pdf", "status": "passed", "seconds": 7.715, "error": null}
+{"event": "cleanup_start", "number": 80, "total": 95, "path": "WR5220 G5/psu_label_matrix.pdf"}
+{"event": "cleanup_complete", "number": 80, "path": "WR5220 G5/psu_label_matrix.pdf", "status": "passed", "seconds": 4.826, "error": null}
+{"event": "cleanup_start", "number": 81, "total": 95, "path": "WR5225 G3/lenovo_bmc_event_reference_guide_g5_v4.pdf"}
+{"event": "cleanup_complete", "number": 81, "path": "WR5225 G3/lenovo_bmc_event_reference_guide_g5_v4.pdf", "status": "passed", "seconds": 42.383, "error": null}
+{"event": "cleanup_start", "number": 82, "total": 95, "path": "WR5225 G3/lenovo_bmc_g3_redfish_guide_v11.pdf"}
+{"event": "cleanup_complete", "number": 82, "path": "WR5225 G3/lenovo_bmc_g3_redfish_guide_v11.pdf", "status": "passed", "seconds": 126.88, "error": null}
+{"event": "cleanup_start", "number": 83, "total": 95, "path": "WR5225 G3/lenovo_snmp_ug_g3.pdf"}
+{"event": "cleanup_complete", "number": 83, "path": "WR5225 G3/lenovo_snmp_ug_g3.pdf", "status": "passed", "seconds": 21.895, "error": null}
+{"event": "cleanup_start", "number": 84, "total": 95, "path": "WR5225 G3/lenovo_wentian_os_installation_guide.pdf"}
+{"event": "cleanup_complete", "number": 84, "path": "WR5225 G3/lenovo_wentian_os_installation_guide.pdf", "status": "passed", "seconds": 33.312, "error": null}
+{"event": "cleanup_start", "number": 85, "total": 95, "path": "WR5225 G3/lp2129.pdf"}
+{"event": "cleanup_complete", "number": 85, "path": "WR5225 G3/lp2129.pdf", "status": "passed", "seconds": 48.328, "error": null}
+{"event": "cleanup_start", "number": 86, "total": 95, "path": "WR5225 G3/lxce_bomc_cplus_ug.pdf"}
+{"event": "cleanup_complete", "number": 86, "path": "WR5225 G3/lxce_bomc_cplus_ug.pdf", "status": "passed", "seconds": 8.273, "error": null}
+{"event": "cleanup_start", "number": 87, "total": 95, "path": "WR5225 G3/lxce_onecli_cplus_ug.pdf"}
+{"event": "cleanup_complete", "number": 87, "path": "WR5225 G3/lxce_onecli_cplus_ug.pdf", "status": "passed", "seconds": 46.559, "error": null}
+{"event": "cleanup_start", "number": 88, "total": 95, "path": "WR5225 G3/lxce_ux_cplus_ug.pdf"}
+{"event": "cleanup_complete", "number": 88, "path": "WR5225 G3/lxce_ux_cplus_ug.pdf", "status": "passed", "seconds": 16.391, "error": null}
+{"event": "cleanup_start", "number": 89, "total": 95, "path": "WR5225 G3/psu_label_matrix.pdf"}
+{"event": "cleanup_complete", "number": 89, "path": "WR5225 G3/psu_label_matrix.pdf", "status": "passed", "seconds": 5.658, "error": null}
+{"event": "cleanup_start", "number": 90, "total": 95, "path": "WR5225 G3/wr5225g3_bios_setup_spec_v2.9-turin.pdf"}
+{"event": "cleanup_complete", "number": 90, "path": "WR5225 G3/wr5225g3_bios_setup_spec_v2.9-turin.pdf", "status": "passed", "seconds": 20.448, "error": null}
+{"event": "cleanup_start", "number": 91, "total": 95, "path": "WR5225 G3/wr5225g3_bios_setup_spec_v3.0-genoa.pdf"}
+{"event": "cleanup_complete", "number": 91, "path": "WR5225 G3/wr5225g3_bios_setup_spec_v3.0-genoa.pdf", "status": "passed", "seconds": 20.954, "error": null}
+{"event": "cleanup_start", "number": 92, "total": 95, "path": "WR5225 G3/wr5225g3_user_guide_v6.pdf"}
+{"event": "cleanup_complete", "number": 92, "path": "WR5225 G3/wr5225g3_user_guide_v6.pdf", "status": "passed", "seconds": 142.939, "error": null}
+{"event": "cleanup_start", "number": 93, "total": 95, "path": "WR6220 G5/lenovo_wentian_wr6220g5_user_guide.pdf"}
+{"event": "cleanup_complete", "number": 93, "path": "WR6220 G5/lenovo_wentian_wr6220g5_user_guide.pdf", "status": "passed", "seconds": 139.996, "error": null}
+{"event": "cleanup_start", "number": 94, "total": 95, "path": "WR6220 G5/lp2468.pdf"}
+{"event": "cleanup_complete", "number": 94, "path": "WR6220 G5/lp2468.pdf", "status": "passed", "seconds": 27.515, "error": null}
+{"event": "cleanup_start", "number": 95, "total": 95, "path": "WR6220 G5/lp2502.pdf"}
+{"event": "cleanup_complete", "number": 95, "path": "WR6220 G5/lp2502.pdf", "status": "passed", "seconds": 9.175, "error": null}
+{"total": 95, "passed": 95}

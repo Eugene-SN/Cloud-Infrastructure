@@ -1,0 +1,39 @@
+{
+  "path": "WA5685 G5/lp2507.pdf",
+  "input_sha256": "e57262389e68449ca7700dd441d57aee294ccb932279af9c0e2090aa2ba98189",
+  "adapter_result": {
+    "ok": true,
+    "cli_rc": 0,
+    "summary": {
+      "schema_version": 1,
+      "tool_version": "0.1.3",
+      "source_commit": "9c9bbb375751f85ca1e6f737504f3e99a68fd3d5",
+      "input": "/tmp/pdf-cleanup-aiqao31c/input/source.pdf",
+      "output": "/tmp/pdf-cleanup-aiqao31c/output/cleaned.pdf",
+      "input_sha256": "e57262389e68449ca7700dd441d57aee294ccb932279af9c0e2090aa2ba98189",
+      "pages": 2,
+      "header_footer_fragments": 0,
+      "removed_header_rows": 0,
+      "removed_footer_rows": 0,
+      "footer_pages": 0,
+      "removed_links": {},
+      "removed_widgets": 1,
+      "cleanup_method": "text_show_operations",
+      "status": "cleaned",
+      "output_sha256": "9e669938e712a8e4025f30b09fe4215d9a7ebb634ecaca20d4c80f0114b3d3d6",
+      "validation": "passed"
+    },
+    "stderr": "fontTools is required to fully parse the encoding of a CFF Type1 font in font dictionary {'/BaseFont': '/ZBCWHZ+Gotham-Book', '/Encoding': IndirectObject(173, 0, 125143127900576), '/FirstChar': 31, '/FontDescriptor': IndirectObject(174, 0, 125143127900576), '/LastChar': 215, '/Subtype': '/Type1', '/Type': '/Font', '/Widths': [631, 300, 0, 0, 0, 0, 834, 0, 0, 0, 0, 430, 625, 0, 408, 244, 508, 715, 358, 599, 613, 671, 612, 647, 596, 630, 647, 0, 0, 0, 0, 0, 0, 0, 790, 722, 742, 782, 670, 0, 784, 760, 291, 0, 719, 615, 868, 790, 850, 668, 0, 723, 640, 641, 759, 750, 1107, 0, 716, 0, 0, 0, 0, 0, 0, 0, 579, 664, 571, 664, 592, 367, 0, 616, 263, 0, 569, 263, 948, 616, 646, 664, 0, 405, 498, 404, 616, 587, 861, 574, 591, 0, 0, 0, 0, 473, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 478, 0, 0, 0, 690, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 830, 0, 0, 0, 0, 0, 0, 458, 0, 0, 0, 0, 0, 0, 244, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 625]}, but is not installed. Consider installing fontTools if you encounter encoding problems.\nfontTools is required to fully parse the encoding of a CFF Type1 font in font dictionary {'/BaseFont': '/BMZDEV+Gotham-Bold', '/Encoding': '/WinAnsiEncoding', '/FirstChar': 32, '/FontDescriptor': IndirectObject(175, 0, 125143127900576), '/LastChar': 87, '/Subtype': '/Type1', '/Type': '/Font', '/Widths': [300, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 630, 662, 0, 630, 0, 0, 0, 0, 0, 0, 0, 0, 790, 0, 0, 0, 0, 0, 784, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1122]}, but is not installed. Consider installing fontTools if you encounter encoding problems.\nfontTools is required to fully parse the encoding of a CFF Type1 font in font dictionary {'/BaseFont': '/ZBCWHZ+Gotham-Book', '/Encoding': IndirectObject(173, 0, 125143127900576), '/FirstChar': 31, '/FontDescriptor': IndirectObject(174, 0, 125143127900576), '/LastChar': 215, '/Subtype': '/Type1', '/Type': '/Font', '/Widths': [631, 300, 0, 0, 0, 0, 834, 0, 0, 0, 0, 430, 625, 0, 408, 244, 508, 715, 358, 599, 613, 671, 612, 647, 596, 630, 647, 0, 0, 0, 0, 0, 0, 0, 790, 722, 742, 782, 670, 0, 784, 760, 291, 0, 719, 615, 868, 790, 850, 668, 0, 723, 640, 641, 759, 750, 1107, 0, 716, 0, 0, 0, 0, 0, 0, 0, 579, 664, 571, 664, 592, 367, 0, 616, 263, 0, 569, 263, 948, 616, 646, 664, 0, 405, 498, 404, 616, 587, 861, 574, 591, 0, 0, 0, 0, 473, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 478, 0, 0, 0, 690, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 830, 0, 0, 0, 0, 0, 0, 458, 0, 0, 0, 0, 0, 0, 244, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 625]}, but is not installed. Consider installing fontTools if you encounter encoding problems.\nfontTools is required to fully parse the encoding of a CFF Type1 font in font dictionary {'/BaseFont': '/XGBFAD+Gotham-Medium', '/Encoding': '/WinAnsiEncoding', '/FirstChar': 32, '/FontDescriptor': IndirectObject(185, 0, 125143127900576), '/LastChar': 57, '/Subtype': '/Type1', '/Type': '/Font', '/Widths': [300, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 724, 396, 0, 0, 681, 0, 656, 609, 630, 656]}, but is not installed. Consider installing fontTools if you encounter encoding problems.\nfontTools is required to fully parse the encoding of a CFF Type1 font in font dictionary {'/Type': '/Font', '/Subtype': '/Type1', '/BaseFont': '/ZBCWHZ+Gotham-Book', '/Encoding': IndirectObject(38, 0, 125143128963216), '/FirstChar': 31, '/FontDescriptor': IndirectObject(39, 0, 125143128963216), '/LastChar': 215, '/Widths': [631, 300, 0, 0, 0, 0, 834, 0, 0, 0, 0, 430, 625, 0, 408, 244, 508, 715, 358, 599, 613, 671, 612, 647, 596, 630, 647, 0, 0, 0, 0, 0, 0, 0, 790, 722, 742, 782, 670, 0, 784, 760, 291, 0, 719, 615, 868, 790, 850, 668, 0, 723, 640, 641, 759, 750, 1107, 0, 716, 0, 0, 0, 0, 0, 0, 0, 579, 664, 571, 664, 592, 367, 0, 616, 263, 0, 569, 263, 948, 616, 646, 664, 0, 405, 498, 404, 616, 587, 861, 574, 591, 0, 0, 0, 0, 473, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 478, 0, 0, 0, 690, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 830, 0, 0, 0, 0, 0, 0, 458, 0, 0, 0, 0, 0, 0, 244, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 625]}, but is not installed. Consider installing fontTools if you encounter encoding problems.\nfontTools is required to fully parse the encoding of a CFF Type1 font in font dictionary {'/Type': '/Font', '/Subtype': '/Type1', '/BaseFont': '/BMZDEV+Gotham-Bold', '/Encoding': '/WinAnsiEncoding', '/FirstChar': 32, '/FontDescriptor': IndirectObject(40, 0, 125143128963216), '/LastChar': 87, '/Widths': [300, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 630, 662, 0, 630, 0, 0, 0, 0, 0, 0, 0, 0, 790, 0, 0, 0, 0, 0, 784, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1122]}, but is not installed. Consider installing fontTools if you encounter encoding problems.\nfontTools is required to fully parse the encoding of a CFF Type1 font in font dictionary {'/Type': '/Font', '/Subtype': '/Type1', '/BaseFont': '/ZBCWHZ+Gotham-Book', '/Encoding': IndirectObject(38, 0, 125143128963216), '/FirstChar': 31, '/FontDescriptor': IndirectObject(39, 0, 125143128963216), '/LastChar': 215, '/Widths': [631, 300, 0, 0, 0, 0, 834, 0, 0, 0, 0, 430, 625, 0, 408, 244, 508, 715, 358, 599, 613, 671, 612, 647, 596, 630, 647, 0, 0, 0, 0, 0, 0, 0, 790, 722, 742, 782, 670, 0, 784, 760, 291, 0, 719, 615, 868, 790, 850, 668, 0, 723, 640, 641, 759, 750, 1107, 0, 716, 0, 0, 0, 0, 0, 0, 0, 579, 664, 571, 664, 592, 367, 0, 616, 263, 0, 569, 263, 948, 616, 646, 664, 0, 405, 498, 404, 616, 587, 861, 574, 591, 0, 0, 0, 0, 473, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 478, 0, 0, 0, 690, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 830, 0, 0, 0, 0, 0, 0, 458, 0, 0, 0, 0, 0, 0, 244, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 625]}, but is not installed. Consider installing fontTools if you encounter encoding problems.\nfontTools is required to fully parse the encoding of a CFF Type1 font in font dictionary {'/Type': '/Font', '/Subtype': '/Type1', '/BaseFont': '/XGBFAD+Gotham-Medium', '/Encoding': '/WinAnsiEncoding', '/FirstChar': 32, '/FontDescriptor': IndirectObject(48, 0, 125143128963216), '/LastChar': 57, '/Widths': [300, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 724, 396, 0, 0, 681, 0, 656, 609, 630, 656]}, but is not installed. Consider installing fontTools if you encounter encoding problems.\n",
+    "status": "cleaned",
+    "cleaned": true
+  },
+  "output_sha256": "9e669938e712a8e4025f30b09fe4215d9a7ebb634ecaca20d4c80f0114b3d3d6",
+  "put_status": 201,
+  "webdav_readback": "matched",
+  "output_file": "030.pdf",
+  "index_updated": true,
+  "status": "passed",
+  "job_removed": true,
+  "seconds": 3.789,
+  "image_id": "sha256:7ed12f7c2e7d4ea8f62cbc97210e1cd7dd5a0e1d3ad73a944ca17bcbb4b12fa8"
+}

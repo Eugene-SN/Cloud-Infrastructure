@@ -1,7 +1,7 @@
 # Lenovo PDF cleanup on edge
 
 Status 2026-10-05: **DEPLOYED / VERIFIED**. This supersedes the earlier unpublished,
-single-filename candidate. Current integration evidence: integration-evidence.json.
+single-filename candidate. Current full-catalogue production verification: [acceptance record](../../../PDF_CLEANUP_PRODUCTION_ACCEPTANCE_2026-10-05.md) and [evidence](production-2026-10-05/README.md). Earlier integration evidence: integration-evidence.json.
 
 ## Placement and runtime
 
@@ -19,12 +19,29 @@ Model directories are created once through Nextcloud during onboarding. No direc
 insertion, files:scan, new credential, service, n8n mount or allowlist is needed.
 
 Source was imported from Eugene-SN/documentation-ai
-46f179e9e5c83ff2c12b7ba084efef124afaf338. The imported package with its portable
-originals guard and three guard tests is executable commit
-8257cb36be7856a0abe89ea27562f847fcf45a8e; no upstream merge.
-Package 0.1.3 uses Python 3.14.8, PyMuPDF 1.28.2 and pypdf 6.19.0 in one-shot
-Docker image edge/pdf-cleanup:8257cb36be78. Identities are in deployment.json.
-This integration does not modify the image, algorithm, launcher or adapter.
+46f179e9e5c83ff2c12b7ba084efef124afaf338. Current executable source commit is
+9c9bbb375751f85ca1e6f737504f3e99a68fd3d5: the original edge import, portable
+originals guard and the full-corpus generic cleanup refinement. No upstream merge.
+Package 0.1.3 uses Python 3.14.8, PyMuPDF 1.28.2, pypdf 6.19.0,
+cryptography 50.0.2 and fontTools 4.66.1 in one-shot image
+edge/pdf-cleanup:9c9bbb375751-fonts.
+Image/source identities and source hashes are in deployment.json. The launcher,
+adapter and n8n graphs retain their existing contracts.
+
+The source refinement precisely edits original text operand bytes, handles
+confirmed pure-text Footer Forms and clipping, and qualifies untagged page-number
+candidates by visible crop geometry. It preserves body numbers and whitespace.
+Saving uses garbage=2, deflate and object streams; these are lossless operations.
+A PDF with no cleanup targets is copied byte-for-byte. PDF without footers still
+undergoes link/widget cleanup when those targets exist.
+
+Refinement.Dockerfile is the exact deployment recipe. It starts from
+the verified existing runtime tag, reinstalls the local package with --no-deps,
+and retains installed library versions. It adds the supported pypdf fonts extra
+to fully decode the three observed CFF Type1 PDFs without warnings.
+The parent runtime image has a concrete build-input role; it is not an ad-hoc rollback copy. Dockerfile remains the full
+upstream-supported rebuild recipe. Actual versions must be recorded and tested
+when the operator requests a runtime update; no new version/update policy applies.
 
 ## Autonomous CLI and originals protection
 
@@ -186,7 +203,7 @@ no content-protection check is weakened during model onboarding. Final source,
 execution and publication evidence is under technical-documentation/
 `wa-g3-expansion-evidence.json`.
 
-Expanded isolated quality research (no production deployment):
+Historical isolated quality research (not deployed at that time):
 [2026-10-05 report](../../../PDF_CLEANUP_QUALITY_RESEARCH_2026-10-05.md)
 and [research artifacts](quality-research-2026-10-05/README.md).
 The experiments expose pagination-classification and independent-rendering
@@ -197,5 +214,8 @@ Refined candidate and complete-catalogue verification:
 [2026-10-05 refinement report](../../../PDF_CLEANUP_REFINEMENT_2026-10-05.md),
 [18-document selection](../../../PDF_CLEANUP_TEST_SELECTION_2026-10-05.md),
 and [candidate/test artifacts](refinement-2026-10-05/README.md).
-This isolated workstream preserves the production import and originals guard;
-the candidate is not deployed.
+That isolated workstream preserved the production import and originals guard;
+it was not deployed at the time of that record. Its candidate has now been
+deployed and all 95 paths rebuilt and independently verified. See the current
+production acceptance record above. The earlier five cleanup failures are
+resolved for the current documents; their historical records are retained.
