@@ -1,42 +1,397 @@
 {
   "id": "QouVaVNhAqSiYq5D",
-  "name": "TechnicalDocumentationSync01",
+  "name": "TechnicalDocumentationSync",
   "active": true,
-  "isArchived": false,
-  "versionId": "af23c9a9-9b54-495f-b684-f6e37f7b7163",
-  "activeVersionId": "af23c9a9-9b54-495f-b684-f6e37f7b7163",
-  "triggerCount": 1,
-  "nodeCount": 16,
-  "createdAt": "2026-10-05T10:38:15.787Z",
-  "updatedAt": "2026-10-05T11:23:09.427Z",
-  "settings": {
-    "executionOrder": "v1",
-    "availableInMCP": true,
-    "timezone": "Europe/Minsk"
-  },
-  "tags": [],
-  "parentFolderId": null,
-  "description": "Daily WR5220 G3 documentation sync from Lenovo ASP and Lenovo Press. Replace updated originals through Nextcloud WebDAV and maintain the compact INDEX.html; models configured in one node.",
-  "scopes": [
-    "execution:reveal",
-    "workflow:create",
-    "workflow:delete",
-    "workflow:disableRedaction",
-    "workflow:enableRedaction",
-    "workflow:execute",
-    "workflow:execute-chat",
-    "workflow:export",
-    "workflow:import",
-    "workflow:list",
-    "workflow:move",
-    "workflow:publish",
-    "workflow:read",
-    "workflow:share",
-    "workflow:unpublish",
-    "workflow:unshare",
-    "workflow:update"
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 7
+            }
+          ]
+        }
+      },
+      "id": "f64eda74-3808-4a1d-8ae8-8b406ec6c292",
+      "name": "Daily 07:00",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "url": "http://nextcloud.edge.internal/remote.php/webdav/technical-documentation/lenovo/originals/INDEX.html",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "nextCloudApi",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "text"
+            }
+          },
+          "timeout": 120000
+        }
+      },
+      "id": "260bf53c-0ee5-41f9-92d1-47e2286a7c8d",
+      "name": "Read INDEX",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        224,
+        0
+      ],
+      "credentials": {
+        "nextCloudApi": {
+          "id": "6MEdI2Cs7tEUiM7o",
+          "name": "Nextcloud - operator automation"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const models = [\n  {\n    \"folder\": \"WR3220 G5\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/C342B075-351E-47EA-BE1F-DBAFE95A46A0\",\n    \"press\": [\n      {\n        \"key\": \"product-guide\",\n        \"title\": \"Product Guide Lenovo Wentian WR3220 G5\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2440.pdf\",\n        \"language\": \"unknown\"\n      }\n    ],\n    \"labels\": {\n      \"lenovo_wentian_wr3220g5_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WR3220 G5\"\n      ],\n      \"lxce_bomc_cplus_ug\": [\n        \"bomc-user-guide\",\n        \"User Guide Lenovo XClarity Essentials BoMC cPlus\"\n      ],\n      \"lxce_onecli_cplus_ug\": [\n        \"onecli-user-guide\",\n        \"User Guide Lenovo XClarity Essentials OneCLI cPlus\"\n      ],\n      \"lxce_ux_cplus_ug\": [\n        \"updatexpress-user-guide\",\n        \"User Guide Lenovo XClarity Essentials UpdateXpress cPlus\"\n      ]\n    }\n  },\n  {\n    \"folder\": \"WR5215 G5\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/2965B165-6320-4D06-BD34-8350DBC4B616\",\n    \"press\": [\n      {\n        \"key\": \"product-guide\",\n        \"title\": \"Product Guide Lenovo Wentian WR5215 G5\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2356.pdf\",\n        \"language\": \"unknown\"\n      }\n    ],\n    \"labels\": {\n      \"lenovo_wentian_wr5215g5_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WR5215 G5\"\n      ],\n      \"lenovo_bmc_user_guide_g5\": [\n        \"bmc-enterprise-user-guide\",\n        \"User Guide Lenovo BMC Enterprise G5\"\n      ],\n      \"lenovo_bmc_commands_g5\": [\n        \"bmc-ipmi-specification\",\n        \"IPMI Command Specification Lenovo BMC G5\"\n      ],\n      \"lenovo_bmc_snmp_guide_g5\": [\n        \"bmc-snmp-reference\",\n        \"SNMP Reference Guide Lenovo BMC G5\"\n      ],\n      \"lenovo_bmc_redfish_guide_g5\": [\n        \"bmc-redfish-specification\",\n        \"Redfish Interface Specification Lenovo BMC G5\"\n      ],\n      \"lxce_bomc_cplus_ug\": [\n        \"bomc-user-guide\",\n        \"User Guide Lenovo XClarity Essentials BoMC cPlus\"\n      ],\n      \"lxce_onecli_cplus_ug\": [\n        \"onecli-user-guide\",\n        \"User Guide Lenovo XClarity Essentials OneCLI cPlus\"\n      ],\n      \"lxce_ux_cplus_ug\": [\n        \"updatexpress-user-guide\",\n        \"User Guide Lenovo XClarity Essentials UpdateXpress cPlus\"\n      ]\n    }\n  },\n  {\n    \"folder\": \"WR5220 G3\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/5D07DC93-3C2A-4986-BBB4-A04A44FAB99E\",\n    \"press\": [\n      {\n        \"key\": \"product-guide\",\n        \"title\": \"Product Guide Lenovo Wentian WR5220 G3\",\n        \"url\": \"https://lenovopress.lenovo.com/lp1705.pdf\",\n        \"language\": \"zh\"\n      }\n    ],\n    \"labels\": {\n      \"lenovo_wentian_wr5220g3_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WR5220 G3\"\n      ],\n      \"lenovo_wentian_os_installation_guide\": [\n        \"os-installation-guide\",\n        \"OS Installation Guide Lenovo Wentian\"\n      ],\n      \"lenovo_bmc_g3_commands_guide\": [\n        \"bmc-ipmi-specification\",\n        \"IPMI Command Specification Lenovo BMC\"\n      ],\n      \"lenovo_bmc_event_reference_guide\": [\n        \"bmc-event-reference\",\n        \"Event Reference Guide Lenovo BMC\"\n      ],\n      \"lenovo_snmp_ug_g3\": [\n        \"bmc-snmp-reference\",\n        \"SNMP Reference Guide Lenovo BMC\"\n      ],\n      \"bmc_user_guide\": [\n        \"bmc-enterprise-user-guide\",\n        \"User Guide Lenovo BMC Enterprise G3\"\n      ],\n      \"lenovo_bmc_g3_redfish_guide\": [\n        \"bmc-redfish-specification\",\n        \"Redfish Interface Specification Lenovo BMC G3\"\n      ],\n      \"lxce_bomc_cplus_ug\": [\n        \"bomc-user-guide\",\n        \"User Guide Lenovo XClarity Essentials BoMC cPlus\"\n      ],\n      \"lxce_onecli_cplus_ug\": [\n        \"onecli-user-guide\",\n        \"User Guide Lenovo XClarity Essentials OneCLI cPlus\"\n      ],\n      \"lxce_ux_cplus_ug\": [\n        \"updatexpress-user-guide\",\n        \"User Guide Lenovo XClarity Essentials UpdateXpress cPlus\"\n      ],\n      \"lxpm_wentian_ug\": [\n        \"lxpm-user-guide\",\n        \"User Guide Lenovo XClarity Provisioning Manager Wentian\"\n      ],\n      \"wr5220g3_bios_setup_spec\": [\n        \"bios-setup-specification\",\n        \"BIOS Setup Specification Lenovo Wentian WR5220 G3\"\n      ],\n      \"psu_label_matrix\": [\n        \"psu-label-matrix\",\n        \"PSU Label Matrix Lenovo\"\n      ],\n      \"vmware_code_recipe_file\": [\n        \"vmware-code-recipe\",\n        \"VMware Code Recipe File\"\n      ]\n    }\n  },\n  {\n    \"folder\": \"WR5220 G5\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/EDF3440A-96A1-463B-9A35-C871B3B28AA1\",\n    \"press\": [\n      {\n        \"key\": \"product-guide\",\n        \"title\": \"Product Guide Lenovo Wentian WR5220 G5\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2014.pdf\",\n        \"language\": \"unknown\"\n      },\n      {\n        \"key\": \"sap-certifications\",\n        \"title\": \"SAP Certifications of Lenovo Servers\",\n        \"url\": \"https://lenovopress.lenovo.com/lp1728.pdf\",\n        \"language\": \"en\"\n      }\n    ],\n    \"labels\": {\n      \"lenovo_wentian_wr5220g5_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WR5220 G5\"\n      ],\n      \"lenovo_wentian_os_installation_guide\": [\n        \"os-installation-guide\",\n        \"OS Installation Guide Lenovo Wentian\"\n      ],\n      \"lenovo_bmc_user_guide_g5\": [\n        \"bmc-enterprise-user-guide\",\n        \"User Guide Lenovo BMC Enterprise G5\"\n      ],\n      \"lenovo_bmc_commands_g5\": [\n        \"bmc-ipmi-specification\",\n        \"IPMI Command Specification Lenovo BMC G5\"\n      ],\n      \"lenovo_bmc_snmp_guide_g5\": [\n        \"bmc-snmp-reference\",\n        \"SNMP Reference Guide Lenovo BMC G5\"\n      ],\n      \"lenovo_bmc_redfish_guide_g5\": [\n        \"bmc-redfish-specification\",\n        \"Redfish Interface Specification Lenovo BMC G5\"\n      ],\n      \"lenovo_bmc_event_reference_guide\": [\n        \"bmc-event-reference\",\n        \"Event Reference Guide Lenovo BMC G3/G5\"\n      ],\n      \"lxpm_wentian_ug\": [\n        \"lxpm-user-guide\",\n        \"User Guide Lenovo XClarity Provisioning Manager Wentian\"\n      ],\n      \"lxce_bomc_cplus_ug\": [\n        \"bomc-user-guide\",\n        \"User Guide Lenovo XClarity Essentials BoMC cPlus\"\n      ],\n      \"lxce_onecli_cplus_ug\": [\n        \"onecli-user-guide\",\n        \"User Guide Lenovo XClarity Essentials OneCLI cPlus\"\n      ],\n      \"lxce_ux_cplus_ug\": [\n        \"updatexpress-user-guide\",\n        \"User Guide Lenovo XClarity Essentials UpdateXpress cPlus\"\n      ],\n      \"psu_label_matrix\": [\n        \"psu-label-matrix\",\n        \"PSU Label Matrix Lenovo\"\n      ]\n    }\n  },\n  {\n    \"folder\": \"WR5225 G3\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/738CA58A-E195-47E6-A61D-248870091B2C\",\n    \"press\": [\n      {\n        \"key\": \"product-guide\",\n        \"title\": \"Product Guide Lenovo Wentian WR5225 G3\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2129.pdf\",\n        \"language\": \"unknown\"\n      }\n    ],\n    \"labels\": {\n      \"wr5225g3_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WR5225 G3\"\n      ],\n      \"lenovo_wentian_os_installation_guide\": [\n        \"os-installation-guide\",\n        \"OS Installation Guide Lenovo Wentian\"\n      ],\n      \"wr5225g3_bios_setup_spec-genoa\": [\n        \"bios-setup-specification-genoa\",\n        \"BIOS Setup Specification Lenovo Wentian WR5225 G3 — Genoa\"\n      ],\n      \"wr5225g3_bios_setup_spec-turin\": [\n        \"bios-setup-specification-turin\",\n        \"BIOS Setup Specification Lenovo Wentian WR5225 G3 — Turin\"\n      ],\n      \"lenovo_snmp_ug_g3\": [\n        \"bmc-snmp-reference\",\n        \"SNMP Reference Guide Lenovo BMC G3\"\n      ],\n      \"lenovo_bmc_g3_redfish_guide\": [\n        \"bmc-redfish-specification\",\n        \"Redfish Interface Specification Lenovo BMC G3\"\n      ],\n      \"lenovo_bmc_event_reference_guide\": [\n        \"bmc-event-reference\",\n        \"Event Reference Guide Lenovo BMC G3/G5\"\n      ],\n      \"lxce_bomc_cplus_ug\": [\n        \"bomc-user-guide\",\n        \"User Guide Lenovo XClarity Essentials BoMC cPlus\"\n      ],\n      \"lxce_onecli_cplus_ug\": [\n        \"onecli-user-guide\",\n        \"User Guide Lenovo XClarity Essentials OneCLI cPlus\"\n      ],\n      \"lxce_ux_cplus_ug\": [\n        \"updatexpress-user-guide\",\n        \"User Guide Lenovo XClarity Essentials UpdateXpress cPlus\"\n      ],\n      \"psu_label_matrix\": [\n        \"psu-label-matrix\",\n        \"PSU Label Matrix Lenovo\"\n      ]\n    }\n  },\n  {\n    \"folder\": \"WR6220 G5\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/96C91746-0B94-43FD-9679-AEE8D447ECFB\",\n    \"press\": [\n      {\n        \"key\": \"product-guide\",\n        \"title\": \"Product Guide Lenovo Wentian WR6220 G5\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2468.pdf\",\n        \"language\": \"unknown\"\n      },\n      {\n        \"key\": \"datasheet\",\n        \"title\": \"Datasheet Lenovo Wentian WR6220 G5\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2502.pdf\",\n        \"language\": \"unknown\"\n      }\n    ],\n    \"labels\": {\n      \"lenovo_wentian_wr6220g5_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WR6220 G5\"\n      ]\n    }\n  },\n  {\n    \"folder\": \"WA5480 G5\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/FA7C53C0-E6C1-494C-9581-EA0B9EC4937F\",\n    \"press\": [],\n    \"labels\": {\n      \"lenovo_wentian_wa5480g5_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WA5480 G5\"\n      ],\n      \"lenovo_wentian_os_installation_guide\": [\n        \"os-installation-guide\",\n        \"OS Installation Guide Lenovo Wentian\"\n      ],\n      \"wa5480g5_bios_setup_spec\": [\n        \"bios-setup-specification\",\n        \"BIOS Setup Specification Lenovo Wentian WA5480 G5\"\n      ],\n      \"lenovo_bmc_user_guide_g5\": [\n        \"bmc-enterprise-user-guide\",\n        \"User Guide Lenovo BMC Enterprise G5\"\n      ],\n      \"lenovo_bmc_commands_g5\": [\n        \"bmc-ipmi-specification\",\n        \"IPMI Command Specification Lenovo BMC G5\"\n      ],\n      \"lenovo_bmc_snmp_guide_g5\": [\n        \"bmc-snmp-reference\",\n        \"SNMP Reference Guide Lenovo BMC G5\"\n      ],\n      \"lenovo_bmc_redfish_guide_g5\": [\n        \"bmc-redfish-specification\",\n        \"Redfish Interface Specification Lenovo BMC G5\"\n      ],\n      \"lenovo_bmc_event_reference_guide\": [\n        \"bmc-event-reference\",\n        \"Event Reference Guide Lenovo BMC G3/G5\"\n      ],\n      \"lxpm_wentian_ug\": [\n        \"lxpm-user-guide\",\n        \"User Guide Lenovo XClarity Provisioning Manager Wentian\"\n      ],\n      \"lxce_bomc_cplus_ug\": [\n        \"bomc-user-guide\",\n        \"User Guide Lenovo XClarity Essentials BoMC cPlus\"\n      ],\n      \"lxce_onecli_cplus_ug\": [\n        \"onecli-user-guide\",\n        \"User Guide Lenovo XClarity Essentials OneCLI cPlus\"\n      ],\n      \"lxce_ux_cplus_ug\": [\n        \"updatexpress-user-guide\",\n        \"User Guide Lenovo XClarity Essentials UpdateXpress cPlus\"\n      ],\n      \"psu_label_matrix\": [\n        \"psu-label-matrix\",\n        \"PSU Label Matrix Lenovo\"\n      ]\n    }\n  },\n  {\n    \"folder\": \"WA5680 G5\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/F5C5B634-8B65-4226-84B1-4C05F13160D9\",\n    \"press\": [\n      {\n        \"key\": \"product-guide\",\n        \"title\": \"Product Guide Lenovo Wentian WA5680 G5\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2469.pdf\",\n        \"language\": \"unknown\"\n      },\n      {\n        \"key\": \"datasheet\",\n        \"title\": \"Datasheet Lenovo Wentian WA5680 G5\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2506.pdf\",\n        \"language\": \"unknown\"\n      }\n    ],\n    \"labels\": {\n      \"lenovo_wentian_wa5680g5_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WA5680 G5\"\n      ],\n      \"lenovo_wentian_wa5680g5_bios_setup_spec\": [\n        \"bios-setup-specification\",\n        \"BIOS Setup Specification Lenovo Wentian WA5680 G5\"\n      ]\n    }\n  },\n  {\n    \"folder\": \"WA5685 G5\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/A9383A8C-EAA4-4DE9-BD5A-44E26ACF44D5\",\n    \"press\": [\n      {\n        \"key\": \"product-guide\",\n        \"title\": \"Product Guide Lenovo Wentian WA5685 G5\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2399.pdf\",\n        \"language\": \"unknown\"\n      },\n      {\n        \"key\": \"datasheet\",\n        \"title\": \"Datasheet Lenovo Wentian WA5685 G5\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2507.pdf\",\n        \"language\": \"unknown\"\n      }\n    ],\n    \"labels\": {\n      \"wa5685g5_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WA5685 G5\"\n      ]\n    }\n  }\n];\nreturn models.map(model => ({json:{model}}));\n"
+      },
+      "id": "26c481c0-5fa5-4636-858e-c1600277013e",
+      "name": "Models and Index",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        448,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://api.asp.atlenovo.com/asp/isg/infomartion/getUserGuide",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "fullGuid",
+              "value": "={{ $json.model.fullGuid }}"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "json"
+            }
+          },
+          "timeout": 120000
+        }
+      },
+      "id": "033c05f2-fd4f-4a94-bf8f-0baa2fedb06d",
+      "name": "Read Lenovo ASP",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        672,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst result = [];\nfor (const [i, item] of $input.all().entries()) {\n  const model = $('Models and Index').all()[i].json.model;\n  const families = new Map();\n  for (const row of item.json.body.data) {\n    const filename = decodeURIComponent(row.url.split('?')[0].split('/').pop());\n    let family = filename.toLowerCase().replace(/\\.pdf$/, '').replace(/[_-]v\\d+(?:\\.\\d+)*$/, '');\n    family = family.replace(/[_-]v\\d+(?:\\.\\d+)*-(genoa|turin)$/, '-$1');\n    if (/^lenovo_bmc_event_reference_guide_g[35]$/.test(family)) family = 'lenovo_bmc_event_reference_guide';\n    const label = model.labels[family] ?? [family, row.title.trim().replace(/\\s+V?\\d+(?:\\.\\d+)*$/i, '')];\n    const doc = {key:model.folder+'/'+label[0], title:label[1], folder:model.folder,\n      source_title:row.title.trim(), source_updated:row.updated, source_url:row.url,\n      path:model.folder+'/'+filename, language:row.isChinese ? 'zh' : 'en', source:'asp'};\n    const old = families.get(doc.key);\n    if (!old || doc.source_updated > old.source_updated) families.set(doc.key, doc);\n  }\n  for (const doc of families.values()) result.push({json:doc, pairedItem:{item:i}});\n  for (const press of model.press) result.push({json:{key:model.folder+'/'+press.key,\n    title:press.title, folder:model.folder, path:model.folder+'/'+press.url.split('?')[0].split('/').pop(),\n    source_title:'Lenovo Press '+press.key, source_url:press.url, source_updated:null,\n    language:press.language, source:'press'}, pairedItem:{item:i}});\n}\nreturn result;\n"
+      },
+      "id": "5165881d-e985-43a6-b919-205d52fc3874",
+      "name": "Latest Document Families",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "HEAD",
+        "url": "={{ $json.source_url }}",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "text"
+            }
+          },
+          "timeout": 120000
+        }
+      },
+      "id": "64570da1-0822-4b43-a8a2-2404b9caabff",
+      "name": "Read Remote Version",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1104,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst html = $('Read INDEX').first().json.data;\nconst catalog = JSON.parse(html.match(/<script id=\"catalog-data\" type=\"application\\/json\">([\\s\\S]*?)<\\/script>/)[1]);\nconst previous = new Map(catalog.documents.map(d => [d.key, d]));\nconst candidates = $('Latest Document Families').all();\nconst result = [];\nfor (const [i,item] of $input.all().entries()) {\n  const doc = {...candidates[i].json};\n  const h = item.json.headers;\n  doc.remote_validator = {etag:h.etag ?? null, last_modified:h['last-modified'] ?? null,\n    content_length:Number(h['content-length']) || null};\n  if (doc.source === 'press') doc.source_updated = h['last-modified'] ? new Date(h['last-modified']).toISOString().slice(0,10) : null;\n  const old = previous.get(doc.key);\n  const v = old?.remote_validator;\n  const sameBytes = v && (doc.remote_validator.etag && v.etag\n    ? doc.remote_validator.etag === v.etag\n    : doc.remote_validator.last_modified === v.last_modified && doc.remote_validator.content_length === v.content_length);\n  if (old && old.source_url === doc.source_url && old.source_updated === doc.source_updated && sameBytes) continue;\n  doc.title = old?.title ?? doc.title;\n  doc.old_path = old?.path !== doc.path ? old?.path ?? null : null;\n  const dav = 'http://nextcloud.edge.internal/remote.php/webdav/technical-documentation/lenovo/originals/';\n  doc.destination_url = dav + doc.path.split('/').map(encodeURIComponent).join('/');\n  doc.old_url = doc.old_path ? dav + doc.old_path.split('/').map(encodeURIComponent).join('/') : null;\n  result.push({json:doc, pairedItem:{item:i}});\n}\nreturn result;\n"
+      },
+      "id": "7231f615-b4da-4101-98c1-be8b9d955057",
+      "name": "Changed Documents",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1328,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nlet html = $('Read INDEX').first().json.data;\nconst pattern = /(<script id=\"catalog-data\" type=\"application\\/json\">)([\\s\\S]*?)(<\\/script>)/;\nconst catalog = JSON.parse(html.match(pattern)[2]);\nconst documents = new Map(catalog.documents.map(d => [d.key,d]));\nconst files = $input.all().map(item=>({path:item.json.path, previous_path:item.json.previous_path ?? ''}));\nfor (const item of $input.all()) {\n  const doc = {...item.json};\n  delete doc.previous_path;\n  documents.set(doc.key, doc);\n}\ncatalog.documents = [...documents.values()];\ncatalog.folders = [...new Set([...catalog.folders, ...catalog.documents.map(d=>d.folder)])].sort();\ncatalog.generated_at = $now.toISO();\nconst data = JSON.stringify(catalog, null, 2).replace(/</g,'\\\\u003c');\nhtml = html.replace(pattern, (_,a,b,c)=>a+data+c);\nconst cleanupDetails = \"   more.append(node('p','Очистка: '+(d.cleanup_status==='cleaned' ? 'Завершена' : d.cleanup_status==='pending' ? 'Ожидает очистки' : 'Не выполнялась')));\\n\" +\n  \"   if(d.cleaned_at)more.append(node('p','Очищен: '+new Date(d.cleaned_at).toLocaleString('ru-RU',{timeZone:'Europe/Minsk'})));\\n\" +\n  \"   if(d.cleanup_status==='cleaned'&&d.cleaned_path){const clean=node('a','Очищенный PDF');clean.href='../cleaned/'+d.cleaned_path.split('/').map(encodeURIComponent).join('/');clean.target='_blank';clean.rel='noopener';more.append(clean);}\\n\";\nif (!html.includes(\"Очистка: \")) {\n  const anchor = \"   more.append(node('p','Сохранён в originals: '+(d.saved_at||'дата неизвестна')));\\n\";\n  html = html.replace(anchor, anchor+cleanupDetails);\n}\nconst escape = s => String(s).replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',\"'\":'&#39;'}[c]));\nconst folders = catalog.folders.map(folder => {\n  const docs = catalog.documents.filter(d => d.folder === folder);\n  return '<details><summary>'+escape(folder)+' — '+docs.length+' документов</summary><ul>'+docs.map(d=>\n    '<li><a href=\"'+escape(d.path.split('/').map(encodeURIComponent).join('/'))+'\">'+escape(d.title)+'</a></li>').join('')+'</ul></details>';\n}).join('');\nhtml = html.replace(/<div class=\"noscript\">[\\s\\S]*?<\\/div>/, '<div class=\"noscript\">'+folders+'<p>Для поиска и постраничного просмотра включите JavaScript.</p></div>');\nhtml = html.replace('Дата источника — дата обновления в каталоге производителя.', 'Дата источника — дата обновления в каталоге производителя; для Lenovo Press — Last-Modified PDF.');\nreturn [{json:{html, updated:$input.all().length, documents:catalog.documents.length, files}}];\n"
+      },
+      "id": "c3cdf218-9455-439c-bdaf-ecf7bcb72ae7",
+      "name": "Update INDEX",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        704
+      ]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "http://nextcloud.edge.internal/remote.php/webdav/technical-documentation/lenovo/originals/INDEX.html",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "nextCloudApi",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "text/html; charset=utf-8",
+        "body": "={{ $json.html }}",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          },
+          "timeout": 120000
+        }
+      },
+      "id": "ffed022e-8de4-4ef9-a413-599d6caf7be6",
+      "name": "Save INDEX",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        448,
+        704
+      ],
+      "credentials": {
+        "nextCloudApi": {
+          "id": "6MEdI2Cs7tEUiM7o",
+          "name": "Nextcloud - operator automation"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.source_url }}",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "file"
+            }
+          },
+          "timeout": 120000
+        }
+      },
+      "id": "b055be77-da6d-47e1-b010-c745db4283a9",
+      "name": "Download PDF",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        224,
+        448
+      ]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "={{ $('Each Changed PDF').item.json.destination_url }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "nextCloudApi",
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "data",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "text"
+            }
+          },
+          "timeout": 120000
+        }
+      },
+      "id": "c70ccc77-bda4-4b29-bf55-07a2d48a23a0",
+      "name": "Save Original",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        448,
+        448
+      ],
+      "credentials": {
+        "nextCloudApi": {
+          "id": "6MEdI2Cs7tEUiM7o",
+          "name": "Nextcloud - operator automation"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ Boolean($('Each Changed PDF').item.json.old_path) }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "b95a6065-4d39-40bc-b6ae-4469a307c6af",
+      "name": "Filename Changed",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        672,
+        448
+      ]
+    },
+    {
+      "parameters": {
+        "method": "DELETE",
+        "url": "={{ $('Each Changed PDF').item.json.old_url }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "nextCloudApi",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "text"
+            }
+          },
+          "timeout": 120000
+        }
+      },
+      "id": "467bc59b-bda8-4878-b58a-2da2c2d2f6c5",
+      "name": "Remove Previous Filename",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        880,
+        352
+      ],
+      "credentials": {
+        "nextCloudApi": {
+          "id": "6MEdI2Cs7tEUiM7o",
+          "name": "Nextcloud - operator automation"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst response = $input.first().json;\nif (response.statusCode >= 300 && response.statusCode !== 404) throw new Error('WebDAV deletion failed: '+response.statusCode);\nconst doc = {...$('Each Changed PDF').item.json};\nconst h = $('Download PDF').item.json.headers;\ndoc.remote_validator = {etag:h.etag ?? null, last_modified:h['last-modified'] ?? null,\n  content_length:Number(h['content-length']) || doc.remote_validator.content_length};\ndoc.size = doc.remote_validator.content_length;\ndoc.saved_at = $now.toISO();\ndoc.edition = null;\ndoc.pages = null;\ndoc.cleanup_status = 'pending';\ndoc.cleaned_at = null;\ndoc.cleaned_path = null;\ndoc.previous_path = doc.old_path ?? null;\ndelete doc.old_path; delete doc.old_url; delete doc.destination_url;\nreturn [{json:doc}];\n"
+      },
+      "id": "0c6493ac-8881-4e14-8c2d-028bc4345f09",
+      "name": "Saved Document",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1104,
+        448
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "0a256b90-1c39-4292-b3bf-e32378da78da",
+      "name": "Each Changed PDF",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        0,
+        448
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "3e31ce6d-96db-4cdd-a651-ab73dd61c087",
+      "name": "Manual Start",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        160
+      ]
+    },
+    {
+      "id": "8c1bf877-ee6f-449c-948e-bf4e54250364",
+      "name": "Clean Saved PDFs",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        672,
+        704
+      ],
+      "parameters": {
+        "source": "database",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "ENo9jFkwcE4PFOyL"
+        },
+        "mode": "once",
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "files": "={{ $('Update INDEX').first().json.files }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "files",
+              "displayName": "files",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "array"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      }
+    }
   ],
-  "canExecute": true,
   "connections": {
     "Daily 07:00": {
       "main": [
@@ -216,379 +571,68 @@
           }
         ]
       ]
+    },
+    "Save INDEX": {
+      "main": [
+        [
+          {
+            "node": "Clean Saved PDFs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
-  "nodes": [
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": true,
+    "timezone": "Europe/Minsk",
+    "binaryMode": "separate"
+  },
+  "versionId": "53999b07-1a21-4dd2-8aef-2ec2bb43e29b",
+  "activeVersionId": "53999b07-1a21-4dd2-8aef-2ec2bb43e29b",
+  "nodeGroups": [
     {
-      "id": "f64eda74-3808-4a1d-8ae8-8b406ec6c292",
-      "name": "Daily 07:00",
-      "type": "n8n-nodes-base.scheduleTrigger",
-      "typeVersion": 1.4,
-      "position": [
-        0,
-        0
+      "id": "b8b1960d-015f-4ac6-82c7-9e420b348b31",
+      "name": "1. Найти обновления",
+      "nodeNames": [
+        "Read INDEX",
+        "Models and Index",
+        "Read Lenovo ASP",
+        "Latest Document Families",
+        "Read Remote Version",
+        "Changed Documents"
       ],
-      "parameters": {
-        "rule": {
-          "interval": [
-            {
-              "field": "days",
-              "daysInterval": 1,
-              "triggerAtHour": 7,
-              "triggerAtMinute": 0
-            }
-          ]
-        }
-      }
+      "description": "Прочитать каталог и источники, сравнить версии документов."
     },
     {
-      "id": "260bf53c-0ee5-41f9-92d1-47e2286a7c8d",
-      "name": "Read INDEX",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.4,
-      "position": [
-        220,
-        0
+      "id": "8105cf07-b061-47c4-aedf-4e806e50b3d0",
+      "name": "2. Скачать оригиналы",
+      "nodeNames": [
+        "Download PDF",
+        "Save Original",
+        "Filename Changed",
+        "Remove Previous Filename",
+        "Saved Document"
       ],
-      "parameters": {
-        "method": "GET",
-        "url": "http://nextcloud.edge.internal/remote.php/webdav/technical-documentation/lenovo/originals/INDEX.html",
-        "options": {
-          "timeout": 120000,
-          "response": {
-            "response": {
-              "fullResponse": true,
-              "responseFormat": "text",
-              "neverError": false
-            }
-          }
-        },
-        "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "nextCloudApi"
-      },
-      "credentials": {
-        "nextCloudApi": {
-          "id": "6MEdI2Cs7tEUiM7o",
-          "name": "Nextcloud - operator automation"
-        }
-      }
+      "description": "Последовательно скачать обновлённые PDF и заменить старые имена только после сохранения новых."
     },
     {
-      "id": "26c481c0-5fa5-4636-858e-c1600277013e",
-      "name": "Models and Index",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        440,
-        0
+      "id": "22db8990-5d4e-4774-8f88-f8f9013d63fd",
+      "name": "3. INDEX.html → очистка",
+      "nodeNames": [
+        "Update INDEX",
+        "Save INDEX",
+        "Clean Saved PDFs"
       ],
-      "parameters": {
-        "mode": "runOnceForAllItems",
-        "jsCode": "const models = [\n  {\n    \"folder\": \"WR3220 G5\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/C342B075-351E-47EA-BE1F-DBAFE95A46A0\",\n    \"press\": [\n      {\n        \"key\": \"product-guide\",\n        \"title\": \"Product Guide Lenovo Wentian WR3220 G5\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2440.pdf\",\n        \"language\": \"unknown\"\n      }\n    ],\n    \"labels\": {\n      \"lenovo_wentian_wr3220g5_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WR3220 G5\"\n      ],\n      \"lxce_bomc_cplus_ug\": [\n        \"bomc-user-guide\",\n        \"User Guide Lenovo XClarity Essentials BoMC cPlus\"\n      ],\n      \"lxce_onecli_cplus_ug\": [\n        \"onecli-user-guide\",\n        \"User Guide Lenovo XClarity Essentials OneCLI cPlus\"\n      ],\n      \"lxce_ux_cplus_ug\": [\n        \"updatexpress-user-guide\",\n        \"User Guide Lenovo XClarity Essentials UpdateXpress cPlus\"\n      ]\n    }\n  },\n  {\n    \"folder\": \"WR5215 G5\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/2965B165-6320-4D06-BD34-8350DBC4B616\",\n    \"press\": [\n      {\n        \"key\": \"product-guide\",\n        \"title\": \"Product Guide Lenovo Wentian WR5215 G5\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2356.pdf\",\n        \"language\": \"unknown\"\n      }\n    ],\n    \"labels\": {\n      \"lenovo_wentian_wr5215g5_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WR5215 G5\"\n      ],\n      \"lenovo_bmc_user_guide_g5\": [\n        \"bmc-enterprise-user-guide\",\n        \"User Guide Lenovo BMC Enterprise G5\"\n      ],\n      \"lenovo_bmc_commands_g5\": [\n        \"bmc-ipmi-specification\",\n        \"IPMI Command Specification Lenovo BMC G5\"\n      ],\n      \"lenovo_bmc_snmp_guide_g5\": [\n        \"bmc-snmp-reference\",\n        \"SNMP Reference Guide Lenovo BMC G5\"\n      ],\n      \"lenovo_bmc_redfish_guide_g5\": [\n        \"bmc-redfish-specification\",\n        \"Redfish Interface Specification Lenovo BMC G5\"\n      ],\n      \"lxce_bomc_cplus_ug\": [\n        \"bomc-user-guide\",\n        \"User Guide Lenovo XClarity Essentials BoMC cPlus\"\n      ],\n      \"lxce_onecli_cplus_ug\": [\n        \"onecli-user-guide\",\n        \"User Guide Lenovo XClarity Essentials OneCLI cPlus\"\n      ],\n      \"lxce_ux_cplus_ug\": [\n        \"updatexpress-user-guide\",\n        \"User Guide Lenovo XClarity Essentials UpdateXpress cPlus\"\n      ]\n    }\n  },\n  {\n    \"folder\": \"WR5220 G3\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/5D07DC93-3C2A-4986-BBB4-A04A44FAB99E\",\n    \"press\": [\n      {\n        \"key\": \"product-guide\",\n        \"title\": \"Product Guide Lenovo Wentian WR5220 G3\",\n        \"url\": \"https://lenovopress.lenovo.com/lp1705.pdf\",\n        \"language\": \"zh\"\n      }\n    ],\n    \"labels\": {\n      \"lenovo_wentian_wr5220g3_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WR5220 G3\"\n      ],\n      \"lenovo_wentian_os_installation_guide\": [\n        \"os-installation-guide\",\n        \"OS Installation Guide Lenovo Wentian\"\n      ],\n      \"lenovo_bmc_g3_commands_guide\": [\n        \"bmc-ipmi-specification\",\n        \"IPMI Command Specification Lenovo BMC\"\n      ],\n      \"lenovo_bmc_event_reference_guide\": [\n        \"bmc-event-reference\",\n        \"Event Reference Guide Lenovo BMC\"\n      ],\n      \"lenovo_snmp_ug_g3\": [\n        \"bmc-snmp-reference\",\n        \"SNMP Reference Guide Lenovo BMC\"\n      ],\n      \"bmc_user_guide\": [\n        \"bmc-enterprise-user-guide\",\n        \"User Guide Lenovo BMC Enterprise G3\"\n      ],\n      \"lenovo_bmc_g3_redfish_guide\": [\n        \"bmc-redfish-specification\",\n        \"Redfish Interface Specification Lenovo BMC G3\"\n      ],\n      \"lxce_bomc_cplus_ug\": [\n        \"bomc-user-guide\",\n        \"User Guide Lenovo XClarity Essentials BoMC cPlus\"\n      ],\n      \"lxce_onecli_cplus_ug\": [\n        \"onecli-user-guide\",\n        \"User Guide Lenovo XClarity Essentials OneCLI cPlus\"\n      ],\n      \"lxce_ux_cplus_ug\": [\n        \"updatexpress-user-guide\",\n        \"User Guide Lenovo XClarity Essentials UpdateXpress cPlus\"\n      ],\n      \"lxpm_wentian_ug\": [\n        \"lxpm-user-guide\",\n        \"User Guide Lenovo XClarity Provisioning Manager Wentian\"\n      ],\n      \"wr5220g3_bios_setup_spec\": [\n        \"bios-setup-specification\",\n        \"BIOS Setup Specification Lenovo Wentian WR5220 G3\"\n      ],\n      \"psu_label_matrix\": [\n        \"psu-label-matrix\",\n        \"PSU Label Matrix Lenovo\"\n      ],\n      \"vmware_code_recipe_file\": [\n        \"vmware-code-recipe\",\n        \"VMware Code Recipe File\"\n      ]\n    }\n  },\n  {\n    \"folder\": \"WR5220 G5\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/EDF3440A-96A1-463B-9A35-C871B3B28AA1\",\n    \"press\": [\n      {\n        \"key\": \"product-guide\",\n        \"title\": \"Product Guide Lenovo Wentian WR5220 G5\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2014.pdf\",\n        \"language\": \"unknown\"\n      },\n      {\n        \"key\": \"sap-certifications\",\n        \"title\": \"SAP Certifications of Lenovo Servers\",\n        \"url\": \"https://lenovopress.lenovo.com/lp1728.pdf\",\n        \"language\": \"en\"\n      }\n    ],\n    \"labels\": {\n      \"lenovo_wentian_wr5220g5_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WR5220 G5\"\n      ],\n      \"lenovo_wentian_os_installation_guide\": [\n        \"os-installation-guide\",\n        \"OS Installation Guide Lenovo Wentian\"\n      ],\n      \"lenovo_bmc_user_guide_g5\": [\n        \"bmc-enterprise-user-guide\",\n        \"User Guide Lenovo BMC Enterprise G5\"\n      ],\n      \"lenovo_bmc_commands_g5\": [\n        \"bmc-ipmi-specification\",\n        \"IPMI Command Specification Lenovo BMC G5\"\n      ],\n      \"lenovo_bmc_snmp_guide_g5\": [\n        \"bmc-snmp-reference\",\n        \"SNMP Reference Guide Lenovo BMC G5\"\n      ],\n      \"lenovo_bmc_redfish_guide_g5\": [\n        \"bmc-redfish-specification\",\n        \"Redfish Interface Specification Lenovo BMC G5\"\n      ],\n      \"lenovo_bmc_event_reference_guide\": [\n        \"bmc-event-reference\",\n        \"Event Reference Guide Lenovo BMC G3/G5\"\n      ],\n      \"lxpm_wentian_ug\": [\n        \"lxpm-user-guide\",\n        \"User Guide Lenovo XClarity Provisioning Manager Wentian\"\n      ],\n      \"lxce_bomc_cplus_ug\": [\n        \"bomc-user-guide\",\n        \"User Guide Lenovo XClarity Essentials BoMC cPlus\"\n      ],\n      \"lxce_onecli_cplus_ug\": [\n        \"onecli-user-guide\",\n        \"User Guide Lenovo XClarity Essentials OneCLI cPlus\"\n      ],\n      \"lxce_ux_cplus_ug\": [\n        \"updatexpress-user-guide\",\n        \"User Guide Lenovo XClarity Essentials UpdateXpress cPlus\"\n      ],\n      \"psu_label_matrix\": [\n        \"psu-label-matrix\",\n        \"PSU Label Matrix Lenovo\"\n      ]\n    }\n  },\n  {\n    \"folder\": \"WR5225 G3\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/738CA58A-E195-47E6-A61D-248870091B2C\",\n    \"press\": [\n      {\n        \"key\": \"product-guide\",\n        \"title\": \"Product Guide Lenovo Wentian WR5225 G3\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2129.pdf\",\n        \"language\": \"unknown\"\n      }\n    ],\n    \"labels\": {\n      \"wr5225g3_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WR5225 G3\"\n      ],\n      \"lenovo_wentian_os_installation_guide\": [\n        \"os-installation-guide\",\n        \"OS Installation Guide Lenovo Wentian\"\n      ],\n      \"wr5225g3_bios_setup_spec-genoa\": [\n        \"bios-setup-specification-genoa\",\n        \"BIOS Setup Specification Lenovo Wentian WR5225 G3 — Genoa\"\n      ],\n      \"wr5225g3_bios_setup_spec-turin\": [\n        \"bios-setup-specification-turin\",\n        \"BIOS Setup Specification Lenovo Wentian WR5225 G3 — Turin\"\n      ],\n      \"lenovo_snmp_ug_g3\": [\n        \"bmc-snmp-reference\",\n        \"SNMP Reference Guide Lenovo BMC G3\"\n      ],\n      \"lenovo_bmc_g3_redfish_guide\": [\n        \"bmc-redfish-specification\",\n        \"Redfish Interface Specification Lenovo BMC G3\"\n      ],\n      \"lenovo_bmc_event_reference_guide\": [\n        \"bmc-event-reference\",\n        \"Event Reference Guide Lenovo BMC G3/G5\"\n      ],\n      \"lxce_bomc_cplus_ug\": [\n        \"bomc-user-guide\",\n        \"User Guide Lenovo XClarity Essentials BoMC cPlus\"\n      ],\n      \"lxce_onecli_cplus_ug\": [\n        \"onecli-user-guide\",\n        \"User Guide Lenovo XClarity Essentials OneCLI cPlus\"\n      ],\n      \"lxce_ux_cplus_ug\": [\n        \"updatexpress-user-guide\",\n        \"User Guide Lenovo XClarity Essentials UpdateXpress cPlus\"\n      ],\n      \"psu_label_matrix\": [\n        \"psu-label-matrix\",\n        \"PSU Label Matrix Lenovo\"\n      ]\n    }\n  },\n  {\n    \"folder\": \"WR6220 G5\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/96C91746-0B94-43FD-9679-AEE8D447ECFB\",\n    \"press\": [\n      {\n        \"key\": \"product-guide\",\n        \"title\": \"Product Guide Lenovo Wentian WR6220 G5\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2468.pdf\",\n        \"language\": \"unknown\"\n      },\n      {\n        \"key\": \"datasheet\",\n        \"title\": \"Datasheet Lenovo Wentian WR6220 G5\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2502.pdf\",\n        \"language\": \"unknown\"\n      }\n    ],\n    \"labels\": {\n      \"lenovo_wentian_wr6220g5_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WR6220 G5\"\n      ]\n    }\n  },\n  {\n    \"folder\": \"WA5480 G5\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/FA7C53C0-E6C1-494C-9581-EA0B9EC4937F\",\n    \"press\": [],\n    \"labels\": {\n      \"lenovo_wentian_wa5480g5_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WA5480 G5\"\n      ],\n      \"lenovo_wentian_os_installation_guide\": [\n        \"os-installation-guide\",\n        \"OS Installation Guide Lenovo Wentian\"\n      ],\n      \"wa5480g5_bios_setup_spec\": [\n        \"bios-setup-specification\",\n        \"BIOS Setup Specification Lenovo Wentian WA5480 G5\"\n      ],\n      \"lenovo_bmc_user_guide_g5\": [\n        \"bmc-enterprise-user-guide\",\n        \"User Guide Lenovo BMC Enterprise G5\"\n      ],\n      \"lenovo_bmc_commands_g5\": [\n        \"bmc-ipmi-specification\",\n        \"IPMI Command Specification Lenovo BMC G5\"\n      ],\n      \"lenovo_bmc_snmp_guide_g5\": [\n        \"bmc-snmp-reference\",\n        \"SNMP Reference Guide Lenovo BMC G5\"\n      ],\n      \"lenovo_bmc_redfish_guide_g5\": [\n        \"bmc-redfish-specification\",\n        \"Redfish Interface Specification Lenovo BMC G5\"\n      ],\n      \"lenovo_bmc_event_reference_guide\": [\n        \"bmc-event-reference\",\n        \"Event Reference Guide Lenovo BMC G3/G5\"\n      ],\n      \"lxpm_wentian_ug\": [\n        \"lxpm-user-guide\",\n        \"User Guide Lenovo XClarity Provisioning Manager Wentian\"\n      ],\n      \"lxce_bomc_cplus_ug\": [\n        \"bomc-user-guide\",\n        \"User Guide Lenovo XClarity Essentials BoMC cPlus\"\n      ],\n      \"lxce_onecli_cplus_ug\": [\n        \"onecli-user-guide\",\n        \"User Guide Lenovo XClarity Essentials OneCLI cPlus\"\n      ],\n      \"lxce_ux_cplus_ug\": [\n        \"updatexpress-user-guide\",\n        \"User Guide Lenovo XClarity Essentials UpdateXpress cPlus\"\n      ],\n      \"psu_label_matrix\": [\n        \"psu-label-matrix\",\n        \"PSU Label Matrix Lenovo\"\n      ]\n    }\n  },\n  {\n    \"folder\": \"WA5680 G5\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/F5C5B634-8B65-4226-84B1-4C05F13160D9\",\n    \"press\": [\n      {\n        \"key\": \"product-guide\",\n        \"title\": \"Product Guide Lenovo Wentian WA5680 G5\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2469.pdf\",\n        \"language\": \"unknown\"\n      },\n      {\n        \"key\": \"datasheet\",\n        \"title\": \"Datasheet Lenovo Wentian WA5680 G5\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2506.pdf\",\n        \"language\": \"unknown\"\n      }\n    ],\n    \"labels\": {\n      \"lenovo_wentian_wa5680g5_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WA5680 G5\"\n      ],\n      \"lenovo_wentian_wa5680g5_bios_setup_spec\": [\n        \"bios-setup-specification\",\n        \"BIOS Setup Specification Lenovo Wentian WA5680 G5\"\n      ]\n    }\n  },\n  {\n    \"folder\": \"WA5685 G5\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/A9383A8C-EAA4-4DE9-BD5A-44E26ACF44D5\",\n    \"press\": [\n      {\n        \"key\": \"product-guide\",\n        \"title\": \"Product Guide Lenovo Wentian WA5685 G5\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2399.pdf\",\n        \"language\": \"unknown\"\n      },\n      {\n        \"key\": \"datasheet\",\n        \"title\": \"Datasheet Lenovo Wentian WA5685 G5\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2507.pdf\",\n        \"language\": \"unknown\"\n      }\n    ],\n    \"labels\": {\n      \"wa5685g5_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WA5685 G5\"\n      ]\n    }\n  }\n];\nreturn models.map(model => ({json:{model}}));\n"
-      }
-    },
-    {
-      "id": "033c05f2-fd4f-4a94-bf8f-0baa2fedb06d",
-      "name": "Read Lenovo ASP",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.4,
-      "position": [
-        660,
-        0
-      ],
-      "parameters": {
-        "method": "GET",
-        "url": "https://api.asp.atlenovo.com/asp/isg/infomartion/getUserGuide",
-        "options": {
-          "timeout": 120000,
-          "response": {
-            "response": {
-              "fullResponse": true,
-              "responseFormat": "json",
-              "neverError": false
-            }
-          }
-        },
-        "sendQuery": true,
-        "queryParameters": {
-          "parameters": [
-            {
-              "name": "fullGuid",
-              "value": "={{ $json.model.fullGuid }}"
-            }
-          ]
-        }
-      }
-    },
-    {
-      "id": "5165881d-e985-43a6-b919-205d52fc3874",
-      "name": "Latest Document Families",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        880,
-        0
-      ],
-      "parameters": {
-        "mode": "runOnceForAllItems",
-        "jsCode": "\nconst result = [];\nfor (const [i, item] of $input.all().entries()) {\n  const model = $('Models and Index').all()[i].json.model;\n  const families = new Map();\n  for (const row of item.json.body.data) {\n    const filename = decodeURIComponent(row.url.split('?')[0].split('/').pop());\n    let family = filename.toLowerCase().replace(/\\.pdf$/, '').replace(/[_-]v\\d+(?:\\.\\d+)*$/, '');\n    family = family.replace(/[_-]v\\d+(?:\\.\\d+)*-(genoa|turin)$/, '-$1');\n    if (/^lenovo_bmc_event_reference_guide_g[35]$/.test(family)) family = 'lenovo_bmc_event_reference_guide';\n    const label = model.labels[family] ?? [family, row.title.trim().replace(/\\s+V?\\d+(?:\\.\\d+)*$/i, '')];\n    const doc = {key:model.folder+'/'+label[0], title:label[1], folder:model.folder,\n      source_title:row.title.trim(), source_updated:row.updated, source_url:row.url,\n      path:model.folder+'/'+filename, language:row.isChinese ? 'zh' : 'en', source:'asp'};\n    const old = families.get(doc.key);\n    if (!old || doc.source_updated > old.source_updated) families.set(doc.key, doc);\n  }\n  for (const doc of families.values()) result.push({json:doc, pairedItem:{item:i}});\n  for (const press of model.press) result.push({json:{key:model.folder+'/'+press.key,\n    title:press.title, folder:model.folder, path:model.folder+'/'+press.url.split('?')[0].split('/').pop(),\n    source_title:'Lenovo Press '+press.key, source_url:press.url, source_updated:null,\n    language:press.language, source:'press'}, pairedItem:{item:i}});\n}\nreturn result;\n"
-      }
-    },
-    {
-      "id": "64570da1-0822-4b43-a8a2-2404b9caabff",
-      "name": "Read Remote Version",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.4,
-      "position": [
-        1100,
-        0
-      ],
-      "parameters": {
-        "method": "HEAD",
-        "url": "={{ $json.source_url }}",
-        "options": {
-          "timeout": 120000,
-          "response": {
-            "response": {
-              "fullResponse": true,
-              "responseFormat": "text",
-              "neverError": false
-            }
-          }
-        }
-      }
-    },
-    {
-      "id": "7231f615-b4da-4101-98c1-be8b9d955057",
-      "name": "Changed Documents",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        1320,
-        0
-      ],
-      "parameters": {
-        "mode": "runOnceForAllItems",
-        "jsCode": "\nconst html = $('Read INDEX').first().json.data;\nconst catalog = JSON.parse(html.match(/<script id=\"catalog-data\" type=\"application\\/json\">([\\s\\S]*?)<\\/script>/)[1]);\nconst previous = new Map(catalog.documents.map(d => [d.key, d]));\nconst candidates = $('Latest Document Families').all();\nconst result = [];\nfor (const [i,item] of $input.all().entries()) {\n  const doc = {...candidates[i].json};\n  const h = item.json.headers;\n  doc.remote_validator = {etag:h.etag ?? null, last_modified:h['last-modified'] ?? null,\n    content_length:Number(h['content-length']) || null};\n  if (doc.source === 'press') doc.source_updated = h['last-modified'] ? new Date(h['last-modified']).toISOString().slice(0,10) : null;\n  const old = previous.get(doc.key);\n  const v = old?.remote_validator;\n  const sameBytes = v && (doc.remote_validator.etag && v.etag\n    ? doc.remote_validator.etag === v.etag\n    : doc.remote_validator.last_modified === v.last_modified && doc.remote_validator.content_length === v.content_length);\n  if (old && old.source_url === doc.source_url && old.source_updated === doc.source_updated && sameBytes) continue;\n  doc.title = old?.title ?? doc.title;\n  doc.old_path = old?.path !== doc.path ? old?.path ?? null : null;\n  const dav = 'http://nextcloud.edge.internal/remote.php/webdav/technical-documentation/lenovo/originals/';\n  doc.destination_url = dav + doc.path.split('/').map(encodeURIComponent).join('/');\n  doc.old_url = doc.old_path ? dav + doc.old_path.split('/').map(encodeURIComponent).join('/') : null;\n  result.push({json:doc, pairedItem:{item:i}});\n}\nreturn result;\n"
-      }
-    },
-    {
-      "id": "c3cdf218-9455-439c-bdaf-ecf7bcb72ae7",
-      "name": "Update INDEX",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        220,
-        700
-      ],
-      "parameters": {
-        "mode": "runOnceForAllItems",
-        "jsCode": "\nlet html = $('Read INDEX').first().json.data;\nconst pattern = /(<script id=\"catalog-data\" type=\"application\\/json\">)([\\s\\S]*?)(<\\/script>)/;\nconst catalog = JSON.parse(html.match(pattern)[2]);\nconst documents = new Map(catalog.documents.map(d => [d.key,d]));\nfor (const item of $input.all()) documents.set(item.json.key, item.json);\ncatalog.documents = [...documents.values()];\ncatalog.folders = [...new Set([...catalog.folders, ...catalog.documents.map(d=>d.folder)])].sort();\ncatalog.generated_at = $now.toISO();\nconst data = JSON.stringify(catalog, null, 2).replace(/</g,'\\\\u003c');\nhtml = html.replace(pattern, (_,a,b,c)=>a+data+c);\nconst escape = s => String(s).replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',\"'\":'&#39;'}[c]));\nconst folders = catalog.folders.map(folder => {\n  const docs = catalog.documents.filter(d => d.folder === folder);\n  return '<details><summary>'+escape(folder)+' — '+docs.length+' документов</summary><ul>'+docs.map(d=>\n    '<li><a href=\"'+escape(d.path.split('/').map(encodeURIComponent).join('/'))+'\">'+escape(d.title)+'</a></li>').join('')+'</ul></details>';\n}).join('');\nhtml = html.replace(/<div class=\"noscript\">[\\s\\S]*?<\\/div>/, '<div class=\"noscript\">'+folders+'<p>Для поиска и постраничного просмотра включите JavaScript.</p></div>');\nhtml = html.replace('Дата источника — дата обновления в каталоге производителя.', 'Дата источника — дата обновления в каталоге производителя; для Lenovo Press — Last-Modified PDF.');\nreturn [{json:{html, updated:$input.all().length, documents:catalog.documents.length}}];\n"
-      }
-    },
-    {
-      "id": "ffed022e-8de4-4ef9-a413-599d6caf7be6",
-      "name": "Save INDEX",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.4,
-      "position": [
-        440,
-        700
-      ],
-      "parameters": {
-        "method": "PUT",
-        "url": "http://nextcloud.edge.internal/remote.php/webdav/technical-documentation/lenovo/originals/INDEX.html",
-        "options": {
-          "timeout": 120000,
-          "response": {
-            "response": {
-              "fullResponse": true,
-              "responseFormat": "autodetect",
-              "neverError": false
-            }
-          }
-        },
-        "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "nextCloudApi",
-        "sendBody": true,
-        "contentType": "raw",
-        "rawContentType": "text/html; charset=utf-8",
-        "body": "={{ $json.html }}"
-      },
-      "credentials": {
-        "nextCloudApi": {
-          "id": "6MEdI2Cs7tEUiM7o",
-          "name": "Nextcloud - operator automation"
-        }
-      }
-    },
-    {
-      "id": "b055be77-da6d-47e1-b010-c745db4283a9",
-      "name": "Download PDF",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.4,
-      "position": [
-        220,
-        440
-      ],
-      "parameters": {
-        "method": "GET",
-        "url": "={{ $json.source_url }}",
-        "options": {
-          "timeout": 120000,
-          "response": {
-            "response": {
-              "fullResponse": true,
-              "responseFormat": "file",
-              "neverError": false,
-              "outputPropertyName": "data"
-            }
-          }
-        }
-      }
-    },
-    {
-      "id": "c70ccc77-bda4-4b29-bf55-07a2d48a23a0",
-      "name": "Save Original",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.4,
-      "position": [
-        440,
-        440
-      ],
-      "parameters": {
-        "method": "PUT",
-        "url": "={{ $('Each Changed PDF').item.json.destination_url }}",
-        "options": {
-          "timeout": 120000,
-          "response": {
-            "response": {
-              "fullResponse": true,
-              "responseFormat": "text",
-              "neverError": false
-            }
-          }
-        },
-        "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "nextCloudApi",
-        "sendBody": true,
-        "contentType": "binaryData",
-        "inputDataFieldName": "data"
-      },
-      "credentials": {
-        "nextCloudApi": {
-          "id": "6MEdI2Cs7tEUiM7o",
-          "name": "Nextcloud - operator automation"
-        }
-      }
-    },
-    {
-      "id": "b95a6065-4d39-40bc-b6ae-4469a307c6af",
-      "name": "Filename Changed",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.2,
-      "position": [
-        660,
-        440
-      ],
-      "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "typeValidation": "strict"
-          },
-          "conditions": [
-            {
-              "leftValue": "={{ Boolean($('Each Changed PDF').item.json.old_path) }}",
-              "rightValue": true,
-              "operator": {
-                "type": "boolean",
-                "operation": "equals"
-              }
-            }
-          ],
-          "combinator": "and"
-        }
-      }
-    },
-    {
-      "id": "467bc59b-bda8-4878-b58a-2da2c2d2f6c5",
-      "name": "Remove Previous Filename",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.4,
-      "position": [
-        880,
-        340
-      ],
-      "parameters": {
-        "method": "DELETE",
-        "url": "={{ $('Each Changed PDF').item.json.old_url }}",
-        "options": {
-          "timeout": 120000,
-          "response": {
-            "response": {
-              "fullResponse": true,
-              "responseFormat": "text",
-              "neverError": true
-            }
-          }
-        },
-        "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "nextCloudApi"
-      },
-      "credentials": {
-        "nextCloudApi": {
-          "id": "6MEdI2Cs7tEUiM7o",
-          "name": "Nextcloud - operator automation"
-        }
-      }
-    },
-    {
-      "id": "0c6493ac-8881-4e14-8c2d-028bc4345f09",
-      "name": "Saved Document",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        1100,
-        440
-      ],
-      "parameters": {
-        "mode": "runOnceForAllItems",
-        "jsCode": "\nconst response = $input.first().json;\nif (response.statusCode >= 300 && response.statusCode !== 404) throw new Error('WebDAV deletion failed: '+response.statusCode);\nconst doc = {...$('Each Changed PDF').item.json};\nconst h = $('Download PDF').item.json.headers;\ndoc.remote_validator = {etag:h.etag ?? null, last_modified:h['last-modified'] ?? null,\n  content_length:Number(h['content-length']) || doc.remote_validator.content_length};\ndoc.size = doc.remote_validator.content_length;\ndoc.saved_at = $now.toISO();\ndoc.edition = null;\ndoc.pages = null;\ndelete doc.old_path; delete doc.old_url; delete doc.destination_url;\nreturn [{json:doc}];\n"
-      }
-    },
-    {
-      "id": "0a256b90-1c39-4292-b3bf-e32378da78da",
-      "name": "Each Changed PDF",
-      "type": "n8n-nodes-base.splitInBatches",
-      "typeVersion": 3,
-      "position": [
-        0,
-        440
-      ],
-      "parameters": {
-        "batchSize": 1,
-        "options": {}
-      }
-    },
-    {
-      "id": "3e31ce6d-96db-4cdd-a651-ab73dd61c087",
-      "name": "Manual Start",
-      "type": "n8n-nodes-base.manualTrigger",
-      "typeVersion": 1,
-      "position": [
-        0,
-        160
-      ],
-      "parameters": {}
+      "description": "Сначала сохранить каталог всех скачанных оригиналов, затем вызвать очистку их списка и дождаться её завершения."
     }
   ],
-  "nodeGroups": [],
-  "activeVersion": {
-    "sameAsDraft": true
-  },
+  "tags": [],
   "meta": {
     "aiBuilderAssisted": true,
     "builderVariant": "mcp"
-  }
+  },
+  "pinData": {}
 }

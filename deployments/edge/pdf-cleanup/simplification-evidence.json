@@ -1,0 +1,102 @@
+{
+  "date": "2026-10-05",
+  "status": "TESTED_ACCEPTANCE_PENDING",
+  "workflow_id": "ENo9jFkwcE4PFOyL",
+  "node_count_before": 20,
+  "node_count_after": 13,
+  "node_counts": {
+    "code": 3,
+    "if": 1,
+    "ssh": 5,
+    "http": 2,
+    "triggers": 2,
+    "crypto": 0
+  },
+  "retained_node_ids": true,
+  "source_export_parameter_parity": true,
+  "native_validation": {
+    "nodes": true,
+    "workflow": true,
+    "warnings": []
+  },
+  "removed": [
+    "external transfer SHA-256",
+    "original ETag HEAD/precondition",
+    "mandatory JSON sidecar",
+    "prepare mode",
+    "separate finalizer"
+  ],
+  "cli_algorithm_image_launcher_unchanged": true,
+  "adapter_sha256": "5a6c0282af7df5b74bba1c06e30f59aa6219e8ac7613b56c645f7292b7176ea9",
+  "executions": {
+    "full_live": {
+      "executionId": "11201",
+      "status": "success"
+    },
+    "controlled_upload_failure": {
+      "executionId": "11205",
+      "status": "error",
+      "error": "ValueError: Snapshot upload failed [line 12]"
+    },
+    "invalid_path": {
+      "executionId": "11206",
+      "status": "error",
+      "error": "filename must be a PDF filename inside Lenovo originals, without directory components [line 8]"
+    },
+    "obsolete_sidecar_removal": {
+      "executionId": "11207",
+      "status": "started"
+    }
+  },
+  "full_result": {
+    "ok": true,
+    "status": "cleaned",
+    "original_path": "/technical-documentation/lenovo/originals/lp1705.pdf",
+    "cleaned_path": "/technical-documentation/lenovo/cleaned/lp1705.pdf",
+    "summary": {
+      "schema_version": 1,
+      "tool_version": "0.1.3",
+      "source_commit": "8257cb36be7856a0abe89ea27562f847fcf45a8e",
+      "input": "/tmp/pdf-cleanup-0ls8m3xa/input/source.pdf",
+      "output": "/tmp/pdf-cleanup-0ls8m3xa/output/cleaned.pdf",
+      "input_sha256": "f3b4f9d125fee56c228b36354a30198ddd14933cb755fdc7dc1ef2d4af8442e7",
+      "pages": 78,
+      "header_footer_fragments": 78,
+      "removed_header_rows": 0,
+      "removed_footer_rows": 78,
+      "footer_pages": 78,
+      "removed_links": {
+        "/URI": 17
+      },
+      "removed_widgets": 1,
+      "cleanup_method": "text_redaction",
+      "status": "cleaned",
+      "output_sha256": "20be01e698c5711451eabf1fc864ce7e195bef91cbfc556f0f03604add1e014c",
+      "validation": "passed"
+    },
+    "temporary_job_removed": true
+  },
+  "tests": {
+    "adapter": 5,
+    "generated_node_cases": "filename confinement and success/CLI/upload/removal outcomes"
+  },
+  "non_regression": {
+    "n8n": "healthy",
+    "nextcloud": "35.0.1 maintenance=false needsDbUpgrade=false",
+    "failed_system_units": 0,
+    "nextcloud_tools_version": "b881ab95-fdae-4471-a490-8d7280564beb",
+    "ai_execution_version": "e9a2731b-b637-4dd1-a7c6-2b10f83b3583"
+  },
+  "cleanup": {
+    "temporary_jobs": 0,
+    "cleanup_containers": 0,
+    "obsolete_sidecar_absent": true
+  },
+  "publication": false,
+  "limitations": [
+    "Downloaded snapshot can become older than a concurrently replaced original",
+    "Same-basename concurrent runs need caller sequencing",
+    "Forced cancellation/SSH loss can leave a job",
+    "New PDF layouts not covered by one-document review"
+  ]
+}

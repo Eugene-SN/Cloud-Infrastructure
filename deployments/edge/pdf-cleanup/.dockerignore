@@ -1,0 +1,6 @@
+source/.git
+source/**/__pycache__
+source/**/*.egg-info
+source/build
+deployment.json
+upstream-blobs.json

@@ -41,11 +41,17 @@ async function run(name,input,previous={}) {
   const other=structuredClone(models);other[0].json.model.folder='Second Model';
   const additional=await run('Latest Document Families',[{json:{body:asp}}],{'Models and Index':other});
   assert(additional.every(d=>d.json.key.startsWith('Second Model/')&&d.json.path.startsWith('Second Model/')));
-  const rendered=await run('Update INDEX',[{json:{...doc,title:'<script>PDF</script>',size:12345,remote_validator:{etag:'"replacement"'},edition:null,pages:null}}],{'Read INDEX':[{json:{data:html}}]});
+  const rendered=await run('Update INDEX',[{json:{...doc,title:'<script>PDF</script>',size:12345,remote_validator:{etag:'"replacement"'},edition:null,pages:null,previous_path:doc.old_path}}],{'Read INDEX':[{json:{data:html}}]});
   assert(rendered[0].json.html.includes('&lt;script&gt;PDF&lt;/script&gt;'));
   const updated=JSON.parse(rendered[0].json.html.match(/<script id="catalog-data" type="application\/json">([\s\S]*?)<\/script>/)[1]);
   assert.equal(updated.documents.length,12);
   assert(updated.documents.find(d=>d.key===doc.key).path.endsWith('v19.pdf'));
+  assert.equal(rendered[0].json.files[0].path,doc.path);
+  assert.equal(rendered[0].json.files[0].previous_path,doc.old_path);
+  assert.equal(updated.documents.find(d=>d.key===doc.key).previous_path,undefined);
+  const cleanupNode=nodes.find(n=>n.name==='Clean Saved PDFs');
+  assert.equal(cleanupNode.parameters.mode,'once');
+  assert.equal(cleanupNode.parameters.options.waitForSubWorkflow,true);
   await assert.rejects(()=>run('Latest Document Families',[{json:{body:{status:500}}}],{'Models and Index':models}));
   const audit=JSON.parse(fs.readFileSync(__dirname+'/source-audit-2026-10-05.json','utf8'));
   const fresh=JSON.parse(fs.readFileSync(__dirname+'/test-fixtures-models.json','utf8'));

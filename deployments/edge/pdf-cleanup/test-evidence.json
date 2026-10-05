@@ -1,0 +1,702 @@
+{
+  "status": "TESTED_PENDING_OPERATOR_ACCEPTANCE",
+  "date": "2026-10-05",
+  "workflow": {
+    "id": "ENo9jFkwcE4PFOyL",
+    "name": "LenovoPdfCleanup01",
+    "project": "Eugene S <es@escloud.us>",
+    "project_id": "O9C85OVLEuW5PgOk",
+    "folder": null,
+    "active": false
+  },
+  "runtime": {
+    "python": "3.14.8",
+    "PyMuPDF": "1.28.2",
+    "pypdf": "6.19.0",
+    "package": "0.1.3"
+  },
+  "preparation": {
+    "execution": {
+      "id": "11033",
+      "workflowId": "ENo9jFkwcE4PFOyL",
+      "mode": "manual",
+      "status": "success",
+      "startedAt": "2026-10-05T07:25:26.099Z",
+      "stoppedAt": "2026-10-05T07:25:29.780Z",
+      "retryOf": null,
+      "retrySuccessId": null,
+      "waitTill": null
+    },
+    "run": {
+      "Check Snapshot Integrity": [
+        {
+          "startTime": 1791185129191,
+          "executionIndex": 11,
+          "source": [
+            {
+              "previousNode": "Verify Working Copy",
+              "previousNodeOutput": 0,
+              "previousNodeRun": 0
+            }
+          ],
+          "hints": [],
+          "executionTime": 27,
+          "executionStatus": "success",
+          "data": {
+            "main": [
+              [
+                {
+                  "json": {
+                    "ok": true,
+                    "error": null,
+                    "details": null,
+                    "input_sha256": "f3b4f9d125fee56c228b36354a30198ddd14933cb755fdc7dc1ef2d4af8442e7",
+                    "input_size": 5056741
+                  },
+                  "pairedItem": {
+                    "item": 0
+                  }
+                }
+              ]
+            ]
+          }
+        }
+      ],
+      "Return Result": [
+        {
+          "startTime": 1791185129734,
+          "executionIndex": 17,
+          "source": [
+            {
+              "previousNode": "Remove Temporary Job",
+              "previousNodeOutput": 0,
+              "previousNodeRun": 0
+            }
+          ],
+          "hints": [],
+          "executionTime": 45,
+          "executionStatus": "success",
+          "data": {
+            "main": [
+              [
+                {
+                  "json": {
+                    "ok": true,
+                    "status": "prepared",
+                    "cleaned": false,
+                    "original_path": "/technical-documentation/lenovo/originals/lp1705.pdf",
+                    "input_sha256": "f3b4f9d125fee56c228b36354a30198ddd14933cb755fdc7dc1ef2d4af8442e7",
+                    "input_size": 5056741,
+                    "source_etag": "\"8304673c44957deeef17183042f66ed4\"",
+                    "temporary_job_removed": true
+                  },
+                  "pairedItem": {
+                    "item": 0
+                  }
+                }
+              ]
+            ]
+          }
+        }
+      ],
+      "Remove Temporary Job": [
+        {
+          "startTime": 1791185129272,
+          "executionIndex": 16,
+          "source": [
+            {
+              "previousNode": "Finalize Job",
+              "previousNodeOutput": 0,
+              "previousNodeRun": 0
+            }
+          ],
+          "hints": [],
+          "executionTime": 462,
+          "executionStatus": "success",
+          "data": {
+            "main": [
+              [
+                {
+                  "json": {
+                    "code": 0,
+                    "signal": null,
+                    "stdout": "{\"ok\": true, \"job_removed\": true}",
+                    "stderr": ""
+                  },
+                  "pairedItem": {
+                    "item": 0
+                  }
+                }
+              ]
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "missing_cli": {
+    "execution": {
+      "id": "11035",
+      "workflowId": "ENo9jFkwcE4PFOyL",
+      "mode": "manual",
+      "status": "error",
+      "startedAt": "2026-10-05T07:25:46.291Z",
+      "stoppedAt": "2026-10-05T07:25:49.691Z",
+      "retryOf": null,
+      "retrySuccessId": null,
+      "waitTill": null
+    },
+    "run": {
+      "Run PDF Cleanup CLI": [
+        {
+          "startTime": 1791185148577,
+          "executionIndex": 14,
+          "source": [
+            {
+              "previousNode": "Preparation Only",
+              "previousNodeOutput": 1,
+              "previousNodeRun": 0
+            }
+          ],
+          "hints": [],
+          "executionTime": 479,
+          "executionStatus": "success",
+          "data": {
+            "main": [
+              [
+                {
+                  "json": {
+                    "code": 0,
+                    "signal": null,
+                    "stdout": "{\"ok\": false, \"status\": \"cli_unavailable\", \"cli_rc\": 127, \"error\": \"PDF cleanup CLI is not installed: /opt/pdf-cleanup/run\"}",
+                    "stderr": ""
+                  },
+                  "pairedItem": {
+                    "item": 0
+                  }
+                }
+              ]
+            ]
+          }
+        }
+      ],
+      "Remove Temporary Job": [
+        {
+          "startTime": 1791185149168,
+          "executionIndex": 19,
+          "source": [
+            {
+              "previousNode": "Finalize Job",
+              "previousNodeOutput": 0,
+              "previousNodeRun": 0
+            }
+          ],
+          "hints": [],
+          "executionTime": 468,
+          "executionStatus": "success",
+          "data": {
+            "main": [
+              [
+                {
+                  "json": {
+                    "code": 0,
+                    "signal": null,
+                    "stdout": "{\"ok\": true, \"job_removed\": true}",
+                    "stderr": ""
+                  },
+                  "pairedItem": {
+                    "item": 0
+                  }
+                }
+              ]
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "invalid_filename": {
+    "executionId": "11037",
+    "status": "error",
+    "error": "filename must be a PDF filename inside Lenovo originals, without directory components [line 8]"
+  },
+  "end_to_end": {
+    "execution": {
+      "id": "11068",
+      "workflowId": "ENo9jFkwcE4PFOyL",
+      "mode": "manual",
+      "status": "success",
+      "startedAt": "2026-10-05T07:36:37.023Z",
+      "stoppedAt": "2026-10-05T07:37:11.223Z",
+      "retryOf": null,
+      "retrySuccessId": null,
+      "waitTill": null
+    },
+    "nodes": {
+      "Return Result": [
+        {
+          "status": "success",
+          "items": [
+            [
+              {
+                "ok": true,
+                "status": "cleaned",
+                "cleaned": true,
+                "original_path": "/technical-documentation/lenovo/originals/lp1705.pdf",
+                "cleaned_path": "/technical-documentation/lenovo/cleaned/lp1705.pdf",
+                "summary": {
+                  "schema_version": 1,
+                  "tool_version": "0.1.3",
+                  "source_commit": "8257cb36be7856a0abe89ea27562f847fcf45a8e",
+                  "input": "/tmp/pdf-cleanup-7uije2oe/input/source.pdf",
+                  "output": "/tmp/pdf-cleanup-7uije2oe/output/cleaned.pdf",
+                  "input_sha256": "f3b4f9d125fee56c228b36354a30198ddd14933cb755fdc7dc1ef2d4af8442e7",
+                  "pages": 78,
+                  "header_footer_fragments": 78,
+                  "removed_header_rows": 0,
+                  "removed_footer_rows": 78,
+                  "footer_pages": 78,
+                  "removed_links": {
+                    "/URI": 17
+                  },
+                  "removed_widgets": 1,
+                  "cleanup_method": "text_redaction",
+                  "status": "cleaned",
+                  "output_sha256": "f4a2c26cd3814c0c339ee63488a8f474291be13e90ab8738abdbba35470d8123",
+                  "validation": "passed"
+                },
+                "temporary_job_removed": true
+              }
+            ]
+          ]
+        }
+      ],
+      "Check CLI Contract": [
+        {
+          "status": "success",
+          "items": [
+            [
+              {
+                "ok": true,
+                "summary": {
+                  "schema_version": 1,
+                  "tool_version": "0.1.3",
+                  "source_commit": "8257cb36be7856a0abe89ea27562f847fcf45a8e",
+                  "input": "/tmp/pdf-cleanup-7uije2oe/input/source.pdf",
+                  "output": "/tmp/pdf-cleanup-7uije2oe/output/cleaned.pdf",
+                  "input_sha256": "f3b4f9d125fee56c228b36354a30198ddd14933cb755fdc7dc1ef2d4af8442e7",
+                  "pages": 78,
+                  "header_footer_fragments": 78,
+                  "removed_header_rows": 0,
+                  "removed_footer_rows": 78,
+                  "footer_pages": 78,
+                  "removed_links": {
+                    "/URI": 17
+                  },
+                  "removed_widgets": 1,
+                  "cleanup_method": "text_redaction",
+                  "status": "cleaned",
+                  "output_sha256": "f4a2c26cd3814c0c339ee63488a8f474291be13e90ab8738abdbba35470d8123",
+                  "validation": "passed"
+                },
+                "error": null,
+                "details": null
+              }
+            ]
+          ]
+        }
+      ],
+      "Remove Temporary Job": [
+        {
+          "status": "success",
+          "items": [
+            [
+              {
+                "code": 0,
+                "signal": null,
+                "stdout": "{\"ok\": true, \"job_removed\": true}",
+                "stderr": ""
+              }
+            ]
+          ]
+        }
+      ],
+      "Check PDF Publication": [
+        {
+          "status": "success",
+          "items": [
+            [
+              {
+                "ok": true,
+                "error": null,
+                "details": {
+                  "statusCode": 204
+                }
+              }
+            ]
+          ]
+        }
+      ],
+      "Check Provenance Publication": [
+        {
+          "status": "success",
+          "items": [
+            [
+              {
+                "ok": true,
+                "error": null,
+                "details": {
+                  "statusCode": 204
+                }
+              }
+            ]
+          ]
+        }
+      ]
+    }
+  },
+  "tests": {
+    "upstream_unit_tests": 11,
+    "edge_guard_tests": 3,
+    "all_passed": true,
+    "publication_preconditions_local_cases": 5
+  },
+  "preservation_review": {
+    "pages": 78,
+    "dpi": 72,
+    "mask_padding_px": 2,
+    "outside_changed_pixels": 0,
+    "page_geometry_and_bookmarks_preserved": true,
+    "output_links_and_widgets_absent": true,
+    "page_results": [
+      {
+        "page": 1,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 2,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 3,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 4,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 5,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 6,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 7,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 8,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 9,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 10,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 11,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 12,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 13,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 14,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 15,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 16,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 17,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 18,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 19,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 20,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 21,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 22,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 23,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 24,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 25,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 26,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 27,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 28,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 29,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 30,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 31,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 32,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 33,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 34,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 35,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 36,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 37,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 38,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 39,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 40,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 41,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 42,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 43,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 44,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 45,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 46,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 47,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 48,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 49,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 50,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 51,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 52,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 53,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 54,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 55,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 56,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 57,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 58,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 59,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 60,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 61,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 62,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 63,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 64,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 65,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 66,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 67,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 68,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 69,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 70,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 71,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 72,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 73,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 74,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 75,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 76,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 77,
+        "outside_changed_pixels": 0
+      },
+      {
+        "page": 78,
+        "outside_changed_pixels": 0
+      }
+    ],
+    "limitation": "Masks come from the CLI dry-run plan and its update-widget classifier; this is a pixel preservation check, not independent layout classification."
+  },
+  "final_verification": {
+    "temporary_review_and_build_workspaces_removed": true,
+    "remaining_cleanup_jobs": 0,
+    "remaining_cleanup_containers": 0,
+    "superseded_image_absent": true,
+    "obsolete_copy_cache_removed": true,
+    "n8n_health": "healthy",
+    "nextcloud_maintenance": false,
+    "nextcloud_needs_db_upgrade": false,
+    "failed_systemd_units": 0,
+    "original_and_output_sidecar_sha256_match": true,
+    "installed_core_matches_source_sha256": true,
+    "nextcloud_tools_workflow_version_unchanged": true,
+    "ai_execution_workflow_active": true
+  }
+}

@@ -1,0 +1,50 @@
+#!/usr/bin/python3
+"""Launch the installed image for an n8n-owned job snapshot."""
+import json
+import os
+from pathlib import Path
+import re
+import subprocess
+import sys
+
+
+def main():
+    if len(sys.argv) not in (3, 4) or (len(sys.argv) == 4 and sys.argv[3] != '--dry-run'):
+        raise ValueError('Usage: run INPUT.pdf OUTPUT.pdf [--dry-run]')
+    source, output = map(Path, sys.argv[1:3])
+    job = source.parent.parent
+    if (not re.fullmatch(r'/tmp/pdf-cleanup-[A-Za-z0-9_\-]{8,}', str(job))
+            or source != job / 'input/source.pdf' or output != job / 'output/cleaned.pdf'):
+        raise ValueError('Use the input and output of one /tmp/pdf-cleanup-* job')
+    if job.is_symlink() or job.resolve() != job or job.stat().st_uid != os.getuid():
+        raise ValueError('Job ownership/path mismatch')
+    marker = json.loads((job / 'job.json').read_text())
+    execution_id = str(marker['execution_id'])
+    if not re.fullmatch(r'[0-9]+', execution_id):
+        raise ValueError('Invalid execution id')
+    for name in ('input', 'output', 'tmp'):
+        directory = job / name
+        if directory.is_symlink() or not directory.is_dir() or directory.stat().st_uid != os.getuid():
+            raise ValueError('Invalid job directory: ' + name)
+    if source.is_symlink() or not source.is_file():
+        raise ValueError('Input must be a regular PDF snapshot')
+    manifest = json.loads(Path('/opt/pdf-cleanup/deployment.json').read_text())
+    image = manifest['image_id']
+    if not re.fullmatch(r'sha256:[0-9a-f]{64}', image):
+        raise ValueError('Invalid installed image identity')
+    args = ['/usr/bin/sudo', '-n', '/usr/bin/docker', 'run', '--rm',
+            '--name', 'pdf-cleanup-' + execution_id, '--user', f'{os.getuid()}:{os.getgid()}',
+            '--env', 'TMPDIR=' + str(job / 'tmp'),
+            '--mount', f'type=bind,src={job / "input"},dst={job / "input"},readonly',
+            '--mount', f'type=bind,src={job / "output"},dst={job / "output"}',
+            '--mount', f'type=bind,src={job / "tmp"},dst={job / "tmp"}',
+            image, str(source), str(output), *sys.argv[3:]]
+    return subprocess.call(args)
+
+
+try:
+    sys.exit(main())
+except Exception as error:
+    print(json.dumps({'schema_version': 1, 'status': 'error', 'exit_code': 2,
+                      'error': str(error)}))
+    sys.exit(2)

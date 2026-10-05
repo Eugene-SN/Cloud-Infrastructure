@@ -1,0 +1,390 @@
+{
+  "date": "2026-10-05",
+  "status": "DEPLOYED_VERIFIED",
+  "design": {
+    "sequence": [
+      "download all changed originals",
+      "save original INDEX with pending markers",
+      "call cleanup once and wait for sequential processing",
+      "save completion marker after each successful cleaned upload"
+    ],
+    "universalInput": "files: Array<{path: string, previous_path?: string}>",
+    "noDefaultFilename": true,
+    "existingCorpusNotBulkProcessed": true,
+    "cleanupRetry": "explicit rerun of affected paths; no automatic queue"
+  },
+  "workflows": [
+    {
+      "id": "ENo9jFkwcE4PFOyL",
+      "name": "LenovoPdfCleanup",
+      "version": "382fc37d-61ec-4311-8c80-0bcb774a2221",
+      "activeVersionId": "382fc37d-61ec-4311-8c80-0bcb774a2221",
+      "active": true,
+      "nodeCount": 17,
+      "nodeGroups": [
+        {
+          "name": "1. Рабочая копия PDF",
+          "nodes": [
+            "Download Original Snapshot",
+            "Create Temporary Job",
+            "Capture Job",
+            "Upload Working Copy"
+          ]
+        },
+        {
+          "name": "2. Очистка и сохранение",
+          "nodes": [
+            "Run PDF Cleanup CLI",
+            "CLI Succeeded",
+            "Download Cleaned PDF",
+            "Publish Cleaned PDF",
+            "Previous Cleaned Filename",
+            "Remove Previous Cleaned PDF",
+            "Remove Temporary Job"
+          ]
+        },
+        {
+          "name": "3. Отметка в INDEX.html",
+          "nodes": [
+            "Read Cleanup INDEX",
+            "Return Result",
+            "Save Cleanup INDEX"
+          ]
+        }
+      ],
+      "settings": {
+        "executionOrder": "v1",
+        "availableInMCP": true,
+        "binaryMode": "separate"
+      }
+    },
+    {
+      "id": "QouVaVNhAqSiYq5D",
+      "name": "TechnicalDocumentationSync",
+      "version": "53999b07-1a21-4dd2-8aef-2ec2bb43e29b",
+      "activeVersionId": "53999b07-1a21-4dd2-8aef-2ec2bb43e29b",
+      "active": true,
+      "nodeCount": 17,
+      "nodeGroups": [
+        {
+          "name": "1. Найти обновления",
+          "nodes": [
+            "Read INDEX",
+            "Models and Index",
+            "Read Lenovo ASP",
+            "Latest Document Families",
+            "Read Remote Version",
+            "Changed Documents"
+          ]
+        },
+        {
+          "name": "2. Скачать оригиналы",
+          "nodes": [
+            "Download PDF",
+            "Save Original",
+            "Filename Changed",
+            "Remove Previous Filename",
+            "Saved Document"
+          ]
+        },
+        {
+          "name": "3. INDEX.html → очистка",
+          "nodes": [
+            "Update INDEX",
+            "Save INDEX",
+            "Clean Saved PDFs"
+          ]
+        }
+      ],
+      "settings": {
+        "executionOrder": "v1",
+        "availableInMCP": true,
+        "timezone": "Europe/Minsk",
+        "binaryMode": "separate"
+      }
+    }
+  ],
+  "nativeValidation": {
+    "valid": true,
+    "warnings": []
+  },
+  "executions": {
+    "standaloneBatch": {
+      "id": "11976",
+      "workflowId": "ENo9jFkwcE4PFOyL",
+      "mode": "manual",
+      "status": "success",
+      "startedAt": "2026-10-05T12:19:18.947Z",
+      "stoppedAt": "2026-10-05T12:20:18.669Z",
+      "retryOf": null,
+      "retrySuccessId": null,
+      "waitTill": null
+    },
+    "invalidPath": {
+      "id": "12000",
+      "status": "error",
+      "error": "path must be a relative PDF path inside originals; rejected before I/O"
+    },
+    "parent": {
+      "id": "12015",
+      "workflowId": "QouVaVNhAqSiYq5D",
+      "mode": "manual",
+      "status": "success",
+      "startedAt": "2026-10-05T12:31:47.254Z",
+      "stoppedAt": "2026-10-05T12:32:54.114Z",
+      "retryOf": null,
+      "retrySuccessId": null,
+      "waitTill": null
+    },
+    "child": {
+      "id": "12016",
+      "workflowId": "ENo9jFkwcE4PFOyL",
+      "mode": "integrated",
+      "status": "success",
+      "startedAt": "2026-10-05T12:31:53.902Z",
+      "stoppedAt": "2026-10-05T12:32:54.069Z",
+      "retryOf": null,
+      "retrySuccessId": null,
+      "waitTill": null
+    },
+    "noChange": {
+      "id": "12020",
+      "workflowId": "QouVaVNhAqSiYq5D",
+      "mode": "trigger",
+      "status": "success",
+      "startedAt": "2026-10-05T12:33:19.451Z",
+      "stoppedAt": "2026-10-05T12:33:24.837Z",
+      "retryOf": null,
+      "retrySuccessId": null,
+      "waitTill": null
+    }
+  },
+  "sequenceEvidence": {
+    "Save Original": [
+      {
+        "executionIndex": 9,
+        "startTime": 1791203512950,
+        "executionTime": 265
+      },
+      {
+        "executionIndex": 14,
+        "startTime": 1791203513399,
+        "executionTime": 183
+      }
+    ],
+    "Save INDEX": [
+      {
+        "executionIndex": 19,
+        "startTime": 1791203513653,
+        "executionTime": 146
+      }
+    ],
+    "Clean Saved PDFs": [
+      {
+        "executionIndex": 20,
+        "startTime": 1791203513800,
+        "executionTime": 60314,
+        "subExecution": {
+          "executionId": "12016",
+          "workflowId": "ENo9jFkwcE4PFOyL"
+        }
+      }
+    ],
+    "Update INDEX": [
+      {
+        "executionIndex": 18,
+        "startTime": 1791203513614,
+        "executionTime": 39
+      }
+    ]
+  },
+  "perFileResults": [
+    {
+      "path": "WR5220 G3/lp1705.pdf",
+      "cleaned_at": "2026-10-05T15:32:26.490+03:00",
+      "ok": true,
+      "temporary_job_removed": true,
+      "summary": {
+        "schema_version": 1,
+        "tool_version": "0.1.3",
+        "source_commit": "8257cb36be7856a0abe89ea27562f847fcf45a8e",
+        "input": "/tmp/pdf-cleanup-v_02bxdw/input/source.pdf",
+        "output": "/tmp/pdf-cleanup-v_02bxdw/output/cleaned.pdf",
+        "input_sha256": "f3b4f9d125fee56c228b36354a30198ddd14933cb755fdc7dc1ef2d4af8442e7",
+        "pages": 78,
+        "header_footer_fragments": 78,
+        "removed_header_rows": 0,
+        "removed_footer_rows": 78,
+        "footer_pages": 78,
+        "removed_links": {
+          "/URI": 17
+        },
+        "removed_widgets": 1,
+        "cleanup_method": "text_redaction",
+        "status": "cleaned",
+        "output_sha256": "4cfa5ada6cb305387be3d19a99382f95a01b171968b9234ed411cfe5b2a9840f",
+        "validation": "passed"
+      }
+    },
+    {
+      "path": "WR3220 G5/lxce_onecli_cplus_ug.pdf",
+      "cleaned_at": "2026-10-05T15:32:53.845+03:00",
+      "ok": true,
+      "temporary_job_removed": true,
+      "summary": {
+        "schema_version": 1,
+        "tool_version": "0.1.3",
+        "source_commit": "8257cb36be7856a0abe89ea27562f847fcf45a8e",
+        "input": "/tmp/pdf-cleanup-t3rx_8xc/input/source.pdf",
+        "output": "/tmp/pdf-cleanup-t3rx_8xc/output/cleaned.pdf",
+        "input_sha256": "dba774fbccfbd4c2e7e84819f2c213a37af77862be9143344db0f64e7f5e3440",
+        "pages": 138,
+        "header_footer_fragments": 268,
+        "removed_header_rows": 0,
+        "removed_footer_rows": 134,
+        "footer_pages": 134,
+        "removed_links": {
+          "/GoTo": 1079,
+          "/URI": 9
+        },
+        "removed_widgets": 0,
+        "cleanup_method": "text_redaction",
+        "status": "cleaned",
+        "output_sha256": "4159704ab408f4419b4c5a5cc88f842552ac42cd803ecb41898f5376486e8859",
+        "validation": "passed"
+      }
+    }
+  ],
+  "publishedNoChange": {
+    "downloadCalls": 0,
+    "indexWrites": 0,
+    "cleanupCalls": 0
+  },
+  "tests": [
+    "relative path/list mapping and Unicode URLs",
+    "no traversal or cross-directory old filename",
+    "old cleaned deletion only after upload",
+    "CLI/upload/removal failure handling",
+    "completion marker preserves another completed record",
+    "nine models, 78 keys and independent Genoa/Turin document families",
+    "source-version replacement and stable labels",
+    "HTML escaping",
+    "browser folder overview and collapsed completion details"
+  ],
+  "runtimeUnchanged": true,
+  "temporaryJobsRemoved": true,
+  "n8nHealthy": true,
+  "nextcloudMaintenance": false,
+  "nextcloudNeedsDbUpgrade": false,
+  "limitations": [
+    "Only two PDFs were processed for integration verification",
+    "No concurrent same-document source-change check",
+    "No automatic cleanup retry",
+    "Forced cancellation or SSH loss can leave a job"
+  ],
+  "filesystemAudit": {
+    "originals_unchanged": 78,
+    "INDEX_md_unchanged": true,
+    "documents": 78,
+    "model_folders": 9,
+    "details_template_deployed": true,
+    "markers": [
+      {
+        "path": "WR5220 G3/lp1705.pdf",
+        "cleanup_status": "cleaned",
+        "cleaned_at": "2026-10-05T15:32:26.490+03:00",
+        "cleaned_path": "WR5220 G3/lp1705.pdf"
+      },
+      {
+        "path": "WR3220 G5/lxce_onecli_cplus_ug.pdf",
+        "cleanup_status": "cleaned",
+        "cleaned_at": "2026-10-05T15:32:53.845+03:00",
+        "cleaned_path": "WR3220 G5/lxce_onecli_cplus_ug.pdf"
+      }
+    ],
+    "cleaned": [
+      {
+        "path": "WR5220 G3/lp1705.pdf",
+        "size": 4606903,
+        "sha256": "4cfa5ada6cb305387be3d19a99382f95a01b171968b9234ed411cfe5b2a9840f"
+      },
+      {
+        "path": "WR3220 G5/lxce_onecli_cplus_ug.pdf",
+        "size": 943950,
+        "sha256": "4159704ab408f4419b4c5a5cc88f842552ac42cd803ecb41898f5376486e8859"
+      }
+    ],
+    "runtime_hashes": {
+      "/opt/pdf-cleanup/run": "40d440ae6e30e475bee0e49de8df085d75bac1643679dec879d4c8e449265092",
+      "/opt/pdf-cleanup/job-command.py": "5a6c0282af7df5b74bba1c06e30f59aa6219e8ac7613b56c645f7292b7176ea9",
+      "/opt/pdf-cleanup/source/src/pdf_cleanup/core.py": "4b29b752fe9dcc3b8f8d08f509b5c840e354ecb0a398fe72bea092fdd4cb4c72"
+    },
+    "index_sha256": "cac632162ff3efa4c75182799ad82b10338836e90fed94a15cbf384866a47278"
+  },
+  "nonRegression": {
+    "workflowCount": 10,
+    "otherWorkflowDatesUnchanged": [
+      {
+        "id": "G0WysKToqsel8yL2",
+        "name": "NextcloudTools01",
+        "active": true,
+        "updatedAt": "2026-10-02T05:12:38.309Z"
+      },
+      {
+        "id": "wQ9ZqMisMCGadGEE",
+        "name": "AIExecution01",
+        "active": true,
+        "updatedAt": "2026-10-02T04:18:30.092Z"
+      },
+      {
+        "id": "bxsXXufaaXuubA3Z",
+        "name": "NextcloudEventIngress01",
+        "active": true,
+        "updatedAt": "2026-10-02T04:14:19.917Z"
+      },
+      {
+        "id": "PlaneDeletionReconcile01",
+        "name": "Plane API deletion reconciliation",
+        "active": true,
+        "updatedAt": "2026-10-02T03:45:15.984Z"
+      },
+      {
+        "id": "PlaneEventIngress01",
+        "name": "Plane Event Ingress",
+        "active": true,
+        "updatedAt": "2026-10-02T00:16:38.574Z"
+      },
+      {
+        "id": "PlaneMattermost01",
+        "name": "Plane → Mattermost",
+        "active": true,
+        "updatedAt": "2026-10-02T00:06:26.188Z"
+      },
+      {
+        "id": "PlaneGitHubPoll01",
+        "name": "GitHub → Plane Polling",
+        "active": true,
+        "updatedAt": "2026-10-02T00:00:48.439Z"
+      },
+      {
+        "id": "PlaneGitHubSync01",
+        "name": "GitHub PR → Plane Item",
+        "active": true,
+        "updatedAt": "2026-10-02T00:00:48.060Z"
+      }
+    ],
+    "parentChangedNodes": [
+      "Saved Document",
+      "Update INDEX",
+      "Clean Saved PDFs"
+    ],
+    "parentSettingsUnchanged": true,
+    "parentRetainedNodeIds": true,
+    "modelsUnchanged": true
+  },
+  "verifierCorrections": [
+    "Installed container lacks rg; SSH source was read with cat and inspected outside container",
+    "MCP setNodeParameter rejected a bare jsCode path without mutation; atomic updateNodeParameters was used instead",
+    "Host port 5678 was not published there; readiness was checked inside the actual container"
+  ]
+}

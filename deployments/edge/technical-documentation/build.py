@@ -8,7 +8,7 @@ ROOT = Path(__file__).parent
 parser = argparse.ArgumentParser()
 parser.add_argument('--validation-output', type=Path)
 args = parser.parse_args()
-POSITIONS = {'Daily 07:00': [0, 0], 'Manual Start': [0, 160], 'Read INDEX': [220, 0], 'Models and Index': [440, 0], 'Read Lenovo ASP': [660, 0], 'Latest Document Families': [880, 0], 'Read Remote Version': [1100, 0], 'Changed Documents': [1320, 0], 'Each Changed PDF': [0, 440], 'Download PDF': [220, 440], 'Save Original': [440, 440], 'Filename Changed': [660, 440], 'Remove Previous Filename': [880, 340], 'Saved Document': [1100, 440], 'Update INDEX': [220, 700], 'Save INDEX': [440, 700]}
+POSITIONS = {'Daily 07:00': [0, 0], 'Manual Start': [0, 160], 'Read INDEX': [220, 0], 'Models and Index': [440, 0], 'Read Lenovo ASP': [660, 0], 'Latest Document Families': [880, 0], 'Read Remote Version': [1100, 0], 'Changed Documents': [1320, 0], 'Each Changed PDF': [0, 440], 'Download PDF': [220, 440], 'Save Original': [440, 440], 'Filename Changed': [660, 440], 'Remove Previous Filename': [880, 340], 'Saved Document': [1100, 440], 'Update INDEX': [220, 700], 'Save INDEX': [440, 700], 'Clean Saved PDFs': [672, 704]}
 nodes = []
 
 
@@ -29,7 +29,7 @@ def code(var, name, source):
                'families': {'source_url': 'https://lenovopress.lenovo.com/lp1705.pdf'},
                'changed': {'source_url': 'https://lenovopress.lenovo.com/lp1705.pdf',
                            'destination_url': 'http://nextcloud.edge.internal/remote.php/webdav/example.pdf', 'old_path': None},
-               'render': {'html': '<!doctype html>', 'updated': 1, 'documents': 15}}
+               'render': {'html': '<!doctype html>', 'updated': 1, 'documents': 15, 'files': []}}
     add(var, name, 'code', {'mode': 'runOnceForAllItems', 'jsCode': source}, 2, sample=samples.get(var))
 
 
@@ -112,6 +112,18 @@ add('batch', 'Each Changed PDF', 'splitInBatches', {'batchSize': 1, 'options': {
 http('download', 'Download PDF', 'GET', '={{ $json.source_url }}', format='file')
 http('upload', 'Save Original', 'PUT', "={{ $('Each Changed PDF').item.json.destination_url }}", True,
      extra={'sendBody': True, 'contentType': 'binaryData', 'inputDataFieldName': 'data'})
+add('cleanup', 'Clean Saved PDFs', 'executeWorkflow', {
+    'source': 'database', 'workflowId': {'__rl': True, 'mode': 'id', 'value': 'ENo9jFkwcE4PFOyL'},
+    'mode': 'once', 'workflowInputs': {
+        'mappingMode': 'defineBelow', 'value': {
+            'files': "={{ $('Update INDEX').first().json.files }}"},
+        'matchingColumns': [], 'schema': [
+            {'id': name, 'displayName': name, 'required': False, 'defaultMatch': False,
+             'display': True, 'canBeUsedToMatch': True, 'type': 'array'}
+            for name in ['files']],
+        'attemptToConvertTypes': False, 'convertFieldsToString': False},
+    'options': {'waitForSubWorkflow': True}}, 1.3,
+    sample={'ok': True, 'status': 'cleaned'})
 add('renamed', 'Filename Changed', 'if', {'conditions': {'options': {'caseSensitive': True,
     'typeValidation': 'strict'}, 'conditions': [{'leftValue': "={{ Boolean($('Each Changed PDF').item.json.old_path) }}",
     'rightValue': True, 'operator': {'type': 'boolean', 'operation': 'equals'}}], 'combinator': 'and'}}, 2.2)
@@ -127,6 +139,10 @@ doc.size = doc.remote_validator.content_length;
 doc.saved_at = $now.toISO();
 doc.edition = null;
 doc.pages = null;
+doc.cleanup_status = 'pending';
+doc.cleaned_at = null;
+doc.cleaned_path = null;
+doc.previous_path = doc.old_path ?? null;
 delete doc.old_path; delete doc.old_url; delete doc.destination_url;
 return [{json:doc}];
 ''')
@@ -135,12 +151,24 @@ let html = $('Read INDEX').first().json.data;
 const pattern = /(<script id="catalog-data" type="application\/json">)([\s\S]*?)(<\/script>)/;
 const catalog = JSON.parse(html.match(pattern)[2]);
 const documents = new Map(catalog.documents.map(d => [d.key,d]));
-for (const item of $input.all()) documents.set(item.json.key, item.json);
+const files = $input.all().map(item=>({path:item.json.path, previous_path:item.json.previous_path ?? ''}));
+for (const item of $input.all()) {
+  const doc = {...item.json};
+  delete doc.previous_path;
+  documents.set(doc.key, doc);
+}
 catalog.documents = [...documents.values()];
 catalog.folders = [...new Set([...catalog.folders, ...catalog.documents.map(d=>d.folder)])].sort();
 catalog.generated_at = $now.toISO();
 const data = JSON.stringify(catalog, null, 2).replace(/</g,'\\u003c');
 html = html.replace(pattern, (_,a,b,c)=>a+data+c);
+const cleanupDetails = "   more.append(node('p','Очистка: '+(d.cleanup_status==='cleaned' ? 'Завершена' : d.cleanup_status==='pending' ? 'Ожидает очистки' : 'Не выполнялась')));\n" +
+  "   if(d.cleaned_at)more.append(node('p','Очищен: '+new Date(d.cleaned_at).toLocaleString('ru-RU',{timeZone:'Europe/Minsk'})));\n" +
+  "   if(d.cleanup_status==='cleaned'&&d.cleaned_path){const clean=node('a','Очищенный PDF');clean.href='../cleaned/'+d.cleaned_path.split('/').map(encodeURIComponent).join('/');clean.target='_blank';clean.rel='noopener';more.append(clean);}\n";
+if (!html.includes("Очистка: ")) {
+  const anchor = "   more.append(node('p','Сохранён в originals: '+(d.saved_at||'дата неизвестна')));\n";
+  html = html.replace(anchor, anchor+cleanupDetails);
+}
 const escape = s => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const folders = catalog.folders.map(folder => {
   const docs = catalog.documents.filter(d => d.folder === folder);
@@ -149,7 +177,7 @@ const folders = catalog.folders.map(folder => {
 }).join('');
 html = html.replace(/<div class="noscript">[\s\S]*?<\/div>/, '<div class="noscript">'+folders+'<p>Для поиска и постраничного просмотра включите JavaScript.</p></div>');
 html = html.replace('Дата источника — дата обновления в каталоге производителя.', 'Дата источника — дата обновления в каталоге производителя; для Lenovo Press — Last-Modified PDF.');
-return [{json:{html, updated:$input.all().length, documents:catalog.documents.length}}];
+return [{json:{html, updated:$input.all().length, documents:catalog.documents.length, files}}];
 ''')
 http('publish', 'Save INDEX', 'PUT',
      'http://nextcloud.edge.internal/remote.php/webdav/technical-documentation/lenovo/originals/INDEX.html', True,
@@ -176,10 +204,10 @@ for var, obj in nodes:
         obj = {k:v for k,v in obj.items() if k != 'type'}
     builder.append(f'const {var} = {factory}({sdk(obj)});')
 builder.append("""
-export default workflow('technical-documentation-sync', 'TechnicalDocumentationSync01')
+export default workflow('technical-documentation-sync', 'TechnicalDocumentationSync')
  .add(daily).to(read).to(models).to(asp).to(families).to(head).to(changed)
  .to(batch.onEachBatch(download.to(upload).to(renamed.onTrue(remove.to(receipt).to(nextBatch(batch))).onFalse(receipt.to(nextBatch(batch)))))
-   .onDone(render.to(publish)))
+   .onDone(render.to(publish).to(cleanup)))
  .add(manual).to(read);
 """)
 (ROOT / 'TechnicalDocumentationSync01.ts').write_text('\n'.join(builder))

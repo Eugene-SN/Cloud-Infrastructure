@@ -1560,3 +1560,38 @@ are permanently removed. All ten workflow definitions/publication, credentials
 and current cloud documents remain unchanged. n8n and critical workflows are healthy. Existing ai-node/vLLM monitoring failures predate
 this work and are outside this cleanup. Inventory, recovery snapshot readback
 and verification: N8N_WORKFLOW_CLEANUP_ACCEPTANCE_2026-10-05.md.
+
+## 2026-10-05 — Documentation download → cleanup → completion details — DEPLOYED / VERIFIED
+
+Operator-authorized TechnicalDocumentationSync (QouVaVNhAqSiYq5D) now downloads
+all changed PDFs, saves INDEX.html immediately, then invokes LenovoPdfCleanup
+(ENo9jFkwcE4PFOyL) once with their relative paths and waits for sequential cleanup.
+This supersedes the earlier original-only monitor and unpublished single-file
+cleanup candidate. Both workflows are published, with 17 executing nodes and
+three native canvas groups each; group/layout changes add no executing nodes.
+
+Cleanup has no configured vendor filename or manual sample trigger. Originals and
+cleaned paths mirror <model>/<vendor filename>. Optional previous_path removes a
+superseded cleaned filename only after replacement publication. Original updates
+remain the source monitor's responsibility; the unchanged standalone CLI retains
+its guard against cleanup output in the actual originals tree.
+
+The source update marks the record pending; successful cleaned publication writes
+cleanup_status=cleaned, cleaned_at and cleaned_path in the existing catalogue JSON.
+The collapsed Сведения shows status/date/link without extra overview columns.
+Failure leaves the saved originals/index and preceding completion markers available.
+There is no cleanup retry queue: rerun affected paths explicitly. Unchanged
+existing originals are not automatically scheduled for bulk cleanup.
+
+Native parent12015/child12016 verified two actual downloads followed by INDEX PUT,
+one awaited child call, two cleaned publications and completion markers. Published
+run12020 found zero changes with no downloads/writes/cleanup. All 78 original PDF
+hashes and INDEX.md stayed unchanged; CLI/adapter/launcher hashes stayed unchanged.
+No job or cleanup container remains; n8n is healthy and Nextcloud has no maintenance
+or database-upgrade flag. Model configuration, credentials and daily 07:00
+Europe/Minsk schedule are unchanged. Translation remains separate work.
+
+Current definitions, node review and sanitized evidence:
+deployments/edge/pdf-cleanup/ and deployments/edge/technical-documentation/.
+Detailed verification: TECHNICAL_DOCUMENTATION_CLEANUP_INTEGRATION_2026-10-05.md.
+Accepted infrastructure checkpoint remains Stage 13; no new finite stage is opened.

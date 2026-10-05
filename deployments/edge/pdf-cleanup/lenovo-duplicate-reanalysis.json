@@ -1,0 +1,574 @@
+{
+  "date": "2026-10-05",
+  "status": "READ_ONLY_REANALYSIS",
+  "local_documents": [
+    {
+      "name": "bmc_user_guide_v14.pdf",
+      "size": 4197674,
+      "sha256": "acba1574ddaf24faa0eb69644e9114be553ee44f45ce2960d0bcefb66a4539d4",
+      "pages": 132,
+      "text_hash": "6251bedfcee0c279fba1fa11cf9cc39a3ebb667f92eecb0460c96a8fbcefeff9",
+      "text_chars": 48214,
+      "metadata_title": "Lenovo BMC 企业版用户操作指南 G3"
+    },
+    {
+      "name": "lenovo_bmc_event_reference_guide_g5_v4.pdf",
+      "size": 1751445,
+      "sha256": "fc4a694ce1574db865fe41a904d185bc85092598a5b6a6d0cbbff739c75411ef",
+      "pages": 116,
+      "text_hash": "467fb382ebbccb5019a793a400ac8c2e02b5ff8fcf4b50136d9a6d6777328ff9",
+      "text_chars": 81994,
+      "metadata_title": ""
+    },
+    {
+      "name": "lenovo_bmc_g3_commands_guide_v2.pdf",
+      "size": 1158155,
+      "sha256": "7273f8d5c3336bfdffe70e3b056d74d0ec08a75856cdb25b65daa3b66cedec46",
+      "pages": 46,
+      "text_hash": "563dbba4fb2c3b62bf5ed947d1d4dd5ec2d582da1bf5963c3a6087feb148436a",
+      "text_chars": 34124,
+      "metadata_title": ""
+    },
+    {
+      "name": "lenovo_bmc_g3_redfish_guide_v11.pdf",
+      "size": 8326662,
+      "sha256": "456897573c42b3e7eb767b248e3c588a987b7f23b2a0c70a344e816b91837ee8",
+      "pages": 423,
+      "text_hash": "99ed9f16a58d1bec39faa77c504b14f0c1eb43e148667f460731886fbfc7f8d8",
+      "text_chars": 328757,
+      "metadata_title": ""
+    },
+    {
+      "name": "lenovo_snmp_ug_g3.pdf",
+      "size": 1136366,
+      "sha256": "54364f7a996ac070098bfa4d0b8de530660edc2aaacd73550584c57373b8256e",
+      "pages": 46,
+      "text_hash": "9182ac5cb580a6d2439218c5afa34facceb2c6657b30e32ce020aa4c96d69ac9",
+      "text_chars": 46154,
+      "metadata_title": ""
+    },
+    {
+      "name": "lenovo_wentian_os_installation_guide.pdf",
+      "size": 13673279,
+      "sha256": "f5d59ae8c6bfc792ae28160790ce0f673b8d940de86f98ed7e326fb40cfaec17",
+      "pages": 179,
+      "text_hash": "d5355af143a90f6a2aadc907cc86895af469c85f5203d9bc3df8cb6e840f97f6",
+      "text_chars": 35219,
+      "metadata_title": ""
+    },
+    {
+      "name": "lenovo_wentian_wr5220g3_user_guide_v18.pdf",
+      "size": 30511980,
+      "sha256": "15b16176143792fd24287d10f29e46cc039660e802a0e2070cc14128f5ea53e6",
+      "pages": 397,
+      "text_hash": "f53529085090c466b951814ef2ec46c61bc9c3bbcac790ddc225e3ed586643eb",
+      "text_chars": 188745,
+      "metadata_title": "WR5220 G3/WR5228 G3/WR3220 G3服务器用户手册"
+    },
+    {
+      "name": "lp1705.pdf",
+      "size": 5056741,
+      "sha256": "f3b4f9d125fee56c228b36354a30198ddd14933cb755fdc7dc1ef2d4af8442e7",
+      "pages": 78,
+      "text_hash": "d3c98cf2dfd6b97e65fd7f335de87ff7790627c597d2f4a815f3bd7a6ac9d262",
+      "text_chars": 67195,
+      "metadata_title": "联想问天WR5220 G3机架服务器"
+    },
+    {
+      "name": "lxce_bomc_cplus_ug.pdf",
+      "size": 638956,
+      "sha256": "c41b84786be486e197ab7604f58b63be062948a8e73455f0c17fb013158959e8",
+      "pages": 22,
+      "text_hash": "5a28b2f92f58989ea4964e5b3c536b6e230adb510a1f9829d5eb684706b00e04",
+      "text_chars": 12372,
+      "metadata_title": "Lenovo XClarity Essentials BoMC cPlus 用户指南"
+    },
+    {
+      "name": "lxce_onecli_cplus_ug.pdf",
+      "size": 856757,
+      "sha256": "dba774fbccfbd4c2e7e84819f2c213a37af77862be9143344db0f64e7f5e3440",
+      "pages": 138,
+      "text_hash": "433cf3ad55bef897a49c618f0c24c7891e706f191b3cf432968b29b88ccef5d9",
+      "text_chars": 98225,
+      "metadata_title": "Lenovo XClarity Essentials OneCLI cPlus 用户指南"
+    },
+    {
+      "name": "lxce_ux_cplus_ug.pdf",
+      "size": 778902,
+      "sha256": "db4f1f0c538d2e623a2b9b9f9de76ad7cc64776076d3246a5cd562c6d0c5576c",
+      "pages": 43,
+      "text_hash": "1888bdce073e684653b7460e9b1bb4c97e14c0afc1dc9566f801d8e720a84c78",
+      "text_chars": 31580,
+      "metadata_title": "Lenovo XClarity Essentials UpdateXpress cPlus 用户指南"
+    },
+    {
+      "name": "lxpm_wentian_ug-v2.pdf",
+      "size": 2508949,
+      "sha256": "7508bcd4c26266887f92c7c803a57cc9cc9d277229909af94f3cb60023844bdc",
+      "pages": 42,
+      "text_hash": "df96cc0957e7fb74289d16ba52c9bd5bfa94a6b5125707c32bf7790f14368740",
+      "text_chars": 12316,
+      "metadata_title": "Lenovo XClarity Provisioning Manager WenTian用户指南"
+    }
+  ],
+  "remote_documents": [
+    {
+      "document": {
+        "name": "lenovo_bmc_event_reference_guide_g3_v3.pdf",
+        "size": 1577058,
+        "sha256": "a71b021bfa18cd2ec8c70e0becee1afcf6af5a8c2dec4712a4cdc48b55c25fa4",
+        "pages": 100,
+        "text_hash": "7b1aa369291ff977ca01653b0c0fb4a44ceac603bd0b380de1a1a3cf681a01b3",
+        "text_chars": 69922,
+        "metadata_title": ""
+      },
+      "comparisons": [
+        {
+          "local_name": "lenovo_bmc_event_reference_guide_g5_v4.pdf",
+          "local_pages": 116,
+          "byte_identical": false,
+          "normalized_text_identical": false,
+          "shared_exact_nonempty_page_texts": 1
+        },
+        {
+          "local_name": "lxce_ux_cplus_ug.pdf",
+          "local_pages": 43,
+          "byte_identical": false,
+          "normalized_text_identical": false,
+          "shared_exact_nonempty_page_texts": 0
+        },
+        {
+          "local_name": "bmc_user_guide_v14.pdf",
+          "local_pages": 132,
+          "byte_identical": false,
+          "normalized_text_identical": false,
+          "shared_exact_nonempty_page_texts": 0
+        },
+        {
+          "local_name": "lxce_bomc_cplus_ug.pdf",
+          "local_pages": 22,
+          "byte_identical": false,
+          "normalized_text_identical": false,
+          "shared_exact_nonempty_page_texts": 0
+        },
+        {
+          "local_name": "lxpm_wentian_ug-v2.pdf",
+          "local_pages": 42,
+          "byte_identical": false,
+          "normalized_text_identical": false,
+          "shared_exact_nonempty_page_texts": 0
+        },
+        {
+          "local_name": "lenovo_wentian_os_installation_guide.pdf",
+          "local_pages": 179,
+          "byte_identical": false,
+          "normalized_text_identical": false,
+          "shared_exact_nonempty_page_texts": 0
+        },
+        {
+          "local_name": "lxce_onecli_cplus_ug.pdf",
+          "local_pages": 138,
+          "byte_identical": false,
+          "normalized_text_identical": false,
+          "shared_exact_nonempty_page_texts": 0
+        },
+        {
+          "local_name": "lenovo_bmc_g3_commands_guide_v2.pdf",
+          "local_pages": 46,
+          "byte_identical": false,
+          "normalized_text_identical": false,
+          "shared_exact_nonempty_page_texts": 0
+        },
+        {
+          "local_name": "lenovo_snmp_ug_g3.pdf",
+          "local_pages": 46,
+          "byte_identical": false,
+          "normalized_text_identical": false,
+          "shared_exact_nonempty_page_texts": 0
+        },
+        {
+          "local_name": "lp1705.pdf",
+          "local_pages": 78,
+          "byte_identical": false,
+          "normalized_text_identical": false,
+          "shared_exact_nonempty_page_texts": 0
+        },
+        {
+          "local_name": "lenovo_bmc_g3_redfish_guide_v11.pdf",
+          "local_pages": 423,
+          "byte_identical": false,
+          "normalized_text_identical": false,
+          "shared_exact_nonempty_page_texts": 0
+        },
+        {
+          "local_name": "lenovo_wentian_wr5220g3_user_guide_v18.pdf",
+          "local_pages": 397,
+          "byte_identical": false,
+          "normalized_text_identical": false,
+          "shared_exact_nonempty_page_texts": 0
+        }
+      ]
+    },
+    {
+      "document": {
+        "name": "psu_label_matrix.pdf",
+        "size": 1676894,
+        "sha256": "8ca145a1ab7450891da9af84933fdebe3042f9624ae25974bb34fb72782c1f39",
+        "pages": 7,
+        "text_hash": "d8ed2780e2838043cd2546a07a46b9db6b3424d3738d3992baee2a2e98a0368f",
+        "text_chars": 3282,
+        "metadata_title": " 1..2"
+      },
+      "comparisons": [
+        {
+          "local_name": "lxce_bomc_cplus_ug.pdf",
+          "local_pages": 22,
+          "byte_identical": false,
+          "normalized_text_identical": false,
+          "shared_exact_nonempty_page_texts": 0
+        },
+        {
+          "local_name": "lxce_ux_cplus_ug.pdf",
+          "local_pages": 43,
+          "byte_identical": false,
+          "normalized_text_identical": false,
+          "shared_exact_nonempty_page_texts": 0
+        },
+        {
+          "local_name": "lxpm_wentian_ug-v2.pdf",
+          "local_pages": 42,
+          "byte_identical": false,
+          "normalized_text_identical": false,
+          "shared_exact_nonempty_page_texts": 0
+        },
+        {
+          "local_name": "bmc_user_guide_v14.pdf",
+          "local_pages": 132,
+          "byte_identical": false,
+          "normalized_text_identical": false,
+          "shared_exact_nonempty_page_texts": 0
+        },
+        {
+          "local_name": "lenovo_wentian_os_installation_guide.pdf",
+          "local_pages": 179,
+          "byte_identical": false,
+          "normalized_text_identical": false,
+          "shared_exact_nonempty_page_texts": 0
+        },
+        {
+          "local_name": "lenovo_bmc_g3_commands_guide_v2.pdf",
+          "local_pages": 46,
+          "byte_identical": false,
+          "normalized_text_identical": false,
+          "shared_exact_nonempty_page_texts": 0
+        },
+        {
+          "local_name": "lenovo_bmc_event_reference_guide_g5_v4.pdf",
+          "local_pages": 116,
+          "byte_identical": false,
+          "normalized_text_identical": false,
+          "shared_exact_nonempty_page_texts": 0
+        },
+        {
+          "local_name": "lenovo_snmp_ug_g3.pdf",
+          "local_pages": 46,
+          "byte_identical": false,
+          "normalized_text_identical": false,
+          "shared_exact_nonempty_page_texts": 0
+        },
+        {
+          "local_name": "lxce_onecli_cplus_ug.pdf",
+          "local_pages": 138,
+          "byte_identical": false,
+          "normalized_text_identical": false,
+          "shared_exact_nonempty_page_texts": 0
+        },
+        {
+          "local_name": "lp1705.pdf",
+          "local_pages": 78,
+          "byte_identical": false,
+          "normalized_text_identical": false,
+          "shared_exact_nonempty_page_texts": 0
+        },
+        {
+          "local_name": "lenovo_wentian_wr5220g3_user_guide_v18.pdf",
+          "local_pages": 397,
+          "byte_identical": false,
+          "normalized_text_identical": false,
+          "shared_exact_nonempty_page_texts": 0
+        },
+        {
+          "local_name": "lenovo_bmc_g3_redfish_guide_v11.pdf",
+          "local_pages": 423,
+          "byte_identical": false,
+          "normalized_text_identical": false,
+          "shared_exact_nonempty_page_texts": 0
+        }
+      ]
+    },
+    {
+      "document": {
+        "name": "vmware_code_recipe_file.pdf",
+        "size": 508079,
+        "sha256": "b92580f11c67c86dedd6984cfaf11b13c3bb3ee7730ea7845f6aa1a94b7715df",
+        "pages": 5,
+        "text_hash": "9be57075cba7ee4a28db36b93a88d8889df2bb48afcb36564fb0f91530f2a9bb",
+        "text_chars": 27334,
+        "metadata_title": ""
+      },
+      "comparisons": [
+        {
+          "local_name": "lxce_ux_cplus_ug.pdf",
+          "local_pages": 43,
+          "byte_identical": false,
+          "normalized_text_identical": false,
+          "shared_exact_nonempty_page_texts": 0
+        },
+        {
+          "local_name": "lenovo_wentian_os_installation_guide.pdf",
+          "local_pages": 179,
+          "byte_identical": false,
+          "normalized_text_identical": false,
+          "shared_exact_nonempty_page_texts": 0
+        },
+        {
+          "local_name": "lxce_bomc_cplus_ug.pdf",
+          "local_pages": 22,
+          "byte_identical": false,
+          "normalized_text_identical": false,
+          "shared_exact_nonempty_page_texts": 0
+        },
+        {
+          "local_name": "lp1705.pdf",
+          "local_pages": 78,
+          "byte_identical": false,
+          "normalized_text_identical": false,
+          "shared_exact_nonempty_page_texts": 0
+        },
+        {
+          "local_name": "bmc_user_guide_v14.pdf",
+          "local_pages": 132,
+          "byte_identical": false,
+          "normalized_text_identical": false,
+          "shared_exact_nonempty_page_texts": 0
+        },
+        {
+          "local_name": "lenovo_wentian_wr5220g3_user_guide_v18.pdf",
+          "local_pages": 397,
+          "byte_identical": false,
+          "normalized_text_identical": false,
+          "shared_exact_nonempty_page_texts": 0
+        },
+        {
+          "local_name": "lxce_onecli_cplus_ug.pdf",
+          "local_pages": 138,
+          "byte_identical": false,
+          "normalized_text_identical": false,
+          "shared_exact_nonempty_page_texts": 0
+        },
+        {
+          "local_name": "lenovo_bmc_event_reference_guide_g5_v4.pdf",
+          "local_pages": 116,
+          "byte_identical": false,
+          "normalized_text_identical": false,
+          "shared_exact_nonempty_page_texts": 0
+        },
+        {
+          "local_name": "lxpm_wentian_ug-v2.pdf",
+          "local_pages": 42,
+          "byte_identical": false,
+          "normalized_text_identical": false,
+          "shared_exact_nonempty_page_texts": 0
+        },
+        {
+          "local_name": "lenovo_bmc_g3_commands_guide_v2.pdf",
+          "local_pages": 46,
+          "byte_identical": false,
+          "normalized_text_identical": false,
+          "shared_exact_nonempty_page_texts": 0
+        },
+        {
+          "local_name": "lenovo_snmp_ug_g3.pdf",
+          "local_pages": 46,
+          "byte_identical": false,
+          "normalized_text_identical": false,
+          "shared_exact_nonempty_page_texts": 0
+        },
+        {
+          "local_name": "lenovo_bmc_g3_redfish_guide_v11.pdf",
+          "local_pages": 423,
+          "byte_identical": false,
+          "normalized_text_identical": false,
+          "shared_exact_nonempty_page_texts": 0
+        }
+      ]
+    },
+    {
+      "document": {
+        "name": "wr5220g3_bios_setup_spec_v2.13.pdf",
+        "size": 13620825,
+        "sha256": "4d0754555ef1c4ae4f41225e6fdc210d502abc902371025caeb6b8cc8b313c1d",
+        "pages": 87,
+        "text_hash": "89c3bbf1991ded6ed7bf773cb5f3b9686eff9dc9d3b89d534f244ea3a6fe491c",
+        "text_chars": 66717,
+        "metadata_title": "wr5220 g3 bios setup spec v2.13"
+      },
+      "comparisons": [
+        {
+          "local_name": "lenovo_wentian_os_installation_guide.pdf",
+          "local_pages": 179,
+          "byte_identical": false,
+          "normalized_text_identical": false,
+          "shared_exact_nonempty_page_texts": 0
+        },
+        {
+          "local_name": "lenovo_wentian_wr5220g3_user_guide_v18.pdf",
+          "local_pages": 397,
+          "byte_identical": false,
+          "normalized_text_identical": false,
+          "shared_exact_nonempty_page_texts": 0
+        },
+        {
+          "local_name": "bmc_user_guide_v14.pdf",
+          "local_pages": 132,
+          "byte_identical": false,
+          "normalized_text_identical": false,
+          "shared_exact_nonempty_page_texts": 0
+        },
+        {
+          "local_name": "lxce_onecli_cplus_ug.pdf",
+          "local_pages": 138,
+          "byte_identical": false,
+          "normalized_text_identical": false,
+          "shared_exact_nonempty_page_texts": 0
+        },
+        {
+          "local_name": "lxce_bomc_cplus_ug.pdf",
+          "local_pages": 22,
+          "byte_identical": false,
+          "normalized_text_identical": false,
+          "shared_exact_nonempty_page_texts": 0
+        },
+        {
+          "local_name": "lp1705.pdf",
+          "local_pages": 78,
+          "byte_identical": false,
+          "normalized_text_identical": false,
+          "shared_exact_nonempty_page_texts": 0
+        },
+        {
+          "local_name": "lxce_ux_cplus_ug.pdf",
+          "local_pages": 43,
+          "byte_identical": false,
+          "normalized_text_identical": false,
+          "shared_exact_nonempty_page_texts": 0
+        },
+        {
+          "local_name": "lenovo_snmp_ug_g3.pdf",
+          "local_pages": 46,
+          "byte_identical": false,
+          "normalized_text_identical": false,
+          "shared_exact_nonempty_page_texts": 0
+        },
+        {
+          "local_name": "lenovo_bmc_g3_redfish_guide_v11.pdf",
+          "local_pages": 423,
+          "byte_identical": false,
+          "normalized_text_identical": false,
+          "shared_exact_nonempty_page_texts": 1
+        },
+        {
+          "local_name": "lenovo_bmc_event_reference_guide_g5_v4.pdf",
+          "local_pages": 116,
+          "byte_identical": false,
+          "normalized_text_identical": false,
+          "shared_exact_nonempty_page_texts": 0
+        },
+        {
+          "local_name": "lenovo_bmc_g3_commands_guide_v2.pdf",
+          "local_pages": 46,
+          "byte_identical": false,
+          "normalized_text_identical": false,
+          "shared_exact_nonempty_page_texts": 0
+        },
+        {
+          "local_name": "lxpm_wentian_ug-v2.pdf",
+          "local_pages": 42,
+          "byte_identical": false,
+          "normalized_text_identical": false,
+          "shared_exact_nonempty_page_texts": 0
+        }
+      ]
+    }
+  ],
+  "downloaded_temporary_files": [
+    {
+      "name": "wr5220g3_bios_setup_spec_v2.13.pdf",
+      "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/wr5220g3_bios_setup_spec_v2.13.pdf",
+      "size": 13620825,
+      "sha256": "4d0754555ef1c4ae4f41225e6fdc210d502abc902371025caeb6b8cc8b313c1d"
+    },
+    {
+      "name": "lenovo_bmc_event_reference_guide_g3_v3.pdf",
+      "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_bmc_event_reference_guide_g3_v3.pdf",
+      "size": 1577058,
+      "sha256": "a71b021bfa18cd2ec8c70e0becee1afcf6af5a8c2dec4712a4cdc48b55c25fa4"
+    },
+    {
+      "name": "psu_label_matrix.pdf",
+      "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/psu_label_matrix.pdf",
+      "size": 1676894,
+      "sha256": "8ca145a1ab7450891da9af84933fdebe3042f9624ae25974bb34fb72782c1f39"
+    },
+    {
+      "name": "vmware_code_recipe_file.pdf",
+      "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/vmware_code_recipe_file.pdf",
+      "size": 508079,
+      "sha256": "b92580f11c67c86dedd6984cfaf11b13c3bb3ee7730ea7845f6aa1a94b7715df"
+    }
+  ],
+  "byte_identical_matches": 0,
+  "normalized_text_identical_matches": 0,
+  "normalization": "Unicode NFKC and whitespace removal; extracted text comparison does not prove visual equivalence",
+  "bmc_event_reference": {
+    "same_document_family_confirmed": true,
+    "g3_file": "lenovo_bmc_event_reference_guide_g3_v3.pdf",
+    "g3_edition": 3,
+    "g3_publication": "April 2026",
+    "g3_pages": 100,
+    "g5_file": "lenovo_bmc_event_reference_guide_g5_v4.pdf",
+    "g5_edition": 4,
+    "g5_publication": "July 2026",
+    "g5_pages": 116,
+    "both_apply_to": "WenTian G3/G5 servers",
+    "applicability_evidence": "Both PDFs explicitly state scope on physical page6; newer PDF also names WR5220 G3",
+    "latest_local_edition_already_present": true,
+    "exact_duplicate": false,
+    "interpretation": "Third/fourth editions of the same manual; keep v4 for a current-edition library, rather than ingesting v3 as another missing family"
+  },
+  "genuinely_missing_documents": [
+    {
+      "name": "psu_label_matrix.pdf",
+      "pages": 7
+    },
+    {
+      "name": "vmware_code_recipe_file.pdf",
+      "pages": 5
+    },
+    {
+      "name": "wr5220g3_bios_setup_spec_v2.13.pdf",
+      "pages": 87
+    }
+  ],
+  "updated_family_counts": {
+    "raw_catalog_records": 18,
+    "latest_title_language_groups_before": 15,
+    "logical_document_families_after_bmc_alias_merge": 14,
+    "current_local_asp_documents": 11,
+    "missing_current_asp_documents": 3,
+    "additional_current_local_lenovo_press": 1
+  },
+  "production_changes": false,
+  "n8n_changes": false,
+  "temporary_artifacts_removed": true
+}

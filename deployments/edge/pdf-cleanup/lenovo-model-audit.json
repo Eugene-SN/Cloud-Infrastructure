@@ -1,0 +1,395 @@
+{
+  "date": "2026-10-05",
+  "mode": "READ_ONLY_AUDIT",
+  "model": "WR5220 G3",
+  "paths": {
+    "originals": "/srv/cloud/technical-documentation/lenovo/originals/WR5220 G3/",
+    "cleaned": "/srv/cloud/technical-documentation/lenovo/cleaned/WR5220 G3/",
+    "translated_en": "/srv/cloud/technical-documentation/lenovo/translated/en/WR5220 G3/",
+    "translated_ru": "/srv/cloud/technical-documentation/lenovo/translated/ru/WR5220 G3/"
+  },
+  "path_status": {
+    "originals": "exists, operator-created",
+    "cleaned": "not yet created",
+    "translated_en": "not yet created",
+    "translated_ru": "not yet created"
+  },
+  "inventory": {
+    "catalog_rows": 18,
+    "document_groups": 15,
+    "local_files": 13,
+    "local_inventory": [
+      {
+        "name": "lxce_onecli_cplus_ug.pdf",
+        "size": 856757,
+        "sha256": "dba774fbccfbd4c2e7e84819f2c213a37af77862be9143344db0f64e7f5e3440"
+      },
+      {
+        "name": "lxce_ux_cplus_ug.pdf",
+        "size": 778902,
+        "sha256": "db4f1f0c538d2e623a2b9b9f9de76ad7cc64776076d3246a5cd562c6d0c5576c"
+      },
+      {
+        "name": "bmc_user_guide_v14.pdf",
+        "size": 4197674,
+        "sha256": "acba1574ddaf24faa0eb69644e9114be553ee44f45ce2960d0bcefb66a4539d4"
+      },
+      {
+        "name": "lenovo_bmc_event_reference_guide_g5_v4.pdf",
+        "size": 1751445,
+        "sha256": "fc4a694ce1574db865fe41a904d185bc85092598a5b6a6d0cbbff739c75411ef"
+      },
+      {
+        "name": "lxpm_wentian_ug-v2.pdf",
+        "size": 2508949,
+        "sha256": "7508bcd4c26266887f92c7c803a57cc9cc9d277229909af94f3cb60023844bdc"
+      },
+      {
+        "name": "lp1705.pdf",
+        "size": 5056741,
+        "sha256": "f3b4f9d125fee56c228b36354a30198ddd14933cb755fdc7dc1ef2d4af8442e7"
+      },
+      {
+        "name": "lenovo_bmc_g3_redfish_guide_v11.pdf",
+        "size": 8326662,
+        "sha256": "456897573c42b3e7eb767b248e3c588a987b7f23b2a0c70a344e816b91837ee8"
+      },
+      {
+        "name": "lenovo_wentian_wr5220g3_user_guide_v18.pdf",
+        "size": 30511980,
+        "sha256": "15b16176143792fd24287d10f29e46cc039660e802a0e2070cc14128f5ea53e6"
+      },
+      {
+        "name": "--lenovo_wentian_wr5220g3_user_guide_v18.pdf",
+        "size": 20554122,
+        "sha256": "ff13a77755ed9dd4b97ada92c90cb79e58d5b3d04ef654fc23c7358a1d76ec03"
+      },
+      {
+        "name": "lenovo_snmp_ug_g3.pdf",
+        "size": 1136366,
+        "sha256": "54364f7a996ac070098bfa4d0b8de530660edc2aaacd73550584c57373b8256e"
+      },
+      {
+        "name": "lenovo_bmc_g3_commands_guide_v2.pdf",
+        "size": 1158155,
+        "sha256": "7273f8d5c3336bfdffe70e3b056d74d0ec08a75856cdb25b65daa3b66cedec46"
+      },
+      {
+        "name": "lxce_bomc_cplus_ug.pdf",
+        "size": 638956,
+        "sha256": "c41b84786be486e197ab7604f58b63be062948a8e73455f0c17fb013158959e8"
+      },
+      {
+        "name": "lenovo_wentian_os_installation_guide.pdf",
+        "size": 13673279,
+        "sha256": "f5d59ae8c6bfc792ae28160790ce0f673b8d940de86f98ed7e326fb40cfaec17"
+      }
+    ]
+  },
+  "summary": {
+    "identical": 12,
+    "missing": 4,
+    "different": 0,
+    "unverified": 0,
+    "unmatched_local": 1
+  },
+  "records": [
+    {
+      "remote_name": "lxce_ux_cplus_ug.pdf",
+      "title": "Lenovo XClarity Essentials UpdateXpress cPlus 用户指南",
+      "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lxce_ux_cplus_ug.pdf",
+      "updated": "2026-08-27",
+      "language": "zc",
+      "http_status": 200,
+      "remote_size": 778902,
+      "remote_sha256": "db4f1f0c538d2e623a2b9b9f9de76ad7cc64776076d3246a5cd562c6d0c5576c",
+      "etag": "\"5f2fa0f5e935dd1:0\"",
+      "last_modified": "Thu, 27 Aug 2026 06:04:45 GMT",
+      "local": {
+        "name": "lxce_ux_cplus_ug.pdf",
+        "size": 778902,
+        "sha256": "db4f1f0c538d2e623a2b9b9f9de76ad7cc64776076d3246a5cd562c6d0c5576c"
+      },
+      "outcome": "identical"
+    },
+    {
+      "remote_name": "lxce_onecli_cplus_ug.pdf",
+      "title": "Lenovo XClarity Essentials OneCLI cPlus 用户指南",
+      "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lxce_onecli_cplus_ug.pdf",
+      "updated": "2026-08-27",
+      "language": "zc",
+      "http_status": 200,
+      "remote_size": 856757,
+      "remote_sha256": "dba774fbccfbd4c2e7e84819f2c213a37af77862be9143344db0f64e7f5e3440",
+      "etag": "\"b2ea11f4e935dd1:0\"",
+      "last_modified": "Thu, 27 Aug 2026 06:04:42 GMT",
+      "local": {
+        "name": "lxce_onecli_cplus_ug.pdf",
+        "size": 856757,
+        "sha256": "dba774fbccfbd4c2e7e84819f2c213a37af77862be9143344db0f64e7f5e3440"
+      },
+      "outcome": "identical"
+    },
+    {
+      "remote_name": "wr5220g3_bios_setup_spec_v2.13.pdf",
+      "title": "WR5220 G3 BIOS Setup Spec V2.13",
+      "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/wr5220g3_bios_setup_spec_v2.13.pdf",
+      "updated": "2026-04-21",
+      "language": "en",
+      "http_status": 200,
+      "remote_size": "13620825",
+      "etag": "\"515c165251cedc1:0\"",
+      "last_modified": "Fri, 17 Apr 2026 10:02:37 GMT",
+      "outcome": "missing_local"
+    },
+    {
+      "remote_name": "lxce_bomc_cplus_ug.pdf",
+      "title": "Lenovo XClarity Essentials BoMC cPlus 用户指南",
+      "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lxce_bomc_cplus_ug.pdf",
+      "updated": "2026-08-27",
+      "language": "zc",
+      "http_status": 200,
+      "remote_size": 638956,
+      "remote_sha256": "c41b84786be486e197ab7604f58b63be062948a8e73455f0c17fb013158959e8",
+      "etag": "\"22864df4e935dd1:0\"",
+      "last_modified": "Thu, 27 Aug 2026 06:04:43 GMT",
+      "local": {
+        "name": "lxce_bomc_cplus_ug.pdf",
+        "size": 638956,
+        "sha256": "c41b84786be486e197ab7604f58b63be062948a8e73455f0c17fb013158959e8"
+      },
+      "outcome": "identical"
+    },
+    {
+      "remote_name": "lenovo_bmc_event_reference_guide_g5_v4.pdf",
+      "title": "Lenovo BMC 日志参考手册",
+      "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_bmc_event_reference_guide_g5_v4.pdf",
+      "updated": "2026-07-31",
+      "language": "zc",
+      "http_status": 200,
+      "remote_size": 1751445,
+      "remote_sha256": "fc4a694ce1574db865fe41a904d185bc85092598a5b6a6d0cbbff739c75411ef",
+      "etag": "\"59f1bfa1cc20dd1:0\"",
+      "last_modified": "Fri, 31 Jul 2026 09:11:55 GMT",
+      "local": {
+        "name": "lenovo_bmc_event_reference_guide_g5_v4.pdf",
+        "size": 1751445,
+        "sha256": "fc4a694ce1574db865fe41a904d185bc85092598a5b6a6d0cbbff739c75411ef"
+      },
+      "outcome": "identical"
+    },
+    {
+      "remote_name": "bmc_user_guide_v14.pdf",
+      "title": "Lenovo BMC 企业版用户操作指南 G3",
+      "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/bmc_user_guide_v14.pdf",
+      "updated": "2026-04-10",
+      "language": "zc",
+      "http_status": 200,
+      "remote_size": 4197674,
+      "remote_sha256": "acba1574ddaf24faa0eb69644e9114be553ee44f45ce2960d0bcefb66a4539d4",
+      "etag": "\"b84edba8dc8dc1:0\"",
+      "last_modified": "Fri, 10 Apr 2026 01:59:56 GMT",
+      "local": {
+        "name": "bmc_user_guide_v14.pdf",
+        "size": 4197674,
+        "sha256": "acba1574ddaf24faa0eb69644e9114be553ee44f45ce2960d0bcefb66a4539d4"
+      },
+      "outcome": "identical"
+    },
+    {
+      "remote_name": "lenovo_wentian_wr5220g3_user_guide_v18.pdf",
+      "title": "联想问天 WR5220 G3 WR5228 G3 服务器用户手册",
+      "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_wentian_wr5220g3_user_guide_v18.pdf",
+      "updated": "2026-09-17",
+      "language": "zc",
+      "http_status": 200,
+      "remote_size": 30511980,
+      "remote_sha256": "15b16176143792fd24287d10f29e46cc039660e802a0e2070cc14128f5ea53e6",
+      "etag": "\"ac81274a7046dd1:0\"",
+      "last_modified": "Thu, 17 Sep 2026 06:46:38 GMT",
+      "local": {
+        "name": "lenovo_wentian_wr5220g3_user_guide_v18.pdf",
+        "size": 30511980,
+        "sha256": "15b16176143792fd24287d10f29e46cc039660e802a0e2070cc14128f5ea53e6"
+      },
+      "outcome": "identical"
+    },
+    {
+      "remote_name": "lenovo_snmp_ug_g3.pdf",
+      "title": "Lenovo BMC SNMP 参考手册",
+      "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_snmp_ug_g3.pdf",
+      "updated": "2026-04-10",
+      "language": "zc",
+      "http_status": 200,
+      "remote_size": 1136366,
+      "remote_sha256": "54364f7a996ac070098bfa4d0b8de530660edc2aaacd73550584c57373b8256e",
+      "etag": "\"47d6311d30d1dc1:0\"",
+      "last_modified": "Tue, 21 Apr 2026 01:42:29 GMT",
+      "local": {
+        "name": "lenovo_snmp_ug_g3.pdf",
+        "size": 1136366,
+        "sha256": "54364f7a996ac070098bfa4d0b8de530660edc2aaacd73550584c57373b8256e"
+      },
+      "outcome": "identical"
+    },
+    {
+      "remote_name": "lenovo_bmc_event_reference_guide_g3_v3.pdf",
+      "title": "Lenovo BMC G3 日志参考手册",
+      "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_bmc_event_reference_guide_g3_v3.pdf",
+      "updated": "2026-04-10",
+      "language": "zc",
+      "http_status": 200,
+      "remote_size": "1577058",
+      "etag": "\"f179ceb98dc8dc1:0\"",
+      "last_modified": "Fri, 10 Apr 2026 01:59:54 GMT",
+      "outcome": "missing_local"
+    },
+    {
+      "remote_name": "lenovo_bmc_g3_redfish_guide_v11.pdf",
+      "title": "Lenovo BMC G3 REDFISH 接口规范",
+      "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_bmc_g3_redfish_guide_v11.pdf",
+      "updated": "2026-04-10",
+      "language": "zc",
+      "http_status": 200,
+      "remote_size": 8326662,
+      "remote_sha256": "456897573c42b3e7eb767b248e3c588a987b7f23b2a0c70a344e816b91837ee8",
+      "etag": "\"e7fe6bbd8dc8dc1:0\"",
+      "last_modified": "Fri, 10 Apr 2026 02:00:00 GMT",
+      "local": {
+        "name": "lenovo_bmc_g3_redfish_guide_v11.pdf",
+        "size": 8326662,
+        "sha256": "456897573c42b3e7eb767b248e3c588a987b7f23b2a0c70a344e816b91837ee8"
+      },
+      "outcome": "identical"
+    },
+    {
+      "remote_name": "lenovo_wentian_os_installation_guide.pdf",
+      "title": "联想问天服务器操作系统安装指南",
+      "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_wentian_os_installation_guide.pdf",
+      "updated": "2026-03-23",
+      "language": "zc",
+      "http_status": 200,
+      "remote_size": 13673279,
+      "remote_sha256": "f5d59ae8c6bfc792ae28160790ce0f673b8d940de86f98ed7e326fb40cfaec17",
+      "etag": "\"d04a778c55ecdc1:0\"",
+      "last_modified": "Mon, 25 May 2026 14:48:28 GMT",
+      "local": {
+        "name": "lenovo_wentian_os_installation_guide.pdf",
+        "size": 13673279,
+        "sha256": "f5d59ae8c6bfc792ae28160790ce0f673b8d940de86f98ed7e326fb40cfaec17"
+      },
+      "outcome": "identical"
+    },
+    {
+      "remote_name": "lenovo_bmc_g3_commands_guide_v2.pdf",
+      "title": "Lenovo BMC IPMI 命令规范",
+      "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_bmc_g3_commands_guide_v2.pdf",
+      "updated": "2026-04-13",
+      "language": "zc",
+      "http_status": 200,
+      "remote_size": 1158155,
+      "remote_sha256": "7273f8d5c3336bfdffe70e3b056d74d0ec08a75856cdb25b65daa3b66cedec46",
+      "etag": "\"7e1bb483e8cadc1:0\"",
+      "last_modified": "Mon, 13 Apr 2026 01:54:50 GMT",
+      "local": {
+        "name": "lenovo_bmc_g3_commands_guide_v2.pdf",
+        "size": 1158155,
+        "sha256": "7273f8d5c3336bfdffe70e3b056d74d0ec08a75856cdb25b65daa3b66cedec46"
+      },
+      "outcome": "identical"
+    },
+    {
+      "remote_name": "lxpm_wentian_ug-v2.pdf",
+      "title": "Lenovo XClarity Provisioning Manager WenTian 用户指南",
+      "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lxpm_wentian_ug-v2.pdf",
+      "updated": "2026-02-04",
+      "language": "zc",
+      "http_status": 200,
+      "remote_size": 2508949,
+      "remote_sha256": "7508bcd4c26266887f92c7c803a57cc9cc9d277229909af94f3cb60023844bdc",
+      "etag": "\"dc3e3c4a395dc1:0\"",
+      "last_modified": "Wed, 04 Feb 2026 06:59:11 GMT",
+      "local": {
+        "name": "lxpm_wentian_ug-v2.pdf",
+        "size": 2508949,
+        "sha256": "7508bcd4c26266887f92c7c803a57cc9cc9d277229909af94f3cb60023844bdc"
+      },
+      "outcome": "identical"
+    },
+    {
+      "remote_name": "vmware_code_recipe_file.pdf",
+      "title": "VMware Code Recipe File 3.0",
+      "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/vmware_code_recipe_file.pdf",
+      "updated": "2023-10-30",
+      "language": "en",
+      "http_status": 200,
+      "remote_size": "508079",
+      "etag": "\"d2deea4dbda1:0\"",
+      "last_modified": "Mon, 30 Oct 2023 08:46:59 GMT",
+      "outcome": "missing_local"
+    },
+    {
+      "remote_name": "psu_label_matrix.pdf",
+      "title": "联想服务器电源标签",
+      "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/psu_label_matrix.pdf",
+      "updated": "2025-05-06",
+      "language": "zc",
+      "http_status": 200,
+      "remote_size": "1676894",
+      "etag": "\"30285b30a7b9db1:0\"",
+      "last_modified": "Wed, 30 Apr 2025 08:09:25 GMT",
+      "outcome": "missing_local"
+    },
+    {
+      "remote_name": "lp1705.pdf",
+      "title": "Lenovo Press LP1705",
+      "url": "https://lenovopress.lenovo.com/lp1705.pdf",
+      "updated": null,
+      "language": "zc",
+      "http_status": 200,
+      "remote_size": 5056741,
+      "remote_sha256": "f3b4f9d125fee56c228b36354a30198ddd14933cb755fdc7dc1ef2d4af8442e7",
+      "etag": null,
+      "last_modified": "Wed, 30 Sep 2026 15:22:09 GMT",
+      "local": {
+        "name": "lp1705.pdf",
+        "size": 5056741,
+        "sha256": "f3b4f9d125fee56c228b36354a30198ddd14933cb755fdc7dc1ef2d4af8442e7"
+      },
+      "outcome": "identical"
+    }
+  ],
+  "unmatched_local": [
+    {
+      "name": "--lenovo_wentian_wr5220g3_user_guide_v18.pdf",
+      "size": 20554122,
+      "sha256": "ff13a77755ed9dd4b97ada92c90cb79e58d5b3d04ef654fc23c7358a1d76ec03"
+    }
+  ],
+  "comparison": "SHA-256 of locally read files and streamed remote GET for existing files; HEAD only for missing files; no remote PDF saved locally",
+  "production_mutations": false,
+  "n8n_mutations": false,
+  "final_inventory_changes": {
+    "removed": [
+      "--lenovo_wentian_wr5220g3_user_guide_v18.pdf"
+    ],
+    "added": [],
+    "remaining_files": 12,
+    "remaining_hashes_unchanged": true,
+    "attribution": "Change observed during read-only audit; agent issued no file deletion"
+  },
+  "simulated_comparison_tests": {
+    "unchanged_actual_records_skip": 12,
+    "missing_actual_records_download": 4,
+    "passed": [
+      "changed ETag",
+      "changed catalog date",
+      "changed URL",
+      "user-guide v18/v19 same family",
+      "BIOS v2.13/v2.14 same family",
+      "same family in different models separate keys",
+      "Last-Modified fallback for LP1705"
+    ],
+    "scope": "Pure proposed comparison logic; not a deployed monitoring workflow"
+  }
+}

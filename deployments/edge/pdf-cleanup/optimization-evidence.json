@@ -1,0 +1,533 @@
+{
+  "date": "2026-10-05",
+  "status": "OPTIMIZED_TESTED_PENDING_OPERATOR_ACCEPTANCE",
+  "workflow_id": "ENo9jFkwcE4PFOyL",
+  "nodes_before": 36,
+  "nodes_after": 20,
+  "branches_before": 6,
+  "branches_after": 2,
+  "code_nodes_before": 14,
+  "code_nodes_after": 5,
+  "job_adapter_sha256": "367237277b39413e52c877189cf087214c22300ad4e6d7dbd4a848e3138105ae",
+  "cli_source_commit": "8257cb36be7856a0abe89ea27562f847fcf45a8e",
+  "cli_image_unchanged": true,
+  "validation": {
+    "all_20_nodes_valid": true,
+    "sdk_workflow_valid": true,
+    "no_warnings": true
+  },
+  "adapter_tests": {
+    "count": 7,
+    "passed": true,
+    "scope": "Synthetic CLI subprocess fixtures validate adapter contracts; installed cleanup algorithm is unchanged"
+  },
+  "local_workflow_logic": {
+    "publication_precondition_cases": 5,
+    "finalization_cases": 6,
+    "sidecar_gate_cases": 2,
+    "all_passed": true,
+    "scope": "Generated Code-node logic; simulated HTTP failures and ETag changes"
+  },
+  "live_preparation": {
+    "execution": {
+      "id": "11143",
+      "workflowId": "ENo9jFkwcE4PFOyL",
+      "mode": "manual",
+      "status": "success",
+      "startedAt": "2026-10-05T08:08:12.921Z",
+      "stoppedAt": "2026-10-05T08:08:16.250Z",
+      "retryOf": null,
+      "retrySuccessId": null,
+      "waitTill": null
+    },
+    "run": {
+      "Run PDF Cleanup CLI": [
+        {
+          "startTime": 1791187695178,
+          "executionIndex": 7,
+          "source": [
+            {
+              "previousNode": "Upload Working Copy",
+              "previousNodeOutput": 0,
+              "previousNodeRun": 0
+            }
+          ],
+          "hints": [],
+          "executionTime": 476,
+          "executionStatus": "success",
+          "data": {
+            "main": [
+              [
+                {
+                  "json": {
+                    "code": 0,
+                    "signal": null,
+                    "stdout": "{\"ok\": true, \"status\": \"prepared\", \"cleaned\": false, \"input_sha256\": \"f3b4f9d125fee56c228b36354a30198ddd14933cb755fdc7dc1ef2d4af8442e7\", \"input_size\": 5056741, \"source_etag\": \"\\\"8304673c44957deeef17183042f66ed4\\\"\"}",
+                    "stderr": ""
+                  },
+                  "pairedItem": {
+                    "item": 0
+                  }
+                }
+              ]
+            ]
+          }
+        }
+      ],
+      "Return Result": [
+        {
+          "startTime": 1791187696224,
+          "executionIndex": 11,
+          "source": [
+            {
+              "previousNode": "Remove Temporary Job",
+              "previousNodeOutput": 0,
+              "previousNodeRun": 0
+            }
+          ],
+          "hints": [],
+          "executionTime": 26,
+          "executionStatus": "success",
+          "data": {
+            "main": [
+              [
+                {
+                  "json": {
+                    "ok": true,
+                    "status": "prepared",
+                    "cleaned": false,
+                    "original_path": "/technical-documentation/lenovo/originals/lp1705.pdf",
+                    "input_sha256": "f3b4f9d125fee56c228b36354a30198ddd14933cb755fdc7dc1ef2d4af8442e7",
+                    "input_size": 5056741,
+                    "source_etag": "\"8304673c44957deeef17183042f66ed4\"",
+                    "temporary_job_removed": true
+                  },
+                  "pairedItem": {
+                    "item": 0
+                  }
+                }
+              ]
+            ]
+          }
+        }
+      ],
+      "Remove Temporary Job": [
+        {
+          "startTime": 1791187695705,
+          "executionIndex": 10,
+          "source": [
+            {
+              "previousNode": "Finalize Job",
+              "previousNodeOutput": 0,
+              "previousNodeRun": 0
+            }
+          ],
+          "hints": [],
+          "executionTime": 518,
+          "executionStatus": "success",
+          "data": {
+            "main": [
+              [
+                {
+                  "json": {
+                    "code": 0,
+                    "signal": null,
+                    "stdout": "{\"ok\": true, \"job_removed\": true}",
+                    "stderr": ""
+                  },
+                  "pairedItem": {
+                    "item": 0
+                  }
+                }
+              ]
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "live_cleanup": {
+    "execution": {
+      "id": "11145",
+      "workflowId": "ENo9jFkwcE4PFOyL",
+      "mode": "manual",
+      "status": "success",
+      "startedAt": "2026-10-05T08:08:47.402Z",
+      "stoppedAt": "2026-10-05T08:09:22.685Z",
+      "retryOf": null,
+      "retrySuccessId": null,
+      "waitTill": null
+    },
+    "run": {
+      "Run PDF Cleanup CLI": [
+        {
+          "startTime": 1791187729050,
+          "executionIndex": 7,
+          "source": [
+            {
+              "previousNode": "Upload Working Copy",
+              "previousNodeOutput": 0,
+              "previousNodeRun": 0
+            }
+          ],
+          "hints": [],
+          "executionTime": 30579,
+          "executionStatus": "success",
+          "data": {
+            "main": [
+              [
+                {
+                  "json": {
+                    "code": 0,
+                    "signal": null,
+                    "stdout": "{\"ok\": true, \"cli_rc\": 0, \"summary\": {\"schema_version\": 1, \"tool_version\": \"0.1.3\", \"source_commit\": \"8257cb36be7856a0abe89ea27562f847fcf45a8e\", \"input\": \"/tmp/pdf-cleanup-31ccuhed/input/source.pdf\", \"output\": \"/tmp/pdf-cleanup-31ccuhed/output/cleaned.pdf\", \"input_sha256\": \"f3b4f9d125fee56c228b36354a30198ddd14933cb755fdc7dc1ef2d4af8442e7\", \"pages\": 78, \"header_footer_fragments\": 78, \"removed_header_rows\": 0, \"removed_footer_rows\": 78, \"footer_pages\": 78, \"removed_links\": {\"/URI\": 17}, \"removed_widgets\": 1, \"cleanup_method\": \"text_redaction\", \"status\": \"cleaned\", \"output_sha256\": \"4dc6eafee234f6e0f4131097f096761b4383925012523c0221d1a03aae900592\", \"validation\": \"passed\"}, \"stderr\": \"\", \"status\": \"cleaned\", \"cleaned\": true, \"output_sha256\": \"4dc6eafee234f6e0f4131097f096761b4383925012523c0221d1a03aae900592\"}",
+                    "stderr": ""
+                  },
+                  "pairedItem": {
+                    "item": 0
+                  }
+                }
+              ]
+            ]
+          }
+        }
+      ],
+      "Return Result": [
+        {
+          "startTime": 1791187762658,
+          "executionIndex": 18,
+          "source": [
+            {
+              "previousNode": "Remove Temporary Job",
+              "previousNodeOutput": 0,
+              "previousNodeRun": 0
+            }
+          ],
+          "hints": [],
+          "executionTime": 27,
+          "executionStatus": "success",
+          "data": {
+            "main": [
+              [
+                {
+                  "json": {
+                    "ok": true,
+                    "status": "cleaned",
+                    "cleaned": true,
+                    "original_path": "/technical-documentation/lenovo/originals/lp1705.pdf",
+                    "cleaned_path": "/technical-documentation/lenovo/cleaned/lp1705.pdf",
+                    "summary": {
+                      "schema_version": 1,
+                      "tool_version": "0.1.3",
+                      "source_commit": "8257cb36be7856a0abe89ea27562f847fcf45a8e",
+                      "input": "/tmp/pdf-cleanup-31ccuhed/input/source.pdf",
+                      "output": "/tmp/pdf-cleanup-31ccuhed/output/cleaned.pdf",
+                      "input_sha256": "f3b4f9d125fee56c228b36354a30198ddd14933cb755fdc7dc1ef2d4af8442e7",
+                      "pages": 78,
+                      "header_footer_fragments": 78,
+                      "removed_header_rows": 0,
+                      "removed_footer_rows": 78,
+                      "footer_pages": 78,
+                      "removed_links": {
+                        "/URI": 17
+                      },
+                      "removed_widgets": 1,
+                      "cleanup_method": "text_redaction",
+                      "status": "cleaned",
+                      "output_sha256": "4dc6eafee234f6e0f4131097f096761b4383925012523c0221d1a03aae900592",
+                      "validation": "passed"
+                    },
+                    "temporary_job_removed": true
+                  },
+                  "pairedItem": {
+                    "item": 0
+                  }
+                }
+              ]
+            ]
+          }
+        }
+      ],
+      "Remove Temporary Job": [
+        {
+          "startTime": 1791187762094,
+          "executionIndex": 17,
+          "source": [
+            {
+              "previousNode": "Finalize Job",
+              "previousNodeOutput": 0,
+              "previousNodeRun": 0
+            }
+          ],
+          "hints": [],
+          "executionTime": 563,
+          "executionStatus": "success",
+          "data": {
+            "main": [
+              [
+                {
+                  "json": {
+                    "code": 0,
+                    "signal": null,
+                    "stdout": "{\"ok\": true, \"job_removed\": true}",
+                    "stderr": ""
+                  },
+                  "pairedItem": {
+                    "item": 0
+                  }
+                }
+              ]
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "controlled_upload_failure": {
+    "execution": {
+      "id": "11151",
+      "workflowId": "ENo9jFkwcE4PFOyL",
+      "mode": "manual",
+      "status": "error",
+      "startedAt": "2026-10-05T08:10:05.076Z",
+      "stoppedAt": "2026-10-05T08:10:07.620Z",
+      "retryOf": null,
+      "retrySuccessId": null,
+      "waitTill": null
+    },
+    "run": {
+      "Run PDF Cleanup CLI": [
+        {
+          "startTime": 1791187806509,
+          "executionIndex": 7,
+          "source": [
+            {
+              "previousNode": "Upload Working Copy",
+              "previousNodeOutput": 0,
+              "previousNodeRun": 0
+            }
+          ],
+          "hints": [],
+          "executionTime": 484,
+          "executionStatus": "success",
+          "data": {
+            "main": [
+              [
+                {
+                  "json": {
+                    "code": 0,
+                    "signal": null,
+                    "stdout": "{\"ok\": false, \"error\": \"ValueError: Snapshot upload failed\"}",
+                    "stderr": ""
+                  },
+                  "pairedItem": {
+                    "item": 0
+                  }
+                }
+              ]
+            ]
+          }
+        }
+      ],
+      "Return Result": [
+        {
+          "startTime": 1791187807583,
+          "executionIndex": 11,
+          "source": [
+            {
+              "previousNode": "Remove Temporary Job",
+              "previousNodeOutput": 0,
+              "previousNodeRun": 0
+            }
+          ],
+          "hints": [],
+          "executionTime": 37,
+          "executionStatus": "error",
+          "error": {
+            "level": "info",
+            "shouldReport": false,
+            "description": null,
+            "tags": {},
+            "name": "WrappedExecutionError",
+            "lineNumber": 8,
+            "message": "{\"ok\":false,\"status\":\"error\",\"cleaned\":false,\"original_path\":\"/technical-documentation/lenovo/originals/lp1705.pdf\",\"error\":\"ValueError: Snapshot upload failed\",\"temporary_job_removed\":true} [line 8]",
+            "stack": "WrappedExecutionError: {\"ok\":false,\"status\":\"error\",\"cleaned\":false,\"original_path\":\"/technical-documentation/lenovo/originals/lp1705.pdf\",\"error\":\"ValueError: Snapshot upload failed\",\"temporary_job_removed\":true} [line 8]\n    at throwExecutionError (/usr/local/lib/node_modules/n8n/node_modules/.pnpm/n8n-nodes-base@file++++home+runner+_work+n8n+n8n+packages+nodes-base/node_modules/n8n-nodes-base/nodes/Code/throw-execution-error.ts:11:9)\n    at JsTaskRunnerSandbox.runCodeAllItems (/usr/local/lib/node_modules/n8n/node_modules/.pnpm/n8n-nodes-base@file++++home+runner+_work+n8n+n8n+packages+nodes-base/node_modules/n8n-nodes-base/nodes/Code/JsTaskRunnerSandbox.ts:46:23)\n    at processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at ExecuteContext.execute (/usr/local/lib/node_modules/n8n/node_modules/.pnpm/n8n-nodes-base@file++++home+runner+_work+n8n+n8n+packages+nodes-base/node_modules/n8n-nodes-base/nodes/Code/Code.node.ts:219:8)\n    at WorkflowExecute.executeNode (/usr/local/lib/node_modules/n8n/node_modules/.pnpm/n8n-core@file++++home+runner+_work+n8n+n8n+packages+core/node_modules/n8n-core/src/execution-engine/workflow-execute.ts:1129:8)\n    at WorkflowExecute.runNode (/usr/local/lib/node_modules/n8n/node_modules/.pnpm/n8n-core@file++++home+runner+_work+n8n+n8n+packages+core/node_modules/n8n-core/src/execution-engine/workflow-execute.ts:1431:11)\n    at /usr/local/lib/node_modules/n8n/node_modules/.pnpm/n8n-core@file++++home+runner+_work+n8n+n8n+packages+core/node_modules/n8n-core/src/execution-engine/workflow-execute.ts:2333:27\n    at /usr/local/lib/node_modules/n8n/node_modules/.pnpm/n8n-core@file++++home+runner+_work+n8n+n8n+packages+core/node_modules/n8n-core/src/execution-engine/workflow-execute.ts:2814:11"
+          }
+        }
+      ],
+      "Remove Temporary Job": [
+        {
+          "startTime": 1791187807025,
+          "executionIndex": 10,
+          "source": [
+            {
+              "previousNode": "Finalize Job",
+              "previousNodeOutput": 0,
+              "previousNodeRun": 0
+            }
+          ],
+          "hints": [],
+          "executionTime": 556,
+          "executionStatus": "success",
+          "data": {
+            "main": [
+              [
+                {
+                  "json": {
+                    "code": 0,
+                    "signal": null,
+                    "stdout": "{\"ok\": true, \"job_removed\": true}",
+                    "stderr": ""
+                  },
+                  "pairedItem": {
+                    "item": 0
+                  }
+                }
+              ]
+            ]
+          }
+        }
+      ]
+    },
+    "simulation": "Only Upload Working Copy output was pinned as failure; actual job creation, processing refusal, removal and failing Return Result ran live; publication nodes did not run."
+  },
+  "invalid_filename": {
+    "executionId": "11153",
+    "status": "error",
+    "error": "filename must be a PDF filename inside Lenovo originals, without directory components [line 9]"
+  },
+  "manual_defaults": {
+    "execution": {
+      "id": "11154",
+      "workflowId": "ENo9jFkwcE4PFOyL",
+      "mode": "manual",
+      "status": "success",
+      "startedAt": "2026-10-05T08:10:07.936Z",
+      "stoppedAt": "2026-10-05T08:10:10.518Z",
+      "retryOf": null,
+      "retrySuccessId": null,
+      "waitTill": null
+    },
+    "run": {
+      "Run PDF Cleanup CLI": [
+        {
+          "startTime": 1791187809508,
+          "executionIndex": 7,
+          "source": [
+            {
+              "previousNode": "Upload Working Copy",
+              "previousNodeOutput": 0,
+              "previousNodeRun": 0
+            }
+          ],
+          "hints": [],
+          "executionTime": 501,
+          "executionStatus": "success",
+          "data": {
+            "main": [
+              [
+                {
+                  "json": {
+                    "code": 0,
+                    "signal": null,
+                    "stdout": "{\"ok\": true, \"status\": \"prepared\", \"cleaned\": false, \"input_sha256\": \"f3b4f9d125fee56c228b36354a30198ddd14933cb755fdc7dc1ef2d4af8442e7\", \"input_size\": 5056741, \"source_etag\": \"\\\"8304673c44957deeef17183042f66ed4\\\"\"}",
+                    "stderr": ""
+                  },
+                  "pairedItem": {
+                    "item": 0
+                  }
+                }
+              ]
+            ]
+          }
+        }
+      ],
+      "Return Result": [
+        {
+          "startTime": 1791187810498,
+          "executionIndex": 11,
+          "source": [
+            {
+              "previousNode": "Remove Temporary Job",
+              "previousNodeOutput": 0,
+              "previousNodeRun": 0
+            }
+          ],
+          "hints": [],
+          "executionTime": 19,
+          "executionStatus": "success",
+          "data": {
+            "main": [
+              [
+                {
+                  "json": {
+                    "ok": true,
+                    "status": "prepared",
+                    "cleaned": false,
+                    "original_path": "/technical-documentation/lenovo/originals/lp1705.pdf",
+                    "input_sha256": "f3b4f9d125fee56c228b36354a30198ddd14933cb755fdc7dc1ef2d4af8442e7",
+                    "input_size": 5056741,
+                    "source_etag": "\"8304673c44957deeef17183042f66ed4\"",
+                    "temporary_job_removed": true
+                  },
+                  "pairedItem": {
+                    "item": 0
+                  }
+                }
+              ]
+            ]
+          }
+        }
+      ],
+      "Remove Temporary Job": [
+        {
+          "startTime": 1791187810035,
+          "executionIndex": 10,
+          "source": [
+            {
+              "previousNode": "Finalize Job",
+              "previousNodeOutput": 0,
+              "previousNodeRun": 0
+            }
+          ],
+          "hints": [],
+          "executionTime": 463,
+          "executionStatus": "success",
+          "data": {
+            "main": [
+              [
+                {
+                  "json": {
+                    "code": 0,
+                    "signal": null,
+                    "stdout": "{\"ok\": true, \"job_removed\": true}",
+                    "stderr": ""
+                  },
+                  "pairedItem": {
+                    "item": 0
+                  }
+                }
+              ]
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "final": {
+    "original_sha256": "f3b4f9d125fee56c228b36354a30198ddd14933cb755fdc7dc1ef2d4af8442e7",
+    "cleaned_sha256": "4dc6eafee234f6e0f4131097f096761b4383925012523c0221d1a03aae900592",
+    "sidecar_matches": true,
+    "n8n_healthy": true,
+    "nextcloud_maintenance": false,
+    "active": false,
+    "export_matches_source": true,
+    "runtime_adapter_matches_source": true,
+    "cli_source_unchanged": true,
+    "temporary_workspaces_absent": true,
+    "cleanup_jobs_absent": true,
+    "cleanup_containers_absent": true,
+    "nextcloud_tools_version_unchanged": true,
+    "ai_execution_version_unchanged": true
+  }
+}

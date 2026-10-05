@@ -1,0 +1,17 @@
+diff --git a/src/pdf_cleanup/core.py b/src/pdf_cleanup/core.py
+index a4cb0de..54515d0 100644
+--- a/src/pdf_cleanup/core.py
++++ b/src/pdf_cleanup/core.py
+@@ -233,8 +233,10 @@ def cleanup(input_path,output_path,dry_run=False):
+     if not inp.is_file(): raise CleanupError('Input PDF not found',2)
+     if os.path.lexists(out) or out.resolve()==inp: raise CleanupError('Output exists or aliases input',2)
+     if not out.parent.is_dir(): raise CleanupError('Output parent must exist',2)
+-    corpus=Path('/srv/pdf-poc/corpus')
+-    if inp.is_relative_to(corpus) and out.resolve().is_relative_to(corpus): raise CleanupError('Writing inside authoritative corpus is forbidden',2)
++    originals_dir=os.environ.get('PDF_CLEANUP_ORIGINALS_DIR')
++    if not originals_dir or not Path(originals_dir).is_absolute(): raise CleanupError('PDF_CLEANUP_ORIGINALS_DIR must name the absolute originals directory',2)
++    originals=Path(originals_dir).resolve()
++    if out.resolve().is_relative_to(originals): raise CleanupError('Writing inside authoritative originals is forbidden',2)
+     original=sha256(inp); native=inspect_pdf(inp)
+     if any(l['kind'] not in ('/URI','/GoTo','/Dest') for p in native for l in p['links']): raise CleanupError('Unsupported link action requires review')
+     with pymupdf.open(inp) as doc:

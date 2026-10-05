@@ -3262,3 +3262,27 @@ scripts, is deleted. The 24 confirmed child executions of retired pilot runs
 Eight verified unused /tmp audit/test files are also removed. No new copy,
 archive or backup flow was created. The ten remaining workflows/publication,
 encrypted credentials and current cloud documentation are unchanged.
+
+## 2026-10-05 — Universal cleanup and catalogue completion — ACCEPTED OPERATOR DESIGN
+
+The operator requested removing the configured document name from LenovoPdfCleanup
+and calling it from TechnicalDocumentationSync. The final selected sequence
+supersedes the initially discussed background and per-download waiting modes:
+download all changed originals, save INDEX.html without waiting for cleanup,
+then call cleanup once with their relative-path list and wait for its sequential
+processing. Originals and cleaned outputs mirror model directories.
+
+The operator requested completion information in the collapsed Сведения section.
+The implementation keeps cleanup status/date/path in the existing catalogue JSON,
+clears the marker for a new source version and writes completion after successful
+cleaned publication. Renamed revisions retain the vendor filename and remove the
+previous derived filename only after the new output is saved. CLI originals
+protection remains intact; the downloader may replace original source versions.
+
+The operator additionally requested reviewing all tiles for efficiency and visual
+clarity. Existing native operations remain explicit; three native canvas groups
+and aligned positions add no executing nodes. There is no new controller, backup,
+retry queue or notification mechanism. This supersedes previous separation of the
+published source monitor from the unpublished cleanup candidate, not the agreed
+originals/cleaned/translated layout. Verified implementation and limitations:
+TECHNICAL_DOCUMENTATION_CLEANUP_INTEGRATION_2026-10-05.md.

@@ -1,8 +1,9 @@
-# TechnicalDocumentationSync01
+# TechnicalDocumentationSync
 
 Daily source monitoring, original PDF replacement and compact HTML catalogue
-maintenance. Deployed and verified on 2026-10-05; this is a post-infrastructure
-operator automation, independent of the unpublished PDF cleanup candidate.
+maintenance followed by sequential PDF cleanup. Deployed and verified on
+2026-10-05; this is a post-infrastructure operator automation. Its published
+child is LenovoPdfCleanup (ENo9jFkwcE4PFOyL).
 
 - Workflow: https://n8n.escloud.us/workflow/QouVaVNhAqSiYq5D
 - Schedule: daily at 07:00, workflow timezone `Europe/Minsk` (UTC+3).
@@ -17,16 +18,22 @@ operator automation, independent of the unpublished PDF cleanup candidate.
 
 ## Mechanism
 
-The workflow uses 16 native nodes: schedule/manual triggers, seven HTTP actions,
-five Code nodes, one PDF loop and one filename-change branch. All nodes serve
-the requested source comparison, file replacement or index update. It has no
+The workflow uses 17 native nodes: schedule/manual triggers, seven HTTP actions,
+five Code nodes, one PDF loop, one filename-change branch and one child-workflow
+call. All nodes serve source comparison, replacement, index update or cleanup.
+Three native canvas groups show source comparison, original downloads and
+INDEX.html followed by cleanup, without additional executing nodes. It has no
 backup, notification, separate database, Data Table, SSH executor or host service.
 
 `Read INDEX → Models and Index → Read Lenovo ASP → Latest Document Families →
 Read Remote Version → Changed Documents` identifies work. The loop downloads
 one PDF, uploads it through Nextcloud and deletes its previous filename only
 after the new upload succeeds. Completed records are merged into INDEX.html
-once, after the loop. A zero-change run stops before any download or write.
+once, after the loop, with changed records marked as awaiting cleanup. Then
+Clean Saved PDFs calls LenovoPdfCleanup once with the saved relative paths and
+optional previous filenames, waiting for its sequential processing. The original
+index is already visible while cleanup runs. A zero-change run stops before any
+download, write or cleanup call.
 
 ASP records are grouped by document family and the latest catalogue date wins.
 The observed LXPM duplicates and equivalent BMC G3/G5 event-reference editions
@@ -45,6 +52,13 @@ edition/page-count metadata reset to unknown rather than retaining stale values.
 Date, size, source URL, actual filename and save time are updated automatically.
 Both JavaScript catalogue data and the no-JavaScript folder list are regenerated.
 
+On a source update, cleanup_status becomes pending and cleaned_at/cleaned_path
+are cleared. The child saves a completion marker after each successful cleaned
+PDF publication. The collapsed Сведения displays status, completion date and
+the relative link to cleaned/<model>/<vendor filename>.pdf. Other documents'
+markers survive source updates. INDEX.html itself stores this state; no separate
+database, sidecar or extra catalogue page is introduced.
+
 All writes use the existing encrypted `Nextcloud - operator automation`
 credential (`6MEdI2Cs7tEUiM7o`) and native WebDAV. No direct filesystem write or
 `occ files:scan` is involved. Same-name updates overwrite through PUT; renamed
@@ -56,6 +70,12 @@ If a transfer fails, the native HTTP node stops execution and the pending
 version is not recorded in the index. A subsequent daily/manual run retries
 it. There is no added retry controller or queue. Files transferred before a
 later index-write failure can be transferred again on that retry.
+
+A cleanup failure does not undo saved originals or delay the original index.
+Rerun the cleanup workflow with the affected paths; there is no added automatic
+cleanup retry queue. The source monitor does not re-download an unchanged source
+version merely to retry pending cleanup. Existing unchanged PDFs are not
+automatically bulk-cleaned.
 
 ## Adding models
 
@@ -73,8 +93,9 @@ translated/en and translated/ru. Append a model object in `models.json`:
 `build.py` embeds this configuration into `Models and Index`; no runtime file
 dependency is added to n8n. The model folder is part of every document key/path,
 so shared manuals remain independent between model collections. No additional
-workflow nodes are needed. This monitor writes only originals and INDEX.html;
-cleaned/translated folders are prepared for later processing.
+workflow nodes are needed. The monitor writes originals and INDEX.html; its
+cleanup child writes cleaned copies in the same model structure. Translation
+remains future work.
 
 The current legacy WebDAV endpoint does not register Nextcloud's modern
 Auto-Mkcol plugin. Do not assume that an auto-folder header works on this path.
@@ -104,7 +125,7 @@ hashes. All fifteen pre-existing WR5220 G3 PDFs and INDEX.md remain byte-identic
 Thirty-two model directories were created through WebDAV, including empty
 cleaned/en/ru output folders. Only the model configuration and document-family
 code changed; the workflow still has sixteen nodes and the same credentials
-and daily schedule. Recovery can use the previous native version
+and daily schedule at that expansion checkpoint. Recovery can use the previous native version
 `4949672a-7e59-47e2-9977-0883df390ad6` and the prior repository definition;
 downloaded originals remain persistent data. Evidence: `model-expansion-evidence.json`.
 
@@ -112,6 +133,16 @@ An initial assistant text-field error and an installed HTTP Request raw/text
 response incompatibility were corrected. The index PUT now uses native response
 `autodetect`, verified against the actual empty HTTP 204 response. The transient
 verification connection was removed before publication.
+
+The subsequent cleanup integration is recorded in
+../pdf-cleanup/integration-evidence.json. Native parent execution 12015 saved
+two current source PDFs, PUT INDEX.html, then called child 12016 once and waited
+for both cleaned outputs and completion markers. Published run 12020 found zero
+changes and performed no downloads, index writes or cleanup calls. All 78 original
+hashes and INDEX.md remained unchanged. Both workflows have 17 executing nodes
+and three native canvas groups; credentials, model configuration and schedule
+are unchanged. Original-only workflow version
+af23c9a9-9b54-495f-b684-f6e37f7b7163 remains native historical recovery state.
 
 `TechnicalDocumentationSync01.json` is the read-back deployed definition,
 including settings, node layout and existing credential references.
@@ -137,4 +168,5 @@ Authoritative mechanisms:
 
 The Lenovo ASP endpoint is the site's observed internal API; a published
 compatibility contract is unknown. The automation uses the confirmed anonymous
-GET response of the current site. Cleanup and translation remain separate work.
+GET response of the current site. Cleanup is integrated through the existing
+standalone CLI; translation remains separate work.

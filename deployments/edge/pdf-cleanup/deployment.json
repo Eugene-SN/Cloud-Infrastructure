@@ -1,0 +1,34 @@
+{
+  "upstream_repository": "Eugene-SN/documentation-ai",
+  "upstream_commit": "46f179e9e5c83ff2c12b7ba084efef124afaf338",
+  "source_commit": "8257cb36be7856a0abe89ea27562f847fcf45a8e",
+  "source_provenance": "Local package import from verified upstream blobs plus portable originals guard and guard tests; no upstream merge",
+  "base_image": "python@sha256:504679006065cdab9a85e983e269140d3c5a279492395a6863b25b1ffb377f86",
+  "image_tag": "edge/pdf-cleanup:8257cb36be78",
+  "image_id": "sha256:cc4ea0c71e114bf9c476671eaae147de5152f471476e67d42b317b89bf2030b8",
+  "runtime_user": "core",
+  "uid": 1000,
+  "gid": 1000,
+  "originals_dir": "/srv/cloud/technical-documentation/lenovo/originals",
+  "publication": "n8n Nextcloud WebDAV",
+  "upstream_blobs": {
+    "EDGE_HANDOFF.md": "dffc9455ed0dec64d260886bc9c81212e458c249",
+    "README.md": "83ddaf22ccf491911a467648a881b09cfa20e00c",
+    "pyproject.toml": "9006f5e220800ef7b850c1fa883dae43a0df2d1c",
+    "requirements.txt": "c04fcf8bc89cd3bf8b7b553cc91891b490a89080",
+    "src/pdf_cleanup/__init__.py": "e69d7a40dd81c2e8350d05a54fe47a14938ee8ac",
+    "src/pdf_cleanup/cli.py": "c54d91957ffc740a456d965471fa6652167fdd27",
+    "src/pdf_cleanup/core.py": "a4cb0deb47f8b331c7b5b6ee4ad4198f8c1e276d",
+    "src/pdf_cleanup/native.py": "3f34bc4f46be5ffd79f54d310b707c5424e6acc6",
+    "tests/test_cleanup.py": "04b019b913041dbf140faf4bfbe899031b23186b"
+  },
+  "versions": {
+    "python": "3.14.8",
+    "PyMuPDF": "1.28.2",
+    "pypdf": "6.19.0",
+    "package": "0.1.3"
+  },
+  "installed_core_sha256": "4b29b752fe9dcc3b8f8d08f509b5c840e354ecb0a398fe72bea092fdd4cb4c72",
+  "job_adapter": "/opt/pdf-cleanup/job-command.py",
+  "job_adapter_sha256": "5a6c0282af7df5b74bba1c06e30f59aa6219e8ac7613b56c645f7292b7176ea9"
+}

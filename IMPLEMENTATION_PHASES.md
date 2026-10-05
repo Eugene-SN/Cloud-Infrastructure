@@ -796,3 +796,23 @@ all 24 pilot child executions and eight old temporary audit files are now absent
 All remaining workflows retain their definitions/publication; LenovoPdfCleanup
 acceptance remains pending. This bounded housekeeping creates no new stage.
 Full inventory and verification: N8N_WORKFLOW_CLEANUP_ACCEPTANCE_2026-10-05.md.
+
+## 2026-10-05 — Universal PDF cleanup integration — DEPLOYED / VERIFIED
+
+The operator's final sequence is implemented: download all changed originals,
+save INDEX.html, then call LenovoPdfCleanup once with their path list and wait
+for sequential cleanup. Each successfully published cleaned PDF receives a
+completion status/date/link in collapsed Сведения. This supersedes the earlier
+unpublished single-file candidate and original-only monitor scope.
+
+Both workflows are published with 17 executing nodes and three native canvas
+groups each. Layout/grouping adds no executing nodes. CLI validation and originals
+protection stay in the unchanged standalone tool; n8n handles native transfers,
+optional old-derived-filename deletion and completion state. No new service,
+credential, mount, backup flow, notification or retry queue is introduced.
+
+Native E2E12015/12016 and published no-change run12020 passed. All 78 original
+PDF hashes and INDEX.md remain unchanged. Only two PDFs were processed for
+integration verification; existing unchanged documents are not implicitly bulk
+processed. Translation remains future work, with no automatic next deployment.
+Record: TECHNICAL_DOCUMENTATION_CLEANUP_INTEGRATION_2026-10-05.md.
