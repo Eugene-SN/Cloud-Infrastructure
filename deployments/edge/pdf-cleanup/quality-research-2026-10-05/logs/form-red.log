@@ -1,0 +1,29 @@
+test_clipped_illustration_does_not_prevent_footer_cleanup (__main__.ResearchTests.test_clipped_illustration_does_not_prevent_footer_cleanup) ... ok
+test_diagonal_illustration_bbox_is_not_a_table (__main__.ResearchTests.test_diagonal_illustration_bbox_is_not_a_table) ... ok
+test_fallback_preserves_nested_form_body_and_removes_top_level_footer (__main__.ResearchTests.test_fallback_preserves_nested_form_body_and_removes_top_level_footer) ... ERROR
+test_geometrically_separated_inline_footer_is_cleaned (__main__.ResearchTests.test_geometrically_separated_inline_footer_is_cleaned) ... ok
+test_inline_body_parameter_numbers_are_preserved (__main__.ResearchTests.test_inline_body_parameter_numbers_are_preserved) ... ok
+test_no_targets_preserves_exact_pdf_bytes (__main__.ResearchTests.test_no_targets_preserves_exact_pdf_bytes) ... ok
+test_single_decimal_outlier_is_not_silently_removed (__main__.ResearchTests.test_single_decimal_outlier_is_not_silently_removed) ... ok
+test_single_roman_frontmatter_then_decimal_sequence (__main__.ResearchTests.test_single_roman_frontmatter_then_decimal_sequence) ... ok
+test_table_row_at_confirmed_footer_height_blocks_removal (__main__.ResearchTests.test_table_row_at_confirmed_footer_height_blocks_removal) ... ok
+test_validation_rejects_changed_font_size_at_same_origin (__main__.ResearchTests.test_validation_rejects_changed_font_size_at_same_origin) ... ok
+test_validation_rejects_changed_reading_order (__main__.ResearchTests.test_validation_rejects_changed_reading_order) ... ok
+test_validation_rejects_changed_text_color (__main__.ResearchTests.test_validation_rejects_changed_text_color) ... ok
+test_validation_rejects_changed_text_opacity (__main__.ResearchTests.test_validation_rejects_changed_text_opacity) ... ok
+
+======================================================================
+ERROR: test_fallback_preserves_nested_form_body_and_removes_top_level_footer (__main__.ResearchTests.test_fallback_preserves_nested_form_body_and_removes_top_level_footer)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/audit/test_research.py", line 106, in test_fallback_preserves_nested_form_body_and_removes_top_level_footer
+    remove_text_shows(work,inp,plan)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/audit/candidate-v4/src/pdf_cleanup/native.py", line 97, in remove_text_shows
+    raise ValueError('Nested text Forms require separate stream mapping')
+ValueError: Nested text Forms require separate stream mapping
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.695s
+
+FAILED (errors=1)

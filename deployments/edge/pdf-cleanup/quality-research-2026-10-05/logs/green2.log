@@ -1,0 +1,10 @@
+test_clipped_illustration_does_not_prevent_footer_cleanup (__main__.ResearchTests.test_clipped_illustration_does_not_prevent_footer_cleanup) ... ok
+test_diagonal_illustration_bbox_is_not_a_table (__main__.ResearchTests.test_diagonal_illustration_bbox_is_not_a_table) ... ok
+test_single_decimal_outlier_is_not_silently_removed (__main__.ResearchTests.test_single_decimal_outlier_is_not_silently_removed) ... ok
+test_single_roman_frontmatter_then_decimal_sequence (__main__.ResearchTests.test_single_roman_frontmatter_then_decimal_sequence) ... ok
+test_table_row_at_confirmed_footer_height_blocks_removal (__main__.ResearchTests.test_table_row_at_confirmed_footer_height_blocks_removal) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.327s
+
+OK

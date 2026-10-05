@@ -1,0 +1,11 @@
+test_color_damage_is_visible (__main__.ReviewControls.test_color_damage_is_visible) ... ok
+test_exact_removal_masks_with_crop_and_rotation (__main__.ReviewControls.test_exact_removal_masks_with_crop_and_rotation) ... ok
+test_identical_file_passes (__main__.ReviewControls.test_identical_file_passes) ... ok
+test_metadata_damage_is_detected (__main__.ReviewControls.test_metadata_damage_is_detected) ... ok
+test_removal_mask_does_not_imply_every_source_glyph_was_removed (__main__.ReviewControls.test_removal_mask_does_not_imply_every_source_glyph_was_removed) ... ok
+test_text_damage_is_detected (__main__.ReviewControls.test_text_damage_is_detected) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.720s
+
+OK

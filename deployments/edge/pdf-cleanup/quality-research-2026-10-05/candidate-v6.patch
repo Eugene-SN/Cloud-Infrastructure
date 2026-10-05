@@ -1,0 +1,176 @@
+--- a/src/pdf_cleanup/core.py
++++ b/src/pdf_cleanup/core.py
+@@ -9,0 +10 @@
++import shutil
+@@ -67,0 +69,8 @@
++def body_signature(lines, selected=()):
++    """Preserve body glyph order and style, in addition to coordinates."""
++    return [{'c':c['c'],'origin':c['origin'],'font':span['font'],
++             'size':span['size'],'flags':span['flags'],'color':span['color'],'alpha':span['alpha'],
++             'dir':line['dir']}
++            for i,line in enumerate(lines) if i not in selected
++            for span in line['spans'] for c in span['chars'] if not c['c'].isspace()]
++
+@@ -82,0 +92,15 @@
++def visible_drawings(page):
++    """Respect nested PDF clipping before testing enclosing drawing frames."""
++    result = []; clips = {}
++    for drawing in page.get_drawings(extended=True):
++        level = drawing['level']
++        clips = {depth:rect for depth,rect in clips.items() if depth < level}
++        if drawing['type'] == 'clip':
++            clips[level] = drawing['scissor']; continue
++        if drawing['type'] == 'group': continue
++        rect = pymupdf.Rect(drawing['rect'])
++        for clip in clips.values(): rect &= clip
++        if not rect.is_empty:
++            result.append(dict(drawing, rect=rect))
++    return result
++
+@@ -86,0 +111,4 @@
++        # One open stroke segment cannot enclose a table. Its bounding box
++        # may cover text that the segment itself does not touch.
++        if drawing.get('type') == 's' and len(drawing.get('items', ())) == 1 and drawing['items'][0][0] == 'l':
++            continue
+@@ -134 +162 @@
+-        tolerance=1e-6 if key in ('fill','color','fill_opacity','stroke_opacity') else 1e-4 if key=='width' else .01
++        tolerance=1e-6 if key in ('fill','color','fill_opacity','stroke_opacity') else 1e-4 if key in ('width','size') else .01
+@@ -146 +174 @@
+-        lines = lines_for(page); drawings = page.get_drawings(); roles = native_roles(page, lines, native[pno])
++        lines = lines_for(page); drawings = visible_drawings(page); roles = native_roles(page, lines, native[pno])
+@@ -168,0 +197,14 @@
++    # A single introductory roman i may precede a confirmed decimal 1,2,...
++    # sequence. Require the immediately following page and the same number slot.
++    for c in candidates:
++        if c['n'] != ('roman', 1) or c['i'] in pages[c['p']]['selected']: continue
++        line = pages[c['p']]['lines'][c['i']]
++        for q in candidates:
++            if q['p'] != c['p'] + 1 or q['n'] != ('decimal', 1): continue
++            if q['i'] not in pages[q['p']]['selected']: continue
++            if (q['height'],q['width'],q['fonts']) != (c['height'],c['width'],c['fonts']): continue
++            if abs(q['y']-c['y']) > c['size']*.5: continue
++            other = pages[q['p']]['lines'][q['i']]
++            if abs(sum(line['bbox'][::2])/2-sum(other['bbox'][::2])/2) > max(c['size'],q['size'])*2: continue
++            pages[c['p']]['selected'][c['i']] = 'introductory_roman_page'
++            break
+@@ -187,0 +230 @@
++        p['requires_text_operators']=False
+@@ -192 +235 @@
+-                        raise CleanupError(f'Page {pno+1}: redaction would touch body text')
++                        p['requires_text_operators']=True
+@@ -194,0 +238 @@
++        p['body_signature']=body_signature(p['lines'],p['selected'])
+@@ -222,0 +267,2 @@
++            if not geometry_equivalent(body_signature(lines_for(p)),plan[i]['body_signature']):
++                raise CleanupError(f'Page {i+1}: body glyph style/order changed',4)
+@@ -260,0 +307 @@
++        operator_only=any(p['requires_text_operators'] for p in plan)
+@@ -275,0 +323,8 @@
++            if not entries and not any(p['links'] or p['widgets'] for p in native):
++                shutil.copyfile(inp,stage)
++                if sha256(stage)!=original or sha256(inp)!=original:
++                    raise CleanupError('Source/copy hash changed',4)
++                summary.update(status='cleaned',output_sha256=original,
++                               cleanup_method='exact_copy',validation='passed')
++                os.link(stage,out)
++                return summary
+@@ -289,3 +344,5 @@
+-                for r in p['rects']: page.add_redact_annot(r,fill=False,cross_out=False)
+-                if p['rects']: page.apply_redactions(images=pymupdf.PDF_REDACT_IMAGE_NONE,graphics=pymupdf.PDF_REDACT_LINE_ART_NONE,text=pymupdf.PDF_REDACT_TEXT_REMOVE)
+-            doc.save(stage,garbage=3,deflate=True)
++                if not operator_only:
++                    for r in p['rects']: page.add_redact_annot(r,fill=False,cross_out=False)
++                    if p['rects']: page.apply_redactions(images=pymupdf.PDF_REDACT_IMAGE_NONE,graphics=pymupdf.PDF_REDACT_LINE_ART_NONE,text=pymupdf.PDF_REDACT_TEXT_REMOVE)
++            if operator_only: remove_text_shows(doc,inp,plan)
++            doc.save(stage,garbage=2,deflate=True,use_objstms=1)
+@@ -293 +350 @@
+-            method='text_redaction'
++            method='text_show_operations' if operator_only else 'text_redaction'
+@@ -296,0 +354 @@
++                if operator_only: raise
+@@ -311 +369 @@
+-                    fallback.save(stage,garbage=3,deflate=True)
++                    fallback.save(stage,garbage=2,deflate=True,use_objstms=1)
+--- a/src/pdf_cleanup/native.py
++++ b/src/pdf_cleanup/native.py
+@@ -79,2 +79,2 @@
+-        positions=[]
+-        leading=0.0; states=[]
++        positions=[]; form_invocations=[]
++        leading=0.0; states=[]; form_depth=0
+@@ -82 +82,8 @@
+-            nonlocal leading
++            nonlocal leading,form_depth
++            # pypdf recurses into Forms with the same visitors. The operations
++            # being rewritten below belong only to the page content stream.
++            # Leave nested body/illustration streams untouched.
++            if op==b'Do':
++                if not form_depth: form_invocations.append((args[0],list(cm)))
++                form_depth+=1; return
++            if form_depth: return
+@@ -93 +100,5 @@
+-        reader.pages[i].extract_text(visitor_operand_before=visitor)
++        def after(op,args,cm,tm):
++            nonlocal form_depth
++            if op==b'Do': form_depth-=1
++        reader.pages[i].extract_text(visitor_operand_before=visitor,visitor_operand_after=after)
++        if form_depth: raise ValueError('Unbalanced Form visitor traversal')
+@@ -98,0 +110,34 @@
++        def matches(point):
++            return any(abs(line['y']-point.y)<=max(2,line['size']*.35) and line['bbox'][0]-2<=point.x<=line['bbox'][2]+2 for line in selected)
++        def pure_footer_form(name,parent_matrix):
++            resources=reader.pages[i]['/Resources']
++            objects=resources.get('/XObject',{})
++            form=objects.get(name)
++            if form is None:return False
++            form=form.get_object()
++            if form.get('/Subtype')!='/Form':return False
++            content=ContentStream(form,reader,forced_encoding='bytes')
++            allowed={b'q',b'Q',b'cm',b'BT',b'ET',b'Tf',b'Tm',b'Td',b'TD',b'TL',b'Tc',b'Tw',b'Tz',b'Tr',b'Ts',b'T*',b'Tj',b'TJ',b"'",b'"',b'BMC',b'BDC',b'EMC',b'MP',b'DP',b'gs'}
++            # Colour/rendering-intent state alone paints no graphics.
++            allowed.update({b'g',b'G',b'rg',b'RG',b'k',b'K',b'cs',b'CS',b'sc',b'SC',b'scn',b'SCN',b'ri'})
++            if any(op not in allowed for _,op in content.operations):return False
++            proxy=PageObject(pdf=reader)
++            proxy[NameObject('/Contents')]=form
++            proxy[NameObject('/Resources')]=form.get('/Resources',resources)
++            form_matrix=list(form.get('/Matrix',[1,0,0,1,0,0]))
++            outer=mult(form_matrix,parent_matrix);points=[];leading=0.0;states=[]
++            def visit(op,args,cm,tm):
++                nonlocal leading
++                if op==b'q':states.append(leading)
++                elif op==b'Q' and states:leading=states.pop()
++                elif op==b'TL':leading=float(args[0])
++                elif op==b'TD':leading=-float(args[1])
++                if op in (b'Tj',b'TJ',b"'",b'"'):
++                    payload=args[0] if op==b'TJ' else args[-1]
++                    if not any(isinstance(v,(str,bytes)) and len(v) for v in (payload if op==b'TJ' else [payload])):return
++                    tm=list(tm)
++                    if op in (b"'",b'"'):tm[4]-=leading*tm[2];tm[5]-=leading*tm[3]
++                    matrix=mult(mult(tm,cm),outer)
++                    points.append(pymupdf.Point(float(matrix[4]),float(matrix[5]))*doc[i].transformation_matrix)
++            proxy.extract_text(visitor_operand_before=visit)
++            return bool(points) and all(matches(point) for point in points)
+@@ -101 +146 @@
+-            if any(abs(line['y']-point.y)<=max(2,line['size']*.35) and line['bbox'][0]-2<=point.x<=line['bbox'][2]+2 for line in selected):
++            if matches(point):
+@@ -107,0 +153,9 @@
++        invocations=[j for j,(_,op) in enumerate(stream.operations) if op==b'Do']
++        if len(invocations)!=len(form_invocations):raise ValueError('Form invocation mapping mismatch')
++        removed_forms=set()
++        for index,(name,matrix) in zip(invocations,form_invocations):
++            if stream.operations[index][0][0]!=name:raise ValueError('Form invocation name mismatch')
++            if pure_footer_form(name,matrix):removed_forms.add(index)
++        if removed_forms:
++            stream.operations=[operation for index,operation in enumerate(stream.operations) if index not in removed_forms]
++            removed+=len(removed_forms)
+@@ -109,3 +163,7 @@
+-        contents=doc[i].get_contents()
+-        if len(contents)!=1: raise ValueError('Multiple page streams require explicit mapping')
+-        doc.update_stream(contents[0],stream.get_data())
++        # The parsed /Contents array already represents one concatenated page
++        # program. Allocate a private stream so shared original streams and all
++        # nested Forms retain their bytes; preserve every non-target operator.
++        xref=doc.get_new_xref()
++        doc.update_object(xref,'<<>>')
++        doc.update_stream(xref,stream.get_data())
++        doc[i].set_contents(xref)

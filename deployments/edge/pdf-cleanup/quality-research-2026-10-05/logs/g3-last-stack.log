@@ -1,0 +1,25 @@
+  File "/usr/local/lib/python3.14/site-packages/pymupdf/__init__.py", line 6644 in save
+  File "/audit/save_experiment.py", line 14 in save
+  File "/usr/local/lib/python3.14/site-packages/pdf_cleanup/core.py", line 291 in cleanup
+  File "/audit/save_experiment.py", line 19 in <module>
+Timeout (0:01:00)!
+Thread 0x0000781aef00a380 [python] (most recent call first):
+  File "/usr/local/lib/python3.14/site-packages/pymupdf/mupdf.py", line 60655 in pdf_save_document
+  File "/usr/local/lib/python3.14/site-packages/pymupdf/__init__.py", line 6644 in save
+  File "/audit/save_experiment.py", line 14 in save
+  File "/usr/local/lib/python3.14/site-packages/pdf_cleanup/core.py", line 291 in cleanup
+  File "/audit/save_experiment.py", line 19 in <module>
+Timeout (0:01:00)!
+Thread 0x0000781aef00a380 [python] (most recent call first):
+  File "/usr/local/lib/python3.14/site-packages/pymupdf/mupdf.py", line 60655 in pdf_save_document
+  File "/usr/local/lib/python3.14/site-packages/pymupdf/__init__.py", line 6644 in save
+  File "/audit/save_experiment.py", line 14 in save
+  File "/usr/local/lib/python3.14/site-packages/pdf_cleanup/core.py", line 291 in cleanup
+  File "/audit/save_experiment.py", line 19 in <module>
+Timeout (0:01:00)!
+Thread 0x0000781aef00a380 [python] (most recent call first):
+  File "/usr/local/lib/python3.14/site-packages/pymupdf/mupdf.py", line 60655 in pdf_save_document
+  File "/usr/local/lib/python3.14/site-packages/pymupdf/__init__.py", line 6644 in save
+  File "/audit/save_experiment.py", line 14 in save
+  File "/usr/local/lib/python3.14/site-packages/pdf_cleanup/core.py", line 291 in cleanup
+  File "/audit/save_experiment.py", line 19 in <module>

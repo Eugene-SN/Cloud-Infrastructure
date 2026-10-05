@@ -1,0 +1,18 @@
+test_removal_mask_does_not_imply_every_source_glyph_was_removed (test_reviewer.ReviewControls.test_removal_mask_does_not_imply_every_source_glyph_was_removed) ... FAIL
+
+======================================================================
+FAIL: test_removal_mask_does_not_imply_every_source_glyph_was_removed (test_reviewer.ReviewControls.test_removal_mask_does_not_imply_every_source_glyph_was_removed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/audit/test_reviewer.py", line 20, in test_removal_mask_does_not_imply_every_source_glyph_was_removed
+    result=compare(path,path,[[box]],[[]]);self.assertEqual(result['status'],'passed',result)
+                                           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'differences' != 'passed'
+- differences
++ passed
+ : {'status': 'differences', 'engine': '156.0.8076.0', 'pypdfium2': '5.14.0', 'dpi': 144, 'pages': 1, 'body_glyphs': 0, 'changed_pixels_total': 0, 'pixels_outside_masks': 0, 'failures': [{'page': 1, 'pixels_outside_masks': 0, 'missing_glyphs': 0, 'extra_glyphs': 4, 'reading_order_changed': True, 'missing_examples': [], 'extra_examples': [(('B', 45.608, 74.256), 1), (('O', 56.896, 74.248), 1), (('D', 69.16, 74.256), 1)]}], 'document_property_changes': [], 'elapsed_seconds': 0.217}
+
+----------------------------------------------------------------------
+Ran 1 test in 0.288s
+
+FAILED (failures=1)

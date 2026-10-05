@@ -185,3 +185,10 @@ preserves the original and does not publish a cleaned PDF or completion marker;
 no content-protection check is weakened during model onboarding. Final source,
 execution and publication evidence is under technical-documentation/
 `wa-g3-expansion-evidence.json`.
+
+Expanded isolated quality research (no production deployment):
+[2026-10-05 report](../../../PDF_CLEANUP_QUALITY_RESEARCH_2026-10-05.md)
+and [research artifacts](quality-research-2026-10-05/README.md).
+The experiments expose pagination-classification and independent-rendering
+limitations. The candidate patch is not a production acceptance or a replacement
+for the installed source described above.

@@ -1,0 +1,47 @@
+test_clipped_illustration_does_not_prevent_footer_cleanup (__main__.ResearchTests.test_clipped_illustration_does_not_prevent_footer_cleanup) ... ERROR
+test_diagonal_illustration_bbox_is_not_a_table (__main__.ResearchTests.test_diagonal_illustration_bbox_is_not_a_table) ... ERROR
+test_single_decimal_outlier_is_not_silently_removed (__main__.ResearchTests.test_single_decimal_outlier_is_not_silently_removed) ... ok
+test_single_roman_frontmatter_then_decimal_sequence (__main__.ResearchTests.test_single_roman_frontmatter_then_decimal_sequence) ... ERROR
+test_table_row_at_confirmed_footer_height_blocks_removal (__main__.ResearchTests.test_table_row_at_confirmed_footer_height_blocks_removal) ... ok
+
+======================================================================
+ERROR: test_clipped_illustration_does_not_prevent_footer_cleanup (__main__.ResearchTests.test_clipped_illustration_does_not_prevent_footer_cleanup)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/audit/test_research.py", line 28, in test_clipped_illustration_does_not_prevent_footer_cleanup
+    result=cleanup(inp,self.root/'cleaned.pdf')
+  File "/usr/local/lib/python3.14/site-packages/pdf_cleanup/core.py", line 260, in cleanup
+    plan=analyze(doc,native)
+  File "/usr/local/lib/python3.14/site-packages/pdf_cleanup/core.py", line 178, in analyze
+    raise CleanupError(f'Page {pno+1}: footer candidate overlaps table text')
+pdf_cleanup.core.CleanupError: Page 1: footer candidate overlaps table text
+
+======================================================================
+ERROR: test_diagonal_illustration_bbox_is_not_a_table (__main__.ResearchTests.test_diagonal_illustration_bbox_is_not_a_table)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/audit/test_research.py", line 34, in test_diagonal_illustration_bbox_is_not_a_table
+    result=cleanup(inp,self.root/'cleaned.pdf')
+  File "/usr/local/lib/python3.14/site-packages/pdf_cleanup/core.py", line 260, in cleanup
+    plan=analyze(doc,native)
+  File "/usr/local/lib/python3.14/site-packages/pdf_cleanup/core.py", line 178, in analyze
+    raise CleanupError(f'Page {pno+1}: footer candidate overlaps table text')
+pdf_cleanup.core.CleanupError: Page 1: footer candidate overlaps table text
+
+======================================================================
+ERROR: test_single_roman_frontmatter_then_decimal_sequence (__main__.ResearchTests.test_single_roman_frontmatter_then_decimal_sequence)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/audit/test_research.py", line 38, in test_single_roman_frontmatter_then_decimal_sequence
+    result=cleanup(inp,self.root/'cleaned.pdf')
+  File "/usr/local/lib/python3.14/site-packages/pdf_cleanup/core.py", line 260, in cleanup
+    plan=analyze(doc,native)
+  File "/usr/local/lib/python3.14/site-packages/pdf_cleanup/core.py", line 183, in analyze
+    if related: raise CleanupError(f'Page {pno+1}: unverified numbering in footer frame')
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pdf_cleanup.core.CleanupError: Page 1: unverified numbering in footer frame
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.131s
+
+FAILED (errors=3)

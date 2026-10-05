@@ -1,0 +1,6 @@
+test_overlapping_body_is_retained_when_only_footer_operators_are_removed (test_research.LegacyOverlapPreservation.test_overlapping_body_is_retained_when_only_footer_operators_are_removed) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.112s
+
+OK

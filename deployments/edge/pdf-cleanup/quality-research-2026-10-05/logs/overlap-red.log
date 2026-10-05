@@ -1,0 +1,54 @@
+test_body_bbox_overlap_uses_operators_and_preserves_body (__main__.ResearchTests.test_body_bbox_overlap_uses_operators_and_preserves_body) ... ERROR
+test_clipped_illustration_does_not_prevent_footer_cleanup (__main__.ResearchTests.test_clipped_illustration_does_not_prevent_footer_cleanup) ... ok
+test_diagonal_illustration_bbox_is_not_a_table (__main__.ResearchTests.test_diagonal_illustration_bbox_is_not_a_table) ... ok
+test_fallback_preserves_nested_form_body_and_removes_top_level_footer (__main__.ResearchTests.test_fallback_preserves_nested_form_body_and_removes_top_level_footer) ... ok
+test_fallback_refuses_to_guess_targets_inside_a_form (__main__.ResearchTests.test_fallback_refuses_to_guess_targets_inside_a_form) ... ERROR
+test_geometrically_separated_inline_footer_is_cleaned (__main__.ResearchTests.test_geometrically_separated_inline_footer_is_cleaned) ... ok
+test_inline_body_parameter_numbers_are_preserved (__main__.ResearchTests.test_inline_body_parameter_numbers_are_preserved) ... expected failure
+test_no_targets_preserves_exact_pdf_bytes (__main__.ResearchTests.test_no_targets_preserves_exact_pdf_bytes) ... ok
+test_single_decimal_outlier_is_not_silently_removed (__main__.ResearchTests.test_single_decimal_outlier_is_not_silently_removed) ... ok
+test_single_roman_frontmatter_then_decimal_sequence (__main__.ResearchTests.test_single_roman_frontmatter_then_decimal_sequence) ... ok
+test_table_row_at_confirmed_footer_height_blocks_removal (__main__.ResearchTests.test_table_row_at_confirmed_footer_height_blocks_removal) ... ok
+test_validation_rejects_changed_font_size_at_same_origin (__main__.ResearchTests.test_validation_rejects_changed_font_size_at_same_origin) ... ok
+test_validation_rejects_changed_reading_order (__main__.ResearchTests.test_validation_rejects_changed_reading_order) ... ok
+test_validation_rejects_changed_text_color (__main__.ResearchTests.test_validation_rejects_changed_text_color) ... ok
+test_validation_rejects_changed_text_opacity (__main__.ResearchTests.test_validation_rejects_changed_text_opacity) ... ok
+
+======================================================================
+ERROR: test_body_bbox_overlap_uses_operators_and_preserves_body (__main__.ResearchTests.test_body_bbox_overlap_uses_operators_and_preserves_body)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/audit/test_research.py", line 140, in test_body_bbox_overlap_uses_operators_and_preserves_body
+    result=cleanup(inp,out)
+  File "/audit/candidate-v5/src/pdf_cleanup/core.py", line 305, in cleanup
+    plan=analyze(doc,native)
+  File "/audit/candidate-v5/src/pdf_cleanup/core.py", line 234, in analyze
+    raise CleanupError(f'Page {pno+1}: redaction would touch body text')
+pdf_cleanup.core.CleanupError: Page 1: redaction would touch body text
+
+======================================================================
+ERROR: test_fallback_refuses_to_guess_targets_inside_a_form (__main__.ResearchTests.test_fallback_refuses_to_guess_targets_inside_a_form)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/audit/test_research.py", line 122, in test_fallback_refuses_to_guess_targets_inside_a_form
+    outer.show_pdf_page(outer.rect,forms,n-1)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.14/site-packages/pymupdf/__init__.py", line 13284, in show_pdf_page
+    xref = page._show_pdf_page(
+        src_page,
+    ...<6 lines>...
+        _imgname=_imgname,
+    )
+  File "/usr/local/lib/python3.14/site-packages/pymupdf/__init__.py", line 10470, in _show_pdf_page
+    xobj1 = JM_xobject_from_page(pdfout, fz_srcpage, xref, graftmap.this)
+  File "/usr/local/lib/python3.14/site-packages/pymupdf/__init__.py", line 22177, in JM_xobject_from_page
+    resources = mupdf.pdf_graft_mapped_object(gmap, o)
+  File "/usr/local/lib/python3.14/site-packages/pymupdf/mupdf.py", line 59449, in pdf_graft_mapped_object
+    return _mupdf.pdf_graft_mapped_object(map, obj)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+pymupdf.mupdf.FzErrorArgument: code=4: source object number out of range
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.789s
+
+FAILED (errors=2, expected failures=1)

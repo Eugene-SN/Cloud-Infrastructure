@@ -1,0 +1,8 @@
+{"event": "review_progress", "file": "8cfc8781da9c75bdab2b3477a6564cba1b06009d553530cd3a026014f4b677af.pdf", "page": 50, "pages": 375, "failures": 0}
+{"event": "review_progress", "file": "8cfc8781da9c75bdab2b3477a6564cba1b06009d553530cd3a026014f4b677af.pdf", "page": 100, "pages": 375, "failures": 0}
+{"event": "review_progress", "file": "8cfc8781da9c75bdab2b3477a6564cba1b06009d553530cd3a026014f4b677af.pdf", "page": 150, "pages": 375, "failures": 0}
+{"event": "review_progress", "file": "8cfc8781da9c75bdab2b3477a6564cba1b06009d553530cd3a026014f4b677af.pdf", "page": 200, "pages": 375, "failures": 0}
+{"event": "review_progress", "file": "8cfc8781da9c75bdab2b3477a6564cba1b06009d553530cd3a026014f4b677af.pdf", "page": 250, "pages": 375, "failures": 0}
+{"event": "review_progress", "file": "8cfc8781da9c75bdab2b3477a6564cba1b06009d553530cd3a026014f4b677af.pdf", "page": 300, "pages": 375, "failures": 0}
+{"event": "review_progress", "file": "8cfc8781da9c75bdab2b3477a6564cba1b06009d553530cd3a026014f4b677af.pdf", "page": 350, "pages": 375, "failures": 0}
+{"path": "WR5225 G3/wr5225g3_user_guide_v6.pdf", "status": "passed", "failures": 0}

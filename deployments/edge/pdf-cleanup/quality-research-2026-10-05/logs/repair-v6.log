@@ -1,0 +1,6 @@
+{"event": "repair_start", "path": "WA7780 G3/lenovo_wentian_wa7780g3_user_guide.pdf"}
+{"event": "repair_complete", "path": "WA7780 G3/lenovo_wentian_wa7780g3_user_guide.pdf", "status": "passed", "elapsed": 321.039, "error": null, "method": "text_show_operations"}
+{"event": "repair_start", "path": "WA7785a G3/lenovo_wentian_wa7785ag3_user_guide.pdf"}
+{"event": "repair_complete", "path": "WA7785a G3/lenovo_wentian_wa7785ag3_user_guide.pdf", "status": "passed", "elapsed": 262.776, "error": null, "method": "text_show_operations"}
+{"event": "repair_start", "path": "WR5225 G3/wr5225g3_user_guide_v6.pdf"}
+{"event": "repair_complete", "path": "WR5225 G3/wr5225g3_user_guide_v6.pdf", "status": "passed", "elapsed": 125.372, "error": null, "method": "text_show_operations"}

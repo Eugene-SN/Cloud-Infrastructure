@@ -1,0 +1,56 @@
+{"path": "WR5220 G3/lenovo_wentian_wr5220g3_user_guide_v18.pdf", "status": "passed", "text_failures": 0}
+{"path": "WR6220 G5/lp2468.pdf", "status": "passed", "text_failures": 0}
+{"path": "WR5220 G5/lp1728.pdf", "status": "differences", "text_failures": 0}
+{"path": "WA5480 G5/lenovo_bmc_commands_g5_v3.pdf", "status": "passed", "text_failures": 0}
+{"path": "WA5680 G5/lp2469.pdf", "status": "passed", "text_failures": 0}
+{"path": "WA5680 G5/lenovo_wentian_wa5680g5_bios_setup_spec_v2.4.pdf", "status": "passed", "text_failures": 0}
+{"path": "WR5225 G3/lp2129.pdf", "status": "passed", "text_failures": 0}
+{"path": "WA5480 G3/lenovo_bmc_g3_redfish_guide_v11.pdf", "status": "passed", "text_failures": 0}
+{"path": "WA5480 G5/lenovo_bmc_redfish_guide_g5_v4.pdf", "status": "passed", "text_failures": 0}
+{"path": "WR5220 G3/wr5220g3_bios_setup_spec_v2.13.pdf", "status": "passed", "text_failures": 0}
+{"path": "WA5480 G5/lenovo_bmc_snmp_guide_g5.pdf", "status": "passed", "text_failures": 0}
+{"path": "WA5480 G3/lenovo_snmp_ug_g3.pdf", "status": "passed", "text_failures": 0}
+{"path": "WA7880a G3/lenovo_wentian_wa7880ag3_user_guide.pdf", "status": "differences", "text_failures": 0}
+{"path": "WR5225 G3/wr5225g3_bios_setup_spec_v2.9-turin.pdf", "status": "passed", "text_failures": 0}
+{"path": "WR3220 G5/lp2440.pdf", "status": "passed", "text_failures": 0}
+{"path": "WR5220 G3/lenovo_bmc_g3_commands_guide_v2.pdf", "status": "passed", "text_failures": 0}
+{"path": "WA5480 G3/lxpm_wentian_ug-v2.pdf", "status": "passed", "text_failures": 0}
+{"path": "WA5685 G5/lp2399.pdf", "status": "passed", "text_failures": 0}
+{"path": "WA5680 G5/lenovo_wentian_wa5680g5_user_guide.pdf", "status": "passed", "text_failures": 0}
+{"path": "WR6220 G5/lenovo_wentian_wr6220g5_user_guide.pdf", "status": "differences", "text_failures": 1}
+{"path": "WA5480 G3/psu_label_matrix.pdf", "status": "passed", "text_failures": 0}
+{"path": "WA5680 G5/lp2506.pdf", "status": "passed", "text_failures": 0}
+{"path": "WR5220 G5/lp2014.pdf", "status": "passed", "text_failures": 0}
+{"path": "WA5480 G5/wa5480g5_bios_setup_spec.pdf", "status": "passed", "text_failures": 0}
+{"path": "WR3220 G5/lenovo_wentian_wr3220g5_user_guide.pdf", "status": "passed", "text_failures": 0}
+{"path": "WA5480 G3/lenovo_wentian_wa5480g3_user_guide_v8.pdf", "status": "passed", "text_failures": 0}
+{"path": "WA5480 G3/bmc_user_guide_v14.pdf", "status": "passed", "text_failures": 0}
+{"path": "WR5220 G3/vmware_code_recipe_file.pdf", "status": "passed", "text_failures": 0}
+{"path": "WA7785a G3/lenovo_wentian_wa7785ag3_bios_user_guide.pdf", "status": "differences", "text_failures": 0}
+{"path": "WA5480 G3/lxce_bomc_cplus_ug.pdf", "status": "passed", "text_failures": 0}
+{"path": "WR5220 G5/lenovo_wentian_wr5220g5_user_guide_v7.pdf", "status": "passed", "text_failures": 0}
+{"path": "WR5215 G5/lenovo_wentian_wr5215g5_user_guide_v2.pdf", "status": "passed", "text_failures": 0}
+{"path": "WA5480 G5/lenovo_wentian_wa5480g5_user_guide_v5.pdf", "status": "passed", "text_failures": 0}
+{"path": "WR5225 G3/wr5225g3_bios_setup_spec_v3.0-genoa.pdf", "status": "passed", "text_failures": 0}
+{"path": "WR5215 G5/lp2356.pdf", "status": "passed", "text_failures": 0}
+{"path": "WA5480 G3/lxce_ux_cplus_ug.pdf", "status": "passed", "text_failures": 0}
+{"path": "WA5480 G3/lxce_onecli_cplus_ug.pdf", "status": "passed", "text_failures": 0}
+{"path": "WR6220 G5/lp2502.pdf", "status": "passed", "text_failures": 0}
+{"path": "WA5685 G5/lp2507.pdf", "status": "passed", "text_failures": 0}
+{"path": "WA5685 G5/wa5685g5_user_guide.pdf", "status": "passed", "text_failures": 0}
+{"path": "WR5220 G3/lp1705.pdf", "status": "passed", "text_failures": 0}
+{"path": "WA5480 G3/lenovo_wentian_os_installation_guide.pdf", "status": "differences", "text_failures": 0}
+{"path": "WA5480 G5/lenovo_bmc_user_guide_g5_v6.pdf", "status": "passed", "text_failures": 0}
+{"path": "WA5480 G3/lenovo_bmc_event_reference_guide_g5_v4.pdf", "status": "differences", "text_failures": 0}
+{"path": "WA5680 G3/lenovo_wentian_wa5680g3_user_guide.pdf", "status": "differences", "text_failures": 0}
+{"path": "WA7780 G3/lenovo_wentian_wa7780g3_bios_user_guide.pdf", "status": "passed", "text_failures": 0}
+{"event": "review_progress", "file": "1718c6d1094bf50a54550fdb191f628875da094b0fbda8f2f147305dbc740f4b.pdf", "page": 50, "pages": 100, "failures": 0}
+{"event": "review_progress", "file": "1718c6d1094bf50a54550fdb191f628875da094b0fbda8f2f147305dbc740f4b.pdf", "page": 100, "pages": 100, "failures": 0}
+{"path": "WA7780 G3/lenovo_wentian_wa7780g3_user_guide.pdf", "status": "passed", "failures": 0}
+{"event": "review_progress", "file": "3a1f7a48df92df1fd415741656cc5294ca26a8e5ab4f3839da557c0189c0e35e.pdf", "page": 50, "pages": 98, "failures": 0}
+{"path": "WA7785a G3/lenovo_wentian_wa7785ag3_user_guide.pdf", "status": "passed", "failures": 0}
+Traceback (most recent call last):
+  File "/audit/final_review_runner.py", line 36, in <module>
+    result=compare(record['input'],record['output'],record['masks'],record['widget_masks'])
+                                                                    ~~~~~~^^^^^^^^^^^^^^^^
+KeyError: 'widget_masks'

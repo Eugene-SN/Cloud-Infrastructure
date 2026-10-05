@@ -1,0 +1,17 @@
+test_pure_text_footer_form_is_removed_without_changing_its_body_instance (test_research.ResearchTests.test_pure_text_footer_form_is_removed_without_changing_its_body_instance) ... ERROR
+
+======================================================================
+ERROR: test_pure_text_footer_form_is_removed_without_changing_its_body_instance (test_research.ResearchTests.test_pure_text_footer_form_is_removed_without_changing_its_body_instance)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/audit/test_research.py", line 170, in test_pure_text_footer_form_is_removed_without_changing_its_body_instance
+    with pymupdf.open(inp) as source:validate_output(out,source,plan,native)
+                                     ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/audit/candidate-v6/src/pdf_cleanup/core.py", line 266, in validate_output
+    raise CleanupError(f'Page {i+1}: native character mismatch; missing={lost}, extra={extra}',4)
+pdf_cleanup.core.CleanupError: Page 1: native character mismatch; missing=[], extra=[(('S', 90.0, 755.0), 1), (('h', 96.003, 755.0), 1), (('a', 101.007, 755.0), 1), (('r', 106.011, 755.0), 1)]
+
+----------------------------------------------------------------------
+Ran 1 test in 0.089s
+
+FAILED (errors=1)

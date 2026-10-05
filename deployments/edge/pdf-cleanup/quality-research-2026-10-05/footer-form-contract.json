@@ -1,0 +1,72 @@
+[
+  {
+    "path": "WA7780 G3/lenovo_wentian_wa7780g3_user_guide.pdf",
+    "name": "/Fm0",
+    "matrix": [
+      1.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0
+    ],
+    "bbox": [
+      0.0,
+      792.0,
+      612.0,
+      0.0
+    ],
+    "ops": [
+      "BDC",
+      "BT",
+      "EMC",
+      "ET",
+      "Tc",
+      "Tf",
+      "Tj",
+      "Tm",
+      "Tr",
+      "Ts",
+      "Tw",
+      "Tz",
+      "gs",
+      "k",
+      "ri"
+    ]
+  },
+  {
+    "path": "WA7785a G3/lenovo_wentian_wa7785ag3_user_guide.pdf",
+    "name": "/Fm0",
+    "matrix": [
+      1.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0
+    ],
+    "bbox": [
+      0.0,
+      792.0,
+      612.0,
+      0.0
+    ],
+    "ops": [
+      "BDC",
+      "BT",
+      "EMC",
+      "ET",
+      "Tc",
+      "Tf",
+      "Tj",
+      "Tm",
+      "Tr",
+      "Ts",
+      "Tw",
+      "Tz",
+      "gs",
+      "k",
+      "ri"
+    ]
+  }
+]
