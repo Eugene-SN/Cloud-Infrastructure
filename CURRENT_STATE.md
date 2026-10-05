@@ -1627,3 +1627,33 @@ cleanup and its originals guard are unchanged. The current page was updated thro
 Nextcloud WebDAV, preserving all 78 document records/cleanup markers and INDEX.md.
 Published no-change run12073 passed. Source and evidence:
 deployments/edge/technical-documentation/previous-date-evidence.json.
+
+## 2026-10-05 — Five WA G3 documentation models — monitoring DEPLOYED / VERIFIED
+
+Operator-requested WA5480 G3, WA5680 G3, WA7780 G3, WA7785a G3 and WA7880a G3
+are enabled in TechnicalDocumentationSync (QouVaVNhAqSiYq5D), published version
+6ed111f3-306d-4cf1-8dc4-2a107c2c1b26. Existing nine model definitions, daily 07:00
+Europe/Minsk, 17 nodes/three groups and download→INDEX→cleanup ordering remain.
+WA7780 uses the complete 7DF1 machine catalogue; WA7880a uses 7DLR, whose guide is
+absent from SubSeries. No matching model Press PDF was found; existing Press
+sources are preserved.
+
+Nextcloud WebDAV created 20 matching model folders and saved 17 new originals.
+INDEX.html now has 95 records/fourteen folders; all 78 existing originals, two
+cleaned copies, old records and INDEX.md are unchanged. Twelve new cleaned copies
+are published. Cleanup is PARTIAL: both WA7780 manuals and both WA7785a manuals
+are rejected for numbering/table overlap; G3 Redfish exceeds 900 seconds. Those
+five originals remain present with no false completion marker; unchanged failures
+are not automatically retried. CLI layout/performance work remains separate.
+
+Two observed runtime defects were corrected: standard pypdf[crypto]/cryptography
+50.0.2 AES support, and exact Docker-container termination on the existing 900-second
+adapter timeout. Python 3.14.8/PyMuPDF 1.28.2/pypdf 6.19.0/package 0.1.3 and pinned core/
+originals guard are unchanged. Current image:
+sha256:3ff39309bab88fca2d28edb606879afbe5ce18fa366d48ade3e9440cbd82c06e.
+14 upstream/guard and five adapter tests pass; real forced/native timeouts clean
+their jobs/containers. No-change production 12269 passed:14 catalogues / 95 documents,
+zero downloads/index writes/cleanup calls. Own temporary/obsolete runtime
+artifacts are removed; n8n/Nextcloud non-regression passes. Stage 13 stays accepted.
+Record: TECHNICAL_DOCUMENTATION_WA_G3_EXPANSION_2026-10-05.md; sanitized evidence:
+deployments/edge/technical-documentation/wa-g3-expansion-evidence.json.

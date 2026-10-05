@@ -405,5 +405,108 @@
         "User Manual Lenovo Wentian WA5685 G5"
       ]
     }
+  },
+  {
+    "folder": "WA5480 G3",
+    "fullGuid": "339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/A5C3F9A2-38D2-452F-BE87-A6230BE9BDC3",
+    "press": [],
+    "labels": {
+      "lxce_onecli_cplus_ug": [
+        "onecli-user-guide",
+        "User Guide Lenovo XClarity Essentials OneCLI cPlus"
+      ],
+      "lxce_bomc_cplus_ug": [
+        "bomc-user-guide",
+        "User Guide Lenovo XClarity Essentials BoMC cPlus"
+      ],
+      "lxce_ux_cplus_ug": [
+        "updatexpress-user-guide",
+        "User Guide Lenovo XClarity Essentials UpdateXpress cPlus"
+      ],
+      "lenovo_bmc_event_reference_guide": [
+        "bmc-event-reference",
+        "Event Reference Guide Lenovo BMC G3/G5"
+      ],
+      "lenovo_snmp_ug_g3": [
+        "bmc-snmp-reference",
+        "SNMP Reference Guide Lenovo BMC G3"
+      ],
+      "bmc_user_guide": [
+        "bmc-enterprise-user-guide",
+        "User Guide Lenovo BMC Enterprise G3"
+      ],
+      "lenovo_bmc_g3_redfish_guide": [
+        "bmc-redfish-specification",
+        "Redfish Interface Specification Lenovo BMC G3"
+      ],
+      "lenovo_wentian_wa5480g3_user_guide": [
+        "user-manual",
+        "User Manual Lenovo Wentian WA5480 G3"
+      ],
+      "lenovo_wentian_os_installation_guide": [
+        "os-installation-guide",
+        "OS Installation Guide Lenovo Wentian"
+      ],
+      "lxpm_wentian_ug": [
+        "lxpm-user-guide",
+        "User Guide Lenovo XClarity Provisioning Manager Wentian"
+      ],
+      "psu_label_matrix": [
+        "psu-label-matrix",
+        "PSU Label Matrix Lenovo"
+      ]
+    }
+  },
+  {
+    "folder": "WA5680 G3",
+    "fullGuid": "339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/F8CF4FB9-55E0-4CDB-A802-01987CBC9783",
+    "press": [],
+    "labels": {
+      "lenovo_wentian_wa5680g3_user_guide": [
+        "user-manual",
+        "User Manual Lenovo Wentian WA5680 G3"
+      ]
+    }
+  },
+  {
+    "folder": "WA7780 G3",
+    "fullGuid": "339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/5C2B79DC-F509-4D89-93E7-B8EC3AC54BAF/1AA59F99-AD94-4107-A4A4-917D32E08DA9",
+    "press": [],
+    "labels": {
+      "lenovo_wentian_wa7780g3_bios_user_guide": [
+        "bios-user-manual",
+        "BIOS User Manual Lenovo Wentian WA7780 G3"
+      ],
+      "lenovo_wentian_wa7780g3_user_guide": [
+        "user-manual",
+        "User Manual Lenovo Wentian WA7780 G3"
+      ]
+    }
+  },
+  {
+    "folder": "WA7785a G3",
+    "fullGuid": "339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/481AF5B3-DC05-4F5A-A656-B027AB93EC6E",
+    "press": [],
+    "labels": {
+      "lenovo_wentian_wa7785ag3_user_guide": [
+        "user-manual",
+        "User Manual Lenovo Wentian WA7785a G3"
+      ],
+      "lenovo_wentian_wa7785ag3_bios_user_guide": [
+        "bios-user-manual",
+        "BIOS User Manual Lenovo Wentian WA7785a G3"
+      ]
+    }
+  },
+  {
+    "folder": "WA7880a G3",
+    "fullGuid": "339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/552F9B30-44C6-4E81-B0D9-62D72CCE43F3/6B5E239B-7F05-4E51-8A8E-CF69E0FB97C2",
+    "press": [],
+    "labels": {
+      "lenovo_wentian_wa7880ag3_user_guide": [
+        "user-manual",
+        "User Manual Lenovo Wentian WA7880a G3"
+      ]
+    }
   }
 ]

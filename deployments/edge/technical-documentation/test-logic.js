@@ -17,7 +17,7 @@ async function run(name,input,previous={}) {
 (async()=>{
   const allModels = await run('Models and Index',[]);
   const models = allModels.filter(item=>item.json.model.folder==='WR5220 G3');
-  assert.equal(allModels.length,9);
+  assert.equal(allModels.length,14);
   const families = await run('Latest Document Families',[{json:{body:asp}}],{'Models and Index':models});
   assert.equal(families.length,15);
   assert.equal(families.find(d=>d.json.key.endsWith('/bmc-event-reference')).json.path,'WR5220 G3/lenovo_bmc_event_reference_guide_g5_v4.pdf');
@@ -67,13 +67,31 @@ async function run(name,input,previous={}) {
   const fresh=JSON.parse(fs.readFileSync(__dirname+'/test-fixtures-models.json','utf8'));
   const inputs=allModels.map(({json:{model}})=>({json:{body:fresh.find(row=>row.folder===model.folder).body}}));
   const combined=await run('Latest Document Families',inputs,{'Models and Index':allModels});
-  assert.equal(combined.length,78);
-  assert.equal(new Set(combined.map(item=>item.json.key)).size,78);
-  for (const group of audit.models) {
+  assert.equal(combined.length,95);
+  assert.equal(new Set(combined.map(item=>item.json.key)).size,95);
+  const g3Audit=JSON.parse(fs.readFileSync(__dirname+'/source-audit-g3-2026-10-05.json','utf8'));
+  assert.equal(combined.filter(item=>g3Audit.models.some(group=>group.folder===item.json.folder)).length,17);
+  for (const group of [...audit.models,...g3Audit.models]) {
     const actual=combined.filter(item=>item.json.folder===group.folder);
     assert.deepEqual(actual.map(item=>item.json.path.split('/').pop()).sort(),group.documents.map(doc=>doc.filename).sort());
     for (const item of actual) assert.equal(item.json.title,group.documents.find(doc=>doc.filename===item.json.path.split('/').pop()).display_title);
   }
+  const wa5480=allModels.filter(item=>item.json.model.folder==='WA5480 G3');
+  const waCatalog=structuredClone(fresh.find(row=>row.folder==='WA5480 G3').body);
+  const waManual=waCatalog.data.find(row=>row.url.endsWith('wa5480g3_user_guide_v8.pdf'));
+  waManual.url=waManual.url.replace('_v8.pdf','_v9.pdf');waManual.updated='2026-10-06';
+  const waCandidates=await run('Latest Document Families',[{json:{body:waCatalog}}],{'Models and Index':wa5480});
+  assert.equal(waCandidates.length,11);
+  const oldWa=combined.filter(item=>item.json.folder==='WA5480 G3');
+  const waHtml='<script id="catalog-data" type="application/json">'+JSON.stringify({documents:oldWa.map(item=>({...item.json,remote_validator:{etag:'"wa"'}}))})+'</script>';
+  const waChanges=await run('Changed Documents',waCandidates.map(()=>({json:{headers:{etag:'"wa"'}}})),{'Read INDEX':[{json:{data:waHtml}}],'Latest Document Families':waCandidates});
+  assert.equal(waChanges.length,1);
+  assert.equal(waChanges[0].json.old_path,'WA5480 G3/lenovo_wentian_wa5480g3_user_guide_v8.pdf');
+  assert.equal(waChanges[0].json.path,'WA5480 G3/lenovo_wentian_wa5480g3_user_guide_v9.pdf');
+  assert.equal(waChanges[0].json.previous_source_updated,'2026-03-27');
+  const wa7880=allModels.find(item=>item.json.model.folder==='WA7880a G3').json.model;
+  assert.equal(wa7880.fullGuid,g3Audit.models.find(group=>group.folder===wa7880.folder).fullGuid);
+  assert(wa7880.fullGuid.endsWith('/6B5E239B-7F05-4E51-8A8E-CF69E0FB97C2'));
   const wr5225=allModels.filter(item=>item.json.model.folder==='WR5225 G3');
   const biosRows=fresh.find(row=>row.folder==='WR5225 G3').body.data.filter(row=>/-genoa\.pdf$|-turin\.pdf$/.test(row.url));
   assert.equal(biosRows.length,2);
@@ -93,6 +111,6 @@ async function run(name,input,previous={}) {
   assert(biosChanges[0].json.path.endsWith('v3.1-genoa.pdf'));
   assert.equal(biosChanges[0].json.title,oldBios.find(item=>item.json.key.endsWith('-genoa')).json.title);
   fs.writeFileSync(directory+'/expected-documents.json',JSON.stringify(combined.map(item=>item.json),null,2)+'\n');
-  console.log('PASS: nine-model mapping, 78 unique model/document keys, audited current filenames/titles, independent Genoa/Turin updates and replacement paths');
+  console.log('PASS: 14-model mapping, 95 unique model/document keys, audited current filenames/titles, independent Genoa/Turin updates and replacement paths');
   console.log('PASS: current-family deduplication, missing documents, same-URL ETag replacement, versioned filename replacement, stable labels, model isolation, HTML escaping, source failure stops processing');
 })().catch(error=>{console.error(error);process.exitCode=1});

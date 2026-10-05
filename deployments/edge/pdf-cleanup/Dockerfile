@@ -6,6 +6,6 @@ ENV PDF_CLEANUP_SOURCE_COMMIT=${SOURCE_COMMIT} \
     PDF_CLEANUP_ORIGINALS_DIR=/srv/cloud/technical-documentation/lenovo/originals \
     PYTHONDONTWRITEBYTECODE=1
 COPY source /opt/pdf-cleanup/source
-RUN python -m pip install --no-cache-dir /opt/pdf-cleanup/source \
+RUN python -m pip install --no-cache-dir /opt/pdf-cleanup/source 'pypdf[crypto]' \
     && python -m pip check
 ENTRYPOINT ["pdf-cleanup"]

@@ -7,7 +7,7 @@ child is LenovoPdfCleanup (ENo9jFkwcE4PFOyL).
 
 - Workflow: https://n8n.escloud.us/workflow/QouVaVNhAqSiYq5D
 - Schedule: daily at 07:00, workflow timezone `Europe/Minsk` (UTC+3).
-- Sources: Lenovo ASP catalogues and configured Lenovo Press PDFs for nine model
+- Sources: Lenovo ASP catalogues and configured Lenovo Press PDFs for fourteen model
   collections; the enabled source definitions are in `models.json`.
 - Model folders: WR3220 G5, WR5215 G5, WR5220 G3, WR5220 G5, WR5225 G3,
   WR6220 G5, WA5480 G5, WA5680 G5 and WA5685 G5. WR5220/WR5228 and
@@ -166,7 +166,7 @@ No task-specific backup was introduced.
 To regenerate/validate the source locally, run `build.py --validation-output`
 with a temporary JSON path and pass its containing directory to `test-logic.js`.
 `test-fixtures.json` contains fixed, public source/catalogue data for those tests.
-`test-fixtures-models.json` contains the nine fresh model catalogues used to
+`test-fixtures-models.json` contains the fourteen fresh model catalogues used to
 verify the expansion. `model-expansion-evidence.json` records the first sync,
 the published no-change run and filesystem/WebDAV verification.
 
@@ -180,3 +180,41 @@ The Lenovo ASP endpoint is the site's observed internal API; a published
 compatibility contract is unknown. The automation uses the confirmed anonymous
 GET response of the current site. Cleanup is integrated through the existing
 standalone CLI; translation remains separate work.
+
+## Additional WA G3 monitoring
+
+The five operator-requested collections are configured in the same Models and
+Index node: WA5480 G3 (11 PDFs), WA5680 G3 (1), WA7780 G3 (2), WA7785a G3 (2)
+and WA7880a G3 (1). Together with the unchanged nine existing collections the
+configuration selects 95 current documents in fourteen model folders.
+
+Both SubSeries and machine-type catalogues were compared. WA7780 G3 uses the
+7DF1 machine-type fullGuid because its user manual is absent from SubSeries;
+WA7880a G3 uses 7DLR because SubSeries returns a null catalogue. The other three
+catalogues agree at both levels. No PDF for these exact models was found in
+Lenovo Press searches; the existing Press configuration is preserved.
+
+Twenty matching originals/cleaned/translated-en/translated-ru directories were
+created through Nextcloud WebDAV. No workflow node, service, credential,
+translation process, backup or queue is added. Source evidence is in
+`source-audit-g3-2026-10-05.json` and its Markdown list. Regression fixtures cover
+all fourteen models, shared-family deduplication and an isolated WA5480 v8 → v9
+replacement with the previous source date preserved.
+
+Live verification: runs 12122/12186 downloaded all seventeen PDFs through
+Nextcloud and produced INDEX.html with 95 records; the no-change production run
+12269 checked all fourteen catalogues/95 current documents and performed no
+PDF downloads, INDEX writes or cleanup calls. Twenty authenticated WebDAV
+folder listings agree with filesystem/publication state; all 78 previous
+originals, two previous cleaned PDFs, their catalogue records and INDEX.md are
+unchanged. Native graph size remains seventeen nodes/three groups.
+
+Cleanup is partial: twelve new cleaned copies are published and marked complete.
+The unchanged upstream CLI rejected both WA7780 G3 manuals and both WA7785a G3
+manuals because of ambiguous numbering or table overlap. The G3 Redfish reference
+exceeded 900 seconds, including a retry after the runtime dependency correction.
+These five originals remain present and have no false cleaned marker. Unchanged
+failed documents are not automatically retried; changing their source version
+will trigger processing again. Resolving these CLI layout/performance limitations
+is separate from enabling the source monitor. Exact paths/errors, runtime AES
+and cancellation corrections and verification are in `wa-g3-expansion-evidence.json`.

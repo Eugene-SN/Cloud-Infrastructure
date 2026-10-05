@@ -160,3 +160,28 @@ Authoritative node mechanisms:
 [n8n SSH](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.ssh/),
 [HTTP Request](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.httprequest/),
 [Execute Sub-workflow](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.executeworkflow/).
+
+## WA G3 onboarding runtime corrections
+
+The new WA7780 G3 user guide exposed the missing upstream-supported pypdf AES
+dependency. The Docker build now requests `pypdf[crypto]` (cryptography 50.0.2)
+while retaining Python 3.14.8, PyMuPDF 1.28.2, pypdf 6.19.0 and package 0.1.3.
+The imported upstream commit, portable originals guard and core source bytes
+are unchanged. The canonical image tag is retained; deployment.json records
+the rebuilt image identity. All fourteen upstream/edge guard tests passed.
+
+An actual Redfish timeout also exposed a cancellation defect: killing the core
+launcher did not terminate the root-owned sudo/Docker client, whose output pipe
+kept the adapter waiting. The existing 900-second limit is retained. The timeout
+branch now stops its exact `pdf-cleanup-<execution_id>` container through Docker
+before collecting the process result. A live test shortened only the harness
+wait to two seconds: it returned timeout in 7.31 seconds, removed its container,
+kept the snapshot hash unchanged and released its temporary job. No workflow
+node, service, retry queue or backup is added. Docker stop semantics were checked
+against the installed CLI help and official Docker documentation.
+
+The current CLI can reject ambiguous pagination/table overlaps. Such rejection
+preserves the original and does not publish a cleaned PDF or completion marker;
+no content-protection check is weakened during model onboarding. Final source,
+execution and publication evidence is under technical-documentation/
+`wa-g3-expansion-evidence.json`.

@@ -62,12 +62,20 @@ def perform(request):
     try:
         stdout, stderr = process.communicate(timeout=900)
     except subprocess.TimeoutExpired:
-        os.killpg(process.pid, signal.SIGTERM)
+        # Docker runs through sudo; signalling core's launcher does not stop
+        # the root-owned Docker client or the container holding its pipes open.
+        subprocess.run(['/usr/bin/sudo', '-n', '/usr/bin/docker', 'stop',
+                        '--timeout', '5', 'pdf-cleanup-' + str(request['execution_id'])],
+                       capture_output=True, text=True, timeout=15)
+        try:
+            os.killpg(process.pid, signal.SIGTERM)
+        except ProcessLookupError:
+            pass
         try:
             stdout, stderr = process.communicate(timeout=5)
         except subprocess.TimeoutExpired:
             os.killpg(process.pid, signal.SIGKILL)
-            stdout, stderr = process.communicate()
+            stdout, stderr = process.communicate(timeout=5)
         return {"ok": False, "status": "timeout", "cli_rc": process.returncode,
                 "error": "Cleanup exceeded 900 seconds"}
     try:

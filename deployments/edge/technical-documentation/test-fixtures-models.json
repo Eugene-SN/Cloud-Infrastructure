@@ -514,5 +514,183 @@
         }
       ]
     }
+  },
+  {
+    "folder": "WA5480 G3",
+    "body": {
+      "msg": "success",
+      "status": 200,
+      "data": [
+        {
+          "title": "Lenovo XClarity Essentials OneCLI cPlus 用户指南",
+          "updated": "2026-08-27",
+          "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lxce_onecli_cplus_ug.pdf",
+          "isChinese": true,
+          "sourceLanguage": "zc"
+        },
+        {
+          "title": "Lenovo XClarity Essentials BoMC cPlus 用户指南",
+          "updated": "2026-08-27",
+          "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lxce_bomc_cplus_ug.pdf",
+          "isChinese": true,
+          "sourceLanguage": "zc"
+        },
+        {
+          "title": "Lenovo XClarity Essentials UpdateXpress cPlus 用户指南 ",
+          "updated": "2026-08-27",
+          "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lxce_ux_cplus_ug.pdf",
+          "isChinese": true,
+          "sourceLanguage": "zc"
+        },
+        {
+          "title": "Lenovo BMC 日志参考手册",
+          "updated": "2026-07-31",
+          "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_bmc_event_reference_guide_g5_v4.pdf",
+          "isChinese": true,
+          "sourceLanguage": "zc"
+        },
+        {
+          "title": "Lenovo BMC SNMP 参考手册",
+          "updated": "2026-04-21",
+          "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_snmp_ug_g3.pdf",
+          "isChinese": true,
+          "sourceLanguage": "zc"
+        },
+        {
+          "title": "Lenovo BMC 企业版用户操作指南 G3",
+          "updated": "2026-04-10",
+          "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/bmc_user_guide_v14.pdf",
+          "isChinese": true,
+          "sourceLanguage": "zc"
+        },
+        {
+          "title": "Lenovo BMC G3 REDFISH 接口规范",
+          "updated": "2026-04-10",
+          "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_bmc_g3_redfish_guide_v11.pdf",
+          "isChinese": true,
+          "sourceLanguage": "zc"
+        },
+        {
+          "title": "Lenovo BMC G3 日志参考手册",
+          "updated": "2026-04-10",
+          "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_bmc_event_reference_guide_g3_v3.pdf",
+          "isChinese": true,
+          "sourceLanguage": "zc"
+        },
+        {
+          "title": "联想问天 WA5480 G3 服务器用户手册",
+          "updated": "2026-03-27",
+          "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_wentian_wa5480g3_user_guide_v8.pdf",
+          "isChinese": true,
+          "sourceLanguage": "zc"
+        },
+        {
+          "title": "联想问天服务器操作系统安装指南",
+          "updated": "2026-03-23",
+          "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_wentian_os_installation_guide.pdf",
+          "isChinese": true,
+          "sourceLanguage": "zc"
+        },
+        {
+          "title": " Lenovo XClarity Provisioning Manager WenTian 用户指南",
+          "updated": "2026-02-04",
+          "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lxpm_wentian_ug-v2.pdf",
+          "isChinese": true,
+          "sourceLanguage": "zc"
+        },
+        {
+          "title": " Lenovo XClarity Provisioning Manager WenTian 用户指南",
+          "updated": "2026-02-04",
+          "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lxpm_wentian_ug-v2.pdf",
+          "isChinese": true,
+          "sourceLanguage": "zc"
+        },
+        {
+          "title": "联想服务器电源标签",
+          "updated": "2025-05-06",
+          "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/psu_label_matrix.pdf",
+          "isChinese": true,
+          "sourceLanguage": "zc"
+        }
+      ]
+    }
+  },
+  {
+    "folder": "WA5680 G3",
+    "body": {
+      "msg": "success",
+      "status": 200,
+      "data": [
+        {
+          "title": "联想问天 WA5680 G3 服务器用户指南",
+          "updated": "2025-08-07",
+          "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_wentian_wa5680g3_user_guide.pdf",
+          "isChinese": true,
+          "sourceLanguage": "zc"
+        }
+      ]
+    }
+  },
+  {
+    "folder": "WA7780 G3",
+    "body": {
+      "msg": "success",
+      "status": 200,
+      "data": [
+        {
+          "title": "联想问天 WA7780 G3 服务器 BIOS 用户手册",
+          "updated": "2025-05-15",
+          "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_wentian_wa7780g3_bios_user_guide.pdf",
+          "isChinese": true,
+          "sourceLanguage": "zc"
+        },
+        {
+          "title": "联想问天 WA7780 G3 服务器用戶手冊",
+          "updated": "2024-06-27",
+          "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_wentian_wa7780g3_user_guide.pdf",
+          "isChinese": true,
+          "sourceLanguage": "zc"
+        }
+      ]
+    }
+  },
+  {
+    "folder": "WA7785a G3",
+    "body": {
+      "msg": "success",
+      "status": 200,
+      "data": [
+        {
+          "title": "联想问天 WA7785a G3 服务器用户手册",
+          "updated": "2025-05-15",
+          "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_wentian_wa7785ag3_user_guide.pdf",
+          "isChinese": true,
+          "sourceLanguage": "zc"
+        },
+        {
+          "title": "联想问天 WA7785a G3 服务器 BIOS 用户手册 ",
+          "updated": "2025-05-15",
+          "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_wentian_wa7785ag3_bios_user_guide.pdf",
+          "isChinese": true,
+          "sourceLanguage": "zc"
+        }
+      ]
+    }
+  },
+  {
+    "folder": "WA7880a G3",
+    "body": {
+      "msg": "success",
+      "status": 200,
+      "data": [
+        {
+          "title": "联想问天 WA7880a G3 服务器用户指南",
+          "updated": "2025-10-23",
+          "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_wentian_wa7880ag3_user_guide.pdf",
+          "isChinese": true,
+          "sourceLanguage": "zc"
+        }
+      ]
+    }
   }
 ]

@@ -1,0 +1,608 @@
+{
+  "date": "2026-10-05",
+  "status": "MONITORING_DEPLOYED_VERIFIED_CLEANUP_PARTIAL",
+  "workflow": {
+    "id": "QouVaVNhAqSiYq5D",
+    "name": "TechnicalDocumentationSync",
+    "version": "6ed111f3-306d-4cf1-8dc4-2a107c2c1b26",
+    "published": "6ed111f3-306d-4cf1-8dc4-2a107c2c1b26",
+    "nodes": 17,
+    "groups": 3,
+    "description": "Daily documentation sync from configured Lenovo ASP and Lenovo Press catalogues. Replace changed originals through Nextcloud WebDAV, update grouped INDEX.html, then clean downloaded PDFs into matching model folders.",
+    "changedNodeParameters": [
+      "Models and Index"
+    ],
+    "settingsPreserved": true,
+    "connectionsPreserved": true
+  },
+  "cleanupWorkflow": {
+    "id": "ENo9jFkwcE4PFOyL",
+    "published": "382fc37d-61ec-4311-8c80-0bcb774a2221",
+    "nodes": 17,
+    "groups": 3,
+    "parametersAndConnectionsUnchanged": true
+  },
+  "addedModels": [
+    "WA5480 G3",
+    "WA5680 G3",
+    "WA7780 G3",
+    "WA7785a G3",
+    "WA7880a G3"
+  ],
+  "initialDownloads": [
+    {
+      "executionId": "12122",
+      "pdfs": 16,
+      "indexDocuments": 94,
+      "cleanupChild": "12140",
+      "status": "error",
+      "error": "Cleanup exceeded 900 seconds; old cancellation path left its container running until exact operator stop."
+    },
+    {
+      "executionId": "12186",
+      "pdfs": 1,
+      "indexDocuments": 95,
+      "cleanupChild": "12188",
+      "status": "error",
+      "error": "Missing pypdf AES cryptography dependency; runtime corrected."
+    }
+  ],
+  "recoveryExecutions": [
+    {
+      "id": "12203",
+      "status": "error",
+      "source": "WA7780 G3 user manual",
+      "error": "Page 46: footer candidate overlaps table text"
+    },
+    {
+      "id": "12212",
+      "status": "error",
+      "pdfsPublished": 5,
+      "error": "WA7780 G3 BIOS: Page 2: unverified numbering in footer frame"
+    },
+    {
+      "path": "WA7785a G3/lenovo_wentian_wa7785ag3_bios_user_guide.pdf",
+      "executionId": "12225",
+      "status": "error",
+      "error": "Page 2: unverified numbering in footer frame [line 12]"
+    },
+    {
+      "path": "WA7785a G3/lenovo_wentian_wa7785ag3_user_guide.pdf",
+      "executionId": "12226",
+      "status": "error",
+      "error": "Page 34: footer candidate overlaps table text [line 12]"
+    },
+    {
+      "path": "WA7880a G3/lenovo_wentian_wa7880ag3_user_guide.pdf",
+      "executionId": "12229",
+      "status": "success"
+    },
+    {
+      "id": "12232",
+      "status": "error",
+      "error": "Cleanup exceeded 900 seconds; exact container and temporary job removed automatically."
+    }
+  ],
+  "noChangeExecution": {
+    "id": "12269",
+    "workflowId": "QouVaVNhAqSiYq5D",
+    "mode": "trigger",
+    "status": "success",
+    "startedAt": "2026-10-05T14:16:31.675Z",
+    "stoppedAt": "2026-10-05T14:16:39.189Z",
+    "retryOf": null,
+    "retrySuccessId": null,
+    "waitTill": null,
+    "models": 14,
+    "sourceDocuments": 95,
+    "changedDocuments": 0,
+    "downloads": 0,
+    "indexWrites": 0,
+    "cleanupCalls": 0
+  },
+  "checks": {
+    "nativeSdkValid": true,
+    "upstreamAndGuardTests": 14,
+    "adapterRegressionTests": 5,
+    "logicTests": "14 models, 95 unique keys, current filenames and titles, isolated future WA5480 v8/v9 and Genoa/Turin updates, previous source dates, source failure, HTML escaping",
+    "nativeN8nReadiness": 200,
+    "nextcloudMaintenance": false,
+    "nextcloudNeedsDbUpgrade": false,
+    "temporaryJobsRemoved": true,
+    "obsoleteImageAndTemporaryTagRemoved": true
+  },
+  "runtimeFixes": {
+    "coreSourceChanged": false,
+    "upstreamCommit": "46f179e9e5c83ff2c12b7ba084efef124afaf338",
+    "imageBefore": "sha256:cc4ea0c71e114bf9c476671eaae147de5152f471476e67d42b317b89bf2030b8",
+    "imageAfter": "sha256:3ff39309bab88fca2d28edb606879afbe5ce18fa366d48ade3e9440cbd82c06e",
+    "cryptoExtra": "pypdf[crypto]",
+    "cryptography": "50.0.2",
+    "timeoutSeconds": 900,
+    "timeoutCancellation": "Stop the exact execution-owned Docker container before collecting root-client pipes; no new workflow nodes.",
+    "references": [
+      "https://pypdf.readthedocs.io/en/latest/user/installation.html",
+      "https://docs.docker.com/reference/cli/docker/container/stop/"
+    ],
+    "adapterSha256": "257ed62ac8f7aed7ca14c1f72e37a722ac3bc8c8d3420e6cc71057dca4a7c4c0"
+  },
+  "limitations": {
+    "cleanupFailures": [
+      {
+        "path": "WA7780 G3/lenovo_wentian_wa7780g3_user_guide.pdf",
+        "executionId": "12203",
+        "error": "Page 46: footer candidate overlaps table text"
+      },
+      {
+        "path": "WA7780 G3/lenovo_wentian_wa7780g3_bios_user_guide.pdf",
+        "executionId": "12212",
+        "error": "Page 2: unverified numbering in footer frame [line 12]"
+      },
+      {
+        "path": "WA7785a G3/lenovo_wentian_wa7785ag3_bios_user_guide.pdf",
+        "executionId": "12225",
+        "error": "Page 2: unverified numbering in footer frame [line 12]"
+      },
+      {
+        "path": "WA7785a G3/lenovo_wentian_wa7785ag3_user_guide.pdf",
+        "executionId": "12226",
+        "error": "Page 34: footer candidate overlaps table text [line 12]"
+      },
+      {
+        "path": "WA5480 G3/lenovo_bmc_g3_redfish_guide_v11.pdf",
+        "executionId": "12232",
+        "error": "Cleanup exceeded 900 seconds [line 12]"
+      }
+    ],
+    "noAutomaticRetryForUnchangedFailedDocuments": true,
+    "indexFlags": "Successful copies are marked cleaned; failed copies retain pending and have no cleaned_at/path. Native execution error details are recorded here.",
+    "sourceProtectionNeverWeakened": true
+  },
+  "assistantAuditCorrections": [
+    "Handled null SubSeries audit data by inspecting the actual UI machine-type catalogues; no empty-response workaround added to production.",
+    "A local export patch used two operations on one path; it failed before mutation and was replaced with one update.",
+    "A local log-prefix regex failed; only that read was repeated using string splitting.",
+    "The live-export helper initially omitted metadata; the final export preserves IDs, active/published version, settings, credentials and groups.",
+    "An asynchronous report collector read incomplete local results; final results were recovered from native execution records.",
+    "A long MCP test call did not return structured final status for Redfish; execution 12232 was tracked to its actual terminal state, without starting a duplicate job."
+  ],
+  "publicationVerification": {
+    "total_models": 14,
+    "originals": 95,
+    "cleaned_total": 14,
+    "added_documents": 17,
+    "model_counts": {
+      "WA5480 G3": 11,
+      "WA5680 G3": 1,
+      "WA7780 G3": 2,
+      "WA7785a G3": 2,
+      "WA7880a G3": 1
+    },
+    "all78_existing_originals_unchanged": true,
+    "existing_records_unchanged": true,
+    "two_existing_cleaned_pdfs_unchanged": true,
+    "index_md_unchanged": true,
+    "previous_dates_unknown_for_new_documents": true,
+    "webdav_index_readback_matches": true,
+    "cleanup_successes": 12,
+    "cleanup_failures": [
+      {
+        "path": "WA7780 G3/lenovo_wentian_wa7780g3_user_guide.pdf",
+        "executionId": "12203",
+        "error": "Page 46: footer candidate overlaps table text"
+      },
+      {
+        "path": "WA7780 G3/lenovo_wentian_wa7780g3_bios_user_guide.pdf",
+        "executionId": "12212",
+        "error": "Page 2: unverified numbering in footer frame [line 12]"
+      },
+      {
+        "path": "WA7785a G3/lenovo_wentian_wa7785ag3_bios_user_guide.pdf",
+        "executionId": "12225",
+        "error": "Page 2: unverified numbering in footer frame [line 12]"
+      },
+      {
+        "path": "WA7785a G3/lenovo_wentian_wa7785ag3_user_guide.pdf",
+        "executionId": "12226",
+        "error": "Page 34: footer candidate overlaps table text [line 12]"
+      },
+      {
+        "path": "WA5480 G3/lenovo_bmc_g3_redfish_guide_v11.pdf",
+        "executionId": "12232",
+        "error": "Cleanup exceeded 900 seconds [line 12]"
+      }
+    ],
+    "cleanup_markers_match_published_files": true,
+    "webdav_listings": [
+      {
+        "model": "WA5480 G3",
+        "scope": "originals",
+        "pdfs": 11,
+        "status": 207
+      },
+      {
+        "model": "WA5480 G3",
+        "scope": "cleaned",
+        "pdfs": 10,
+        "status": 207
+      },
+      {
+        "model": "WA5480 G3",
+        "scope": "translated/en",
+        "pdfs": 0,
+        "status": 207
+      },
+      {
+        "model": "WA5480 G3",
+        "scope": "translated/ru",
+        "pdfs": 0,
+        "status": 207
+      },
+      {
+        "model": "WA5680 G3",
+        "scope": "originals",
+        "pdfs": 1,
+        "status": 207
+      },
+      {
+        "model": "WA5680 G3",
+        "scope": "cleaned",
+        "pdfs": 1,
+        "status": 207
+      },
+      {
+        "model": "WA5680 G3",
+        "scope": "translated/en",
+        "pdfs": 0,
+        "status": 207
+      },
+      {
+        "model": "WA5680 G3",
+        "scope": "translated/ru",
+        "pdfs": 0,
+        "status": 207
+      },
+      {
+        "model": "WA7780 G3",
+        "scope": "originals",
+        "pdfs": 2,
+        "status": 207
+      },
+      {
+        "model": "WA7780 G3",
+        "scope": "cleaned",
+        "pdfs": 0,
+        "status": 207
+      },
+      {
+        "model": "WA7780 G3",
+        "scope": "translated/en",
+        "pdfs": 0,
+        "status": 207
+      },
+      {
+        "model": "WA7780 G3",
+        "scope": "translated/ru",
+        "pdfs": 0,
+        "status": 207
+      },
+      {
+        "model": "WA7785a G3",
+        "scope": "originals",
+        "pdfs": 2,
+        "status": 207
+      },
+      {
+        "model": "WA7785a G3",
+        "scope": "cleaned",
+        "pdfs": 0,
+        "status": 207
+      },
+      {
+        "model": "WA7785a G3",
+        "scope": "translated/en",
+        "pdfs": 0,
+        "status": 207
+      },
+      {
+        "model": "WA7785a G3",
+        "scope": "translated/ru",
+        "pdfs": 0,
+        "status": 207
+      },
+      {
+        "model": "WA7880a G3",
+        "scope": "originals",
+        "pdfs": 1,
+        "status": 207
+      },
+      {
+        "model": "WA7880a G3",
+        "scope": "cleaned",
+        "pdfs": 1,
+        "status": 207
+      },
+      {
+        "model": "WA7880a G3",
+        "scope": "translated/en",
+        "pdfs": 0,
+        "status": 207
+      },
+      {
+        "model": "WA7880a G3",
+        "scope": "translated/ru",
+        "pdfs": 0,
+        "status": 207
+      }
+    ],
+    "new_files": [
+      {
+        "path": "WA5480 G3/lxce_onecli_cplus_ug.pdf",
+        "original_bytes": 856757,
+        "original_sha256": "dba774fbccfbd4c2e7e84819f2c213a37af77862be9143344db0f64e7f5e3440",
+        "cleaned_bytes": 943950,
+        "cleaned_at": "2026-10-05T16:22:49.206+03:00",
+        "cleanup_status": "cleaned"
+      },
+      {
+        "path": "WA5480 G3/lxce_bomc_cplus_ug.pdf",
+        "original_bytes": 638956,
+        "original_sha256": "c41b84786be486e197ab7604f58b63be062948a8e73455f0c17fb013158959e8",
+        "cleaned_bytes": 722938,
+        "cleaned_at": "2026-10-05T16:22:57.495+03:00",
+        "cleanup_status": "cleaned"
+      },
+      {
+        "path": "WA5480 G3/lxce_ux_cplus_ug.pdf",
+        "original_bytes": 778902,
+        "original_sha256": "db4f1f0c538d2e623a2b9b9f9de76ad7cc64776076d3246a5cd562c6d0c5576c",
+        "cleaned_bytes": 1024263,
+        "cleaned_at": "2026-10-05T16:23:11.973+03:00",
+        "cleanup_status": "cleaned"
+      },
+      {
+        "path": "WA5480 G3/lenovo_bmc_event_reference_guide_g5_v4.pdf",
+        "original_bytes": 1751445,
+        "original_sha256": "fc4a694ce1574db865fe41a904d185bc85092598a5b6a6d0cbbff739c75411ef",
+        "cleaned_bytes": 3279184,
+        "cleaned_at": "2026-10-05T16:24:03.166+03:00",
+        "cleanup_status": "cleaned"
+      },
+      {
+        "path": "WA5480 G3/lenovo_snmp_ug_g3.pdf",
+        "original_bytes": 1136366,
+        "original_sha256": "54364f7a996ac070098bfa4d0b8de530660edc2aaacd73550584c57373b8256e",
+        "cleaned_bytes": 2018226,
+        "cleaned_at": "2026-10-05T16:24:22.132+03:00",
+        "cleanup_status": "cleaned"
+      },
+      {
+        "path": "WA5480 G3/bmc_user_guide_v14.pdf",
+        "original_bytes": 4197674,
+        "original_sha256": "acba1574ddaf24faa0eb69644e9114be553ee44f45ce2960d0bcefb66a4539d4",
+        "cleaned_bytes": 4299552,
+        "cleaned_at": "2026-10-05T16:24:44.800+03:00",
+        "cleanup_status": "cleaned"
+      },
+      {
+        "path": "WA5480 G3/lenovo_bmc_g3_redfish_guide_v11.pdf",
+        "original_bytes": 8326662,
+        "original_sha256": "456897573c42b3e7eb767b248e3c588a987b7f23b2a0c70a344e816b91837ee8",
+        "cleaned_bytes": null,
+        "cleaned_at": null,
+        "cleanup_status": "pending"
+      },
+      {
+        "path": "WA5480 G3/lenovo_wentian_wa5480g3_user_guide_v8.pdf",
+        "original_bytes": 26904246,
+        "original_sha256": "a73e5e450d7b3c9bce074f3d54d9ff249f2f58a71eac214bc2a168ba1e4fecd7",
+        "cleaned_bytes": 27068747,
+        "cleaned_at": "2026-10-05T16:54:32.546+03:00",
+        "cleanup_status": "cleaned"
+      },
+      {
+        "path": "WA5480 G3/lenovo_wentian_os_installation_guide.pdf",
+        "original_bytes": 13673279,
+        "original_sha256": "f5d59ae8c6bfc792ae28160790ce0f673b8d940de86f98ed7e326fb40cfaec17",
+        "cleaned_bytes": 13644452,
+        "cleaned_at": "2026-10-05T16:53:37.629+03:00",
+        "cleanup_status": "cleaned"
+      },
+      {
+        "path": "WA5480 G3/lxpm_wentian_ug-v2.pdf",
+        "original_bytes": 2508949,
+        "original_sha256": "7508bcd4c26266887f92c7c803a57cc9cc9d277229909af94f3cb60023844bdc",
+        "cleaned_bytes": 2479201,
+        "cleaned_at": "2026-10-05T16:54:42.568+03:00",
+        "cleanup_status": "cleaned"
+      },
+      {
+        "path": "WA5480 G3/psu_label_matrix.pdf",
+        "original_bytes": 1676894,
+        "original_sha256": "8ca145a1ab7450891da9af84933fdebe3042f9624ae25974bb34fb72782c1f39",
+        "cleaned_bytes": 1731171,
+        "cleaned_at": "2026-10-05T16:54:48.887+03:00",
+        "cleanup_status": "cleaned"
+      },
+      {
+        "path": "WA5680 G3/lenovo_wentian_wa5680g3_user_guide.pdf",
+        "original_bytes": 25638397,
+        "original_sha256": "fe6bafcd127777fe95f0f46fcea690d22ab78331853450d6b990f674575774d2",
+        "cleaned_bytes": 25986405,
+        "cleaned_at": "2026-10-05T16:55:17.738+03:00",
+        "cleanup_status": "cleaned"
+      },
+      {
+        "path": "WA7780 G3/lenovo_wentian_wa7780g3_bios_user_guide.pdf",
+        "original_bytes": 940977,
+        "original_sha256": "ff73d1e9ccc954f7e64173874a55dc7fe52569c9fe85c8669527933e81843d39",
+        "cleaned_bytes": null,
+        "cleaned_at": null,
+        "cleanup_status": "pending"
+      },
+      {
+        "path": "WA7785a G3/lenovo_wentian_wa7785ag3_user_guide.pdf",
+        "original_bytes": 8814630,
+        "original_sha256": "3a1f7a48df92df1fd415741656cc5294ca26a8e5ab4f3839da557c0189c0e35e",
+        "cleaned_bytes": null,
+        "cleaned_at": null,
+        "cleanup_status": "pending"
+      },
+      {
+        "path": "WA7785a G3/lenovo_wentian_wa7785ag3_bios_user_guide.pdf",
+        "original_bytes": 969234,
+        "original_sha256": "c129642ccf27022ed6ab2ec88597e0c905c361c7a8008de29a58d2a373f1e073",
+        "cleaned_bytes": null,
+        "cleaned_at": null,
+        "cleanup_status": "pending"
+      },
+      {
+        "path": "WA7880a G3/lenovo_wentian_wa7880ag3_user_guide.pdf",
+        "original_bytes": 15985420,
+        "original_sha256": "59de6ab16247b3c5dde9fbb612103ee046b9a377c0280544f16eb9e62dd28cf8",
+        "cleaned_bytes": 16652235,
+        "cleaned_at": "2026-10-05T17:00:24.959+03:00",
+        "cleanup_status": "cleaned"
+      },
+      {
+        "path": "WA7780 G3/lenovo_wentian_wa7780g3_user_guide.pdf",
+        "original_bytes": 10001885,
+        "original_sha256": "1718c6d1094bf50a54550fdb191f628875da094b0fbda8f2f147305dbc740f4b",
+        "cleaned_bytes": null,
+        "cleaned_at": null,
+        "cleanup_status": "pending"
+      }
+    ]
+  },
+  "folderCreation": [
+    {
+      "path": "technical-documentation/lenovo/originals/WA5480 G3",
+      "status": 201
+    },
+    {
+      "path": "technical-documentation/lenovo/cleaned/WA5480 G3",
+      "status": 201
+    },
+    {
+      "path": "technical-documentation/lenovo/translated/en/WA5480 G3",
+      "status": 201
+    },
+    {
+      "path": "technical-documentation/lenovo/translated/ru/WA5480 G3",
+      "status": 201
+    },
+    {
+      "path": "technical-documentation/lenovo/originals/WA5680 G3",
+      "status": 201
+    },
+    {
+      "path": "technical-documentation/lenovo/cleaned/WA5680 G3",
+      "status": 201
+    },
+    {
+      "path": "technical-documentation/lenovo/translated/en/WA5680 G3",
+      "status": 201
+    },
+    {
+      "path": "technical-documentation/lenovo/translated/ru/WA5680 G3",
+      "status": 201
+    },
+    {
+      "path": "technical-documentation/lenovo/originals/WA7780 G3",
+      "status": 201
+    },
+    {
+      "path": "technical-documentation/lenovo/cleaned/WA7780 G3",
+      "status": 201
+    },
+    {
+      "path": "technical-documentation/lenovo/translated/en/WA7780 G3",
+      "status": 201
+    },
+    {
+      "path": "technical-documentation/lenovo/translated/ru/WA7780 G3",
+      "status": 201
+    },
+    {
+      "path": "technical-documentation/lenovo/originals/WA7785a G3",
+      "status": 201
+    },
+    {
+      "path": "technical-documentation/lenovo/cleaned/WA7785a G3",
+      "status": 201
+    },
+    {
+      "path": "technical-documentation/lenovo/translated/en/WA7785a G3",
+      "status": 201
+    },
+    {
+      "path": "technical-documentation/lenovo/translated/ru/WA7785a G3",
+      "status": 201
+    },
+    {
+      "path": "technical-documentation/lenovo/originals/WA7880a G3",
+      "status": 201
+    },
+    {
+      "path": "technical-documentation/lenovo/cleaned/WA7880a G3",
+      "status": 201
+    },
+    {
+      "path": "technical-documentation/lenovo/translated/en/WA7880a G3",
+      "status": 201
+    },
+    {
+      "path": "technical-documentation/lenovo/translated/ru/WA7880a G3",
+      "status": 201
+    }
+  ],
+  "timeoutTest": {
+    "actual_sudo_docker_timeout_test": true,
+    "test_wait_seconds": 2,
+    "production_limit_seconds": 900,
+    "elapsed_seconds": 7.31,
+    "result": {
+      "ok": false,
+      "status": "timeout",
+      "cli_rc": -15,
+      "error": "Cleanup exceeded 900 seconds"
+    },
+    "container_removed": true,
+    "snapshot_unchanged": true
+  },
+  "runtimeDeployment": {
+    "upstream_repository": "Eugene-SN/documentation-ai",
+    "upstream_commit": "46f179e9e5c83ff2c12b7ba084efef124afaf338",
+    "source_commit": "8257cb36be7856a0abe89ea27562f847fcf45a8e",
+    "source_provenance": "Local package import from verified upstream blobs plus portable originals guard and guard tests; no upstream merge",
+    "base_image": "python@sha256:504679006065cdab9a85e983e269140d3c5a279492395a6863b25b1ffb377f86",
+    "image_tag": "edge/pdf-cleanup:8257cb36be78",
+    "image_id": "sha256:3ff39309bab88fca2d28edb606879afbe5ce18fa366d48ade3e9440cbd82c06e",
+    "runtime_user": "core",
+    "uid": 1000,
+    "gid": 1000,
+    "originals_dir": "/srv/cloud/technical-documentation/lenovo/originals",
+    "publication": "n8n Nextcloud WebDAV",
+    "upstream_blobs": {
+      "EDGE_HANDOFF.md": "dffc9455ed0dec64d260886bc9c81212e458c249",
+      "README.md": "83ddaf22ccf491911a467648a881b09cfa20e00c",
+      "pyproject.toml": "9006f5e220800ef7b850c1fa883dae43a0df2d1c",
+      "requirements.txt": "c04fcf8bc89cd3bf8b7b553cc91891b490a89080",
+      "src/pdf_cleanup/__init__.py": "e69d7a40dd81c2e8350d05a54fe47a14938ee8ac",
+      "src/pdf_cleanup/cli.py": "c54d91957ffc740a456d965471fa6652167fdd27",
+      "src/pdf_cleanup/core.py": "a4cb0deb47f8b331c7b5b6ee4ad4198f8c1e276d",
+      "src/pdf_cleanup/native.py": "3f34bc4f46be5ffd79f54d310b707c5424e6acc6",
+      "tests/test_cleanup.py": "04b019b913041dbf140faf4bfbe899031b23186b"
+    },
+    "versions": {
+      "python": "3.14.8",
+      "PyMuPDF": "1.28.2",
+      "pypdf": "6.19.0",
+      "package": "0.1.3",
+      "cryptography": "50.0.2"
+    },
+    "installed_core_sha256": "4b29b752fe9dcc3b8f8d08f509b5c840e354ecb0a398fe72bea092fdd4cb4c72",
+    "job_adapter": "/opt/pdf-cleanup/job-command.py",
+    "job_adapter_sha256": "257ed62ac8f7aed7ca14c1f72e37a722ac3bc8c8d3420e6cc71057dca4a7c4c0"
+  }
+}

@@ -1,7 +1,15 @@
 {
   "id": "QouVaVNhAqSiYq5D",
-  "name": "TechnicalDocumentationSync",
   "active": true,
+  "versionId": "6ed111f3-306d-4cf1-8dc4-2a107c2c1b26",
+  "activeVersionId": "6ed111f3-306d-4cf1-8dc4-2a107c2c1b26",
+  "tags": [],
+  "meta": {
+    "aiBuilderAssisted": true,
+    "builderVariant": "mcp"
+  },
+  "pinData": {},
+  "name": "TechnicalDocumentationSync",
   "nodes": [
     {
       "parameters": {
@@ -18,8 +26,8 @@
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.4,
       "position": [
-        0,
-        0
+        -16,
+        80
       ]
     },
     {
@@ -43,7 +51,7 @@
       "typeVersion": 4.4,
       "position": [
         224,
-        0
+        160
       ],
       "credentials": {
         "nextCloudApi": {
@@ -54,7 +62,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const models = [\n  {\n    \"folder\": \"WR3220 G5\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/C342B075-351E-47EA-BE1F-DBAFE95A46A0\",\n    \"press\": [\n      {\n        \"key\": \"product-guide\",\n        \"title\": \"Product Guide Lenovo Wentian WR3220 G5\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2440.pdf\",\n        \"language\": \"unknown\"\n      }\n    ],\n    \"labels\": {\n      \"lenovo_wentian_wr3220g5_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WR3220 G5\"\n      ],\n      \"lxce_bomc_cplus_ug\": [\n        \"bomc-user-guide\",\n        \"User Guide Lenovo XClarity Essentials BoMC cPlus\"\n      ],\n      \"lxce_onecli_cplus_ug\": [\n        \"onecli-user-guide\",\n        \"User Guide Lenovo XClarity Essentials OneCLI cPlus\"\n      ],\n      \"lxce_ux_cplus_ug\": [\n        \"updatexpress-user-guide\",\n        \"User Guide Lenovo XClarity Essentials UpdateXpress cPlus\"\n      ]\n    }\n  },\n  {\n    \"folder\": \"WR5215 G5\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/2965B165-6320-4D06-BD34-8350DBC4B616\",\n    \"press\": [\n      {\n        \"key\": \"product-guide\",\n        \"title\": \"Product Guide Lenovo Wentian WR5215 G5\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2356.pdf\",\n        \"language\": \"unknown\"\n      }\n    ],\n    \"labels\": {\n      \"lenovo_wentian_wr5215g5_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WR5215 G5\"\n      ],\n      \"lenovo_bmc_user_guide_g5\": [\n        \"bmc-enterprise-user-guide\",\n        \"User Guide Lenovo BMC Enterprise G5\"\n      ],\n      \"lenovo_bmc_commands_g5\": [\n        \"bmc-ipmi-specification\",\n        \"IPMI Command Specification Lenovo BMC G5\"\n      ],\n      \"lenovo_bmc_snmp_guide_g5\": [\n        \"bmc-snmp-reference\",\n        \"SNMP Reference Guide Lenovo BMC G5\"\n      ],\n      \"lenovo_bmc_redfish_guide_g5\": [\n        \"bmc-redfish-specification\",\n        \"Redfish Interface Specification Lenovo BMC G5\"\n      ],\n      \"lxce_bomc_cplus_ug\": [\n        \"bomc-user-guide\",\n        \"User Guide Lenovo XClarity Essentials BoMC cPlus\"\n      ],\n      \"lxce_onecli_cplus_ug\": [\n        \"onecli-user-guide\",\n        \"User Guide Lenovo XClarity Essentials OneCLI cPlus\"\n      ],\n      \"lxce_ux_cplus_ug\": [\n        \"updatexpress-user-guide\",\n        \"User Guide Lenovo XClarity Essentials UpdateXpress cPlus\"\n      ]\n    }\n  },\n  {\n    \"folder\": \"WR5220 G3\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/5D07DC93-3C2A-4986-BBB4-A04A44FAB99E\",\n    \"press\": [\n      {\n        \"key\": \"product-guide\",\n        \"title\": \"Product Guide Lenovo Wentian WR5220 G3\",\n        \"url\": \"https://lenovopress.lenovo.com/lp1705.pdf\",\n        \"language\": \"zh\"\n      }\n    ],\n    \"labels\": {\n      \"lenovo_wentian_wr5220g3_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WR5220 G3\"\n      ],\n      \"lenovo_wentian_os_installation_guide\": [\n        \"os-installation-guide\",\n        \"OS Installation Guide Lenovo Wentian\"\n      ],\n      \"lenovo_bmc_g3_commands_guide\": [\n        \"bmc-ipmi-specification\",\n        \"IPMI Command Specification Lenovo BMC\"\n      ],\n      \"lenovo_bmc_event_reference_guide\": [\n        \"bmc-event-reference\",\n        \"Event Reference Guide Lenovo BMC\"\n      ],\n      \"lenovo_snmp_ug_g3\": [\n        \"bmc-snmp-reference\",\n        \"SNMP Reference Guide Lenovo BMC\"\n      ],\n      \"bmc_user_guide\": [\n        \"bmc-enterprise-user-guide\",\n        \"User Guide Lenovo BMC Enterprise G3\"\n      ],\n      \"lenovo_bmc_g3_redfish_guide\": [\n        \"bmc-redfish-specification\",\n        \"Redfish Interface Specification Lenovo BMC G3\"\n      ],\n      \"lxce_bomc_cplus_ug\": [\n        \"bomc-user-guide\",\n        \"User Guide Lenovo XClarity Essentials BoMC cPlus\"\n      ],\n      \"lxce_onecli_cplus_ug\": [\n        \"onecli-user-guide\",\n        \"User Guide Lenovo XClarity Essentials OneCLI cPlus\"\n      ],\n      \"lxce_ux_cplus_ug\": [\n        \"updatexpress-user-guide\",\n        \"User Guide Lenovo XClarity Essentials UpdateXpress cPlus\"\n      ],\n      \"lxpm_wentian_ug\": [\n        \"lxpm-user-guide\",\n        \"User Guide Lenovo XClarity Provisioning Manager Wentian\"\n      ],\n      \"wr5220g3_bios_setup_spec\": [\n        \"bios-setup-specification\",\n        \"BIOS Setup Specification Lenovo Wentian WR5220 G3\"\n      ],\n      \"psu_label_matrix\": [\n        \"psu-label-matrix\",\n        \"PSU Label Matrix Lenovo\"\n      ],\n      \"vmware_code_recipe_file\": [\n        \"vmware-code-recipe\",\n        \"VMware Code Recipe File\"\n      ]\n    }\n  },\n  {\n    \"folder\": \"WR5220 G5\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/EDF3440A-96A1-463B-9A35-C871B3B28AA1\",\n    \"press\": [\n      {\n        \"key\": \"product-guide\",\n        \"title\": \"Product Guide Lenovo Wentian WR5220 G5\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2014.pdf\",\n        \"language\": \"unknown\"\n      },\n      {\n        \"key\": \"sap-certifications\",\n        \"title\": \"SAP Certifications of Lenovo Servers\",\n        \"url\": \"https://lenovopress.lenovo.com/lp1728.pdf\",\n        \"language\": \"en\"\n      }\n    ],\n    \"labels\": {\n      \"lenovo_wentian_wr5220g5_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WR5220 G5\"\n      ],\n      \"lenovo_wentian_os_installation_guide\": [\n        \"os-installation-guide\",\n        \"OS Installation Guide Lenovo Wentian\"\n      ],\n      \"lenovo_bmc_user_guide_g5\": [\n        \"bmc-enterprise-user-guide\",\n        \"User Guide Lenovo BMC Enterprise G5\"\n      ],\n      \"lenovo_bmc_commands_g5\": [\n        \"bmc-ipmi-specification\",\n        \"IPMI Command Specification Lenovo BMC G5\"\n      ],\n      \"lenovo_bmc_snmp_guide_g5\": [\n        \"bmc-snmp-reference\",\n        \"SNMP Reference Guide Lenovo BMC G5\"\n      ],\n      \"lenovo_bmc_redfish_guide_g5\": [\n        \"bmc-redfish-specification\",\n        \"Redfish Interface Specification Lenovo BMC G5\"\n      ],\n      \"lenovo_bmc_event_reference_guide\": [\n        \"bmc-event-reference\",\n        \"Event Reference Guide Lenovo BMC G3/G5\"\n      ],\n      \"lxpm_wentian_ug\": [\n        \"lxpm-user-guide\",\n        \"User Guide Lenovo XClarity Provisioning Manager Wentian\"\n      ],\n      \"lxce_bomc_cplus_ug\": [\n        \"bomc-user-guide\",\n        \"User Guide Lenovo XClarity Essentials BoMC cPlus\"\n      ],\n      \"lxce_onecli_cplus_ug\": [\n        \"onecli-user-guide\",\n        \"User Guide Lenovo XClarity Essentials OneCLI cPlus\"\n      ],\n      \"lxce_ux_cplus_ug\": [\n        \"updatexpress-user-guide\",\n        \"User Guide Lenovo XClarity Essentials UpdateXpress cPlus\"\n      ],\n      \"psu_label_matrix\": [\n        \"psu-label-matrix\",\n        \"PSU Label Matrix Lenovo\"\n      ]\n    }\n  },\n  {\n    \"folder\": \"WR5225 G3\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/738CA58A-E195-47E6-A61D-248870091B2C\",\n    \"press\": [\n      {\n        \"key\": \"product-guide\",\n        \"title\": \"Product Guide Lenovo Wentian WR5225 G3\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2129.pdf\",\n        \"language\": \"unknown\"\n      }\n    ],\n    \"labels\": {\n      \"wr5225g3_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WR5225 G3\"\n      ],\n      \"lenovo_wentian_os_installation_guide\": [\n        \"os-installation-guide\",\n        \"OS Installation Guide Lenovo Wentian\"\n      ],\n      \"wr5225g3_bios_setup_spec-genoa\": [\n        \"bios-setup-specification-genoa\",\n        \"BIOS Setup Specification Lenovo Wentian WR5225 G3 — Genoa\"\n      ],\n      \"wr5225g3_bios_setup_spec-turin\": [\n        \"bios-setup-specification-turin\",\n        \"BIOS Setup Specification Lenovo Wentian WR5225 G3 — Turin\"\n      ],\n      \"lenovo_snmp_ug_g3\": [\n        \"bmc-snmp-reference\",\n        \"SNMP Reference Guide Lenovo BMC G3\"\n      ],\n      \"lenovo_bmc_g3_redfish_guide\": [\n        \"bmc-redfish-specification\",\n        \"Redfish Interface Specification Lenovo BMC G3\"\n      ],\n      \"lenovo_bmc_event_reference_guide\": [\n        \"bmc-event-reference\",\n        \"Event Reference Guide Lenovo BMC G3/G5\"\n      ],\n      \"lxce_bomc_cplus_ug\": [\n        \"bomc-user-guide\",\n        \"User Guide Lenovo XClarity Essentials BoMC cPlus\"\n      ],\n      \"lxce_onecli_cplus_ug\": [\n        \"onecli-user-guide\",\n        \"User Guide Lenovo XClarity Essentials OneCLI cPlus\"\n      ],\n      \"lxce_ux_cplus_ug\": [\n        \"updatexpress-user-guide\",\n        \"User Guide Lenovo XClarity Essentials UpdateXpress cPlus\"\n      ],\n      \"psu_label_matrix\": [\n        \"psu-label-matrix\",\n        \"PSU Label Matrix Lenovo\"\n      ]\n    }\n  },\n  {\n    \"folder\": \"WR6220 G5\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/96C91746-0B94-43FD-9679-AEE8D447ECFB\",\n    \"press\": [\n      {\n        \"key\": \"product-guide\",\n        \"title\": \"Product Guide Lenovo Wentian WR6220 G5\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2468.pdf\",\n        \"language\": \"unknown\"\n      },\n      {\n        \"key\": \"datasheet\",\n        \"title\": \"Datasheet Lenovo Wentian WR6220 G5\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2502.pdf\",\n        \"language\": \"unknown\"\n      }\n    ],\n    \"labels\": {\n      \"lenovo_wentian_wr6220g5_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WR6220 G5\"\n      ]\n    }\n  },\n  {\n    \"folder\": \"WA5480 G5\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/FA7C53C0-E6C1-494C-9581-EA0B9EC4937F\",\n    \"press\": [],\n    \"labels\": {\n      \"lenovo_wentian_wa5480g5_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WA5480 G5\"\n      ],\n      \"lenovo_wentian_os_installation_guide\": [\n        \"os-installation-guide\",\n        \"OS Installation Guide Lenovo Wentian\"\n      ],\n      \"wa5480g5_bios_setup_spec\": [\n        \"bios-setup-specification\",\n        \"BIOS Setup Specification Lenovo Wentian WA5480 G5\"\n      ],\n      \"lenovo_bmc_user_guide_g5\": [\n        \"bmc-enterprise-user-guide\",\n        \"User Guide Lenovo BMC Enterprise G5\"\n      ],\n      \"lenovo_bmc_commands_g5\": [\n        \"bmc-ipmi-specification\",\n        \"IPMI Command Specification Lenovo BMC G5\"\n      ],\n      \"lenovo_bmc_snmp_guide_g5\": [\n        \"bmc-snmp-reference\",\n        \"SNMP Reference Guide Lenovo BMC G5\"\n      ],\n      \"lenovo_bmc_redfish_guide_g5\": [\n        \"bmc-redfish-specification\",\n        \"Redfish Interface Specification Lenovo BMC G5\"\n      ],\n      \"lenovo_bmc_event_reference_guide\": [\n        \"bmc-event-reference\",\n        \"Event Reference Guide Lenovo BMC G3/G5\"\n      ],\n      \"lxpm_wentian_ug\": [\n        \"lxpm-user-guide\",\n        \"User Guide Lenovo XClarity Provisioning Manager Wentian\"\n      ],\n      \"lxce_bomc_cplus_ug\": [\n        \"bomc-user-guide\",\n        \"User Guide Lenovo XClarity Essentials BoMC cPlus\"\n      ],\n      \"lxce_onecli_cplus_ug\": [\n        \"onecli-user-guide\",\n        \"User Guide Lenovo XClarity Essentials OneCLI cPlus\"\n      ],\n      \"lxce_ux_cplus_ug\": [\n        \"updatexpress-user-guide\",\n        \"User Guide Lenovo XClarity Essentials UpdateXpress cPlus\"\n      ],\n      \"psu_label_matrix\": [\n        \"psu-label-matrix\",\n        \"PSU Label Matrix Lenovo\"\n      ]\n    }\n  },\n  {\n    \"folder\": \"WA5680 G5\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/F5C5B634-8B65-4226-84B1-4C05F13160D9\",\n    \"press\": [\n      {\n        \"key\": \"product-guide\",\n        \"title\": \"Product Guide Lenovo Wentian WA5680 G5\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2469.pdf\",\n        \"language\": \"unknown\"\n      },\n      {\n        \"key\": \"datasheet\",\n        \"title\": \"Datasheet Lenovo Wentian WA5680 G5\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2506.pdf\",\n        \"language\": \"unknown\"\n      }\n    ],\n    \"labels\": {\n      \"lenovo_wentian_wa5680g5_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WA5680 G5\"\n      ],\n      \"lenovo_wentian_wa5680g5_bios_setup_spec\": [\n        \"bios-setup-specification\",\n        \"BIOS Setup Specification Lenovo Wentian WA5680 G5\"\n      ]\n    }\n  },\n  {\n    \"folder\": \"WA5685 G5\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/A9383A8C-EAA4-4DE9-BD5A-44E26ACF44D5\",\n    \"press\": [\n      {\n        \"key\": \"product-guide\",\n        \"title\": \"Product Guide Lenovo Wentian WA5685 G5\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2399.pdf\",\n        \"language\": \"unknown\"\n      },\n      {\n        \"key\": \"datasheet\",\n        \"title\": \"Datasheet Lenovo Wentian WA5685 G5\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2507.pdf\",\n        \"language\": \"unknown\"\n      }\n    ],\n    \"labels\": {\n      \"wa5685g5_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WA5685 G5\"\n      ]\n    }\n  }\n];\nreturn models.map(model => ({json:{model}}));\n"
+        "jsCode": "const models = [\n  {\n    \"folder\": \"WR3220 G5\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/C342B075-351E-47EA-BE1F-DBAFE95A46A0\",\n    \"press\": [\n      {\n        \"key\": \"product-guide\",\n        \"title\": \"Product Guide Lenovo Wentian WR3220 G5\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2440.pdf\",\n        \"language\": \"unknown\"\n      }\n    ],\n    \"labels\": {\n      \"lenovo_wentian_wr3220g5_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WR3220 G5\"\n      ],\n      \"lxce_bomc_cplus_ug\": [\n        \"bomc-user-guide\",\n        \"User Guide Lenovo XClarity Essentials BoMC cPlus\"\n      ],\n      \"lxce_onecli_cplus_ug\": [\n        \"onecli-user-guide\",\n        \"User Guide Lenovo XClarity Essentials OneCLI cPlus\"\n      ],\n      \"lxce_ux_cplus_ug\": [\n        \"updatexpress-user-guide\",\n        \"User Guide Lenovo XClarity Essentials UpdateXpress cPlus\"\n      ]\n    }\n  },\n  {\n    \"folder\": \"WR5215 G5\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/2965B165-6320-4D06-BD34-8350DBC4B616\",\n    \"press\": [\n      {\n        \"key\": \"product-guide\",\n        \"title\": \"Product Guide Lenovo Wentian WR5215 G5\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2356.pdf\",\n        \"language\": \"unknown\"\n      }\n    ],\n    \"labels\": {\n      \"lenovo_wentian_wr5215g5_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WR5215 G5\"\n      ],\n      \"lenovo_bmc_user_guide_g5\": [\n        \"bmc-enterprise-user-guide\",\n        \"User Guide Lenovo BMC Enterprise G5\"\n      ],\n      \"lenovo_bmc_commands_g5\": [\n        \"bmc-ipmi-specification\",\n        \"IPMI Command Specification Lenovo BMC G5\"\n      ],\n      \"lenovo_bmc_snmp_guide_g5\": [\n        \"bmc-snmp-reference\",\n        \"SNMP Reference Guide Lenovo BMC G5\"\n      ],\n      \"lenovo_bmc_redfish_guide_g5\": [\n        \"bmc-redfish-specification\",\n        \"Redfish Interface Specification Lenovo BMC G5\"\n      ],\n      \"lxce_bomc_cplus_ug\": [\n        \"bomc-user-guide\",\n        \"User Guide Lenovo XClarity Essentials BoMC cPlus\"\n      ],\n      \"lxce_onecli_cplus_ug\": [\n        \"onecli-user-guide\",\n        \"User Guide Lenovo XClarity Essentials OneCLI cPlus\"\n      ],\n      \"lxce_ux_cplus_ug\": [\n        \"updatexpress-user-guide\",\n        \"User Guide Lenovo XClarity Essentials UpdateXpress cPlus\"\n      ]\n    }\n  },\n  {\n    \"folder\": \"WR5220 G3\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/5D07DC93-3C2A-4986-BBB4-A04A44FAB99E\",\n    \"press\": [\n      {\n        \"key\": \"product-guide\",\n        \"title\": \"Product Guide Lenovo Wentian WR5220 G3\",\n        \"url\": \"https://lenovopress.lenovo.com/lp1705.pdf\",\n        \"language\": \"zh\"\n      }\n    ],\n    \"labels\": {\n      \"lenovo_wentian_wr5220g3_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WR5220 G3\"\n      ],\n      \"lenovo_wentian_os_installation_guide\": [\n        \"os-installation-guide\",\n        \"OS Installation Guide Lenovo Wentian\"\n      ],\n      \"lenovo_bmc_g3_commands_guide\": [\n        \"bmc-ipmi-specification\",\n        \"IPMI Command Specification Lenovo BMC\"\n      ],\n      \"lenovo_bmc_event_reference_guide\": [\n        \"bmc-event-reference\",\n        \"Event Reference Guide Lenovo BMC\"\n      ],\n      \"lenovo_snmp_ug_g3\": [\n        \"bmc-snmp-reference\",\n        \"SNMP Reference Guide Lenovo BMC\"\n      ],\n      \"bmc_user_guide\": [\n        \"bmc-enterprise-user-guide\",\n        \"User Guide Lenovo BMC Enterprise G3\"\n      ],\n      \"lenovo_bmc_g3_redfish_guide\": [\n        \"bmc-redfish-specification\",\n        \"Redfish Interface Specification Lenovo BMC G3\"\n      ],\n      \"lxce_bomc_cplus_ug\": [\n        \"bomc-user-guide\",\n        \"User Guide Lenovo XClarity Essentials BoMC cPlus\"\n      ],\n      \"lxce_onecli_cplus_ug\": [\n        \"onecli-user-guide\",\n        \"User Guide Lenovo XClarity Essentials OneCLI cPlus\"\n      ],\n      \"lxce_ux_cplus_ug\": [\n        \"updatexpress-user-guide\",\n        \"User Guide Lenovo XClarity Essentials UpdateXpress cPlus\"\n      ],\n      \"lxpm_wentian_ug\": [\n        \"lxpm-user-guide\",\n        \"User Guide Lenovo XClarity Provisioning Manager Wentian\"\n      ],\n      \"wr5220g3_bios_setup_spec\": [\n        \"bios-setup-specification\",\n        \"BIOS Setup Specification Lenovo Wentian WR5220 G3\"\n      ],\n      \"psu_label_matrix\": [\n        \"psu-label-matrix\",\n        \"PSU Label Matrix Lenovo\"\n      ],\n      \"vmware_code_recipe_file\": [\n        \"vmware-code-recipe\",\n        \"VMware Code Recipe File\"\n      ]\n    }\n  },\n  {\n    \"folder\": \"WR5220 G5\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/EDF3440A-96A1-463B-9A35-C871B3B28AA1\",\n    \"press\": [\n      {\n        \"key\": \"product-guide\",\n        \"title\": \"Product Guide Lenovo Wentian WR5220 G5\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2014.pdf\",\n        \"language\": \"unknown\"\n      },\n      {\n        \"key\": \"sap-certifications\",\n        \"title\": \"SAP Certifications of Lenovo Servers\",\n        \"url\": \"https://lenovopress.lenovo.com/lp1728.pdf\",\n        \"language\": \"en\"\n      }\n    ],\n    \"labels\": {\n      \"lenovo_wentian_wr5220g5_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WR5220 G5\"\n      ],\n      \"lenovo_wentian_os_installation_guide\": [\n        \"os-installation-guide\",\n        \"OS Installation Guide Lenovo Wentian\"\n      ],\n      \"lenovo_bmc_user_guide_g5\": [\n        \"bmc-enterprise-user-guide\",\n        \"User Guide Lenovo BMC Enterprise G5\"\n      ],\n      \"lenovo_bmc_commands_g5\": [\n        \"bmc-ipmi-specification\",\n        \"IPMI Command Specification Lenovo BMC G5\"\n      ],\n      \"lenovo_bmc_snmp_guide_g5\": [\n        \"bmc-snmp-reference\",\n        \"SNMP Reference Guide Lenovo BMC G5\"\n      ],\n      \"lenovo_bmc_redfish_guide_g5\": [\n        \"bmc-redfish-specification\",\n        \"Redfish Interface Specification Lenovo BMC G5\"\n      ],\n      \"lenovo_bmc_event_reference_guide\": [\n        \"bmc-event-reference\",\n        \"Event Reference Guide Lenovo BMC G3/G5\"\n      ],\n      \"lxpm_wentian_ug\": [\n        \"lxpm-user-guide\",\n        \"User Guide Lenovo XClarity Provisioning Manager Wentian\"\n      ],\n      \"lxce_bomc_cplus_ug\": [\n        \"bomc-user-guide\",\n        \"User Guide Lenovo XClarity Essentials BoMC cPlus\"\n      ],\n      \"lxce_onecli_cplus_ug\": [\n        \"onecli-user-guide\",\n        \"User Guide Lenovo XClarity Essentials OneCLI cPlus\"\n      ],\n      \"lxce_ux_cplus_ug\": [\n        \"updatexpress-user-guide\",\n        \"User Guide Lenovo XClarity Essentials UpdateXpress cPlus\"\n      ],\n      \"psu_label_matrix\": [\n        \"psu-label-matrix\",\n        \"PSU Label Matrix Lenovo\"\n      ]\n    }\n  },\n  {\n    \"folder\": \"WR5225 G3\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/738CA58A-E195-47E6-A61D-248870091B2C\",\n    \"press\": [\n      {\n        \"key\": \"product-guide\",\n        \"title\": \"Product Guide Lenovo Wentian WR5225 G3\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2129.pdf\",\n        \"language\": \"unknown\"\n      }\n    ],\n    \"labels\": {\n      \"wr5225g3_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WR5225 G3\"\n      ],\n      \"lenovo_wentian_os_installation_guide\": [\n        \"os-installation-guide\",\n        \"OS Installation Guide Lenovo Wentian\"\n      ],\n      \"wr5225g3_bios_setup_spec-genoa\": [\n        \"bios-setup-specification-genoa\",\n        \"BIOS Setup Specification Lenovo Wentian WR5225 G3 — Genoa\"\n      ],\n      \"wr5225g3_bios_setup_spec-turin\": [\n        \"bios-setup-specification-turin\",\n        \"BIOS Setup Specification Lenovo Wentian WR5225 G3 — Turin\"\n      ],\n      \"lenovo_snmp_ug_g3\": [\n        \"bmc-snmp-reference\",\n        \"SNMP Reference Guide Lenovo BMC G3\"\n      ],\n      \"lenovo_bmc_g3_redfish_guide\": [\n        \"bmc-redfish-specification\",\n        \"Redfish Interface Specification Lenovo BMC G3\"\n      ],\n      \"lenovo_bmc_event_reference_guide\": [\n        \"bmc-event-reference\",\n        \"Event Reference Guide Lenovo BMC G3/G5\"\n      ],\n      \"lxce_bomc_cplus_ug\": [\n        \"bomc-user-guide\",\n        \"User Guide Lenovo XClarity Essentials BoMC cPlus\"\n      ],\n      \"lxce_onecli_cplus_ug\": [\n        \"onecli-user-guide\",\n        \"User Guide Lenovo XClarity Essentials OneCLI cPlus\"\n      ],\n      \"lxce_ux_cplus_ug\": [\n        \"updatexpress-user-guide\",\n        \"User Guide Lenovo XClarity Essentials UpdateXpress cPlus\"\n      ],\n      \"psu_label_matrix\": [\n        \"psu-label-matrix\",\n        \"PSU Label Matrix Lenovo\"\n      ]\n    }\n  },\n  {\n    \"folder\": \"WR6220 G5\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/96C91746-0B94-43FD-9679-AEE8D447ECFB\",\n    \"press\": [\n      {\n        \"key\": \"product-guide\",\n        \"title\": \"Product Guide Lenovo Wentian WR6220 G5\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2468.pdf\",\n        \"language\": \"unknown\"\n      },\n      {\n        \"key\": \"datasheet\",\n        \"title\": \"Datasheet Lenovo Wentian WR6220 G5\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2502.pdf\",\n        \"language\": \"unknown\"\n      }\n    ],\n    \"labels\": {\n      \"lenovo_wentian_wr6220g5_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WR6220 G5\"\n      ]\n    }\n  },\n  {\n    \"folder\": \"WA5480 G5\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/FA7C53C0-E6C1-494C-9581-EA0B9EC4937F\",\n    \"press\": [],\n    \"labels\": {\n      \"lenovo_wentian_wa5480g5_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WA5480 G5\"\n      ],\n      \"lenovo_wentian_os_installation_guide\": [\n        \"os-installation-guide\",\n        \"OS Installation Guide Lenovo Wentian\"\n      ],\n      \"wa5480g5_bios_setup_spec\": [\n        \"bios-setup-specification\",\n        \"BIOS Setup Specification Lenovo Wentian WA5480 G5\"\n      ],\n      \"lenovo_bmc_user_guide_g5\": [\n        \"bmc-enterprise-user-guide\",\n        \"User Guide Lenovo BMC Enterprise G5\"\n      ],\n      \"lenovo_bmc_commands_g5\": [\n        \"bmc-ipmi-specification\",\n        \"IPMI Command Specification Lenovo BMC G5\"\n      ],\n      \"lenovo_bmc_snmp_guide_g5\": [\n        \"bmc-snmp-reference\",\n        \"SNMP Reference Guide Lenovo BMC G5\"\n      ],\n      \"lenovo_bmc_redfish_guide_g5\": [\n        \"bmc-redfish-specification\",\n        \"Redfish Interface Specification Lenovo BMC G5\"\n      ],\n      \"lenovo_bmc_event_reference_guide\": [\n        \"bmc-event-reference\",\n        \"Event Reference Guide Lenovo BMC G3/G5\"\n      ],\n      \"lxpm_wentian_ug\": [\n        \"lxpm-user-guide\",\n        \"User Guide Lenovo XClarity Provisioning Manager Wentian\"\n      ],\n      \"lxce_bomc_cplus_ug\": [\n        \"bomc-user-guide\",\n        \"User Guide Lenovo XClarity Essentials BoMC cPlus\"\n      ],\n      \"lxce_onecli_cplus_ug\": [\n        \"onecli-user-guide\",\n        \"User Guide Lenovo XClarity Essentials OneCLI cPlus\"\n      ],\n      \"lxce_ux_cplus_ug\": [\n        \"updatexpress-user-guide\",\n        \"User Guide Lenovo XClarity Essentials UpdateXpress cPlus\"\n      ],\n      \"psu_label_matrix\": [\n        \"psu-label-matrix\",\n        \"PSU Label Matrix Lenovo\"\n      ]\n    }\n  },\n  {\n    \"folder\": \"WA5680 G5\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/F5C5B634-8B65-4226-84B1-4C05F13160D9\",\n    \"press\": [\n      {\n        \"key\": \"product-guide\",\n        \"title\": \"Product Guide Lenovo Wentian WA5680 G5\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2469.pdf\",\n        \"language\": \"unknown\"\n      },\n      {\n        \"key\": \"datasheet\",\n        \"title\": \"Datasheet Lenovo Wentian WA5680 G5\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2506.pdf\",\n        \"language\": \"unknown\"\n      }\n    ],\n    \"labels\": {\n      \"lenovo_wentian_wa5680g5_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WA5680 G5\"\n      ],\n      \"lenovo_wentian_wa5680g5_bios_setup_spec\": [\n        \"bios-setup-specification\",\n        \"BIOS Setup Specification Lenovo Wentian WA5680 G5\"\n      ]\n    }\n  },\n  {\n    \"folder\": \"WA5685 G5\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/A9383A8C-EAA4-4DE9-BD5A-44E26ACF44D5\",\n    \"press\": [\n      {\n        \"key\": \"product-guide\",\n        \"title\": \"Product Guide Lenovo Wentian WA5685 G5\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2399.pdf\",\n        \"language\": \"unknown\"\n      },\n      {\n        \"key\": \"datasheet\",\n        \"title\": \"Datasheet Lenovo Wentian WA5685 G5\",\n        \"url\": \"https://lenovopress.lenovo.com/lp2507.pdf\",\n        \"language\": \"unknown\"\n      }\n    ],\n    \"labels\": {\n      \"wa5685g5_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WA5685 G5\"\n      ]\n    }\n  },\n  {\n    \"folder\": \"WA5480 G3\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/A5C3F9A2-38D2-452F-BE87-A6230BE9BDC3\",\n    \"press\": [],\n    \"labels\": {\n      \"lxce_onecli_cplus_ug\": [\n        \"onecli-user-guide\",\n        \"User Guide Lenovo XClarity Essentials OneCLI cPlus\"\n      ],\n      \"lxce_bomc_cplus_ug\": [\n        \"bomc-user-guide\",\n        \"User Guide Lenovo XClarity Essentials BoMC cPlus\"\n      ],\n      \"lxce_ux_cplus_ug\": [\n        \"updatexpress-user-guide\",\n        \"User Guide Lenovo XClarity Essentials UpdateXpress cPlus\"\n      ],\n      \"lenovo_bmc_event_reference_guide\": [\n        \"bmc-event-reference\",\n        \"Event Reference Guide Lenovo BMC G3/G5\"\n      ],\n      \"lenovo_snmp_ug_g3\": [\n        \"bmc-snmp-reference\",\n        \"SNMP Reference Guide Lenovo BMC G3\"\n      ],\n      \"bmc_user_guide\": [\n        \"bmc-enterprise-user-guide\",\n        \"User Guide Lenovo BMC Enterprise G3\"\n      ],\n      \"lenovo_bmc_g3_redfish_guide\": [\n        \"bmc-redfish-specification\",\n        \"Redfish Interface Specification Lenovo BMC G3\"\n      ],\n      \"lenovo_wentian_wa5480g3_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WA5480 G3\"\n      ],\n      \"lenovo_wentian_os_installation_guide\": [\n        \"os-installation-guide\",\n        \"OS Installation Guide Lenovo Wentian\"\n      ],\n      \"lxpm_wentian_ug\": [\n        \"lxpm-user-guide\",\n        \"User Guide Lenovo XClarity Provisioning Manager Wentian\"\n      ],\n      \"psu_label_matrix\": [\n        \"psu-label-matrix\",\n        \"PSU Label Matrix Lenovo\"\n      ]\n    }\n  },\n  {\n    \"folder\": \"WA5680 G3\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/F8CF4FB9-55E0-4CDB-A802-01987CBC9783\",\n    \"press\": [],\n    \"labels\": {\n      \"lenovo_wentian_wa5680g3_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WA5680 G3\"\n      ]\n    }\n  },\n  {\n    \"folder\": \"WA7780 G3\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/5C2B79DC-F509-4D89-93E7-B8EC3AC54BAF/1AA59F99-AD94-4107-A4A4-917D32E08DA9\",\n    \"press\": [],\n    \"labels\": {\n      \"lenovo_wentian_wa7780g3_bios_user_guide\": [\n        \"bios-user-manual\",\n        \"BIOS User Manual Lenovo Wentian WA7780 G3\"\n      ],\n      \"lenovo_wentian_wa7780g3_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WA7780 G3\"\n      ]\n    }\n  },\n  {\n    \"folder\": \"WA7785a G3\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/481AF5B3-DC05-4F5A-A656-B027AB93EC6E\",\n    \"press\": [],\n    \"labels\": {\n      \"lenovo_wentian_wa7785ag3_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WA7785a G3\"\n      ],\n      \"lenovo_wentian_wa7785ag3_bios_user_guide\": [\n        \"bios-user-manual\",\n        \"BIOS User Manual Lenovo Wentian WA7785a G3\"\n      ]\n    }\n  },\n  {\n    \"folder\": \"WA7880a G3\",\n    \"fullGuid\": \"339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/552F9B30-44C6-4E81-B0D9-62D72CCE43F3/6B5E239B-7F05-4E51-8A8E-CF69E0FB97C2\",\n    \"press\": [],\n    \"labels\": {\n      \"lenovo_wentian_wa7880ag3_user_guide\": [\n        \"user-manual\",\n        \"User Manual Lenovo Wentian WA7880a G3\"\n      ]\n    }\n  }\n];\nreturn models.map(model => ({json:{model}}));\n\n"
       },
       "id": "26c481c0-5fa5-4636-858e-c1600277013e",
       "name": "Models and Index",
@@ -62,7 +70,7 @@
       "typeVersion": 2,
       "position": [
         448,
-        0
+        160
       ]
     },
     {
@@ -93,7 +101,7 @@
       "typeVersion": 4.4,
       "position": [
         672,
-        0
+        160
       ]
     },
     {
@@ -106,7 +114,7 @@
       "typeVersion": 2,
       "position": [
         880,
-        0
+        160
       ]
     },
     {
@@ -129,7 +137,7 @@
       "typeVersion": 4.4,
       "position": [
         1104,
-        0
+        160
       ]
     },
     {
@@ -142,7 +150,7 @@
       "typeVersion": 2,
       "position": [
         1328,
-        0
+        160
       ]
     },
     {
@@ -155,7 +163,7 @@
       "typeVersion": 2,
       "position": [
         224,
-        704
+        400
       ]
     },
     {
@@ -183,7 +191,7 @@
       "typeVersion": 4.4,
       "position": [
         448,
-        704
+        400
       ],
       "credentials": {
         "nextCloudApi": {
@@ -211,7 +219,7 @@
       "typeVersion": 4.4,
       "position": [
         224,
-        448
+        640
       ]
     },
     {
@@ -239,7 +247,7 @@
       "typeVersion": 4.4,
       "position": [
         448,
-        448
+        640
       ],
       "credentials": {
         "nextCloudApi": {
@@ -277,7 +285,7 @@
       "typeVersion": 2.2,
       "position": [
         672,
-        448
+        640
       ]
     },
     {
@@ -303,7 +311,7 @@
       "typeVersion": 4.4,
       "position": [
         880,
-        352
+        544
       ],
       "credentials": {
         "nextCloudApi": {
@@ -322,7 +330,7 @@
       "typeVersion": 2,
       "position": [
         1104,
-        448
+        640
       ]
     },
     {
@@ -345,27 +353,17 @@
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
-        0,
-        160
+        -16,
+        -64
       ]
     },
     {
-      "id": "8c1bf877-ee6f-449c-948e-bf4e54250364",
-      "name": "Clean Saved PDFs",
-      "type": "n8n-nodes-base.executeWorkflow",
-      "typeVersion": 1.3,
-      "position": [
-        672,
-        704
-      ],
       "parameters": {
-        "source": "database",
         "workflowId": {
           "__rl": true,
           "mode": "id",
           "value": "ENo9jFkwcE4PFOyL"
         },
-        "mode": "once",
         "workflowInputs": {
           "mappingMode": "defineBelow",
           "value": {
@@ -389,7 +387,15 @@
         "options": {
           "waitForSubWorkflow": true
         }
-      }
+      },
+      "id": "8c1bf877-ee6f-449c-948e-bf4e54250364",
+      "name": "Clean Saved PDFs",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        672,
+        400
+      ]
     }
   ],
   "connections": {
@@ -590,8 +596,6 @@
     "timezone": "Europe/Minsk",
     "binaryMode": "separate"
   },
-  "versionId": "758bcab2-aa27-4c55-b158-932b74d1a4ac",
-  "activeVersionId": "758bcab2-aa27-4c55-b158-932b74d1a4ac",
   "nodeGroups": [
     {
       "id": "b8b1960d-015f-4ac6-82c7-9e420b348b31",
@@ -629,10 +633,5 @@
       "description": "Сначала сохранить каталог всех скачанных оригиналов, затем вызвать очистку их списка и дождаться её завершения."
     }
   ],
-  "tags": [],
-  "meta": {
-    "aiBuilderAssisted": true,
-    "builderVariant": "mcp"
-  },
-  "pinData": {}
+  "description": "Daily documentation sync from configured Lenovo ASP and Lenovo Press catalogues. Replace changed originals through Nextcloud WebDAV, update grouped INDEX.html, then clean downloaded PDFs into matching model folders."
 }

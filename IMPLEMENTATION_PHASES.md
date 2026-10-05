@@ -838,3 +838,26 @@ reads, n8n health and both retained scheduled Plane workflows pass. Event-only
 cron network membership/local-remote override are absent. Stage13 remains the
 infrastructure checkpoint. Record: N8N_WORKFLOW_CLEANUP_ACCEPTANCE_2026-10-05.md;
 N8N_WORKFLOW_VALUE_CLEANUP=PASS.
+
+## 2026-10-05 — Post-infrastructure WA G3 monitor expansion — DEPLOYED / VERIFIED
+
+Accepted operator scope adds WA5480 G3, WA5680 G3, WA7780 G3, WA7785a G3 and
+WA7880a G3 to the existing universal TechnicalDocumentationSync configuration.
+The complete 7DF1/7DLR machine catalogues are used where SubSeries is incomplete;
+other source/model definitions, 07:00 schedule,17 nodes/three groups and the
+download-all→save INDEX→cleanup sequence are preserved. Nextcloud-native
+onboarding added 20 directories / 17 PDFs; the library has 95 originals / 14 models.
+
+Monitoring/replacement/date logic and zero-change production 12269 are verified.
+All78 prior originals, two prior cleaned PDFs, their records and INDEX.md remain
+unchanged. Twelve new cleaned copies are published. Five cleanup limitations
+remain demonstrated: WA7780/WA7785a manuals have ambiguous footer/table cases;
+G3 Redfish exceeds 900-second. Their originals are retained without completion markers.
+No auto retry, backup, extra workflow node/service or translation process is added.
+
+Required corrective work included upstream pypdf AES dependency installation and
+a bounded exact-container stop on the existing adapter timeout. Core source and
+originals/content protection are unchanged;14 guard/upstream and five adapter
+tests pass. CLI layout/performance correction is a separate application task,
+not a new finite infrastructure stage. Stage 13 remains the accepted checkpoint.
+Record: TECHNICAL_DOCUMENTATION_WA_G3_EXPANSION_2026-10-05.md.

@@ -1,0 +1,323 @@
+{
+  "date": "2026-10-05",
+  "source": "https://asp.atlenovo.com/asp-service/index.html#/deviceInfo",
+  "models": [
+    {
+      "folder": "WA5480 G3",
+      "fullGuid": "339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/A5C3F9A2-38D2-452F-BE87-A6230BE9BDC3",
+      "productId": "SERVERS/LENOVOWENTIAN/WA5480G3",
+      "lookupType": "Product.SubSeries",
+      "rawEntries": 13,
+      "documents": [
+        {
+          "key": "bmc-enterprise-user-guide",
+          "filename": "bmc_user_guide_v14.pdf",
+          "display_title": "User Guide Lenovo BMC Enterprise G3",
+          "source_title": "Lenovo BMC 企业版用户操作指南 G3",
+          "date": "2026-04-10",
+          "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/bmc_user_guide_v14.pdf"
+        },
+        {
+          "key": "bmc-event-reference",
+          "filename": "lenovo_bmc_event_reference_guide_g5_v4.pdf",
+          "display_title": "Event Reference Guide Lenovo BMC G3/G5",
+          "source_title": "Lenovo BMC 日志参考手册",
+          "date": "2026-07-31",
+          "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_bmc_event_reference_guide_g5_v4.pdf"
+        },
+        {
+          "key": "bmc-redfish-specification",
+          "filename": "lenovo_bmc_g3_redfish_guide_v11.pdf",
+          "display_title": "Redfish Interface Specification Lenovo BMC G3",
+          "source_title": "Lenovo BMC G3 REDFISH 接口规范",
+          "date": "2026-04-10",
+          "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_bmc_g3_redfish_guide_v11.pdf"
+        },
+        {
+          "key": "bmc-snmp-reference",
+          "filename": "lenovo_snmp_ug_g3.pdf",
+          "display_title": "SNMP Reference Guide Lenovo BMC G3",
+          "source_title": "Lenovo BMC SNMP 参考手册",
+          "date": "2026-04-21",
+          "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_snmp_ug_g3.pdf"
+        },
+        {
+          "key": "bomc-user-guide",
+          "filename": "lxce_bomc_cplus_ug.pdf",
+          "display_title": "User Guide Lenovo XClarity Essentials BoMC cPlus",
+          "source_title": "Lenovo XClarity Essentials BoMC cPlus 用户指南",
+          "date": "2026-08-27",
+          "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lxce_bomc_cplus_ug.pdf"
+        },
+        {
+          "key": "lxpm-user-guide",
+          "filename": "lxpm_wentian_ug-v2.pdf",
+          "display_title": "User Guide Lenovo XClarity Provisioning Manager Wentian",
+          "source_title": "Lenovo XClarity Provisioning Manager WenTian 用户指南",
+          "date": "2026-02-04",
+          "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lxpm_wentian_ug-v2.pdf"
+        },
+        {
+          "key": "onecli-user-guide",
+          "filename": "lxce_onecli_cplus_ug.pdf",
+          "display_title": "User Guide Lenovo XClarity Essentials OneCLI cPlus",
+          "source_title": "Lenovo XClarity Essentials OneCLI cPlus 用户指南",
+          "date": "2026-08-27",
+          "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lxce_onecli_cplus_ug.pdf"
+        },
+        {
+          "key": "os-installation-guide",
+          "filename": "lenovo_wentian_os_installation_guide.pdf",
+          "display_title": "OS Installation Guide Lenovo Wentian",
+          "source_title": "联想问天服务器操作系统安装指南",
+          "date": "2026-03-23",
+          "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_wentian_os_installation_guide.pdf"
+        },
+        {
+          "key": "psu-label-matrix",
+          "filename": "psu_label_matrix.pdf",
+          "display_title": "PSU Label Matrix Lenovo",
+          "source_title": "联想服务器电源标签",
+          "date": "2025-05-06",
+          "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/psu_label_matrix.pdf"
+        },
+        {
+          "key": "updatexpress-user-guide",
+          "filename": "lxce_ux_cplus_ug.pdf",
+          "display_title": "User Guide Lenovo XClarity Essentials UpdateXpress cPlus",
+          "source_title": "Lenovo XClarity Essentials UpdateXpress cPlus 用户指南",
+          "date": "2026-08-27",
+          "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lxce_ux_cplus_ug.pdf"
+        },
+        {
+          "key": "user-manual",
+          "filename": "lenovo_wentian_wa5480g3_user_guide_v8.pdf",
+          "display_title": "User Manual Lenovo Wentian WA5480 G3",
+          "source_title": "联想问天 WA5480 G3 服务器用户手册",
+          "date": "2026-03-27",
+          "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_wentian_wa5480g3_user_guide_v8.pdf"
+        }
+      ],
+      "pressPdfSources": []
+    },
+    {
+      "folder": "WA5680 G3",
+      "fullGuid": "339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/F8CF4FB9-55E0-4CDB-A802-01987CBC9783",
+      "productId": "SERVERS/LENOVOWENTIAN/WA5680G3",
+      "lookupType": "Product.SubSeries",
+      "rawEntries": 1,
+      "documents": [
+        {
+          "key": "user-manual",
+          "filename": "lenovo_wentian_wa5680g3_user_guide.pdf",
+          "display_title": "User Manual Lenovo Wentian WA5680 G3",
+          "source_title": "联想问天 WA5680 G3 服务器用户指南",
+          "date": "2025-08-07",
+          "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_wentian_wa5680g3_user_guide.pdf"
+        }
+      ],
+      "pressPdfSources": []
+    },
+    {
+      "folder": "WA7780 G3",
+      "fullGuid": "339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/5C2B79DC-F509-4D89-93E7-B8EC3AC54BAF/1AA59F99-AD94-4107-A4A4-917D32E08DA9",
+      "productId": "SERVERS/LENOVOWENTIAN/WA7780G3/7DF1",
+      "lookupType": "Product.MachineType",
+      "rawEntries": 2,
+      "documents": [
+        {
+          "key": "bios-user-manual",
+          "filename": "lenovo_wentian_wa7780g3_bios_user_guide.pdf",
+          "display_title": "BIOS User Manual Lenovo Wentian WA7780 G3",
+          "source_title": "联想问天 WA7780 G3 服务器 BIOS 用户手册",
+          "date": "2025-05-15",
+          "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_wentian_wa7780g3_bios_user_guide.pdf"
+        },
+        {
+          "key": "user-manual",
+          "filename": "lenovo_wentian_wa7780g3_user_guide.pdf",
+          "display_title": "User Manual Lenovo Wentian WA7780 G3",
+          "source_title": "联想问天 WA7780 G3 服务器用戶手冊",
+          "date": "2024-06-27",
+          "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_wentian_wa7780g3_user_guide.pdf"
+        }
+      ],
+      "pressPdfSources": []
+    },
+    {
+      "folder": "WA7785a G3",
+      "fullGuid": "339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/481AF5B3-DC05-4F5A-A656-B027AB93EC6E",
+      "productId": "SERVERS/LENOVOWENTIAN/WA7785AG3",
+      "lookupType": "Product.SubSeries",
+      "rawEntries": 2,
+      "documents": [
+        {
+          "key": "bios-user-manual",
+          "filename": "lenovo_wentian_wa7785ag3_bios_user_guide.pdf",
+          "display_title": "BIOS User Manual Lenovo Wentian WA7785a G3",
+          "source_title": "联想问天 WA7785a G3 服务器 BIOS 用户手册",
+          "date": "2025-05-15",
+          "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_wentian_wa7785ag3_bios_user_guide.pdf"
+        },
+        {
+          "key": "user-manual",
+          "filename": "lenovo_wentian_wa7785ag3_user_guide.pdf",
+          "display_title": "User Manual Lenovo Wentian WA7785a G3",
+          "source_title": "联想问天 WA7785a G3 服务器用户手册",
+          "date": "2025-05-15",
+          "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_wentian_wa7785ag3_user_guide.pdf"
+        }
+      ],
+      "pressPdfSources": []
+    },
+    {
+      "folder": "WA7880a G3",
+      "fullGuid": "339E8F3F-BAD4-4F7D-BDAA-5E6C1DD8827E/E003AB30-9C7D-403E-B672-7B5EFB52C070/552F9B30-44C6-4E81-B0D9-62D72CCE43F3/6B5E239B-7F05-4E51-8A8E-CF69E0FB97C2",
+      "productId": "SERVERS/LENOVOWENTIAN/WA7880AG3/7DLR",
+      "lookupType": "Product.MachineType",
+      "rawEntries": 1,
+      "documents": [
+        {
+          "key": "user-manual",
+          "filename": "lenovo_wentian_wa7880ag3_user_guide.pdf",
+          "display_title": "User Manual Lenovo Wentian WA7880a G3",
+          "source_title": "联想问天 WA7880a G3 服务器用户指南",
+          "date": "2025-10-23",
+          "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_wentian_wa7880ag3_user_guide.pdf"
+        }
+      ],
+      "pressPdfSources": []
+    }
+  ],
+  "pdfHeadAudit": [
+    {
+      "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/bmc_user_guide_v14.pdf",
+      "status": 200,
+      "content_type": "application/pdf",
+      "size": 4197674,
+      "etag": "\"b84edba8dc8dc1:0\""
+    },
+    {
+      "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_bmc_event_reference_guide_g3_v3.pdf",
+      "status": 200,
+      "content_type": "application/pdf",
+      "size": 1577058,
+      "etag": "\"f179ceb98dc8dc1:0\""
+    },
+    {
+      "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_bmc_event_reference_guide_g5_v4.pdf",
+      "status": 200,
+      "content_type": "application/pdf",
+      "size": 1751445,
+      "etag": "\"59f1bfa1cc20dd1:0\""
+    },
+    {
+      "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_bmc_g3_redfish_guide_v11.pdf",
+      "status": 200,
+      "content_type": "application/pdf",
+      "size": 8326662,
+      "etag": "\"e7fe6bbd8dc8dc1:0\""
+    },
+    {
+      "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_snmp_ug_g3.pdf",
+      "status": 200,
+      "content_type": "application/pdf",
+      "size": 1136366,
+      "etag": "\"47d6311d30d1dc1:0\""
+    },
+    {
+      "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_wentian_os_installation_guide.pdf",
+      "status": 200,
+      "content_type": "application/pdf",
+      "size": 13673279,
+      "etag": "\"d04a778c55ecdc1:0\""
+    },
+    {
+      "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_wentian_wa5480g3_user_guide_v8.pdf",
+      "status": 200,
+      "content_type": "application/pdf",
+      "size": 26904246,
+      "etag": "\"5f3e3a690bddc1:0\""
+    },
+    {
+      "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_wentian_wa5680g3_user_guide.pdf",
+      "status": 200,
+      "content_type": "application/pdf",
+      "size": 25638397,
+      "etag": "\"6959c47e3c7dc1:0\""
+    },
+    {
+      "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_wentian_wa7780g3_bios_user_guide.pdf",
+      "status": 200,
+      "content_type": "application/pdf",
+      "size": 940977,
+      "etag": "\"2e71acf262c5db1:0\""
+    },
+    {
+      "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_wentian_wa7785ag3_bios_user_guide.pdf",
+      "status": 200,
+      "content_type": "application/pdf",
+      "size": 969234,
+      "etag": "\"6530c3a96cc5db1:0\""
+    },
+    {
+      "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_wentian_wa7785ag3_user_guide.pdf",
+      "status": 200,
+      "content_type": "application/pdf",
+      "size": 8814630,
+      "etag": "\"83462ab6cc5db1:0\""
+    },
+    {
+      "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_wentian_wa7880ag3_user_guide.pdf",
+      "status": 200,
+      "content_type": "application/pdf",
+      "size": 15985420,
+      "etag": "\"c58c9725c443dc1:0\""
+    },
+    {
+      "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lxce_bomc_cplus_ug.pdf",
+      "status": 200,
+      "content_type": "application/pdf",
+      "size": 638956,
+      "etag": "\"22864df4e935dd1:0\""
+    },
+    {
+      "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lxce_onecli_cplus_ug.pdf",
+      "status": 200,
+      "content_type": "application/pdf",
+      "size": 856757,
+      "etag": "\"b2ea11f4e935dd1:0\""
+    },
+    {
+      "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lxce_ux_cplus_ug.pdf",
+      "status": 200,
+      "content_type": "application/pdf",
+      "size": 778902,
+      "etag": "\"5f2fa0f5e935dd1:0\""
+    },
+    {
+      "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lxpm_wentian_ug-v2.pdf",
+      "status": 200,
+      "content_type": "application/pdf",
+      "size": 2508949,
+      "etag": "\"dc3e3c4a395dc1:0\""
+    },
+    {
+      "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/psu_label_matrix.pdf",
+      "status": 200,
+      "content_type": "application/pdf",
+      "size": 1676894,
+      "etag": "\"30285b30a7b9db1:0\""
+    },
+    {
+      "url": "https://download.lenovo.com/pccbbs/pubs/china-only-product_pdf/lenovo_wentian_wa7780g3_user_guide.pdf",
+      "status": 200,
+      "content_type": "application/pdf",
+      "size": 10001885,
+      "etag": "\"5a6381f462c5db1:0\""
+    }
+  ],
+  "pressSearch": "All five model terms searched at lenovopress.lenovo.com/search; no matching model PDF. WA5480 G3 yields interactive OSIG only; WA5680 G3 yields G5 results, excluded.",
+  "wa7880aCatalogue": "SubSeries returns {status:200,msg:failed,data:null}; machine-type 7DLR returns its user guide. Use the actual UI-selected machine-type fullGuid; no empty-response workaround.",
+  "machineTypeComparison": "All five machine-type catalogues audited. WA7780 7DF1 adds a user guide absent from SubSeries; WA7880a 7DLR supplies the only guide. Other three match SubSeries."
+}

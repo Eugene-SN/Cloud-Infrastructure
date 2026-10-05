@@ -3317,3 +3317,32 @@ webhook paths; this cleanup did not rename retained runtime workflows.
 requirements only. Plane notifications/reconciliation, AI/file tools, documents,
 Stage0–13 and shared products remain. Verification:
 N8N_WORKFLOW_CLEANUP_ACCEPTANCE_2026-10-05.md.
+
+## 2026-10-05 — WA G3 documentation monitoring expansion
+
+**Operator-authorized scope:** add WA7780 G3, WA5480 G3, WA7880a G3, WA7785a G3
+and WA5680 G3 to TechnicalDocumentationSync, using the accepted model-folder
+structure and existing simple daily source/download/index/cleanup flow.
+
+**Confirmed source choice:** compare official SubSeries and machine-type
+catalogues. Use 7DF1 for WA7780 because it adds the user guide omitted at SubSeries;
+use 7DLR for WA7880a because SubSeries returns null data. Other three lists agree.
+No matching G3 model PDF was found in official Lenovo Press searches; interactive
+OSIG and G5 search matches are excluded. Existing nine model configurations and
+Press sources remain unchanged.17 new originals bring the catalogue to 95 / 14 models.
+
+**Corrective runtime:** encrypted PDFs require the upstream-supported pypdf
+crypto extra; cryptography 50.0.2 is installed without changing existing package/
+Python/PyMuPDF/pypdf versions or pinned cleanup core. The existing 900-second timeout now
+stops its exact Docker container rather than only core's launcher, because a real
+timeout left the root-owned Docker client holding output pipes. No new policy,
+workflow node, service, queue or backup is introduced.
+
+**Verified limits:** twelve new PDFs clean successfully; four WA7780/WA7785a
+manuals fail pagination/table protection and G3 Redfish exceeds 900-second. Preserve the
+originals and failed state; do not weaken content/originals protection or publish
+false cleaned copies. Existing unchanged-file detection does not retry these
+failures automatically. Their CLI layout/performance handling is separate work.
+Monitoring and zero-change execution 12269 are verified. No new infrastructure
+stage or final operator acceptance is inferred.
+Reference: TECHNICAL_DOCUMENTATION_WA_G3_EXPANSION_2026-10-05.md.
