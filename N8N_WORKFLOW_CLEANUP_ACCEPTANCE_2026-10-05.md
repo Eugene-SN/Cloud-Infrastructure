@@ -1,0 +1,96 @@
+# n8n workflow cleanup — 2026-10-05
+
+Status: **COMPLETE / ACCEPTED**, `N8N_WORKFLOW_CLEANUP=PASS`.
+The operator explicitly authorized deletion of Documentation AI Oracle Pilot 01
+and Hermes Machine Invocation after reviewing their purposes. This supersedes
+the 2026-10-02 decision to retain Hermes4FMachine01 as dormant compatibility state.
+Historical Stage 4 and executor acceptance records remain unchanged.
+
+## Changes and recovery
+
+Installed n8n is 2.40.7. Fresh read-only SQLite audit found twelve workflows,
+zero archived workflows and no nonterminal executions. No remaining workflow
+definition/settings referenced either selected ID. Scoped active host-reference
+inspection found no callers.
+
+The authenticated native editor REST interface performed POST archive followed
+by DELETE for exactly StnDJjC7klAtEE73 and Hermes4FMachine01. The installed
+workflow service and official [n8n deletion instructions](https://support.n8n.io/article/how-to-delete-a-workflow)
+established the contract before mutation. Both workflows and their native
+execution/history/shared-workflow records are absent, rather than merely archived.
+Temporary trusted-owner sessions used the installed native encryption/JWT
+implementations; native logout and HTTP401 replay verified revocation.
+An initial node-e loading defect in the assistant's audit helper was corrected
+by supplying a verified native entrypoint path; it caused no production mutation.
+
+The Oracle-only Compose override had added a read-only pilot mount and file
+allowlist. n8n alone was recreated from unchanged /opt/n8n/compose.yaml using
+`--no-deps --force-recreate --pull never --wait`. Current image stayed
+`sha256:ffeb52485f78b1b06c9a832205853cf75da72a07a514c9a27724df85979d6c34`;
+both existing network IDs and the n8n/Knowledge mounts were preserved.
+The pilot mount/allowlist and obsolete
+/srv/benchmark/pilot-v1/runtime/n8n-oracle.override.yaml are absent.
+
+The 2,084 other pilot files under /srv/benchmark/pilot-v1 are preserved
+byte-for-byte as research evidence, source material and reproducibility artifacts;
+they have no remaining n8n mount. No vendor PDF or research result was deleted.
+Current encrypted credentials remain required by retained workflows and unchanged.
+
+Existing scheduled Backrest edge-state snapshot
+`cd6f692cc864c0f813225834f52a01ce960bae1252366e19c455d47fd1511cc6`
+was read back: its consistent staged n8n SQLite contains both deleted workflow
+IDs; its pilot export and result paths also exist. Recovery uses the established
+matched n8n recovery contract/native exports. No new backup mechanism or manual
+backup flow was introduced.
+
+## Remaining inventory
+
+Confirmed by both native MCP search and fresh live SQLite: **10 workflows,
+9 published/active, 1 unpublished; zero archived**.
+
+| Name | ID | State / trigger | Purpose |
+| --- | --- | --- | --- |
+| AIExecution01 | wQ9ZqMisMCGadGEE | Active; authenticated webhook or subworkflow | Explicit vLLM, Codex, Antigravity or Hermes execution; direct native paths and structured results. |
+| GitHub PR → Plane Item | PlaneGitHubSync01 | Active; subworkflow | Associate an explicitly identified PR with a PERSO item and create/update its idempotent PR comment without changing issue state. |
+| GitHub → Plane Polling | PlaneGitHubPoll01 | Active; every 15 minutes | Read repository PRs, find an unambiguous PERSO identifier and call PlaneGitHubSync01. |
+| LenovoPdfCleanup | ENo9jFkwcE4PFOyL | Unpublished; manual/subworkflow candidate | Download one original PDF, process through edge CLI, upload cleaned output and remove its temporary job; operator acceptance remains pending. |
+| NextcloudEventIngress01 | bxsXXufaaXuubA3Z | Active; authenticated webhook | Persist four native file-event classes in the durable Nextcloud Data Table inbox before acknowledgment. |
+| NextcloudTools01 | G0WysKToqsel8yL2 | Active; authenticated webhook or subworkflow | Eleven reusable file/folder/share operations through the existing Nextcloud identity. |
+| Plane API deletion reconciliation | PlaneDeletionReconcile01 | Active; every 5 minutes | Confirm issue deletions from native Plane activity records and enqueue them for notification. |
+| Plane Event Ingress | PlaneEventIngress01 | Active; signed webhook | Verify raw-body HMAC, filter/normalize Plane events and persist them for asynchronous processing. |
+| Plane → Mattermost | PlaneMattermost01 | Active; every 30 seconds | Process the Plane inbox, notify meaningful creates/changes/deletes and persist comparison state. |
+| TechnicalDocumentationSync | QouVaVNhAqSiYq5D | Active; daily 07:00 Europe/Minsk; manual trigger | Monitor nine Lenovo model collections through ASP/Press, download updated originals, remove superseded filenames and update INDEX.html. |
+
+## Verification and limits
+
+All ten retained definitions (nodes/connections/settings/name/description/pins/meta/
+node groups), draft/publication version IDs and active/archive flags match the
+pre-change baseline. Credential IDs/names/types/encrypted data, Data Table schema
+and all four webhook registrations are unchanged. AIExecution01 retains its
+previous accepted nodes/connections/settings hash
+`f63f0e5c8d6a667518694932e87b02cf1f5edf074eef0c3fb1237abeacb633e6`.
+No remaining definition references either removed ID.
+
+n8n readiness returned HTTP200 and Docker health is healthy. Fresh monitoring
+shows n8n and all three critical Plane scheduled workflows OK with zero
+consecutive failures; other application probes are OK. Container image, networks,
+base Compose and retained workflow publication remain unchanged. Exact obsolete
+override and own Playwright/temp audit artifacts are removed.
+
+The overall monitor was already FAIL before this work: ai-node/vLLM probes have
+been failing since their last success on 2026-10-04. Edge, Knowledge, operations
+and the relevant n8n integrations are OK. This cleanup does not establish current
+inference availability or repair that separate existing issue; no AI execution
+or notification test was issued.
+
+```text
+N8N_SELECTED_WORKFLOWS_DELETED=PASS
+N8N_REMAINING_WORKFLOW_COUNT=10
+N8N_REMAINING_DEFINITIONS_AND_PUBLICATION=UNCHANGED
+N8N_CREDENTIALS_AND_WEBHOOKS=UNCHANGED
+N8N_PILOT_RUNTIME_RESIDUE=ABSENT
+N8N_PILOT_RESEARCH_ARTIFACTS=UNCHANGED
+N8N_READINESS_AND_CRITICAL_WORKFLOWS=PASS
+N8N_RECOVERY_SNAPSHOT_READBACK=PASS
+N8N_WORKFLOW_CLEANUP=PASS
+```

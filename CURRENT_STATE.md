@@ -7,7 +7,7 @@ Bounded reconciliation is **COMPLETE / ACCEPTED**, `EDGE_HERMES_EXPLICIT_EXECUTO
 - Hermes default remains custom ai-node vLLM/Qwen `qwen3.8-27b-fp8`. Explicit native `/codex` and `/antigravity` commands invoke independent standalone CLIs through the existing one-shot helper, with no Hermes inference on this command path, automatic selection/fallback/fan-out/review or new provider/daemon. `/skill` is guidance; `/v1/responses` remains an inference endpoint.
 - Fresh versions: Hermes `v0.21.5+5635.g5bba024`, source `5bba024d8ddd388f56f354c1f789be825e3d8a3c`; Codex0.160.0; AGY1.2.14. Native source/update ownership is unchanged. Local Codex guidance is corrected and an AGY skill added through the supported user-skill lifecycle.
 - Hermes commands always specify a permission mode: Codex defaults read-only, write/full access is explicit; AGY defaults native plan+sandbox, which is not filesystem-immutable. Existing n8n callers omitting the new optional mode retain their accepted full-access contract. Helper completion now rejects AGY partial/non-SUCCESS/denied results and enforces its host deadline before AGY's partial timeout.
-- AIExecution01 is active and definition-unchanged; all accepted service MCPs and Codex-only Docs remain. Hermes4FMachine01 is active but dormant compatibility state: no caller found among current workflows, retained executions or scoped active host references; its historical prompt branches remain unchanged, outside the new command contract.
+- AIExecution01 is active and definition-unchanged; all accepted service MCPs and Codex-only Docs remain. Hermes4FMachine01 was retired by explicit operator decision on 2026-10-05 after the caller audit; the current n8n Hermes path is AIExecution01. See N8N_WORKFLOW_CLEANUP_ACCEPTANCE_2026-10-05.md.
 - Native plugin validated/enabled, Gateway hotloaded two adapters without restart; Dashboard restarted once, auth/unit unchanged. Real default, native CLI/dispatcher specialist success, non-zero and timeout gates passed. Gateway/Dashboard active, Mattermost connected, Edge/overall OK. All new nonsecret state is in Git; existing scheduled Backrest edge-state coverage is verified, no manual flow issued. Exact test artifacts/cache pointer removed.
 
 ## Current interaction/AI tool foundation — 2026-10-02
@@ -17,7 +17,7 @@ The unified interaction/AI tool fabric is complete, with final recovery verifica
 - Fresh relevant runtime: n8n2.40.7, Nextcloud35.0.1, Plane MCP0.3.3, GitHub MCP1.13.0, Playwright MCP0.0.83 with existing Chromium153. Hermes native source is `5bba024d8ddd388f56f354c1f789be825e3d8a3c`; its own prior native update was not issued by this workstream.
 - Plane deletion pagination is repaired and native scheduled reconciliation repeatedly succeeds. Edge Monitor now has one generic `n8n-workflow-health` incident for PlaneMattermost01, PlaneDeletionReconcile01 and PlaneGitHubPoll01; manual tests are excluded from scheduled freshness/failure counters.
 - Hermes, Codex and Antigravity each have the same CE13 Plane subset, full native35-tool n8n instance MCP, official44-tool GitHub MCP and official25-tool isolated Playwright MCP. Codex alone has official read-only OpenAI Docs MCP. Existing Context7/security/browser integrations remain. Codex and Antigravity have independent ordinary operator Plane PATs; native n8n MCP uses the owner's shared one-per-user key, with autoexposure disabled and two workflows explicitly exposed.
-- AIExecution01 has an explicit vllm/codex/antigravity/hermes selector. vLLM is direct private HTTP with real JSON-schema proof; CLI backends use native n8n SSH to trusted core through one dedicated encrypted key and one transparent one-shot helper, bounded to two CLI processes with timeout/cancellation/exit/stderr results. Existing Hermes4FMachine01 remains unchanged. No automatic router, custom daemon or new Docker network.
+- AIExecution01 has an explicit vllm/codex/antigravity/hermes selector. vLLM is direct private HTTP with real JSON-schema proof; CLI backends use native n8n SSH to trusted core through one dedicated encrypted key and one transparent one-shot helper, bounded to two CLI processes with timeout/cancellation/exit/stderr results. Hermes4FMachine01 was deleted by explicit operator decision on 2026-10-05; AIExecution01 and its Hermes credential remain unchanged. No automatic router, custom daemon or new Docker network.
 - Nextcloud35.0.1 uses an app password of the existing OIDC operator and one encrypted native n8n credential. NextcloudTools01 provides11 reusable file/share operations through all three agents' n8n MCP. Four native file events enter a header-authenticated durable Data Table inbox before204, through existing cron and edge_internal. Nextcloud app/cron now join that existing network; public OIDC/HTTPS and native Nextcloud→Mattermost remain unchanged.
 - Canonical runtime, secret-free client definitions, workflow exports and recovery contract: `deployments/edge/interaction-fabric/README.md`. Final Backrest edge-state flow395 / operations395–398 SUCCESS; actual snapshot `78d8c27cfe06be6ad31e3e7b0ec441832ea8e5c6aadefc7727ba8df084bb3007`, D5 copy `8e3b3c07bbe19661120d1d3af3c1799e8baa408db471929c03326434849c39ab`. Protected configs/helpers byte-match; native snapshot credential decryption and Plane/Nextcloud logical table readback passed. No remaining implementation scope in this authorized foundation workstream.
 
@@ -1544,3 +1544,16 @@ LenovoPdfCleanup01 candidate remains unpublished and unchanged.
 Configuration, deployed definition, source audit and verification:
 `deployments/edge/technical-documentation/`. No new infrastructure stage or
 service was introduced; Stage 13 remains the accepted finite checkpoint.
+
+## 2026-10-05 — n8n workflow cleanup — COMPLETE / ACCEPTED
+
+Operator-authorized Oracle Pilot (StnDJjC7klAtEE73) and legacy Hermes Machine
+Invocation (Hermes4FMachine01) are permanently deleted through native n8n.
+This supersedes the prior dormant-Hermes retention decision. Ten workflows remain:
+nine published/active and the unpublished LenovoPdfCleanup candidate. Retained
+definitions/publication, credentials, Data Table schema and webhooks are unchanged.
+Oracle-only mount/allowlist/Compose override are absent after same-image n8n
+recreation; 2,084 other pilot research files are byte-unchanged. n8n and its
+critical workflows are healthy. Existing ai-node/vLLM monitoring failures predate
+this work and are outside this cleanup. Inventory, recovery snapshot readback
+and verification: N8N_WORKFLOW_CLEANUP_ACCEPTANCE_2026-10-05.md.

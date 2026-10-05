@@ -3234,3 +3234,19 @@ deletion are retained. Genoa and Turin BIOS documents for WR5225 G3 are distinct
 version families. No new nodes, credentials, services, backup mechanism, cleanup
 or translation integration are added. Deployed evidence and source configuration:
 `deployments/edge/technical-documentation/`.
+
+## 2026-10-05 — n8n obsolete workflows retirement — ACCEPTED
+
+After reviewing their original purpose and current dependencies, the operator
+explicitly selected deletion of Documentation AI Oracle Pilot 01
+(StnDJjC7klAtEE73) and Hermes Machine Invocation (Hermes4FMachine01).
+This supersedes only the 2026-10-02 decision to retain the latter as dormant
+compatibility state. AIExecution01 owns the current explicit n8n AI/Hermes path;
+the private Hermes API and shared credential remain.
+
+Native archive/delete and exact Oracle-only container-setting/override cleanup
+are complete. Retained workflow definitions/publication, credentials and webhook
+registrations are unchanged. Pilot results/source materials remain research
+artifacts without an n8n mount. Historical acceptance evidence is preserved.
+No other workflow is retired or published by this decision. Exact verification
+and current inventory: N8N_WORKFLOW_CLEANUP_ACCEPTANCE_2026-10-05.md.

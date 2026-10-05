@@ -44,7 +44,7 @@ Codex RC0 requires a nonempty final-message file. AGY RC0 also requires native `
 
 **Existing n8n compatibility:** helper calls omitting `permission_mode` retain their accepted full-access behavior. Hermes always sends an explicit mode, defaulting to read-only. AIExecution01's existing payload forwarding accepts an explicitly supplied mode without any workflow modification; no n8n permission-policy redesign is implied.
 
-`Hermes4FMachine01` remains active but dormant compatibility state: the bounded audit of all nine durable workflows, retained executions and active host references found no caller. Its historical prompt-mediated specialist branches remain unchanged and are not the new specialist contract. Use `AIExecution01` for explicit n8n backends and native commands for Hermes. The audit does not establish that the legacy interface was never used historically.
+`Hermes4FMachine01` was retired by explicit operator decision on 2026-10-05 after the earlier bounded caller audit and a fresh review of all twelve workflows. Use `AIExecution01` for explicit n8n backends and native commands for Hermes. The accepted historical tests remain preserved; deletion does not remove the private Hermes API or its shared credential. Exact cleanup/recovery evidence: `N8N_WORKFLOW_CLEANUP_ACCEPTANCE_2026-10-05.md` in the repository root.
 
 ## Deployment, lifecycle and recovery
 
