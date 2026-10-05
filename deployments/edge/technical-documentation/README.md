@@ -52,6 +52,16 @@ edition/page-count metadata reset to unknown rather than retaining stale values.
 Date, size, source URL, actual filename and save time are updated automatically.
 Both JavaScript catalogue data and the no-JavaScript folder list are regenerated.
 
+The document table uses **Дата предыдущей версии** instead of the former edition
+column, whose manually extracted values existed only for WR5220 G3. On a detected
+replacement, previous_source_updated takes the replaced record's source_updated
+date. It works for same-name changes and renamed revisions, and advances to the
+immediately preceding document on the next update. New documents or unavailable
+previous dates show —. Existing history is not invented or backfilled. The
+current source-date column stays separate; previous dates are also searchable.
+Initial page migration preserves all 78 records and completion markers. Evidence:
+previous-date-evidence.json. The workflow keeps the same 17 nodes and groups.
+
 On a source update, cleanup_status becomes pending and cleaned_at/cleaned_path
 are cleared. The child saves a completion marker after each successful cleaned
 PDF publication. The collapsed Сведения displays status, completion date and

@@ -3286,3 +3286,11 @@ retry queue or notification mechanism. This supersedes previous separation of th
 published source monitor from the unpublished cleanup candidate, not the agreed
 originals/cleaned/translated layout. Verified implementation and limitations:
 TECHNICAL_DOCUMENTATION_CLEANUP_INTEGRATION_2026-10-05.md.
+
+## 2026-10-05 — Previous version date replaces edition — OPERATOR DESIGN
+
+The operator selected the date of the replaced document instead of the sparse,
+manually populated edition column. Use the replaced record's source date, retained
+in INDEX.html as previous_source_updated; show — when no previous date is known.
+Do not reconstruct unrecorded history from edition labels or file timestamps.
+Keep the current source-date column and cleanup details. No nodes are added.

@@ -1595,3 +1595,19 @@ Current definitions, node review and sanitized evidence:
 deployments/edge/pdf-cleanup/ and deployments/edge/technical-documentation/.
 Detailed verification: TECHNICAL_DOCUMENTATION_CLEANUP_INTEGRATION_2026-10-05.md.
 Accepted infrastructure checkpoint remains Stage 13; no new finite stage is opened.
+
+## 2026-10-05 — Previous-document date in catalogue — DEPLOYED / VERIFIED
+
+The operator requested replacing the unmaintained edition column with the source
+date of the document preceding replacement. INDEX.html now shows Дата предыдущей
+версии; missing history is displayed as —. On replacement the existing Changed
+Documents node copies the prior record's source_updated into previous_source_updated.
+Both same-name and renamed updates retain that date; the next replacement advances
+it to the immediately previous document. Historical dates are not invented.
+
+TechnicalDocumentationSync remains published with 17 nodes and three groups.
+Only Changed Documents and Update INDEX logic changed; schedule, sources, downloads,
+cleanup and its originals guard are unchanged. The current page was updated through
+Nextcloud WebDAV, preserving all 78 document records/cleanup markers and INDEX.md.
+Published no-change run12073 passed. Source and evidence:
+deployments/edge/technical-documentation/previous-date-evidence.json.

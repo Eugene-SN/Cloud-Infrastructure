@@ -38,6 +38,15 @@ async function run(name,input,previous={}) {
   const doc=changed.find(d=>d.json.key.endsWith('/user-manual')).json;
   assert(doc.old_path.endsWith('v18.pdf')); assert(doc.path.endsWith('v19.pdf'));
   assert.equal(doc.title,'User Manual Lenovo Wentian WR5220 G3');
+  assert.equal(doc.previous_source_updated,catalog.documents.find(d=>d.key===doc.key).source_updated);
+  assert(changed.filter(d=>!catalog.documents.some(old=>old.key===d.json.key)).every(d=>d.json.previous_source_updated===null));
+  const nextCatalog=structuredClone(catalog);
+  const priorRecord=nextCatalog.documents.find(d=>d.key===doc.key);
+  priorRecord.previous_source_updated='2026-01-01';
+  priorRecord.source_updated='2026-10-05';
+  const nextHtml='<script id="catalog-data" type="application/json">'+JSON.stringify(nextCatalog)+'</script>';
+  const nextChanges=await run('Changed Documents',revised,{...previous,'Read INDEX':[{json:{data:nextHtml}}]});
+  assert.equal(nextChanges.find(d=>d.json.key===doc.key).json.previous_source_updated,'2026-10-05');
   const other=structuredClone(models);other[0].json.model.folder='Second Model';
   const additional=await run('Latest Document Families',[{json:{body:asp}}],{'Models and Index':other});
   assert(additional.every(d=>d.json.key.startsWith('Second Model/')&&d.json.path.startsWith('Second Model/')));
@@ -49,6 +58,7 @@ async function run(name,input,previous={}) {
   assert.equal(rendered[0].json.files[0].path,doc.path);
   assert.equal(rendered[0].json.files[0].previous_path,doc.old_path);
   assert.equal(updated.documents.find(d=>d.key===doc.key).previous_path,undefined);
+  assert.equal(updated.documents.find(d=>d.key===doc.key).previous_source_updated,doc.previous_source_updated);
   const cleanupNode=nodes.find(n=>n.name==='Clean Saved PDFs');
   assert.equal(cleanupNode.parameters.mode,'once');
   assert.equal(cleanupNode.parameters.options.waitForSubWorkflow,true);

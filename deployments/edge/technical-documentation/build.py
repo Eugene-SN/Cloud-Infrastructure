@@ -100,6 +100,7 @@ for (const [i,item] of $input.all().entries()) {
     : doc.remote_validator.last_modified === v.last_modified && doc.remote_validator.content_length === v.content_length);
   if (old && old.source_url === doc.source_url && old.source_updated === doc.source_updated && sameBytes) continue;
   doc.title = old?.title ?? doc.title;
+  doc.previous_source_updated = old?.source_updated ?? null;
   doc.old_path = old?.path !== doc.path ? old?.path ?? null : null;
   const dav = 'http://nextcloud.edge.internal/remote.php/webdav/technical-documentation/lenovo/originals/';
   doc.destination_url = dav + doc.path.split('/').map(encodeURIComponent).join('/');
@@ -162,6 +163,19 @@ catalog.folders = [...new Set([...catalog.folders, ...catalog.documents.map(d=>d
 catalog.generated_at = $now.toISO();
 const data = JSON.stringify(catalog, null, 2).replace(/</g,'\\u003c');
 html = html.replace(pattern, (_,a,b,c)=>a+data+c);
+html = html.replace('<th scope="col">Редакция</th>',
+  '<th scope="col" title="Дата источника предыдущего документа до замены">Дата предыдущей версии</th>');
+html = html.replace('.doc-edition{grid-column:1/-1}',
+    ".doc-previous-date{grid-column:1/-1}.doc-previous-date:before{content:'Предыдущая версия: ';font-size:10px;color:var(--muted)}")
+  .replaceAll('doc-edition', 'doc-previous-date')
+  .replace("const edition=node('td',d.edition||'—','doc-previous-date');",
+    "const previousDate=node('td',date(d.previous_source_updated),'doc-previous-date numeric');")
+  .replace('tr.append(td,edition,updated,volume,actions);', 'tr.append(td,previousDate,updated,volume,actions);')
+  .replace('d.path,d.edition,d.source_updated', 'd.path,d.previous_source_updated,d.source_updated')
+  .replace('Номер редакции, дата, объём и имя текущего PDF указаны отдельно.',
+    'Дата источника, дата предыдущей версии, объём и имя текущего PDF указаны отдельно.')
+  .replace('Дата внутри PDF относится к его редакции; эти значения могут отличаться.',
+    'Дата предыдущей версии — дата источника последнего заменённого документа; прочерк означает, что предыдущая дата не сохранена.');
 const cleanupDetails = "   more.append(node('p','Очистка: '+(d.cleanup_status==='cleaned' ? 'Завершена' : d.cleanup_status==='pending' ? 'Ожидает очистки' : 'Не выполнялась')));\n" +
   "   if(d.cleaned_at)more.append(node('p','Очищен: '+new Date(d.cleaned_at).toLocaleString('ru-RU',{timeZone:'Europe/Minsk'})));\n" +
   "   if(d.cleanup_status==='cleaned'&&d.cleaned_path){const clean=node('a','Очищенный PDF');clean.href='../cleaned/'+d.cleaned_path.split('/').map(encodeURIComponent).join('/');clean.target='_blank';clean.rel='noopener';more.append(clean);}\n";

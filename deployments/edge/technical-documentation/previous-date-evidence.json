@@ -1,0 +1,55 @@
+{
+  "date": "2026-10-05",
+  "status": "DEPLOYED_VERIFIED",
+  "workflow": {
+    "id": "QouVaVNhAqSiYq5D",
+    "name": "TechnicalDocumentationSync",
+    "version": "758bcab2-aa27-4c55-b158-932b74d1a4ac",
+    "published": "758bcab2-aa27-4c55-b158-932b74d1a4ac",
+    "nodeCount": 17,
+    "groups": 3,
+    "changedNodes": [
+      "Changed Documents",
+      "Update INDEX"
+    ]
+  },
+  "oldColumn": {
+    "meaning": "Manually extracted PDF edition / product revision",
+    "populatedDocuments": 10,
+    "onlyFolder": "WR5220 G3",
+    "automaticallyMaintained": false
+  },
+  "replacementColumn": {
+    "label": "Дата предыдущей версии",
+    "field": "previous_source_updated",
+    "value": "Replaced document's source_updated date",
+    "unknown": "—",
+    "existingHistoryBackfilled": false
+  },
+  "checks": {
+    "unknownOrNewDate": null,
+    "immediatelyPreviousDateOnSecondReplacement": true,
+    "renamedRevision": true,
+    "htmlMigrationIdempotent": true,
+    "browserUnknownShowsDash": true,
+    "browserSampleDate": "01.09.2026",
+    "cleanupDetailsPreserved": true,
+    "all78DocumentRecordsUnchanged": true,
+    "webdavPut": 204,
+    "readbackMatches": true,
+    "indexMdSha256": "27d907f1597543bd2e10e4edbe23afa124d3cf8196685ec3f32e784db62a814f",
+    "nativeWorkflowValid": true
+  },
+  "noChangeExecution": {
+    "id": "12073",
+    "workflowId": "QouVaVNhAqSiYq5D",
+    "mode": "trigger",
+    "status": "success",
+    "startedAt": "2026-10-05T12:53:06.631Z",
+    "stoppedAt": "2026-10-05T12:53:12.931Z",
+    "retryOf": null,
+    "retrySuccessId": null,
+    "waitTill": null
+  },
+  "previewVerifierCorrection": "An additional assistant preview script removed the element it then selected; the full-page preview was reloaded and passed. Production was unaffected."
+}

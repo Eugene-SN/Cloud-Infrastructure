@@ -816,3 +816,13 @@ PDF hashes and INDEX.md remain unchanged. Only two PDFs were processed for
 integration verification; existing unchanged documents are not implicitly bulk
 processed. Translation remains future work, with no automatic next deployment.
 Record: TECHNICAL_DOCUMENTATION_CLEANUP_INTEGRATION_2026-10-05.md.
+
+## 2026-10-05 — Catalogue previous-version date — DEPLOYED / VERIFIED
+
+Operator-requested column replacement is complete: prior source date is retained
+on each document replacement, with — for unknown history. Existing INDEX.html was
+updated through Nextcloud without changing document records or cleanup markers.
+The existing 17-node monitor preserves its download/index/cleanup sequence and
+schedule. Date rollover and browser checks passed; published no-change run12073
+performed no writes or cleanup. Evidence: previous-date-evidence.json in the
+technical-documentation deployment directory. No new infrastructure scope.
