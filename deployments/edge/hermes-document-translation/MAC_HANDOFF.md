@@ -1,5 +1,15 @@
 # lp2468 real pilot: request for the existing Mac chat
 
+Historical request below is superseded. Mac delivered and accepted the controlled
+108-unit test, then the operator clarified that current work is a fresh source-only
+translation of pages 1–10. Source/glossary were transferred to edge and a new
+native Hermes/Qwen session performs that task. Old targets/TM and synthetic
+diffs are excluded. Automatic coordination uses Mac delegated messages and
+authenticated return reads; edge native send_message_to_thread remains absent.
+Current deliverable/evidence: `first10-clean-evidence.json`, machine draft,
+187 fresh pairs, translator/audit exit0, verified HTML and declared lang=en
+metadata exception. Unsupported native free-form review claims are excluded.
+
 Requested by the operator on 2026-10-10. This is one coordinated task across
 the existing chats, not a request for the operator to divide the work.
 

@@ -8,16 +8,50 @@ Runtime skill:
 `/home/core/.hermes/skills/technical-documentation/technical-html-translation/`.
 Canonical source is `skill/technical-html-translation/` in this directory.
 Load it through native `/technical-html-translation` or the verified CLI
-`hermes chat --skills technical-html-translation`. No profile, daemon, provider
-change, Office dependency or Weblate customization is introduced.
+`hermes chat --skills technical-html-translation`. The clean translation profile
+below isolates inference settings and history. Shared daemons/provider settings,
+Office dependencies and Weblate customization are unchanged.
 
 ## Chat boundary and input package
+
+The current operator task is a clean English translation of original lp2468
+pages 1–10, not a version comparison. Skill 1.1.0 accepts only `source.html`,
+`glossary.json` and a fresh source-only `manifest.json`; it starts a new native
+session without old English targets or TM. `scripts/clean_html.py` extracts
+actual source leaf blocks, assembles Hermes-generated per-page translations and
+checks structure/assets/quantities relative to that source. Audited PDF word
+wraps in p/li/td may be removed; semantic item breaks remain. No fixed 108-unit
+position set is used for this path. Full meaning and browser review are required.
+The English output changes only root `lang="und"` to `lang="en"` outside the
+translated fragments; this declared metadata exception is recorded explicitly.
+
+Subsequent clean runs use the native `html-translation` profile, selected with
+`hermes -p html-translation chat --skills technical-html-translation`.
+Its profile-local named endpoint and `auxiliary.compression.extra_body` both
+carry `chat_template_kwargs.enable_thinking: false`; native kwargs construction
+was asserted offline, without another inference call. Main request overrides
+alone did not propagate to compression in the current pilot. The profile does
+not change the selected default profile or shared Gateway/Dashboard config.
+Upstream mechanisms: [profiles](https://hermes-agent.nousresearch.com/docs/user-guide/profiles/)
+and [auxiliary configuration](https://hermes-agent.nousresearch.com/docs/user-guide/configuration/).
+
+Current real result is a verified machine draft: 187 newly translated source
+blocks, ten browser-checked pages, two tables, one loaded image, 22 audited PDF
+wrap removals and 56 retained separators. Translator and final read-only audit
+both exit 0. The final audit actually reads all187 pairs; ten quoted anchors and
+independent Mac semantics are verified. Unsupported free-form native review
+claims are excluded from acceptance. Five verifier regressions pass.
+Evidence and final output hash: `first10-clean-evidence.json`.
+
+The 108-unit package and controlled-diff results below are historical incremental
+workflow evidence, not acceptance of the current clean translator. Diff applies
+only to explicitly requested future document updates.
 
 The existing Mac chat owns authenticated ai-node/Weblate work. The edge chat
 owns Hermes setup, planning, translation and HTML checking. No SSH key or
 Weblate credentials are copied to edge.
 
-For the real pilot, the Mac chat supplies a temporary directory containing:
+For the historical incremental pilot, the Mac chat supplied a directory containing:
 
 - `source.html`, the exact original lp2468 HTML;
 - `draft.html`, the current English sample/native download;
@@ -63,7 +97,7 @@ Run the stdlib test program `test_html_workflow.py` for offline verification.
 Use the installed Hermes parser to validate Hermes frontmatter: the Codex
 skill validator does not support Hermes `platforms`/`version` fields.
 
-## Repeating the scoped workflow
+## Repeating the historical incremental workflow
 
 Load the installed skill with native `/technical-html-translation`, or
 `hermes chat --skills technical-html-translation`. Supply the actual package

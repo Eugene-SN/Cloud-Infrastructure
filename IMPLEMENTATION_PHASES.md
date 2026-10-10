@@ -930,3 +930,14 @@ works through delegated messages and authenticated return reads; native edge
 send_message_to_thread remains absent from Desktop registration. Evidence:
 `deployments/edge/hermes-document-translation/real-pilot-evidence.json`.
 Stage 13 remains accepted; no finite infrastructure stage is opened.
+
+## 2026-10-10 — Hermes clean lp2468 scope supersession — VERIFIED MACHINE DRAFT
+
+Original Chinese pages1–10 → English,187 actual blocks; historical108/diff does
+not accept this current translator. Skill1.1.0, isolated no-thinking profile,
+native translator/read-only audit exit0, real pair coverage and independent Mac
+semantics are verified. Unsupported native free-form review claims are excluded.
+HTML/table/browser/five regressions pass;22 PDF wrap removals,56 preserved
+separators, and explicit root-lang und→en metadata exception. Source/production/
+Web UI/shared config remain unchanged. Evidence: first10-clean-evidence.json in
+`deployments/edge/hermes-document-translation/`. No finite stage is opened.

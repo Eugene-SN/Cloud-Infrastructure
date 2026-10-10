@@ -1748,3 +1748,21 @@ works through delegated messages and authenticated return reads; native edge
 send_message_to_thread remains absent from Desktop registration. Evidence:
 `deployments/edge/hermes-document-translation/real-pilot-evidence.json`.
 Stage 13 remains accepted; no finite infrastructure stage is opened.
+
+## 2026-10-10 — Hermes clean lp2468 pages 1–10 — VERIFIED MACHINE DRAFT
+
+Current scope supersedes historical108/diff acceptance: original Chinese pages
+1–10 freshly translated through native Hermes/Qwen, 187 actual blocks and133
+glossary terms, excluding old targets/TM. Skill1.1.0 and isolated html-translation
+profile are installed; native request preparation verifies no-thinking for
+auxiliary/main requests without changing shared config/default profile. Both
+translator and later read-only audit exited0/completed=true. Real187 pair reads,
+ten verified anchors and independent Mac semantics support a machine draft;
+unsupported native free-form self-review claims are explicitly excluded.
+HTML/table/assets/browser and five regressions pass;22 PDF wraps removed,56
+semantic separators retained. Root lang und→en is the sole declared exception
+to outside-fragment byte preservation; source/production/Web UI stay unchanged.
+Automatic Mac delegated messages/authenticated return reads work; edge native
+send_message_to_thread remains absent. Final evidence:
+`deployments/edge/hermes-document-translation/first10-clean-evidence.json`.
+Stage13 remains accepted; no finite infrastructure stage is opened.

@@ -1,0 +1,326 @@
+{
+  "date": "2026-10-10",
+  "scope": "Fresh Chinese-to-English original lp2468 pages1-10; historical108/diff test is superseded acceptance scope",
+  "acceptance": "VERIFIED_MACHINE_DRAFT_WITH_NATIVE_REVIEW_LIMITS",
+  "inputs": {
+    "source_only": true,
+    "prior_targets": false,
+    "translation_memory": false,
+    "glossary_entries": 133,
+    "source_slice_sha256": "b45db7a919046e9bab36c5ceff5711d7ba503efd7144b19a16bb191f6c7a9300",
+    "original_full_source_sha256": "28c83bd6bb8afb9a056f1f6182f9fa4b93fab2d5935e9f3d09f8a3f5490082e7"
+  },
+  "native": {
+    "session_id": "20261010_085914_ca340a",
+    "fresh_history": true,
+    "provider": "custom:ai-node-vllm",
+    "model": "qwen3.8-27b-fp8",
+    "base_url": "http://192.168.1.30:8000/v1",
+    "current_result": {
+      "exit_code": 0,
+      "session_id": "20261010_085914_ca340a",
+      "failed": false,
+      "partial": false,
+      "completed": true,
+      "failure_reason": null,
+      "field_presence": {
+        "failed": true,
+        "partial": true,
+        "completed": true,
+        "failure_reason": false
+      }
+    },
+    "new_clients_started": false,
+    "native_process_exit": {
+      "exit_code": 0
+    },
+    "main_api_calls": 78,
+    "inference_usage": {
+      "input_tokens": 7072259,
+      "output_tokens": 38735,
+      "total_tokens": 7110994
+    },
+    "auxiliary_compression_routes": {
+      "provider": "custom",
+      "model": "qwen3.8-27b-fp8",
+      "base_url": "http://192.168.1.30:8000/v1/",
+      "calls": 2,
+      "main_no_thinking_override_not_forwarded": true,
+      "total_ceiling_seconds_per_stalled_call": 600,
+      "global_queue_abort": false
+    },
+    "subsequent_read_only_audit": {
+      "session_id": "20261010_100841_2f635a",
+      "profile": "html-translation",
+      "api_calls": 6,
+      "last_prompt_tokens": 43302,
+      "native_result": {
+        "exit_code": 0,
+        "session_id": "20261010_100841_2f635a",
+        "failed": false,
+        "partial": false,
+        "completed": true,
+        "failure_reason": null,
+        "field_presence": {
+          "failed": true,
+          "partial": true,
+          "completed": true,
+          "failure_reason": false
+        }
+      },
+      "process_exit": {
+        "exit_code": 0
+      },
+      "compression_invoked": false,
+      "translation_writes": 0,
+      "protected_source_and_translation_files_unchanged": true,
+      "authorization": "Mac clarified no-new-client restriction applied while original translator was running; single later read-only audit explicitly permitted"
+    }
+  },
+  "output": {
+    "sha256": "69997a57f452448866fe745b5ca2039269ad853abed5df5d6856466c8f66026b",
+    "blocks": 187,
+    "pages": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "tables": 2,
+    "rows": 14,
+    "cells": 27,
+    "images": 1,
+    "removed_pdf_wrap_br": 22,
+    "retained_semantic_br": 56,
+    "outside_translated_fragments_byte_exact": false,
+    "bytes": 2536455,
+    "html_language": "en",
+    "outside_translated_fragments_byte_exact_except_declared_metadata": true,
+    "metadata_exceptions": [
+      {
+        "type": "html-language",
+        "source_tag": "<html lang=\"und\">",
+        "target_tag": "<html lang=\"en\">",
+        "source_byte_offset": 17
+      }
+    ],
+    "prior_reviewed_html_sha256": "af08b74869bf5fc21e3cb711e6edd16e98595d57006eecef2413b5fe33785016",
+    "only_delta_from_prior_reviewed_html": "Source-asserted html root lang und -> en; all187 target values unchanged"
+  },
+  "meaning": {
+    "correct_pair_count": 187,
+    "pair_sha256": "6c118da2ecca09cae636e263d19328cc7c624d883db4624d5cfd1605fe79fccc",
+    "native_final_review": "Actual187 pair read coverage and ten verified quoted anchors; unsupported free-form claims excluded",
+    "native_corrected_ids": [
+      "page01-block001",
+      "page08-block135",
+      "page09-block167"
+    ],
+    "native_corrections": [
+      "大中型企业: medium and large enterprises",
+      "无故障运行时间: fault-free operating time",
+      "内存插槽: DIMM slots"
+    ],
+    "prior_ordinal_dump_rejected": true,
+    "source_word_quantities_verified": [
+      {
+        "id": "page07-block105",
+        "source_quote": "两颗",
+        "source_number": "2",
+        "count": 1
+      },
+      {
+        "id": "page07-block115",
+        "source_quote": "一个OCP",
+        "source_number": "1",
+        "count": 1
+      },
+      {
+        "id": "page08-block139",
+        "source_quote": "一个服务器专用以太网端口",
+        "source_number": "1",
+        "count": 1
+      }
+    ],
+    "nonexistent_review_note_ids": [
+      "page04-block051"
+    ],
+    "native_self_review_limits": {
+      "accepted_scope": "Verified actual187 pair reads, all10 quoted anchors and independent Mac semantic review; machine draft",
+      "free_form_claims_accepted": false,
+      "unsupported_free_form_claims": [
+        "Native final prose attributes open-loop content to introductory page01-block001; actual intro does not contain it.",
+        "Native page10 observation calls power-supply items Rear battery; actual source describes power supplies."
+      ],
+      "original_compressed_review": "Rejected for invented pages/source quotes; preserved as historical test evidence",
+      "perfect_translation_claimed": false
+    },
+    "actual_native_pair_reads": [
+      {
+        "page": 1,
+        "pairs": 3,
+        "truncated": false,
+        "exact_current_pair_objects": true
+      },
+      {
+        "page": 2,
+        "pairs": 28,
+        "truncated": false,
+        "exact_current_pair_objects": true
+      },
+      {
+        "page": 3,
+        "pairs": 28,
+        "truncated": false,
+        "exact_current_pair_objects": true
+      },
+      {
+        "page": 4,
+        "pairs": 27,
+        "truncated": false,
+        "exact_current_pair_objects": true
+      },
+      {
+        "page": 5,
+        "pairs": 9,
+        "truncated": false,
+        "exact_current_pair_objects": true
+      },
+      {
+        "page": 6,
+        "pairs": 7,
+        "truncated": false,
+        "exact_current_pair_objects": true
+      },
+      {
+        "page": 7,
+        "pairs": 23,
+        "truncated": false,
+        "exact_current_pair_objects": true
+      },
+      {
+        "page": 8,
+        "pairs": 32,
+        "truncated": false,
+        "exact_current_pair_objects": true
+      },
+      {
+        "page": 9,
+        "pairs": 17,
+        "truncated": false,
+        "exact_current_pair_objects": true
+      },
+      {
+        "page": 10,
+        "pairs": 13,
+        "truncated": false,
+        "exact_current_pair_objects": true
+      }
+    ],
+    "verified_quoted_anchors": 10,
+    "coverage_does_not_approve_meaning": true,
+    "independent_mac_semantic_review": "All187 real source/target pairs reviewed; af08 HTML independently validated by Mac; final lang-only HTML publication readback pending"
+  },
+  "checks": {
+    "structural_pass": true,
+    "numeric_flags": [],
+    "visible_chinese": [],
+    "browser_pages": 10,
+    "browser_overflow": 0,
+    "browser_chinese": 0,
+    "image_loaded": true,
+    "external_resources": [],
+    "visual_review_pages": [
+      1,
+      7,
+      9,
+      10
+    ],
+    "page8_lower_view_reviewed": true,
+    "offline_regressions": {
+      "pass": true,
+      "count": 5
+    }
+  },
+  "isolated_profile": {
+    "pass": true,
+    "profile": "html-translation",
+    "path": "/home/core/.hermes/profiles/html-translation",
+    "mechanism": "native profile; context-local set_hermes_home_override/reset_hermes_home_override",
+    "provider": "custom:ai-node-vllm",
+    "model": "qwen3.8-27b-fp8",
+    "base_url": "http://192.168.1.30:8000/v1",
+    "compression_kwargs": {
+      "model": "qwen3.8-27b-fp8",
+      "timeout": 300.0,
+      "extra_body": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        }
+      }
+    },
+    "other_auxiliary_inherited_extra_body": {
+      "chat_template_kwargs": {
+        "enable_thinking": false
+      }
+    },
+    "offline_only": true,
+    "inference_calls": 0,
+    "inflight_client_modified": false,
+    "global_config_sha256_unchanged": "1e851cf31d0009d96d3201bbff9598028b3cefb342335b88bee564a61b0250b3",
+    "active_profile_unchanged": "default",
+    "fresh_history_counts": {
+      "sessions": 0,
+      "messages": 0
+    },
+    "core_patched": false,
+    "verifier_correction": "Native profile initialized empty state.db; assert zero history, not file absence.",
+    "full_native_prepared_request": {
+      "provider": "main",
+      "model": "qwen3.8-27b-fp8",
+      "base_url": "http://192.168.1.30:8000/v1/",
+      "kwargs": {
+        "model": "qwen3.8-27b-fp8",
+        "timeout": 300.0,
+        "extra_body": {
+          "chat_template_kwargs": {
+            "enable_thinking": false
+          }
+        }
+      },
+      "inference_calls": 0,
+      "network_disabled_during_assertion": true,
+      "native_aux_prepare_request_asserted": true
+    }
+  },
+  "coordination": {
+    "mac_thread": "01a121de-3b75-7d33-8fa3-650ece5d8b90",
+    "edge_thread": "01a123f2-cf5b-7e51-af49-5b7e483b4368",
+    "mechanism": "Mac delegated messages + authenticated return reads",
+    "native_edge_send_message_to_thread": "ABSENT",
+    "latest_publication_ack": "PENDING_FINAL_LANG_EN_SHA"
+  },
+  "boundaries": {
+    "full_source_modified": false,
+    "production_modified": false,
+    "web_ui_modified": false,
+    "global_config_modified": false,
+    "vllm_or_queue_modified": false,
+    "core_patched": false,
+    "gateway_active": true,
+    "dashboard_active": true
+  },
+  "installation": {
+    "skill_version": "1.1.0",
+    "native_parser_pass": true,
+    "runtime_copies_equal_canonical": true,
+    "skill_sha256": "420fa1a61e68bf8c813b5c137e119b6693daea1a75ad6edff211c2b4f2807a4d",
+    "helper_sha256": "fd7fa22fb015dd845fb3ea1211b17cb80e52ee13d7cd45e2f3a42b30299d76fe"
+  }
+}

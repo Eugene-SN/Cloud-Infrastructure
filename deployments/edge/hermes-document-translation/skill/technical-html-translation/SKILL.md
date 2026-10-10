@@ -1,7 +1,7 @@
 ---
 name: technical-html-translation
-description: Manage incremental Chinese-to-English technical HTML translation, reuse Weblate wording, and verify document and table preservation.
-version: 1.0.2
+description: Translate Chinese technical HTML into English from source, normalize paragraph wrapping, and verify HTML and table preservation; reuse prior wording only for explicitly requested future updates.
+version: 1.1.0
 platforms: [linux]
 metadata:
   hermes:
@@ -10,12 +10,67 @@ metadata:
     requires_toolsets: [terminal, file]
 ---
 
-# Incremental technical HTML translation
+# Technical HTML translation
+
+## Clean source translation — current task
+
+The operator's current task is a fresh English translation of lp2468 pages
+1–10 from a source-only package and the existing 133-term glossary. Do not read
+old English drafts, translation memory, previous targets or prior native session
+history. No new document version exists. Historical controlled-diff evidence
+does not accept this clean translation.
+
+Use Hermes itself with `custom:ai-node-vllm` / `qwen3.8-27b-fp8` in a new session.
+Model context contains extracted Chinese blocks and glossary, not embedded
+images, CSS or scripts. Review per-page source/English JSON; do not read/search
+raw source or assembled HTML through model tools. Scripts and the browser handle
+raw HTML and resources. `scripts/clean_html.py extract SOURCE MANIFEST WORKDIR`
+uses the supplied source hash/page manifest and emits page source files and
+`extracted.json`. IDs are local extraction IDs, not fabricated Weblate IDs.
+Translate every extracted block using `write_file` into
+`WORKDIR/results/page-NN.en.json`, mapping each local ID to English inner HTML.
+Translate page by page, retain all original inline tags/attributes, quantities,
+negations, lists, table separators, product names and commands. Use Lenovo
+WenTian for 联想问天 and Product Guide for 产品指南. Normalize the marked
+continuous prose paragraphs by removing their PDF wrapping br tags and joining
+the text naturally. Audit li/td as well: source-verified word/clause wraps may
+be removed at explicit br indices, while independent item/heading separators
+remain. Record the source context and each removal; do not preserve or remove
+table/list br blindly.
+
+Run `scripts/clean_html.py assemble WORKDIR/extracted.json WORKDIR/results
+WORKDIR/results/lp2468.pages-1-10.en.html`. This deterministic helper assembles
+the model's translations, requires complete coverage, checks source-relative
+tags/attributes/quantities and preserves bytes outside translated inner
+fragments, including images/CSS/scripts/resources, with exactly one declared
+metadata exception: accepted DocVortex `<html lang="und">` becomes
+`<html lang="en">` in the English output. Source stays unchanged; the checker
+reports this exception rather than claiming absolute outside-byte equality.
+It makes no model calls.
+Resolve actual validation failures; never weaken approval or checks to obtain
+PASS. Invoke the helper as a script file, never inline python-c or a heredoc.
+Review the meaning of all pages and record explicit checked local IDs, actual
+issues and corrected IDs. Coverage alone does not approve meaning. The browser
+must check all ten pages, prose, tables, images and resources before acceptance.
+
+One native client may use the normal sufficient tool/time budget and per-request
+`chat_template_kwargs.enable_thinking=false`; preserve the shared FIFO queue,
+provider and approval settings. For subsequent translation runs, select the
+native `html-translation` profile (`hermes -p html-translation chat`): its own
+endpoint `extra_body` and `auxiliary.compression.extra_body` both set
+`chat_template_kwargs.enable_thinking=false`. Main request overrides alone do
+not reach the compressor in the tested runtime. The isolated profile preserves
+the local Qwen route and starts with its own empty history; never migrate or
+restart an in-flight request to apply this setting. Return actual validated English HTML to the
+existing Mac/Weblate chat. Mac alone saves validated output in the accepted
+translated/temp/en directory. Source, production and Web UI remain unchanged.
+
+## Future incremental updates — only when requested
 
 Use the existing Hermes agent and its local `custom:ai-node-vllm` / `qwen3.8-27b-fp8`
 route. Do not launch Codex/Antigravity, use a cloud fallback, or change shared
 provider settings. Read [references/lp2468-pilot.md](references/lp2468-pilot.md)
-before running this pilot. This skill does not authorize other documents or
+only for the historical 108-unit incremental pilot. This skill does not authorize other documents or
 translation languages.
 
 ## Procedure

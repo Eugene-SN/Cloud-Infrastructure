@@ -1,5 +1,10 @@
 # Real lp2468 Hermes pilot — 2026-10-10
 
+Historical controlled-diff evidence only. The operator subsequently clarified
+that no new document version exists: this test does not accept the current
+clean translator. The current task translates original pages 1–10 from scratch;
+existing evidence is preserved without reuse of its English targets.
+
 Scoped workflow VERIFIED. Evidence: `real-pilot-evidence.json`.
 Mac/Weblate transferred the actual 108-unit source/draft/glossary package through
 Mac → edge SSH and independently checked original hashes. No keys were copied.
