@@ -1,0 +1,37 @@
+{
+  "date": "2026-10-10",
+  "scope": "edge Hermes setup; real lp2468 pilot pending Mac inputs",
+  "hermes_upstream": "46d7718a52ff33accb15dc0501736fbdb6833cab",
+  "native_skill": "technical-html-translation",
+  "native_skill_readiness": "available",
+  "offline_tests": 7,
+  "synthetic_native_result": {
+    "synthetic": true,
+    "translation_candidates": 1,
+    "retained_blocks": 107,
+    "block_checks_pass": true,
+    "translated_unit_ids": [
+      1
+    ]
+  },
+  "inference_usage": [
+    {
+      "model": "qwen3.8-27b-fp8",
+      "billing_provider": "custom",
+      "billing_base_url": "http://192.168.1.30:8000/v1",
+      "api_call_count": 10
+    }
+  ],
+  "initial_short_run_exit_code": 1,
+  "read_only_resumed_completion_exit_code": 0,
+  "browser_local_fixture_pass": true,
+  "browser_launch_args": [
+    "--no-sandbox"
+  ],
+  "web_ui_mutated": false,
+  "weblate_mutated": false,
+  "shared_provider_mutated": false,
+  "real_sample_test": "NOT_RUN_AWAITING_MAC_EXPORT",
+  "config_sha256": "1e851cf31d0009d96d3201bbff9598028b3cefb342335b88bee564a61b0250b3",
+  "synthetic_session_and_temporary_files_removed": true
+}

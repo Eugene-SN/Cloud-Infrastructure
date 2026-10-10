@@ -1717,3 +1717,20 @@ and private SQLite/config/env copy removed; n8n/Nextcloud non-regression passes.
 No new retry/backup/service or infrastructure stage. Stage13 remains accepted.
 Record: N8N_DOCUMENTATION_WORKFLOW_VERIFICATION_2026-10-06.md.
 N8N_DOCUMENTATION_WORKFLOW_VERIFICATION=PASS.
+
+## 2026-10-10 — Hermes technical HTML skill — EDGE SETUP VERIFIED / REAL PILOT PENDING
+
+Existing edge Hermes now discovers native skill `technical-html-translation` at
+`/home/core/.hermes/skills/technical-documentation/technical-html-translation/`.
+It plans reuse/changed blocks and checks HTML/table/data preservation for the
+accepted 108-unit English lp2468 sample. Seven offline tests pass. Native
+Hermes/Qwen translated one synthetic changed block, retained 107 blocks, passed
+checks and completed a read-only continuation with RC0. Only the existing local
+Qwen route was observed; synthetic session/files were removed.
+
+Operator-confirmed split: edge owns Hermes/processing; the existing Mac chat
+owns ai-node/Weblate access, publication and downloads. No edge SSH key is
+needed. Real lp2468 acceptance awaits that chat's input package; no actual
+source/draft/Weblate/UI/provider was changed here. Gateway/Dashboard remain
+active. Contract/evidence: `deployments/edge/hermes-document-translation/`.
+Stage 13 remains accepted; no finite infrastructure stage is opened.

@@ -906,3 +906,13 @@ removed; native validation and service non-regression pass. No retries/backups/
 new component or operator acceptance is inferred. Stage13 remains accepted.
 Record: N8N_DOCUMENTATION_WORKFLOW_VERIFICATION_2026-10-06.md.
 N8N_DOCUMENTATION_WORKFLOW_VERIFICATION=PASS.
+
+## 2026-10-10 — Hermes incremental HTML translation pilot
+
+Edge setup is DEPLOYED / VERIFIED: native scoped skill, deterministic reuse/diff
+and preservation checks, seven offline tests and native local-Qwen synthetic
+smoke test. The REAL lp2468 pilot remains PENDING. Edge processes document data;
+the Mac/Weblate chat supplies fresh scoped units/HTML/glossary, saves genuine
+state-20 drafts and verifies downloads. No copied edge SSH key, new provider,
+Weblate UI change, full-document/Russian translation or new service is included.
+Contract and sanitized evidence: `deployments/edge/hermes-document-translation/`.
