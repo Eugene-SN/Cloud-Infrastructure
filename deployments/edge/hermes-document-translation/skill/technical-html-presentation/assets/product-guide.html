@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{{document_title}}</title>
+<link rel="stylesheet" href="product-guide.css">
+</head>
+<body class="product-guide">
+<main class="guide">
+<header class="guide-cover">
+<!-- Supply verified logos for the task's explicitly selected identity.
+     Omit unused slots; never reconstruct a logo from OCR text. -->
+<div class="guide-branding">{{verified_logo_elements}}</div>
+<h1>{{document_title}}</h1>
+<p class="guide-subtitle">{{document_type}}</p>
+</header>
+{{verified_semantic_content}}
+<!-- Source page labels are provenance, not computed print-page numbers.
+     Add export-engine page numbering only after checking the print output. -->
+</main>
+</body>
+</html>

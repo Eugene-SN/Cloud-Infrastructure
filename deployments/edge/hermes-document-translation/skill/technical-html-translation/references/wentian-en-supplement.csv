@@ -1,0 +1,32 @@
+﻿Source Language,Target Language,Source Text,Target Text,Translate Source Text,Source Text Case-Sensitive
+Simplified Chinese,English,产品指南,Product Guide,Yes,No
+Simplified Chinese,English,整机规格,System specifications,Yes,No
+Simplified Chinese,English,整机爆炸图,System exploded view,Yes,No
+Simplified Chinese,English,整机逻辑框图,System logical block diagram,Yes,No
+Simplified Chinese,English,内存支持类型,Supported memory types,Yes,No
+Simplified Chinese,English,左耳,Left rack ear,Yes,No
+Simplified Chinese,English,右耳,Right rack ear,Yes,No
+Simplified Chinese,English,温感,Temperature sensor,Yes,No
+Simplified Chinese,English,进风口,Air inlet,Yes,No
+Simplified Chinese,English,机房环温,Data center ambient temperature,Yes,No
+Simplified Chinese,English,前置I/O,Front I/O,Yes,No
+Simplified Chinese,English,后置I/O,Rear I/O,Yes,No
+Simplified Chinese,English,热设计功耗,Thermal design power,Yes,No
+Simplified Chinese,English,能效核,Efficiency core,Yes,No
+Simplified Chinese,English,性能核,Performance core,Yes,No
+Simplified Chinese,English,无故障运行时间,Fault-free operating time,Yes,No
+Simplified Chinese,English,错峰上电,Staggered power-on,Yes,No
+Simplified Chinese,English,边带管理,Sideband management,Yes,No
+Simplified Chinese,English,冷板式液冷,Cold-plate liquid cooling,Yes,No
+Simplified Chinese,English,主板布局图,System board layout diagram,Yes,No
+Simplified Chinese,English,双宽GPU,Double-wide GPU,Yes,No
+Simplified Chinese,English,热插拔电源,Hot-swap power supply,Yes,No
+Simplified Chinese,English,风扇模块,Fan module,Yes,No
+Simplified Chinese,English,内存通道,Memory channel,Yes,No
+Simplified Chinese,English,数据保护,Data protection,Yes,No
+Simplified Chinese,English,正常运行时间,System uptime,Yes,No
+Simplified Chinese,English,主动平台预警,Proactive Platform Alerts,Yes,No
+Simplified Chinese,English,业务网口,Host network port,Yes,No
+Simplified Chinese,English,机箱开盖监测,Chassis intrusion detection,Yes,No
+Simplified Chinese,English,电源模块,Power supply unit,Yes,No
+Simplified Chinese,English,驱动器托架,Drive bay,Yes,No

@@ -1,0 +1,70 @@
+/* Derived from the operator's edited R5225 G3 Product Guide.
+   shortcut: host font fallbacks affect metrics; verify typography on the export host. */
+:root { color-scheme: light; }
+body.product-guide {
+  margin: 0; background: #fff; color: #000;
+  font-family: "Trebuchet MS", Arial, sans-serif;
+  font-size: 16px; line-height: 1.45;
+}
+.product-guide *, .product-guide *::before, .product-guide *::after { box-sizing: border-box; }
+.product-guide .guide { max-width: 64rem; margin: 0 auto; padding: 2.5rem 2rem; }
+.product-guide .guide-page { margin-bottom: 2rem; }
+.product-guide .guide-branding {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  gap: 2rem; margin-bottom: 2rem;
+}
+.product-guide .guide-branding img { max-height: 5rem; max-width: 42%; width: auto; height: auto; }
+.product-guide h1, .product-guide h2, .product-guide h3, .product-guide h4 {
+  font-family: Tahoma, Arial, sans-serif; color: #000; font-weight: 700;
+  line-height: 1.2; margin: 1.4em 0 .65em; break-after: avoid;
+}
+.product-guide h1 { font-size: 2rem; margin-top: 0; }
+.product-guide h2 { font-size: 1.35rem; }
+.product-guide h3 { font-size: 1.12rem; }
+.product-guide h4 { font-size: 1rem; }
+.product-guide .guide-subtitle { font: 700 1.35rem/1.2 Tahoma, Arial, sans-serif; margin: 0 0 1.2rem; }
+.product-guide p { margin: 0 0 .8em; white-space: normal; }
+.product-guide ul, .product-guide ol { margin: .5em 0 .9em; padding-left: 1.5em; }
+.product-guide li { margin: .3em 0; }
+.product-guide li > ul, .product-guide li > ol { margin: .3em 0; }
+.product-guide figure { margin: 1.25rem 0; break-inside: avoid; }
+.product-guide figure img, .product-guide figure svg { display: block; max-width: 100%; height: auto; margin: 0 auto; }
+.product-guide figcaption, .product-guide caption { color: #000; text-align: left; margin: .65em 0; font-size: .94rem; }
+.product-guide table { border-collapse: collapse; width: 100%; margin: .8rem 0 1.2rem; table-layout: auto; }
+.product-guide th, .product-guide td { border: .75pt solid #000; padding: .4em .5em; vertical-align: top; height: auto; }
+.product-guide th { text-align: left; font-weight: 700; }
+.product-guide .guide-options thead th { background: #dadada; }
+.product-guide .guide-specifications th[scope="row"] { width: 23%; }
+.product-guide thead { display: table-header-group; }
+.product-guide tfoot { display: table-footer-group; }
+.product-guide tr { break-inside: avoid; }
+.product-guide td p:last-child, .product-guide td ul:last-child { margin-bottom: 0; }
+.product-guide code, .product-guide pre { font-family: ui-monospace, monospace; }
+.product-guide pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+.product-guide a { color: #000; text-decoration: underline; overflow-wrap: anywhere; }
+.product-guide .guide-toc { list-style: none; padding: 0; }
+.product-guide .guide-toc li { display: flex; gap: .75em; align-items: baseline; }
+.product-guide .guide-toc .toc-label { flex: 1; }
+.product-guide .guide-toc .toc-reference { white-space: nowrap; }
+.product-guide .guide-footer { text-align: right; margin-top: 1.5em; font-size: .85rem; }
+.product-guide .source-page-marker { color: #555; font-size: .85rem; }
+@media (max-width: 640px) {
+  .product-guide .guide { padding: 1rem; }
+  .product-guide table { font-size: .9rem; }
+  .product-guide th, .product-guide td { padding: .3em; overflow-wrap: anywhere; }
+}
+@page { size: Letter portrait; margin: 70.9pt 56.7pt 39.7pt 62.35pt; }
+@media print {
+  body.product-guide { font-size: 9.5pt; line-height: 1.18; }
+  .product-guide .guide { max-width: none; margin: 0; padding: 0; }
+  .product-guide .guide-page { margin-bottom: 12pt; }
+  .product-guide h1 { font-size: 18pt; }
+  .product-guide h2, .product-guide .guide-subtitle { font-size: 12pt; }
+  .product-guide h3 { font-size: 10pt; }
+  .product-guide h4 { font-size: 9.5pt; }
+  .product-guide table { font-size: 8.5pt; }
+  .product-guide figcaption, .product-guide caption { font-size: 9.5pt; }
+  .product-guide .guide-footer { font-size: 10pt; }
+  .product-guide .guide-branding { margin-bottom: 18pt; }
+  .product-guide a { text-decoration: none; }
+}

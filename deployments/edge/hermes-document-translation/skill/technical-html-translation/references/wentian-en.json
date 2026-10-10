@@ -1,0 +1,1956 @@
+{
+  "source_language": "zh_Hans",
+  "target_language": "en",
+  "origin": "Glossary_Import_WenTian_universal_v2.csv",
+  "origin_sha256": "b8e0fe127b12eddb484f2ae2cdf4eb635561e97b5594ac5fae186c7880fd3037",
+  "entries": [
+    {
+      "source": "联想问天 WR5220 G3 服务器",
+      "target": "Lenovo WenTian WR5220 G3 server",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "联想问天WR5220 G3 服务器",
+      "target": "Lenovo WenTian WR5220 G3 server",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "联想问天 WR5220 G3",
+      "target": "Lenovo WenTian WR5220 G3",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "联想问天WR5220 G3",
+      "target": "Lenovo WenTian WR5220 G3",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "WR5220 G3 服务器",
+      "target": "WR5220 G3 server",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "WR5228 G3 服务器",
+      "target": "WR5228 G3 server",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "WR5220 G3/WR5228 G3服务器用户手册",
+      "target": "WR5220 G3/WR5228 G3 Server User Manual",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "联想问天WR5220 G3 服务器 产品指南",
+      "target": "Lenovo WenTian WR5220 G3 Server Product Guide",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "WR5220 G3/WR5228 G3服务器",
+      "target": "WR5220 G3/WR5228 G3 server",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "WR5220 G3/WR5228 G3",
+      "target": "WR5220 G3/WR5228 G3",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "产品概述",
+      "target": "Product overview",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "主要特点",
+      "target": "Key features",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "可扩展性和性能（针对客户通用应用及负载）",
+      "target": "Scalability and performance",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "可用性和可维护性",
+      "target": "Availability and serviceability",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "可管理性和安全性",
+      "target": "Manageability and security",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "能源效率",
+      "target": "Energy efficiency",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "系统架构",
+      "target": "System architecture",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "系统规格",
+      "target": "System specifications",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "安全功能",
+      "target": "Security features",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "平台固件弹性",
+      "target": "Platform Firmware Resiliency",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "WR5220 G3 外观及关键组件",
+      "target": "WR5220 G3 appearance and key components",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "识别您的服务器",
+      "target": "Identify your server",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "服务器包装内容",
+      "target": "Server package contents",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "更新固件",
+      "target": "Update firmware",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "RAID 配置",
+      "target": "RAID configuration",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "内存配置",
+      "target": "Memory configuration",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "操作系统安装",
+      "target": "Operating system installation",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "安全检查核对表",
+      "target": "Safety checklist",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "WR5220 G3 提供高性能 高可扩展性并降低成本",
+      "target": "The WR5220 G3 offers numerous features to boost performance  improve scalability and reduce costs.",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "WR5220 G3 在设计上简化运维的复杂性，并尽可能增长系统的正常运行时间",
+      "target": "The WR5220 G3 is designed to reduce operational complexity and maximize system uptime.",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "丰富的系统管理工具简化了WR5220 G3 的本地或远程的管理",
+      "target": "Comprehensive systems management tools simplify local and remote management of the WR5220 G3.",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "支持各类管理协议如IPMI 2.0 SNMP 3.0 Redfish REST API等",
+      "target": "Supports industry-standard management protocols such as IPMI 2.0  SNMP 3.0 and Redfish REST API.",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "其它物理安全功能如有锁功能的服务器前挡板",
+      "target": "Additional physical security features include an optional lockable front security bezel.",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "适配支持80 PLUS白金和钛金认证高效电源",
+      "target": "Supports high-efficiency power supplies with 80 PLUS Platinum and Titanium certifications.",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "支持最多 40个2.5 英寸热插拔硬盘(前置最多 24个 中置最多8个 后置最多8个)",
+      "target": "Supports up to 40 2.5-inch hot-swappable drives (up to 24 front  8 middle  and 8 rear).",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "支持最多 20个3.5 英寸热插拔硬盘(前置最多 12个 中置最多4个 后置最多4个)",
+      "target": "Supports up to 20 3.5-inch hot-swappable drives (up to 12 front  4 middle  and 4 rear).",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "支持最多 18 个 PCIe 标准槽位",
+      "target": "Supports up to 18 PCIe standard slots.",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "支持最多 16 个单宽 GPU",
+      "target": "Supports up to 16 single-width GPUs.",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "支持最多 45 个 2.5”SAS/SATA 硬盘(前置 25 个 中置 10 个 后置 10 个)",
+      "target": "Supports up to 45 2.5-inch SAS/SATA drives (25 front  10 middle  and 10 rear).",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "支持最多 36 个 NVMe SSD(前置 24 个 中置 8 个 后置 4 个)",
+      "target": "Supports up to 36 NVMe SSDs (24 front  8 middle  and 4 rear).",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "支持最多 48 个 E3.S(1T) SSD (前置 32 个 中置 16 个)",
+      "target": "Supports up to 48 E3.S (1T) SSDs (32 front  16 middle).",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "支持最多 16 个 CXL 内存（前置 E3.S 形态）",
+      "target": "Supports up to 16 CXL memory modules in front E3.S form factor.",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "支持 CPU 及内存液冷(Open Loop 形态)",
+      "target": "Supports liquid cooling for CPUs and memory in an open-loop configuration.",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "可支持3年7*24*4全国上门有限保修服务及安装服务",
+      "target": "Supports 3-year nationwide 7x24x4 on-site limited warranty and installation services.",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "采用双 ROM的方式 具备BMC和BIOS芯片级冗余以保障服务器的高可用性",
+      "target": "Uses dual ROM design with BMC and BIOS chip-level redundancy to ensure high server availability.",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "联想 XClarity Essentials",
+      "target": "Lenovo XClarity Essentials",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "WR5220 G3 服务器提供以下安全功能：",
+      "target": "The WR5220 G3 server offers the following security features:",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "英特尔至强处理器的安全启动功能",
+      "target": "Secure Boot function of the Intel Xeon processor.",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "支持国民技术的TCM或TPM2.0 的集成可信平台模块",
+      "target": "Integrated Trusted Platform Module supporting Nationz TCM or TPM 2.0.",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "以下物理安全功能，如可选的机箱可锁安全挡板",
+      "target": "The following physical security features  such as an optional lockable front security bezel.",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "超融合基础架构 (HCI)",
+      "target": "hyper-converged infrastructure (HCI)",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "软件定义的存储(SDS)",
+      "target": "software-defined storage (SDS)",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "虚拟桌面基础设施",
+      "target": "virtual desktop infrastructure (VDI)",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "高性能计算",
+      "target": "high-performance computing (HPC)",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "流媒体",
+      "target": "streaming media",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "热插拔",
+      "target": "hot-swappable",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "热插拔硬盘",
+      "target": "hot-swappable drive",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "风冷",
+      "target": "air cooling",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "液冷",
+      "target": "liquid cooling",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "背板",
+      "target": "backplane",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "硬盘托架",
+      "target": "drive bay",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "服务器前挡板",
+      "target": "front security bezel",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "服务器用户手册",
+      "target": "Server User Manual",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "超大系统内存容量",
+      "target": "Very large system memory capacity",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "集成的可信平台模块（TCM）",
+      "target": "Integrated Trusted Platform Module (TCM)",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "超大数据存储容量和热插拔功能",
+      "target": "Very large data storage capacity and hot-swap capability",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "冗余网络连接",
+      "target": "Redundant network connections",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "数据库",
+      "target": "databases",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "虚拟化和云计算",
+      "target": "virtualization and cloud computing",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "AI",
+      "target": "AI",
+      "translate": false,
+      "case_sensitive": false
+    },
+    {
+      "source": "基础设施安全",
+      "target": "infrastructure security",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "系统管理",
+      "target": "systems management",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "企业应用程序",
+      "target": "enterprise applications",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "协作/电子邮件",
+      "target": "collaboration/email",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "联想问天",
+      "target": "Lenovo WenTian",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "服务器后窗",
+      "target": "rear of the server",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "服务器后窗及关键组件",
+      "target": "rear of the server and its key components",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "系统分解视图",
+      "target": "system exploded view",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "上图显示联想问天 WR5220 G3的系统分解视图",
+      "target": "The above figure shows the system exploded view of the Lenovo WenTian WR5220 G3.",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "联想问天WR5220 G3的架构框图",
+      "target": "architectural block diagram of the Lenovo WenTian WR5220 G3",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "下图显示了联想问天WR5220 G3的架构框图",
+      "target": "The diagram below shows the architectural block diagram of the Lenovo WenTian WR5220 G3.",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "联想问天WR5220 G3通用应用关键规格表",
+      "target": "Lenovo WenTian WR5220 G3 General Application Key Specifications",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "下图显示了服务器后窗及关键组件。",
+      "target": "The figure below shows the rear of the server and its key components.",
+      "translate": true,
+      "case_sensitive": true
+    },
+    {
+      "source": "下图(示意图)显示了服务器后窗及关键组件。",
+      "target": "The diagram (schematic) shows the rear of the server and its key components.",
+      "translate": true,
+      "case_sensitive": true
+    },
+    {
+      "source": "联想问天WR5220 G3通用应用关键规格表(未包含I/O扩展及存储扩展的加强支持部分)",
+      "target": "Lenovo WenTian WR5220 G3 key specifications (excluding I/O and storage expansion).",
+      "translate": true,
+      "case_sensitive": true
+    },
+    {
+      "source": "联想问天 WR5220 G3可在联想数据中心配置器 (DCSC）进行配置。",
+      "target": "The Lenovo WenTian WR5220 G3 can be configured in the Lenovo Data Center Configuration Tool (DCSC).",
+      "translate": true,
+      "case_sensitive": true
+    },
+    {
+      "source": "联想问天服务器操作系统安装指南",
+      "target": "Lenovo WenTian Server Operating System Installation Guide",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "Lenovo XClarity Provisioning Manager WenTian 简介",
+      "target": "Introduction to Lenovo XClarity Provisioning Manager WenTian",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "Lenovo XClarity Provisioning Manager WenTian 用户指南",
+      "target": "Lenovo XClarity Provisioning Manager WenTian User Guide",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "Lenovo BMC 企业版用户操作指南 G3",
+      "target": "Lenovo BMC Enterprise Edition User Guide G3",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "Lenovo BMC 命令规范",
+      "target": "Lenovo BMC Command Specification",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "Lenovo BMC IPMI 命令规范",
+      "target": "Lenovo BMC IPMI Command Specification",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "Lenovo BMC SNMP 参考手册",
+      "target": "Lenovo BMC SNMP Reference Manual",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "Lenovo BMC 日志参考手册",
+      "target": "Lenovo BMC Log Reference Manual",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "Lenovo BMC 事件参考手册",
+      "target": "Lenovo BMC Event Reference Manual",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "Lenovo BMC Redfish 接口规范 G3",
+      "target": "Lenovo BMC Redfish Interface Specification G3",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "操作系统安装方式介绍",
+      "target": "Operating system installation methods",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "适用产品",
+      "target": "Applicable products",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "操作系统安装流程",
+      "target": "Operating system installation process",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "安装前准备工作",
+      "target": "Pre installation preparations",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "OS 兼容性确认",
+      "target": "OS compatibility verification",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "准备安装镜像",
+      "target": "Preparing installation media",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "通过 BMC 安装",
+      "target": "Installation via BMC",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "登录 BMC 管理界面",
+      "target": "Logging into the BMC management interface",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "配置 BMC 管理网口 IP 地址",
+      "target": "Configuring the BMC management port IP address",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "打开 BMC 页面",
+      "target": "Opening the BMC page",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "打开远程控制台",
+      "target": "Launching the remote console",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "加载系统镜像",
+      "target": "Loading the system image",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "选择 BIOS 启动设备",
+      "target": "Selecting the BIOS boot device",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "通过 U 盘/CD-ROM 安装",
+      "target": "Install via USB drive or CD ROM",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "通过 HTTP(S) Boot 安装",
+      "target": "Install via HTTP Boot or HTTPS Boot",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "HTTP(S) Boot 介绍",
+      "target": "Introduction to HTTP Boot and HTTPS Boot",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "BIOS 相关配置",
+      "target": "BIOS related configurations",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "开机引导启动",
+      "target": "Boot startup",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "配置 RAID（可选）",
+      "target": "Configure RAID optional",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "安装 RAID 卡配置",
+      "target": "Install RAID card configuration",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "进入 RAID 卡配置界面",
+      "target": "Enter the RAID card configuration interface",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "安装 OS（Windows)",
+      "target": "Install OS Windows",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "安装 OS（RHEL）",
+      "target": "Install OS RHEL",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "安装 OS（SLES）",
+      "target": "Install OS SLES",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "安装 OS（Ubuntu）",
+      "target": "Install OS Ubuntu",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "安装 OS（VMware ESXi）",
+      "target": "Install OS VMware ESXi",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "通过 LXPM 进行安装",
+      "target": "Install via LXPM",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "轻松安装",
+      "target": "Easy installation",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "引导安装",
+      "target": "Boot installation",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "手动安装",
+      "target": "Manual installation",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "安装 Windows 操作系统",
+      "target": "Install Windows operating system",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "安装 Linux 操作系统",
+      "target": "Install Linux operating system",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "安装 VMware 操作系统",
+      "target": "Install VMware operating system",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "轻松重置",
+      "target": "Easy Reset",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "手动安装操作系统",
+      "target": "Manually install the operating system",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "操作系统安装过程",
+      "target": "Operating system installation process",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "安装操作系统",
+      "target": "Install the operating system",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "安装摘要",
+      "target": "Installation summary",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "硬盘选择",
+      "target": "Hard disk selection",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "操作系统选择",
+      "target": "Operating system selection",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "安装设置",
+      "target": "Installation settings",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "分区选项",
+      "target": "Partition options",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "导出操作系统安装响应文件",
+      "target": "Export operating system installation response file",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "操作系统安装响应文件",
+      "target": "Operating system installation response file",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "轻松重置界面",
+      "target": "Easy Reset interface",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "保存驱动程序",
+      "target": "Save drivers",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "安装驱动程序",
+      "target": "Install drivers",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "安装操作系统完成后",
+      "target": "After the operating system installation is complete",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "Lenovo BMC 概述",
+      "target": "Lenovo BMC overview",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "BMC 快速入门",
+      "target": "BMC Quick Start",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "权限指南",
+      "target": "Permission guide",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "系统功能",
+      "target": "System functions",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "系统清单",
+      "target": "System inventory",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "系统摘要",
+      "target": "System summary",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "系统信息",
+      "target": "System information",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "日志和报告",
+      "target": "Logs and reports",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "审计日志",
+      "target": "Audit Logs",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "视频日志",
+      "target": "Video Log",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "IPMI 事件日志",
+      "target": "IPMI Event Log",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "事件日志",
+      "target": "Event Log",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "系统事件日志",
+      "target": "System event log",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "日志设置",
+      "target": "Log settings",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "日志策略",
+      "target": "Log policies",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "远程日志设置",
+      "target": "Remote log settings",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "远程日志配置",
+      "target": "Remote log configuration",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "电源控制",
+      "target": "Power control",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "电源策略",
+      "target": "Power policy",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "风扇控制",
+      "target": "Fan control",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "风扇策略",
+      "target": "Fan policy",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "媒体重定向设置",
+      "target": "Media redirection settings",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "系统启动选项",
+      "target": "System boot options",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "启动模式",
+      "target": "Boot mode",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "启动类型",
+      "target": "Startup type",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "系统启动设备选项",
+      "target": "System boot device options",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "背板设置",
+      "target": "Backplane settings",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "BIOS 设置",
+      "target": "BIOS settings",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "CPU 节能设置",
+      "target": "CPU power saving settings",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "Watchdog 设置",
+      "target": "Watchdog settings",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "媒体重定向",
+      "target": "Media redirection",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "用户管理",
+      "target": "User management",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "外部用户设置",
+      "target": "External user settings",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "网络设置",
+      "target": "Network settings",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "安全设置",
+      "target": "Security settings",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "SNMP 设置",
+      "target": "SNMP settings",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "NTP 设置",
+      "target": "NTP settings",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "IPMI 设置",
+      "target": "IPMI settings",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "SMTP 设置",
+      "target": "SMTP settings",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "系统管理员",
+      "target": "System administrator",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "维护",
+      "target": "Maintenance",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "固件更新",
+      "target": "Firmware update",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "配置导入导出",
+      "target": "Configuration import and export",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "恢复出厂默认值",
+      "target": "Restore factory default settings",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "重启 BMC",
+      "target": "Restart BMC",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "系统导航",
+      "target": "System navigation",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "信息概况",
+      "target": "Information overview",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "主机系统诊断",
+      "target": "Host system diagnostics",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "故障诊断",
+      "target": "Fault diagnosis",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "主机系统诊断功能介绍",
+      "target": "Host system diagnostics feature description",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "SNMP 功能介绍",
+      "target": "SNMP feature introduction",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "SNMP 部署与应用",
+      "target": "SNMP deployment and application",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "SNMP 工具安装",
+      "target": "SNMP tool installation",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "MIB 文件导入",
+      "target": "MIB file import",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "SNMP Get and Set 测试",
+      "target": "SNMP Get and Set test",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "MIB 详细规格",
+      "target": "MIB detailed specifications",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "SNMP V1 V2 设置",
+      "target": "SNMP V1 V2 settings",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "SNMP V3 权限设置",
+      "target": "SNMP V3 permission settings",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "事件参考手册",
+      "target": "Event reference manual",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "事件类型说明",
+      "target": "Description of event types",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "事件代码",
+      "target": "Event code",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "严重性",
+      "target": "Severity",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "BIOS 功能设置",
+      "target": "BIOS function settings",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "进入 BIOS 界面",
+      "target": "Entering the BIOS interface",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "BIOS 主要功能模块",
+      "target": "Main BIOS function modules",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "BIOS 导航键",
+      "target": "BIOS navigation keys",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "联想问天 WR5225 G3 服务器",
+      "target": "Lenovo WenTian WR5225 G3 server",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "联想问天WR5225 G3 服务器",
+      "target": "Lenovo WenTian WR5225 G3 server",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "联想问天 WR5225 G3",
+      "target": "Lenovo WenTian WR5225 G3",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "联想问天WR5225 G3",
+      "target": "Lenovo WenTian WR5225 G3",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "WR5225 G3 服务器",
+      "target": "WR5225 G3 server",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "联想问天 WR5220 G5 服务器",
+      "target": "Lenovo WenTian WR5220 G5 server",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "联想问天WR5220 G5 服务器",
+      "target": "Lenovo WenTian WR5220 G5 server",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "联想问天 WR5220 G5",
+      "target": "Lenovo WenTian WR5220 G5",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "联想问天WR5220 G5",
+      "target": "Lenovo WenTian WR5220 G5",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "WR5220 G5 服务器",
+      "target": "WR5220 G5 server",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "联想问天 WA5480 G3 服务器",
+      "target": "Lenovo WenTian WA5480 G3 server",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "联想问天WA5480 G3 服务器",
+      "target": "Lenovo WenTian WA5480 G3 server",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "联想问天 WA5480 G3",
+      "target": "Lenovo WenTian WA5480 G3",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "联想问天WA5480 G3",
+      "target": "Lenovo WenTian WA5480 G3",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "WA5480 G3 服务器",
+      "target": "WA5480 G3 server",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "联想问天 WA5480 G5 服务器",
+      "target": "Lenovo WenTian WA5480 G5 server",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "联想问天WA5480 G5 服务器",
+      "target": "Lenovo WenTian WA5480 G5 server",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "联想问天 WA5480 G5",
+      "target": "Lenovo WenTian WA5480 G5",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "联想问天WA5480 G5",
+      "target": "Lenovo WenTian WA5480 G5",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "WA5480 G5 服务器",
+      "target": "WA5480 G5 server",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "联想问天 WA5680 G3 服务器",
+      "target": "Lenovo WenTian WA5680 G3 server",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "联想问天WA5680 G3 服务器",
+      "target": "Lenovo WenTian WA5680 G3 server",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "联想问天 WA5680 G3",
+      "target": "Lenovo WenTian WA5680 G3",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "联想问天WA5680 G3",
+      "target": "Lenovo WenTian WA5680 G3",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "WA5680 G3 服务器",
+      "target": "WA5680 G3 server",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "联想问天 WA7785a G3 服务器",
+      "target": "Lenovo WenTian WA7785a G3 server",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "联想问天WA7785a G3 服务器",
+      "target": "Lenovo WenTian WA7785a G3 server",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "联想问天 WA7785a G3",
+      "target": "Lenovo WenTian WA7785a G3",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "联想问天WA7785a G3",
+      "target": "Lenovo WenTian WA7785a G3",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "WA7785a G3 服务器",
+      "target": "WA7785a G3 server",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "联想问天 WA7880a G3 服务器",
+      "target": "Lenovo WenTian WA7880a G3 server",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "联想问天WA7880a G3 服务器",
+      "target": "Lenovo WenTian WA7880a G3 server",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "联想问天 WA7880a G3",
+      "target": "Lenovo WenTian WA7880a G3",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "联想问天WA7880a G3",
+      "target": "Lenovo WenTian WA7880a G3",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "WA7880a G3 服务器",
+      "target": "WA7880a G3 server",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "WR5225 G3 服务器用户手册",
+      "target": "WR5225 G3 Server User Manual",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "联想问天 WR5225 G3 服务器用户手册",
+      "target": "Lenovo WenTian WR5225 G3 Server User Manual",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "联想问天WR5225 G3 服务器用户手册",
+      "target": "Lenovo WenTian WR5225 G3 Server User Manual",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "联想问天WA5480 G3 服务器 产品指南",
+      "target": "Lenovo WenTian WA5480 G3 Server Product Guide",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "联想问天 WA5480 G3 服务器 产品指南",
+      "target": "Lenovo WenTian WA5480 G3 Server Product Guide",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "联想问天WA7880a G3 服务器 产品指南",
+      "target": "Lenovo WenTian WA7880a G3 Server Product Guide",
+      "translate": true,
+      "case_sensitive": false
+    },
+    {
+      "source": "联想问天 WA7880a G3 服务器 产品指南",
+      "target": "Lenovo WenTian WA7880a G3 Server Product Guide",
+      "translate": true,
+      "case_sensitive": false
+    }
+  ],
+  "supplement_origin": "Terms added after the operator requested gap analysis; exact original 252 entries remain unchanged.",
+  "supplement": [
+    {
+      "source": "产品指南",
+      "target": "Product Guide",
+      "translate": true,
+      "case_sensitive": false,
+      "context": "Document type; never User Manual for this title.",
+      "evidence_block_ids": [
+        "page01-block000"
+      ],
+      "origin": "lp2468 reviewed 10-page sample"
+    },
+    {
+      "source": "整机规格",
+      "target": "System specifications",
+      "translate": true,
+      "case_sensitive": false,
+      "context": "Hardware specification/table or heading.",
+      "evidence_block_ids": [
+        "page02-block014",
+        "page09-block161"
+      ],
+      "origin": "lp2468 reviewed 10-page sample"
+    },
+    {
+      "source": "整机爆炸图",
+      "target": "System exploded view",
+      "translate": true,
+      "case_sensitive": false,
+      "context": "Hardware assembly diagram heading.",
+      "evidence_block_ids": [
+        "page02-block015"
+      ],
+      "origin": "lp2468 reviewed 10-page sample"
+    },
+    {
+      "source": "整机逻辑框图",
+      "target": "System logical block diagram",
+      "translate": true,
+      "case_sensitive": false,
+      "context": "Hardware logical architecture diagram.",
+      "evidence_block_ids": [
+        "page02-block028"
+      ],
+      "origin": "lp2468 reviewed 10-page sample"
+    },
+    {
+      "source": "内存支持类型",
+      "target": "Supported memory types",
+      "translate": true,
+      "case_sensitive": false,
+      "context": "Memory heading.",
+      "evidence_block_ids": [
+        "page03-block038"
+      ],
+      "origin": "lp2468 reviewed 10-page sample"
+    },
+    {
+      "source": "左耳",
+      "target": "Left rack ear",
+      "translate": true,
+      "case_sensitive": false,
+      "context": "Front rack-mounted server I/O mounting context; do not infer latch mechanism.",
+      "evidence_block_ids": [
+        "page10-block175"
+      ],
+      "origin": "lp2468 reviewed 10-page sample"
+    },
+    {
+      "source": "右耳",
+      "target": "Right rack ear",
+      "translate": true,
+      "case_sensitive": false,
+      "context": "Front rack-mounted server I/O mounting context; do not infer latch mechanism.",
+      "evidence_block_ids": [
+        "page10-block175"
+      ],
+      "origin": "lp2468 reviewed 10-page sample"
+    },
+    {
+      "source": "温感",
+      "target": "Temperature sensor",
+      "translate": true,
+      "case_sensitive": false,
+      "context": "A counted physical sensor detecting inlet temperature.",
+      "evidence_block_ids": [
+        "page10-block175"
+      ],
+      "origin": "lp2468 reviewed 10-page sample"
+    },
+    {
+      "source": "进风口",
+      "target": "Air inlet",
+      "translate": true,
+      "case_sensitive": false,
+      "context": "Cooling/intake temperature context.",
+      "evidence_block_ids": [
+        "page10-block175"
+      ],
+      "origin": "lp2468 reviewed 10-page sample"
+    },
+    {
+      "source": "机房环温",
+      "target": "Data center ambient temperature",
+      "translate": true,
+      "case_sensitive": false,
+      "context": "Configuration-dependent thermal limits.",
+      "evidence_block_ids": [
+        "page07-block118"
+      ],
+      "origin": "lp2468 reviewed 10-page sample"
+    },
+    {
+      "source": "前置I/O",
+      "target": "Front I/O",
+      "translate": true,
+      "case_sensitive": false,
+      "context": "Server front connector group.",
+      "evidence_block_ids": [
+        "page10-block174"
+      ],
+      "origin": "lp2468 reviewed 10-page sample"
+    },
+    {
+      "source": "后置I/O",
+      "target": "Rear I/O",
+      "translate": true,
+      "case_sensitive": false,
+      "context": "Server rear connector group.",
+      "evidence_block_ids": [
+        "page10-block174"
+      ],
+      "origin": "lp2468 reviewed 10-page sample"
+    },
+    {
+      "source": "热设计功耗",
+      "target": "Thermal design power",
+      "translate": true,
+      "case_sensitive": false,
+      "context": "Processor TDP; retain value/unit and per-model scope.",
+      "evidence_block_ids": [
+        "page07-block105",
+        "page09-block165"
+      ],
+      "origin": "lp2468 reviewed 10-page sample"
+    },
+    {
+      "source": "能效核",
+      "target": "Efficiency core",
+      "translate": true,
+      "case_sensitive": false,
+      "context": "Processor core class; not a generic Energy efficiency substring.",
+      "evidence_block_ids": [
+        "page06-block096",
+        "page09-block165"
+      ],
+      "origin": "lp2468 reviewed 10-page sample"
+    },
+    {
+      "source": "性能核",
+      "target": "Performance core",
+      "translate": true,
+      "case_sensitive": false,
+      "context": "Processor core class.",
+      "evidence_block_ids": [
+        "page06-block096",
+        "page09-block165"
+      ],
+      "origin": "lp2468 reviewed 10-page sample"
+    },
+    {
+      "source": "无故障运行时间",
+      "target": "Fault-free operating time",
+      "translate": true,
+      "case_sensitive": false,
+      "context": "Reliability metric; not merely ordinary uptime.",
+      "evidence_block_ids": [
+        "page08-block135"
+      ],
+      "origin": "lp2468 reviewed 10-page sample"
+    },
+    {
+      "source": "错峰上电",
+      "target": "Staggered power-on",
+      "translate": true,
+      "case_sensitive": false,
+      "context": "Drive power-on scheduling; do not infer rotating drives or spin-up only.",
+      "evidence_block_ids": [
+        "page08-block156"
+      ],
+      "origin": "lp2468 reviewed 10-page sample"
+    },
+    {
+      "source": "边带管理",
+      "target": "Sideband management",
+      "translate": true,
+      "case_sensitive": false,
+      "context": "NC-SI management feature.",
+      "evidence_block_ids": [
+        "page08-block142"
+      ],
+      "origin": "lp2468 reviewed 10-page sample"
+    },
+    {
+      "source": "冷板式液冷",
+      "target": "Cold-plate liquid cooling",
+      "translate": true,
+      "case_sensitive": false,
+      "context": "Cooling solution; do not infer open-loop configuration.",
+      "evidence_block_ids": [
+        "page07-block124"
+      ],
+      "origin": "lp2468 reviewed 10-page sample"
+    },
+    {
+      "source": "主板布局图",
+      "target": "System board layout diagram",
+      "translate": true,
+      "case_sensitive": false,
+      "context": "Hardware board-layout heading.",
+      "evidence_block_ids": [
+        "page02-block029"
+      ],
+      "origin": "lp2468 reviewed 10-page sample"
+    },
+    {
+      "source": "双宽GPU",
+      "target": "Double-wide GPU",
+      "translate": true,
+      "case_sensitive": false,
+      "context": "Physical double-slot-width GPU; preserve source count and configuration.",
+      "evidence_block_ids": [
+        "page06-block097",
+        "page07-block123"
+      ],
+      "origin": "lp2468 reviewed 10-page sample; Lenovo Press LP1608 English reference",
+      "english_reference": {
+        "url": "https://lenovopress.lenovo.com/lp1608.pdf",
+        "pdf_page": 2,
+        "term": "double-wide GPUs",
+        "exact_target_term": true
+      }
+    },
+    {
+      "source": "热插拔电源",
+      "target": "Hot-swap power supply",
+      "translate": true,
+      "case_sensitive": false,
+      "context": "Power supply supporting replacement while powered; redundancy and count remain source-specific.",
+      "evidence_block_ids": [
+        "page08-block130"
+      ],
+      "origin": "lp2468 reviewed 10-page sample; Lenovo Press LP1608 English reference",
+      "english_reference": {
+        "url": "https://lenovopress.lenovo.com/lp1608.pdf",
+        "pdf_page": 3,
+        "term": "hot-swap redundant power supplies",
+        "exact_target_term": true
+      }
+    },
+    {
+      "source": "风扇模块",
+      "target": "Fan module",
+      "translate": true,
+      "case_sensitive": false,
+      "context": "Physical module, not a generic fan function; preserve 8056 identifier and N+1 rotor conditions.",
+      "evidence_block_ids": [
+        "page08-block131",
+        "page10-block179"
+      ],
+      "origin": "lp2468 reviewed 10-page sample; Lenovo Press LP1608 English reference",
+      "english_reference": {
+        "url": "https://lenovopress.lenovo.com/lp1608.pdf",
+        "pdf_page": 3,
+        "term": "fans",
+        "exact_target_term": false
+      }
+    },
+    {
+      "source": "内存通道",
+      "target": "Memory channel",
+      "translate": true,
+      "case_sensitive": false,
+      "context": "Per-processor memory topology; never copy SR665 channel/DIMM counts.",
+      "evidence_block_ids": [
+        "page07-block108"
+      ],
+      "origin": "lp2468 reviewed 10-page sample; Lenovo Press LP1608 English reference",
+      "english_reference": {
+        "url": "https://lenovopress.lenovo.com/lp1608.pdf",
+        "pdf_page": 2,
+        "term": "memory channels",
+        "exact_target_term": true
+      }
+    },
+    {
+      "source": "数据保护",
+      "target": "Data protection",
+      "translate": true,
+      "case_sensitive": false,
+      "context": "Data protection in storage/RAID or management context; do not imply a new feature.",
+      "evidence_block_ids": [
+        "page08-block129",
+        "page08-block138"
+      ],
+      "origin": "lp2468 reviewed 10-page sample; Lenovo Press LP1608 English reference",
+      "english_reference": {
+        "url": "https://lenovopress.lenovo.com/lp1608.pdf",
+        "pdf_page": 3,
+        "term": "data protection",
+        "exact_target_term": true
+      }
+    },
+    {
+      "source": "正常运行时间",
+      "target": "System uptime",
+      "translate": true,
+      "case_sensitive": false,
+      "context": "Availability context; not mean time between failures or guaranteed operating lifetime.",
+      "evidence_block_ids": [
+        "page08-block126",
+        "page08-block129"
+      ],
+      "origin": "lp2468 reviewed 10-page sample; Lenovo Press LP1608 English reference",
+      "english_reference": {
+        "url": "https://lenovopress.lenovo.com/lp1608.pdf",
+        "pdf_page": 3,
+        "term": "system uptime",
+        "exact_target_term": true
+      }
+    },
+    {
+      "source": "主动平台预警",
+      "target": "Proactive Platform Alerts",
+      "translate": true,
+      "case_sensitive": false,
+      "context": "Platform pre-failure alerting; preserve source PFA/SMART scope and monitored devices.",
+      "evidence_block_ids": [
+        "page08-block135"
+      ],
+      "origin": "lp2468 reviewed 10-page sample; Lenovo Press LP1608 English reference",
+      "english_reference": {
+        "url": "https://lenovopress.lenovo.com/lp1608.pdf",
+        "pdf_page": 3,
+        "term": "Proactive Platform Alerts",
+        "exact_target_term": true
+      }
+    },
+    {
+      "source": "业务网口",
+      "target": "Host network port",
+      "translate": true,
+      "case_sensitive": false,
+      "context": "Host/data traffic port contrasted with a dedicated management port; retain NC-SI sharing context.",
+      "evidence_block_ids": [
+        "page08-block142"
+      ],
+      "origin": "lp2468 reviewed 10-page sample; Lenovo Press LP1608 English reference",
+      "english_reference": {
+        "url": "https://lenovopress.lenovo.com/lp1608.pdf",
+        "pdf_page": 2,
+        "term": "sideband connectivity",
+        "exact_target_term": false
+      }
+    },
+    {
+      "source": "机箱开盖监测",
+      "target": "Chassis intrusion detection",
+      "translate": true,
+      "case_sensitive": false,
+      "context": "Opening/intrusion monitoring; retain optional qualifier. Do not invent a lockable bezel or identify an absent switch.",
+      "evidence_block_ids": [
+        "page10-block183"
+      ],
+      "origin": "lp2468 reviewed 10-page sample; Lenovo Press LP1608 English reference",
+      "english_reference": {
+        "url": "https://lenovopress.lenovo.com/lp1608.pdf",
+        "pdf_page": 4,
+        "term": "chassis intrusion switch",
+        "exact_target_term": false
+      }
+    },
+    {
+      "source": "电源模块",
+      "target": "Power supply unit",
+      "translate": true,
+      "case_sensitive": false,
+      "context": "Physical supply unit; preserve power, efficiency, voltage and redundancy qualifiers.",
+      "evidence_block_ids": [
+        "page08-block130",
+        "page08-block152"
+      ],
+      "origin": "lp2468 reviewed 10-page sample; Lenovo Press LP1608 English reference",
+      "english_reference": {
+        "url": "https://lenovopress.lenovo.com/lp1608.pdf",
+        "pdf_page": 3,
+        "term": "power supplies",
+        "exact_target_term": false
+      }
+    },
+    {
+      "source": "驱动器托架",
+      "target": "Drive bay",
+      "translate": true,
+      "case_sensitive": false,
+      "context": "Only the AnyBay protocol-mixing bay in this source. An actually removable carrier/tray requires its own context.",
+      "evidence_block_ids": [
+        "page06-block098"
+      ],
+      "origin": "lp2468 reviewed 10-page sample; Lenovo Press LP1608 English reference",
+      "english_reference": {
+        "url": "https://lenovopress.lenovo.com/lp1608.pdf",
+        "pdf_page": 14,
+        "term": "AnyBay",
+        "exact_target_term": false
+      }
+    }
+  ],
+  "terminology_reference": {
+    "title": "Lenovo ThinkSystem SR665 V3 Server Product Guide",
+    "url": "https://lenovopress.lenovo.com/lp1608.pdf",
+    "sha256": "952f8ca345e0a3cc6b2e8cd77a70ed4c05160758eedfacab2138a2b530c74ea6",
+    "pdf_pages": 161,
+    "scope": "English terminology and natural phrasing only; lp2468 controls all identity, specifications, numbers and conditions.",
+    "primary_review_pages": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "additional_terminology_pages": [
+      14,
+      18
+    ]
+  }
+}

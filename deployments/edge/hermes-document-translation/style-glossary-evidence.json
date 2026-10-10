@@ -1,0 +1,70 @@
+{
+  "scope": "Read-only audit of lp2468 pages 1-10; native Hermes skills/glossary/template preparation. No document repair or inference run.",
+  "sample_sha256": "69997a57f452448866fe745b5ca2039269ad853abed5df5d6856466c8f66026b",
+  "source_first10_sha256": "b45db7a919046e9bab36c5ceff5711d7ba503efd7144b19a16bb191f6c7a9300",
+  "review": {
+    "source_target_blocks": 187,
+    "screen_pages": 10,
+    "visible_cjk": 0,
+    "loaded_images": 1,
+    "tables": 2,
+    "publication_accepted": false,
+    "findings": [
+      "literal terminology and long chained English clauses",
+      "inconsistent hardware nouns and missing physical rack/sensor context",
+      "OCR logo words, uneven TOC, mixed lists and incorrect semantic heading roles",
+      "ambiguous source specifications must be flagged rather than corrected by analogy"
+    ]
+  },
+  "glossary": {
+    "original_entries": 252,
+    "contextual_additions": 31,
+    "original_csv_unchanged": true,
+    "all_additions_source_grounded": true,
+    "english_reference": "https://lenovopress.lenovo.com/lp1608.pdf",
+    "english_reference_sha256": "952f8ca345e0a3cc6b2e8cd77a70ed4c05160758eedfacab2138a2b530c74ea6"
+  },
+  "skills": {
+    "technical-html-translation": "1.2.0",
+    "technical-html-presentation": "1.0.0",
+    "native_parser": true,
+    "default_and_html_translation_discovery": true,
+    "native_linked_files_loaded": true,
+    "related_skills_resolved": true,
+    "profile_configs_unchanged": true,
+    "validation_harness_cleanup_retry": "Native reset_hermes_home_override requires the token returned by set; corrected reset passed without repeating validated sections."
+  },
+  "template_fixture": {
+    "passed": true,
+    "tables": 2,
+    "rows": 36,
+    "rowspan": "2",
+    "colspan": "2",
+    "desktop_overflow": false,
+    "narrow_overflow": false,
+    "content_unchanged_across_screen_and_print": true,
+    "external_requests": 0,
+    "print_pages": 2,
+    "all_30_continuation_rows_present": true,
+    "screen_and_both_print_pages_visually_reviewed": true
+  },
+  "existing_helper_regressions": {
+    "passed": 15,
+    "model_calls": 0
+  },
+  "new_translation_run": false,
+  "web_ui_changed": false,
+  "actual_documents_changed": false,
+  "brand_policy": "Style only; retain Lenovo WenTian and actual model names.",
+  "skill_file_sha256": {
+    "technical-html-presentation/SKILL.md": "18e0275fe0ece383c65fbbb314c16eb371aa57376f198a5f4589aa96bc7b8cc7",
+    "technical-html-presentation/references/product-guide-style.md": "d8a388e40b4c0b0854b00d2e61cdb22980d286764862c2ded1381f44ee9ee8c2",
+    "technical-html-presentation/assets/product-guide.css": "2f5ec7edb2f68e45bc8355bf8f173598ddb3cea7a027c092ffc372298d331447",
+    "technical-html-presentation/assets/product-guide.html": "c38a342ff25a777946e444d9ff9c997915d156891d6a41546db86693e197c91a",
+    "technical-html-translation/SKILL.md": "338b677214f0b57c7d0065108b318acb4034bd35de19a1b16e8fe01c01715026",
+    "technical-html-translation/references/wentian-en-supplement.csv": "478d562538d72dfc888384bea2dcdd4f9870f9a939a46ae7443c24a51419766a",
+    "technical-html-translation/references/english-quality.md": "ddb14bc4d325e0a5307abb8c89e6758721758a01beef62593f417bc902590289",
+    "technical-html-translation/references/wentian-en.json": "954e37282866309ad7c781621384d01c61d021e1812a5c390028d090d1ee0c9a"
+  },
+  "remaining_validation": "A new native Hermes translation/normalization run is needed to evaluate the improved wording and actual-document layout; synthetic template checks do not prove model quality."
+}

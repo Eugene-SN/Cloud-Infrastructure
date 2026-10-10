@@ -15,7 +15,7 @@ Office dependencies and Weblate customization are unchanged.
 ## Chat boundary and input package
 
 The current operator task is a clean English translation of original lp2468
-pages 1–10, not a version comparison. Skill 1.1.0 accepts only `source.html`,
+pages 1–10, not a version comparison. Skill 1.2.0 uses `source.html`,
 `glossary.json` and a fresh source-only `manifest.json`; it starts a new native
 session without old English targets or TM. `scripts/clean_html.py` extracts
 actual source leaf blocks, assembles Hermes-generated per-page translations and
@@ -42,6 +42,23 @@ both exit 0. The final audit actually reads all187 pairs; ten quoted anchors and
 independent Mac semantics are verified. Unsupported free-form native review
 claims are excluded from acceptance. Five verifier regressions pass.
 Evidence and final output hash: `first10-clean-evidence.json`.
+
+Mac reviewed all 187 actual source/target blocks and all ten rendered pages.
+That read-only review found literal English, inconsistent component terms and
+presentation defects; the existing HTML remains an unapproved machine draft.
+Skill 1.2.0 adds source-quoted English review rules and the operator's 252 original
+glossary entries plus 31 contextual additions. LP1608 is English terminology
+guidance only; source facts and Lenovo WenTian/model identity remain authoritative.
+
+The native technical-html-presentation skill 1.0.0 provides a shared HTML/CSS
+Product Guide template derived from the operator's edited R5225 DOCX/PDF.
+Apply style only, retain Lenovo WenTian, and use a source-verified semantic-role
+plan on a separate output. No DOTIRON logo or R5225 specification is shipped.
+Both skills are installed in the default and isolated html-translation profiles.
+Native discovery/reference loading, 15 existing helper tests and a synthetic
+screen/print table fixture pass. This is skill/template preparation, not proof
+of a newly improved model output: no new translation or Web UI changes occurred.
+Evidence: style-glossary-evidence.json.
 
 The 108-unit package and controlled-diff results below are historical incremental
 workflow evidence, not acceptance of the current clean translator. Diff applies
