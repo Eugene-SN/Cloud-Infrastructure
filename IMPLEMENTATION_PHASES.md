@@ -916,3 +916,17 @@ the Mac/Weblate chat supplies fresh scoped units/HTML/glossary, saves genuine
 state-20 drafts and verifies downloads. No copied edge SSH key, new provider,
 Weblate UI change, full-document/Russian translation or new service is included.
 Contract and sanitized evidence: `deployments/edge/hermes-document-translation/`.
+
+## 2026-10-10 — Hermes real lp2468 pilot completion
+
+Supersedes the earlier real-pilot PENDING entry: native skill 1.0.2 is available;
+ten regression tests pass. Actual 108-unit Mac package verifies 0 translations
+for unchanged/moved/wrapped and 1 controlled diff / 107 byte-identical reused targets.
+HTML/table/browser checks pass with documented pre-existing native repeat labels;
+strict outside-page baseline failure remains visible. Semantic coverage 98+10=108;
+main native exit 0, supplement exit 1 after 6 turns, final validation-only exit 0.
+No publication/full-document/UI/provider mutation. Automatic Mac↔edge coordination
+works through delegated messages and authenticated return reads; native edge
+send_message_to_thread remains absent from Desktop registration. Evidence:
+`deployments/edge/hermes-document-translation/real-pilot-evidence.json`.
+Stage 13 remains accepted; no finite infrastructure stage is opened.

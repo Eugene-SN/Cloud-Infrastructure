@@ -1,0 +1,453 @@
+{
+  "date": "2026-10-10",
+  "scope": "Real 108-unit lp2468 package; controlled temporary versions; no publication",
+  "acceptance": "Scoped workflow verified; quality remains a reviewed draft, not approval",
+  "coordination": {
+    "mac_thread": "01a121de-3b75-7d33-8fa3-650ece5d8b90",
+    "edge_thread": "01a123f2-cf5b-7e51-af49-5b7e483b4368",
+    "native_edge_send_message_to_thread": "ABSENT from initial client dynamic-tools registration; still absent after Mac reconnect",
+    "exact_desktop_omission_condition": "UNKNOWN",
+    "working_return_path": "Mac native delegated messages; edge commentary/artifacts read by Mac through native thread reads and authenticated Mac-to-edge SSH",
+    "copied_private_keys": false
+  },
+  "inputs": {
+    "manifest": {
+      "hashes": {
+        "glossary.json": "34fb3486218dd1b40ad83f4fc7efb3c65d3dd67152b0992f92418e4ffe33d4d1",
+        "current.json": "12ca5d78c5f4788fd058249737e553da8b9cda8ca9604e72bc7751c4b2ebd96c",
+        "translation-memory.json": "e1fd0f93c84b4dc3f4643d86f469aaf8b5a49abd8649e2ff28fd54412617a102",
+        "previous.json": "12ca5d78c5f4788fd058249737e553da8b9cda8ca9604e72bc7751c4b2ebd96c",
+        "source.html": "28c83bd6bb8afb9a056f1f6182f9fa4b93fab2d5935e9f3d09f8a3f5490082e7",
+        "draft.html": "ee82fae7906f3139f66e85fc7500d708109a5d0b73d2fe1b555e19b435d41bf6"
+      },
+      "live_server_hashes_verified_utc": "2026-10-10T04:42:27.851633+00:00",
+      "historical_snapshot_available": false,
+      "baseline": "current real source and draft; changed versions must be explicitly synthetic",
+      "draft_path": "/srv/ai-data/cloud/technical-documentation/lenovo/translated/temp/en/WR6220 G5/html/lp2468.html",
+      "pages": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11
+      ],
+      "units": 108,
+      "source_immutable": true,
+      "native_draft_download_from_previous_verified_export": true,
+      "fresh_unit_snapshot_utc": "2026-10-10T04:42:06.743755+00:00",
+      "glossary_entries": 133,
+      "wrapped_prose_positions": [
+        7
+      ],
+      "verified_translation_flags_added": false
+    },
+    "verified_edge_hashes": {
+      "glossary.json": "34fb3486218dd1b40ad83f4fc7efb3c65d3dd67152b0992f92418e4ffe33d4d1",
+      "current.json": "12ca5d78c5f4788fd058249737e553da8b9cda8ca9604e72bc7751c4b2ebd96c",
+      "translation-memory.json": "e1fd0f93c84b4dc3f4643d86f469aaf8b5a49abd8649e2ff28fd54412617a102",
+      "previous.json": "12ca5d78c5f4788fd058249737e553da8b9cda8ca9604e72bc7751c4b2ebd96c",
+      "source.html": "28c83bd6bb8afb9a056f1f6182f9fa4b93fab2d5935e9f3d09f8a3f5490082e7",
+      "draft.html": "ee82fae7906f3139f66e85fc7500d708109a5d0b73d2fe1b555e19b435d41bf6"
+    },
+    "all_match": true
+  },
+  "controller_cases": {
+    "unchanged": {
+      "reuse": 108,
+      "translate": 0,
+      "review": 0,
+      "retained_targets_byte_equal": true,
+      "translated_ids": []
+    },
+    "moved": {
+      "reuse": 108,
+      "translate": 0,
+      "review": 0,
+      "retained_targets_byte_equal": true,
+      "translated_ids": []
+    },
+    "wrapped": {
+      "reuse": 108,
+      "translate": 0,
+      "review": 0,
+      "retained_targets_byte_equal": true,
+      "translated_ids": []
+    },
+    "changed": {
+      "reuse": 107,
+      "translate": 1,
+      "review": 0,
+      "retained_targets_byte_equal": true,
+      "translated_ids": [
+        4871
+      ]
+    }
+  },
+  "changed_translation": {
+    "id": 4871,
+    "position": 171,
+    "controlled_source_change": "80% -> 75%",
+    "target": "Supports various solid-state drives (SSDs), with power consumption approximately 75% lower than hard disk drives (HDDs)",
+    "retained_targets_byte_equal": 107
+  },
+  "block_checks": {
+    "baseline": {
+      "pass": true,
+      "checked_blocks": 108,
+      "issues": [],
+      "interpreted_quantities": [
+        {
+          "id": "4707",
+          "source": "双路",
+          "target": "2-socket"
+        }
+      ],
+      "semantic_review_required": true
+    },
+    "changed": {
+      "pass": true,
+      "checked_blocks": 1,
+      "issues": [],
+      "interpreted_quantities": [],
+      "semantic_review_required": true
+    }
+  },
+  "html": {
+    "strict_received_baseline": {
+      "pass": false,
+      "issues": [
+        "Content outside selected pages changed"
+      ],
+      "source_sha256": "28c83bd6bb8afb9a056f1f6182f9fa4b93fab2d5935e9f3d09f8a3f5490082e7",
+      "target_sha256": "ee82fae7906f3139f66e85fc7500d708109a5d0b73d2fe1b555e19b435d41bf6",
+      "counts": {
+        "section": 64,
+        "img": 55,
+        "table": 51,
+        "tr": 359,
+        "td": 1457,
+        "br": 219
+      },
+      "break_delta": {
+        "(1, 1)": 7
+      },
+      "visual_and_meaning_review_required": true
+    },
+    "native_baseline_audit": {
+      "pass": true,
+      "structural_events_equal": true,
+      "css_script_equal": true,
+      "outside_text_nodes_checked": 2050,
+      "serialization_whitespace_changes": 9,
+      "expected_native_repeated_units": [
+        {
+          "page": 12,
+          "id": 4880,
+          "source": "内存",
+          "target": "Memory",
+          "tag": "td",
+          "line": 400,
+          "native_column": 330,
+          "native_location_exact": true
+        },
+        {
+          "page": 12,
+          "id": 4878,
+          "source": "处理器",
+          "target": "Processor",
+          "tag": "td",
+          "line": 400,
+          "native_column": 360,
+          "native_location_exact": true
+        },
+        {
+          "page": 19,
+          "id": 4890,
+          "source": "电源",
+          "target": "Power Supply",
+          "tag": "td",
+          "line": 559,
+          "native_column": 289,
+          "native_location_exact": true
+        },
+        {
+          "page": 36,
+          "id": 4878,
+          "source": "处理器",
+          "target": "Processor",
+          "tag": "td",
+          "line": 936,
+          "native_column": 334,
+          "native_location_exact": true
+        },
+        {
+          "page": 57,
+          "id": 4880,
+          "source": "内存",
+          "target": "Memory",
+          "tag": "td",
+          "line": 1427,
+          "native_column": 290,
+          "native_location_exact": true
+        }
+      ],
+      "unexpected_outside_changes": [],
+      "strict_six_page_only_check": false,
+      "note": "Native baseline audit only; does not authorize new outside changes."
+    },
+    "controlled_diff": {
+      "pass": true,
+      "synthetic_controlled_diff": true,
+      "historical_version_available": false,
+      "changed_id": 4871,
+      "translation_outputs": 1,
+      "retained_targets_byte_equal": 107,
+      "old_target_occurrences_in_draft": 1,
+      "all_other_html_bytes_preserved": true,
+      "new_changes_outside_selected_pages": 0,
+      "html_checks": {
+        "pass": true,
+        "issues": [],
+        "source_sha256": "ee82fae7906f3139f66e85fc7500d708109a5d0b73d2fe1b555e19b435d41bf6",
+        "target_sha256": "9b5bf5e6ff861caf91e185630a5b66cfd14f5add3de736a2375c8734120926a3",
+        "counts": {
+          "section": 64,
+          "img": 55,
+          "table": 51,
+          "tr": 359,
+          "td": 1457,
+          "br": 219
+        },
+        "break_delta": {},
+        "visual_and_meaning_review_required": true
+      },
+      "source_and_draft_untouched": true
+    }
+  },
+  "browser": {
+    "url": "file:///tmp/hermes-lp2468-work-hslblyo6/results/controlled-diff.html",
+    "pages": [
+      {
+        "page": 1,
+        "tables": 0,
+        "overflow": 0
+      },
+      {
+        "page": 2,
+        "tables": 0,
+        "overflow": 0
+      },
+      {
+        "page": 3,
+        "tables": 0,
+        "overflow": 0
+      },
+      {
+        "page": 9,
+        "tables": 1,
+        "overflow": 0
+      },
+      {
+        "page": 10,
+        "tables": 1,
+        "overflow": 0
+      },
+      {
+        "page": 11,
+        "tables": 1,
+        "overflow": 0
+      }
+    ],
+    "images": 55,
+    "brokenImages": 0,
+    "controlledDiff": true
+  },
+  "semantic": {
+    "coverage": {
+      "pass": true,
+      "coverage": {
+        "pass": true,
+        "checked_unique_units": 108,
+        "report_id_counts": [
+          98,
+          10
+        ],
+        "missing_ids": [],
+        "issues": [],
+        "semantic_quality_decision_required": true,
+        "note": "Explicit ID coverage only; does not auto-approve meaning or translations."
+      },
+      "ten_supplement_rows_present": true,
+      "raw_quote_metadata_issues": [
+        {
+          "id": 4879,
+          "field": "source_quote",
+          "reason": "Concatenated/paraphrased excerpt, not a literal contiguous quote"
+        },
+        {
+          "id": 4879,
+          "field": "target_quote",
+          "reason": "Concatenated/paraphrased excerpt, not a literal contiguous quote"
+        },
+        {
+          "id": 4881,
+          "field": "source_quote",
+          "reason": "Concatenated/paraphrased excerpt, not a literal contiguous quote"
+        },
+        {
+          "id": 4881,
+          "field": "target_quote",
+          "reason": "Concatenated/paraphrased excerpt, not a literal contiguous quote"
+        }
+      ],
+      "note": "Coverage and actual snapshot values confirmed. Raw model quotes are not used as source authority; concatenated excerpts are explicitly rejected as literal quotes. Meaning remains a separate reviewed conclusion."
+    },
+    "initial_claimed_108_rejected": true,
+    "confirmed_material_translation_errors": [],
+    "mac_independent_ten_pair_review": "No confirmed meaning defect; 4900 non-storage wording matches actual source and was not changed",
+    "raw_quotes_authoritative": false,
+    "approved_translation_memory_or_auto_approval": false,
+    "translation_quality_improvement_claimed": false
+  },
+  "native": {
+    "hermes_version": "v0.21.6+373.g46d7718",
+    "vllm_version": "0.30.0",
+    "session_id": "20261010_074417_2717c4",
+    "per_run_options": {
+      "session_id": "20261010_074417_2717c4",
+      "provider": "custom",
+      "model": "qwen3.8-27b-fp8",
+      "base_url": "http://192.168.1.30:8000/v1",
+      "request_overrides": {
+        "extra_body": {
+          "chat_template_kwargs": {
+            "enable_thinking": false
+          }
+        }
+      },
+      "reasoning_config": {
+        "enabled": false
+      },
+      "global_config_mutated": false
+    },
+    "initial_exit": {
+      "code": 143,
+      "cause": "UNKNOWN"
+    },
+    "interrupted_review_exit": {
+      "code": 130,
+      "cause": "Only own test client stopped before FIFO decision; output preserved"
+    },
+    "main_exit": {
+      "exit_code": 0,
+      "session_id": "20261010_074417_2717c4"
+    },
+    "supplement_exit": {
+      "code": 1,
+      "max_turns": 6,
+      "cause": {
+        "native_session_end": {
+          "id": "20261010_074417_2717c4",
+          "end_reason": null,
+          "ended_at": null,
+          "api_call_count": 26,
+          "tool_call_count": 33
+        },
+        "confirmed_cause": "max_iterations_reached (6/6), recorded in native agent.log at2026-10-10T05:27:27.597Z; report saved before stop",
+        "terminal_validation_blocked": "inline python -c script; single-query approval gate",
+        "captured_fields": {
+          "failed": false,
+          "error": null
+        },
+        "uncaptured_raw_result_fields": [
+          "partial",
+          "completed",
+          "failure_reason"
+        ],
+        "note": "These omitted raw result fields are unknown for the supplemental process; do not infer false/true values from failedfalse/errornull. Next validation-only run will capture its full native result."
+      },
+      "report_saved_before_limit": true
+    },
+    "validation": {
+      "exit_code": 0,
+      "session_id": "20261010_074417_2717c4",
+      "failed": false,
+      "partial": false,
+      "completed": true,
+      "failure_reason": null,
+      "field_presence": {
+        "failed": true,
+        "partial": true,
+        "completed": true,
+        "failure_reason": false
+      },
+      "model": "qwen3.8-27b-fp8",
+      "provider": "custom",
+      "base_url": "http://192.168.1.30:8000/v1",
+      "request_overrides": {
+        "extra_body": {
+          "chat_template_kwargs": {
+            "enable_thinking": false
+          }
+        }
+      },
+      "validation_only": true,
+      "max_turns": 24
+    },
+    "validation_process_exit": 0,
+    "validation_tool_calls": [
+      {
+        "type": "tool_use",
+        "name": "terminal",
+        "input": {
+          "command": "python3 /home/core/.hermes/skills/technical-documentation/technical-html-translation/scripts/html_workflow.py check-reviews /tmp/hermes-lp2468-work-hslblyo6/current.json /tmp/hermes-lp2468-work-hslblyo6/results/semantic-review.json /tmp/hermes-lp2468-work-hslblyo6/results/semantic-review-supplement.json"
+        },
+        "timestamp": 1791610604415
+      }
+    ],
+    "recorded_usage": [
+      {
+        "model": "qwen3.8-27b-fp8",
+        "billing_provider": "custom",
+        "billing_base_url": "http://192.168.1.30:8000/v1",
+        "task": "",
+        "api_call_count": 28
+      }
+    ],
+    "all_pre_supplement_message_ids_retained": true,
+    "shared_queue_abort_pause_restart_priority_changes": false
+  },
+  "installation": {
+    "skill": {
+      "name": "technical-html-translation",
+      "version": "1.0.2",
+      "readiness": {
+        "required_environment_variables": [],
+        "required_commands": [],
+        "missing_required_environment_variables": [],
+        "missing_credential_files": [],
+        "missing_required_commands": [],
+        "setup_needed": false,
+        "setup_skipped": false,
+        "readiness_status": "available"
+      }
+    },
+    "regression_tests_passed": 10,
+    "global_config_sha256_unchanged": "1e851cf31d0009d96d3201bbff9598028b3cefb342335b88bee564a61b0250b3",
+    "gateway_dashboard": "active"
+  },
+  "mutations": {
+    "full_source_document": false,
+    "real_english_draft": false,
+    "weblate": false,
+    "web_ui": false,
+    "shared_vllm_or_providers": false
+  },
+  "evidence_hashes": {
+    "semantic-review.json": "02a724167ea343f01016dcb3f39a749166cb0fd602d54ebd4799bf843e265410",
+    "semantic-review-supplement.json": "0f8a51d644463ef210e2fd5008c95bf106966c8db45e21c8c5542ffaea1200aa",
+    "supplement-verified-pairs.json": "954ae13ec2057ee862cacfeef1ae74492222ff8ec4722224570484db86269628",
+    "native-validation-raw-result.json": "bddff202671b4f4a4acdce1c309e8da04d0099a4cd8c2349e8c20020bf8cdd1b"
+  }
+}

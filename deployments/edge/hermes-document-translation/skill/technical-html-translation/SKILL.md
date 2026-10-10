@@ -1,7 +1,7 @@
 ---
 name: technical-html-translation
 description: Manage incremental Chinese-to-English technical HTML translation, reuse Weblate wording, and verify document and table preservation.
-version: 1.0.0
+version: 1.0.2
 platforms: [linux]
 metadata:
   hermes:
@@ -45,6 +45,16 @@ translation languages.
 5. Run `scripts/html_workflow.py check-blocks PLAN.json TRANSLATIONS.json`.
    Investigate failed number/tag/term/Chinese checks; never bypass them to get
    PASS. Perform a meaning review for terminology, quantities and negations.
+   Record explicit native IDs in `checked_unit_ids`; run `check-reviews
+   CURRENT.json REVIEW.json [SUPPLEMENT.json ...]`. A textual claim of 108
+   reviewed units does not prove coverage. Review omitted IDs before acceptance;
+   the helper checks coverage only and never approves translation meaning.
+   Invoke the packaged Python helper as a script file for validation. Inline
+   `python -c`/`-e` execution can be blocked in native single-query mode; do not
+   change approval settings to work around it. Allow enough native tool turns
+   for context reads, writing and validation: the real pilot's six-turn
+   supplemental limit was exhausted after saving its report. Use the normal
+   native budget or the tested pilot option `--max-turns 24`.
 6. Return genuine proposed translations and review results to the Mac/Weblate
    chat. That chat owns publication, state-20 draft saving and native downloads;
    this edge skill does not publish or auto-approve. A synthetic changed block
@@ -56,6 +66,14 @@ translation languages.
    the introductory paragraph and tables. Count broken images and clipped text;
    inspect screenshots when available. Use the same model for semantic review;
    do not invoke an external vision model through `vision_analyze`.
+   If a native export changes repeated unit labels outside these pages, retain
+   the strict failure and run `scripts/audit_native_export.py ORIGINAL.html
+   ENGLISH.html CURRENT.json`. This separate audit checks every outside text
+   node and requires exact source/target text and native tag/line/column
+   locations for each repeated label. Unexpected changes still fail. Report
+   native deduplication and serialization whitespace separately; neither
+   authorizes new changes outside the sample. A controlled diff must preserve
+   every other byte of the received draft.
 
 ## HTML and table treatment
 
@@ -71,4 +89,5 @@ preservation test. Office/PDF dependencies are unnecessary.
 
 Report observed results, translation-call counts and unresolved failures in a
 few lines. Keep one control sample outside `converted` before replacing a real
-draft; use `/tmp` for synthetic fixtures and remove them after the test.
+draft; use `/tmp` for synthetic fixtures and remove them after the receiving
+Mac chat has independently read and acknowledged the results.

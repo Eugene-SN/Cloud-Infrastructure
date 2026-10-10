@@ -125,6 +125,7 @@ def check_blocks(work, translations):
     if set(translations) != set(expected):
         raise ValueError('Translations must cover exactly the changed blocks')
     issues = []
+    interpreted_quantities = []
     for uid, u in expected.items():
         source, target = u['source'], one(translations[uid])
         wrapped = u.get('wrapped_prose', False)
@@ -137,6 +138,12 @@ def check_blocks(work, translations):
             issues.append([uid, 'Obsolete prose wrapping was reintroduced'])
         src_numbers = Counter((n, suffix.lower()) for n, suffix in NUMBERS.findall(''.join(src.text)))
         dst_numbers = Counter((n, suffix.lower()) for n, suffix in NUMBERS.findall(''.join(dst.text)))
+        # The real pilot says "2U双路", rendered as "2U 2-socket" in English.
+        # Count that explicit Chinese quantity only when its exact English
+        # equivalent occurs; other additional/missing numbers remain failures.
+        if '双路' in ''.join(src.text) and re.search(r'\b2[- ]socket\b', ''.join(dst.text), re.I):
+            src_numbers[('2', '')] += ''.join(src.text).count('双路')
+            interpreted_quantities.append({'id': uid, 'source': '双路', 'target': '2-socket'})
         if src_numbers != dst_numbers:
             issues.append([uid, 'Numbers or numeric units changed'])
         for zh, en in [('联想问天', 'Lenovo WenTian'), ('产品指南', 'Product Guide')]:
@@ -145,7 +152,32 @@ def check_blocks(work, translations):
         if '联想问天' in source and 'ThinkSystem' in target:
             issues.append([uid, 'Server family substituted'])
     return {'pass': not issues, 'checked_blocks': len(expected), 'issues': issues,
+            'interpreted_quantities': interpreted_quantities,
             'semantic_review_required': True}
+
+
+def check_reviews(snapshot, reviews):
+    """Check explicit coverage, including supplemental reports; not semantic truth."""
+    expected = {u['id'] for u in selected(snapshot)}
+    covered, issues, counts = set(), [], []
+    for index, review in enumerate(reviews):
+        ids = review.get('checked_unit_ids', [])
+        if not isinstance(ids, list) or any(type(uid) is not int for uid in ids):
+            raise ValueError('checked_unit_ids must be an array of integer native IDs')
+        if len(set(ids)) != len(ids):
+            issues.append({'report': index, 'reason': 'Duplicate checked IDs'})
+        outside = set(ids) - expected
+        if outside:
+            issues.append({'report': index, 'reason': 'IDs outside pilot', 'ids': sorted(outside)})
+        covered.update(set(ids) & expected)
+        counts.append(len(ids))
+    missing = expected - covered
+    if missing:
+        issues.append({'reason': 'Missing checked IDs', 'ids': sorted(missing)})
+    return {'pass': not issues, 'checked_unique_units': len(covered),
+            'report_id_counts': counts, 'missing_ids': sorted(missing), 'issues': issues,
+            'semantic_quality_decision_required': True,
+            'note': 'Explicit ID coverage only; does not auto-approve meaning or translations.'}
 
 
 class Document(HTMLParser):
@@ -256,6 +288,8 @@ def main():
     p.add_argument('previous'); p.add_argument('current'); p.add_argument('--out', required=True)
     p = sub.add_parser('check-blocks')
     p.add_argument('plan'); p.add_argument('translations')
+    p = sub.add_parser('check-reviews')
+    p.add_argument('snapshot'); p.add_argument('reviews', nargs='+')
     p = sub.add_parser('verify-html')
     p.add_argument('source'); p.add_argument('target')
     args = parser.parse_args()
@@ -264,8 +298,12 @@ def main():
         Path(args.out).write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
         print(json.dumps({k: len(result[k]) for k in ['reuse', 'translate', 'review']}))
     else:
-        result = (check_blocks(load(args.plan), load(args.translations)) if args.cmd == 'check-blocks'
-                  else verify_html(args.source, args.target))
+        if args.cmd == 'check-blocks':
+            result = check_blocks(load(args.plan), load(args.translations))
+        elif args.cmd == 'check-reviews':
+            result = check_reviews(load(args.snapshot), [load(p) for p in args.reviews])
+        else:
+            result = verify_html(args.source, args.target)
         print(json.dumps(result, ensure_ascii=False, indent=2))
         return 0 if result['pass'] else 1
     return 0
