@@ -243,7 +243,8 @@
       "service": "weblate",
       "health_services": [
         "weblate"
-      ]
+      ],
+      "prune_unrelated_images": false
     },
     {
       "id": "WEBLATE_VALKEY",
@@ -256,7 +257,8 @@
       "service": "cache",
       "health_services": [
         "cache"
-      ]
+      ],
+      "prune_unrelated_images": false
     }
   ]
 }

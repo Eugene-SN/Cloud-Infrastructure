@@ -332,7 +332,8 @@ def execute(unit, status_row):
             if old_id not in new_image_ids:
                 subprocess.run(["docker", "rmi", old_id], capture_output=True, check=False)
 
-        subprocess.run(["docker", "image", "prune", "-f"], capture_output=True, check=False)
+        if unit.get("prune_unrelated_images", True):
+            subprocess.run(["docker", "image", "prune", "-f"], capture_output=True, check=False)
     elif driver == "self_update":
         run([unit["binary"], *unit.get("arguments", [])])
         for service in unit.get("user_services", []):
