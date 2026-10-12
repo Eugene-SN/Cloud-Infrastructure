@@ -36,6 +36,8 @@
     "NEXTCLOUD",
     "NEXTCLOUD_REDIS",
     "PLANE",
+    "WEBLATE",
+    "WEBLATE_VALKEY",
     "SEMAPHORE",
     "APT_EDGE"
   ],
@@ -228,6 +230,32 @@
         "plane-redis",
         "plane-mq",
         "plane-minio"
+      ]
+    },
+    {
+      "id": "WEBLATE",
+      "group": "docker",
+      "driver": "compose",
+      "directory": "/opt/weblate",
+      "files": [
+        "compose.yaml"
+      ],
+      "service": "weblate",
+      "health_services": [
+        "weblate"
+      ]
+    },
+    {
+      "id": "WEBLATE_VALKEY",
+      "group": "docker",
+      "driver": "compose",
+      "directory": "/opt/weblate",
+      "files": [
+        "compose.yaml"
+      ],
+      "service": "cache",
+      "health_services": [
+        "cache"
       ]
     }
   ]

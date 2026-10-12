@@ -49,6 +49,8 @@ DOCKER_COMPONENTS = [
     ("NEXTCLOUD", "Nextcloud"),
     ("NEXTCLOUD_REDIS", "Redis (Nextcloud)"),
     ("PLANE", "Plane"),
+    ("WEBLATE", "Weblate"),
+    ("WEBLATE_VALKEY", "Valkey (Weblate)"),
 ]
 
 CLI_COMPONENTS = []

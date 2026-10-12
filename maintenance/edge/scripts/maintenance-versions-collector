@@ -121,6 +121,12 @@ docker_runtime_version() {
               php occ status --output=json 2>/dev/null |
               python3 -c 'import json,sys; print(json.load(sys.stdin).get("versionstring",""))'
             ;;
+        WEBLATE)
+            docker exec "$container" /app/venv/bin/python -c 'import importlib.metadata; print(importlib.metadata.version("Weblate"))' 2>/dev/null | head -n1
+            ;;
+        WEBLATE_VALKEY)
+            docker exec "$container" valkey-server --version 2>/dev/null | sed -n 's/.*v=\([0-9][0-9.]*\).*/\1/p' | head -n1
+            ;;
         NEXTCLOUD_REDIS)
             docker exec "$container" redis-server --version 2>/dev/null |
               sed -n 's/.*v=\([0-9][0-9.]*\).*/\1/p' |
@@ -696,7 +702,7 @@ docker_remote_snapshot() {
                 "$installed"
             ;;
 
-        AUTHELIA|MATTERMOST|POSTGRESQL|STALWART|NEXTCLOUD|NEXTCLOUD_REDIS)
+        AUTHELIA|MATTERMOST|POSTGRESQL|STALWART|NEXTCLOUD|NEXTCLOUD_REDIS|WEBLATE|WEBLATE_VALKEY)
             docker_hub_snapshot \
                 "$component" \
                 "$repository" \
@@ -868,6 +874,8 @@ emit_docker_component STALWART stalwart stalwartlabs/stalwart:latest stalwartlab
 emit_docker_component BULWARK bulwark ghcr.io/bulwarkmail/webmail:latest ghcr.io/bulwarkmail/webmail latest
 emit_docker_component NEXTCLOUD nextcloud-app-1 nextcloud:stable-apache nextcloud stable-apache
 emit_docker_component NEXTCLOUD_REDIS nextcloud-redis-1 redis:alpine redis alpine
+emit_docker_component WEBLATE weblate-edge-weblate-1 weblate/weblate:latest weblate/weblate latest
+emit_docker_component WEBLATE_VALKEY weblate-edge-cache-1 valkey/valkey:latest valkey/valkey latest
 
 echo
 echo "--- GIT / USER TOOLS ---"

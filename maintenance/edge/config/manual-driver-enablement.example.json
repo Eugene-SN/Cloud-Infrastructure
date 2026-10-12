@@ -17,6 +17,8 @@
     "NEXTCLOUD_REDIS": true,
     "SEMAPHORE": true,
     "APT_EDGE": true,
-    "PLANE": true
+    "PLANE": true,
+    "WEBLATE": true,
+    "WEBLATE_VALKEY": true
   }
 }

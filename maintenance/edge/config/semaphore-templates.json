@@ -67,6 +67,14 @@
     "PLANE": {
       "template_id": 21,
       "label": "Update Plane"
+    },
+    "WEBLATE": {
+      "template_id": 22,
+      "label": "Update Weblate"
+    },
+    "WEBLATE_VALKEY": {
+      "template_id": 23,
+      "label": "Update Weblate Valkey"
     }
   }
 }
