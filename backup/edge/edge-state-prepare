@@ -15,6 +15,7 @@ MATTERMOST_STOPPED=0
 BULWARK_STOPPED=0
 STALWART_STOPPED=0
 PLANE_STOPPED=0
+WEBLATE_STOPPED=0
 COMMITTED=0
 
 mkdir -p "$STAGING_ROOT"
@@ -24,6 +25,14 @@ flock -w 600 9
 
 recover_services() {
   rc=$?
+
+  if [ "$WEBLATE_STOPPED" -eq 1 ]; then
+    if docker compose -f /opt/weblate/compose.yaml start weblate >/dev/null; then
+      WEBLATE_STOPPED=0
+    else
+      printf 'RECOVERY_FAIL|service=weblate\n' >&2
+    fi
+  fi
 
   if [ "$PLANE_STOPPED" -eq 1 ]; then
     if /usr/local/sbin/plane-compose start plane-minio api worker beat-worker live >/dev/null; then
@@ -65,6 +74,39 @@ recover_services() {
 }
 
 trap recover_services EXIT
+
+prepare_weblate() {
+  local stage="$1/weblate"
+  mkdir -p "$stage/postgres" "$stage/data" "$stage/config"
+  local running
+  running="$(docker inspect weblate-edge-weblate-1 --format '{{.State.Running}}' 2>/dev/null || true)"
+  if [ "$running" = true ]; then
+    WEBLATE_STOPPED=1
+    docker compose -f /opt/weblate/compose.yaml stop weblate >/dev/null
+  fi
+  docker exec postgres pg_dump -U postgres -d weblate -Fc >"$stage/postgres/weblate.dump"
+  test -s "$stage/postgres/weblate.dump"
+  docker exec -i postgres pg_restore -l <"$stage/postgres/weblate.dump" >/dev/null
+  chmod 0600 "$stage/postgres/weblate.dump"
+  rsync -a /srv/weblate/data/ "$stage/data/"
+  rsync -a /opt/weblate/ "$stage/config/"
+  cat >"$stage/MANIFEST.txt" <<EOF
+schema=weblate-consistent-backup-v1
+created_at=$(date --iso-8601=seconds)
+database=weblate
+role=weblate
+data_dir=/srv/weblate/data
+configuration=/opt/weblate
+cache=valkey_reconstructed_not_historical_queue_state
+EOF
+  chmod 0600 "$stage/MANIFEST.txt"
+  if [ "$WEBLATE_STOPPED" -eq 1 ]; then
+    docker compose -f /opt/weblate/compose.yaml start --wait --wait-timeout 120 weblate >/dev/null
+    WEBLATE_STOPPED=0
+  fi
+  printf 'WEBLATE_STAGE_GATE=PASS\n'
+}
+
 
 rm -rf "$NEXT"
 mkdir -p "$NEXT"
@@ -447,6 +489,10 @@ chmod 0600 "$NEXT/plane/postgres/plane.dump"
 PLANE_STOPPED=0
 printf 'PLANE_STAGE_GATE=PASS\n'
 
+if [ -f /opt/weblate/compose.yaml ]; then
+  prepare_weblate "$NEXT"
+fi
+
 printf '\n--- Manifest ---\n'
 
 cat >"$NEXT/MANIFEST.txt" <<EOF
@@ -462,6 +508,7 @@ agent_sqlite=consistent_overlay
 nextcloud=consolidated_postgres_pg_dump_consistent
 plane=quiesced_logical_postgres_dump_plus_uploads_and_runtime
 plane_valkey=cache_pubsub_reconstructed_not_historical_state
+weblate=quiesced_postgres_dump_plus_matching_data_and_configuration
 plane_rabbitmq=task_queue_reconstructed_not_historical_state
 EOF
 
