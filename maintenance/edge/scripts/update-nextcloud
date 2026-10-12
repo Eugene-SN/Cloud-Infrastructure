@@ -6,6 +6,7 @@ import json
 import os
 import pathlib
 import re
+import runpy
 import subprocess
 import tempfile
 import time
@@ -649,6 +650,7 @@ def main():
 
     if not steps:
         verify_runtime(target)
+        runpy.run_path("/opt/edge-maintenance/scripts/docker-service-images")["cleanup"]("NEXTCLOUD")
         print(
             "NEXTCLOUD_UPDATE_RESULT=SUCCESS"
             f"|VERSION={target}"
@@ -669,6 +671,9 @@ def main():
             f"|MAJOR={major}"
             f"|TARGET={expected}"
         )
+
+        image_lifecycle = runpy.run_path("/opt/edge-maintenance/scripts/docker-service-images")
+        image_lifecycle["capture"]("NEXTCLOUD", compose_argv(), SERVICES, DIRECTORY)
 
         apply_step(
             major,
@@ -697,6 +702,7 @@ def main():
         )
 
     verify_runtime(target)
+    image_lifecycle["cleanup"]("NEXTCLOUD")
 
     print(
         "NEXTCLOUD_UPDATE_RESULT=SUCCESS"

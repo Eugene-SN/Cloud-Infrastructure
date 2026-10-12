@@ -295,45 +295,16 @@ def execute(unit, status_row):
                     f"configured={configured or 'absent'}"
                 )
 
-        old_image_ids = set()
-        for service in services:
-            proc = subprocess.run(
-                compose + ["images", "-q", service],
-                cwd=directory,
-                capture_output=True,
-                text=True,
-            )
-            for line in proc.stdout.splitlines():
-                img_id = line.strip()
-                if img_id:
-                    old_image_ids.add(img_id)
-
+        image_lifecycle = runpy.run_path("/opt/edge-maintenance/scripts/docker-service-images")
+        image_lifecycle["capture"](unit["id"], compose, services, directory)
         run(["docker", "pull", pinned])
         run(["docker", "tag", pinned, image])
         run(
-            compose + ["up", "-d", "--wait", "--force-recreate", *services],
+            compose + ["up", "-d", "--wait", "--no-deps", "--force-recreate", *services],
             cwd=directory,
         )
 
-        new_image_ids = set()
-        for service in services:
-            proc = subprocess.run(
-                compose + ["images", "-q", service],
-                cwd=directory,
-                capture_output=True,
-                text=True,
-            )
-            for line in proc.stdout.splitlines():
-                img_id = line.strip()
-                if img_id:
-                    new_image_ids.add(img_id)
-
-        for old_id in old_image_ids:
-            if old_id not in new_image_ids:
-                subprocess.run(["docker", "rmi", old_id], capture_output=True, check=False)
-
-        if unit.get("prune_unrelated_images", True):
-            subprocess.run(["docker", "image", "prune", "-f"], capture_output=True, check=False)
+        image_lifecycle["cleanup"](unit["id"])
     elif driver == "self_update":
         run([unit["binary"], *unit.get("arguments", [])])
         for service in unit.get("user_services", []):

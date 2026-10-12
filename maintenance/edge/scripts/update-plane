@@ -6,6 +6,7 @@ import json
 import os
 import pathlib
 import re
+import runpy
 import subprocess
 import sys
 import tempfile
@@ -221,12 +222,13 @@ def main():
         if args.preflight: return
         discovery=discover(release)
         if discovery['status'] == 'CURRENT':
+            runpy.run_path('/opt/edge-maintenance/scripts/docker-service-images')['cleanup']('PLANE')
             print('PLANE_UPDATE=NO_UPDATE_AVAILABLE'); return
         snapshot=backup_now()
         print('PLANE_PRE_UPDATE_SNAPSHOT=' + snapshot, flush=True)
         # No schema-changing work begins until a real recovery flow completes.
-        old_references = output([WRAPPER, 'images', '-q']).split()
-        old_ids = {image['Id'] for image in json.loads(output(['docker', 'image', 'inspect', *old_references]))} if old_references else set()
+        image_lifecycle = runpy.run_path('/opt/edge-maintenance/scripts/docker-service-images')
+        image_lifecycle['capture']('PLANE', [WRAPPER], sorted(PERSISTENT))
         run([WRAPPER, 'stop', '--timeout', '30'])
         for source, destination in ((directory/'docker-compose.yml', APP/'docker-compose.yaml'),
                                     (candidate_env, APP/'plane.env'),
@@ -250,13 +252,7 @@ def main():
             except Exception:
                 if attempt==35: raise
                 time.sleep(5)
-        # Retire only former Plane images with zero remaining container users.
-        all_ids = output(['docker', 'ps', '-aq']).split()
-        used = {c['Image'] for c in json.loads(output(['docker', 'inspect', *all_ids]))} if all_ids else set()
-        for old in old_ids - used:
-            image = json.loads(output(['docker', 'image', 'inspect', old]))[0]
-            tags = image.get('RepoTags') or []
-            run(['docker', 'image', 'rm', *(tags or [old])])
+        image_lifecycle['cleanup']('PLANE')
         print('PLANE_UPDATE=PASS|RECOVERY_SNAPSHOT=' + snapshot)
 
 if __name__=='__main__':

@@ -6,6 +6,7 @@ import json
 import os
 import pathlib
 import re
+import runpy
 import subprocess
 import tempfile
 
@@ -199,6 +200,8 @@ def main():
     new_reference = f"{REPOSITORY}:{target_track}"
     pinned = f"{REPOSITORY}@{target_digest}"
 
+    image_lifecycle = runpy.run_path("/opt/edge-maintenance/scripts/docker-service-images")
+    image_lifecycle["capture"]("STALWART", compose_argv(), [SERVICE], DIRECTORY)
     run(["docker", "pull", pinned])
     run(["docker", "tag", pinned, new_reference])
 
@@ -214,7 +217,7 @@ def main():
             "-d",
             "--wait",
             "--force-recreate",
-            "--remove-orphans",
+            "--no-deps",
             SERVICE,
         )
 
@@ -233,10 +236,12 @@ def main():
                 "-d",
                 "--wait",
                 "--force-recreate",
-                "--remove-orphans",
-                SERVICE,
+            "--no-deps",
+                    SERVICE,
             )
         raise
+
+    image_lifecycle["cleanup"]("STALWART")
 
     print(
         "STALWART_UPDATE_GATE=PASS"

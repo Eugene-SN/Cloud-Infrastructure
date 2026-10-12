@@ -1,0 +1,144 @@
+#!/usr/bin/env python3
+"""Keep service-owned previous image references until application checks pass."""
+import argparse
+import fcntl
+import functools
+import json
+import pathlib
+import re
+import subprocess
+
+STATE = pathlib.Path('/opt/edge-maintenance/state/image-recovery')
+
+def locked(function):
+    @functools.wraps(function)
+    def wrapper(*args, **kwargs):
+        with open('/run/lock/edge-service-images.lock', 'a') as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX)
+            return function(*args, **kwargs)
+    return wrapper
+
+def repository(reference):
+    name = reference.split('@', 1)[0]
+    if name.rfind(':') > name.rfind('/'):
+        name = name[:name.rfind(':')]
+    for prefix in ('docker.io/', 'index.docker.io/'):
+        if name.startswith(prefix): name = name[len(prefix):]
+    if name.startswith('library/'): name = name[len('library/'):]
+    return name
+
+def declared_images():
+    protected = set()
+    manifest = json.loads(pathlib.Path('/opt/edge-maintenance/config/update-units.json').read_text())
+    for unit in manifest['units']:
+        if unit.get('driver') not in {'compose','nextcloud_compose','stalwart_compose','plane_compose'}:
+            continue
+        command = ['/usr/local/sbin/plane-compose'] if unit['driver']=='plane_compose' else ['docker','compose',*sum((['-f', f] for f in unit['files']), [])]
+        refs = subprocess.run([*command,'config','--images'],cwd=unit['directory'],check=True,capture_output=True,text=True).stdout.split()
+        for ref in set(refs):
+            result = subprocess.run(['docker','image','inspect',ref],capture_output=True,text=True)
+            if result.returncode == 0: protected.add(json.loads(result.stdout)[0]['Id'])
+    # This deployed one-shot worker has no standing container; its local build
+    # parent and base are part of its current reproducible deployment contract.
+    deployed = pathlib.Path('/opt/pdf-cleanup/deployment.json')
+    if deployed.exists():
+        data = json.loads(deployed.read_text())
+        for key in ('image_id','runtime_parent_image','base_image'):
+            if not data.get(key): continue
+            result = subprocess.run(['docker','image','inspect',data[key]],capture_output=True,text=True)
+            if result.returncode == 0: protected.add(json.loads(result.stdout)[0]['Id'])
+    result = subprocess.run(['docker','image','inspect','ghcr.io/github/github-mcp-server:latest'],capture_output=True,text=True)
+    if result.returncode == 0: protected.add(json.loads(result.stdout)[0]['Id'])
+    return protected
+
+def docker(*args):
+    return subprocess.run(['docker', *args], check=True, capture_output=True, text=True).stdout
+
+def state_file(target):
+    if not re.fullmatch(r'[A-Z0-9_-]+', target):
+        raise ValueError('invalid service target')
+    STATE.mkdir(parents=True, exist_ok=True, mode=0o700)
+    return STATE / (target + '.json')
+
+@locked
+def capture(target, command=None, services=(), cwd=None, image=None):
+    path = state_file(target)
+    saved = json.loads(path.read_text())['images'] if path.exists() else []
+    if image:
+        result = subprocess.run(['docker','image','inspect',image],capture_output=True,text=True)
+        current = [] if result.returncode else [{'id':json.loads(result.stdout)[0]['Id'],'references':[image]}]
+    else:
+        ids = subprocess.run([*command,'ps','-aq',*services],cwd=cwd,check=True,capture_output=True,text=True).stdout.split()
+        current = [{'id':c['Image'],'references':[c['Config']['Image']]} for c in json.loads(docker('inspect',*ids))] if ids else []
+    merged = {}
+    for item in [*saved,*current]:
+        merged.setdefault(item['id'],set()).update(item['references'])
+    payload = {'target':target,'phase':'pending','images':[{'id':k,'references':sorted(v)} for k,v in merged.items()]}
+    path.write_text(json.dumps(payload,indent=2)+'\n');path.chmod(0o600)
+    print('SERVICE_IMAGE_RECOVERY_CAPTURE='+target+'|IDS='+','.join(merged),flush=True)
+    return payload
+
+@locked
+def cleanup(target):
+    path = state_file(target)
+    if not path.exists():
+        return
+    payload = json.loads(path.read_text())
+    protected_pending = set()
+    for other in STATE.glob('*.json'):
+        if other == path:
+            continue
+        data = json.loads(other.read_text())
+        if data.get('phase') == 'pending':
+            protected_pending.update(i['id'] for i in data['images'])
+    protected_deployed = declared_images()
+    retained = [];removed = []
+    for old in payload['images']:
+        ids = docker('ps','-aq').split()
+        used = {c['Image'] for c in json.loads(docker('inspect',*ids))} if ids else set()
+        if old['id'] in used or old['id'] in protected_pending or old['id'] in protected_deployed:
+            retained.append(old);continue
+        result = subprocess.run(['docker','image','inspect',old['id']],capture_output=True,text=True)
+        if result.returncode:
+            continue
+        image = json.loads(result.stdout)[0]
+        tags = set(image.get('RepoTags') or [])
+        digests = set(image.get('RepoDigests') or [])
+        own = set(old['references'])
+        own_repositories = {repository(ref) for ref in own}
+        foreign_tags = {ref for ref in tags if repository(ref) not in own_repositories}
+        foreign_digests = {ref for ref in digests if repository(ref) not in own_repositories}
+        if foreign_digests:
+            retained.append(old)
+            print('SERVICE_IMAGE_KEEP_FOREIGN_DIGEST='+target+'|ID='+old['id'],flush=True)
+            continue
+        own_present = {ref for ref in tags if repository(ref) in own_repositories}
+        if not own_present:
+            own_present = {ref for ref in digests if repository(ref) in own_repositories}
+        if foreign_tags:
+            # Never delete aliases which were not used by this service.
+            for ref in sorted(own_present):
+                subprocess.run(['docker','image','rm','--no-prune',ref],check=True)
+            if not own_present:
+                retained.append(old)
+            print('SERVICE_IMAGE_KEEP_SHARED='+target+'|ID='+old['id'],flush=True)
+            continue
+        refs = sorted(own_present) if own_present else [old['id']]
+        # Docker itself additionally refuses deletion of a concurrently used image.
+        subprocess.run(['docker','image','rm','--no-prune',*refs],check=True)
+        removed.append(old['id'])
+    if retained:
+        payload['images']=retained;payload['phase']='complete_in_use'
+        path.write_text(json.dumps(payload,indent=2)+'\n');path.chmod(0o600)
+    else:
+        path.unlink()
+    print('SERVICE_IMAGE_CLEANUP='+target+'|REMOVED='+str(len(removed))+'|RETAINED='+str(len(retained)),flush=True)
+
+if __name__ == '__main__':
+    p=argparse.ArgumentParser()
+    p.add_argument('action',choices=['capture','cleanup']);p.add_argument('target');p.add_argument('--image')
+    a=p.parse_args()
+    if a.action=='capture':
+        if not a.image:p.error('capture CLI requires --image')
+        capture(a.target,image=a.image)
+    else:cleanup(a.target)
