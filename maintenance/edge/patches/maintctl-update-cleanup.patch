@@ -1,51 +1,21 @@
 --- a/maintctl
 +++ b/maintctl
-@@ -304,7 +304,7 @@
-   printf '%s\n' "$v"
- }
- 
+@@ -307 +307 @@
 -cmd_update_xray() {
 +cmd_update_xray() (
-   need_cmd curl
-   need_cmd unzip
- 
-@@ -327,7 +327,7 @@
-   cp -a /etc/xray/config.json "$backup/xray.config.json.bak" 2>/dev/null || true
- 
-   work="$(mktemp -d /var/tmp/xray-update.XXXXXX)"
+@@ -330 +330 @@
 -  trap 'rm -rf "$work"' RETURN
 +  trap 'rm -rf -- "$work"' EXIT
-   cd "$work"
- 
-   echo "Updating Xray: ${old_version:-UNKNOWN} -> ${version}"
-@@ -347,9 +347,9 @@
-   systemctl is-active xray
-   ls -1dt /var/backups/vpn-stack/update-xray-* 2>/dev/null | tail -n +3 | xargs -r rm -rf
-   echo "backup=$backup"
+@@ -350,3 +350,3 @@
 -}
 -
 -cmd_update_hy2() {
 +)
 +
 +cmd_update_hy2() (
-   need_cmd curl
- 
-   local requested="${1:-latest}"
-@@ -370,7 +370,7 @@
-   cp -a /etc/hysteria/config.yaml "$backup/hysteria.config.yaml.bak" 2>/dev/null || true
- 
-   work="$(mktemp -d /var/tmp/hy2-update.XXXXXX)"
+@@ -373 +373 @@
 -  trap 'rm -rf "$work"' RETURN
 +  trap 'rm -rf -- "$work"' EXIT
-   cd "$work"
- 
-   echo "Updating Hysteria2: ${old_version:-UNKNOWN} -> ${version}"
-@@ -387,7 +387,7 @@
-   systemctl is-active hysteria-server
-   ls -1dt /var/backups/vpn-stack/update-hy2-* 2>/dev/null | tail -n +3 | xargs -r rm -rf
-   echo "backup=$backup"
+@@ -390 +390 @@
 -}
 +)
- 
- cmd_update() {
-   local target="${1:-all}"
