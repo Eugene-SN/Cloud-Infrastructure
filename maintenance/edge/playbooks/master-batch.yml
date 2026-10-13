@@ -18,7 +18,10 @@
 
     - name: Show complete Master Batch output
       ansible.builtin.debug:
-        var: master_batch_run.stdout_lines
+        msg:
+          - "MASTER_BATCH_DRIVER_RC={{ master_batch_run.rc }}"
+          - "MASTER_BATCH_DRIVER_STDOUT={{ master_batch_run.stdout | default('') }}"
+          - "MASTER_BATCH_DRIVER_STDERR={{ master_batch_run.stderr | default('') }}"
 
     - name: Refresh maintenance cache after all Master targets
       ansible.builtin.command:
@@ -58,6 +61,7 @@
         msg: >-
           Master Batch did not reach a clean accepted state. Review
           MASTER_BATCH_SUMMARY, MASTER_POST_SCAN_GATE and MASTER_HEALTH_GATE.
+          Driver error: {{ master_batch_run.stderr | default('') }}
       when: >-
         master_batch_run.rc != 0 or
         master_post_refresh.rc != 0 or

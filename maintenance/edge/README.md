@@ -4,6 +4,10 @@ Current contract (2026-10-01 after Plane Part 1): 16 manual targets, 9 Docker un
 
 Current source for the single `edge` maintenance/update subsystem.
 
+After the 2026-10-13 Weblate deployment, the manifest contains 18 manual
+targets, 11 Docker units and 25 monitored components. `WEBLATE` and
+`WEBLATE_VALKEY` are separate Compose targets and Semaphore templates 22 and 23.
+
 ## Ownership model
 
 Stage 07.2 uses **native-first ownership**:
@@ -25,18 +29,18 @@ Normal and third-party APT updates remain manual through `APT_EDGE`. Automatic r
 
 Generated target model: `update_units_v5`.
 
-Maintenance contains exactly 16 actionable manual targets:
+Maintenance contains exactly 18 actionable manual targets:
 
 `APT_EDGE`, `XRAY`, `HYSTERIA2`, `BACKREST`, `RESTIC`, `RCLONE`,
 `SEMAPHORE`, `N8N`, `AUTHELIA`, `MATTERMOST`, `POSTGRESQL`,
 `STALWART`, `BULWARK`, `NEXTCLOUD`, `PLANE`,
-`NEXTCLOUD_REDIS`.
+`NEXTCLOUD_REDIS`, `WEBLATE`, `WEBLATE_VALKEY`.
 
 `HERMES`, `CODEX` and `ANTIGRAVITY` do not appear in raw Maintenance version rows,
 `maintenance.json`, `actions.json`, the Maintenance dashboard or Semaphore
 update templates.
 
-`actions.json` contains exactly the 16 manual actions, has
+`actions.json` contains exactly the 18 manual actions, has
 `execution_mode=manual_only`, and `auto_update=false`.
 
 `update.escloud.us` remains the operator launch surface. Semaphore is the
@@ -56,12 +60,18 @@ the actual image update remains operator-triggered.
 
 ## Master Batch
 
-Master Batch derives its 16-target plan from `config/update-units.json`.
+Master Batch derives its 18-target plan from `config/update-units.json`.
 Both real execution and `--plan-only` require the accepted schema-2
 `/etc/edge-maintenance/manual-driver-enablement.json`.
 
 Semaphore remains `individual_only` because updating the running orchestrator
 inside its own batch could interrupt final acceptance.
+When its row is `UPDATE_AVAILABLE`, the precheck stops before any update with
+`INDIVIDUAL_UPDATE_REQUIRED|DETAIL=SEMAPHORE`. A pending reboot also prevents
+dispatch. These are existing preconditions, not driver or cleanup failures.
+The Master playbook displays both driver stdout and stderr, including the
+specific precheck reason; a post-scan failure alone is not the primary cause
+when dispatch never began.
 
 ## Monitoring integration
 
@@ -74,7 +84,7 @@ updates, not native updater drift.
 
 A manual component update requires:
 
-- the target to be one of the 16 manifest units;
+- the target to be one of the 18 manifest units;
 - schema-2 enablement to permit the target;
 - a fresh `UPDATE_AVAILABLE` row;
 - explicit operator initiation.

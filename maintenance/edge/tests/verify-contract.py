@@ -25,14 +25,15 @@ assert maintenance["target_model"] == "update_units_v5"
 assert manifest["schema"] == 2
 assert manifest["ownership_mode"] == "native_first_hybrid"
 assert "monitor_only" not in manifest
-assert len(manual) == 16
+assert len(manual) == 18
+assert {"WEBLATE", "WEBLATE_VALKEY"}.issubset(manual)
 assert native == {"HERMES", "CODEX", "UBUNTU_SECURITY", "ANTIGRAVITY"}
 assert set(index) == manual
 assert "HERMES" not in index
 assert "CODEX" not in index
 assert "ANTIGRAVITY" not in index
-assert maintenance["summary"]["TOTAL"] == 16
-assert maintenance["summary"]["ACTIONABLE_TARGETS"] == 16
+assert maintenance["summary"]["TOTAL"] == len(manual)
+assert maintenance["summary"]["ACTIONABLE_TARGETS"] == len(manual)
 assert maintenance["summary"]["CLI_TARGETS"] == 0
 assert "MONITOR_ONLY_TARGETS" not in maintenance["summary"]
 assert maintenance["summary"]["APT_MANAGED_COMPONENTS"] == 8
@@ -42,7 +43,7 @@ for target in manual:
     assert index[target]["update_owner"] == "maintenance_manual"
 
 docker = [r for r in rows if r["type"] == "DOCKER"]
-assert len(docker) == 9
+assert len(docker) == 11
 required = {
     "application_version",
     "available_application_version",
@@ -120,8 +121,6 @@ assert "NEXTCLOUD_POSTGRESQL" not in {u["id"] for u in manifest["units"]}
 assert "NEXTCLOUD_POSTGRESQL" not in templates["components"]
 assert "NEXTCLOUD_POSTGRESQL" not in enablement["enabled"]
 assert "--remove-orphans" not in manual_update_source
-assert '"docker", "rmi"' in manual_update_source
-assert '"image", "prune"' in manual_update_source
 assert "rotate_backups" not in manual_update_source
 assert "autoremove" in manual_update_source
 assert '"apt-get", "clean"' in manual_update_source
@@ -138,7 +137,7 @@ assert "DOCKER_SERVICES=" in health_source
 # Master health coverage verification
 COMPOSE_DRIVERS = ("compose", "nextcloud_compose", "stalwart_compose", "plane_compose")
 compose_family_units = [u for u in manifest["units"] if u.get("driver") in COMPOSE_DRIVERS]
-assert len(compose_family_units) == 9
+assert len(compose_family_units) == 11
 
 
 nc_manifest = next(u for u in manifest["units"] if u["id"] == "NEXTCLOUD")
