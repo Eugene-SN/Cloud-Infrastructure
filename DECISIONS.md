@@ -3394,3 +3394,25 @@ their expected outcomes.95original hashes unchanged; all95cleaned/INDEX markers
 present. Own jobs/container/private credential-bearing clone removed. Stage13
 remains accepted; no final operator acceptance or new policy is inferred.
 Record: N8N_DOCUMENTATION_WORKFLOW_VERIFICATION_2026-10-06.md.
+
+## 2026-10-13 — Pending reboot does not block Edge Master updates
+
+**Operator decision:** remove the pending-reboot blocker before Master dispatch
+and in final validation; preserve the reboot notification. Verify without
+executing updates or restarting services.
+
+**Correction:** task65 stopped before any component update because the Edge
+precheck rejected `REBOOT_REQUIRED=1`. This blanket restriction was added in
+Edge adaptation commit54027cd; its necessity was not established by the PVE
+evidence. A record describing it as accepted does not establish a technical
+requirement. It is explicitly superseded by this operator decision.
+
+Master reports a pending reboot as information and may succeed when component
+updates and the remaining checks pass. The cache, dashboard and final output
+retain the actual reboot indication. This change neither clears the OS marker
+nor authorizes a reboot, updates or changes to PVE. Other execution, status and
+health checks remain in force.
+
+**Supersedes:** only the before/after pending-reboot rejection in the
+2026-09-21 Stage7B Master activation/acceptance contract. Real execution of the
+modified Master is not established by the isolated verification.

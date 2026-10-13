@@ -67,8 +67,11 @@ Both real execution and `--plan-only` require the accepted schema-2
 Semaphore remains `individual_only` because updating the running orchestrator
 inside its own batch could interrupt final acceptance.
 When its row is `UPDATE_AVAILABLE`, the precheck stops before any update with
-`INDIVIDUAL_UPDATE_REQUIRED|DETAIL=SEMAPHORE`. A pending reboot also prevents
-dispatch. These are existing preconditions, not driver or cleanup failures.
+`INDIVIDUAL_UPDATE_REQUIRED|DETAIL=SEMAPHORE`.
+An outstanding reboot is informational: it permits dispatch and final update
+acceptance, emits `MASTER_NOTICE=REBOOT_REQUIRED`, and remains visible in the
+maintenance cache/dashboard and the final validator's `REBOOT_REQUIRED` field.
+Master neither reboots the host nor clears the OS reboot marker.
 The Master playbook displays both driver stdout and stderr, including the
 specific precheck reason; a post-scan failure alone is not the primary cause
 when dispatch never began.

@@ -42,13 +42,12 @@ def validate(manifest, cache, now=None):
         return False, "NONCURRENT_ROWS_REMAIN:" + ",".join(noncurrent)
 
     summary = cache.get("summary", {})
-    if summary.get("REBOOT_REQUIRED") != 0:
-        return False, f"REBOOT_REQUIRED:{summary.get('REBOOT_REQUIRED')}"
     if summary.get("ACTIONABLE_TARGETS") != len(expected):
         return False, "ACTIONABLE_SUMMARY_MISMATCH"
 
     return True, (
-        f"MANUAL_TOTAL={len(expected)}|MANUAL_CURRENT={len(expected)}|REBOOT_REQUIRED=0"
+        f"MANUAL_TOTAL={len(expected)}|MANUAL_CURRENT={len(expected)}|"
+        f"REBOOT_REQUIRED={summary.get('REBOOT_REQUIRED', 0)}"
     )
 
 

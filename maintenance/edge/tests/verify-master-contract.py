@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 import copy
+import contextlib
 import datetime as dt
+import io
 import json
 import pathlib
 import runpy
@@ -79,8 +81,31 @@ one_update["summary"]["UPDATE_AVAILABLE"] = 1
 assert master["validate_plan"](manifest, one_update, now)[2][target]["status"] == "UPDATE_AVAILABLE"
 assert post["validate"](manifest, one_update, now)[0] is False
 
-for mutation in ("UNRESOLVED", "MISSING", "SEMAPHORE", "STALE", "REBOOT", "NONACTIONABLE"):
+# A pending reboot must permit dispatch and completion while remaining visible.
+pending_reboot = fixture()
+pending_reboot["summary"]["REBOOT_REQUIRED"] = 1
+messages = io.StringIO()
+failures = []
+with contextlib.redirect_stdout(messages):
+    try:
+        master["validate_plan"](manifest, pending_reboot, now)
+    except RuntimeError as error:
+        failures.append("precheck blocked pending reboot: " + str(error))
+success, detail = post["validate"](manifest, pending_reboot, now)
+if not success:
+    failures.append("postcheck rejected pending reboot: " + detail)
+assert not failures, failures
+assert "MASTER_NOTICE=REBOOT_REQUIRED" in messages.getvalue()
+assert "REBOOT_REQUIRED=1" in detail
+assert pending_reboot["summary"]["REBOOT_REQUIRED"] == 1
+one_update["summary"]["REBOOT_REQUIRED"] = 1
+with contextlib.redirect_stdout(io.StringIO()):
+    assert master["validate_plan"](manifest, one_update, now)[2][target]["status"] == "UPDATE_AVAILABLE"
+assert post["validate"](manifest, one_update, now) == (False, "NONCURRENT_ROWS_REMAIN:AUTHELIA:UPDATE_AVAILABLE")
+
+for mutation in ("UNRESOLVED", "MISSING", "SEMAPHORE", "STALE", "NONACTIONABLE"):
     broken = copy.deepcopy(clean)
+    broken["summary"]["REBOOT_REQUIRED"] = 1
     if mutation == "UNRESOLVED":
         next(r for r in broken["rows"] if r["component"] == "RESTIC")["status"] = "STABLE_UNRESOLVED"
     elif mutation == "MISSING":
@@ -89,8 +114,6 @@ for mutation in ("UNRESOLVED", "MISSING", "SEMAPHORE", "STALE", "REBOOT", "NONAC
         next(r for r in broken["rows"] if r["component"] == "SEMAPHORE")["status"] = "UPDATE_AVAILABLE"
     elif mutation == "STALE":
         broken["generated_at"] = (now - dt.timedelta(seconds=301)).isoformat()
-    elif mutation == "REBOOT":
-        broken["summary"]["REBOOT_REQUIRED"] = 1
     else:
         next(r for r in broken["rows"] if r["component"] == "N8N")["actionable"] = False
 
