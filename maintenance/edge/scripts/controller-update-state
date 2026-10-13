@@ -1,0 +1,154 @@
+#!/usr/bin/env python3
+"""Semaphore's external update outcome, idle check and matched rollback."""
+import datetime
+from contextlib import closing
+import json
+import os
+from pathlib import Path
+import re
+import shutil
+import sqlite3
+import subprocess
+import sys
+import time
+import urllib.request
+
+DATABASE = Path('/var/lib/semaphore/database.sqlite')
+STATE = Path('/var/www/maintenance-status/controller-update.json')
+BINARY = Path('/usr/local/bin/semaphore')
+CONFIG = '/etc/semaphore/config.json'
+
+def write_state(status, version='', operation='', phase=''):
+    temporary = STATE.with_suffix('.json.tmp')
+    temporary.write_text(json.dumps({
+        'status': status, 'version': version, 'operation': operation,
+        'phase': phase, 'updated_at': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+    }) + '\n')
+    temporary.chmod(0o644)
+    os.replace(temporary, STATE)
+
+def wait_idle(database=DATABASE, timeout=600):
+    deadline = time.monotonic() + timeout
+    while True:
+        with closing(sqlite3.connect(database.as_uri() + '?mode=ro', uri=True)) as connection:
+            active = connection.execute(
+                "SELECT count(*) FROM task WHERE runner_id IS NULL "
+                "AND status NOT IN ('success','error','stopped')"
+            ).fetchone()[0]
+        if not active:
+            return
+        if time.monotonic() >= deadline:
+            raise RuntimeError('local tasks still active; service was not stopped')
+        time.sleep(1)
+
+def recover():
+    # Retained for the existing Home ExecStartPre; no Edge hook is added.
+    with closing(sqlite3.connect(DATABASE, timeout=5)) as connection, connection:
+        rows = connection.execute(
+            "SELECT id FROM task WHERE runner_id IS NULL "
+            "AND status IN ('running','starting','stopping')"
+        ).fetchall()
+        for (task_id,) in rows:
+            now = datetime.datetime.now(datetime.timezone.utc).isoformat()
+            connection.execute("UPDATE task SET status='error', end=? WHERE id=?", (now, task_id))
+            connection.execute('INSERT INTO task__output(task_id,time,output) VALUES (?,?,?)',
+                               (task_id, now, 'Interrupted by Semaphore service restart; local worker no longer exists.'))
+            print(f'CONTROLLER_RECOVERED_INTERRUPTED_TASK={task_id}', flush=True)
+
+def run(argv):
+    subprocess.run(argv, check=True)
+
+def binary_version(path):
+    text = subprocess.check_output([str(path), 'version'], text=True).strip()
+    match = re.match(r'[0-9]+\.[0-9]+\.[0-9]+', text)
+    if not match:
+        raise RuntimeError('unrecognized Semaphore binary version')
+    return match.group()
+
+def copy_database(source, destination):
+    with closing(sqlite3.connect(source.as_uri() + '?mode=ro', uri=True)) as src:
+        with closing(sqlite3.connect(destination)) as dst:
+            src.backup(dst)
+
+def healthy(version):
+    for attempt in range(30):
+        try:
+            pid = int(subprocess.check_output(
+                ['systemctl', 'show', 'semaphore', '-p', 'MainPID', '--value'], text=True).strip())
+            if pid > 0:
+                with urllib.request.urlopen('http://127.0.0.1:3000/api/ping', timeout=5) as response:
+                    if response.status == 200 and binary_version(Path('/proc') / str(pid) / 'exe') == version:
+                        return
+        except (OSError, ValueError, subprocess.SubprocessError):
+            pass
+        time.sleep(1)
+    raise RuntimeError('Semaphore ping/running-version check failed')
+
+def install_semaphore(candidate, version, database, backup, backup_db):
+    if binary_version(candidate) != version:
+        raise RuntimeError('downloaded binary version mismatch')
+    wait_idle(database)
+    previous_version = binary_version(BINARY)
+    shutil.copy2(BINARY, backup)
+    backup.chmod(0o600)
+    stopped = False
+    database_saved = False
+    try:
+        run(['systemctl', 'stop', 'semaphore'])
+        stopped = True
+        # Cold, matched SQLite backup before any schema/binary changes.
+        backup_db.touch(mode=0o600, exist_ok=True)
+        backup_db.chmod(0o600)
+        copy_database(database, backup_db)
+        database_saved = True
+        shutil.copy2(candidate, BINARY)
+        BINARY.chmod(0o755)
+        run(['runuser', '-u', 'semaphore', '--', str(BINARY), 'migrate', '--config', CONFIG])
+        run(['systemctl', 'start', 'semaphore'])
+        healthy(version)
+    except Exception as failure:
+        if stopped:
+            try:
+                run(['systemctl', 'stop', 'semaphore'])
+                shutil.copy2(backup, BINARY)
+                BINARY.chmod(0o755)
+                if database_saved:
+                    copy_database(backup_db, database)
+                run(['systemctl', 'start', 'semaphore'])
+                healthy(previous_version)
+                print('SEMAPHORE_ROLLBACK=VERIFIED', flush=True)
+            except Exception as rollback_failure:
+                raise RuntimeError('rollback failed; retain backup pair and inspect service') from rollback_failure
+        raise failure
+
+if __name__ == '__main__':
+    command = sys.argv[1]
+    if command == 'wait-idle':
+        wait_idle()
+    elif command == 'recover':
+        recover()
+    elif command in ('pending', 'success', 'error'):
+        arguments = sys.argv[2:5]
+        preserve_error = False
+        if command == 'error' and len(arguments) >= 2 and STATE.exists():
+            existing = json.loads(STATE.read_text())
+            preserve_error = existing.get('status') == 'error' and existing.get('operation') == arguments[1]
+        if not preserve_error:
+            write_state(command, *arguments)
+    elif command == 'install':
+        candidate, version, operation, backup, backup_db, refresh = sys.argv[2:8]
+        try:
+            install_semaphore(Path(candidate), version, DATABASE, Path(backup), Path(backup_db))
+        except Exception:
+            write_state('error', version, operation, 'install-or-rollback')
+            raise
+        try:
+            run([refresh])
+        except Exception:
+            # A status refresh failure does not undo a healthy updated service.
+            write_state('error', version, operation, 'status-refresh')
+            raise
+        write_state('success', version, operation, 'verified')
+        print('SEMAPHORE_UPDATE=SUCCESS|VERSION=' + version, flush=True)
+    else:
+        raise SystemExit('Unknown controller update command')

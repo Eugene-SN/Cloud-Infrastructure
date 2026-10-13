@@ -10,6 +10,7 @@ import runpy
 import shutil
 import subprocess
 import sys
+import uuid
 
 BASE = pathlib.Path("/opt/edge-maintenance")
 MANIFEST = BASE / "config/update-units.json"
@@ -165,8 +166,19 @@ def preflight(unit):
         run([unit["binary"], "version"])
     elif driver == "maintctl" and not pathlib.Path("/usr/local/bin/maintctl").is_file():
         raise RuntimeError("missing maintctl")
-    elif driver == "github_binary" and not pathlib.Path(f"/usr/local/bin/{unit['id'].lower()}").is_file():
-        raise RuntimeError("missing installed binary")
+    elif driver == "github_binary":
+        if not pathlib.Path(f"/usr/local/bin/{unit['id'].lower()}").is_file():
+            raise RuntimeError("missing installed binary")
+        if unit["id"] == "SEMAPHORE":
+            helper = BASE / "scripts/update-github-binary"
+            if not helper.is_file() or not os.access(helper, os.X_OK):
+                raise RuntimeError(f"missing executable Semaphore update helper: {helper}")
+            state = BASE / "scripts/controller-update-state"
+            if not state.is_file() or not os.access(state, os.X_OK):
+                raise RuntimeError(f"missing executable Semaphore state helper: {state}")
+            for dependency in ("systemd-run", "curl", "jq", "tar", "sha256sum", "python3"):
+                if not shutil.which(dependency):
+                    raise RuntimeError(f"missing dependency: {dependency}")
     elif driver == "apt" and not shutil.which("apt-get"):
         raise RuntimeError("missing apt-get")
     print(f"DRIVER_PREFLIGHT={unit['id']}:PASS")
@@ -197,6 +209,16 @@ def execute(unit, status_row):
         run(["apt-get", "clean"], env=env)
     elif driver == "maintctl":
         run(["/usr/local/bin/maintctl", "update", unit["argument"]])
+    elif driver == "github_binary" and unit["id"] == "SEMAPHORE":
+        operation = uuid.uuid4().hex
+        run([
+            "systemd-run", "--unit=edge-semaphore-update", "--collect",
+            "--service-type=exec", "--property=StandardOutput=journal",
+            "--property=StandardError=journal",
+            str(BASE / "scripts/update-github-binary"), "SEMAPHORE", operation,
+        ])
+        print("SEMAPHORE_UPDATE_ID=" + operation, flush=True)
+        print("SEMAPHORE_STATUS=DISPATCHED_TO_TRANSIENT_UNIT|UNIT=edge-semaphore-update.service", flush=True)
     elif driver == "github_binary":
         binary_name = unit["id"].lower()
         target = pathlib.Path(f"/usr/local/bin/{binary_name}")
@@ -350,7 +372,10 @@ def main():
     else:
         status_row = require_fresh_update(args.target, manifest["cache_max_age_seconds"])
     execute(unit, status_row)
-    print(f"UPDATE_RESULT={args.target}:SUCCESS")
+    if args.target == "SEMAPHORE":
+        print("UPDATE_RESULT=SEMAPHORE:DISPATCHED|COMPLETION=SYSTEMD_JOURNAL_AND_MAINTENANCE_STATUS")
+    else:
+        print(f"UPDATE_RESULT={args.target}:SUCCESS")
 
 
 if __name__ == "__main__":

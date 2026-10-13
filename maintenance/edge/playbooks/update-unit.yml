@@ -23,6 +23,11 @@
       register: update_result
       changed_when: true
 
+    - name: Show Semaphore self-update handoff
+      ansible.builtin.debug:
+        var: update_result.stdout_lines
+      when: edge_update_target == 'SEMAPHORE'
+
     - name: Refresh status after the driver
       ansible.builtin.command:
         argv:

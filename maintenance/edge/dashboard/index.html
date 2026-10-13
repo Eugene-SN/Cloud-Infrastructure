@@ -2152,6 +2152,27 @@
       }
     }
 
+    async function waitControllerUpdate(taskId) {
+      const response = await apiFetch(`/api/project/1/tasks/${taskId}/output`);
+      if (!response.ok) throw new Error(`Cannot read update outcome: HTTP ${response.status}`);
+      const output = (await response.json()).map(line => line.output || "").join("\n");
+      const operation = output.match(/SEMAPHORE_UPDATE_ID=([A-Za-z0-9_.-]+)/)?.[1];
+      if (!operation) return;
+      showToast("Waiting for Semaphore update and health check...", "info");
+      for (let i = 0; i < 330; i++) {
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        let state;
+        try {
+          const result = await apiFetch("/status/controller-update.json", {cache: "no-store", signal: AbortSignal.timeout(10000)});
+          if (result.ok) state = await result.json();
+        } catch (error) { continue; }
+        if (state?.operation !== operation) continue;
+        if (state.status === "error") throw new Error("Semaphore update failed; inspect its external unit journal.");
+        if (state.status === "success") return;
+      }
+      throw new Error("Semaphore update outcome is still pending; inspect its external unit journal.");
+    }
+
     async function pollTask(taskId, label, maxAttempts = 180) {
       for (let i = 0; i < maxAttempts; i++) {
         await new Promise(r => setTimeout(r, 2000));
@@ -2160,9 +2181,11 @@
           if (!res.ok) continue;
           const t = await res.json();
           if (t.status === "success") {
+            try { await waitControllerUpdate(taskId); }
+            catch (error) { showToast(escapeHtml(error.message), "bad"); return false; }
             showToast(`✓ <strong>${label}</strong> completed successfully!`, "ok");
             return true;
-          } else if (t.status === "error" || t.status === "failed") {
+          } else if (["error", "failed", "stopped", "cancelled", "canceled"].includes(t.status)) {
             showToast(`✗ <strong>${label}</strong> failed with error.`, "bad");
             return false;
           }

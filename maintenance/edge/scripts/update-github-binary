@@ -3,13 +3,23 @@ set -euo pipefail
 
 # Candidate native-binary driver. manual-update enforces per-target acceptance first.
 target="${1:-}"
+operation="${2:-}"
+state=/opt/edge-maintenance/scripts/controller-update-state
+if test "$target" = SEMAPHORE; then
+  test -n "$operation"
+  "$state" pending '' "$operation"
+fi
 case "$target" in
   BACKREST) repo=garethgeorge/backrest; binary=backrest; asset_template='backrest_VERSION_Linux_x86_64.tar.gz'; checksum_template='backrest_VERSION_checksums.txt'; service=backrest ;;
   RESTIC) repo=restic/restic; binary=restic; asset_template='restic_VERSION_linux_amd64.bz2'; checksum_template='SHA256SUMS'; service='' ;;
-  SEMAPHORE) repo=semaphoreui/semaphore; binary=semaphore; asset_template='semaphore_VERSION_linux_amd64.tar.gz'; checksum_template='semaphore_VERSION_checksums.txt'; service=semaphore ;;
+  SEMAPHORE) repo=semaphoreui/semaphore; binary=semaphore; asset_template='semaphore_community_VERSION_linux_amd64.tar.gz'; checksum_template='semaphore_community_VERSION_checksums.txt'; service=semaphore ;;
   *) echo "unsupported native target: $target" >&2; exit 2 ;;
 esac
 
+preparation_failed() {
+  if test "$target" = SEMAPHORE; then "$state" error "${version:-}" "$operation"; fi
+}
+trap preparation_failed ERR
 release_json="$(curl -fsSL --retry 3 --connect-timeout 15 --max-time 60 \
   -H 'Accept: application/vnd.github+json' -H 'User-Agent: Edge-Maintenance' \
   "https://api.github.com/repos/${repo}/releases/latest")"
@@ -22,8 +32,17 @@ sum_url="$(jq -r --arg n "$checksums" '.assets[]|select(.name==$n)|.browser_down
 test -n "$asset_url" && test "$asset_url" != null
 test -n "$sum_url" && test "$sum_url" != null
 
-work="$(mktemp -d /var/tmp/edge-native-update.XXXXXX)"
-trap 'rm -rf "$work"' EXIT
+work_root=/var/tmp
+if test "$target" = SEMAPHORE; then work_root=/tmp; fi
+work="$(mktemp -d "$work_root/edge-native-update.XXXXXX")"
+cleanup() {
+  rc=$?
+  rm -rf -- "$work"
+  if test "$target" = SEMAPHORE && test "$rc" -ne 0; then
+    "$state" error "${version:-}" "$operation"
+  fi
+}
+trap cleanup EXIT
 curl -fL --retry 3 --connect-timeout 15 --max-time 300 -o "$work/$asset" "$asset_url"
 curl -fL --retry 3 --connect-timeout 15 --max-time 60 -o "$work/$checksums" "$sum_url"
 expected="$(awk -v n="$asset" '$2==n || $2=="*"n {print $1; exit}' "$work/$checksums")"
@@ -38,6 +57,22 @@ candidate="$(find "$work" -type f -name "$binary" -perm -u+x -print -quit)"
 if test -z "$candidate" && test -f "${work}/${asset%.bz2}"; then candidate="${work}/${asset%.bz2}"; fi
 test -n "$candidate" && chmod 0755 "$candidate"
 "$candidate" version >/dev/null 2>&1 || "$candidate" --version >/dev/null
+
+if test "$target" = SEMAPHORE; then
+  backup="/var/backups/edge-maintenance/semaphore-$(date -u +%Y%m%d-%H%M%S)"
+  /opt/edge-maintenance/scripts/controller-update-state install "$candidate" "$version" "$operation" \
+    "$backup" "$backup.sqlite" /opt/edge-maintenance/scripts/maintenance-refresh
+  python3 - <<'PY_ROTATE'
+from pathlib import Path
+import re
+root = Path('/var/backups/edge-maintenance')
+items = sorted((p for p in root.iterdir() if re.fullmatch(r'semaphore-[0-9]{8}-[0-9]{6}', p.name)), reverse=True)
+for old in items[2:]:
+    old.unlink()
+    Path(str(old) + '.sqlite').unlink(missing_ok=True)
+PY_ROTATE
+  exit 0
+fi
 
 backup="/var/backups/edge-maintenance/${binary}-$(date -u +%Y%m%d-%H%M%S)"
 install -d -o root -g root -m 0700 /var/backups/edge-maintenance

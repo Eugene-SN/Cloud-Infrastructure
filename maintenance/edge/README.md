@@ -73,6 +73,58 @@ The Master playbook displays both driver stdout and stderr, including the
 specific precheck reason; a post-scan failure alone is not the primary cause
 when dispatch never began.
 
+## Semaphore self-update (2026-10-13)
+
+The installed binary distribution remains in use, as supported by the
+[upstream upgrade guide](https://semaphoreui.com/docs/admin-guide/upgrading).
+The manual Semaphore task only dispatches a fixed transient systemd service
+`edge-semaphore-update.service`; it reports `DISPATCHED`, not completed update.
+The external service downloads the Community release and its matching official
+checksum manifest, checks the candidate version, waits for all unfinished local
+tasks (including `stopping`), then stops Semaphore, snapshots SQLite, installs
+the binary, runs the native migration and starts Semaphore. A second dispatch
+cannot replace an existing active unit. No permanent unit or timer is added.
+
+`scripts/controller-update-state` records the operation and final outcome in
+`/var/www/maintenance-status/controller-update.json`. The dashboard matches
+that operation before reporting success. Completion requires both `/api/ping`
+and the actual running process's version; migration/start/health failures
+restore and verify the matched previous binary and SQLite database. Failure
+before installation does not restart the service. A subsequent cache-refresh
+failure is reported separately and does not undo a healthy update.
+
+Matched private recovery files use `/var/backups/edge-maintenance/semaphore-*`
+and `.sqlite` (0600), retaining the existing limit of two previous versions.
+The helper has no Edge `ExecStartPre` hook and does not alter task records on
+Edge startup. Orphan task 63 was stopped through Semaphore's native stop API.
+
+Handler installation recovery is `/tmp/semaphore-handler-recovery` (0700),
+with original files and ownership/mode metadata in `manifest.json`. Retain
+this agreed recovery directory until operator acceptance. Restoring these
+handler/page files does not require a service restart.
+
+`semaphore-pve-fix.py` is an operator-run root installer for the audited CT1000
+Home layout. It refuses drift in the audited manual driver, preserves the
+Home release edition and existing `ExecStartPre` hook, uses a fixed transient
+unit on PVE and the existing `.pre-update` recovery pair inside CT1000 (0600).
+It patches the Home dashboard and common playbook without executing an update
+or restarting services. Its files and permission metadata are recoverable from
+the same `/tmp/semaphore-handler-recovery` location inside CT1000. Preparation
+of this installer does not mean it has been applied on PVE.
+
+Verification commands (isolated service/network boundaries):
+
+```bash
+python3 maintenance/edge/tests/verify-semaphore-update.py
+node maintenance/edge/tests/verify-semaphore-dashboard.js
+python3 maintenance/edge/tests/verify-semaphore-pve.py
+ansible-playbook --syntax-check -i localhost, maintenance/edge/playbooks/updates/semaphore.yml
+```
+
+These checks cover dispatch, download failure, unfinished tasks, SQLite/binary
+rollback, rollback failure and stale UI outcomes. They do not establish that a
+real upgrade has completed; a real operator-initiated upgrade remains untested.
+
 ## Monitoring integration
 
 Stage 8 `edge-monitor` consumes
