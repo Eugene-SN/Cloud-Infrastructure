@@ -145,3 +145,37 @@ A manual component update requires:
 - explicit operator initiation.
 
 Read-only Refresh never chains into a component update.
+
+## Update driver audit and correction (2026-10-13, Task 66)
+
+Task 66 dispatched eight updates, with Hysteria2's cleanup reporting an error
+after installation and Nextcloud rejecting its missing required CLI argument.
+The correction isolates Xray/Hysteria2 function working directories and EXIT
+cleanup inside subshells; the deployed maintctl delta is recorded in
+`patches/maintctl-update-cleanup.patch`. The historical migration reference is
+preserved, and the patch applies only to the two update functions.
+
+Nextcloud dispatch passes the cached application version and image digest.
+Equal application versions still run the existing image replacement path.
+The final image is pulled by that digest and tagged for the existing Compose
+track; app and cron are recreated with `--no-deps`, then native readiness and
+both running image IDs are checked before the existing image cleanup. The
+existing intermediate-major upgrade path remains; no automatic data downgrade
+is introduced. Upstream lifecycle: https://github.com/nextcloud/docker#update-to-a-newer-version.
+
+Backrest uses the existing `update-github-binary` helper rather than the absent
+legacy downloader. Its official archive is `backrest_Linux_x86_64.tar.gz`;
+the checksum manifest includes the release version. Candidate verification
+uses `--version`, avoiding invocation of the application with a positional
+`version` argument. Preparation failures do not touch the service. Installation
+and health failures use the existing binary recovery path and verify service
+activity after restoration.
+
+Verification adds executable behavior tests for all 18 dispatch routes,
+Nextcloud digest refresh/readiness, maintctl cleanup and Backrest download,
+checksum, version, installation and health failures. It also checks live
+Compose identities, native preflights, APT simulation and the complete health
+validator. See `UPDATE_DRIVER_AUDIT_2026-10-13.md` for coverage and limits.
+No real update, image pull, migration or service restart is part of this
+verification. Runtime handler recovery is
+`/tmp/semaphore-handler-recovery/drivers-task66` until operator acceptance.

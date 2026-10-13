@@ -169,10 +169,13 @@ def preflight(unit):
     elif driver == "github_binary":
         if not pathlib.Path(f"/usr/local/bin/{unit['id'].lower()}").is_file():
             raise RuntimeError("missing installed binary")
+        helper = BASE / "scripts/update-github-binary"
+        if not helper.is_file() or not os.access(helper, os.X_OK):
+            raise RuntimeError(f"missing executable native update helper: {helper}")
+        for dependency in ("curl", "jq", "tar", "sha256sum", "python3"):
+            if not shutil.which(dependency):
+                raise RuntimeError(f"missing dependency: {dependency}")
         if unit["id"] == "SEMAPHORE":
-            helper = BASE / "scripts/update-github-binary"
-            if not helper.is_file() or not os.access(helper, os.X_OK):
-                raise RuntimeError(f"missing executable Semaphore update helper: {helper}")
             state = BASE / "scripts/controller-update-state"
             if not state.is_file() or not os.access(state, os.X_OK):
                 raise RuntimeError(f"missing executable Semaphore state helper: {state}")
@@ -220,57 +223,19 @@ def execute(unit, status_row):
         print("SEMAPHORE_UPDATE_ID=" + operation, flush=True)
         print("SEMAPHORE_STATUS=DISPATCHED_TO_TRANSIENT_UNIT|UNIT=edge-semaphore-update.service", flush=True)
     elif driver == "github_binary":
-        binary_name = unit["id"].lower()
-        target = pathlib.Path(f"/usr/local/bin/{binary_name}")
-        old_bin = pathlib.Path(f"/usr/local/bin/{binary_name}.old")
-        tmp_bin = pathlib.Path(f"/usr/local/bin/{binary_name}.new")
-        service = unit["service"]
-
-        try:
-            old_bin.unlink(missing_ok=True)
-            tmp_bin.unlink(missing_ok=True)
-            installed = (
-                subprocess.run(
-                    [str(target), "--version"],
-                    capture_output=True,
-                    text=True,
-                    check=True,
-                )
-                .stdout.splitlines()[0]
-                .strip()
-            )
-            download = BASE / "scripts/download-github-release-binary"
-            run(
-                [
-                    str(download),
-                    unit["repository"],
-                    binary_name,
-                    str(tmp_bin),
-                ]
-            )
-            run(["systemctl", "stop", service])
-            if target.exists():
-                target.rename(old_bin)
-            shutil.move(str(tmp_bin), str(target))
-            target.chmod(0o755)
-            run(["systemctl", "start", service])
-            run(["systemctl", "is-active", "--quiet", service])
-            old_bin.unlink(missing_ok=True)
-        except Exception:
-            if old_bin.exists() and not target.exists():
-                old_bin.rename(target)
-            tmp_bin.unlink(missing_ok=True)
-            subprocess.run(
-                ["systemctl", "restart", service],
-                check=False,
-            )
-            raise
+        run([str(BASE / "scripts/update-github-binary"), unit["id"]])
     elif driver == "plane_compose":
         run([sys.executable, "/opt/edge-maintenance/scripts/update-plane"])
     elif driver == "nextcloud_compose":
+        target = str(status_row.get("available_application_version") or "")
+        digest = str(status_row.get("remote_image_digest") or "")
+        if not target or not digest.startswith("sha256:"):
+            raise RuntimeError("fresh Nextcloud target identity is incomplete")
         run([
             sys.executable,
             "/opt/edge-maintenance/scripts/update-nextcloud",
+            "--target-version", target,
+            "--target-digest", digest,
         ])
     elif driver == "stalwart_compose":
         target = str(status_row.get("available_application_version") or "")

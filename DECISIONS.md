@@ -3416,3 +3416,28 @@ health checks remain in force.
 **Supersedes:** only the before/after pending-reboot rejection in the
 2026-09-21 Stage7B Master activation/acceptance contract. Real execution of the
 modified Master is not established by the isolated verification.
+
+## 2026-10-13 — Correct Task66 updater defects and audit every Edge dispatch route
+
+**Operator scope:** correct Hysteria2 and Nextcloud, including a changed image
+digest with the same application version; inspect every remaining updater.
+Xray and Backrest corrections were separately approved after the audit exposed
+their dormant defects. Verification must not execute updates or restart services.
+
+**Confirmed fixes:** isolate Xray/Hysteria2 cleanup inside their function
+subshells; pass Nextcloud's cached version/digest and reuse its existing
+pull/recreate/readiness path even for equal versions; verify both app and cron
+image IDs against the accepted digest. Backrest reuses the existing native
+binary helper, with corrected upstream asset and version syntax, no service
+action on preparation failure, and checked restoration on installation/health
+failure. Remove the obsolete missing-downloader branch instead of adding a
+second loader. No runtime layer, dependency, service or timer is introduced.
+
+**Verification:** all18 dispatch routes exercised with isolated command
+boundaries, live Compose/preflight/native CLI checks including CURRENT targets,
+matched-digest and error-path fixtures, APT simulation and complete health
+validation. No real update or migration is claimed. Original handlers and
+metadata are retained under `/tmp/semaphore-handler-recovery/drivers-task66`
+until acceptance. Task66 remains a failed historical task.
+
+Evidence and limits: `maintenance/edge/UPDATE_DRIVER_AUDIT_2026-10-13.md`.

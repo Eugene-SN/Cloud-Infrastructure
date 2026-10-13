@@ -532,7 +532,21 @@ def build_steps(installed, target, releases):
     return steps
 
 
-def apply_step(major, expected_version):
+def verify_running_digest(digest):
+    reference = "nextcloud@" + digest
+    expected = run(["docker", "image", "inspect", reference, "--format", "{{.Id}}"],
+                   capture_output=True, text=True).stdout.strip()
+    containers = compose_run("ps", "-q", *SERVICES, capture_output=True, text=True).stdout.split()
+    if not expected or len(containers) != len(SERVICES):
+        raise RuntimeError("Nextcloud app/cron image verification incomplete")
+    actual = run(["docker", "inspect", "--format", "{{.Image}}", *containers],
+                 capture_output=True, text=True).stdout.split()
+    if len(actual) != len(SERVICES) or any(image != expected for image in actual):
+        raise RuntimeError("Nextcloud app/cron running image differs from the requested digest")
+    print("NEXTCLOUD_RUNNING_IMAGE_GATE=PASS|DIGEST=" + digest)
+
+
+def apply_step(major, expected_version, expected_digest=None):
     old_reference = effective_nextcloud_image()
     parts = expected_version.split(".")
     new_reference = f"nextcloud:{parts[0]}.{parts[1]}-apache"
@@ -561,10 +575,12 @@ def apply_step(major, expected_version):
             "--quiet",
         )
 
-        compose_run(
-            "pull",
-            *SERVICES,
-        )
+        if expected_digest:
+            pinned = "nextcloud@" + expected_digest
+            run(["docker", "pull", pinned])
+            run(["docker", "tag", pinned, new_reference])
+        else:
+            compose_run("pull", *SERVICES)
 
         actual_image_version = pulled_image_version(
             new_reference
@@ -598,6 +614,7 @@ def apply_step(major, expected_version):
         "-d",
         "--wait",
         "--force-recreate",
+        "--no-deps",
         *SERVICES,
     )
 
@@ -612,7 +629,10 @@ def main():
         "--target-version",
         required=True,
     )
+    parser.add_argument("--target-digest")
     args = parser.parse_args()
+    if args.target_digest and not re.fullmatch(r"sha256:[0-9a-f]{64}", args.target_digest):
+        raise RuntimeError("invalid Nextcloud target digest")
 
     if not (DIRECTORY / COMPOSE_FILES[0]).is_file():
         raise RuntimeError(
@@ -640,6 +660,9 @@ def main():
         target,
         releases,
     )
+    # Same application version can still have a newer official container image.
+    if not steps:
+        steps = [(int(target.split(".", 1)[0]), target)]
 
     print(
         "NEXTCLOUD_UPDATE_PLAN"
@@ -647,15 +670,6 @@ def main():
         f"|TARGET={target}"
         f"|STEPS={','.join(version for _, version in steps) or 'NONE'}"
     )
-
-    if not steps:
-        verify_runtime(target)
-        runpy.run_path("/opt/edge-maintenance/scripts/docker-service-images")["cleanup"]("NEXTCLOUD")
-        print(
-            "NEXTCLOUD_UPDATE_RESULT=SUCCESS"
-            f"|VERSION={target}"
-        )
-        return
 
     previous_major = int(
         installed.split(".", 1)[0]
@@ -678,6 +692,7 @@ def main():
         apply_step(
             major,
             expected,
+            args.target_digest if index == len(steps) else None,
         )
 
         major_changed = (
@@ -702,6 +717,8 @@ def main():
         )
 
     verify_runtime(target)
+    if args.target_digest:
+        verify_running_digest(args.target_digest)
     image_lifecycle["cleanup"]("NEXTCLOUD")
 
     print(

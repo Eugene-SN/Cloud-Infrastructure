@@ -10,7 +10,7 @@ if test "$target" = SEMAPHORE; then
   "$state" pending '' "$operation"
 fi
 case "$target" in
-  BACKREST) repo=garethgeorge/backrest; binary=backrest; asset_template='backrest_VERSION_Linux_x86_64.tar.gz'; checksum_template='backrest_VERSION_checksums.txt'; service=backrest ;;
+  BACKREST) repo=garethgeorge/backrest; binary=backrest; asset_template='backrest_Linux_x86_64.tar.gz'; checksum_template='backrest_VERSION_checksums.txt'; service=backrest ;;
   RESTIC) repo=restic/restic; binary=restic; asset_template='restic_VERSION_linux_amd64.bz2'; checksum_template='SHA256SUMS'; service='' ;;
   SEMAPHORE) repo=semaphoreui/semaphore; binary=semaphore; asset_template='semaphore_community_VERSION_linux_amd64.tar.gz'; checksum_template='semaphore_community_VERSION_checksums.txt'; service=semaphore ;;
   *) echo "unsupported native target: $target" >&2; exit 2 ;;
@@ -56,7 +56,11 @@ esac
 candidate="$(find "$work" -type f -name "$binary" -perm -u+x -print -quit)"
 if test -z "$candidate" && test -f "${work}/${asset%.bz2}"; then candidate="${work}/${asset%.bz2}"; fi
 test -n "$candidate" && chmod 0755 "$candidate"
-"$candidate" version >/dev/null 2>&1 || "$candidate" --version >/dev/null
+if test "$target" = BACKREST; then
+  "$candidate" --version 2>&1 | python3 -c 'import re,sys; value=sys.stdin.read(); match=re.search(r"backrest version: ([0-9]+\.[0-9]+\.[0-9]+)",value); sys.exit(0 if match and match[1]==sys.argv[1] else 1)' "$version"
+else
+  "$candidate" version >/dev/null 2>&1 || "$candidate" --version >/dev/null
+fi
 
 if test "$target" = SEMAPHORE; then
   backup="/var/backups/edge-maintenance/semaphore-$(date -u +%Y%m%d-%H%M%S)"
@@ -77,14 +81,17 @@ fi
 backup="/var/backups/edge-maintenance/${binary}-$(date -u +%Y%m%d-%H%M%S)"
 install -d -o root -g root -m 0700 /var/backups/edge-maintenance
 cp -a "/usr/local/bin/$binary" "$backup"
-if test -n "$service"; then systemctl stop "$service"; fi
-install -o root -g root -m 0755 "$candidate" "/usr/local/bin/$binary"
 if test -n "$service"; then
-  if ! systemctl start "$service" || ! systemctl is-active --quiet "$service"; then
+  systemctl stop "$service"
+  if ! install -o root -g root -m 0755 "$candidate" "/usr/local/bin/$binary" || \
+     ! systemctl start "$service" || ! systemctl is-active --quiet "$service"; then
     install -o root -g root -m 0755 "$backup" "/usr/local/bin/$binary"
     systemctl start "$service"
+    systemctl is-active --quiet "$service"
     exit 1
   fi
+else
+  install -o root -g root -m 0755 "$candidate" "/usr/local/bin/$binary"
 fi
 
 # Rotate older binary backups, retaining only the latest 2 copies
