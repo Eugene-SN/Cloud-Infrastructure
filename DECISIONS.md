@@ -3441,3 +3441,39 @@ metadata are retained under `/tmp/semaphore-handler-recovery/drivers-task66`
 until acceptance. Task66 remains a failed historical task.
 
 Evidence and limits: `maintenance/edge/UPDATE_DRIVER_AUDIT_2026-10-13.md`.
+
+
+---
+
+## 2026-10-16 — Antigravity daemon native updater with minimal operational scheduling
+
+**Status:** ACCEPTED by operator; deployment/current-version checks VERIFIED.
+
+**Context:** Enabled native interactive background updates did not provide the
+previously assumed daemon automatic install/restart loop. Exact deployed binary
+inspection confirmed the headless startup bypass and a separate availability
+checker with request-driven installation. Codex uses its own native PID update
+loop and does not have the same integration gap.
+
+**Decision:** Keep the native Antigravity daemon and `agy update` installer.
+Use one independently named user timer, daily 04:30 Europe/Moscow with
+Persistent=true, and one bounded oneshot helper to invoke the vendor updater,
+retain one running-binary recovery copy, restart only on executable mismatch,
+and verify stable PID, installed version and its own Connected log. No vendor
+binary/service patch, custom downloader or parallel daemon is introduced.
+Keep native interactive updates enabled. Existing edge-monitor detects failed,
+stuck or stale (>26h) checks and disabled scheduling through its existing
+incident/notification path. Antigravity stays outside manual Semaphore updates.
+
+**Evidence and limit:** Actual native 1.2.14 → 1.3.6 install and Connected daemon
+application were observed on 2026-10-16. The final strengthened helper passed
+live no-change and fresh-daemon readiness checks plus offline replacement/error
+checks. A release transition through this final helper awaits the next natural
+release; do not describe that future cycle as already observed.
+
+**Supersedes:** the 2026-09-25 assumption that enabled background updates alone
+prove automatic daemon installation/application. Retains the native-first
+ownership and single native daemon lifecycle decisions.
+
+**Canonical contract and evidence:** `deployments/edge/antigravity-update/README.md`
+and `deployments/edge/antigravity-update/ACCEPTANCE_2026-10-16.md`.

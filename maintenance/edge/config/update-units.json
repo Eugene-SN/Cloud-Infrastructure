@@ -18,7 +18,7 @@
     },
     {
       "id": "ANTIGRAVITY",
-      "owner": "antigravity_native_background_updater"
+      "owner": "antigravity_native_updater_with_systemd_timer"
     }
   ],
   "master_order": [

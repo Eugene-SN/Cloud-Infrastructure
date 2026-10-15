@@ -1,0 +1,11 @@
+[Unit]
+Description=Daily Antigravity native update check
+
+[Timer]
+OnCalendar=*-*-* 04:30:00 Europe/Moscow
+Persistent=true
+AccuracySec=1s
+Unit=antigravity-native-update.service
+
+[Install]
+WantedBy=timers.target

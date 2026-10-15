@@ -649,6 +649,47 @@ def collect_user_units(
     return result
 
 
+def collect_antigravity_update(config, now=None):
+    settings = config.get('antigravity_update')
+    if not settings:
+        return {'state': 'OK', 'detail': {'configured': False}}
+    now = time.time() if now is None else now
+    reasons = []
+    detail = {'reasons': reasons}
+    try:
+        status = json.loads(Path(settings['status_file']).read_text())
+        age = now - float(status['last_success_at'])
+        detail.update(status=status, success_age_s=round(age))
+        if age < -60 or age > settings['max_success_age_s']:
+            reasons.append('no recent successful update/application check')
+        if status['result'] == 'FAIL':
+            reasons.append('update failed: ' + status.get('error', 'unknown error'))
+        elif status['result'] == 'RUNNING':
+            if now - float(status['started_at']) > 900:
+                reasons.append('update check exceeded 15 minutes')
+        elif status['result'] != 'PASS':
+            reasons.append('unknown update result')
+    except (OSError, ValueError, TypeError, KeyError) as error:
+        reasons.append('update status unavailable: ' + str(error))
+    raw = run_text(['runuser', '-u', 'core', '--', 'env',
+                    'XDG_RUNTIME_DIR=/run/user/1000', 'systemctl', '--user', 'show',
+                    'antigravity-native-update.timer', 'antigravity-native-update.service',
+                    '-p', 'Id', '-p', 'ActiveState', '-p', 'UnitFileState', '-p', 'Result'],
+                   timeout=5)
+    units = {}
+    for block in (raw or '').strip().split('\n\n'):
+        properties = dict(line.split('=', 1) for line in block.splitlines() if '=' in line)
+        units[properties.get('Id')] = properties
+    timer = units.get('antigravity-native-update.timer', {})
+    service = units.get('antigravity-native-update.service', {})
+    detail['units'] = units
+    if timer.get('ActiveState') != 'active' or timer.get('UnitFileState') != 'enabled':
+        reasons.append('daily update timer is not enabled and active')
+    if service.get('Result') != 'success':
+        reasons.append('update service result: ' + service.get('Result', 'unavailable'))
+    return {'state': 'DEGRADED' if reasons else 'OK', 'detail': detail}
+
+
 def collect_docker(
     config,
     tracker,
@@ -1683,6 +1724,16 @@ def build_incidents(snapshot):
     knowledge = snapshot.get("knowledge") or {}
     operations = snapshot.get("operations") or {}
 
+    update_health = apps.get('antigravity_update') or {}
+    if update_health:
+        incidents['antigravity-update'] = _make_incident(
+            'antigravity-update', _item_state(update_health),
+            'Antigravity automatic updates', 'EDGE', 'Application lifecycle',
+            'Antigravity updates may not be installed or applied to the daemon.',
+            '; '.join(_detail(update_health).get('reasons', [])) or 'Daily update checks are healthy',
+            [f"Last successful check age: {_detail(update_health).get('success_age_s')}s"],
+        )
+
     workflow_health = apps.get("n8n_workflows") or {}
     workflow_detail = _detail(workflow_health)
     incidents["n8n-workflow-health"] = _make_incident(
@@ -2550,7 +2601,8 @@ def main():
                 {**collect_http_probes(
                     config,
                     tracker,
-                ), "n8n_workflows": collect_n8n_workflows(config)},
+                ), "n8n_workflows": collect_n8n_workflows(config),
+                 "antigravity_update": collect_antigravity_update(config)},
 
             "home_pai":
                 collect_cross_site(

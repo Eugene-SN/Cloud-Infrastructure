@@ -1766,3 +1766,28 @@ Automatic Mac delegated messages/authenticated return reads work; edge native
 send_message_to_thread remains absent. Final evidence:
 `deployments/edge/hermes-document-translation/first10-clean-evidence.json`.
 Stage13 remains accepted; no finite infrastructure stage is opened.
+
+
+---
+
+## 2026-10-16 — Antigravity daemon automatic update integration
+
+Operator approved minimal operational scheduling around the native updater.
+Installed: separate user `antigravity-native-update.timer` daily at 04:30
+Europe/Moscow (Persistent=true), bounded oneshot and helper outside vendor paths.
+`agy update` performs installation; helper retains one previous running binary,
+restarts only when daemon executable differs, then requires matching version,
+stable PID and its own Connected log. The native daemon unit/auth settings are
+unchanged. Existing edge-monitor reports failures, disabled schedule and stale
+success (>26h); Antigravity remains outside manual Maintenance/Semaphore.
+
+Live version 1.3.6; actual native update 1.2.14 → 1.3.6 and subsequent Connected
+application observed at 01:47 MSK. Final helper checks passed at 02:18 and 02:19
+MSK, including unchanged PID and readiness of freshly restarted native daemon
+PID 2896471. Next scheduled check: 2026-10-16 04:30 MSK. Recovery binary: 1.2.14.
+A new release transition through the final strengthened helper has not yet been
+observed; replacement/error paths passed offline tests. Monitoring is active
+for the next natural release. No deliberate production downgrade was used.
+
+Contract/evidence: `deployments/edge/antigravity-update/README.md` and
+`deployments/edge/antigravity-update/ACCEPTANCE_2026-10-16.md`.

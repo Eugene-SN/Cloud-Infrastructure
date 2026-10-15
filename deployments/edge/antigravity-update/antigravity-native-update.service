@@ -1,0 +1,12 @@
+[Unit]
+Description=Antigravity native update and daemon verification
+After=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/core
+ExecStart=/usr/bin/python3 /home/core/.local/state/antigravity-native-update/update.py
+TimeoutStartSec=15min
+UMask=0077
+StandardOutput=journal
+StandardError=journal

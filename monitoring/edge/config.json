@@ -91,6 +91,10 @@
       "/var/www/maintenance-status/maintenance.json"
     ]
   },
+  "antigravity_update": {
+    "status_file": "/home/core/.local/state/antigravity-native-update/status.json",
+    "max_success_age_s": 93600
+  },
   "n8n_workflows": {
     "database": "/srv/n8n/database.sqlite",
     "consecutive_failure_threshold": 3,
