@@ -1,5 +1,23 @@
 # Cloud Infrastructure — Current State
 
+## Current Docker container names — 2026-10-16
+
+`EDGE_CONTAINER_NAMES_NORMALIZED=PASS`. The approved naming table is deployed:
+16 permanent containers were recreated with explicit Compose names; six already
+normalized containers retain their original IDs. There are 22 permanent
+services. Images, mounted data, Compose project/service keys, network membership,
+ports and integration aliases are preserved. RabbitMQ retains hostname `plane-mq`.
+
+The full 22-container table and on-demand PDF CleanUp/Plane migrator contract are
+in `deployments/edge/docker/container-names.md`. Monitoring, version discovery,
+Plane updates and backup preparation use the current names. Weblate backup
+startup waits for native health for up to 300 seconds. Historical inventories
+below retain their original observation dates and are superseded for naming.
+Final verification: `CONTAINER_NAME_NORMALIZATION_ACCEPTANCE_2026-10-16.md`.
+
+Actual post-change Backrest snapshot verified: `ced0024094be380689564ec9e5b05d8c9dec21680ca001fda838ebaaae8b8465`;
+all services and monitor checks pass after backup preparation.
+
 ## Current GitHub MCP credential source — 2026-10-16
 
 `EDGE_GITHUB_MCP_TOKEN_SOURCE=PASS`. The active stored gh credential is now the

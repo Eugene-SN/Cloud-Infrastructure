@@ -1,0 +1,780 @@
+{
+  "verified_at": "2026-10-16T02:45:07.977875+00:00",
+  "containers": [
+    {
+      "previous": "github-mcp",
+      "name": "github-mcp",
+      "project": "github-mcp",
+      "service": "github-mcp",
+      "image_id": "sha256:ffced0d76e77428532a2ced185516992d77fd146d69eec2f244e6237d1a97796",
+      "container_id": "3781d6a9a71e6d77740cbca7b77c75233ffbcb889560bbc3f67a6023ccdf176b",
+      "networks": [
+        "edge_internal"
+      ],
+      "data_mounts_preserved": true,
+      "configuration_preserved": true,
+      "running": true,
+      "health": "no-healthcheck"
+    },
+    {
+      "previous": "plane-space-1",
+      "name": "plane-space",
+      "project": "plane",
+      "service": "space",
+      "image_id": "sha256:f8f842f05f41a16e9fe8c4f5e17a3bb175338ccdc094620e58ae49764ffbd671",
+      "container_id": "e3bab21e3db44f431cf80649c558e9422ec6d243139201962595c0386df74cfc",
+      "networks": [
+        "plane_default"
+      ],
+      "data_mounts_preserved": true,
+      "configuration_preserved": true,
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "previous": "plane-live-1",
+      "name": "plane-live",
+      "project": "plane",
+      "service": "live",
+      "image_id": "sha256:cbb630ccaea24bb9998040cb45c11619a7501e8b6c75d449df2f8fd9b9cddbd0",
+      "container_id": "8aa33bcd19f1869a3a478995edaa3c9dce5a03f4689426f5e974d63d377e201b",
+      "networks": [
+        "plane_default"
+      ],
+      "data_mounts_preserved": true,
+      "configuration_preserved": true,
+      "running": true,
+      "health": "no-healthcheck"
+    },
+    {
+      "previous": "plane-admin-1",
+      "name": "plane-admin",
+      "project": "plane",
+      "service": "admin",
+      "image_id": "sha256:6e1bb1d800d3c7ce84a09f810d5588db8613b35d4464e722a1bec12556ca0ebb",
+      "container_id": "b0566b038aa91bf5fb8950a611827d44f0be638e95904f7183287e962f687322",
+      "networks": [
+        "plane_default"
+      ],
+      "data_mounts_preserved": true,
+      "configuration_preserved": true,
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "previous": "plane-web-1",
+      "name": "plane-web",
+      "project": "plane",
+      "service": "web",
+      "image_id": "sha256:22fd2434fb8d6658439f669ab72f999ce0773abe587663da21a77d70bd63ff61",
+      "container_id": "8a016eebe79065cb04a4afbe618b201d0ac0ec4a1fadddca4933a49c828baa7f",
+      "networks": [
+        "plane_default"
+      ],
+      "data_mounts_preserved": true,
+      "configuration_preserved": true,
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "previous": "plane-beat-worker-1",
+      "name": "plane-scheduler",
+      "project": "plane",
+      "service": "beat-worker",
+      "image_id": "sha256:90032ce088708889b60c00d491897916f4deb882facda27db59fd10fb68729ef",
+      "container_id": "d03bb54307ee0bff4a322babcc58c43924b72a6bcbf0e43ab86bb3032e57710f",
+      "networks": [
+        "plane_default",
+        "postgres_net"
+      ],
+      "data_mounts_preserved": true,
+      "configuration_preserved": true,
+      "running": true,
+      "health": "no-healthcheck"
+    },
+    {
+      "previous": "plane-worker-1",
+      "name": "plane-worker",
+      "project": "plane",
+      "service": "worker",
+      "image_id": "sha256:90032ce088708889b60c00d491897916f4deb882facda27db59fd10fb68729ef",
+      "container_id": "790818df9d672b1b7449dc222de0b33ee5d544a68cef7d948c731e4fa242c56f",
+      "networks": [
+        "edge_internal",
+        "plane_default",
+        "postgres_net"
+      ],
+      "data_mounts_preserved": true,
+      "configuration_preserved": true,
+      "running": true,
+      "health": "no-healthcheck"
+    },
+    {
+      "previous": "plane-api-1",
+      "name": "plane-api",
+      "project": "plane",
+      "service": "api",
+      "image_id": "sha256:90032ce088708889b60c00d491897916f4deb882facda27db59fd10fb68729ef",
+      "container_id": "3f916d3bbe6f64935b0b0d0c4b1118ca6c7f8c66cb3c483f1638d673021595d0",
+      "networks": [
+        "edge_internal",
+        "plane_default",
+        "postgres_net"
+      ],
+      "data_mounts_preserved": true,
+      "configuration_preserved": true,
+      "running": true,
+      "health": "no-healthcheck"
+    },
+    {
+      "previous": "mattermost-mattermost-1",
+      "name": "mattermost",
+      "project": "mattermost",
+      "service": "mattermost",
+      "image_id": "sha256:6ad5912b45875ef2fafc41886b5a70a3ec1b6c17ec706e0492566e8a2fd8aa85",
+      "container_id": "c9d48c050edd71159e3611ec924f33b3127c14face5fc02f3e49991303dc3f4e",
+      "networks": [
+        "edge_internal",
+        "mattermost_default",
+        "postgres_net"
+      ],
+      "data_mounts_preserved": true,
+      "configuration_preserved": true,
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "previous": "nextcloud-app-1",
+      "name": "nextcloud",
+      "project": "nextcloud",
+      "service": "app",
+      "image_id": "sha256:8f2f0e93aca5e9457019933936dea1f313052e72c696b4aecb31580a208b859f",
+      "container_id": "c6844ff7c8866881e49de48d905f7679fdb04f5178280c981135191c9428348a",
+      "networks": [
+        "edge_internal",
+        "nextcloud_default",
+        "postgres_net"
+      ],
+      "data_mounts_preserved": true,
+      "configuration_preserved": true,
+      "running": true,
+      "health": "no-healthcheck"
+    },
+    {
+      "previous": "nextcloud-cron-1",
+      "name": "nextcloud-cron",
+      "project": "nextcloud",
+      "service": "cron",
+      "image_id": "sha256:8f2f0e93aca5e9457019933936dea1f313052e72c696b4aecb31580a208b859f",
+      "container_id": "e06aab53435cb0ad6410928fdbd197a48c86dc24543cd59948190d69ea298fbd",
+      "networks": [
+        "nextcloud_default",
+        "postgres_net"
+      ],
+      "data_mounts_preserved": true,
+      "configuration_preserved": true,
+      "running": true,
+      "health": "no-healthcheck"
+    },
+    {
+      "previous": "n8n",
+      "name": "n8n",
+      "project": "n8n",
+      "service": "n8n",
+      "image_id": "sha256:906dd7fb0a2f23869001d1767168359489c518ff34d4f67427abf2dc59e868fe",
+      "container_id": "1ea9d9cdc1fa15d924940b7ba54b1fd342df61e586dc62fe8593df77e5f7dbef",
+      "networks": [
+        "edge_internal",
+        "n8n_hermes"
+      ],
+      "data_mounts_preserved": true,
+      "configuration_preserved": true,
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "previous": "plane-plane-mq-1",
+      "name": "plane-rabbitmq",
+      "project": "plane",
+      "service": "plane-mq",
+      "image_id": "sha256:611107e29cce05c2acd968325d5dcbde7e2fee404970f1ead75fdb22be2821b3",
+      "container_id": "ccd4327a6f78ede863a552d807afd9590f3f26c6cea8cc8af290e64b2f95c3cb",
+      "networks": [
+        "plane_default"
+      ],
+      "data_mounts_preserved": true,
+      "configuration_preserved": true,
+      "running": true,
+      "health": "no-healthcheck"
+    },
+    {
+      "previous": "plane-plane-minio-1",
+      "name": "plane-minio",
+      "project": "plane",
+      "service": "plane-minio",
+      "image_id": "sha256:b6bfe7239bfc83fb90d31612d9704d86039dd714f7904b3f1ad68f211e602372",
+      "container_id": "54a09822374d56e3d81a04d016340b5eec8ba0703f0a28ea08013e9a7edef5cc",
+      "networks": [
+        "plane_default"
+      ],
+      "data_mounts_preserved": true,
+      "configuration_preserved": true,
+      "running": true,
+      "health": "no-healthcheck"
+    },
+    {
+      "previous": "plane-plane-redis-1",
+      "name": "plane-valkey",
+      "project": "plane",
+      "service": "plane-redis",
+      "image_id": "sha256:10328d00120dc14fbc87b2ed61b7677ddbb0d011e705361b4788329a0ec69a93",
+      "container_id": "c18d88135bdf9370e50c5842e360016a474d88ede98a80b787b062fedb9402df",
+      "networks": [
+        "plane_default"
+      ],
+      "data_mounts_preserved": true,
+      "configuration_preserved": true,
+      "running": true,
+      "health": "no-healthcheck"
+    },
+    {
+      "previous": "nextcloud-redis-1",
+      "name": "nextcloud-redis",
+      "project": "nextcloud",
+      "service": "redis",
+      "image_id": "sha256:3811787313eba226a2ef38658c6ccb91cd5e110edc89c37767de373120a0e5a0",
+      "container_id": "934c67934ace6b06455fc0bf7fec0328efcbace75e2ce0fe64ddd0bec2ec643a",
+      "networks": [
+        "nextcloud_default"
+      ],
+      "data_mounts_preserved": true,
+      "configuration_preserved": true,
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "previous": "postgres",
+      "name": "postgres",
+      "project": "postgres",
+      "service": "postgres",
+      "image_id": "sha256:74935e72241653ca55e0414067e6d8763aceb8a810eb51b452253ec3dcfc4336",
+      "container_id": "75397517da8a0161224c60ce87cc605448cead33ae2add3bb81246f35cca12ac",
+      "networks": [
+        "postgres_net"
+      ],
+      "data_mounts_preserved": true,
+      "configuration_preserved": true,
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "previous": "weblate-edge-weblate-1",
+      "name": "weblate",
+      "project": "weblate-edge",
+      "service": "weblate",
+      "image_id": "sha256:57f8cdc6dcb28079e20241daf3671a73dc30c42408379965cd6582e772001636",
+      "container_id": "bc1069495d41646c509fec95da75b8a740621fbb01b16c79eeb08de8f5325003",
+      "networks": [
+        "edge_internal",
+        "n8n_hermes",
+        "postgres_net",
+        "weblate-edge_default"
+      ],
+      "data_mounts_preserved": true,
+      "configuration_preserved": true,
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "previous": "bulwark",
+      "name": "bulwark",
+      "project": "mail-stack",
+      "service": "bulwark",
+      "image_id": "sha256:9885a046afab5054719004b885bd821d164f0d4e50a21100b96595b0400e0403",
+      "container_id": "fac97b40963150784183d12eb3e3674c23fff73c62d6d2cfd616dbae57ba9d35",
+      "networks": [
+        "mail-stack_default"
+      ],
+      "data_mounts_preserved": true,
+      "configuration_preserved": true,
+      "running": true,
+      "health": "no-healthcheck"
+    },
+    {
+      "previous": "stalwart",
+      "name": "stalwart",
+      "project": "mail-stack",
+      "service": "stalwart",
+      "image_id": "sha256:254ce5d7f3dbe4bb628ce2c7912e664ecb1c3466db79907f4a44d9a00117776b",
+      "container_id": "db9b9c29f9f10ab5ee86fe0a3a9fafea8208ef8d3063e6585a8cbd2360baa1fc",
+      "networks": [
+        "mail-stack_default"
+      ],
+      "data_mounts_preserved": true,
+      "configuration_preserved": true,
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "previous": "weblate-edge-cache-1",
+      "name": "weblate-valkey",
+      "project": "weblate-edge",
+      "service": "cache",
+      "image_id": "sha256:418652cfb58ef879d4978c33553735d7147016032d5aefaa14c828e611eb9dfd",
+      "container_id": "acf717f8dcb3c29b9236da99ca19cc603a6b0e4dd0634d1cfa794680588b53ae",
+      "networks": [
+        "weblate-edge_default"
+      ],
+      "data_mounts_preserved": true,
+      "configuration_preserved": true,
+      "running": true,
+      "health": "healthy"
+    },
+    {
+      "previous": "authelia",
+      "name": "authelia",
+      "project": "authelia",
+      "service": "authelia",
+      "image_id": "sha256:bd97cff4fcbf715b5ff1f9ae286afbe6033afce385302520b0368122d43a6f54",
+      "container_id": "2a9ca0efcd0af1004b4661221d5cbf23daf0cc7af7e240217a5ac58c826dcd9c",
+      "networks": [
+        "authelia_default"
+      ],
+      "data_mounts_preserved": true,
+      "configuration_preserved": true,
+      "running": true,
+      "health": "healthy"
+    }
+  ],
+  "on_demand_observed": [
+    {
+      "name": "pdf-cleanup-standalone-regression",
+      "auto_remove": true,
+      "role": "concurrent PDF CleanUp regression; preserved"
+    }
+  ],
+  "checks": {
+    "inventory": "PASS",
+    "same_images": "PASS",
+    "mounts": "PASS",
+    "service_dns_aliases": "PASS",
+    "compose_only_name_changes": "PASS",
+    "compose_convergence": "PASS",
+    "database_primary_keys": "PASS",
+    "rabbitmq_hostname": "PASS",
+    "unchanged_six_container_ids": "PASS",
+    "master_health": {
+      "system_services": 9,
+      "user_services": 4,
+      "docker_units": 12,
+      "persistent_services": 22,
+      "sqlite_databases": 2,
+      "postgres_readiness": "PASS"
+    },
+    "monitor": {
+      "containers": 22,
+      "http_probes": 13,
+      "overall_state": "OK"
+    },
+    "monitor_tests": 21,
+    "plane_topology_drift_cases": 9,
+    "isolated_update_dispatch_targets": 19,
+    "affected_live_update_preflights": 6,
+    "published_workflows_without_old_references": 7,
+    "active_file_scan_roots": 14,
+    "old_active_references": 0,
+    "n8n_service_routes": {
+      "mattermost": 200,
+      "plane": 200,
+      "nextcloud": 200,
+      "weblate": 200,
+      "github-mcp": 401
+    },
+    "final_monitor_snapshot": {
+      "generated_at": "2026-10-16T02:56:07.824969+00:00",
+      "overall_state": "OK"
+    }
+  },
+  "database_identity": {
+    "mattermost": {
+      "teams": {
+        "count": 1,
+        "pk_sha256": "8d1b19f1a5b4c3a73673828e83115cbf3bb0af72926cd76ba988ae08f1baa9a6",
+        "keys": [
+          "id"
+        ]
+      },
+      "users": {
+        "count": 6,
+        "pk_sha256": "d6f71bab39a4924b4edaadb11c5b0d3dcc7a00f243a835615e3b417755e13f7d",
+        "keys": [
+          "id"
+        ]
+      }
+    },
+    "nextcloud": {
+      "oc_storages": {
+        "count": 4,
+        "pk_sha256": "16fbd7d1f18d2fedb247d73edc3bc6aa040f5ab99bd3b48c35b79e543d22179b",
+        "keys": [
+          "numeric_id"
+        ]
+      },
+      "oc_users": {
+        "count": 2,
+        "pk_sha256": "725723bf7e85f98f823b4331979f50f6c810816146a935d34a4b14446236bca2",
+        "keys": [
+          "uid"
+        ]
+      }
+    },
+    "plane": {
+      "users": {
+        "count": 2,
+        "pk_sha256": "d4f8f018dd178f03ec38a1c579fcef789cc4211d2fd3ebae10037adef25d7855",
+        "keys": [
+          "id"
+        ]
+      },
+      "projects": {
+        "count": 1,
+        "pk_sha256": "dab08504496d4a827d56d880e1361b557c64dffdcc134f55aa37ec7a62503d4b",
+        "keys": [
+          "id"
+        ]
+      },
+      "issues": {
+        "count": 9,
+        "pk_sha256": "72ef16e83e1fa10b773640ddc197d69cb55c4b31c07e7eb79d8eaabd5e0ab4db",
+        "keys": [
+          "id"
+        ]
+      },
+      "teams": {
+        "count": 0,
+        "pk_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "keys": [
+          "id"
+        ]
+      },
+      "workspaces": {
+        "count": 1,
+        "pk_sha256": "a373208d92d73af9173778d6636c7d7a3f4f9a1c5caad45028f830616e9cac67",
+        "keys": [
+          "id"
+        ]
+      }
+    },
+    "weblate": {
+      "trans_component": {
+        "count": 1,
+        "pk_sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+        "keys": [
+          "id"
+        ]
+      },
+      "trans_project": {
+        "count": 1,
+        "pk_sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+        "keys": [
+          "id"
+        ]
+      }
+    }
+  },
+  "canonical_runtime": [
+    {
+      "source": "deployments/edge/mattermost/docker-compose.edge.yml",
+      "runtime": "/opt/mattermost/docker-compose.edge.yml",
+      "sha256": "26a2e68c706eeeb1da4ee3dc427ce3b1d74e1b34c17a245ea867f4c49a218157"
+    },
+    {
+      "source": "deployments/edge/nextcloud/compose.yaml",
+      "runtime": "/opt/nextcloud/compose.yaml",
+      "sha256": "458a93a541a02e81dce89c321f31eacc8d76129496f236d7234670f58b98d33b"
+    },
+    {
+      "source": "deployments/plane/docker-compose.edge.yml",
+      "runtime": "/opt/plane/plane-app/docker-compose.edge.yml",
+      "sha256": "13ea6d9d2e0017e5752fca52c35d36c047280400487fc8d6716130fedb4c1d30"
+    },
+    {
+      "source": "deployments/edge/weblate/compose.yaml",
+      "runtime": "/opt/weblate/compose.yaml",
+      "sha256": "25e8e20ecf370231b74437bfb419eb847315b666bea80a53fc4e6a60d5bd9cc8"
+    },
+    {
+      "source": "monitoring/edge/edge-monitor",
+      "runtime": "/usr/local/sbin/edge-monitor",
+      "sha256": "ab5aba19010142ded4f7d7f2b55d194ea8bfde951605e97448372bfcc8732b00"
+    },
+    {
+      "source": "monitoring/edge/config.json",
+      "runtime": "/etc/edge-monitor/config.json",
+      "sha256": "2b6233195c9e33531680b2cd2c0b07d107b354966fc3ab2f64aa152f215cd227"
+    },
+    {
+      "source": "backup/edge/edge-state-prepare",
+      "runtime": "/usr/local/sbin/edge-state-prepare",
+      "sha256": "59cf7639d259d0d0b976d65f27334eb0c561d3fed476123452a21447e8ca7870"
+    },
+    {
+      "source": "maintenance/edge/scripts/update-plane",
+      "runtime": "/opt/edge-maintenance/scripts/update-plane",
+      "sha256": "7ebb566796e2113bd922c18cf822af84c99e9f3f26c9c668d19fabf9e76d29a9"
+    },
+    {
+      "source": "maintenance/edge/scripts/maintenance-versions-collector",
+      "runtime": "/opt/edge-maintenance/scripts/maintenance-versions-collector",
+      "sha256": "fa03735e3a32387181d4c9773d990e74d9ee04a91f22b62c582db10c05257527"
+    }
+  ],
+  "backup": {
+    "operation": "802",
+    "status": "STATUS_SUCCESS",
+    "snapshot_id": "ced0024094be380689564ec9e5b05d8c9dec21680ca001fda838ebaaae8b8465",
+    "file_checks": [
+      {
+        "directory": "/opt/mattermost",
+        "files": {
+          "docker-compose.edge.yml": 481
+        }
+      },
+      {
+        "directory": "/opt/nextcloud",
+        "files": {
+          "compose.yaml": 2597
+        }
+      },
+      {
+        "directory": "/opt/plane/plane-app",
+        "files": {
+          "docker-compose.edge.yml": 4204
+        }
+      },
+      {
+        "directory": "/opt/weblate",
+        "files": {
+          "compose.yaml": 1337
+        }
+      },
+      {
+        "directory": "/usr/local/sbin",
+        "files": {
+          "edge-monitor": 83283,
+          "edge-state-prepare": 12255
+        }
+      },
+      {
+        "directory": "/etc/edge-monitor",
+        "files": {
+          "config.json": 3044
+        }
+      },
+      {
+        "directory": "/opt/edge-maintenance/scripts",
+        "files": {
+          "update-plane": 16404,
+          "maintenance-versions-collector": 24762
+        }
+      },
+      {
+        "directory": "/var/lib/backrest-staging/edge-state/current/mattermost/postgres",
+        "files": {
+          "mattermost.dump": 449262
+        }
+      },
+      {
+        "directory": "/var/lib/backrest-staging/edge-state/current/nextcloud/postgres",
+        "files": {
+          "nextcloud.dump": 32491419
+        }
+      },
+      {
+        "directory": "/var/lib/backrest-staging/edge-state/current/plane/postgres",
+        "files": {
+          "plane.dump": 2076971
+        }
+      },
+      {
+        "directory": "/var/lib/backrest-staging/edge-state/current/weblate/postgres",
+        "files": {
+          "weblate.dump": 560595
+        }
+      },
+      {
+        "directory": "/var/lib/backrest-staging/edge-state/current",
+        "files": {
+          "MANIFEST.txt": 616
+        }
+      }
+    ],
+    "summary": {
+      "filesNew": "1267",
+      "filesChanged": "29883",
+      "filesUnmodified": "459707",
+      "dirsNew": "59",
+      "dirsChanged": "3238",
+      "dirsUnmodified": "797553",
+      "dataBlobs": "2601",
+      "treeBlobs": "3239",
+      "dataAdded": "838658552",
+      "totalFilesProcessed": "490857",
+      "totalBytesProcessed": "62174526077",
+      "totalDuration": 501.969432025,
+      "snapshotId": "ced0024094be380689564ec9e5b05d8c9dec21680ca001fda838ebaaae8b8465"
+    },
+    "preparation": {
+      "operation": "803",
+      "status": "STATUS_SUCCESS",
+      "gates": [
+        "N8N_STAGE_GATE=PASS",
+        "AUTHELIA_STAGE_GATE=PASS",
+        "POSTGRES_GLOBALS_STAGE_GATE=PASS",
+        "MATTERMOST_STAGE_GATE=PASS",
+        "MAIL_STAGE_GATE=PASS",
+        "AGENT_SQLITE_STAGE_GATE=PASS",
+        "NEXTCLOUD_STAGE_GATE=PASS",
+        "PLANE_STAGE_GATE=PASS",
+        "WEBLATE_STAGE_GATE=PASS",
+        "STAGING_COMMIT_GATE=PASS"
+      ]
+    },
+    "initial_failed_test": {
+      "operation": "800",
+      "hook": "801",
+      "reason": "Native Weblate health wait exceeded existing 120 seconds; startup recovered; no snapshot committed",
+      "fix": "Keep native health gate; wait up to 300 seconds, matching installed image health start period"
+    }
+  },
+  "cleanup": {
+    "recovery_snapshot": "35d566187fea085851fb0d9f026e148b19dede63fe22e9fc4480535276165506",
+    "files": [
+      {
+        "path": "/opt/weblate/backup/last/addressed-old-image-cleanup.json",
+        "size": 29320,
+        "sha256": "6a9c6c0930905e1fe91c10f8d561899802036ae7eb42767f46446d20d3e8f49b"
+      },
+      {
+        "path": "/opt/weblate/backup/last/backup-verification.json",
+        "size": 1500,
+        "sha256": "8112d269346c69d97ab526846696758c820cd6dd75c2e07077c8abdf30d88a24"
+      },
+      {
+        "path": "/opt/weblate/backup/last/baseline.json",
+        "size": 14681,
+        "sha256": "c7ed5c7f05ccbbca40572ad5decab493aced5cc3ba3d10771b3f2fcf5566b9e5"
+      },
+      {
+        "path": "/opt/weblate/backup/last/docker-image-audit-before.json",
+        "size": 17353,
+        "sha256": "7b2be6bd4e98f2fe29810782e3ba6087426d0653aef6c24d38ed2e35d868286c"
+      },
+      {
+        "path": "/opt/weblate/backup/last/docker-image-cleanup-result.json",
+        "size": 785,
+        "sha256": "492f646e5d00906d6fcf131b4bcdbd5a527fe372702982854477c8fc20c8e2c5"
+      },
+      {
+        "path": "/opt/weblate/backup/last/etc__edge-maintenance__manual-driver-enablement.json",
+        "size": 404,
+        "sha256": "f047b7f940beb46d655e20f130774eabaac5ad55897955f36ef8e293f828e98b"
+      },
+      {
+        "path": "/opt/weblate/backup/last/nextcloud-share-records.json",
+        "size": 320,
+        "sha256": "b1675d6a6275f56648b2d6ca661d15575632907c813a835efca4617021320cb3"
+      },
+      {
+        "path": "/opt/weblate/backup/last/opt__edge-maintenance__config__semaphore-templates.json",
+        "size": 1444,
+        "sha256": "3c9800cea3dda9923e55d3a09402586f3339f8cb1781ae4ee3275da7a8f5235d"
+      },
+      {
+        "path": "/opt/weblate/backup/last/opt__edge-maintenance__config__update-units.json",
+        "size": 4640,
+        "sha256": "c79bd35f307097c8f4625c78ea090f32812b3c49f071a9696cdfd2795f521cfd"
+      },
+      {
+        "path": "/opt/weblate/backup/last/opt__edge-maintenance__scripts__maintenance-actions-render",
+        "size": 3831,
+        "sha256": "a4e1aae4953982a2a323e423b4031bf97a8b3849e2504d5b51e681e830ab5a41"
+      },
+      {
+        "path": "/opt/weblate/backup/last/opt__edge-maintenance__scripts__maintenance-targets-refresh",
+        "size": 15740,
+        "sha256": "f975167021618b7baf3aea8ea1d1f106a4f34533eec0237a93ccf3df276f8bbe"
+      },
+      {
+        "path": "/opt/weblate/backup/last/opt__edge-maintenance__scripts__maintenance-versions-collector",
+        "size": 23900,
+        "sha256": "bd53f733a49ee1b4ae76e1169da6cd3cb913176a27630632f73cf06dd5f77b5c"
+      },
+      {
+        "path": "/opt/weblate/backup/last/opt__edge-maintenance__scripts__manual-update",
+        "size": 14683,
+        "sha256": "3dfc9945bca67d58b90188704e8d32a92641700ec7f0168e11fc74d281790f60"
+      },
+      {
+        "path": "/opt/weblate/backup/last/opt__edge-maintenance__scripts__update-nextcloud",
+        "size": 16519,
+        "sha256": "a6947363fc6870858e157aa5e063a01219adad0a33add71a813f8e83e695db24"
+      },
+      {
+        "path": "/opt/weblate/backup/last/opt__edge-maintenance__scripts__update-plane",
+        "size": 16197,
+        "sha256": "5ec20af9c84955b9bba6ba9fd12a9ed4ff2f8236013cc148c7201e290cdd2ccd"
+      },
+      {
+        "path": "/opt/weblate/backup/last/opt__edge-maintenance__scripts__update-stalwart",
+        "size": 6826,
+        "sha256": "55205bf8c2eb32d608d31c184aaaefe6ae75773779955bd565f7a862a632ec19"
+      },
+      {
+        "path": "/opt/weblate/backup/last/service-image-ownership-checks.json",
+        "size": 488,
+        "sha256": "394fb1ad4f680c56fe861498106922d3b59ea1c1627bcb9cadf99639a12b1ae6"
+      },
+      {
+        "path": "/opt/weblate/backup/last/srv__authelia__config__configuration.yml",
+        "size": 4035,
+        "sha256": "87edd09275476623415c11bd251e16f1ca12bd73c424dae2046ad3799d97bb9d"
+      },
+      {
+        "path": "/opt/weblate/backup/last/usr__local__bin__edge-github-mcp",
+        "size": 892,
+        "sha256": "bd22b8270bdc55f8c5a4b98db543623e69f1a1afc528dc5e3c9705c82deca724"
+      },
+      {
+        "path": "/opt/weblate/backup/last/usr__local__sbin__edge-state-prepare",
+        "size": 10595,
+        "sha256": "870fbc268edb4a36e16b8355f18d676399766d81b1e285a735fdb6e83ccaaf91"
+      },
+      {
+        "path": "/opt/weblate/backup/last/var__lib__backrest__config.json",
+        "size": 3793,
+        "sha256": "984b4b996e73b82fe99c5a2339c8d6a5dcf6b09da2219729dfb7c56bb015fa55"
+      }
+    ],
+    "task_temporary_directory_removed": true,
+    "unfinished_task_processes": [],
+    "temporary_containers_created_by_this_task": 0,
+    "browser_profiles_created_by_this_task": 0
+  },
+  "concurrent_pdf_change": {
+    "commit": "51ebf6873b1a76008df2eed790ccea4ebfc2da74",
+    "role": "Independently completed standalone PDF image; preserved, outside this normalization",
+    "current_image": "edge/pdf-cleanup:9c9bbb375751-standalone",
+    "image_id": "sha256:d7fe7e73d422ed59128f4dfe889fb90e8c299fa70df42b6024c65c3087ec6be3"
+  },
+  "version_discovery": {
+    "unresolved": 0,
+    "failed": 0,
+    "weblate": "UPDATE_AVAILABLE",
+    "application_installed": "2026.10.1",
+    "application_available": "2026.10.1",
+    "reason": "IMAGE_DIGEST_UPDATE",
+    "image_update_executed_by_this_task": false
+  },
+  "final_verified_at": "2026-10-16T02:56:09.776920+00:00"
+}

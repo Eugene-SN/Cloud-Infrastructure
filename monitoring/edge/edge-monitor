@@ -1894,7 +1894,7 @@ def build_incidents(snapshot):
         [
             _container_evidence(
                 "Mattermost container",
-                docker.get("mattermost-mattermost-1") or {},
+                docker.get("mattermost") or {},
             ),
             _container_evidence(
                 "Shared PostgreSQL",
@@ -1944,14 +1944,14 @@ def build_incidents(snapshot):
         "Application",
         "cloud.escloud.us service backend is unavailable.",
         [
-            _container_evidence("Nextcloud app", docker.get("nextcloud-app-1") or {}),
-            _container_evidence("Nextcloud cron", docker.get("nextcloud-cron-1") or {}),
+            _container_evidence("Nextcloud app", docker.get("nextcloud") or {}),
+            _container_evidence("Nextcloud cron", docker.get("nextcloud-cron") or {}),
             _container_evidence("Shared PostgreSQL", docker.get("postgres") or {}),
-            _container_evidence("Nextcloud Redis", docker.get("nextcloud-redis-1") or {}),
+            _container_evidence("Nextcloud Redis", docker.get("nextcloud-redis") or {}),
         ],
         docker_dependent=True,
     )
-    weblate_containers = ('weblate-edge-weblate-1', 'weblate-edge-cache-1', 'postgres')
+    weblate_containers = ('weblate', 'weblate-valkey', 'postgres')
     weblate_state = _worst_state(
         _item_state(apps.get('weblate') or {}),
         *[_item_state(docker.get(name) or {}) for name in weblate_containers],
@@ -1981,12 +1981,11 @@ def build_incidents(snapshot):
         confirmation='2 consecutive probes' if github_state == 'FAIL' else None,
         suppressed=bool(docker_parent_failed and github_state != 'OK'),
     )
-    plane_containers = [
-        'plane-' + name + '-1' for name in (
-            'web', 'api', 'admin', 'space', 'live', 'worker', 'beat-worker',
-            'plane-redis', 'plane-mq', 'plane-minio',
-        )
-    ]
+    plane_containers = (
+        'plane-web', 'plane-api', 'plane-admin', 'plane-space', 'plane-live',
+        'plane-worker', 'plane-scheduler', 'plane-valkey', 'plane-rabbitmq',
+        'plane-minio',
+    )
     plane_state = _worst_state(
         *[_item_state(apps.get(probe) or {}) for probe in ('plane', 'plane_api', 'plane_live')],
         *[_item_state(docker.get(name) or {}) for name in plane_containers],

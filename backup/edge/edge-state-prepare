@@ -59,10 +59,10 @@ recover_services() {
   fi
 
   if [ "$MATTERMOST_STOPPED" -eq 1 ]; then
-    if docker start mattermost-mattermost-1 >/dev/null; then
+    if docker start mattermost >/dev/null; then
       MATTERMOST_STOPPED=0
     else
-      printf 'RECOVERY_FAIL|container=mattermost-mattermost-1\n' >&2
+      printf 'RECOVERY_FAIL|container=mattermost\n' >&2
     fi
   fi
 
@@ -79,7 +79,7 @@ prepare_weblate() {
   local stage="$1/weblate"
   mkdir -p "$stage/postgres" "$stage/data" "$stage/config"
   local running
-  running="$(docker inspect weblate-edge-weblate-1 --format '{{.State.Running}}' 2>/dev/null || true)"
+  running="$(docker inspect weblate --format '{{.State.Running}}' 2>/dev/null || true)"
   if [ "$running" = true ]; then
     WEBLATE_STOPPED=1
     docker compose -f /opt/weblate/compose.yaml stop weblate >/dev/null
@@ -101,7 +101,9 @@ cache=valkey_reconstructed_not_historical_queue_state
 EOF
   chmod 0600 "$stage/MANIFEST.txt"
   if [ "$WEBLATE_STOPPED" -eq 1 ]; then
-    docker compose -f /opt/weblate/compose.yaml start --wait --wait-timeout 120 weblate >/dev/null
+    # Observed startup can exceed two minutes; wait for native health before
+    # committing the coordinated database/data/configuration recovery bundle.
+    docker compose -f /opt/weblate/compose.yaml start --wait --wait-timeout 300 weblate >/dev/null
     WEBLATE_STOPPED=0
   fi
   printf 'WEBLATE_STAGE_GATE=PASS\n'
@@ -240,7 +242,7 @@ printf '\n--- Mattermost quiesce ---\n'
 
 docker stop \
   --time 30 \
-  mattermost-mattermost-1 \
+  mattermost \
   >/dev/null
 
 MATTERMOST_STOPPED=1
@@ -275,7 +277,7 @@ rsync -a \
   /srv/mattermost/volumes/app/mattermost/ \
   "$NEXT/mattermost/app/"
 
-docker start mattermost-mattermost-1 >/dev/null
+docker start mattermost >/dev/null
 MATTERMOST_STOPPED=0
 
 printf 'MATTERMOST_STAGE_GATE=PASS\n'

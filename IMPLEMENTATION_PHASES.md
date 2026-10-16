@@ -1,5 +1,17 @@
 # Cloud Infrastructure — Accepted Implementation Phases
 
+## Container naming normalization — 2026-10-16 COMPLETE / VERIFIED
+
+Operator-approved post-infrastructure housekeeping: explicit names for 16
+permanent containers, preservation of six existing names, matching monitoring,
+maintenance and backup references, unique temporary Plane migrator names, and
+retirement of superseded setup copies. Service keys, networks, data paths,
+volumes and deployed image generations remain unchanged. Stage 13 remains the
+accepted infrastructure checkpoint.
+
+Contract: `deployments/edge/docker/container-names.md`.
+Verification: `CONTAINER_NAME_NORMALIZATION_ACCEPTANCE_2026-10-16.md`.
+
 ## Shared GitHub credential source — 2026-10-16 COMPLETE
 
 Operator-requested automatic credential distribution is complete. The existing

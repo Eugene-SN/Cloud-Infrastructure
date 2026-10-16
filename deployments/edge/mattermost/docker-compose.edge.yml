@@ -4,6 +4,7 @@ services:
       - disabled
 
   mattermost:
+    container_name: mattermost
     logging:
       driver: json-file
       options:

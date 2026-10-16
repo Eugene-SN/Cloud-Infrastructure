@@ -13,7 +13,7 @@ class WeblateHealthTest(unittest.TestCase):
         self.snapshot = {
             'edge': {'system_units': {'docker.service': {'state': 'OK'}},
                      'docker': {name: {'state': 'OK'} for name in (
-                         'weblate-edge-weblate-1', 'weblate-edge-cache-1', 'postgres')}},
+                         'weblate', 'weblate-valkey', 'postgres')}},
             'applications': {'weblate': {'state': 'OK', 'detail': {'code': 200}}},
         }
 
@@ -33,7 +33,7 @@ class WeblateHealthTest(unittest.TestCase):
 
     def test_docker_parent_suppresses_child_alert(self):
         self.snapshot['edge']['system_units']['docker.service']['state'] = 'FAIL'
-        self.snapshot['edge']['docker']['weblate-edge-cache-1']['state'] = 'FAIL'
+        self.snapshot['edge']['docker']['weblate-valkey']['state'] = 'FAIL'
         self.assertTrue(self.incident()['suppressed'])
 
     def test_failure_deduplication_and_recovery(self):
@@ -45,7 +45,7 @@ class WeblateHealthTest(unittest.TestCase):
                             STATE_PATH=Path(temp) / 'state.json'):
                 durable = {'notification_model': 2, 'incidents': {}}
                 for state in ('OK', 'FAIL', 'FAIL', 'OK'):
-                    self.snapshot['edge']['docker']['weblate-edge-cache-1']['state'] = state
+                    self.snapshot['edge']['docker']['weblate-valkey']['state'] = state
                     notify({'weblate': self.incident()}, durable)
         self.assertEqual(len(sent), 2)
         self.assertEqual(durable['incidents']['weblate']['state'], 'OK')

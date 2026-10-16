@@ -1,5 +1,16 @@
 # Cloud Infrastructure — Decision Log
 
+## 2026-10-16 — ACCEPTED: explicit production container names
+
+The operator approved the complete before/after table and authorized deployment.
+Use the names in `deployments/edge/docker/container-names.md` in owned Compose
+inputs and all active monitor/maintenance/backup references. Preserve upstream
+service keys, Compose projects, network/volume identities and service DNS;
+RabbitMQ hostname remains `plane-mq`. One permanent instance per service is
+accepted with explicit names. PDF CleanUp keeps its per-execution `--rm` name;
+Plane migration uses a unique `plane-migrator-<run-id>` with native `--rm`.
+Historical acceptance evidence is retained with its original naming.
+
 Decision entries are chronological. The latest applicable `ACCEPTED` decision has priority over older conflicting entries. This file retains durable project decisions, not chat transcripts.
 
 ---

@@ -1,6 +1,18 @@
 # Edge Maintenance
 
-Current contract (2026-10-01 after Plane Part 1): 16 manual targets, 9 Docker units, 23 monitored components. PLANE is an official-release unit using `plane_compose`, manual helper `scripts/update-plane`, Git playbook `playbooks/updates/plane.yml`, and Semaphore template 21. Current/latest stable v1.4.2 CURRENT; preflight checks native vendor/site graphs, public routes/variables and actual Backrest recovery contents, and real updates require a completed backup before migration. No scheduled Plane update. Full contract: `../../deployments/plane/README.md`; acceptance: `../../PLANE_PART_1_ACCEPTANCE_2026-10-01.md`. Shared PostgreSQL and every other update driver remain. Earlier stage target counts below are historical checkpoints.
+Current contract (2026-10-16): 19 manual targets, 12 Docker units and 22 permanent
+containers. Runtime discovery uses the approved names in
+`../../deployments/edge/docker/container-names.md`; Compose service keys and
+dispatch target IDs stay unchanged. Plane updates assign a unique
+`plane-migrator-<run-id>` name to the temporary `--rm` migration container.
+
+Weblate discovery reads the registry manifest and its official
+`org.opencontainers.image.version` label through the existing registry helper.
+This also identifies an image rebuild with the same application version; it
+does not depend on the Docker Hub tag-alias path used by other products.
+Source: [official Weblate image labels](https://github.com/WeblateOrg/docker/blob/main/Dockerfile).
+
+Plane Part 1 contract (2026-10-01): PLANE is an official-release unit using `plane_compose`, manual helper `scripts/update-plane`, Git playbook `playbooks/updates/plane.yml`, and Semaphore template 21. Preflight checks native vendor/site graphs, public routes/variables and actual Backrest recovery contents, and real updates require a completed backup before migration. No scheduled Plane update. Full contract: `../../deployments/plane/README.md`; acceptance: `../../PLANE_PART_1_ACCEPTANCE_2026-10-01.md`. Shared PostgreSQL and every other update driver remain. Earlier stage target counts below are historical checkpoints.
 
 Current source for the single `edge` maintenance/update subsystem.
 

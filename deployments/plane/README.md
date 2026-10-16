@@ -1,5 +1,12 @@
 # Plane Community on edge
 
+Container naming (2026-10-16): permanent containers are `plane-web`, `plane-api`,
+`plane-admin`, `plane-space`, `plane-live`, `plane-worker`, `plane-scheduler`,
+`plane-valkey`, `plane-rabbitmq`, `plane-minio`. The existing Compose service
+keys stay unchanged. RabbitMQ keeps hostname `plane-mq` and its existing volume.
+The update driver runs the temporary migrator as `plane-migrator-<run-id>` with
+`--rm --no-deps`; no standing migrator container is required.
+
 Current acceptance: `PLANE_PART_1_ACCEPTANCE_2026-10-01.md`, `PLANE_P2_1_SMTP_ACCEPTANCE_2026-10-02.md` and `PLANE_PART_2_CORE_INTEGRATIONS_ACCEPTANCE_2026-10-02.md`. Core deployment, SMTP and unified Part 2 core integrations are COMPLETE / ACCEPTED. Optional workflows are deferred.
 
 ## Authoritative deployment inputs

@@ -19,6 +19,7 @@ for description, change in (
     ('changed upload bucket', lambda d: d['services']['api']['environment'].update(AWS_S3_BUCKET_NAME='new-bucket')),
     ('extra integration member', lambda d: d['services']['beat-worker']['networks'].update(edge_internal={})),
     ('embedded database dependency', lambda d: d['services']['api']['depends_on'].update({'plane-db': {}})),
+    ('container name drift', lambda d: d['services']['beat-worker'].update(container_name='unexpected-scheduler')),
 ):
     candidate = copy.deepcopy(config); change(candidate)
     try:
@@ -34,4 +35,4 @@ candidate['services']['worker']['depends_on']['new-worker-dependency'] = {}
 assert signature(config) != signature(candidate)
 assert 'pgdata' not in config.get('volumes', {})
 assert module['PERSISTENT'] == set(config['services']) - {'migrator'}
-print('PLANE_NATIVE_COMPOSE_CONTRACT=PASS|DRIFT_CASES=8|SECRETS_PRINTED=0')
+print('PLANE_NATIVE_COMPOSE_CONTRACT=PASS|DRIFT_CASES=9|SECRETS_PRINTED=0')

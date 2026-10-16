@@ -700,7 +700,7 @@ An explicit stable Docker bridge network `edge_internal` provides direct, intern
 This network separates application-level communication from database infrastructure:
 - `postgres_net` (`172.26.0.0/16`) remains strictly dedicated to PostgreSQL database connections.
 - `edge_internal` (`172.30.0.0/24`) hosts inter-service application APIs and webhooks.
-- Current member services: `n8n` (alias `n8n`), `mattermost-mattermost-1` (alias `mattermost`), `plane-api-1` (alias `plane-api`) and `plane-worker-1` (alias `plane-worker`), verified 2026-10-01 after Plane Part 1 acceptance.
+- Current container names on this network (normalization 2026-10-16): `n8n`, `mattermost`, `nextcloud`, `plane-api`, `plane-worker`, `weblate`, `github-mcp`. Service keys and existing integration aliases remain unchanged; addresses are resolved through Docker DNS rather than fixed container IPs. The full naming contract is in `deployments/edge/docker/container-names.md`.
 - Host-native integrations (such as `Hermes` gateway) connect to application services via their dedicated loopback port bindings (e.g. `127.0.0.1:18065` for Mattermost), eliminating same-host hairpin traffic through public DNS and reverse proxy infrastructure.
 
 ### Project-management decommission — 2026-10-01

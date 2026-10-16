@@ -12,6 +12,7 @@ import sys
 import tempfile
 import time
 import urllib.request
+import uuid
 
 APP = pathlib.Path('/opt/plane/plane-app')
 WRAPPER = '/usr/local/sbin/plane-compose'
@@ -19,6 +20,12 @@ PERSISTENT = {'web', 'api', 'admin', 'space', 'live', 'worker', 'beat-worker', '
 DB = {'api', 'worker', 'beat-worker', 'migrator'}
 ROUTES = {'web': (18110, 3000), 'api': (18111, 8000), 'admin': (18112, 3000),
           'space': (18113, 3000), 'live': (18114, 3000), 'plane-minio': (18115, 9000)}
+CONTAINER_NAMES = {
+    'web': 'plane-web', 'api': 'plane-api', 'admin': 'plane-admin',
+    'space': 'plane-space', 'live': 'plane-live', 'worker': 'plane-worker',
+    'beat-worker': 'plane-scheduler', 'plane-redis': 'plane-valkey',
+    'plane-mq': 'plane-rabbitmq', 'plane-minio': 'plane-minio',
+}
 
 def run(argv, **kwargs):
     return subprocess.run(argv, check=True, **kwargs)
@@ -46,7 +53,7 @@ def latest():
 
 def installed():
     version = env_values(APP / 'plane.env')['APP_RELEASE']
-    image = output(['docker', 'inspect', 'plane-api-1', '--format', '{{.Config.Image}}']).strip()
+    image = output(['docker', 'inspect', 'plane-api', '--format', '{{.Config.Image}}']).strip()
     if image != 'makeplane/plane-backend:' + version:
         raise RuntimeError('installed release/runtime identity drift')
     return version
@@ -68,6 +75,8 @@ def validate_topology(data):
     if 'pgdata' in data.get('volumes', {}):
         raise RuntimeError('embedded pgdata is present')
     for name, service in services.items():
+        if name in CONTAINER_NAMES and service.get('container_name') != CONTAINER_NAMES[name]:
+            raise RuntimeError(f'container name contract changed: {name}')
         networks = set(service.get('networks', {}))
         expected = {'default'} | ({'postgres_net'} if name in DB else set())
         expected |= {'edge_internal'} if name in {'api', 'worker'} else set()
@@ -93,7 +102,7 @@ def validate_topology(data):
 
 def topology_signature(data):
     # Native Compose supplies parsing, interpolation and merge semantics.
-    return {name: {key: service.get(key) for key in ('command', 'depends_on', 'ports', 'networks', 'volumes', 'tmpfs', 'hostname')}
+    return {name: {key: service.get(key) for key in ('command', 'depends_on', 'ports', 'networks', 'volumes', 'tmpfs', 'hostname', 'container_name')}
             for name, service in data['services'].items()}
 
 def rpc(method, payload, timeout=30):
@@ -148,7 +157,7 @@ def discover(release):
     current, available = installed(), release['tag_name']
     image = 'makeplane/plane-backend:' + available
     digest = json.loads(output(['docker', 'buildx', 'imagetools', 'inspect', image, '--format', '{{json .Manifest.Digest}}']))
-    image_id = output(['docker', 'inspect', 'plane-api-1', '--format', '{{.Image}}']).strip()
+    image_id = output(['docker', 'inspect', 'plane-api', '--format', '{{.Image}}']).strip()
     digests = json.loads(output(['docker', 'image', 'inspect', image_id]))[0]['RepoDigests']
     local = next(d.split('@', 1)[1] for d in digests if d.startswith('makeplane/plane-backend@'))
     changed = current != available or local != digest
@@ -244,7 +253,8 @@ def main():
         run([WRAPPER, '--profile', 'migration', 'pull', '--quiet'])
         run([WRAPPER, 'up', '-d', 'plane-redis', 'plane-mq', 'plane-minio'])
         # An exception here leaves the new application generation stopped.
-        run([WRAPPER, '--profile', 'migration', 'run', '--rm', '--no-deps', 'migrator'])
+        run([WRAPPER, '--profile', 'migration', 'run', '--rm', '--no-deps',
+             '--name', 'plane-migrator-' + uuid.uuid4().hex, 'migrator'])
         run([WRAPPER, 'up', '-d', '--wait', '--wait-timeout', '180'])
         for attempt in range(36):
             try:

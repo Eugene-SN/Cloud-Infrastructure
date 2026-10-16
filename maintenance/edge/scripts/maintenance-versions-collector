@@ -706,7 +706,7 @@ docker_remote_snapshot() {
                 "$installed"
             ;;
 
-        AUTHELIA|MATTERMOST|POSTGRESQL|STALWART|NEXTCLOUD|NEXTCLOUD_REDIS|WEBLATE|WEBLATE_VALKEY)
+        AUTHELIA|MATTERMOST|POSTGRESQL|STALWART|NEXTCLOUD|NEXTCLOUD_REDIS|WEBLATE_VALKEY)
             docker_hub_snapshot \
                 "$component" \
                 "$repository" \
@@ -715,7 +715,7 @@ docker_remote_snapshot() {
                 "$installed"
             ;;
 
-        BULWARK|GITHUB_MCP)
+        BULWARK|GITHUB_MCP|WEBLATE)
             docker_registry_snapshot \
                 "$image" \
                 "$component"
@@ -872,14 +872,14 @@ echo
 echo "--- DOCKER APPLICATIONS ---"
 emit_docker_component N8N n8n docker.n8n.io/n8nio/n8n:stable docker.n8n.io/n8nio/n8n stable
 emit_docker_component AUTHELIA authelia authelia/authelia:latest authelia/authelia latest
-emit_docker_component MATTERMOST mattermost-mattermost-1 mattermost/mattermost-team-edition:latest mattermost/mattermost-team-edition latest
+emit_docker_component MATTERMOST mattermost mattermost/mattermost-team-edition:latest mattermost/mattermost-team-edition latest
 emit_docker_component POSTGRESQL postgres postgres:18 postgres 18
 emit_docker_component STALWART stalwart stalwartlabs/stalwart:latest stalwartlabs/stalwart latest
 emit_docker_component BULWARK bulwark ghcr.io/bulwarkmail/webmail:latest ghcr.io/bulwarkmail/webmail latest
-emit_docker_component NEXTCLOUD nextcloud-app-1 nextcloud:stable-apache nextcloud stable-apache
-emit_docker_component NEXTCLOUD_REDIS nextcloud-redis-1 redis:alpine redis alpine
-emit_docker_component WEBLATE weblate-edge-weblate-1 weblate/weblate:latest weblate/weblate latest
-emit_docker_component WEBLATE_VALKEY weblate-edge-cache-1 valkey/valkey:latest valkey/valkey latest
+emit_docker_component NEXTCLOUD nextcloud nextcloud:stable-apache nextcloud stable-apache
+emit_docker_component NEXTCLOUD_REDIS nextcloud-redis redis:alpine redis alpine
+emit_docker_component WEBLATE weblate weblate/weblate:latest weblate/weblate latest
+emit_docker_component WEBLATE_VALKEY weblate-valkey valkey/valkey:latest valkey/valkey latest
 emit_docker_component GITHUB_MCP github-mcp ghcr.io/github/github-mcp-server:latest ghcr.io/github/github-mcp-server latest
 
 echo

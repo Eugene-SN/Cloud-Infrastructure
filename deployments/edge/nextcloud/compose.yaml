@@ -1,5 +1,6 @@
 services:
   redis:
+    container_name: nextcloud-redis
     logging:
       driver: json-file
       options:
@@ -16,6 +17,7 @@ services:
       timeout: 3s
       retries: 20
   app:
+    container_name: nextcloud
     logging:
       driver: json-file
       options:
@@ -57,6 +59,7 @@ services:
         aliases:
         - nextcloud.edge.internal
   cron:
+    container_name: nextcloud-cron
     logging:
       driver: json-file
       options:

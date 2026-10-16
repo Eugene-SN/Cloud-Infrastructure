@@ -1,0 +1,56 @@
+name: weblate-edge
+services:
+  weblate:
+    container_name: weblate
+    image: weblate/weblate:latest
+    restart: unless-stopped
+    env_file:
+      - environment
+      - cloud.env
+    ports:
+      - "127.0.0.1:18090:8080"
+    volumes:
+      - /srv/weblate/data:/app/data:rw
+      - /srv/weblate/cache:/app/cache:rw
+      - /opt/weblate/provider:/app/data/python/customize:ro
+      - /opt/weblate/settings-override.py:/app/data/settings-override.py:ro
+      - /opt/weblate/cloud.env:/run/secrets/cloud.env:ro
+    depends_on:
+      cache:
+        condition: service_healthy
+    networks:
+      - default
+      - postgres_net
+      - edge_internal
+      - n8n_hermes
+    logging:
+      driver: local
+      options:
+        max-size: 10m
+        max-file: "3"
+  cache:
+    container_name: weblate-valkey
+    image: valkey/valkey:latest
+    restart: unless-stopped
+    command: ["valkey-server", "--save", "60", "1", "--appendonly", "yes"]
+    volumes:
+      - /srv/weblate/valkey:/data:rw
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    logging:
+      driver: local
+      options:
+        max-size: 10m
+        max-file: "3"
+networks:
+  default:
+    internal: true
+  postgres_net:
+    external: true
+  edge_internal:
+    external: true
+  n8n_hermes:
+    external: true

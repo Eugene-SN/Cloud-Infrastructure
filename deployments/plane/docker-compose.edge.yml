@@ -1,5 +1,6 @@
 services:
   web:
+    container_name: plane-web
     logging:
       driver: json-file
       options:
@@ -10,6 +11,7 @@ services:
     ports: !override
       - "127.0.0.1:18110:3000"
   space:
+    container_name: plane-space
     logging:
       driver: json-file
       options:
@@ -20,6 +22,7 @@ services:
     ports: !override
       - "127.0.0.1:18113:3000"
   admin:
+    container_name: plane-admin
     logging:
       driver: json-file
       options:
@@ -30,6 +33,7 @@ services:
     ports: !override
       - "127.0.0.1:18112:3000"
   live:
+    container_name: plane-live
     logging:
       driver: json-file
       options:
@@ -40,6 +44,7 @@ services:
     ports: !override
       - "127.0.0.1:18114:3000"
   api:
+    container_name: plane-api
     logging:
       driver: json-file
       options:
@@ -58,6 +63,7 @@ services:
       edge_internal:
         aliases: [plane-api]
   worker:
+    container_name: plane-worker
     logging:
       driver: json-file
       options:
@@ -75,6 +81,7 @@ services:
       edge_internal:
         aliases: [plane-worker]
   beat-worker:
+    container_name: plane-scheduler
     logging:
       driver: json-file
       options:
@@ -90,6 +97,7 @@ services:
       default: {}
       postgres_net: {}
   plane-redis:
+    container_name: plane-valkey
     logging:
       driver: json-file
       options:
@@ -98,6 +106,7 @@ services:
     deploy: !override {replicas: 1}
     restart: unless-stopped
   plane-mq:
+    container_name: plane-rabbitmq
     logging:
       driver: json-file
       options:
@@ -107,6 +116,7 @@ services:
     deploy: !override {replicas: 1}
     restart: unless-stopped
   plane-minio:
+    container_name: plane-minio
     logging:
       driver: json-file
       options:
