@@ -114,5 +114,9 @@
         "cadence_s": 300
       }
     ]
+  },
+  "github_mcp_token_sync": {
+    "status_file": "/home/core/.local/state/github-mcp-token-sync/status.json",
+    "max_success_age_s": 600
   }
 }

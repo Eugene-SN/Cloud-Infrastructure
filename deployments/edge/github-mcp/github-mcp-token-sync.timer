@@ -1,0 +1,11 @@
+[Unit]
+Description=Reconcile GitHub MCP client credentials and retry pending reloads
+
+[Timer]
+OnBootSec=30s
+OnUnitInactiveSec=60s
+AccuracySec=2s
+Unit=github-mcp-token-sync.service
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,10 @@
+[Unit]
+Description=Apply the active gh credential to GitHub MCP clients
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /usr/local/libexec/edge-github-mcp-token-sync
+TimeoutStartSec=6min
+UMask=0077
+StandardOutput=journal
+StandardError=journal

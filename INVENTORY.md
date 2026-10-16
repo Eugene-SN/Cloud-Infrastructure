@@ -3,7 +3,7 @@
 ## Current GitHub MCP inventory — 2026-10-16
 
 One permanent `github-mcp` container, official v2.0.2 on the existing latest track,
-replaces all agent-owned GitHub STDIO containers. Codex/Hermes/Antigravity use
+replaces all agent-owned GitHub STDIO containers. The active stored gh token is the single authority; core user github-mcp-token-sync path/timer/service automatically maintain native client headers and refresh changed connections. Codex/Hermes/Antigravity use
 `http://127.0.0.1:18082/`; Docker peers can use `http://github-mcp:8082/` on existing
 edge_internal. No n8n/Plane GitHub MCP consumer currently exists. Total permanent
 containers22; Maintenance19 manual / 12 Docker units / 26 components; GitHub

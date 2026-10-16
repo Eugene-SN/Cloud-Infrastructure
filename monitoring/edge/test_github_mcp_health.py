@@ -1,5 +1,6 @@
 """Shared GitHub MCP liveness, dependency suppression and alert recovery."""
 import copy
+import json
 import runpy
 import tempfile
 import unittest
@@ -57,6 +58,38 @@ class GitHubMCPHealthTest(unittest.TestCase):
                     notify({'github-mcp': self.incident()}, durable)
         self.assertEqual(len(sent), 2)
         self.assertEqual(durable['incidents']['github-mcp']['state'], 'OK')
+
+    def test_credential_sync_failure_degrades_the_shared_incident(self):
+        self.snapshot['applications']['github_mcp_token_sync'] = {'state': 'DEGRADED'}
+        self.assertEqual(self.incident()['state'], 'DEGRADED')
+
+    def test_credential_sync_failure_staleness_and_disabled_triggers(self):
+        collect = self.monitor['collect_github_token_sync']
+        units = ('Id=github-mcp-token-sync.timer\nActiveState=active\nUnitFileState=enabled\n\n'
+                 'Id=github-mcp-token-sync.path\nActiveState=active\nUnitFileState=enabled\n\n'
+                 'Id=github-mcp-token-sync.service\nActiveState=inactive\nResult=success\n')
+        now = 1800000000
+        with tempfile.TemporaryDirectory(prefix='github-token-monitor-') as temp:
+            path = Path(temp) / 'status.json'
+            config = {'github_mcp_token_sync': {'status_file': str(path), 'max_success_age_s': 600}}
+            status = {'result': 'PASS', 'last_success_at': now - 30, 'pending_reload': []}
+            def health(unit_data=units):
+                path.write_text(json.dumps(status))
+                with patch.dict(collect.__globals__, run_text=lambda *a, **k: unit_data):
+                    return collect(config, now=now)['state']
+            self.assertEqual(health(), 'OK')
+            self.assertEqual(health(units.replace('enabled', 'disabled')), 'DEGRADED')
+            status['result'] = 'FAIL'
+            self.assertEqual(health(), 'DEGRADED')
+            status.update(result='PASS', last_success_at=now - 601)
+            self.assertEqual(health(), 'DEGRADED')
+            status.update(result='RUNNING', last_success_at=now - 30, started_at=now - 120,
+                          pending_reload=['hermes'])
+            self.assertEqual(health(), 'OK')
+            status['started_at'] = now - 361
+            self.assertEqual(health(), 'DEGRADED')
+            status.update(result='PASS', pending_reload=['codex'])
+            self.assertEqual(health(), 'DEGRADED')
 
 
 if __name__ == '__main__':

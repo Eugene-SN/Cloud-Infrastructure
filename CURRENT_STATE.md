@@ -1,5 +1,21 @@
 # Cloud Infrastructure — Current State
 
+## Current GitHub MCP credential source — 2026-10-16
+
+`EDGE_GITHUB_MCP_TOKEN_SOURCE=PASS`. The active stored gh credential is now the
+single authority. Enabled core user path/timer units synchronize only GitHub
+Authorization headers into the three protected native client files and apply
+changed connections automatically. File events trigger earlier application;
+a one-minute reconciliation retries pending reloads. Unchanged runs do not
+rewrite files or restart clients. Codex uses native MCP reload; Hermes drains/
+relaunches its gateway and refreshes Dashboard; Antigravity refreshes its daemon.
+Generated client copies remain; manual edits to three files are superseded.
+Native get_me in all three clients, durable retry/no-op tests, live scheduled
+runs and Edge Monitor credential-sync health pass. GitHub authorization itself
+is maintained through gh; this does not issue/renew GitHub credentials.
+Evidence: `deployments/edge/github-mcp/TOKEN_SYNC_ACCEPTANCE_2026-10-16.md`.
+
+
 ## Current shared GitHub MCP HTTP — 2026-10-16
 
 `EDGE_SHARED_GITHUB_MCP_HTTP=PASS`. One permanent `github-mcp` Compose container

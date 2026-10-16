@@ -1,5 +1,15 @@
 # Cloud Infrastructure — Accepted Implementation Phases
 
+## Shared GitHub credential source — 2026-10-16 COMPLETE
+
+Operator-requested automatic credential distribution is complete. The existing
+gh store supplies generated native headers for Codex/Hermes/Antigravity, with
+file-change and minute triggers, native application and durable retry. No new
+GitHub token/account, proxy or Docker service. Source/trigger/reload failures
+join the existing GitHub MCP incident. Acceptance:
+`deployments/edge/github-mcp/TOKEN_SYNC_ACCEPTANCE_2026-10-16.md`.
+
+
 ## Post-infrastructure shared GitHub MCP — 2026-10-16 COMPLETE
 
 Operator-requested transport/lifecycle migration is verified: one permanent

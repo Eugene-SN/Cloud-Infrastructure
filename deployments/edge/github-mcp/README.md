@@ -33,12 +33,51 @@ Codex `url`/`http_headers`, Hermes `url`/`headers`, and Antigravity
 `serverUrl`/`headers`. Secret-free examples are in
 [`../interaction-fabric/clients`](../interaction-fabric/clients).
 
-The headers contain the credential value at configuration time. A later token
-rotation must also update these three native client entries and reload their
-connections; they do not dynamically rerun `gh auth token` on each request.
-Codex supports `config/mcpServer/reload` without daemon restart; Hermes has native
-MCP configuration reconciliation/reload; Antigravity has its native MCP manager
-reload, or the existing user daemon can be restarted when applying configuration.
+The active stored GitHub CLI credential is the single authoritative source.
+The client headers are generated copies, synchronized by
+`/usr/local/libexec/edge-github-mcp-token-sync` running as `core`. The existing
+GitHub CLI store is used through `gh auth token --hostname github.com`, with
+`GH_CONFIG_DIR=/home/core/.config/gh` and ambient token overrides removed. No
+fourth credential file, token issuer, proxy or container is added. Updating the
+GitHub authorization through gh is sufficient; do not edit the managed GitHub
+Authorization fields in the three client files.
+
+The enabled user path unit watches `~/.config/gh/hosts.yml`; the user timer
+reconciles every minute and retries interrupted application. Files are atomically
+written mode600 only when the credential changes. All other settings and headers
+are preserved. Layout/transport drift or unavailable credentials fail before
+writing; failed reload obligations survive for the next attempt. Unchanged runs
+never rewrite client files or restart services.
+
+On a change, Codex's native `config/mcpServer/reload` refreshes loaded chats
+without restarting its managed daemon. Hermes's native `systemctl --user reload`
+drains active gateway turns and relaunches it; its Dashboard and the Antigravity
+daemon restart to replace cached connections. Inactive clients are left inactive
+and read the new headers at their next start. These applications may briefly
+reconnect during a token change; normal minute checks cause no reconnect.
+
+The timer detects a change within about a minute if no file event is available;
+native draining/startup follows detection. This distributes the current gh token;
+it does not mint a new GitHub token or recover revoked/expired authorization.
+Refresh/re-authenticate gh when GitHub requires it. Other HTTP consumers must be
+explicitly added to the managed client registry before relying on this automation.
+
+The root-owned script uses system Python, existing PyYAML and the distribution
+`python3-websockets` package for the native Codex socket. Canonical unit files
+`github-mcp-token-sync.{service,path,timer}` install into core's existing
+`~/.config/systemd/user/`. Existing user lingering supplies reboot persistence.
+Status and retry metadata at `~/.local/state/github-mcp-token-sync/status.json`
+contain no credential or token fingerprint. Existing Edge Monitor includes
+source/application failures, missing/disabled triggers and stale success in the
+same GitHub MCP incident. It never reads or publishes the credential itself.
+
+To disable this mechanism during a deliberate recovery, stop/disable its path
+and timer before restoring client settings. Restore the script/units from Git
+and the gh authorization from the existing protected Backrest coverage, then
+start the service and enable both triggers. The script's `--refresh` explicitly
+reapplies the current source and refreshes clients; normal timer runs do not
+force refresh. Source rotation/retry tests: `test_token_sync.py`; deployment
+evidence: [TOKEN_SYNC_ACCEPTANCE_2026-10-16.md](TOKEN_SYNC_ACCEPTANCE_2026-10-16.md).
 
 `/opt/github-mcp/.env` is root-owned mode600 and contains only
 `GITHUB_MCP_SERVER_MRTR_STATE_KEY`, a base64-encoded random 32-byte key. This is
@@ -90,3 +129,5 @@ Acceptance: [`ACCEPTANCE_2026-10-16.md`](ACCEPTANCE_2026-10-16.md).
 - [Hermes MCP](https://hermes-agent.nousresearch.com/docs/user-guide/features/mcp)
 - [Antigravity MCP configuration](https://antigravity.google/docs/mcp/)
 - [Semaphore native API](https://semaphoreui.com/api-docs)
+- [GitHub CLI active credential](https://cli.github.com/manual/gh_auth_token)
+- Installed systemd path/timer manuals and native user-unit validator

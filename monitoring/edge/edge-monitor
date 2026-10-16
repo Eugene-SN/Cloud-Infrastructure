@@ -690,6 +690,46 @@ def collect_antigravity_update(config, now=None):
     return {'state': 'DEGRADED' if reasons else 'OK', 'detail': detail}
 
 
+def collect_github_token_sync(config, now=None):
+    settings = config.get('github_mcp_token_sync')
+    if not settings:
+        return {'state': 'OK', 'detail': {'configured': False}}
+    now = time.time() if now is None else now
+    reasons = []
+    detail = {'reasons': reasons}
+    try:
+        status = json.loads(Path(settings['status_file']).read_text())
+        age = now - float(status['last_success_at'])
+        detail.update(result=status['result'], success_age_s=round(age),
+                      pending_reload=status.get('pending_reload', []))
+        if age < -60 or age > settings['max_success_age_s']:
+            reasons.append('credential synchronization has no recent success')
+        if status['result'] == 'FAIL':
+            reasons.append('credential synchronization failed')
+        elif status['result'] == 'RUNNING':
+            if now - float(status['started_at']) > 360:
+                reasons.append('credential application exceeded six minutes')
+        elif status['result'] != 'PASS' or status.get('pending_reload'):
+            reasons.append('credential application is incomplete')
+    except (OSError, ValueError, TypeError, KeyError):
+        reasons.append('credential synchronization status unavailable')
+    raw = run_text(['runuser', '-u', 'core', '--', 'env', 'XDG_RUNTIME_DIR=/run/user/1000',
+                    'systemctl', '--user', 'show', 'github-mcp-token-sync.timer',
+                    'github-mcp-token-sync.path', 'github-mcp-token-sync.service',
+                    '-p', 'Id', '-p', 'ActiveState', '-p', 'UnitFileState', '-p', 'Result'], timeout=5)
+    units = {}
+    for block in (raw or '').strip().split('\n\n'):
+        properties = dict(line.split('=', 1) for line in block.splitlines() if '=' in line)
+        units[properties.get('Id')] = properties
+    for name in ('github-mcp-token-sync.timer', 'github-mcp-token-sync.path'):
+        unit = units.get(name, {})
+        if unit.get('ActiveState') != 'active' or unit.get('UnitFileState') != 'enabled':
+            reasons.append('credential synchronization trigger unavailable')
+    if units.get('github-mcp-token-sync.service', {}).get('Result') != 'success':
+        reasons.append('credential synchronization service failed')
+    return {'state': 'DEGRADED' if reasons else 'OK', 'detail': detail}
+
+
 def collect_docker(
     config,
     tracker,
@@ -1928,13 +1968,16 @@ def build_incidents(snapshot):
     github_state = _worst_state(
         _item_state(apps.get('github_mcp') or {}),
         _item_state(docker.get('github-mcp') or {}),
+        _item_state(apps.get('github_mcp_token_sync') or {'state': 'OK'}),
     )
     incidents['github-mcp'] = _make_incident(
         'github-mcp', github_state, 'GitHub MCP', 'EDGE', 'Agent integration',
         'Shared GitHub tools may be unavailable to Codex, Hermes and Antigravity.',
-        'Native HTTP authentication challenge and permanent container checks',
+        'Native HTTP challenge, permanent container and shared credential synchronization',
         [_http_evidence('GitHub MCP HTTP', apps.get('github_mcp') or {}),
-         _container_evidence('github-mcp', docker.get('github-mcp') or {})],
+         _container_evidence('github-mcp', docker.get('github-mcp') or {}),
+         {'check': 'GitHub credential synchronization',
+          'state': (apps.get('github_mcp_token_sync') or {}).get('state', 'OK')}],
         confirmation='2 consecutive probes' if github_state == 'FAIL' else None,
         suppressed=bool(docker_parent_failed and github_state != 'OK'),
     )
@@ -2632,7 +2675,8 @@ def main():
                     config,
                     tracker,
                 ), "n8n_workflows": collect_n8n_workflows(config),
-                 "antigravity_update": collect_antigravity_update(config)},
+                 "antigravity_update": collect_antigravity_update(config),
+                 "github_mcp_token_sync": collect_github_token_sync(config)},
 
             "home_pai":
                 collect_cross_site(

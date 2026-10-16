@@ -1,0 +1,68 @@
+{
+  "marker": "EDGE_GITHUB_MCP_TOKEN_SOURCE=PASS",
+  "verified_at": "2026-10-16T05:06:10.555769+03:00",
+  "source": "active stored gh credential for github.com, core config directory, no environment token override",
+  "distribution": "generated native Authorization headers in three mode600 configurations",
+  "source_tokens_rotated_or_issued": false,
+  "native_get_me": {
+    "Codex": "PASS, current chat, 44 tools",
+    "Hermes": "PASS, installed runtime",
+    "Antigravity": "SUCCESS, native CLI"
+  },
+  "sync_status": {
+    "applied": {
+      "antigravity": {
+        "at": 1792115890.532029,
+        "result": 3206178
+      },
+      "codex": {
+        "at": 1792115869.190929,
+        "result": "mcp_reloaded"
+      },
+      "hermes": {
+        "at": 1792115885.9015172,
+        "result": {
+          "dashboard": 3206145,
+          "gateway": 3205823
+        }
+      }
+    },
+    "changed_clients": [],
+    "last_success_at": 1792116269.82822,
+    "pending_reload": [],
+    "result": "PASS",
+    "schema": 1,
+    "started_at": 1792116269.7305658
+  },
+  "no_op_preserves_client_pids_and_config_mtimes": true,
+  "unrelated_client_settings_preserved": true,
+  "codex_managed_daemon_pid_preserved": 2730265,
+  "triggers": {
+    "path": "enabled/active, watches ~/.config/gh/hosts.yml",
+    "timer": "enabled/active, 60 seconds after completion",
+    "scheduled_noop_runs_observed": true,
+    "user_linger": true
+  },
+  "isolated_rotation_retry_and_preservation_tests": 9,
+  "monitoring_tests": 19,
+  "runtime_dependencies": {
+    "python3-websockets": "distribution package, 15.0.1-1build2 at installation",
+    "PyYAML": "already installed"
+  },
+  "master_health": "PASS|SYSTEM_SERVICES=9|USER_SERVICES=4|DOCKER_UNITS=12|DOCKER_SERVICES=22|SQLITE_DATABASES=2|POSTGRES_READINESS=PASS",
+  "own_test_conversation_removed": true,
+  "task_temp_cleanup": "PASS",
+  "monitor": {
+    "overall_state": "OK",
+    "credential_sync": {
+      "state": "OK",
+      "detail": {
+        "reasons": [],
+        "result": "PASS",
+        "success_age_s": 15,
+        "pending_reload": []
+      }
+    },
+    "generated_at": "2026-10-16T02:06:05.735904+00:00"
+  }
+}

@@ -3518,3 +3518,23 @@ are removed after all native clients pass get_me. n8n/Plane have no existing MCP
 consumer; no integration is enabled solely because the endpoint is available.
 
 **Evidence:** `deployments/edge/github-mcp/ACCEPTANCE_2026-10-16.md`.
+
+
+## 2026-10-16 — Automatic GitHub credential distribution from gh
+
+**Status:** ACCEPTED by explicit operator request to remove manual updates in
+three client configurations. Supersedes the manual credential propagation
+requirement of the earlier shared HTTP deployment.
+
+The active stored gh credential is authoritative. Native protected client
+headers are generated copies: common file-reference/command auth is not a
+documented shared capability of all three clients. A core user oneshot/path/
+timer reconciles GitHub headers, retries incomplete application and refreshes
+cached connections only on changes. Codex uses native MCP RPC; Hermes's
+native gateway reload drains active turns and relaunches, Dashboard and
+Antigravity refresh their daemons. No unchanged-run restarts. Existing Edge
+Monitor observes failures/staleness in its GitHub MCP incident. No proxy, token
+issuer or additional container. Gh reauthorization remains the operator's
+native GitHub credential lifecycle; copies require no manual maintenance.
+
+**Evidence:** `deployments/edge/github-mcp/TOKEN_SYNC_ACCEPTANCE_2026-10-16.md`.
