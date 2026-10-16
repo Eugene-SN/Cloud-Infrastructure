@@ -150,9 +150,11 @@ updates, not native updater drift.
 ## Safety boundary
 
 Docker rows with `IMAGE_DIGEST_UPDATE` and equal known application versions
-show **New Docker image build** under Latest Stable. The application version
-and existing digest tooltip remain visible; update discovery and dispatch are
-unchanged. The live dashboard has separate styling changes, so deploy this
+explain in the existing hover tooltip that a new Docker image build is available
+and the application version is unchanged. Latest Stable keeps only the version
+and its existing red update highlight; both digests remain in the tooltip.
+Update discovery and dispatch are unchanged. The live dashboard has separate
+styling changes, so deploy this
 renderer change as a targeted patch rather than replacing its full HTML.
 
 The generic Compose driver records previous image IDs before recreation and
