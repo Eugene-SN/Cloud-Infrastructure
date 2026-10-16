@@ -4,3 +4,4 @@ source/**/*.egg-info
 source/build
 deployment.json
 upstream-blobs.json
+work

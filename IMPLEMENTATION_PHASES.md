@@ -996,3 +996,15 @@ Own cache/test artifacts are absent; n8n/Nextcloud remain healthy. The previous
 runtime's build-input retention is superseded; no new infrastructure stage or
 update policy. Record: PDF_CLEANUP_STANDALONE_BUILD_2026-10-16.md.
 PDF_CLEANUP_STANDALONE_BUILD=PASS.
+
+
+## 2026-10-16 — Simplify PDF Cleanup lifecycle — DEPLOYED / VERIFIED
+
+Post-infrastructure operator scope: one named `pdf-cleanup` container, fixed paths,
+start on demand/exit after processing, retained image/dependencies, cleared work
+contents. Published child workflow simplified from 17 to 13 nodes; parent unchanged.
+Real success/publication-error/timeout/recovery and same-ID checks pass; superseded
+launcher and own test artifacts removed. No new service or infrastructure stage.
+Current contract supersedes per-execution runtime instructions; independent image
+build remains valid. Record: PDF_CLEANUP_NAMED_CONTAINER_2026-10-16.md.
+PDF_CLEANUP_NAMED_CONTAINER=PASS.

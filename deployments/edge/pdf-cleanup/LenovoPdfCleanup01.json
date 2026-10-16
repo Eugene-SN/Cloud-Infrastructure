@@ -18,99 +18,11 @@
     },
     {
       "parameters": {
-        "url": "={{ $json.original_url }}",
-        "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "nextCloudApi",
-        "options": {
-          "response": {
-            "response": {
-              "fullResponse": true,
-              "responseFormat": "file"
-            }
-          },
-          "timeout": 120000
-        }
-      },
-      "id": "edb09fd7-5bf7-4809-a21c-58397a47bffe",
-      "name": "Download Original Snapshot",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.4,
-      "position": [
-        672,
-        240
-      ],
-      "credentials": {
-        "nextCloudApi": {
-          "id": "6MEdI2Cs7tEUiM7o",
-          "name": "Nextcloud - operator automation"
-        }
-      }
-    },
-    {
-      "parameters": {
         "authentication": "privateKey",
-        "command": "={{ \"/usr/bin/python3 /opt/pdf-cleanup/job-command.py \" + JSON.stringify({action:'create',execution_id:$('Normalize Request').item.json.execution_id}).base64Encode() }}",
-        "cwd": "/tmp"
-      },
-      "id": "d8475b2d-02fe-49ee-9b8d-1a309393f417",
-      "name": "Create Temporary Job",
-      "type": "n8n-nodes-base.ssh",
-      "typeVersion": 1,
-      "position": [
-        896,
-        240
-      ],
-      "onError": "continueRegularOutput",
-      "credentials": {
-        "sshPrivateKey": {
-          "id": "OsTkP0IAXod5QjbI",
-          "name": "SSH - n8n core edge AI execution"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "jsCode": "\nconst response = $input.first().json;\nconst job = JSON.parse(response.stdout ?? '{}');\nif (response.code !== 0 || job.ok !== true) throw new Error(job.error ?? response.error ?? 'Job creation failed');\nreturn [{json:{...$('Normalize Request').item.json, ...job},\n  binary:$('Download Original Snapshot').item.binary}];\n"
-      },
-      "id": "d9973e2a-d58e-47f9-ace3-18e40269514a",
-      "name": "Capture Job",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        1120,
-        240
-      ]
-    },
-    {
-      "parameters": {
-        "authentication": "privateKey",
-        "resource": "file",
-        "path": "={{ $json.job_dir + '/input' }}",
-        "options": {
-          "fileName": "source.pdf"
-        }
-      },
-      "id": "cd43c27c-b222-41b4-9269-7bc0b8f74e08",
-      "name": "Upload Working Copy",
-      "type": "n8n-nodes-base.ssh",
-      "typeVersion": 1,
-      "position": [
-        1344,
-        240
-      ],
-      "onError": "continueRegularOutput",
-      "credentials": {
-        "sshPrivateKey": {
-          "id": "OsTkP0IAXod5QjbI",
-          "name": "SSH - n8n core edge AI execution"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "authentication": "privateKey",
-        "command": "={{ \"/usr/bin/python3 /opt/pdf-cleanup/job-command.py \" + JSON.stringify({action:'process',job_dir:$('Capture Job').item.json.job_dir, execution_id:$('Capture Job').item.json.execution_id,upload_ok:$json.success === true}).base64Encode() }}",
-        "cwd": "/tmp"
+        "resource": "command",
+        "operation": "execute",
+        "cwd": "/tmp",
+        "command": "={{ \"/usr/bin/python3 /opt/pdf-cleanup/job-command.py \" + JSON.stringify({action:'process',path:$json.path, execution_id:$json.execution_id}).base64Encode() }}"
       },
       "id": "4e512be4-8bf3-4c9b-812e-fc4f15de62c7",
       "name": "Run PDF Cleanup CLI",
@@ -118,7 +30,7 @@
       "typeVersion": 1,
       "position": [
         672,
-        688
+        240
       ],
       "onError": "continueRegularOutput",
       "credentials": {
@@ -157,7 +69,7 @@
       "typeVersion": 2.2,
       "position": [
         896,
-        688
+        240
       ]
     },
     {
@@ -165,10 +77,10 @@
         "authentication": "privateKey",
         "resource": "file",
         "operation": "download",
-        "path": "={{ $('Capture Job').item.json.job_dir + '/output/cleaned.pdf' }}",
+        "path": "/opt/pdf-cleanup/work/cleaned.pdf",
         "binaryPropertyName": "cleaned",
         "options": {
-          "fileName": "={{ $('Capture Job').item.json.filename }}"
+          "fileName": "={{ $('Each PDF').item.json.filename }}"
         }
       },
       "id": "f2a3b761-cb2e-4985-9f9c-b56b3e3c8704",
@@ -177,7 +89,7 @@
       "typeVersion": 1,
       "position": [
         1120,
-        592
+        144
       ],
       "onError": "continueRegularOutput",
       "credentials": {
@@ -189,23 +101,23 @@
     },
     {
       "parameters": {
-        "method": "PUT",
-        "url": "={{ $('Capture Job').item.json.cleaned_url }}",
         "authentication": "predefinedCredentialType",
         "nodeCredentialType": "nextCloudApi",
-        "sendBody": true,
-        "contentType": "binaryData",
-        "inputDataFieldName": "cleaned",
+        "method": "PUT",
+        "url": "={{ $('Each PDF').item.json.cleaned_url }}",
         "options": {
+          "timeout": 120000,
           "response": {
             "response": {
+              "responseFormat": "text",
               "fullResponse": true,
-              "neverError": true,
-              "responseFormat": "text"
+              "neverError": true
             }
-          },
-          "timeout": 120000
-        }
+          }
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "cleaned"
       },
       "id": "869939d9-c671-470f-b475-d80816edd6cf",
       "name": "Publish Cleaned PDF",
@@ -213,7 +125,7 @@
       "typeVersion": 4.4,
       "position": [
         1344,
-        592
+        144
       ],
       "onError": "continueRegularOutput",
       "credentials": {
@@ -246,16 +158,18 @@
     {
       "parameters": {
         "authentication": "privateKey",
-        "command": "={{ \"/usr/bin/python3 /opt/pdf-cleanup/job-command.py \" + JSON.stringify({action:'release',job_dir:$('Capture Job').item.json.job_dir, execution_id:$('Capture Job').item.json.execution_id}).base64Encode() }}",
-        "cwd": "/tmp"
+        "resource": "command",
+        "operation": "execute",
+        "cwd": "/tmp",
+        "command": "={{ \"/usr/bin/python3 /opt/pdf-cleanup/job-command.py \" + JSON.stringify({action:'release',execution_id:$('Each PDF').item.json.execution_id}).base64Encode() }}"
       },
       "id": "9a93b34b-c42d-4f32-8641-e0563b992e87",
-      "name": "Remove Temporary Job",
+      "name": "Clear Workspace",
       "type": "n8n-nodes-base.ssh",
       "typeVersion": 1,
       "position": [
         2016,
-        784
+        336
       ],
       "onError": "continueRegularOutput",
       "credentials": {
@@ -267,7 +181,8 @@
     },
     {
       "parameters": {
-        "jsCode": "\nconst ctx = $('Capture Job').item.json;\nconst response = $('Remove Temporary Job').item.json;\nlet released;\ntry { released = JSON.parse(response.stdout); } catch { released = {}; }\nif (response.code !== 0 || released.ok !== true)\n  throw new Error('Temporary job removal failed: ' + (released.error ?? response.error ?? 'SSH failure'));\nconst processResponse = $('Run PDF Cleanup CLI').item.json;\nlet processed;\ntry { processed = JSON.parse(processResponse.stdout); } catch { processed = {}; }\nif (processResponse.code !== 0 || processed.ok !== true)\n  throw new Error(processed.error ?? processResponse.error ?? 'PDF cleanup CLI failed');\nconst pdf = $('Publish Cleaned PDF').item.json;\nif (pdf.error || ![200,201,204].includes(pdf.statusCode))\n  throw new Error('Cleaned PDF upload failed: ' + JSON.stringify(pdf.error ?? pdf.statusCode));\nif (ctx.previous_path) {\n  const deletion = $('Remove Previous Cleaned PDF').item.json;\n  if (deletion.error || ![200,204,404].includes(deletion.statusCode))\n    throw new Error('Previous cleaned PDF deletion failed: '+JSON.stringify(deletion.error ?? deletion.statusCode));\n}\nlet html = $input.first().json.data;\nconst pattern = /(<script id=\"catalog-data\" type=\"application\\/json\">)([\\s\\S]*?)(<\\/script>)/;\nconst catalog = JSON.parse(html.match(pattern)[2]);\nconst cleanedAt = $now.toISO();\nconst document = catalog.documents.find(doc=>doc.path===ctx.path);\nif (document) {\n  document.cleanup_status = 'cleaned';\n  document.cleaned_at = cleanedAt;\n  document.cleaned_path = ctx.path;\n  catalog.generated_at = cleanedAt;\n  html = html.replace(pattern,(_,a,b,c)=>a+JSON.stringify(catalog,null,2).replace(/</g,'\\\\u003c')+c);\n}\nreturn [{json:{ok:true,status:'cleaned',path:ctx.path,original_path:ctx.original_path,cleaned_path:ctx.cleaned_path,\n  cleaned_at:cleanedAt,summary:processed.summary,temporary_job_removed:true,html}}];\n"
+        "mode": "runOnceForAllItems",
+        "jsCode": "\nconst ctx = $('Each PDF').item.json;\nconst response = $('Clear Workspace').item.json;\nlet released;\ntry { released = JSON.parse(response.stdout); } catch { released = {}; }\nif (response.code !== 0 || released.ok !== true)\n  throw new Error('Workspace cleanup failed: ' + (released.error ?? response.error ?? 'SSH failure'));\nconst processResponse = $('Run PDF Cleanup CLI').item.json;\nlet processed;\ntry { processed = JSON.parse(processResponse.stdout); } catch { processed = {}; }\nif (processResponse.code !== 0 || processed.ok !== true)\n  throw new Error(processed.error ?? processResponse.error ?? 'PDF cleanup CLI failed');\nconst pdf = $('Publish Cleaned PDF').item.json;\nif (pdf.error || ![200,201,204].includes(pdf.statusCode))\n  throw new Error('Cleaned PDF upload failed: ' + JSON.stringify(pdf.error ?? pdf.statusCode));\nif (ctx.previous_path) {\n  const deletion = $('Remove Previous Cleaned PDF').item.json;\n  if (deletion.error || ![200,204,404].includes(deletion.statusCode))\n    throw new Error('Previous cleaned PDF deletion failed: '+JSON.stringify(deletion.error ?? deletion.statusCode));\n}\nlet html = $input.first().json.data;\nconst pattern = /(<script id=\"catalog-data\" type=\"application\\/json\">)([\\s\\S]*?)(<\\/script>)/;\nconst catalog = JSON.parse(html.match(pattern)[2]);\nconst cleanedAt = $now.toISO();\nconst document = catalog.documents.find(doc=>doc.path===ctx.path);\nif (document) {\n  document.cleanup_status = 'cleaned';\n  document.cleaned_at = cleanedAt;\n  document.cleaned_path = ctx.path;\n  catalog.generated_at = cleanedAt;\n  html = html.replace(pattern,(_,a,b,c)=>a+JSON.stringify(catalog,null,2).replace(/</g,'\\\\u003c')+c);\n}\nreturn [{json:{ok:true,status:'cleaned',path:ctx.path,original_path:ctx.original_path,cleaned_path:ctx.cleaned_path,\n  cleaned_at:cleanedAt,summary:processed.summary,temporary_job_removed:true,html}}];\n"
       },
       "id": "cb3929ba-2149-41a2-a906-d02ac7cb960d",
       "name": "Return Result",
@@ -275,7 +190,7 @@
       "typeVersion": 2,
       "position": [
         896,
-        736
+        640
       ]
     },
     {
@@ -296,13 +211,12 @@
         "conditions": {
           "options": {
             "caseSensitive": true,
-            "leftValue": "",
             "typeValidation": "strict",
             "version": 2
           },
           "conditions": [
             {
-              "leftValue": "={{ Boolean($('Capture Job').item.json.previous_path) && !$json.error && [200,201,204].includes($json.statusCode) }}",
+              "leftValue": "={{ Boolean($('Each PDF').item.json.previous_path) && !$json.error && [200,201,204].includes($json.statusCode) }}",
               "rightValue": true,
               "operator": {
                 "type": "boolean",
@@ -311,8 +225,7 @@
             }
           ],
           "combinator": "and"
-        },
-        "options": {}
+        }
       },
       "id": "b5448840-b3e2-4ac5-92f1-b7173d54474e",
       "name": "Previous Cleaned Filename",
@@ -320,24 +233,24 @@
       "typeVersion": 2.2,
       "position": [
         1568,
-        592
+        144
       ]
     },
     {
       "parameters": {
-        "method": "DELETE",
-        "url": "={{ $('Capture Job').item.json.previous_cleaned_url }}",
         "authentication": "predefinedCredentialType",
         "nodeCredentialType": "nextCloudApi",
+        "method": "DELETE",
+        "url": "={{ $('Each PDF').item.json.previous_cleaned_url }}",
         "options": {
+          "timeout": 120000,
           "response": {
             "response": {
+              "responseFormat": "text",
               "fullResponse": true,
-              "neverError": true,
-              "responseFormat": "text"
+              "neverError": true
             }
-          },
-          "timeout": 120000
+          }
         }
       },
       "id": "8dea90c2-d4c5-49e6-8ff5-b8889d7e556c",
@@ -346,7 +259,7 @@
       "typeVersion": 4.4,
       "position": [
         1792,
-        496
+        48
       ],
       "onError": "continueRegularOutput",
       "credentials": {
@@ -377,7 +290,7 @@
       "typeVersion": 4.4,
       "position": [
         672,
-        736
+        640
       ],
       "credentials": {
         "nextCloudApi": {
@@ -411,7 +324,7 @@
       "typeVersion": 4.4,
       "position": [
         1120,
-        736
+        640
       ],
       "credentials": {
         "nextCloudApi": {
@@ -422,50 +335,6 @@
     }
   ],
   "connections": {
-    "Download Original Snapshot": {
-      "main": [
-        [
-          {
-            "node": "Create Temporary Job",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Create Temporary Job": {
-      "main": [
-        [
-          {
-            "node": "Capture Job",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Capture Job": {
-      "main": [
-        [
-          {
-            "node": "Upload Working Copy",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Upload Working Copy": {
-      "main": [
-        [
-          {
-            "node": "Run PDF Cleanup CLI",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Run PDF Cleanup CLI": {
       "main": [
         [
@@ -510,7 +379,7 @@
         ],
         [
           {
-            "node": "Remove Temporary Job",
+            "node": "Clear Workspace",
             "type": "main",
             "index": 0
           }
@@ -522,18 +391,6 @@
         [
           {
             "node": "Each PDF",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Each PDF": {
-      "main": [
-        null,
-        [
-          {
-            "node": "Download Original Snapshot",
             "type": "main",
             "index": 0
           }
@@ -562,7 +419,7 @@
         ],
         [
           {
-            "node": "Remove Temporary Job",
+            "node": "Clear Workspace",
             "type": "main",
             "index": 0
           }
@@ -573,18 +430,7 @@
       "main": [
         [
           {
-            "node": "Remove Temporary Job",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Remove Temporary Job": {
-      "main": [
-        [
-          {
-            "node": "Read Cleanup INDEX",
+            "node": "Clear Workspace",
             "type": "main",
             "index": 0
           }
@@ -623,6 +469,29 @@
           }
         ]
       ]
+    },
+    "Clear Workspace": {
+      "main": [
+        [
+          {
+            "node": "Read Cleanup INDEX",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Each PDF": {
+      "main": [
+        null,
+        [
+          {
+            "node": "Run PDF Cleanup CLI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -630,23 +499,12 @@
     "availableInMCP": true,
     "binaryMode": "separate"
   },
-  "versionId": "ef2dce4e-e4fe-4ac3-bf00-7bee56c0f8c8",
-  "activeVersionId": "ef2dce4e-e4fe-4ac3-bf00-7bee56c0f8c8",
+  "versionId": "5b174000-7fd8-4c01-887e-d944cd2398ba",
+  "activeVersionId": "5b174000-7fd8-4c01-887e-d944cd2398ba",
   "nodeGroups": [
     {
-      "id": "ecb5cd40-2a36-43d9-a613-1841478ae22c",
-      "name": "1. Рабочая копия PDF",
-      "nodeNames": [
-        "Download Original Snapshot",
-        "Create Temporary Job",
-        "Capture Job",
-        "Upload Working Copy"
-      ],
-      "description": "Получить оригинал, создать временную папку и передать копию на edge."
-    },
-    {
       "id": "c8b7958a-496e-4d17-8e43-2ade442df338",
-      "name": "2. Очистка и сохранение",
+      "name": "1. Очистка и сохранение",
       "nodeNames": [
         "Run PDF Cleanup CLI",
         "CLI Succeeded",
@@ -654,19 +512,19 @@
         "Publish Cleaned PDF",
         "Previous Cleaned Filename",
         "Remove Previous Cleaned PDF",
-        "Remove Temporary Job"
+        "Clear Workspace"
       ],
-      "description": "CLI → публикация очищенного PDF → удаление прежнего имени при обновлении → удаление временной папки."
+      "description": "Запустить один контейнер, сохранить PDF через Nextcloud и очистить рабочий каталог."
     },
     {
       "id": "890def65-9710-41f7-bd41-055785a87b45",
-      "name": "3. Отметка в INDEX.html",
+      "name": "2. Отметка в INDEX.html",
       "nodeNames": [
         "Read Cleanup INDEX",
         "Return Result",
         "Save Cleanup INDEX"
       ],
-      "description": "После успешного сохранения отметить документ очищенным. Затем перейти к следующему PDF."
+      "description": "После успешной публикации обновить сведения об очистке и перейти к следующему PDF."
     }
   ],
   "tags": [],
@@ -674,6 +532,6 @@
     "aiBuilderAssisted": true,
     "builderVariant": "mcp"
   },
-  "pinData": {},
-  "description": "Clean a supplied PDF list with the edge CLI, preserve model folders, and mark completion in INDEX.html through Nextcloud WebDAV. Originals stay unchanged; temporary jobs are removed before reporting errors."
+  "description": "Clean a supplied PDF list using one persistent on-demand container and direct read-only originals. Publish through Nextcloud, clear the fixed workspace, and update INDEX.html after success.",
+  "pinData": {}
 }

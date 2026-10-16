@@ -1,0 +1,35 @@
+[
+  {
+    "request": {
+      "action": "process",
+      "execution_id": "202610160102",
+      "path": "../bad.pdf"
+    },
+    "result": {
+      "ok": false,
+      "error": "ValueError: Input must be a relative PDF path inside originals"
+    },
+    "exit_code": 0,
+    "container_id": "4d300f6e8fda774c107531fa11a124ac7cfca8b73cb8b6fb13cd8aa84db4329e"
+  },
+  {
+    "request": {
+      "action": "process",
+      "execution_id": "202610160103",
+      "path": "Missing/no-file.pdf"
+    },
+    "result": {
+      "ok": false,
+      "cli_rc": 2,
+      "summary": {
+        "status": "error",
+        "error": "Input must be an existing PDF inside originals",
+        "exit_code": 2
+      },
+      "stderr": "",
+      "error": "Input must be an existing PDF inside originals"
+    },
+    "exit_code": 2,
+    "container_id": "4d300f6e8fda774c107531fa11a124ac7cfca8b73cb8b6fb13cd8aa84db4329e"
+  }
+]

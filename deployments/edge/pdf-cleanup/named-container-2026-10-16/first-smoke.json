@@ -1,0 +1,32 @@
+{
+  "process": {
+    "ok": true,
+    "cli_rc": 0,
+    "summary": {
+      "schema_version": 1,
+      "tool_version": "0.1.3",
+      "source_commit": "9c9bbb375751f85ca1e6f737504f3e99a68fd3d5",
+      "input": "/originals/WA5680 G5/lp2506.pdf",
+      "output": "/work/cleaned.pdf",
+      "input_sha256": "966fc8ea9efda6f9f416ddf55c0c291f41583dd0a97a6d8b44cb87da3f2eaa5c",
+      "pages": 2,
+      "header_footer_fragments": 0,
+      "removed_header_rows": 0,
+      "removed_footer_rows": 0,
+      "footer_pages": 0,
+      "removed_links": {},
+      "removed_widgets": 1,
+      "cleanup_method": "text_show_operations",
+      "status": "cleaned",
+      "output_sha256": "7345218f06c1f55bad994832ae10da1b1dbe08092a923a24976c1faa45ad0a78",
+      "validation": "passed"
+    },
+    "stderr": "",
+    "status": "cleaned",
+    "cleaned": true
+  },
+  "release": {
+    "ok": true,
+    "job_removed": true
+  }
+}

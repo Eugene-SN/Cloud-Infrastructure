@@ -34,12 +34,17 @@
   },
   "installed_core_sha256": "2eaa182b11a5f9e5be766c5cf9d9b53712a23c13cdb292a9ba7bfc2b22487047",
   "job_adapter": "/opt/pdf-cleanup/job-command.py",
-  "job_adapter_sha256": "257ed62ac8f7aed7ca14c1f72e37a722ac3bc8c8d3420e6cc71057dca4a7c4c0",
+  "job_adapter_sha256": "8b07601d65b9e100168071e4d29632085934f8602c6b1698cdf87e2a19ce94d3",
   "installed_native_sha256": "d8b11bcc7c7726a1d31667c1d17cb159b280fe4146d1550dd38227c34971f331",
   "installed_lexical_sha256": "bde6b55e1dfc8f25f37f90bd39b5d1fc7d12357e5ded6f0a0a2bd056dafb2a0c",
   "refinement_evidence_commit": "afd3dc026b0e215ffca2983af9c91ee7c79c88b5",
   "font_dependency": "pypdf[fonts], exact installed pypdf 6.19.0; verified CFF Type1 decoding; core/native/lexical bytes unchanged",
   "build_recipe": "Dockerfile",
   "runtime_requirements": "runtime-requirements.txt",
-  "build_verification": "PDF_CLEANUP_STANDALONE_BUILD_2026-10-16.md"
+  "build_verification": "PDF_CLEANUP_STANDALONE_BUILD_2026-10-16.md",
+  "container_name": "pdf-cleanup",
+  "compose_file": "compose.yaml",
+  "workspace": "/opt/pdf-cleanup/work",
+  "lifecycle": "Persistent container; start on demand, exit after processing; dependencies retained",
+  "runtime_verification": "PDF_CLEANUP_NAMED_CONTAINER_2026-10-16.md"
 }

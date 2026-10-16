@@ -761,3 +761,16 @@ flowchart LR
 Inbox and issue-context/fingerprint state use native n8n Data Tables in existing SQLite. HMAC is over original bytes; invalid/missing signatures fail401, accepted project payloads are durably queued before quick204. Mattermost work does not delay ingress. API/MCP DELETE's confirmed v1.4.2 emission gap is covered by native deletion-activity polling, not a 404 heuristic. GitHub PR association/comment sync was retired by operator decision on 2026-10-05; native GitHub MCP remains.
 
 Hermes-managed MCP stdio uses `http://127.0.0.1:18111` origin, personal workspace and explicit PERSO project UUID; Pages/commercial groups are excluded. No hosted MCP server or direct executor MCP configuration. Existing Backrest logical dumps/SQLite staging/protected host configuration recover the whole graph; final flow384 snapshot readback passed. Plane is task state; Obsidian is durable knowledge. Optional Knowledge/Nextcloud/calendar/intake workflows remain deferred. Exact object inventory/evidence: `PLANE_PART_2_CORE_INTEGRATIONS_ACCEPTANCE_2026-10-02.md`; secret-free native definitions: `deployments/plane/integrations/`.
+
+
+## PDF Cleanup lifecycle — 2026-10-16
+
+The operator-selected PDF Cleanup workload uses one persistent named container,
+`pdf-cleanup`, stopped between jobs. Fixed read-only originals and adapter mounts,
+a writable fixed workspace and /tmp tmpfs serve the unchanged CLI. n8n starts it
+on demand, downloads the output through SSH, publishes through native Nextcloud
+WebDAV, clears workspace contents and records completion. Dependencies remain in
+the existing image; job execution does not build/pull or create/delete containers.
+No idle daemon/API/queue/network is introduced. Current contract and failure/recovery
+boundary: PDF_CLEANUP_NAMED_CONTAINER_2026-10-16.md. This supersedes per-execution
+PDF container instructions in historical records.

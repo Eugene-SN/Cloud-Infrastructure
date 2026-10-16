@@ -1,0 +1,18 @@
+{
+  "seconds": 6.34,
+  "state": {
+    "Status": "exited",
+    "Running": false,
+    "Paused": false,
+    "Restarting": false,
+    "OOMKilled": false,
+    "Dead": false,
+    "Pid": 0,
+    "ExitCode": 137,
+    "Error": "",
+    "StartedAt": "2026-10-16T03:31:45.478421438Z",
+    "FinishedAt": "2026-10-16T03:31:51.501583528Z"
+  },
+  "same_container": true,
+  "workspace_empty": true
+}

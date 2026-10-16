@@ -3567,3 +3567,27 @@ workflow, service, backup mechanism or infrastructure stage is introduced.
 
 **Evidence:** PDF_CLEANUP_STANDALONE_BUILD_2026-10-16.md;
 PDF_CLEANUP_STANDALONE_BUILD=PASS.
+
+
+## 2026-10-16 — Keep one named PDF Cleanup container and retain dependencies
+
+**Operator decision:** simplify PDF Cleanup to one named container with permanent
+mounts, started only on demand and stopped after processing. Delete temporary data,
+retain installed dependencies, simplify the workflow and retire obsolete components.
+
+**Implemented:** persistent `pdf-cleanup` from the existing standalone image;
+fixed originals/work/script mounts and tmpfs; one Python adapter controls native
+start/attach/stop and invokes the unchanged CLI. No idle service/API/queue. Workflow
+retains native Nextcloud WebDAV publication and sequential list processing; removes
+four redundant original-transfer/job nodes and the separate run launcher. Pending
+request ownership prevents overlapping jobs. Handled failures clean work contents;
+forced cancellation/outage can require explicit release of an unconsumed result.
+
+This supersedes the former per-execution container/work-directory choice. The
+standalone image recipe is retained for recovery/updates, with no rebuild/pull or
+package installation in ordinary jobs. Existing backup/monitoring roles remain.
+Native real workflow and controlled error/timeout/recovery checks verified the
+same container ID, source/dependency preservation and empty final workspace.
+
+**Evidence:** PDF_CLEANUP_NAMED_CONTAINER_2026-10-16.md;
+PDF_CLEANUP_NAMED_CONTAINER=PASS.

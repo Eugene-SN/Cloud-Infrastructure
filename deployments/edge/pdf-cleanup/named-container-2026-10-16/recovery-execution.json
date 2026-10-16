@@ -1,0 +1,40 @@
+{
+  "execution": {
+    "id": "45701",
+    "workflowId": "ENo9jFkwcE4PFOyL",
+    "mode": "manual",
+    "status": "success",
+    "startedAt": "2026-10-16T03:34:15.442Z",
+    "stoppedAt": "2026-10-16T03:34:21.095Z",
+    "retryOf": null,
+    "retrySuccessId": null,
+    "waitTill": null
+  },
+  "nodes": {
+    "Clear Workspace": [
+      {
+        "executionTime": 540,
+        "outputs": [
+          [
+            {
+              "code": 0,
+              "stdout": "{\"ok\": true, \"job_removed\": true}"
+            }
+          ]
+        ]
+      }
+    ],
+    "Save Cleanup INDEX": [
+      {
+        "executionTime": 187,
+        "outputs": [
+          [
+            {
+              "statusCode": 204
+            }
+          ]
+        ]
+      }
+    ]
+  }
+}

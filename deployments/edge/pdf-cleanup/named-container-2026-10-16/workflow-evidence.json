@@ -1,0 +1,218 @@
+{
+  "success": {
+    "execution": {
+      "id": "45688",
+      "workflowId": "ENo9jFkwcE4PFOyL",
+      "mode": "manual",
+      "status": "success",
+      "startedAt": "2026-10-16T03:29:05.050Z",
+      "stoppedAt": "2026-10-16T03:29:28.349Z",
+      "retryOf": null,
+      "retrySuccessId": null,
+      "waitTill": null
+    },
+    "nodes": {
+      "Run PDF Cleanup CLI": [
+        {
+          "executionTime": 5396,
+          "outputs": [
+            [
+              {
+                "code": 0,
+                "stdout": "{\"ok\": true, \"cli_rc\": 0, \"summary\": {\"schema_version\": 1, \"tool_version\": \"0.1.3\", \"source_commit\": \"9c9bbb375751f85ca1e6f737504f3e99a68fd3d5\", \"input\": \"/originals/WA5680 G5/lp2506.pdf\", \"output\": \"/work/cleaned.pdf\", \"input_sha256\": \"966fc8ea9efda6f9f416ddf55c0c291f41583dd0a97a6d8b44cb87da3f2eaa5c\", \"pages\": 2, \"header_footer_fragments\": 0, \"removed_header_rows\": 0, \"removed_footer_rows\": 0, \"footer_pages\": 0, \"removed_links\": {}, \"removed_widgets\": 1, \"cleanup_method\": \"text_show_operations\", \"status\": \"cleaned\", \"output_sha256\": \"a047f0027a8caa13a45d343d4d619b1fb92ffef027cf1e47b914eaee21df930a\", \"validation\": \"passed\"}, \"stderr\": \"\", \"status\": \"cleaned\", \"cleaned\": true}"
+              }
+            ]
+          ]
+        },
+        {
+          "executionTime": 2947,
+          "outputs": [
+            [
+              {
+                "code": 0,
+                "stdout": "{\"ok\": true, \"cli_rc\": 0, \"summary\": {\"schema_version\": 1, \"tool_version\": \"0.1.3\", \"source_commit\": \"9c9bbb375751f85ca1e6f737504f3e99a68fd3d5\", \"input\": \"/originals/WA5685 G5/lp2507.pdf\", \"output\": \"/work/cleaned.pdf\", \"input_sha256\": \"e57262389e68449ca7700dd441d57aee294ccb932279af9c0e2090aa2ba98189\", \"pages\": 2, \"header_footer_fragments\": 0, \"removed_header_rows\": 0, \"removed_footer_rows\": 0, \"footer_pages\": 0, \"removed_links\": {}, \"removed_widgets\": 1, \"cleanup_method\": \"text_show_operations\", \"status\": \"cleaned\", \"output_sha256\": \"c53c499f3657cd903cbc3a8f5d2cfdfc012ac289f314fe33ed20bb51acec24b8\", \"validation\": \"passed\"}, \"stderr\": \"\", \"status\": \"cleaned\", \"cleaned\": true}"
+              }
+            ]
+          ]
+        },
+        {
+          "executionTime": 6933,
+          "outputs": [
+            [
+              {
+                "code": 0,
+                "stdout": "{\"ok\": true, \"cli_rc\": 0, \"summary\": {\"schema_version\": 1, \"tool_version\": \"0.1.3\", \"source_commit\": \"9c9bbb375751f85ca1e6f737504f3e99a68fd3d5\", \"input\": \"/originals/WR6220 G5/lp2502.pdf\", \"output\": \"/work/cleaned.pdf\", \"input_sha256\": \"dfafab00543396b843a9daac753c9962f8366a4752a121442a62e056b0ae4f25\", \"pages\": 2, \"header_footer_fragments\": 0, \"removed_header_rows\": 0, \"removed_footer_rows\": 0, \"footer_pages\": 0, \"removed_links\": {}, \"removed_widgets\": 1, \"cleanup_method\": \"text_show_operations\", \"status\": \"cleaned\", \"output_sha256\": \"bb3ae5915101661ecb41e57091601cbf242800004e7a6b816b9bfe883f791211\", \"validation\": \"passed\"}, \"stderr\": \"\", \"status\": \"cleaned\", \"cleaned\": true}"
+              }
+            ]
+          ]
+        }
+      ],
+      "Publish Cleaned PDF": [
+        {
+          "executionTime": 609,
+          "outputs": [
+            [
+              {
+                "statusCode": 204
+              }
+            ]
+          ]
+        },
+        {
+          "executionTime": 444,
+          "outputs": [
+            [
+              {
+                "statusCode": 204
+              }
+            ]
+          ]
+        },
+        {
+          "executionTime": 299,
+          "outputs": [
+            [
+              {
+                "statusCode": 204
+              }
+            ]
+          ]
+        }
+      ],
+      "Clear Workspace": [
+        {
+          "executionTime": 580,
+          "outputs": [
+            [
+              {
+                "code": 0,
+                "stdout": "{\"ok\": true, \"job_removed\": true}"
+              }
+            ]
+          ]
+        },
+        {
+          "executionTime": 569,
+          "outputs": [
+            [
+              {
+                "code": 0,
+                "stdout": "{\"ok\": true, \"job_removed\": true}"
+              }
+            ]
+          ]
+        },
+        {
+          "executionTime": 582,
+          "outputs": [
+            [
+              {
+                "code": 0,
+                "stdout": "{\"ok\": true, \"job_removed\": true}"
+              }
+            ]
+          ]
+        }
+      ],
+      "Save Cleanup INDEX": [
+        {
+          "executionTime": 216,
+          "outputs": [
+            [
+              {
+                "statusCode": 204
+              }
+            ]
+          ]
+        },
+        {
+          "executionTime": 211,
+          "outputs": [
+            [
+              {
+                "statusCode": 204
+              }
+            ]
+          ]
+        },
+        {
+          "executionTime": 154,
+          "outputs": [
+            [
+              {
+                "statusCode": 204
+              }
+            ]
+          ]
+        }
+      ]
+    }
+  },
+  "publication_failure": {
+    "execution": {
+      "id": "45691",
+      "workflowId": "ENo9jFkwcE4PFOyL",
+      "mode": "manual",
+      "status": "error",
+      "startedAt": "2026-10-16T03:30:03.572Z",
+      "stoppedAt": "2026-10-16T03:30:09.369Z",
+      "retryOf": null,
+      "retrySuccessId": null,
+      "waitTill": null
+    },
+    "nodes": {
+      "Run PDF Cleanup CLI": [
+        {
+          "executionTime": 3246,
+          "outputs": [
+            [
+              {
+                "code": 0,
+                "stdout": "{\"ok\": true, \"cli_rc\": 0, \"summary\": {\"schema_version\": 1, \"tool_version\": \"0.1.3\", \"source_commit\": \"9c9bbb375751f85ca1e6f737504f3e99a68fd3d5\", \"input\": \"/originals/WA5685 G5/lp2507.pdf\", \"output\": \"/work/cleaned.pdf\", \"input_sha256\": \"e57262389e68449ca7700dd441d57aee294ccb932279af9c0e2090aa2ba98189\", \"pages\": 2, \"header_footer_fragments\": 0, \"removed_header_rows\": 0, \"removed_footer_rows\": 0, \"footer_pages\": 0, \"removed_links\": {}, \"removed_widgets\": 1, \"cleanup_method\": \"text_show_operations\", \"status\": \"cleaned\", \"output_sha256\": \"4bae9d4fe685c454a6968edfa481ff03878645165f4534506be5f61910bc0195\", \"validation\": \"passed\"}, \"stderr\": \"\", \"status\": \"cleaned\", \"cleaned\": true}"
+              }
+            ]
+          ]
+        }
+      ],
+      "Publish Cleaned PDF": [
+        {
+          "executionTime": 0,
+          "outputs": [
+            [
+              {
+                "statusCode": 503
+              }
+            ]
+          ]
+        }
+      ],
+      "Clear Workspace": [
+        {
+          "executionTime": 607,
+          "outputs": [
+            [
+              {
+                "code": 0,
+                "stdout": "{\"ok\": true, \"job_removed\": true}"
+              }
+            ]
+          ]
+        }
+      ]
+    }
+  },
+  "index_sha_before_and_after_publication_failure": "b28412e22075815098a71840fe5f60a38a6e58c416f0dfe8e29cb182dbf61e97",
+  "sdk_validation": {
+    "valid": true,
+    "nodeCount": 13
+  },
+  "update": {
+    "workflowId": "ENo9jFkwcE4PFOyL",
+    "name": "LenovoPdfCleanup",
+    "nodeCount": 13,
+    "url": "https://n8n.escloud.us/workflow/ENo9jFkwcE4PFOyL",
+    "appliedOperations": 26,
+    "autoAssignedCredentials": [],
+    "validationWarnings": []
+  }
+}

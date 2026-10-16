@@ -1,0 +1,20 @@
+name: pdf-cleanup
+services:
+  pdf-cleanup:
+    container_name: pdf-cleanup
+    image: edge/pdf-cleanup:9c9bbb375751-standalone
+    pull_policy: never
+    restart: "no"
+    user: "1000:1000"
+    network_mode: none
+    read_only: true
+    entrypoint: [python, /app/job-command.py, --container]
+    environment:
+      PDF_CLEANUP_ORIGINALS_DIR: /originals
+      TMPDIR: /tmp
+    volumes:
+      - /srv/cloud/technical-documentation/lenovo/originals:/originals:ro
+      - ./work:/work
+      - ./job-command.py:/app/job-command.py:ro
+    tmpfs:
+      - /tmp:mode=1777

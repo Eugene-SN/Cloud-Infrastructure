@@ -1,246 +1,117 @@
-# Lenovo PDF cleanup on edge
+# PDF Cleanup on edge
 
-Status 2026-10-16: **DEPLOYED / VERIFIED**, standalone image build.
-Current build/lifecycle verification: [record](../../../PDF_CLEANUP_STANDALONE_BUILD_2026-10-16.md)
-and [evidence](standalone-2026-10-16/README.md). Algorithm/full-catalogue baseline:
-[2026-10-05 acceptance](../../../PDF_CLEANUP_PRODUCTION_ACCEPTANCE_2026-10-05.md)
-and [evidence](production-2026-10-05/README.md). Earlier integration evidence:
-integration-evidence.json. Historical records describe the runtime at their date.
+Status 2026-10-16: **DEPLOYED / VERIFIED**. One persistent on-demand container.
+Current record: [acceptance](../../../PDF_CLEANUP_NAMED_CONTAINER_2026-10-16.md).
+Evidence: [named-container-2026-10-16](named-container-2026-10-16/README.md).
 
-## Placement and runtime
+## Runtime and paths
 
-| Purpose | Path |
+| Component | Current contract |
 | --- | --- |
-| Originals | /srv/cloud/technical-documentation/lenovo/originals/<model>/<vendor filename>.pdf |
-| Cleaned copies | /srv/cloud/technical-documentation/lenovo/cleaned/<model>/<vendor filename>.pdf |
-| Translations | /srv/cloud/technical-documentation/lenovo/translated/{en,ru}/<model>/ |
-| CLI and adapter | /opt/pdf-cleanup/run and /opt/pdf-cleanup/job-command.py |
-| Temporary processing | /tmp/pdf-cleanup-<random>/ |
+| Container | `pdf-cleanup`; normally `exited`, started only for an explicit job |
+| Image | `edge/pdf-cleanup:9c9bbb375751-standalone`; exact installed ID in deployment.json |
+| Runtime configuration | `/opt/pdf-cleanup/compose.yaml` |
+| Single adapter | `/opt/pdf-cleanup/job-command.py`; host controller and container CLI entry point |
+| Originals | `/srv/cloud/technical-documentation/lenovo/originals` mounted at `/originals:ro` |
+| Workspace | `/opt/pdf-cleanup/work` mounted at `/work:rw`; core 1000:1000, mode 0700 |
+| Job request / output | `/work/job.json` and `/work/cleaned.pdf`, removed after publication or a handled failure |
+| Parser temporary files | `/tmp` tmpfs; cleared when the container stops |
+| Publication | Existing n8n Nextcloud WebDAV into `cleaned/<model>/<vendor filename>.pdf` |
 
-All persistent cloud writes use native Nextcloud WebDAV, reusing the existing
-Nextcloud and edge SSH credentials. Nextcloud owns these files as www-data 33:33.
-Model directories are created once through Nextcloud during onboarding. No direct
-insertion, files:scan, new credential, service, n8n mount or allowlist is needed.
+The existing image, Python 3.14.8, PyMuPDF 1.28.2, pypdf 6.19.0,
+cryptography 50.0.2, fontTools 4.66.1, cffi 2.1.1 and pycparser 3.0 are unchanged.
+Source remains 9c9bbb375751f85ca1e6f737504f3e99a68fd3d5, package 0.1.3.
+Installed dependencies stay in the image between jobs. Ordinary workflow runs
+neither build/pull an image nor install/remove packages.
 
-Source was imported from Eugene-SN/documentation-ai
-46f179e9e5c83ff2c12b7ba084efef124afaf338. Current executable source commit is
-9c9bbb375751f85ca1e6f737504f3e99a68fd3d5: the original edge import, portable
-originals guard and the full-corpus generic cleanup refinement. No upstream merge.
-Package 0.1.3 uses Python 3.14.8, PyMuPDF 1.28.2, pypdf 6.19.0,
-cryptography 50.0.2 and fontTools 4.66.1 in one-shot image
-edge/pdf-cleanup:9c9bbb375751-standalone.
-Image/source identities and source hashes are in deployment.json. The launcher,
-adapter and n8n graphs retain their existing contracts.
+Compose creates the named container once. The adapter uses native
+`docker start --attach pdf-cleanup`; the installed CLI processes one requested
+PDF and exits. There is no idle daemon, new API, queue, scheduler, Docker network
+or public port. Restart policy is no, automatic removal is disabled, and the
+container ID remains unchanged across successful, failed and timed-out jobs.
+The container root filesystem is read-only; temporary data belongs in work/tmpfs.
+The manifest records the installed image; it is no longer a per-job image selector.
 
-The source refinement precisely edits original text operand bytes, handles
-confirmed pure-text Footer Forms and clipping, and qualifies untagged page-number
-candidates by visible crop geometry. It preserves body numbers and whitespace.
-Saving uses garbage=2, deflate and object streams; these are lossless operations.
-A PDF with no cleanup targets is copied byte-for-byte. PDF without footers still
-undergoes link/widget cleanup when those targets exist.
+Existing originals are readable by UID 1000 through the read-only mount; their
+ownership/permissions were not modified. The CLI's originals-output guard remains
+active with PDF_CLEANUP_ORIGINALS_DIR=/originals. Input hash/content validation
+remains inside the unchanged CLI. It reads the original directly; the existing
+parent downloads all changed originals before invoking cleanup.
 
-Dockerfile is the sole current deployment recipe. It starts directly from
-python@sha256:504679006065cdab9a85e983e269140d3c5a279492395a6863b25b1ffb377f86,
-installs runtime-requirements.txt (including pypdf crypto/fonts extras), installs
-the local package with --no-deps and runs pip check. It needs no previous PDF
-Cleanup image. The fixed versions preserve the previously verified environment
-for this ancestry-only rebuild; they do not introduce an update policy.
-
-The build context is /opt/pdf-cleanup: Dockerfile, runtime-requirements.txt,
-.dockerignore and source/. The canonical source Git repository remains
-/opt/pdf-cleanup/source at 9c9bbb375751f85ca1e6f737504f3e99a68fd3d5;
-restore it through the existing accepted backup path if rebuilding on a new host.
-Git in this infrastructure repository preserves the Dockerfile, dependency list,
-launcher, manifest and evidence. Building the context with Docker produces a new
-image; verify it before recording its exact ID in deployment.json. The unchanged
-launcher selects image_id dynamically. Do not expect a rebuild to have an
-identical image ID: packaging timestamps/provenance can change it.
-
-Both superseded images (8257cb36be78 and 9c9bbb375751-fonts) were removed after
-verification. The former Refinement.Dockerfile was retired; Dockerfiles and
-image IDs under dated production/research evidence are historical recipes,
-not current build dependencies. Recovery uses source + Dockerfile + the public
-Python base and pinned package releases, rather than a retained rollback image.
-
-## Autonomous CLI and originals protection
-
-The package command is **pdf-cleanup INPUT.pdf OUTPUT.pdf [--dry-run]**.
-It works independently of n8n, Nextcloud and the job adapter. The CLI owns PDF
-parsing, source/output validation, original hashes, alias/existing-output
-protection and atomic publication. Validation checks page count/geometry, native
-body content, images, vectors, bookmarks and unaffected annotations.
-
-PDF_CLEANUP_ORIGINALS_DIR resolves to the agreed originals tree; cleanup output
-inside that tree is forbidden. This allows the authorized source monitor to
-replace originals without allowing cleanup to write there. The launcher runs as
-core 1000:1000, mounts the temporary snapshot read-only and output/tmp writable,
-and does not mount the authoritative originals tree. Internal source.pdf and
-cleaned.pdf are temporary technical names; no vendor document is configured.
-
-## Universal n8n input
+## Workflow
 
 [LenovoPdfCleanup](https://n8n.escloud.us/workflow/ENo9jFkwcE4PFOyL)
-is published in the operator's personal project. Its single Subworkflow Input
-declares an array named files:
+has 13 nodes / two groups. Its published version is
+5b174000-7fd8-4c01-887e-d944cd2398ba. The input remains:
 
 ```json
-{"files":[
-  {"path":"Model A/manual-v2.pdf","previous_path":"Model A/manual-v1.pdf"},
-  {"path":"Model B/guide.pdf"}
-]}
+{"files":[{"path":"Model/manual.pdf","previous_path":"Model/old-manual.pdf"}]}
 ```
 
-Paths are relative to originals. The same relative path is used under cleaned;
-spaces, Unicode and nested directories are URL-encoded component by component.
-There is no default document or filename and no Manual Start with sample input.
-Optional previous_path identifies a different filename in the same directory.
-The old cleaned filename is removed only after the new cleaned PDF is saved.
-A missing old file (404) is harmless. CLI --dry-run remains independent.
+Paths are relative PDFs beneath originals. previous_path is optional and must
+name a different PDF in the same folder. No document name is configured in the
+workflow. Invalid/traversal paths are rejected before processing. The current
+caller, TechnicalDocumentationSync, retains its existing graph, publication and
+schedule: download all changed originals, save INDEX, invoke this child once with
+the list, and process it sequentially. Unchanged files do not trigger cleanup.
 
-## Node review and visual layout
+Flow: validate input → loop over PDFs → adapter starts the named container →
+download its result through native SSH → publish through native Nextcloud WebDAV
+→ remove an obsolete cleaned filename only after successful replacement → clear
+workspace → update the existing INDEX.html completion fields → next PDF.
 
-The workflow has 17 executing nodes, grouped into three native canvas groups.
-Groups add no executing nodes. Input, path preparation and the one-PDF loop
-precede the grouped operations.
+Removed: Download Original Snapshot, Create Temporary Job, Capture Job and Upload
+Working Copy. The original is no longer downloaded from Nextcloud and uploaded
+back to edge for processing. The old separate run launcher, random job directories
+and per-execution Docker container creation/removal are retired.
 
-| Node | Required operation |
-| --- | --- |
-| Subworkflow Input | Receive the caller's files array |
-| Normalize Request | Expand the list and construct confined original/cleaned paths |
-| Each PDF | Process one file at a time |
-| Download Original Snapshot | GET the original through Nextcloud |
-| Create Temporary Job | Create the CLI workspace on edge |
-| Capture Job | Restore PDF binary data after the SSH command and attach its workspace |
-| Upload Working Copy | Transfer the snapshot to edge through native SSH |
-| Run PDF Cleanup CLI | Invoke the existing standalone CLI |
-| CLI Succeeded | Skip publication if processing failed |
-| Download Cleaned PDF | Read the CLI output through native SSH |
-| Publish Cleaned PDF | PUT the output under the corresponding model directory |
-| Previous Cleaned Filename | Select deletion only when an older filename exists and upload succeeded |
-| Remove Previous Cleaned PDF | DELETE that older derived filename |
-| Remove Temporary Job | Remove the exact processing workspace |
-| Read Cleanup INDEX | Read current catalogue state, preserving earlier completed-file markers |
-| Return Result | Report transport/CLI failures, then mark successful publication |
-| Save Cleanup INDEX | Persist the successful file's completion marker |
+Two canvas groups describe processing/publication/workspace cleanup and INDEX
+completion. Return Result reports success only after CLI validation, publication,
+optional prior-derived-file deletion and workspace release succeed. Handled errors
+leave preceding successful markers and the caller's downloaded originals/index
+available. Read/save INDEX occur after workspace release. No retry queue is added.
 
-SSH execute returns stdout/exit code and does not carry input binary data forward;
-the installed Ssh.node.js confirms why Capture Job remains necessary.
-The two If nodes control operations, not PDF content validation.
-The Code nodes prepare paths/binary data and the result/catalogue record.
-There are no repeated PDF validators, external hash/ETag nodes, sidecars,
-separate finalizer, backup, queue or notification workflow.
+## Adapter lifecycle and recovery
 
-Canvas stages are **Рабочая копия PDF**, **Очистка и сохранение** and
-**Отметка в INDEX.html**. The earlier 13-node candidate handled one fixed
-filename: removing its manual trigger and adding a list loop, old-derived-file
-replacement and index updates results in 17 nodes for the accepted functionality.
+The host entry takes base64 JSON with action=process, execution_id and relative
+path. It writes the fixed request, attaches to the existing container, returns
+its JSON report and leaves the output for the workflow's SSH download. The release
+action clears workspace contents without deleting the mount root or dependencies.
+A pending request rejects a second caller until release; the workflow is sequential.
 
-## Caller and completion markers
+The existing processing limit is 900 seconds. On timeout or an interruption caught
+by the adapter, stop the container before waiting for the root-owned Docker client,
+then clear workspace. A controlled timeout verified this path in 6.34 seconds;
+a subsequent native n8n run succeeded using the same container ID. The container
+also exits on a CLI error, and failed processing removes its temporary output.
 
-TechnicalDocumentationSync first downloads **all** changed originals and saves
-INDEX.html. Only then does Clean Saved PDFs call this workflow once with their
-files list, waiting for sequential cleanup. Original catalogue visibility does
-not wait for cleanup.
+A host outage or forced cancellation between processing and publication can leave
+an unconsumed result. Inspect the stopped container and job marker, then release
+that execution through the adapter before retrying. There is no background cleanup
+service. The next successful publication owns the normal output cleanup.
 
-A source update sets cleanup_status=pending and clears cleaned_at/cleaned_path.
-After each successful cleaned PUT, the child writes cleanup_status=cleaned,
-cleaned_at and the relative cleaned_path into the existing catalog-data JSON.
-The collapsed **Сведения** shows status, completion date and a cleaned-PDF link.
-Other records and the compact folder overview are retained; INDEX.md is untouched.
+Restore source/runtime configuration through the existing Backrest edge-state /opt
+coverage. Restore the Dockerfile, runtime-requirements.txt, .dockerignore, adapter,
+Compose and manifest from Git; preserve the canonical source Git under
+/opt/pdf-cleanup/source. If the image is missing, rebuild from the recorded Python
+base and dependency versions and verify it before creating the container. Native
+Compose config validates the runtime file. Create with no build/pull against the
+installed image, without starting an idle process. Image/config updates require
+recreating this one container once; ordinary jobs only start and stop it.
 
-Successful markers are saved per file. A later handled processing/publication
-error does not erase preceding markers. It stops the caller after original
-downloads and the original index are already saved. There is no automatic
-cleanup retry queue: rerun cleanup with the affected paths; the source monitor
-does not re-download an unchanged version solely because cleanup is pending.
-Existing documents are not automatically bulk-cleaned by this integration.
+## Verification and history
 
-## Verification and recovery
+Native SDK validation and atomic workflow update passed without warnings. Real
+n8n execution 45688 processed three PDFs and published all three with INDEX updates.
+All PDF objects/decoded streams match accepted outputs, excluding regenerated
+XRef trailer IDs. Controlled publication failure 45691 cleaned the workspace and
+left INDEX unchanged. Recovery execution 45701 passed after the timeout test.
+Invalid/missing paths, cross-execution release protection and unchanged source
+hashes are covered by tests/readback. No temporary test workflow was created.
 
-- SDK/native workflow validation: 17 nodes, no warnings; three native groups.
-- Logic tests cover relative paths, Unicode URLs, lists, revision deletion only
-  after upload, marker preservation and CLI/upload/removal failures.
-- Native execution 11976 cleaned two real PDFs in different model directories.
-- Native execution 12000 rejected traversal before file operations.
-- Caller execution 12015 downloaded those two current source PDFs, saved INDEX,
-  invoked child 12016 once and waited for both cleaned copies and markers.
-- Published source-monitor run 12020 found zero changes: no download, cleanup
-  invocation or index write.
-- All 78 original hashes and INDEX.md stayed unchanged. CLI/adapter/launcher
-  hashes stayed unchanged; temporary jobs and cleanup containers are absent.
-- Browser verification confirms nine-folder overview, collapsed Сведения,
-  completion text/date and correctly encoded relative cleaned link.
-
-Only two PDFs were processed in these integration tests, not all 78 documents.
-Earlier package/guard/render checks are historical evidence in test-evidence.json;
-optimization-evidence.json and simplification-evidence.json describe superseded
-graphs. The unchanged image passed eleven upstream and three guard tests.
-The original all-page render comparison covers one document and is not proof
-of correct classification for every future PDF layout.
-
-Handled processing/transfer failures remove the job. Forced cancellation, host
-failure or SSH loss can leave one; inspect its marker/container before exact
-removal. The workflow processes its downloaded snapshot; same-document concurrent
-source changes are not checked, and simultaneous callers should be avoided.
-
-LenovoPdfCleanup01.ts is the generated SDK source; LenovoPdfCleanup01.json is the
-current unpinned definition, including native group metadata and credential
-references. The retained artifact basename does not set the live workflow name.
-build-workflow.py regenerates the graph and syntax-checks embedded languages.
-Native version history and the Git definitions provide workflow recovery.
-The CLI source/runtime manifest describes rebuild recovery; use the existing
-accepted backup mechanism for persistent documents. Preserve originals.
-There are no ad-hoc production rollback copies, OCR or translation changes.
-
-Authoritative node mechanisms:
-[n8n SSH](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.ssh/),
-[HTTP Request](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.httprequest/),
-[Execute Sub-workflow](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.executeworkflow/).
-
-## WA G3 onboarding runtime corrections
-
-The new WA7780 G3 user guide exposed the missing upstream-supported pypdf AES
-dependency. The Docker build now requests `pypdf[crypto]` (cryptography 50.0.2)
-while retaining Python 3.14.8, PyMuPDF 1.28.2, pypdf 6.19.0 and package 0.1.3.
-The imported upstream commit, portable originals guard and core source bytes
-are unchanged. The canonical image tag is retained; deployment.json records
-the rebuilt image identity. All fourteen upstream/edge guard tests passed.
-
-An actual Redfish timeout also exposed a cancellation defect: killing the core
-launcher did not terminate the root-owned sudo/Docker client, whose output pipe
-kept the adapter waiting. The existing 900-second limit is retained. The timeout
-branch now stops its exact `pdf-cleanup-<execution_id>` container through Docker
-before collecting the process result. A live test shortened only the harness
-wait to two seconds: it returned timeout in 7.31 seconds, removed its container,
-kept the snapshot hash unchanged and released its temporary job. No workflow
-node, service, retry queue or backup is added. Docker stop semantics were checked
-against the installed CLI help and official Docker documentation.
-
-The current CLI can reject ambiguous pagination/table overlaps. Such rejection
-preserves the original and does not publish a cleaned PDF or completion marker;
-no content-protection check is weakened during model onboarding. Final source,
-execution and publication evidence is under technical-documentation/
-`wa-g3-expansion-evidence.json`.
-
-Historical isolated quality research (not deployed at that time):
-[2026-10-05 report](../../../PDF_CLEANUP_QUALITY_RESEARCH_2026-10-05.md)
-and [research artifacts](quality-research-2026-10-05/README.md).
-The experiments expose pagination-classification and independent-rendering
-limitations. The candidate patch is not a production acceptance or a replacement
-for the installed source described above.
-
-Refined candidate and complete-catalogue verification:
-[2026-10-05 refinement report](../../../PDF_CLEANUP_REFINEMENT_2026-10-05.md),
-[18-document selection](../../../PDF_CLEANUP_TEST_SELECTION_2026-10-05.md),
-and [candidate/test artifacts](refinement-2026-10-05/README.md).
-That isolated workstream preserved the production import and originals guard;
-it was not deployed at the time of that record. Its candidate has now been
-deployed and all 95 paths rebuilt and independently verified. See the current
-production acceptance record above. The earlier five cleanup failures are
-resolved for the current documents; their historical records are retained.
-
-Current workflow integration verification and one-setting transport-error fix:
-[2026-10-06 report](../../../N8N_DOCUMENTATION_WORKFLOW_VERIFICATION_2026-10-06.md).
-Published child `ef2dce4e-e4fe-4ac3-bf00-7bee56c0f8c8` keeps 17 nodes/three groups.
-Deletion transport failures now reach the existing temporary-job release before
-`Return Result` reports the error. The CLI and originals guard are unchanged.
+The unchanged algorithm's full-catalogue baseline is
+[2026-10-05](../../../PDF_CLEANUP_PRODUCTION_ACCEPTANCE_2026-10-05.md).
+Independent image build evidence is
+[2026-10-16](../../../PDF_CLEANUP_STANDALONE_BUILD_2026-10-16.md).
+Those dated records retain their historical lifecycle/configuration identities;
+the current named-container record supersedes per-execution runtime instructions.

@@ -1,0 +1,15 @@
+{
+  "container_id": "4d300f6e8fda774c107531fa11a124ac7cfca8b73cb8b6fb13cd8aa84db4329e",
+  "image_id": "sha256:d7fe7e73d422ed59128f4dfe889fb90e8c299fa70df42b6024c65c3087ec6be3",
+  "state": "exited",
+  "exit_code": 0,
+  "same_container_as_created": true,
+  "workspace_empty": true,
+  "old_launcher_absent": true,
+  "single_pdf_container": true,
+  "runtime_files_match_repository": true,
+  "source_and_dependencies_preserved": true,
+  "compose_native_validation": "PASS",
+  "n8n_healthy": true,
+  "nextcloud_installed_no_maintenance_no_upgrade": true
+}

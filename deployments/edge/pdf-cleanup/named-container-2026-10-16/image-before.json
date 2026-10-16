@@ -1,0 +1,63 @@
+[
+    {
+        "Id": "sha256:d7fe7e73d422ed59128f4dfe889fb90e8c299fa70df42b6024c65c3087ec6be3",
+        "RepoTags": [
+            "edge/pdf-cleanup:9c9bbb375751-standalone"
+        ],
+        "RepoDigests": [
+            "edge/pdf-cleanup@sha256:d7fe7e73d422ed59128f4dfe889fb90e8c299fa70df42b6024c65c3087ec6be3"
+        ],
+        "Comment": "buildkit.dockerfile.v0",
+        "Created": "2026-10-16T05:25:46.460349698+03:00",
+        "Config": {
+            "Env": [
+                "PATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "PYTHON_VERSION=3.14.8",
+                "PYTHON_SHA256=c2215904f02b175596dc49351585104f4bc20341e1c47378b26a2c274360ce73",
+                "PDF_CLEANUP_SOURCE_COMMIT=9c9bbb375751f85ca1e6f737504f3e99a68fd3d5",
+                "PDF_CLEANUP_ORIGINALS_DIR=/srv/cloud/technical-documentation/lenovo/originals",
+                "PYTHONDONTWRITEBYTECODE=1"
+            ],
+            "Entrypoint": [
+                "pdf-cleanup"
+            ],
+            "Labels": {
+                "org.opencontainers.image.revision": "9c9bbb375751f85ca1e6f737504f3e99a68fd3d5"
+            }
+        },
+        "Architecture": "amd64",
+        "Os": "linux",
+        "Size": 1778198770,
+        "RootFS": {
+            "Type": "layers",
+            "Layers": [
+                "sha256:119aaab78849620efdb76820b1033715e7f2b6878dcb17494fc30f2bbc18ab64",
+                "sha256:dff9076f696cfb52ac99baa50e1d148935117233667b6a145ae60109642637f6",
+                "sha256:bd0966898939cfb2895870cf662af1caeae35005a5bb9b7974a053884fbaacbf",
+                "sha256:03c1fc065307d6459f428a201304ea664403569cf69cd24c207ea85776e69193",
+                "sha256:ed8384a58a6bd94faa2a5dde94f0a32619c4d1dc8cbc8644fd97a6ad42f39d71",
+                "sha256:076fb6729f12bec697ba617c4aeba4edf310cdf8bf9543264d02e796e3d8fedb",
+                "sha256:6d702293352b93d41adafcbb4d53df0a7449936ed66fe0ad3803aa7a81be50ec",
+                "sha256:0bc685f3ce20e015f4ab178c7c5edf7446a6a78af72d9049560f17a313941f9e",
+                "sha256:afe82eb738f770cce4f079dfbf4b9c0c41e3fe8e2242027374b04fed0ff3c90b",
+                "sha256:8cfc7ab51db72f3b3acd5c524b5d983e6cee39f627d02594701f183f8418f362"
+            ]
+        },
+        "Metadata": {
+            "LastTagTime": "2026-10-16T02:25:52.95995535Z"
+        },
+        "Descriptor": {
+            "mediaType": "application/vnd.oci.image.index.v1+json",
+            "digest": "sha256:d7fe7e73d422ed59128f4dfe889fb90e8c299fa70df42b6024c65c3087ec6be3",
+            "size": 856
+        },
+        "Identity": {
+            "Build": [
+                {
+                    "Ref": "xysbbqk3vdgrdy2jowekd7c1b",
+                    "CreatedAt": "2026-10-16T05:25:54.144537631+03:00"
+                }
+            ]
+        }
+    }
+]

@@ -15,13 +15,11 @@ SSH = {'sshPrivateKey': {'id': 'OsTkP0IAXod5QjbI', 'name': 'SSH - n8n core edge 
 NC = {'nextCloudApi': {'id': '6MEdI2Cs7tEUiM7o', 'name': 'Nextcloud - operator automation'}}
 POSITIONS = {
     'Subworkflow Input': [0, 0], 'Normalize Request': [224, 0], 'Each PDF': [448, 0],
-    'Download Original Snapshot': [672, 240], 'Create Temporary Job': [896, 240],
-    'Capture Job': [1120, 240], 'Upload Working Copy': [1344, 240],
-    'Run PDF Cleanup CLI': [672, 688], 'CLI Succeeded': [896, 688],
-    'Download Cleaned PDF': [1120, 592], 'Publish Cleaned PDF': [1344, 592],
-    'Previous Cleaned Filename': [1568, 592], 'Remove Previous Cleaned PDF': [1792, 496],
-    'Remove Temporary Job': [2016, 784], 'Read Cleanup INDEX': [672, 736],
-    'Return Result': [896, 736], 'Save Cleanup INDEX': [1120, 736],
+    'Run PDF Cleanup CLI': [672, 240], 'CLI Succeeded': [896, 240],
+    'Download Cleaned PDF': [1120, 144], 'Publish Cleaned PDF': [1344, 144],
+    'Previous Cleaned Filename': [1568, 144], 'Remove Previous Cleaned PDF': [1792, 48],
+    'Clear Workspace': [2016, 336], 'Read Cleanup INDEX': [672, 640],
+    'Return Result': [896, 640], 'Save Cleanup INDEX': [1120, 640],
 }
 nodes = []
 
@@ -105,48 +103,34 @@ return {json:{path, filename, previous_path:previousPath,
 });
 ''', sample_request)
 add('each', 'Each PDF', 'splitInBatches', {'batchSize': 1, 'options': {}}, 3)
-http('download', 'Download Original Snapshot', 'GET', '={{ $json.original_url }}', file=True)
-ssh('createJob', 'Create Temporary Job', {'resource': 'command', 'operation': 'execute', 'cwd': '/tmp',
-    'command': '={{ ' + json.dumps(COMMAND) + " + JSON.stringify({action:'create',"
-    "execution_id:$('Normalize Request').item.json.execution_id}).base64Encode() }}"})
-code('captureJob', 'Capture Job', r'''
-const response = $input.first().json;
-const job = JSON.parse(response.stdout ?? '{}');
-if (response.code !== 0 || job.ok !== true) throw new Error(job.error ?? response.error ?? 'Job creation failed');
-return [{json:{...$('Normalize Request').item.json, ...job},
-  binary:$('Download Original Snapshot').item.binary}];
-''', {**sample_request, 'job_dir': '/tmp/pdf-cleanup-example1'})
-ssh('upload', 'Upload Working Copy', {'resource': 'file', 'operation': 'upload',
-    'binaryPropertyName': 'data', 'path': "={{ $json.job_dir + '/input' }}", 'options': {'fileName': 'source.pdf'}})
 ssh('run', 'Run PDF Cleanup CLI', {'resource': 'command', 'operation': 'execute', 'cwd': '/tmp',
     'command': '={{ ' + json.dumps(COMMAND) + " + JSON.stringify({action:'process',"
-    "job_dir:$('Capture Job').item.json.job_dir, execution_id:$('Capture Job').item.json.execution_id,"
-    "upload_ok:$json.success === true}).base64Encode() }}"})
+    "path:$json.path, execution_id:$json.execution_id}).base64Encode() }}"})
 branch('cliValid', 'CLI Succeeded', r'''={{ (() => {
   try { return $json.code === 0 && JSON.parse($json.stdout).ok === true; }
   catch { return false; }
 })() }}''')
 ssh('downloadOutput', 'Download Cleaned PDF', {'resource': 'file', 'operation': 'download',
-    'path': "={{ $('Capture Job').item.json.job_dir + '/output/cleaned.pdf' }}",
-    'binaryPropertyName': 'cleaned', 'options': {'fileName': "={{ $('Capture Job').item.json.filename }}"}})
-http('publishPdf', 'Publish Cleaned PDF', 'PUT', "={{ $('Capture Job').item.json.cleaned_url }}", {
+    'path': '/opt/pdf-cleanup/work/cleaned.pdf',
+    'binaryPropertyName': 'cleaned', 'options': {'fileName': "={{ $('Each PDF').item.json.filename }}"}})
+http('publishPdf', 'Publish Cleaned PDF', 'PUT', "={{ $('Each PDF').item.json.cleaned_url }}", {
     'sendBody': True, 'contentType': 'binaryData', 'inputDataFieldName': 'cleaned'})
 branch('previousCleaned', 'Previous Cleaned Filename',
-       "={{ Boolean($('Capture Job').item.json.previous_path) && !$json.error && [200,201,204].includes($json.statusCode) }}")
+       "={{ Boolean($('Each PDF').item.json.previous_path) && !$json.error && [200,201,204].includes($json.statusCode) }}")
 http('deletePrevious', 'Remove Previous Cleaned PDF', 'DELETE',
-     "={{ $('Capture Job').item.json.previous_cleaned_url }}")
-ssh('release', 'Remove Temporary Job', {'resource': 'command', 'operation': 'execute', 'cwd': '/tmp',
+     "={{ $('Each PDF').item.json.previous_cleaned_url }}")
+ssh('release', 'Clear Workspace', {'resource': 'command', 'operation': 'execute', 'cwd': '/tmp',
     'command': '={{ ' + json.dumps(COMMAND) + " + JSON.stringify({action:'release',"
-    "job_dir:$('Capture Job').item.json.job_dir, execution_id:$('Capture Job').item.json.execution_id}).base64Encode() }}"})
+    "execution_id:$('Each PDF').item.json.execution_id}).base64Encode() }}"})
 http('readIndex', 'Read Cleanup INDEX', 'GET',
      'http://nextcloud.edge.internal/remote.php/webdav/technical-documentation/lenovo/originals/INDEX.html', stop=True)
 code('returned', 'Return Result', r'''
-const ctx = $('Capture Job').item.json;
-const response = $('Remove Temporary Job').item.json;
+const ctx = $('Each PDF').item.json;
+const response = $('Clear Workspace').item.json;
 let released;
 try { released = JSON.parse(response.stdout); } catch { released = {}; }
 if (response.code !== 0 || released.ok !== true)
-  throw new Error('Temporary job removal failed: ' + (released.error ?? response.error ?? 'SSH failure'));
+  throw new Error('Workspace cleanup failed: ' + (released.error ?? response.error ?? 'SSH failure'));
 const processResponse = $('Run PDF Cleanup CLI').item.json;
 let processed;
 try { processed = JSON.parse(processResponse.stdout); } catch { processed = {}; }
@@ -200,9 +184,11 @@ for var, obj in nodes:
 builder.append("""
 export default workflow('lenovo-pdf-cleanup', 'LenovoPdfCleanup')
  .add(subflow).to(normalize)
- .to(each.onEachBatch(download.to(createJob).to(captureJob).to(upload).to(run)
+ .to(each.onEachBatch(run
    .to(cliValid.onTrue(downloadOutput.to(publishPdf).to(previousCleaned.onTrue(deletePrevious.to(release)).onFalse(release))).onFalse(release))))
- .add(release).to(readIndex).to(returned).to(saveIndex).to(nextBatch(each));
+ .add(release).to(readIndex).to(returned).to(saveIndex).to(nextBatch(each))
+ .group('1. Очистка и сохранение', [run, cliValid, downloadOutput, publishPdf, previousCleaned, deletePrevious, release], {description:'Запустить один контейнер, сохранить PDF через Nextcloud и очистить рабочий каталог.'})
+ .group('2. Отметка в INDEX.html', [readIndex, returned, saveIndex], {description:'После успешной публикации обновить сведения об очистке и перейти к следующему PDF.'});
 """)
 (ROOT / 'LenovoPdfCleanup01.ts').write_text('\n'.join(builder))
 if args.validation_output:

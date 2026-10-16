@@ -1,0 +1,28 @@
+F
+======================================================================
+FAIL: test_invalid_paths_are_rejected_before_work_is_created (__main__.WorkspaceTests.test_invalid_paths_are_rejected_before_work_is_created)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/core/projects/cloud-infrastructure/deployments/edge/pdf-cleanup/test_job.py", line 19, in test_invalid_paths_are_rejected_before_work_is_created
+    adapter.perform(dict(action='process', execution_id='1', path=path))
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/core/projects/cloud-infrastructure/deployments/edge/pdf-cleanup/job-command.py", line 44, in perform
+    path, _ = job_path(request)
+              ~~~~~~~~^^^^^^^^^
+  File "/home/core/projects/cloud-infrastructure/deployments/edge/pdf-cleanup/job-command.py", line 17, in job_path
+    path = Path(request["job_dir"])
+                ~~~~~~~^^^^^^^^^^^
+KeyError: 'job_dir'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/core/projects/cloud-infrastructure/deployments/edge/pdf-cleanup/test_job.py", line 21, in test_invalid_paths_are_rejected_before_work_is_created
+    self.assertIsInstance(error, ValueError)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+AssertionError: KeyError('job_dir') is not an instance of <class 'ValueError'>
+
+----------------------------------------------------------------------
+Ran 1 test in 0.002s
+
+FAILED (failures=1)

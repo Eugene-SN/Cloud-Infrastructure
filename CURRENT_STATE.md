@@ -1880,3 +1880,20 @@ This supersedes previous-image retention as a required build input. Recovery use
 source Git + Dockerfile + dependency list in the existing Backrest /opt scope.
 Stage 13 remains accepted. Record: PDF_CLEANUP_STANDALONE_BUILD_2026-10-16.md.
 PDF_CLEANUP_STANDALONE_BUILD=PASS.
+
+
+## 2026-10-16 — PDF Cleanup named container — DEPLOYED / VERIFIED
+
+Operator-requested lifecycle now uses one persistent container, `pdf-cleanup`,
+with fixed originals/work/script mounts. It starts on demand, exits after each
+PDF and remains stopped between jobs. Existing standalone image/dependencies are
+retained; normal runs perform no build/pull/install/container creation. Temporary
+workspace contents are released after publication or a handled error; /tmp is
+container tmpfs. Old launcher and duplicate download/upload/job-creation nodes
+are removed. Published LenovoPdfCleanup has 13 nodes / two groups; its parent is
+unchanged. Real three-file workflow, controlled publication failure, actual timeout
+cleanup and subsequent recovery pass with the same container ID. All 95 originals
+remain unchanged; n8n/Nextcloud healthy, own temporary artifacts removed. This
+supersedes per-execution PDF containers, without changing Stage 13 acceptance.
+Record: PDF_CLEANUP_NAMED_CONTAINER_2026-10-16.md.
+PDF_CLEANUP_NAMED_CONTAINER=PASS.

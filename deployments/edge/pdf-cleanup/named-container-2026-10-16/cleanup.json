@@ -1,0 +1,9 @@
+{
+  "scratch": "/tmp/pdf-cleanup-named-0480_zjx",
+  "removed_temporary_files": 127,
+  "scratch_absent": true,
+  "own_python_cache_absent": true,
+  "runtime_python_cache_absent": true,
+  "workspace_empty": true,
+  "orphan_docker_attach_clients": []
+}

@@ -1,0 +1,12 @@
+{
+  "original_pdfs_unchanged": 95,
+  "production_files": 192,
+  "changed_paths": [
+    "cleaned/WA5680 G5/lp2506.pdf",
+    "cleaned/WA5685 G5/lp2507.pdf",
+    "cleaned/WR6220 G5/lp2502.pdf",
+    "originals/INDEX.html"
+  ],
+  "only_intended_publication_changes": true,
+  "parent_workflow_unchanged": true
+}

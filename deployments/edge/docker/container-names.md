@@ -33,7 +33,7 @@ a separately chosen naming design.
 
 | On-demand workload | Naming and lifecycle |
 |---|---|
-| PDF CleanUp | `pdf-cleanup-<execution_id>` unchanged, `docker run --rm`; keep its required images and published n8n workflow |
+| PDF Cleanup | Persistent `pdf-cleanup`; `docker start --attach` on demand, normally `exited`; fixed mounts and retained dependencies. See `../pdf-cleanup/README.md`. |
 | Plane migrator | `plane-migrator-<run-id>`, native Compose `run --rm --no-deps` in migration profile |
 
 Service DNS aliases, network/volume names, bind paths and RabbitMQ hostname

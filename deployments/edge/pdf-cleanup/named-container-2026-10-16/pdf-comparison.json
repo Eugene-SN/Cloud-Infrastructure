@@ -1,0 +1,20 @@
+[
+  {
+    "index": 0,
+    "pages": 2,
+    "objects": 77,
+    "all_objects_and_decoded_streams_equal": true
+  },
+  {
+    "index": 1,
+    "pages": 2,
+    "objects": 108,
+    "all_objects_and_decoded_streams_equal": true
+  },
+  {
+    "index": 2,
+    "pages": 2,
+    "objects": 70,
+    "all_objects_and_decoded_streams_equal": true
+  }
+]

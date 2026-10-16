@@ -3,7 +3,7 @@
 The logging limit is three files of 10 MB per container. Docker's native
 rotation owns the files; no external logrotate/truncation job is used.
 `daemon.json` supplies defaults to future containers, including GitHub MCP and
-one-shot PDF Cleanup. Existing `live-restore=false` remains unchanged.
+on-demand PDF Cleanup. Existing `live-restore=false` remains unchanged.
 
 Persistent Compose services explicitly declare the same limits. Existing
 `local` drivers for Authelia/Weblate and bounded `json-file` mail services remain
@@ -32,8 +32,9 @@ shared PostgreSQL in one incident, with existing Docker-parent suppression and
 normal failure/recovery notification handling.
 
 Cleanup is based on exact audited volume/cache identities. Never infer that an
-image with no current container is obsolete: PDF CleanUp runs on demand and
-uses the current standalone image contract in `../pdf-cleanup/README.md`.
+image with no current container is obsolete. PDF Cleanup now retains one named
+container, `pdf-cleanup`, normally stopped between jobs; retain its installed
+image and dependencies. Current lifecycle: `../pdf-cleanup/README.md`.
 Retain `plane_logs_migrator`
 for its declared migration lifecycle. Historical test data is examined only on
 isolated temporary copies, never by starting the original volume.

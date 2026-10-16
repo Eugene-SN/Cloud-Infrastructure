@@ -3,10 +3,12 @@
 ## Current Docker naming inventory — 2026-10-16
 
 The authoritative current table is `deployments/edge/docker/container-names.md`:
-22 permanent Compose containers, with 16 normalized names and six unchanged.
-PDF CleanUp is an on-demand `pdf-cleanup-<execution_id>` workload with `--rm`;
-its absence between jobs does not mean that the service or its images are
-unused. Plane migrator is also on demand, named `plane-migrator-<run-id>`.
+22 long-running infrastructure containers, with 16 normalized names and six unchanged.
+PDF Cleanup now has one persistent on-demand container, `pdf-cleanup`, with fixed
+mounts. Its normal idle state is `exited`; dependencies remain in its image.
+This supersedes the per-execution `--rm` lifecycle. Current record:
+`PDF_CLEANUP_NAMED_CONTAINER_2026-10-16.md`.
+Plane migrator remains on demand, named `plane-migrator-<run-id>`.
 Dated inventories below remain historical observations and do not override
 this naming contract. Runtime evidence and verification are recorded in
 `CONTAINER_NAME_NORMALIZATION_ACCEPTANCE_2026-10-16.md`.
