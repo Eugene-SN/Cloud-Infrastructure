@@ -4,14 +4,24 @@ services:
       - disabled
 
   mattermost:
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     depends_on: !reset []
     ports:
       - "127.0.0.1:${APP_PORT:-18065}:8065"
     networks:
-      - default
-      - postgres_net
+      default:
+      postgres_net:
+      edge_internal:
+        aliases:
+          - mattermost
 
 networks:
   default:
   postgres_net:
+    external: true
+  edge_internal:
     external: true

@@ -1,25 +1,50 @@
 services:
   web:
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     deploy: !override {replicas: 1}
     restart: unless-stopped
     ports: !override
       - "127.0.0.1:18110:3000"
   space:
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     deploy: !override {replicas: 1}
     restart: unless-stopped
     ports: !override
       - "127.0.0.1:18113:3000"
   admin:
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     deploy: !override {replicas: 1}
     restart: unless-stopped
     ports: !override
       - "127.0.0.1:18112:3000"
   live:
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     deploy: !override {replicas: 1}
     restart: unless-stopped
     ports: !override
       - "127.0.0.1:18114:3000"
   api:
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     deploy: !override {replicas: 1}
     restart: unless-stopped
     ports: !override
@@ -33,6 +58,11 @@ services:
       edge_internal:
         aliases: [plane-api]
   worker:
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     deploy: !override {replicas: 1}
     restart: unless-stopped
     depends_on: !override
@@ -45,6 +75,11 @@ services:
       edge_internal:
         aliases: [plane-worker]
   beat-worker:
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     deploy: !override {replicas: 1}
     restart: unless-stopped
     depends_on: !override
@@ -55,13 +90,28 @@ services:
       default: {}
       postgres_net: {}
   plane-redis:
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     deploy: !override {replicas: 1}
     restart: unless-stopped
   plane-mq:
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     hostname: plane-mq
     deploy: !override {replicas: 1}
     restart: unless-stopped
   plane-minio:
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     deploy: !override {replicas: 1}
     restart: unless-stopped
     # The image declares /data, while the official Plane command uses /export.
@@ -71,6 +121,11 @@ services:
     ports: !override
       - "127.0.0.1:18115:9000"
   migrator:
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     deploy: !override {replicas: 1}
     restart: "no"
     depends_on: !override

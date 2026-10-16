@@ -1,5 +1,10 @@
 services:
   redis:
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     image: redis:alpine
     restart: unless-stopped
     healthcheck:
@@ -11,6 +16,11 @@ services:
       timeout: 3s
       retries: 20
   app:
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     image: nextcloud:35.0-apache
     restart: unless-stopped
     ports:
@@ -47,6 +57,11 @@ services:
         aliases:
         - nextcloud.edge.internal
   cron:
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     image: nextcloud:35.0-apache
     restart: unless-stopped
     entrypoint: /cron.sh

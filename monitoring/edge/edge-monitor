@@ -1908,6 +1908,20 @@ def build_incidents(snapshot):
         ],
         docker_dependent=True,
     )
+    weblate_containers = ('weblate-edge-weblate-1', 'weblate-edge-cache-1', 'postgres')
+    weblate_state = _worst_state(
+        _item_state(apps.get('weblate') or {}),
+        *[_item_state(docker.get(name) or {}) for name in weblate_containers],
+    )
+    incidents['weblate'] = _make_incident(
+        'weblate', weblate_state, 'Weblate', 'EDGE', 'Application',
+        'translate.escloud.us translation service may be unavailable.',
+        'Weblate HTTP, application, cache and shared PostgreSQL checks',
+        [_http_evidence('Weblate health', apps.get('weblate') or {})]
+        + [_container_evidence(name, docker.get(name) or {}) for name in weblate_containers],
+        confirmation='2 consecutive probes' if weblate_state == 'FAIL' else None,
+        suppressed=bool(docker_parent_failed and weblate_state != 'OK'),
+    )
     plane_containers = [
         'plane-' + name + '-1' for name in (
             'web', 'api', 'admin', 'space', 'live', 'worker', 'beat-worker',

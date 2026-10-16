@@ -1791,3 +1791,22 @@ for the next natural release. No deliberate production downgrade was used.
 
 Contract/evidence: `deployments/edge/antigravity-update/README.md` and
 `deployments/edge/antigravity-update/ACCEPTANCE_2026-10-16.md`.
+
+
+## 2026-10-16 — Weblate monitoring and Docker cleanup — DEPLOYED / VERIFIED
+
+Edge Monitor now covers all 21 persistent containers and Weblate HTTP, with one
+incident for its application/cache/shared PostgreSQL dependencies. Native Docker
+log rotation is active: three files of 10 MB, daemon defaults plus explicit Compose
+settings. 16 unbounded services were recreated on identical images/data/env/ports/
+networks; bounded existing drivers remain. Actual 41 MB log-rotation test passed.
+
+Two anonymous PostgreSQL 18 volumes were identified on isolated copies as retired
+September 30 Nextcloud/OpenProject tests (nc_test/admin/integration_openproject 3.2.0)
+and precisely deleted. 13 exact cache records removed; build cache 0; all 22 images
+preserved, including PDF Cleanup runtime/build inputs. Seven Plane volumes remain,
+including required migrator logs. Temporary copies/test objects removed.
+
+Master Health 21 services, monitor/tests/internal paths and Edge/overall OK verified.
+Stage 13 remains accepted. Record: deployments/edge/docker/ACCEPTANCE_2026-10-16.md;
+EDGE_DOCKER_MONITOR_LOGGING_CLEANUP=PASS.

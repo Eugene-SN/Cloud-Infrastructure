@@ -3477,3 +3477,25 @@ ownership and single native daemon lifecycle decisions.
 
 **Canonical contract and evidence:** `deployments/edge/antigravity-update/README.md`
 and `deployments/edge/antigravity-update/ACCEPTANCE_2026-10-16.md`.
+
+
+## 2026-10-16 — Native Docker log limits, Weblate coverage and exact test cleanup
+
+**Operator scope:** add Weblate to existing Edge Monitor, configure Docker log
+rotation, and delete old volumes only after proving test ownership, plus unused
+build cache.
+
+**Verified implementation:** one Weblate HTTP/application/cache/shared-DB incident;
+21 permanent containers monitored. Native Docker limits are three 10 MB files, with
+daemon defaults and explicit Compose settings; existing bounded drivers and
+live-restore=false are preserved. No external log truncator or product upgrade.
+
+Both anonymous PostgreSQL 18 volumes are proven retired Nextcloud/OpenProject
+compatibility-test databases (nc_test/admin, installed September 30, app 3.2.0).
+Their exact names and 13 exact cache records are removed. All 22 image identities
+and seven required Plane volumes are preserved. This supersedes earlier unknown/
+empty-volume characterization as current state; historical records are unchanged.
+
+**Evidence:** deployments/edge/docker/ACCEPTANCE_2026-10-16.md and sanitized JSON.
+Master Health, actual log rotation, monitor failure/recovery tests and final
+Edge/overall OK pass. Stage 13 remains the accepted infrastructure checkpoint.

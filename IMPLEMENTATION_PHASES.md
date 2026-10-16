@@ -941,3 +941,13 @@ HTML/table/browser/five regressions pass;22 PDF wrap removals,56 preserved
 separators, and explicit root-lang und→en metadata exception. Source/production/
 Web UI/shared config remain unchanged. Evidence: first10-clean-evidence.json in
 `deployments/edge/hermes-document-translation/`. No finite stage is opened.
+
+
+## 2026-10-16 — Bounded Docker monitoring/logging housekeeping — DEPLOYED / VERIFIED
+
+Operator-requested post-infrastructure work adds Weblate to Edge Monitor, activates
+native Docker log rotation for existing/future containers, and removes two proven
+September 30 Nextcloud compatibility-test volumes plus 13 exact unused cache records.
+All 21 persistent services pass; image/data/integration contracts remain. All 22
+images and required Plane migrator logs are retained; temporary diagnostics are
+removed. No new infrastructure stage. Record: deployments/edge/docker/ACCEPTANCE_2026-10-16.md.

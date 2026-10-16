@@ -1,0 +1,466 @@
+{
+  "verified_at": "2026-10-16T01:11:22.503609+00:00",
+  "status": "PASS",
+  "scope": "Weblate monitoring, native Docker log rotation and exact test/cache cleanup",
+  "runtime": {
+    "services": 21,
+    "images_env_mounts_networks_ports_commands_users_preserved": true,
+    "completed_at": 1792112888.5933545
+  },
+  "containers": [
+    {
+      "name": "plane-space-1",
+      "image": "makeplane/plane-space:v1.4.2",
+      "image_id": "sha256:f8f842f05f41a16e9fe8c4f5e17a3bb175338ccdc094620e58ae49764ffbd671",
+      "logging": {
+        "Type": "json-file",
+        "Config": {
+          "max-file": "3",
+          "max-size": "10m"
+        }
+      },
+      "health": "healthy",
+      "image_preserved": true,
+      "environment_values_preserved": true
+    },
+    {
+      "name": "plane-live-1",
+      "image": "makeplane/plane-live:v1.4.2",
+      "image_id": "sha256:cbb630ccaea24bb9998040cb45c11619a7501e8b6c75d449df2f8fd9b9cddbd0",
+      "logging": {
+        "Type": "json-file",
+        "Config": {
+          "max-file": "3",
+          "max-size": "10m"
+        }
+      },
+      "health": null,
+      "image_preserved": true,
+      "environment_values_preserved": true
+    },
+    {
+      "name": "plane-admin-1",
+      "image": "makeplane/plane-admin:v1.4.2",
+      "image_id": "sha256:6e1bb1d800d3c7ce84a09f810d5588db8613b35d4464e722a1bec12556ca0ebb",
+      "logging": {
+        "Type": "json-file",
+        "Config": {
+          "max-file": "3",
+          "max-size": "10m"
+        }
+      },
+      "health": "healthy",
+      "image_preserved": true,
+      "environment_values_preserved": true
+    },
+    {
+      "name": "plane-web-1",
+      "image": "makeplane/plane-frontend:v1.4.2",
+      "image_id": "sha256:22fd2434fb8d6658439f669ab72f999ce0773abe587663da21a77d70bd63ff61",
+      "logging": {
+        "Type": "json-file",
+        "Config": {
+          "max-file": "3",
+          "max-size": "10m"
+        }
+      },
+      "health": "healthy",
+      "image_preserved": true,
+      "environment_values_preserved": true
+    },
+    {
+      "name": "plane-beat-worker-1",
+      "image": "makeplane/plane-backend:v1.4.2",
+      "image_id": "sha256:90032ce088708889b60c00d491897916f4deb882facda27db59fd10fb68729ef",
+      "logging": {
+        "Type": "json-file",
+        "Config": {
+          "max-file": "3",
+          "max-size": "10m"
+        }
+      },
+      "health": null,
+      "image_preserved": true,
+      "environment_values_preserved": true
+    },
+    {
+      "name": "plane-worker-1",
+      "image": "makeplane/plane-backend:v1.4.2",
+      "image_id": "sha256:90032ce088708889b60c00d491897916f4deb882facda27db59fd10fb68729ef",
+      "logging": {
+        "Type": "json-file",
+        "Config": {
+          "max-file": "3",
+          "max-size": "10m"
+        }
+      },
+      "health": null,
+      "image_preserved": true,
+      "environment_values_preserved": true
+    },
+    {
+      "name": "plane-api-1",
+      "image": "makeplane/plane-backend:v1.4.2",
+      "image_id": "sha256:90032ce088708889b60c00d491897916f4deb882facda27db59fd10fb68729ef",
+      "logging": {
+        "Type": "json-file",
+        "Config": {
+          "max-file": "3",
+          "max-size": "10m"
+        }
+      },
+      "health": null,
+      "image_preserved": true,
+      "environment_values_preserved": true
+    },
+    {
+      "name": "mattermost-mattermost-1",
+      "image": "mattermost/mattermost-team-edition:latest",
+      "image_id": "sha256:6ad5912b45875ef2fafc41886b5a70a3ec1b6c17ec706e0492566e8a2fd8aa85",
+      "logging": {
+        "Type": "json-file",
+        "Config": {
+          "max-file": "3",
+          "max-size": "10m"
+        }
+      },
+      "health": "healthy",
+      "image_preserved": true,
+      "environment_values_preserved": true
+    },
+    {
+      "name": "nextcloud-app-1",
+      "image": "nextcloud:35.0-apache",
+      "image_id": "sha256:8f2f0e93aca5e9457019933936dea1f313052e72c696b4aecb31580a208b859f",
+      "logging": {
+        "Type": "json-file",
+        "Config": {
+          "max-file": "3",
+          "max-size": "10m"
+        }
+      },
+      "health": null,
+      "image_preserved": true,
+      "environment_values_preserved": true
+    },
+    {
+      "name": "nextcloud-cron-1",
+      "image": "nextcloud:35.0-apache",
+      "image_id": "sha256:8f2f0e93aca5e9457019933936dea1f313052e72c696b4aecb31580a208b859f",
+      "logging": {
+        "Type": "json-file",
+        "Config": {
+          "max-file": "3",
+          "max-size": "10m"
+        }
+      },
+      "health": null,
+      "image_preserved": true,
+      "environment_values_preserved": true
+    },
+    {
+      "name": "n8n",
+      "image": "docker.n8n.io/n8nio/n8n:stable",
+      "image_id": "sha256:906dd7fb0a2f23869001d1767168359489c518ff34d4f67427abf2dc59e868fe",
+      "logging": {
+        "Type": "json-file",
+        "Config": {
+          "max-file": "3",
+          "max-size": "10m"
+        }
+      },
+      "health": "healthy",
+      "image_preserved": true,
+      "environment_values_preserved": true
+    },
+    {
+      "name": "plane-plane-mq-1",
+      "image": "rabbitmq:3.13.6-management-alpine",
+      "image_id": "sha256:611107e29cce05c2acd968325d5dcbde7e2fee404970f1ead75fdb22be2821b3",
+      "logging": {
+        "Type": "json-file",
+        "Config": {
+          "max-file": "3",
+          "max-size": "10m"
+        }
+      },
+      "health": null,
+      "image_preserved": true,
+      "environment_values_preserved": true
+    },
+    {
+      "name": "plane-plane-minio-1",
+      "image": "docker.io/pgsty/minio:RELEASE.2026-08-04T00-00-00Z",
+      "image_id": "sha256:b6bfe7239bfc83fb90d31612d9704d86039dd714f7904b3f1ad68f211e602372",
+      "logging": {
+        "Type": "json-file",
+        "Config": {
+          "max-file": "3",
+          "max-size": "10m"
+        }
+      },
+      "health": null,
+      "image_preserved": true,
+      "environment_values_preserved": true
+    },
+    {
+      "name": "plane-plane-redis-1",
+      "image": "valkey/valkey:7.2.11-alpine",
+      "image_id": "sha256:10328d00120dc14fbc87b2ed61b7677ddbb0d011e705361b4788329a0ec69a93",
+      "logging": {
+        "Type": "json-file",
+        "Config": {
+          "max-file": "3",
+          "max-size": "10m"
+        }
+      },
+      "health": null,
+      "image_preserved": true,
+      "environment_values_preserved": true
+    },
+    {
+      "name": "nextcloud-redis-1",
+      "image": "redis:alpine",
+      "image_id": "sha256:3811787313eba226a2ef38658c6ccb91cd5e110edc89c37767de373120a0e5a0",
+      "logging": {
+        "Type": "json-file",
+        "Config": {
+          "max-file": "3",
+          "max-size": "10m"
+        }
+      },
+      "health": "healthy",
+      "image_preserved": true,
+      "environment_values_preserved": true
+    },
+    {
+      "name": "postgres",
+      "image": "postgres:18",
+      "image_id": "sha256:74935e72241653ca55e0414067e6d8763aceb8a810eb51b452253ec3dcfc4336",
+      "logging": {
+        "Type": "json-file",
+        "Config": {
+          "max-file": "3",
+          "max-size": "10m"
+        }
+      },
+      "health": "healthy",
+      "image_preserved": true,
+      "environment_values_preserved": true
+    },
+    {
+      "name": "weblate-edge-weblate-1",
+      "image": "weblate/weblate:latest",
+      "image_id": "sha256:57f8cdc6dcb28079e20241daf3671a73dc30c42408379965cd6582e772001636",
+      "logging": {
+        "Type": "local",
+        "Config": {
+          "max-file": "3",
+          "max-size": "10m"
+        }
+      },
+      "health": "healthy",
+      "image_preserved": true,
+      "environment_values_preserved": true
+    },
+    {
+      "name": "bulwark",
+      "image": "ghcr.io/bulwarkmail/webmail:latest",
+      "image_id": "sha256:9885a046afab5054719004b885bd821d164f0d4e50a21100b96595b0400e0403",
+      "logging": {
+        "Type": "json-file",
+        "Config": {
+          "max-file": "3",
+          "max-size": "10m"
+        }
+      },
+      "health": null,
+      "image_preserved": true,
+      "environment_values_preserved": true
+    },
+    {
+      "name": "stalwart",
+      "image": "stalwartlabs/stalwart:v0.16",
+      "image_id": "sha256:254ce5d7f3dbe4bb628ce2c7912e664ecb1c3466db79907f4a44d9a00117776b",
+      "logging": {
+        "Type": "json-file",
+        "Config": {
+          "max-file": "3",
+          "max-size": "10m"
+        }
+      },
+      "health": "healthy",
+      "image_preserved": true,
+      "environment_values_preserved": true
+    },
+    {
+      "name": "weblate-edge-cache-1",
+      "image": "valkey/valkey:latest",
+      "image_id": "sha256:418652cfb58ef879d4978c33553735d7147016032d5aefaa14c828e611eb9dfd",
+      "logging": {
+        "Type": "local",
+        "Config": {
+          "max-file": "3",
+          "max-size": "10m"
+        }
+      },
+      "health": "healthy",
+      "image_preserved": true,
+      "environment_values_preserved": true
+    },
+    {
+      "name": "authelia",
+      "image": "docker.io/authelia/authelia:latest",
+      "image_id": "sha256:bd97cff4fcbf715b5ff1f9ae286afbe6033afce385302520b0368122d43a6f54",
+      "logging": {
+        "Type": "local",
+        "Config": {
+          "max-file": "3",
+          "max-size": "10m"
+        }
+      },
+      "health": "healthy",
+      "image_preserved": true,
+      "environment_values_preserved": true
+    }
+  ],
+  "monitor": {
+    "generated_at": "2026-10-16T01:11:19.728185+00:00",
+    "edge_state": "OK",
+    "overall_state": "OK",
+    "container_count": 21,
+    "weblate_http": {
+      "state": "OK",
+      "failures": 0,
+      "last_probe_at": "2026-10-16T01:11:10.691365+00:00",
+      "last_success_at": "2026-10-16T01:11:10.691365+00:00",
+      "detail": {
+        "code": 200,
+        "latency_ms": 20,
+        "error": null
+      }
+    },
+    "weblate_incident": {
+      "id": "weblate",
+      "state": "OK",
+      "name": "Weblate",
+      "scope": "EDGE",
+      "category": "Application",
+      "impact": "translate.escloud.us translation service may be unavailable.",
+      "cause": "Weblate HTTP, application, cache and shared PostgreSQL checks",
+      "diagnostics": [
+        "Weblate health: HTTP 200 \u00b7 20 ms",
+        "weblate-edge-weblate-1: running \u00b7 healthy",
+        "weblate-edge-cache-1: running \u00b7 healthy",
+        "postgres: running \u00b7 healthy"
+      ],
+      "confirmation": null,
+      "suppressed": false
+    }
+  },
+  "rotation": {
+    "default_log_config": {
+      "Type": "json-file",
+      "Config": {
+        "max-file": "3",
+        "max-size": "10m"
+      }
+    },
+    "generated_bytes": 41472000,
+    "log_file_count": 3,
+    "log_sizes": [
+      10000890,
+      1782990,
+      10000919
+    ],
+    "tail_verified": true
+  },
+  "cleanup": {
+    "removed_volumes": [
+      "83d048b5893ab010bd33007f75e8540d570d9b69aefcf797c7d501a5ad1c446b",
+      "846b84d898b3e0a1d69c04122f1dff263ed939936ae03ffe5057f2a5792873d9"
+    ],
+    "removed_cache_ids": [
+      "1ylb96cz9gwj3clniabmspdnx",
+      "7zovqx9xwza73g8mb3jicv9p9",
+      "baezhrrdldtko90of0vghld2a",
+      "fmfifxynzf6if2n4ez06u6p17",
+      "i8obq7crs172uo7mxfkwdhgl8",
+      "idf1042dmltz3b3u2f6tpqcjj",
+      "idynrr608vgd71snggcafl3c8",
+      "igob1wnfr32tqosophnb9h6gl",
+      "ljk33eeai8uskk63kelijdiay",
+      "oqregz9b0mlx0s731jermomgz",
+      "p45p3kchf3vnd1ibnczsh0aqw",
+      "ri3n4m23vydt0alxxr2nvs4pv",
+      "t315d351x1inzolib1oqfcim6"
+    ],
+    "all_image_ids_preserved": true
+  },
+  "old_volume_content": [
+    {
+      "volume": "83d048b5893ab010bd33007f75e8540d570d9b69aefcf797c7d501a5ad1c446b",
+      "database": "nc_test",
+      "roles": [
+        "nc_test",
+        "oc_admin"
+      ],
+      "tables": 139,
+      "users": [
+        "admin"
+      ],
+      "filecache_records": 76,
+      "storages": [
+        "local::/var/www/html/data/",
+        "home::admin"
+      ],
+      "integration_openproject": [
+        {
+          "key": "enabled",
+          "value": "yes"
+        },
+        {
+          "key": "installed_version",
+          "value": "3.2.0"
+        }
+      ],
+      "installed_at": "1790733964.9608"
+    },
+    {
+      "volume": "846b84d898b3e0a1d69c04122f1dff263ed939936ae03ffe5057f2a5792873d9",
+      "database": "nc_test",
+      "roles": [
+        "nc_test",
+        "oc_admin"
+      ],
+      "tables": 139,
+      "users": [
+        "admin"
+      ],
+      "filecache_records": 76,
+      "storages": [
+        "local::/var/www/html/data/",
+        "home::admin"
+      ],
+      "integration_openproject": [
+        {
+          "key": "enabled",
+          "value": "no"
+        },
+        {
+          "key": "installed_version",
+          "value": "3.2.0"
+        }
+      ],
+      "installed_at": "1790733648.1502"
+    }
+  ],
+  "temporary_cleanup": "PASS: own clones, configuration captures, scripts and test containers removed",
+  "validation": {
+    "monitor_unit_tests": 13,
+    "master_contract": "PASS",
+    "master_health": "PASS: 11 Docker units / 21 services",
+    "n8n_internal_http": "200: Mattermost, Nextcloud, Plane, Weblate, Hermes",
+    "github_mcp_authenticated_read": "PASS"
+  }
+}
