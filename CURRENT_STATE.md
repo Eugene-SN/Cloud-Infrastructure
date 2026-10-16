@@ -1844,3 +1844,21 @@ including required migrator logs. Temporary copies/test objects removed.
 Master Health 21 services, monitor/tests/internal paths and Edge/overall OK verified.
 Stage 13 remains accepted. Record: deployments/edge/docker/ACCEPTANCE_2026-10-16.md;
 EDGE_DOCKER_MONITOR_LOGGING_CLEANUP=PASS.
+
+
+## 2026-10-16 — PDF Cleanup independent image build — DEPLOYED / VERIFIED
+
+Operator-requested rebuild removes the old PDF Cleanup image as a build input.
+The sole current image is edge/pdf-cleanup:9c9bbb375751-standalone, exact ID
+sha256:d7fe7e73d422ed59128f4dfe889fb90e8c299fa70df42b6024c65c3087ec6be3.
+Canonical Dockerfile builds from the same official Python digest and recorded
+runtime requirements; executable source and all installed package versions are
+unchanged. Manifest and installed README/build files match the repository.
+35 package tests, seven real PDFs / 947 pages and actual adapter/launcher smoke
+pass. All 192 production file hashes and both documentation workflows remain
+unchanged; n8n/Nextcloud non-regression passes. Both superseded PDF Cleanup images,
+all 13 own cache records and temporary test data/jobs/containers are absent.
+This supersedes previous-image retention as a required build input. Recovery uses
+source Git + Dockerfile + dependency list in the existing Backrest /opt scope.
+Stage 13 remains accepted. Record: PDF_CLEANUP_STANDALONE_BUILD_2026-10-16.md.
+PDF_CLEANUP_STANDALONE_BUILD=PASS.

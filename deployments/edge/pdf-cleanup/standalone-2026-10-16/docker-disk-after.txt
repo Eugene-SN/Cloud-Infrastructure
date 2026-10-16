@@ -1,0 +1,65 @@
+Images space usage:
+
+REPOSITORY                           TAG                            IMAGE ID       CREATED          SIZE      SHARED SIZE   UNIQUE SIZE   CONTAINERS
+edge/pdf-cleanup                     9c9bbb375751-standalone        d7fe7e73d422   22 minutes ago   1.78GB    1.614GB       164.3MB       0
+docker.n8n.io/n8nio/n8n              stable                         906dd7fb0a2f   3 days ago       1.79GB    32B           1.789GB       1
+ghcr.io/bulwarkmail/webmail          latest                         9885a046afab   3 days ago       412MB     2B            412.1MB       1
+stalwartlabs/stalwart                v0.16                          254ce5d7f3db   4 days ago       395MB     87.67MB       307.8MB       1
+weblate/weblate                      latest                         57f8cdc6dcb2   6 days ago       1.96GB    2B            1.962GB       1
+ghcr.io/github/github-mcp-server     latest                         ffced0d76e77   7 days ago       71.8MB    33.06MB       38.71MB       1
+nextcloud                            35.0-apache                    8f2f0e93aca5   10 days ago      2.12GB    117.5MB       2.006GB       2
+postgres                             18                             74935e722416   10 days ago      650MB     117.5MB       532.7MB       1
+python                               3.14                           504679006065   2 weeks ago      1.63GB    1.614GB       17.8MB        0
+mattermost/mattermost-team-edition   latest                         6ad5912b4587   3 weeks ago      1.16GB    33.06MB       1.127GB       1
+redis                                alpine                         3811787313eb   3 weeks ago      161MB     32B           160.5MB       1
+valkey/valkey                        latest                         418652cfb58e   3 weeks ago      139MB     32B           139.3MB       1
+authelia/authelia                    latest                         bd97cff4fcbf   4 weeks ago      110MB     2B            110MB         1
+makeplane/plane-admin                v1.4.2                         6e1bb1d800d3   7 weeks ago      107MB     94.33MB       12.27MB       1
+makeplane/plane-frontend             v1.4.2                         22fd2434fb8d   7 weeks ago      147MB     94.33MB       53.08MB       1
+makeplane/plane-space                v1.4.2                         f8f842f05f41   2 months ago     1.47GB    231.9MB       1.241GB       1
+makeplane/plane-live                 v1.4.2                         cbb630ccaea2   2 months ago     1.69GB    231.9MB       1.456GB       1
+makeplane/plane-backend              v1.4.2                         90032ce08870   2 months ago     499MB     34B           498.9MB       3
+pgsty/minio                          RELEASE.2026-08-04T00-00-00Z   b6bfe7239bfc   2 months ago     216MB     0B            216.5MB       1
+valkey/valkey                        7.2.11-alpine                  10328d00120d   8 months ago     58.7MB    32B           58.7MB        1
+rabbitmq                             3.13.6-management-alpine       611107e29cce   2 years ago      280MB     0B            280MB         1
+
+Containers space usage:
+
+CONTAINER ID   IMAGE                                       COMMAND                  LOCAL VOLUMES   SIZE      CREATED             STATUS                    NAMES
+bc1069495d41   weblate/weblate:latest                      "/app/bin/start runs…"   0               81.9kB    19 minutes ago      Up 7 minutes (healthy)    weblate
+acf717f8dcb3   valkey/valkey:latest                        "tini -- docker-entr…"   0               4.1kB     19 minutes ago      Up 19 minutes (healthy)   weblate-valkey
+e3bab21e3db4   makeplane/plane-space:v1.4.2                "docker-entrypoint.s…"   0               36.9kB    22 minutes ago      Up 22 minutes (healthy)   plane-space
+8aa33bcd19f1   makeplane/plane-live:v1.4.2                 "docker-entrypoint.s…"   0               4.1kB     22 minutes ago      Up 7 minutes              plane-live
+b0566b038aa9   makeplane/plane-admin:v1.4.2                "/docker-entrypoint.…"   0               81.9kB    22 minutes ago      Up 22 minutes (healthy)   plane-admin
+8a016eebe790   makeplane/plane-frontend:v1.4.2             "/docker-entrypoint.…"   0               81.9kB    22 minutes ago      Up 22 minutes (healthy)   plane-web
+d03bb54307ee   makeplane/plane-backend:v1.4.2              "./bin/docker-entryp…"   1               4.1kB     22 minutes ago      Up 7 minutes              plane-scheduler
+790818df9d67   makeplane/plane-backend:v1.4.2              "./bin/docker-entryp…"   1               20.5kB    22 minutes ago      Up 7 minutes              plane-worker
+3f916d3bbe6f   makeplane/plane-backend:v1.4.2              "./bin/docker-entryp…"   1               4.08MB    22 minutes ago      Up 7 minutes              plane-api
+ccd4327a6f78   rabbitmq:3.13.6-management-alpine           "docker-entrypoint.s…"   1               4.1kB     22 minutes ago      Up 22 minutes             plane-rabbitmq
+54a09822374d   pgsty/minio:RELEASE.2026-08-04T00-00-00Z    "/usr/bin/docker-ent…"   1               28.7kB    22 minutes ago      Up 7 minutes              plane-minio
+c18d88135bdf   valkey/valkey:7.2.11-alpine                 "docker-entrypoint.s…"   1               4.1kB     22 minutes ago      Up 22 minutes             plane-valkey
+c6844ff7c886   nextcloud:35.0-apache                       "/entrypoint.sh apac…"   0               65.5kB    23 minutes ago      Up 23 minutes             nextcloud
+e06aab53435c   nextcloud:35.0-apache                       "/cron.sh"               0               24.6kB    23 minutes ago      Up 23 minutes             nextcloud-cron
+934c67934ace   redis:alpine                                "docker-entrypoint.s…"   0               16.4kB    23 minutes ago      Up 23 minutes (healthy)   nextcloud-redis
+c9d48c050edd   mattermost/mattermost-team-edition:latest   "/mattermost/bin/mat…"   0               737kB     24 minutes ago      Up 8 minutes (healthy)    mattermost
+3781d6a9a71e   ghcr.io/github/github-mcp-server:latest     "/server/github-mcp-…"   0               4.1kB     About an hour ago   Up About an hour          github-mcp
+1ea9d9cdc1fa   docker.n8n.io/n8nio/n8n:stable              "tini -- /docker-ent…"   0               47.9MB    2 hours ago         Up 2 hours (healthy)      n8n
+75397517da8a   postgres:18                                 "docker-entrypoint.s…"   0               20.5kB    2 hours ago         Up 2 hours (healthy)      postgres
+fac97b409631   ghcr.io/bulwarkmail/webmail:latest          "docker-entrypoint.s…"   0               77.8kB    3 days ago          Up 8 minutes              bulwark
+db9b9c29f9f1   stalwartlabs/stalwart:v0.16                 "/usr/local/bin/stal…"   0               2.25MB    3 days ago          Up 8 minutes (healthy)    stalwart
+2a9ca0efcd0a   authelia/authelia:latest                    "/app/entrypoint.sh"     0               28.7kB    3 weeks ago         Up 2 hours (healthy)      authelia
+
+Local Volumes space usage:
+
+VOLUME NAME              LINKS     SIZE
+plane_logs_api           1         0B
+plane_logs_beat-worker   1         0B
+plane_rabbitmq_data      1         480kB
+plane_logs_migrator      0         0B
+plane_logs_worker        1         946B
+plane_redisdata          1         1.21kB
+plane_uploads            1         32.68kB
+
+Build cache usage: 0B
+
+CACHE ID   CACHE TYPE   SIZE      CREATED   LAST USED   USAGE     SHARED

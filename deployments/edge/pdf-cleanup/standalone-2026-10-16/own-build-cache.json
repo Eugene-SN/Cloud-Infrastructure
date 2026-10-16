@@ -1,0 +1,189 @@
+[
+  {
+    "CreatedAt": "2026-10-16 02:24:59.658764145 +0000 UTC",
+    "Description": "local source for dockerfile",
+    "ID": "qqbk30jt9vt2o3iuk3dwssi5l",
+    "LastUsedAt": "6 minutes ago",
+    "Mutable": true,
+    "Parents": null,
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "8.192kB",
+    "Type": "source.local",
+    "UsageCount": 2
+  },
+  {
+    "CreatedAt": "2026-10-16 02:25:00.94685456 +0000 UTC",
+    "Description": "local source for context",
+    "ID": "rdnpublsd9ulwbqowq5wlii7j",
+    "LastUsedAt": "6 minutes ago",
+    "Mutable": true,
+    "Parents": null,
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "8.192kB",
+    "Type": "source.local",
+    "UsageCount": 2
+  },
+  {
+    "CreatedAt": "2026-10-16 02:25:01.797340443 +0000 UTC",
+    "Description": "",
+    "ID": "w7j5r7we6us8pvtagny6nj3rn",
+    "LastUsedAt": "6 minutes ago",
+    "Mutable": false,
+    "Parents": [
+      "9p4q9fwtmt7m1wfw7spkytoek"
+    ],
+    "Reclaimable": true,
+    "Shared": true,
+    "Size": "16.63kB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-16 02:25:21.314898023 +0000 UTC",
+    "Description": "[3/4] COPY runtime-requirements.txt /opt/pdf-cleanup/runtime-requirements.txt",
+    "ID": "u0a29072625unvmgt476ea2pf",
+    "LastUsedAt": "6 minutes ago",
+    "Mutable": false,
+    "Parents": [
+      "ti3y4vp2uhublqnw0iunr7ekr"
+    ],
+    "Reclaimable": true,
+    "Shared": true,
+    "Size": "20.85kB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-16 02:25:01.699892403 +0000 UTC",
+    "Description": "local source for context",
+    "ID": "kp0t53wqr9eg1okgic98nzsol",
+    "LastUsedAt": "6 minutes ago",
+    "Mutable": true,
+    "Parents": null,
+    "Reclaimable": true,
+    "Shared": false,
+    "Size": "131.1kB",
+    "Type": "source.local",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-16 02:25:21.219866947 +0000 UTC",
+    "Description": "[2/4] COPY source /opt/pdf-cleanup/source",
+    "ID": "ti3y4vp2uhublqnw0iunr7ekr",
+    "LastUsedAt": "6 minutes ago",
+    "Mutable": false,
+    "Parents": [
+      "w7j5r7we6us8pvtagny6nj3rn"
+    ],
+    "Reclaimable": true,
+    "Shared": true,
+    "Size": "158.1kB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-16 02:25:01.753646171 +0000 UTC",
+    "Description": "",
+    "ID": "zr2zcaswrncnn2vj0cd8a7gzd",
+    "LastUsedAt": "7 minutes ago",
+    "Mutable": false,
+    "Parents": [
+      "8rc21wjtwe0bczynb9tdpn5o2"
+    ],
+    "Reclaimable": true,
+    "Shared": true,
+    "Size": "26.04MB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-16 02:25:01.695090077 +0000 UTC",
+    "Description": "",
+    "ID": "w4lfl4gi1oqrat25fd8r15kpc",
+    "LastUsedAt": "7 minutes ago",
+    "Mutable": false,
+    "Parents": [
+      "zarr3bb8c41paqxskltjlw2d5"
+    ],
+    "Reclaimable": true,
+    "Shared": true,
+    "Size": "90.63MB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-16 02:25:01.780602292 +0000 UTC",
+    "Description": "",
+    "ID": "9p4q9fwtmt7m1wfw7spkytoek",
+    "LastUsedAt": "7 minutes ago",
+    "Mutable": false,
+    "Parents": [
+      "zr2zcaswrncnn2vj0cd8a7gzd"
+    ],
+    "Reclaimable": true,
+    "Shared": true,
+    "Size": "113.1MB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-16 02:25:46.460349698 +0000 UTC",
+    "Description": "mount / from exec /bin/sh -c python -m pip install --no-cache-dir -r /opt/pdf-cleanup/runtime-requirements.txt     && python -m pip install --no-cache-dir --no-deps /opt/pdf-cleanup/source     && python -m pip check",
+    "ID": "pwld83gwnjfl43a0z3a72gc8q",
+    "LastUsedAt": "6 minutes ago",
+    "Mutable": false,
+    "Parents": [
+      "u0a29072625unvmgt476ea2pf"
+    ],
+    "Reclaimable": true,
+    "Shared": true,
+    "Size": "164.2MB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-16 02:25:01.682725659 +0000 UTC",
+    "Description": "",
+    "ID": "zarr3bb8c41paqxskltjlw2d5",
+    "LastUsedAt": "7 minutes ago",
+    "Mutable": false,
+    "Parents": null,
+    "Reclaimable": true,
+    "Shared": true,
+    "Size": "183.6MB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-16 02:25:01.72271869 +0000 UTC",
+    "Description": "",
+    "ID": "jfmsl83j4j5w22pqnbpzcvqoh",
+    "LastUsedAt": "7 minutes ago",
+    "Mutable": false,
+    "Parents": [
+      "w4lfl4gi1oqrat25fd8r15kpc"
+    ],
+    "Reclaimable": true,
+    "Shared": true,
+    "Size": "270.2MB",
+    "Type": "regular",
+    "UsageCount": 1
+  },
+  {
+    "CreatedAt": "2026-10-16 02:25:01.737550185 +0000 UTC",
+    "Description": "",
+    "ID": "8rc21wjtwe0bczynb9tdpn5o2",
+    "LastUsedAt": "7 minutes ago",
+    "Mutable": false,
+    "Parents": [
+      "jfmsl83j4j5w22pqnbpzcvqoh"
+    ],
+    "Reclaimable": true,
+    "Shared": true,
+    "Size": "930.4MB",
+    "Type": "regular",
+    "UsageCount": 1
+  }
+]

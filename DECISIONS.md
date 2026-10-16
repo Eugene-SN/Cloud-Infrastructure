@@ -3538,3 +3538,21 @@ issuer or additional container. Gh reauthorization remains the operator's
 native GitHub credential lifecycle; copies require no manual maintenance.
 
 **Evidence:** `deployments/edge/github-mcp/TOKEN_SYNC_ACCEPTANCE_2026-10-16.md`.
+
+
+## 2026-10-16 — Build PDF Cleanup independently and retire previous images
+
+**Operator scope:** remove the current build's dependency on the old PDF Cleanup
+image, verify the replacement, delete the retired image and update documentation.
+
+**Implemented choice:** use the canonical Dockerfile directly from the existing
+Python digest with the observed runtime dependency versions and unchanged source.
+Manifest selects edge/pdf-cleanup:9c9bbb375751-standalone by exact image ID. The
+former parent-image retention decision from 2026-10-05 is superseded: both the old
+parent and replaced fonts image are removed after tests and actual launcher smoke.
+Source Git, recipe and dependency list in existing Backrest /opt coverage provide
+rebuild recovery. Historical dated evidence is retained. No new update policy,
+workflow, service, backup mechanism or infrastructure stage is introduced.
+
+**Evidence:** PDF_CLEANUP_STANDALONE_BUILD_2026-10-16.md;
+PDF_CLEANUP_STANDALONE_BUILD=PASS.

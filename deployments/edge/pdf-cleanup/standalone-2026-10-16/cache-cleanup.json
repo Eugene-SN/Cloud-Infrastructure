@@ -1,0 +1,80 @@
+[
+  {
+    "id": "pwld83gwnjfl43a0z3a72gc8q",
+    "returncode": 0,
+    "stdout": "ID\t\t\t\t\t\tRECLAIMABLE\tSIZE\t\tLAST ACCESSED\npwld83gwnjfl43a0z3a72gc8q               \ttrue \t\t164.2MB   \t21 minutes ago\nTotal:\t164.2MB\n",
+    "stderr": ""
+  },
+  {
+    "id": "u0a29072625unvmgt476ea2pf",
+    "returncode": 0,
+    "stdout": "ID\t\t\t\t\t\tRECLAIMABLE\tSIZE\t\tLAST ACCESSED\nu0a29072625unvmgt476ea2pf               \ttrue \t\t20.85kB   \t21 minutes ago\nTotal:\t20.85kB\n",
+    "stderr": ""
+  },
+  {
+    "id": "ti3y4vp2uhublqnw0iunr7ekr",
+    "returncode": 0,
+    "stdout": "ID\t\t\t\t\t\tRECLAIMABLE\tSIZE\t\tLAST ACCESSED\nti3y4vp2uhublqnw0iunr7ekr               \ttrue \t\t158.1kB   \t21 minutes ago\nTotal:\t158.1kB\n",
+    "stderr": ""
+  },
+  {
+    "id": "w7j5r7we6us8pvtagny6nj3rn",
+    "returncode": 0,
+    "stdout": "ID\t\t\t\t\t\tRECLAIMABLE\tSIZE\t\tLAST ACCESSED\nw7j5r7we6us8pvtagny6nj3rn               \ttrue \t\t16.63kB   \t21 minutes ago\nTotal:\t16.63kB\n",
+    "stderr": ""
+  },
+  {
+    "id": "9p4q9fwtmt7m1wfw7spkytoek",
+    "returncode": 0,
+    "stdout": "ID\t\t\t\t\t\tRECLAIMABLE\tSIZE\t\tLAST ACCESSED\n9p4q9fwtmt7m1wfw7spkytoek               \ttrue \t\t113.1MB   \t22 minutes ago\nTotal:\t113.1MB\n",
+    "stderr": ""
+  },
+  {
+    "id": "zr2zcaswrncnn2vj0cd8a7gzd",
+    "returncode": 0,
+    "stdout": "ID\t\t\t\t\t\tRECLAIMABLE\tSIZE\t\tLAST ACCESSED\nzr2zcaswrncnn2vj0cd8a7gzd               \ttrue \t\t26.04MB   \t22 minutes ago\nTotal:\t26.04MB\n",
+    "stderr": ""
+  },
+  {
+    "id": "8rc21wjtwe0bczynb9tdpn5o2",
+    "returncode": 0,
+    "stdout": "ID\t\t\t\t\t\tRECLAIMABLE\tSIZE\t\tLAST ACCESSED\n8rc21wjtwe0bczynb9tdpn5o2               \ttrue \t\t930.4MB   \t22 minutes ago\nTotal:\t930.4MB\n",
+    "stderr": ""
+  },
+  {
+    "id": "jfmsl83j4j5w22pqnbpzcvqoh",
+    "returncode": 0,
+    "stdout": "ID\t\t\t\t\t\tRECLAIMABLE\tSIZE\t\tLAST ACCESSED\njfmsl83j4j5w22pqnbpzcvqoh               \ttrue \t\t270.2MB   \t22 minutes ago\nTotal:\t270.2MB\n",
+    "stderr": ""
+  },
+  {
+    "id": "w4lfl4gi1oqrat25fd8r15kpc",
+    "returncode": 0,
+    "stdout": "ID\t\t\t\t\t\tRECLAIMABLE\tSIZE\t\tLAST ACCESSED\nw4lfl4gi1oqrat25fd8r15kpc               \ttrue \t\t90.63MB   \t22 minutes ago\nTotal:\t90.63MB\n",
+    "stderr": ""
+  },
+  {
+    "id": "qqbk30jt9vt2o3iuk3dwssi5l",
+    "returncode": 0,
+    "stdout": "ID\t\t\t\t\t\tRECLAIMABLE\tSIZE\t\tLAST ACCESSED\nqqbk30jt9vt2o3iuk3dwssi5l*              \ttrue \t\t8.192kB   \t22 minutes ago\nTotal:\t8.192kB\n",
+    "stderr": ""
+  },
+  {
+    "id": "rdnpublsd9ulwbqowq5wlii7j",
+    "returncode": 0,
+    "stdout": "ID\t\t\t\t\t\tRECLAIMABLE\tSIZE\t\tLAST ACCESSED\nrdnpublsd9ulwbqowq5wlii7j*              \ttrue \t\t8.192kB   \t22 minutes ago\nTotal:\t8.192kB\n",
+    "stderr": ""
+  },
+  {
+    "id": "kp0t53wqr9eg1okgic98nzsol",
+    "returncode": 0,
+    "stdout": "ID\t\t\t\t\t\tRECLAIMABLE\tSIZE\t\tLAST ACCESSED\nkp0t53wqr9eg1okgic98nzsol*              \ttrue \t\t131.1kB   \t22 minutes ago\nTotal:\t131.1kB\n",
+    "stderr": ""
+  },
+  {
+    "id": "zarr3bb8c41paqxskltjlw2d5",
+    "returncode": 0,
+    "stdout": "ID\t\t\t\t\t\tRECLAIMABLE\tSIZE\t\tLAST ACCESSED\nzarr3bb8c41paqxskltjlw2d5               \ttrue \t\t183.6MB   \t22 minutes ago\nTotal:\t183.6MB\n",
+    "stderr": ""
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "image_id": "sha256:d7fe7e73d422ed59128f4dfe889fb90e8c299fa70df42b6024c65c3087ec6be3",
+  "result": {
+    "ok": true,
+    "cli_rc": 0,
+    "summary": {
+      "schema_version": 1,
+      "tool_version": "0.1.3",
+      "source_commit": "9c9bbb375751f85ca1e6f737504f3e99a68fd3d5",
+      "input": "/tmp/pdf-cleanup-5e8b1jf_/input/source.pdf",
+      "output": "/tmp/pdf-cleanup-5e8b1jf_/output/cleaned.pdf",
+      "input_sha256": "966fc8ea9efda6f9f416ddf55c0c291f41583dd0a97a6d8b44cb87da3f2eaa5c",
+      "pages": 2,
+      "header_footer_fragments": 0,
+      "removed_header_rows": 0,
+      "removed_footer_rows": 0,
+      "footer_pages": 0,
+      "removed_links": {},
+      "removed_widgets": 1,
+      "cleanup_method": "text_show_operations",
+      "status": "cleaned",
+      "output_sha256": "c4c911f6cc5e1e1511e53b4d6283221e13be87402a9c81fd8c68e0082f0e41b2",
+      "validation": "passed"
+    },
+    "stderr": "",
+    "status": "cleaned",
+    "cleaned": true
+  },
+  "release": {
+    "ok": true,
+    "job_removed": true
+  },
+  "no_publication": true
+}

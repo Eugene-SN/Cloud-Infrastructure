@@ -971,3 +971,16 @@ September 30 Nextcloud compatibility-test volumes plus 13 exact unused cache rec
 All 21 persistent services pass; image/data/integration contracts remain. All 22
 images and required Plane migrator logs are retained; temporary diagnostics are
 removed. No new infrastructure stage. Record: deployments/edge/docker/ACCEPTANCE_2026-10-16.md.
+
+
+## 2026-10-16 — PDF Cleanup build dependency removal — DEPLOYED / VERIFIED
+
+Post-infrastructure operator scope is complete: build directly from the existing
+Python digest with unchanged package/source versions, verify, select the new image,
+remove the two superseded images and update current runtime/recovery documentation.
+35 package tests, seven real PDFs / 947 pages, production adapter/launcher smoke,
+192 unchanged production file hashes and unchanged documentation workflows pass.
+Own cache/test artifacts are absent; n8n/Nextcloud remain healthy. The previous
+runtime's build-input retention is superseded; no new infrastructure stage or
+update policy. Record: PDF_CLEANUP_STANDALONE_BUILD_2026-10-16.md.
+PDF_CLEANUP_STANDALONE_BUILD=PASS.

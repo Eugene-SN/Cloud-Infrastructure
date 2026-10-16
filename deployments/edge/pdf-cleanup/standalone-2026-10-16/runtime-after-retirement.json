@@ -1,0 +1,20 @@
+{
+  "python": "3.14.8 (main, Oct  1 2026, 21:39:17) [GCC 14.2.0]",
+  "packages": {
+    "cffi": "2.1.1",
+    "cryptography": "50.0.2",
+    "documentation-ai-pdf-cleanup": "0.1.3",
+    "fonttools": "4.66.1",
+    "pip": "26.2.1",
+    "pycparser": "3.0",
+    "pymupdf": "1.28.2",
+    "pypdf": "6.19.0"
+  },
+  "modules": {
+    "core.py": "2eaa182b11a5f9e5be766c5cf9d9b53712a23c13cdb292a9ba7bfc2b22487047",
+    "native.py": "d8b11bcc7c7726a1d31667c1d17cb159b280fe4146d1550dd38227c34971f331",
+    "__init__.py": "ef9bee654ce1de3fc7c75aadb490b04542e79a201d615cfc9c1112e06e3b10bd",
+    "lexical.py": "bde6b55e1dfc8f25f37f90bd39b5d1fc7d12357e5ded6f0a0a2bd056dafb2a0c",
+    "cli.py": "ff0b86fcd7c25213f6c4ac48d1e395a0b1f74e5a2d43144202886d45dbca8554"
+  }
+}

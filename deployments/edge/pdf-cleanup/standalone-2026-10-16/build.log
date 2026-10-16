@@ -1,0 +1,125 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 761B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/python@sha256:504679006065cdab9a85e983e269140d3c5a279492395a6863b25b1ffb377f86
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 144B done
+#3 DONE 0.0s
+
+#4 [internal] load build context
+#4 DONE 0.0s
+
+#5 [1/4] FROM docker.io/library/python@sha256:504679006065cdab9a85e983e269140d3c5a279492395a6863b25b1ffb377f86
+#5 resolve docker.io/library/python@sha256:504679006065cdab9a85e983e269140d3c5a279492395a6863b25b1ffb377f86
+#5 resolve docker.io/library/python@sha256:504679006065cdab9a85e983e269140d3c5a279492395a6863b25b1ffb377f86 0.0s done
+#5 ...
+
+#4 [internal] load build context
+#4 transferring context: 73.10kB 0.0s done
+#4 DONE 0.1s
+
+#5 [1/4] FROM docker.io/library/python@sha256:504679006065cdab9a85e983e269140d3c5a279492395a6863b25b1ffb377f86
+#5 extracting sha256:6eefb2f5d3e91a6cfc577476bbec26bb63f0d0fc31f904493f400833783aa2c2
+#5 extracting sha256:6eefb2f5d3e91a6cfc577476bbec26bb63f0d0fc31f904493f400833783aa2c2 2.3s done
+#5 DONE 2.5s
+
+#5 [1/4] FROM docker.io/library/python@sha256:504679006065cdab9a85e983e269140d3c5a279492395a6863b25b1ffb377f86
+#5 extracting sha256:42f0cc32f2e355552fbfad163210ddc51f7b8bc7cfaddb2a41bd9c4a7c5e3c49
+#5 extracting sha256:42f0cc32f2e355552fbfad163210ddc51f7b8bc7cfaddb2a41bd9c4a7c5e3c49 0.9s done
+#5 DONE 3.4s
+
+#5 [1/4] FROM docker.io/library/python@sha256:504679006065cdab9a85e983e269140d3c5a279492395a6863b25b1ffb377f86
+#5 extracting sha256:38985a14f2b1b8215895ecb448f3dfc4067cb494aa00b547c78c9a012e9b2460
+#5 extracting sha256:38985a14f2b1b8215895ecb448f3dfc4067cb494aa00b547c78c9a012e9b2460 3.6s done
+#5 DONE 7.0s
+
+#5 [1/4] FROM docker.io/library/python@sha256:504679006065cdab9a85e983e269140d3c5a279492395a6863b25b1ffb377f86
+#5 extracting sha256:e7272a918094ebc3b66e08b23223afd37614df4ba4518b2dfd9da5ee9247fce6
+#5 extracting sha256:e7272a918094ebc3b66e08b23223afd37614df4ba4518b2dfd9da5ee9247fce6 10.8s done
+#5 DONE 17.8s
+
+#5 [1/4] FROM docker.io/library/python@sha256:504679006065cdab9a85e983e269140d3c5a279492395a6863b25b1ffb377f86
+#5 extracting sha256:7654fbfc185d733c507c36a4310e8729883d55eb6678cdbd1bd3427e87e613cd
+#5 extracting sha256:7654fbfc185d733c507c36a4310e8729883d55eb6678cdbd1bd3427e87e613cd 0.3s done
+#5 DONE 18.0s
+
+#5 [1/4] FROM docker.io/library/python@sha256:504679006065cdab9a85e983e269140d3c5a279492395a6863b25b1ffb377f86
+#5 extracting sha256:e636a39670e049b2ae85a878003f8403dda94cf0e8803ad2ce55d1513ebef1c0
+#5 extracting sha256:e636a39670e049b2ae85a878003f8403dda94cf0e8803ad2ce55d1513ebef1c0 1.0s done
+#5 DONE 19.0s
+
+#5 [1/4] FROM docker.io/library/python@sha256:504679006065cdab9a85e983e269140d3c5a279492395a6863b25b1ffb377f86
+#5 extracting sha256:58c447da347e74de7fa9644d20b4fc8baf6f922a3d52cf472d1b0530ab4c39ff done
+#5 DONE 19.0s
+
+#6 [2/4] COPY source /opt/pdf-cleanup/source
+#6 DONE 0.5s
+
+#7 [3/4] COPY runtime-requirements.txt /opt/pdf-cleanup/runtime-requirements.txt
+#7 DONE 0.1s
+
+#8 [4/4] RUN python -m pip install --no-cache-dir -r /opt/pdf-cleanup/runtime-requirements.txt     && python -m pip install --no-cache-dir --no-deps /opt/pdf-cleanup/source     && python -m pip check
+#8 5.422 Collecting PyMuPDF==1.28.2 (from -r /opt/pdf-cleanup/runtime-requirements.txt (line 3))
+#8 5.516   Downloading pymupdf-1.28.2-cp310-abi3-manylinux_2_28_x86_64.whl.metadata (26 kB)
+#8 5.555 Collecting pypdf==6.19.0 (from pypdf[crypto,fonts]==6.19.0->-r /opt/pdf-cleanup/runtime-requirements.txt (line 4))
+#8 5.560   Downloading pypdf-6.19.0-py3-none-any.whl.metadata (7.5 kB)
+#8 6.350 Collecting cryptography==50.0.2 (from -r /opt/pdf-cleanup/runtime-requirements.txt (line 5))
+#8 6.356   Downloading cryptography-50.0.2-cp311-abi3-manylinux_2_34_x86_64.whl.metadata (4.4 kB)
+#8 7.151 Collecting fonttools==4.66.1 (from -r /opt/pdf-cleanup/runtime-requirements.txt (line 6))
+#8 7.162   Downloading fonttools-4.66.1-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (130 kB)
+#8 7.977 Collecting cffi==2.1.1 (from -r /opt/pdf-cleanup/runtime-requirements.txt (line 7))
+#8 7.984   Downloading cffi-2.1.1-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.5 kB)
+#8 8.001 Collecting pycparser==3.0 (from -r /opt/pdf-cleanup/runtime-requirements.txt (line 8))
+#8 8.007   Downloading pycparser-3.0-py3-none-any.whl.metadata (8.2 kB)
+#8 8.054 Downloading pymupdf-1.28.2-cp310-abi3-manylinux_2_28_x86_64.whl (25.8 MB)
+#8 8.325    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 25.8/25.8 MB 99.5 MB/s  0:00:00
+#8 8.330 Downloading pypdf-6.19.0-py3-none-any.whl (395 kB)
+#8 8.336 Downloading cryptography-50.0.2-cp311-abi3-manylinux_2_34_x86_64.whl (4.8 MB)
+#8 8.440    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.8/4.8 MB 45.5 MB/s  0:00:00
+#8 8.447 Downloading fonttools-4.66.1-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (5.3 MB)
+#8 8.495    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.3/5.3 MB 216.3 MB/s  0:00:00
+#8 8.501 Downloading cffi-2.1.1-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (221 kB)
+#8 8.510 Downloading pycparser-3.0-py3-none-any.whl (48 kB)
+#8 8.794 Installing collected packages: pypdf, PyMuPDF, pycparser, fonttools, cffi, cryptography
+#8 13.58
+#8 13.58 Successfully installed PyMuPDF-1.28.2 cffi-2.1.1 cryptography-50.0.2 fonttools-4.66.1 pycparser-3.0 pypdf-6.19.0
+#8 13.58 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+#8 16.24 Processing ./opt/pdf-cleanup/source
+#8 16.24   Installing build dependencies: started
+#8 18.96   Installing build dependencies: finished with status 'done'
+#8 18.96   Getting requirements to build wheel: started
+#8 20.35   Getting requirements to build wheel: finished with status 'done'
+#8 20.35   Preparing metadata (pyproject.toml): started
+#8 21.72   Preparing metadata (pyproject.toml): finished with status 'done'
+#8 21.72 Building wheels for collected packages: documentation-ai-pdf-cleanup
+#8 21.73   Building wheel for documentation-ai-pdf-cleanup (pyproject.toml): started
+#8 23.19   Building wheel for documentation-ai-pdf-cleanup (pyproject.toml): finished with status 'done'
+#8 23.20   Created wheel for documentation-ai-pdf-cleanup: filename=documentation_ai_pdf_cleanup-0.1.3-py3-none-any.whl size=13780 sha256=fd96a8f118087b2503a65ffc4204ac042bf672925c8f22b6835d85b879a9dcac
+#8 23.20   Stored in directory: /tmp/pip-ephem-wheel-cache-0i_30m97/wheels/8d/12/84/81fcc682ab81b862264ae83174b9c2292bf58a3d9eb02bf6e6
+#8 23.22 Successfully built documentation-ai-pdf-cleanup
+#8 23.38 Installing collected packages: documentation-ai-pdf-cleanup
+#8 23.41 Successfully installed documentation-ai-pdf-cleanup-0.1.3
+#8 23.41 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+#8 24.97 No broken requirements found.
+#8 DONE 25.1s
+
+#9 exporting to image
+#9 exporting layers
+#9 exporting layers 6.4s done
+#9 exporting manifest sha256:b937bf68b45f531a4fee675315a4edb41659d29e5d0d77914cb2abced19ac918
+#9 exporting manifest sha256:b937bf68b45f531a4fee675315a4edb41659d29e5d0d77914cb2abced19ac918 done
+#9 exporting config sha256:173edfe8a0b2ed542a83047de085506908c03f4214f6ed108592e15a1affdc0d done
+#9 exporting attestation manifest sha256:0fb6b9ffada68fc56a40761ede3bf44c241a426f610c626b3c2bf367855ec89f done
+#9 exporting manifest list sha256:d7fe7e73d422ed59128f4dfe889fb90e8c299fa70df42b6024c65c3087ec6be3 0.0s done
+#9 naming to docker.io/edge/pdf-cleanup:9c9bbb375751-standalone done
+#9 unpacking to docker.io/edge/pdf-cleanup:9c9bbb375751-standalone
+#9 unpacking to docker.io/edge/pdf-cleanup:9c9bbb375751-standalone 1.1s done
+#9 DONE 7.7s
+
+#10 resolving provenance for metadata file
+#10 DONE 0.0s

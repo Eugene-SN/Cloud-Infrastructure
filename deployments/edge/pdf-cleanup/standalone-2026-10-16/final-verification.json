@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "image_id": "sha256:d7fe7e73d422ed59128f4dfe889fb90e8c299fa70df42b6024c65c3087ec6be3",
+  "image_tag": "edge/pdf-cleanup:9c9bbb375751-standalone",
+  "unchanged_production_files": 192,
+  "unchanged_workflows": 2,
+  "retired_images_absent": true,
+  "independent_layers": true,
+  "runtime_files_match": true,
+  "temporary_jobs_and_containers_absent": true
+}

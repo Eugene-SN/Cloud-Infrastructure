@@ -1,0 +1,8 @@
+# Preserve the verified runtime while replacing its image ancestry.
+# These versions describe this rebuild; they do not establish an update policy.
+PyMuPDF==1.28.2
+pypdf[crypto,fonts]==6.19.0
+cryptography==50.0.2
+fonttools==4.66.1
+cffi==2.1.1
+pycparser==3.0

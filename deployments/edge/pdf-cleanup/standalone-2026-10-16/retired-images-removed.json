@@ -1,0 +1,16 @@
+[
+  {
+    "image_id": "sha256:93ca37d01cdfbb68550cba9d0008aefac52f3b2d6e86ca481e5163fde1ca448e",
+    "tag": "edge/pdf-cleanup:9c9bbb375751-fonts",
+    "returncode": 0,
+    "stdout": "Untagged: edge/pdf-cleanup:9c9bbb375751-fonts\nDeleted: sha256:93ca37d01cdfbb68550cba9d0008aefac52f3b2d6e86ca481e5163fde1ca448e\n",
+    "stderr": ""
+  },
+  {
+    "image_id": "sha256:3ff39309bab88fca2d28edb606879afbe5ce18fa366d48ade3e9440cbd82c06e",
+    "tag": "edge/pdf-cleanup:8257cb36be78",
+    "returncode": 0,
+    "stdout": "Untagged: edge/pdf-cleanup:8257cb36be78\nDeleted: sha256:3ff39309bab88fca2d28edb606879afbe5ce18fa366d48ade3e9440cbd82c06e\n",
+    "stderr": ""
+  }
+]

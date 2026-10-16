@@ -1,0 +1,61 @@
+{
+  "n8n": {
+    "Status": "running",
+    "Running": true,
+    "Paused": false,
+    "Restarting": false,
+    "OOMKilled": false,
+    "Dead": false,
+    "Pid": 3099917,
+    "ExitCode": 0,
+    "Error": "",
+    "StartedAt": "2026-10-16T01:05:08.494113406Z",
+    "FinishedAt": "0001-01-01T00:00:00Z",
+    "Health": {
+      "Status": "healthy",
+      "FailingStreak": 0,
+      "Log": [
+        {
+          "Start": "2026-10-16T05:47:35.280680414+03:00",
+          "End": "2026-10-16T05:47:35.599262587+03:00",
+          "ExitCode": 0,
+          "Output": ""
+        },
+        {
+          "Start": "2026-10-16T05:47:45.60082258+03:00",
+          "End": "2026-10-16T05:47:46.203033168+03:00",
+          "ExitCode": 0,
+          "Output": ""
+        },
+        {
+          "Start": "2026-10-16T05:47:56.204580405+03:00",
+          "End": "2026-10-16T05:47:56.7484468+03:00",
+          "ExitCode": 0,
+          "Output": ""
+        },
+        {
+          "Start": "2026-10-16T05:48:06.749901646+03:00",
+          "End": "2026-10-16T05:48:06.991951658+03:00",
+          "ExitCode": 0,
+          "Output": ""
+        },
+        {
+          "Start": "2026-10-16T05:48:16.993349427+03:00",
+          "End": "2026-10-16T05:48:17.800467153+03:00",
+          "ExitCode": 0,
+          "Output": ""
+        }
+      ]
+    }
+  },
+  "nextcloud": {
+    "installed": true,
+    "version": "35.0.1.1",
+    "versionstring": "35.0.1",
+    "edition": "",
+    "maintenance": false,
+    "needsDbUpgrade": false,
+    "productname": "Nextcloud",
+    "extendedSupport": false
+  }
+}

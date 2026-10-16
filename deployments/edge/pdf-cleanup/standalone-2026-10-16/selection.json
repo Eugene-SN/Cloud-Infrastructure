@@ -1,0 +1,44 @@
+[
+  {
+    "path": "WA5680 G5/lp2506.pdf",
+    "snapshot": "0.pdf",
+    "source_sha256": "966fc8ea9efda6f9f416ddf55c0c291f41583dd0a97a6d8b44cb87da3f2eaa5c",
+    "reference_sha256": "9abe6b54224e6b8060b6752e7d39420be67117da4489c4a7f5a21b2bd4928588"
+  },
+  {
+    "path": "WA5685 G5/lp2507.pdf",
+    "snapshot": "1.pdf",
+    "source_sha256": "e57262389e68449ca7700dd441d57aee294ccb932279af9c0e2090aa2ba98189",
+    "reference_sha256": "423abc70567744ec2a818860e028e494eabecc4bbc71435482914d7b7db1460d"
+  },
+  {
+    "path": "WR6220 G5/lp2502.pdf",
+    "snapshot": "2.pdf",
+    "source_sha256": "dfafab00543396b843a9daac753c9962f8366a4752a121442a62e056b0ae4f25",
+    "reference_sha256": "4af236e9cf7e8649a6566a4024610581e1c329cba316825ac4a630c7e0722be1"
+  },
+  {
+    "path": "WA7780 G3/lenovo_wentian_wa7780g3_user_guide.pdf",
+    "snapshot": "3.pdf",
+    "source_sha256": "1718c6d1094bf50a54550fdb191f628875da094b0fbda8f2f147305dbc740f4b",
+    "reference_sha256": "15aff549912ec8e4f0902e1e69e962995236b70a424f2a3a57049b37ffbf1918"
+  },
+  {
+    "path": "WR5220 G3/lp1705.pdf",
+    "snapshot": "4.pdf",
+    "source_sha256": "f3b4f9d125fee56c228b36354a30198ddd14933cb755fdc7dc1ef2d4af8442e7",
+    "reference_sha256": "c69803224f5d2734542c07b26b752063779407d50081a5576e92b288c524e115"
+  },
+  {
+    "path": "WR5225 G3/wr5225g3_user_guide_v6.pdf",
+    "snapshot": "5.pdf",
+    "source_sha256": "8cfc8781da9c75bdab2b3477a6564cba1b06009d553530cd3a026014f4b677af",
+    "reference_sha256": "d53d18343d19081f2ee66d5bd29e9d70aaea3bde4785b29e98e002b83167040a"
+  },
+  {
+    "path": "WR6220 G5/lenovo_wentian_wr6220g5_user_guide.pdf",
+    "snapshot": "6.pdf",
+    "source_sha256": "8921606e9e9fcc6b199f2c360787dc228f3180bd2448423d40bd1d101c13be71",
+    "reference_sha256": "84f4a0929aff74ee3bb585b7faae8dfca8fdb388e8c33aa30f4a1dd7a5bc96b9"
+  }
+]

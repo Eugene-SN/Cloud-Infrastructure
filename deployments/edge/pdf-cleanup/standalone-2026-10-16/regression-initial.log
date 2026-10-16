@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/regression.py", line 65, in <module>
+    main()
+    ~~~~^^
+  File "/regression.py", line 42, in main
+    assert actual.xref_object(xref) == expected.xref_object(xref), (item['path'], xref)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('WA5680 G5/lp2506.pdf', 77)

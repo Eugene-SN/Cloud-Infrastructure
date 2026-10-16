@@ -1,7 +1,11 @@
 # Lenovo PDF cleanup on edge
 
-Status 2026-10-05: **DEPLOYED / VERIFIED**. This supersedes the earlier unpublished,
-single-filename candidate. Current full-catalogue production verification: [acceptance record](../../../PDF_CLEANUP_PRODUCTION_ACCEPTANCE_2026-10-05.md) and [evidence](production-2026-10-05/README.md). Earlier integration evidence: integration-evidence.json.
+Status 2026-10-16: **DEPLOYED / VERIFIED**, standalone image build.
+Current build/lifecycle verification: [record](../../../PDF_CLEANUP_STANDALONE_BUILD_2026-10-16.md)
+and [evidence](standalone-2026-10-16/README.md). Algorithm/full-catalogue baseline:
+[2026-10-05 acceptance](../../../PDF_CLEANUP_PRODUCTION_ACCEPTANCE_2026-10-05.md)
+and [evidence](production-2026-10-05/README.md). Earlier integration evidence:
+integration-evidence.json. Historical records describe the runtime at their date.
 
 ## Placement and runtime
 
@@ -24,7 +28,7 @@ Source was imported from Eugene-SN/documentation-ai
 originals guard and the full-corpus generic cleanup refinement. No upstream merge.
 Package 0.1.3 uses Python 3.14.8, PyMuPDF 1.28.2, pypdf 6.19.0,
 cryptography 50.0.2 and fontTools 4.66.1 in one-shot image
-edge/pdf-cleanup:9c9bbb375751-fonts.
+edge/pdf-cleanup:9c9bbb375751-standalone.
 Image/source identities and source hashes are in deployment.json. The launcher,
 adapter and n8n graphs retain their existing contracts.
 
@@ -35,13 +39,28 @@ Saving uses garbage=2, deflate and object streams; these are lossless operations
 A PDF with no cleanup targets is copied byte-for-byte. PDF without footers still
 undergoes link/widget cleanup when those targets exist.
 
-Refinement.Dockerfile is the exact deployment recipe. It starts from
-the verified existing runtime tag, reinstalls the local package with --no-deps,
-and retains installed library versions. It adds the supported pypdf fonts extra
-to fully decode the three observed CFF Type1 PDFs without warnings.
-The parent runtime image has a concrete build-input role; it is not an ad-hoc rollback copy. Dockerfile remains the full
-upstream-supported rebuild recipe. Actual versions must be recorded and tested
-when the operator requests a runtime update; no new version/update policy applies.
+Dockerfile is the sole current deployment recipe. It starts directly from
+python@sha256:504679006065cdab9a85e983e269140d3c5a279492395a6863b25b1ffb377f86,
+installs runtime-requirements.txt (including pypdf crypto/fonts extras), installs
+the local package with --no-deps and runs pip check. It needs no previous PDF
+Cleanup image. The fixed versions preserve the previously verified environment
+for this ancestry-only rebuild; they do not introduce an update policy.
+
+The build context is /opt/pdf-cleanup: Dockerfile, runtime-requirements.txt,
+.dockerignore and source/. The canonical source Git repository remains
+/opt/pdf-cleanup/source at 9c9bbb375751f85ca1e6f737504f3e99a68fd3d5;
+restore it through the existing accepted backup path if rebuilding on a new host.
+Git in this infrastructure repository preserves the Dockerfile, dependency list,
+launcher, manifest and evidence. Building the context with Docker produces a new
+image; verify it before recording its exact ID in deployment.json. The unchanged
+launcher selects image_id dynamically. Do not expect a rebuild to have an
+identical image ID: packaging timestamps/provenance can change it.
+
+Both superseded images (8257cb36be78 and 9c9bbb375751-fonts) were removed after
+verification. The former Refinement.Dockerfile was retired; Dockerfiles and
+image IDs under dated production/research evidence are historical recipes,
+not current build dependencies. Recovery uses source + Dockerfile + the public
+Python base and pinned package releases, rather than a retained rollback image.
 
 ## Autonomous CLI and originals protection
 

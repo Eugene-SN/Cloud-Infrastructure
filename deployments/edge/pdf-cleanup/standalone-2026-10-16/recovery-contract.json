@@ -1,0 +1,6 @@
+{
+  "plan": "edge-state",
+  "source_path": "/opt/pdf-cleanup/source",
+  "source_commit": "9c9bbb375751f85ca1e6f737504f3e99a68fd3d5",
+  "source_in_existing_backup_scope": true
+}
