@@ -46,7 +46,8 @@
     "plane-plane-mq-1",
     "plane-plane-minio-1",
     "weblate-edge-weblate-1",
-    "weblate-edge-cache-1"
+    "weblate-edge-cache-1",
+    "github-mcp"
   ],
   "http_probes": {
     "n8n": "http://127.0.0.1:15678/healthz",
@@ -60,7 +61,8 @@
     "plane": "https://projects.escloud.us/api/instances/",
     "plane_api": "http://127.0.0.1:18111/",
     "plane_live": "http://127.0.0.1:18114/live/health/",
-    "weblate": "http://127.0.0.1:18090/healthz/"
+    "weblate": "http://127.0.0.1:18090/healthz/",
+    "github_mcp": "http://127.0.0.1:18082/"
   },
   "pve": {
     "host": "192.168.1.3",

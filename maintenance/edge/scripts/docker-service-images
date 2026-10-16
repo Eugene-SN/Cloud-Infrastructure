@@ -47,8 +47,6 @@ def declared_images():
             if not data.get(key): continue
             result = subprocess.run(['docker','image','inspect',data[key]],capture_output=True,text=True)
             if result.returncode == 0: protected.add(json.loads(result.stdout)[0]['Id'])
-    result = subprocess.run(['docker','image','inspect','ghcr.io/github/github-mcp-server:latest'],capture_output=True,text=True)
-    if result.returncode == 0: protected.add(json.loads(result.stdout)[0]['Id'])
     return protected
 
 def docker(*args):

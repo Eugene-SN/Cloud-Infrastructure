@@ -1,5 +1,23 @@
 # Cloud Infrastructure — Current State
 
+## Current shared GitHub MCP HTTP — 2026-10-16
+
+`EDGE_SHARED_GITHUB_MCP_HTTP=PASS`. One permanent `github-mcp` Compose container
+at `/opt/github-mcp` serves native HTTP `/`: host `127.0.0.1:18082`, existing
+`edge_internal` peers `github-mcp:8082`. Same v2.0.2 image, 44 GitHub tools;
+Codex, Hermes and Antigravity each completed get_me through native clients.
+Existing gh identity is reused in protected native bearer headers; token rotation
+requires refreshing those entries. No public ingress or new GitHub account.
+
+Old STDIO containers/launchers/settings and 140 orphan CID directories are gone.
+Monitor covers 22 permanent containers plus GitHub HTTP; Maintenance has 19 manual
+targets / 12 Docker units / 26 monitored components, GitHub template24. Backrest
+edge-state already includes deployment/client configuration. Seven published n8n
+workflows and Plane have no GitHub MCP consumer to migrate. Full contract,
+verification and cleanup: `deployments/edge/github-mcp/ACCEPTANCE_2026-10-16.md`.
+This supersedes older on-demand STDIO/version/container-count descriptions.
+
+
 ## Current workflow scope — 2026-10-05 value cleanup
 
 Operator-approved retirement supersedes the GitHub PR association pair and

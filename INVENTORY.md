@@ -1,5 +1,18 @@
 # Cloud Infrastructure — Inventory
 
+## Current GitHub MCP inventory — 2026-10-16
+
+One permanent `github-mcp` container, official v2.0.2 on the existing latest track,
+replaces all agent-owned GitHub STDIO containers. Codex/Hermes/Antigravity use
+`http://127.0.0.1:18082/`; Docker peers can use `http://github-mcp:8082/` on existing
+edge_internal. No n8n/Plane GitHub MCP consumer currently exists. Total permanent
+containers22; Maintenance19 manual / 12 Docker units / 26 components; GitHub
+Semaphore template24. Old launchers, pending STDIO capture record and 140 orphan
+CID directories removed. Existing image and accepted Plane volumes retained.
+This supersedes older GitHub MCP version/STDIO/count entries below. Canonical
+evidence: `deployments/edge/github-mcp/ACCEPTANCE_2026-10-16.md`.
+
+
 ## Current workflow scope — 2026-10-05 value cleanup
 
 Operator-approved retirement supersedes the GitHub PR association pair and

@@ -75,6 +75,10 @@
     "WEBLATE_VALKEY": {
       "template_id": 23,
       "label": "Update Weblate Valkey"
+    },
+    "GITHUB_MCP": {
+      "template_id": 24,
+      "label": "Update GitHub MCP"
     }
   }
 }

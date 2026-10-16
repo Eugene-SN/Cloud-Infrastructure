@@ -1,5 +1,15 @@
 # Cloud Infrastructure — Accepted Implementation Phases
 
+## Post-infrastructure shared GitHub MCP — 2026-10-16 COMPLETE
+
+Operator-requested transport/lifecycle migration is verified: one permanent
+native HTTP GitHub MCP container shared by Codex, Hermes and Antigravity; real
+get_me calls pass. STDIO runtime/settings and orphan CID files retired. Existing
+monitoring, Backrest coverage and manual Maintenance/Semaphore lifecycle include
+the service. No new n8n/Plane integration was invented. Evidence and recovery:
+`deployments/edge/github-mcp/ACCEPTANCE_2026-10-16.md`. Stage13 checkpoint unchanged.
+
+
 **Status:** Stages 0–13 COMPLETE / ACCEPTED. Post-infrastructure application/workflow layer is canonical.
 
 This document is the canonical stage chronology for Cloud Infrastructure / `edge`.

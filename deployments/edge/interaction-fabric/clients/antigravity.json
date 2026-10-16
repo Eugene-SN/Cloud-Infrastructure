@@ -39,8 +39,10 @@
       "serverUrl": "http://127.0.0.1:15678/mcp-server/http"
     },
     "github": {
-      "command": "/usr/local/bin/edge-github-mcp",
-      "args": []
+      "serverUrl": "http://127.0.0.1:18082/",
+      "headers": {
+        "Authorization": "Bearer <EXISTING_GH_OPERATOR_TOKEN>"
+      }
     },
     "playwright": {
       "command": "/usr/bin/npx",

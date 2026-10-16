@@ -4,9 +4,9 @@ Current contract (2026-10-01 after Plane Part 1): 16 manual targets, 9 Docker un
 
 Current source for the single `edge` maintenance/update subsystem.
 
-After the 2026-10-13 Weblate deployment, the manifest contains 18 manual
-targets, 11 Docker units and 25 monitored components. `WEBLATE` and
-`WEBLATE_VALKEY` are separate Compose targets and Semaphore templates 22 and 23.
+After the 2026-10-16 shared GitHub MCP deployment, the manifest contains 19 manual
+targets, 12 Docker units and 26 monitored components. `GITHUB_MCP` is a permanent
+Compose unit and Semaphore template 24; `WEBLATE` and `WEBLATE_VALKEY` remain templates 22 and 23.
 
 ## Ownership model
 
@@ -29,18 +29,18 @@ Normal and third-party APT updates remain manual through `APT_EDGE`. Automatic r
 
 Generated target model: `update_units_v5`.
 
-Maintenance contains exactly 18 actionable manual targets:
+Maintenance contains exactly 19 actionable manual targets:
 
 `APT_EDGE`, `XRAY`, `HYSTERIA2`, `BACKREST`, `RESTIC`, `RCLONE`,
 `SEMAPHORE`, `N8N`, `AUTHELIA`, `MATTERMOST`, `POSTGRESQL`,
 `STALWART`, `BULWARK`, `NEXTCLOUD`, `PLANE`,
-`NEXTCLOUD_REDIS`, `WEBLATE`, `WEBLATE_VALKEY`.
+`NEXTCLOUD_REDIS`, `WEBLATE`, `WEBLATE_VALKEY`, `GITHUB_MCP`.
 
 `HERMES`, `CODEX` and `ANTIGRAVITY` do not appear in raw Maintenance version rows,
 `maintenance.json`, `actions.json`, the Maintenance dashboard or Semaphore
 update templates.
 
-`actions.json` contains exactly the 18 manual actions, has
+`actions.json` contains exactly the 19 manual actions, has
 `execution_mode=manual_only`, and `auto_update=false`.
 
 `update.escloud.us` remains the operator launch surface. Semaphore is the
@@ -60,7 +60,7 @@ the actual image update remains operator-triggered.
 
 ## Master Batch
 
-Master Batch derives its 18-target plan from `config/update-units.json`.
+Master Batch derives its 19-target plan from `config/update-units.json`.
 Both real execution and `--plan-only` require the accepted schema-2
 `/etc/edge-maintenance/manual-driver-enablement.json`.
 
@@ -139,7 +139,7 @@ updates, not native updater drift.
 
 A manual component update requires:
 
-- the target to be one of the 18 manifest units;
+- the target to be one of the 19 manifest units;
 - schema-2 enablement to permit the target;
 - a fresh `UPDATE_AVAILABLE` row;
 - explicit operator initiation.

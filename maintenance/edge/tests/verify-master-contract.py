@@ -20,8 +20,8 @@ manual = [u["id"] for u in manifest["units"]]
 assert manifest["schema"] == 2
 assert enablement["schema"] == 2
 assert enablement["master"] is True
-assert len(manual) == 18
-assert {"WEBLATE", "WEBLATE_VALKEY"}.issubset(manual)
+assert len(manual) == 19
+assert {"WEBLATE", "WEBLATE_VALKEY", "GITHUB_MCP"}.issubset(manual)
 assert set(manual) == set(manifest["master_order"])
 assert set(enablement["enabled"]) == set(manual)
 assert manifest["master_order"][-1] == "APT_EDGE"

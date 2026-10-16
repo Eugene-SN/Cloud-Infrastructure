@@ -38,6 +38,7 @@
     "PLANE",
     "WEBLATE",
     "WEBLATE_VALKEY",
+    "GITHUB_MCP",
     "SEMAPHORE",
     "APT_EDGE"
   ],
@@ -256,6 +257,19 @@
       "service": "cache",
       "health_services": [
         "cache"
+      ]
+    },
+    {
+      "id": "GITHUB_MCP",
+      "group": "docker",
+      "driver": "compose",
+      "directory": "/opt/github-mcp",
+      "files": [
+        "compose.yaml"
+      ],
+      "service": "github-mcp",
+      "health_services": [
+        "github-mcp"
       ]
     }
   ]

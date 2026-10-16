@@ -16,8 +16,8 @@ url = "http://127.0.0.1:15678/mcp-server/http"
 "Authorization" = "Bearer <N8N_OPERATOR_MCP_KEY>"
 
 [mcp_servers.github]
-command = "/usr/local/bin/edge-github-mcp"
-args = []
+url = "http://127.0.0.1:18082/"
+http_headers = { Authorization = "Bearer <EXISTING_GH_OPERATOR_TOKEN>" }
 
 [mcp_servers.playwright]
 command = "/usr/bin/npx"

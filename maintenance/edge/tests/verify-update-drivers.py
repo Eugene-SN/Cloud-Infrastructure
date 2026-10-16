@@ -54,7 +54,7 @@ for unit in manifest['units']:
     elif unit['id']=='STALWART':assert '--target-version' in calls[0] and '--target-digest' in calls[0]
     elif unit['id']=='APT_EDGE':assert calls[0]==['apt-get','update'] and any('dist-upgrade' in c for c in calls)
 assert not failures, failures
-print('ALL_MANUAL_DRIVER_DISPATCH=PASS|TARGETS=18|REAL_UPDATES=NO|SERVICE_RESTARTS=NO')
+print(f'ALL_MANUAL_DRIVER_DISPATCH=PASS|TARGETS={len(manifest["units"])}|REAL_UPDATES=NO|SERVICE_RESTARTS=NO')
 
 nextcloud = runpy.run_path(root/'scripts/update-nextcloud')['main'].__globals__
 with patch.dict(nextcloud, DIRECTORY=MagicMock(), occ_status=lambda:{'versionstring':'35.0.1'},

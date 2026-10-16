@@ -51,6 +51,7 @@ DOCKER_COMPONENTS = [
     ("PLANE", "Plane"),
     ("WEBLATE", "Weblate"),
     ("WEBLATE_VALKEY", "Valkey (Weblate)"),
+    ("GITHUB_MCP", "GitHub MCP"),
 ]
 
 CLI_COMPONENTS = []

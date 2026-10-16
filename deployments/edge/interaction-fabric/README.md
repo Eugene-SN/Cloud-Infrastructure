@@ -11,7 +11,7 @@ The later bounded Hermes specialist reconciliation is accepted in `EDGE_HERMES_E
 |---|---|---|
 | Plane MCP | `uvx plane-mcp-server stdio`, CE-compatible 13 tools | Existing operator; independent Hermes, Codex and Antigravity PATs |
 | n8n instance MCP | `http://127.0.0.1:15678/mcp-server/http` | Existing n8n owner, native instance MCP key |
-| GitHub MCP | `/usr/local/bin/edge-github-mcp`, official on-demand Docker stdio | Existing `gh auth token --hostname github.com` context |
+| GitHub MCP | Permanent official Docker HTTP service, `http://127.0.0.1:18082/` | Existing gh operator identity, native per-request bearer headers in protected client configs |
 | Playwright MCP | `npx --yes @playwright/mcp@latest`, isolated headless stdio | Existing host Chromium; no persistent test profile |
 | OpenAI Docs MCP | `https://developers.openai.com/mcp` | Public read-only, Codex only |
 | Direct CLI execution | Native n8n SSH node → `core@172.19.0.1:22` → `/usr/local/bin/edge-ai-exec` | Dedicated SSH key stored in encrypted n8n credential |
@@ -25,7 +25,7 @@ n8n MCP retains the complete native 35-tool core surface, including SDK referenc
 
 The native n8n API-key UI supports one MCP key per user; regenerating it replaces that user's key. All three clients therefore share the existing owner's MCP bearer. Native OAuth advertises the public editor registration/token URLs behind the accepted Authelia ingress; independent loopback OAuth would require changing that ingress contract. No new user, proxy, auth bypass or public MCP route was introduced. This is the confirmed native authentication contract, not a new restriction on future capabilities.
 
-GitHub uses precisely `repos,issues,pull_requests,actions` and individual `get_me`, 44 tools at acceptance (official server v1.13.0). The launcher resolves the existing gh token in memory and passes it through environment, without copying it to client definitions. Docker `--rm` and exact `--cidfile` cleanup bind the container to the requesting stdio client, including client termination under sudo. There is no separate GitHub daemon or update target. Install the canonical launcher as root755 at `/usr/local/bin/edge-github-mcp`.
+GitHub uses `repos,issues,pull_requests,actions` plus `get_me`, 44 tools with server v2.0.2. The 2026-10-16 shared HTTP deployment supersedes the earlier STDIO launcher contract. All three clients use one permanent Compose service; native HTTP validates the GitHub bearer on each request. Client definitions remain mode600. See [shared service and recovery](../github-mcp/README.md).
 
 Playwright v0.0.83 uses existing Chromium153 at `/home/core/.cache/ms-playwright/chromium-1243/chrome-linux64/chrome`. Native `--isolated` avoids persisted profiles; `--no-sandbox` is required by the observed host Chromium sandbox launch failure. The MCP process/browser belongs to the invoking client. Existing Hermes browser tooling remains available.
 
@@ -62,7 +62,7 @@ Deletion reconciliation pagination preserves the original native activity URL an
 
 Existing Edge Monitor reads native SQLite workflow state and scheduled execution history. One generic `n8n-workflow-health` Integration/EDGE incident reports both critical Plane workflows, suppresses itself when n8n HTTP is unavailable, ignores manual executions and recovers through the existing incident model. Three consecutive terminal failures or absence of a scheduled success for three cadences plus execution timeout trigger health degradation. Current stale thresholds: Mattermost115s, deletion1020s. Inactive/archived/missing workflows or schedule drift fail the declared contract.
 
-Existing Backrest `edge-state` captures protected client configs/context, SSH authorized_keys, both helpers and Compose/system config; its native consistent staging captures n8n SQLite/config/encrypted credentials and logical Plane/Nextcloud PostgreSQL data. No second backup mechanism exists. Restore the matching snapshot and staging through the established service recovery procedure; raw live SQLite and shared physical PostgreSQL are not substituted for those staged copies.
+Existing Backrest `edge-state` captures protected client configs/context, SSH authorized_keys, the execution helper and Compose/system config; its native consistent staging captures n8n SQLite/config/encrypted credentials and logical Plane/Nextcloud PostgreSQL data. No second backup mechanism exists. Restore the matching snapshot and staging through the established service recovery procedure; raw live SQLite and shared physical PostgreSQL are not substituted for those staged copies.
 
 Temporary test workflows/Data Tables, Plane entities/posts, Nextcloud test files/shares/trash, n8n test executions, stored test Hermes responses, browser profiles and temporary auth/payload/source files are removed precisely. Native token use/audit/JWT blacklist history stays. Backrest's `oplog.sqlite-*.backup` is its upstream-managed database-backup lifecycle (keep3, weekly/schema-aware); it is retained for that concrete native role. An unreferenced old manual `config.json.bak` was removed.
 
@@ -70,7 +70,7 @@ Temporary test workflows/Data Tables, Plane entities/posts, Nextcloud test files
 
 - [n8n instance MCP](https://docs.n8n.io/connect/connect-to-n8n-mcp-server/) and [native tool reference](https://docs.n8n.io/connect/connect-to-n8n-mcp-server/mcp-server-tools-reference/)
 - [Plane MCP](https://developers.plane.so/dev-tools/mcp-server)
-- [Official GitHub MCP](https://github.com/github/github-mcp-server), [Docker cidfile lifecycle](https://docs.docker.com/reference/cli/docker/container/run/)
+- [Official GitHub MCP](https://github.com/github/github-mcp-server)
 - [Official Playwright MCP](https://github.com/microsoft/playwright-mcp)
 - [OpenAI Docs MCP](https://developers.openai.com/learn/docs-mcp), [Codex noninteractive execution](https://developers.openai.com/codex/noninteractive)
 - [Antigravity CLI reference](https://antigravity.google/docs/cli/reference/), [native context/config paths](https://antigravity.google/docs/cli/gcli-migration/)

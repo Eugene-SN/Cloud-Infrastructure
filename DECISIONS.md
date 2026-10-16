@@ -3499,3 +3499,22 @@ empty-volume characterization as current state; historical records are unchanged
 **Evidence:** deployments/edge/docker/ACCEPTANCE_2026-10-16.md and sanitized JSON.
 Master Health, actual log rotation, monitor failure/recovery tests and final
 Edge/overall OK pass. Stage 13 remains the accepted infrastructure checkpoint.
+
+
+## 2026-10-16 — One permanent local HTTP GitHub MCP service
+
+**Status:** ACCEPTED by explicit operator request. Supersedes the GitHub STDIO
+transport/lifecycle clause of the 2026-10-02 interaction fabric decision.
+
+Codex, Hermes and Antigravity share the official GitHub MCP native HTTP server
+in one permanent Compose container; host loopback18082 and existing private
+Docker network8082, no public route or proxy. The existing GitHub identity and
+44-tool selection remain. Native request headers carry the existing credential
+in mode600 client files; a rotated token must be applied to those entries.
+The server has upstream request-state encryption configuration, not a static PAT.
+Existing Edge Monitor, manual Maintenance/Semaphore and Backrest coverage own
+its normal lifecycle. STDIO containers/launchers/settings and orphan CID files
+are removed after all native clients pass get_me. n8n/Plane have no existing MCP
+consumer; no integration is enabled solely because the endpoint is available.
+
+**Evidence:** `deployments/edge/github-mcp/ACCEPTANCE_2026-10-16.md`.

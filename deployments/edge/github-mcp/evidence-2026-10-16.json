@@ -1,0 +1,97 @@
+{
+  "verified_at": "2026-10-16T01:42:08.013245+00:00",
+  "marker": "EDGE_SHARED_GITHUB_MCP_HTTP=PASS",
+  "image_id": "sha256:ffced0d76e77428532a2ced185516992d77fd146d69eec2f244e6237d1a97796",
+  "server_version": "v2.0.2",
+  "endpoints": {
+    "host": "http://127.0.0.1:18082/",
+    "docker": "http://github-mcp:8082/"
+  },
+  "restart_policy": "unless-stopped",
+  "logging": {
+    "Type": "json-file",
+    "Config": {
+      "max-file": "3",
+      "max-size": "10m"
+    }
+  },
+  "tool_count": 44,
+  "clients": {
+    "Codex": "native app-server reload, current chat tools/list and get_me PASS",
+    "Hermes": "installed runtime discovery and native get_me PASS, 44 tools plus 4 utilities",
+    "Antigravity": "native CLI get_me SUCCESS, daemon Connected on installed binary"
+  },
+  "legacy_stdio_containers_before": 7,
+  "legacy_stdio_containers_after": 0,
+  "orphan_cid_directories_removed": 140,
+  "permanent_containers": 22,
+  "unrelated_21_container_ids_and_images_unchanged": true,
+  "monitor": {
+    "generated_at": "2026-10-16T01:42:07.772097+00:00",
+    "overall_state": "OK",
+    "github_http": {
+      "state": "OK",
+      "failures": 0,
+      "last_probe_at": "2026-10-16T01:41:58.443428+00:00",
+      "last_success_at": "2026-10-16T01:41:58.443428+00:00",
+      "detail": {
+        "code": 401,
+        "latency_ms": 9,
+        "error": null
+      }
+    },
+    "github_container": {
+      "state": "OK",
+      "failures": 0,
+      "last_probe_at": "2026-10-16T01:41:58.369948+00:00",
+      "last_success_at": "2026-10-16T01:41:58.369948+00:00",
+      "detail": {
+        "status": "running",
+        "health": null
+      }
+    }
+  },
+  "maintenance": {
+    "manual_targets": 19,
+    "github_row": {
+      "scope": "EDGE",
+      "component": "GITHUB_MCP",
+      "label": "GitHub MCP",
+      "ip_address": "45.92.156.17",
+      "type": "DOCKER",
+      "group": "docker",
+      "managed_by": "docker",
+      "current": "2.0.2",
+      "available": "2.0.2",
+      "status": "CURRENT",
+      "source": "DOCKER_RUNTIME_AND_REGISTRY",
+      "action_key": "GITHUB_MCP",
+      "update_target": "GITHUB_MCP",
+      "actionable": true,
+      "update_owner": "maintenance_manual",
+      "application_version": "2.0.2",
+      "available_application_version": "2.0.2",
+      "image_repository": "ghcr.io/github/github-mcp-server",
+      "image_track": "latest",
+      "running_image_digest": "sha256:ffced0d76e77428532a2ced185516992d77fd146d69eec2f244e6237d1a97796",
+      "remote_image_digest": "sha256:ffced0d76e77428532a2ced185516992d77fd146d69eec2f244e6237d1a97796",
+      "update_reason": "CURRENT"
+    },
+    "template_id": 24,
+    "preflight": "PASS",
+    "real_update_executed": false
+  },
+  "master_health": "PASS|SYSTEM_SERVICES=9|USER_SERVICES=4|DOCKER_UNITS=12|DOCKER_SERVICES=22|SQLITE_DATABASES=2|POSTGRES_READINESS=PASS",
+  "monitoring_tests": 17,
+  "n8n_audit": {
+    "draft_workflows": 7,
+    "published_workflows": 7,
+    "github_mcp_references": 0,
+    "mcp_credentials": 0
+  },
+  "cleanup": {
+    "launcher_removed": true,
+    "legacy_pending_record_removed": true,
+    "own_antigravity_test_conversation_removed": true
+  }
+}

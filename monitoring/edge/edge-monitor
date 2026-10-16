@@ -800,6 +800,9 @@ def collect_http_probes(
 
     for key in urls:
         r=raw_results[key]
+        if key == "github_mcp":
+            # A live native HTTP endpoint challenges an unauthenticated request.
+            r["ok"] = r.get("code") == 401
 
         public[key]=tracker.observe(
             "http:" + key,
@@ -1921,6 +1924,19 @@ def build_incidents(snapshot):
         + [_container_evidence(name, docker.get(name) or {}) for name in weblate_containers],
         confirmation='2 consecutive probes' if weblate_state == 'FAIL' else None,
         suppressed=bool(docker_parent_failed and weblate_state != 'OK'),
+    )
+    github_state = _worst_state(
+        _item_state(apps.get('github_mcp') or {}),
+        _item_state(docker.get('github-mcp') or {}),
+    )
+    incidents['github-mcp'] = _make_incident(
+        'github-mcp', github_state, 'GitHub MCP', 'EDGE', 'Agent integration',
+        'Shared GitHub tools may be unavailable to Codex, Hermes and Antigravity.',
+        'Native HTTP authentication challenge and permanent container checks',
+        [_http_evidence('GitHub MCP HTTP', apps.get('github_mcp') or {}),
+         _container_evidence('github-mcp', docker.get('github-mcp') or {})],
+        confirmation='2 consecutive probes' if github_state == 'FAIL' else None,
+        suppressed=bool(docker_parent_failed and github_state != 'OK'),
     )
     plane_containers = [
         'plane-' + name + '-1' for name in (
