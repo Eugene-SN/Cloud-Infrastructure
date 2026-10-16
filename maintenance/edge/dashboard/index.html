@@ -865,6 +865,13 @@
       margin-top: 1px;
     }
 
+    .image-build-notice {
+      margin-top: 4px;
+      color: var(--ink);
+      font-size: 14px;
+      line-height: 1.3;
+    }
+
     .mono-version {
       font-family: "SFMono-Regular", Consolas, monospace;
       font-size: .72rem;
@@ -1983,6 +1990,14 @@
             ? r.available_application_version
             : (r.update_reason === "CURRENT" ? applicationDisplay : `New ${r.image_track || "tracked"} image`);
           const latestDisplay = r.type === "DOCKER" ? dockerLatest : (r.available || "—");
+          const sameVersionImageUpdate = r.type === "DOCKER" && hasUpdate
+            && r.update_reason === "IMAGE_DIGEST_UPDATE"
+            && r.application_version && r.application_version !== "-"
+            && r.available_application_version && r.available_application_version !== "-"
+            && r.application_version.replace(/^v/, "") === r.available_application_version.replace(/^v/, "");
+          const buildNotice = sameVersionImageUpdate
+            ? '<div class="image-build-notice">New Docker image build</div>'
+            : "";
           const dockerTechnical = r.type === "DOCKER"
             ? `${r.image_repository || ""}:${r.image_track || ""}\nrunning: ${r.running_image_digest || "unavailable"}\nremote: ${r.remote_image_digest || "unavailable"}\nreason: ${r.update_reason || "CHECK_FAILED"}`
             : "";
@@ -2002,7 +2017,7 @@
               <div class="service-sub">${lifecycle}</div>
             </td>
             <td class="col-ver"><span class="mono-version">${applicationDisplay}</span></td>
-            <td class="col-stable" title="${dockerTechnical.replace(/"/g, "&quot;")}"><span class="mono-version ${hasUpdate ? "is-upgrade" : ""}">${latestDisplay}</span></td>
+            <td class="col-stable" title="${dockerTechnical.replace(/"/g, "&quot;")}"><span class="mono-version ${hasUpdate ? "is-upgrade" : ""}">${latestDisplay}</span>${buildNotice}</td>
             <td class="col-status"><span class="status-badge ${badgeClass}"><span class="status-badge-dot"></span>${badgeText}</span></td>
             <td class="col-act">
               <button class="action action-sm action-btn-center ${availability.executable ? "action-primary" : ""}" onclick="runSingle('${r.action_key}')" title="${availability.label}" ${isBusy || !availability.executable ? "disabled" : ""}>

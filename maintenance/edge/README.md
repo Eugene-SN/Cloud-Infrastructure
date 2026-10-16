@@ -149,6 +149,21 @@ updates, not native updater drift.
 
 ## Safety boundary
 
+Docker rows with `IMAGE_DIGEST_UPDATE` and equal known application versions
+show **New Docker image build** under Latest Stable. The application version
+and existing digest tooltip remain visible; update discovery and dispatch are
+unchanged. The live dashboard has separate styling changes, so deploy this
+renderer change as a targeted patch rather than replacing its full HTML.
+
+The generic Compose driver records previous image IDs before recreation and
+keeps them when the update command fails. After native Docker health/wait
+succeeds, scoped cleanup can delete an unused previous image and its recovery
+receipt. This is not an archive of adapter-tested builds or automatic rollback.
+For Weblate, no adapter translation check or fresh pre-update backup is part of
+this driver. Existing Backrest preparation covers its coordinated database,
+DATA_DIR and configuration; rollback after schema changes must account for
+that matched recovery state, not assume an image-only downgrade is safe.
+
 A manual component update requires:
 
 - the target to be one of the 19 manifest units;
