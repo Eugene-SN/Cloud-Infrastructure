@@ -235,6 +235,14 @@ Stage 5 branches 05.1, 05.2 and 05.3 are all COMPLETE / ACCEPTED.
 
 ## Lifecycle ordering invariants
 
+Backrest hooks must never interrupt running workloads: no container/service
+stop, start, restart, pause, kill, recreation, maintenance mode or suspension of
+application jobs. Collect online-accessible state only; omit unsupported live
+stores and document coverage limitations instead of stopping their owner. This
+operator-approved policy supersedes historical cold/quiesced backup contracts.
+See `OPERATING_RULES.md` and `backup/edge/README.md`.
+
+
 - Backrest restore capability must be accepted before Semaphore/update testing.
 - `update.escloud.us` is a dedicated maintenance/update page, separate from `app.escloud.us`, and is built as a separate Codex substage after the real backend contract is known.
 - Production monitoring is deployed after the substantially complete service inventory, cross-site connectivity, Backrest and update subsystem exist.

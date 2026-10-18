@@ -3591,3 +3591,33 @@ same container ID, source/dependency preservation and empty final workspace.
 
 **Evidence:** PDF_CLEANUP_NAMED_CONTAINER_2026-10-16.md;
 PDF_CLEANUP_NAMED_CONTAINER=PASS.
+
+
+## 2026-10-18 — Backrest collects online-accessible state without service interruption
+
+**Status:** ACCEPTED (explicit operator instruction).
+
+**Context:** The Edge `edge-state` preparation hook stopped Weblate, Mattermost,
+mail and Plane every six hours. The 2026-10-18 13:00 run again terminated Weblate
+and interrupted its availability. Increasing startup readiness to 300 seconds did
+not remove this cause.
+
+**Decision:** Backup availability has priority over complete cold application
+bundles. Every Backrest hook must leave services/containers/jobs running, including
+on failure. Retain native online PostgreSQL dumps, SQLite Online Backup and
+accessible live files. Exclude state that cannot be backed up online with the
+currently implemented mechanism, rather than stopping its service. Keep the
+existing schedules, repositories, tier copying and retention.
+
+**Implementation:** Edge preparation has no lifecycle/recovery commands. Four
+PostgreSQL dumps and globals remain; `/srv/postgres/**` is excluded from ordinary
+Restic file capture. Mail configuration/TLS/Bulwark files remain; the live Stalwart
+RocksDB store is excluded. Manifests label live files as best effort and not
+atomic with database dumps. Preparation failures preserve the prior staging
+and remove only an unfinished next generation. All six plans and their complete
+hook dependency chains on Edge and AI Node were inspected; AI Node needs no
+lifecycle correction. Coverage and validation: `backup/edge/README.md`.
+
+**Supersedes:** Earlier Backrest-specific requirements to stop/quiesce these
+applications or wait for their restart. Historical acceptance records remain
+historical. This is not permission to change update or restore lifecycles.

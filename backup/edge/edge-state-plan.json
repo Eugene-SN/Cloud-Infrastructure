@@ -1,0 +1,61 @@
+{
+  "id": "edge-state",
+  "repo": "edge-state-local",
+  "paths": [
+    "/etc",
+    "/home/core",
+    "/opt",
+    "/root",
+    "/srv",
+    "/usr/local",
+    "/var/lib",
+    "/var/spool",
+    "/var/www"
+  ],
+  "excludes": [
+    "/srv/backup/**",
+    "/srv/knowledge/**",
+    "/srv/n8n/**",
+    "/srv/authelia/**",
+    "/srv/mattermost/**",
+    "/srv/mail/**",
+    "/var/lib/docker/**",
+    "/var/lib/containerd/**",
+    "/var/lib/apt/lists/**",
+    "/var/lib/systemd/coredump/**",
+    "/home/core/.cache/**",
+    "/home/core/.npm/**",
+    "/home/core/.local/share/Trash/**",
+    "/root/.cache/**",
+    "/root/.npm/**",
+    "/srv/weblate/**",
+    "/srv/postgres/**"
+  ],
+  "schedule": {
+    "cron": "0 1,7,13,19 * * *",
+    "clock": "CLOCK_LOCAL"
+  },
+  "retention": {
+    "policyKeepAll": true
+  },
+  "hooks": [
+    {
+      "conditions": [
+        "CONDITION_SNAPSHOT_START"
+      ],
+      "onError": "ON_ERROR_FATAL",
+      "actionCommand": {
+        "command": "/usr/local/sbin/edge-state-prepare"
+      }
+    },
+    {
+      "conditions": [
+        "CONDITION_SNAPSHOT_SUCCESS"
+      ],
+      "onError": "ON_ERROR_FATAL",
+      "actionCommand": {
+        "command": "/usr/local/sbin/edge-state-tier-copy"
+      }
+    }
+  ]
+}

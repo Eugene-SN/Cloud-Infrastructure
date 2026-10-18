@@ -1,5 +1,22 @@
 # Cloud Infrastructure — Current State
 
+## Backrest without service interruptions — 2026-10-18
+
+Operator-approved policy: all scheduled/manual Backrest backups collect only
+state available while services continue running. Backup hooks must not stop,
+start, restart, pause, kill, recreate containers/services, enter maintenance mode,
+or suspend application jobs. Failed preparation fails the backup and cleans only
+its own uncommitted staging generation; it never recovers/restarts services.
+
+`backup/edge/edge-state-prepare` now uses online PostgreSQL dumps, SQLite Online
+Backup, and best-effort live file copies. The Edge plan excludes `/srv/postgres/**`;
+logical dumps are the PostgreSQL recovery source. Stalwart's live RocksDB store
+`/srv/mail/stalwart/lib` is excluded; mail configuration/TLS/Bulwark files remain.
+Database dumps and live files are not a jointly atomic application snapshot.
+The schedule and retention are unchanged. All hooks on Edge and AI Node were
+traced, including sourced environment files and the volume-check dependency.
+See `backup/edge/README.md` for coverage, verification and recovery limits.
+
 ## Current Docker container names — 2026-10-16
 
 `EDGE_CONTAINER_NAMES_NORMALIZED=PASS`. The approved naming table is deployed:
@@ -10,8 +27,9 @@ ports and integration aliases are preserved. RabbitMQ retains hostname `plane-mq
 
 The full 22-container table and on-demand PDF CleanUp/Plane migrator contract are
 in `deployments/edge/docker/container-names.md`. Monitoring, version discovery,
-Plane updates and backup preparation use the current names. Weblate backup
-startup waits for native health for up to 300 seconds. Historical inventories
+Plane updates and backup preparation use the current names. The historical
+300-second Weblate backup restart wait was superseded on 2026-10-18 by the
+online-only backup policy above. Historical inventories
 below retain their original observation dates and are superseded for naming.
 Final verification: `CONTAINER_NAME_NORMALIZATION_ACCEPTANCE_2026-10-16.md`.
 

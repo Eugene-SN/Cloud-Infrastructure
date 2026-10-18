@@ -9,13 +9,7 @@ NEXT="$STAGING_ROOT/next.$RUN_ID"
 CURRENT="$STAGING_ROOT/current"
 PREVIOUS="$STAGING_ROOT/previous"
 
-INJECT_FAILURE="${EDGE_STATE_PREPARE_INJECT_FAILURE:-}"
-
-MATTERMOST_STOPPED=0
-BULWARK_STOPPED=0
-STALWART_STOPPED=0
-PLANE_STOPPED=0
-WEBLATE_STOPPED=0
+# Backups may read running services, but must never control their lifecycle.
 COMMITTED=0
 
 mkdir -p "$STAGING_ROOT"
@@ -23,89 +17,53 @@ mkdir -p "$STAGING_ROOT"
 exec 9>/run/lock/edge-state-prepare.lock
 flock -w 600 9
 
-recover_services() {
+cleanup_staging() {
   rc=$?
-
-  if [ "$WEBLATE_STOPPED" -eq 1 ]; then
-    if docker compose -f /opt/weblate/compose.yaml start weblate >/dev/null; then
-      WEBLATE_STOPPED=0
-    else
-      printf 'RECOVERY_FAIL|service=weblate\n' >&2
-    fi
-  fi
-
-  if [ "$PLANE_STOPPED" -eq 1 ]; then
-    if /usr/local/sbin/plane-compose start plane-minio api worker beat-worker live >/dev/null; then
-      PLANE_STOPPED=0
-    else
-      printf 'RECOVERY_FAIL|service=plane\n' >&2
-    fi
-  fi
-
-  if [ "$STALWART_STOPPED" -eq 1 ]; then
-    if docker start stalwart >/dev/null; then
-      STALWART_STOPPED=0
-    else
-      printf 'RECOVERY_FAIL|container=stalwart\n' >&2
-    fi
-  fi
-
-  if [ "$BULWARK_STOPPED" -eq 1 ]; then
-    if docker start bulwark >/dev/null; then
-      BULWARK_STOPPED=0
-    else
-      printf 'RECOVERY_FAIL|container=bulwark\n' >&2
-    fi
-  fi
-
-  if [ "$MATTERMOST_STOPPED" -eq 1 ]; then
-    if docker start mattermost >/dev/null; then
-      MATTERMOST_STOPPED=0
-    else
-      printf 'RECOVERY_FAIL|container=mattermost\n' >&2
-    fi
-  fi
-
   if [ "$COMMITTED" -eq 0 ]; then
     rm -rf "$NEXT"
   fi
-
   return "$rc"
 }
+trap cleanup_staging EXIT
 
-trap recover_services EXIT
+# Files may disappear while an application writes. Only rsync's specific
+# vanished-source result is acceptable; permission/I/O/copy errors still fail.
+online_rsync() {
+  local rc
+  if rsync "$@"; then
+    return 0
+  else
+    rc=$?
+    if [ "$rc" -eq 24 ]; then
+      printf 'ONLINE_FILES_WARNING=vanished_source|consistency=best_effort\n' >&2
+      return 0
+    fi
+    return "$rc"
+  fi
+}
 
 prepare_weblate() {
   local stage="$1/weblate"
   mkdir -p "$stage/postgres" "$stage/data" "$stage/config"
-  local running
-  running="$(docker inspect weblate --format '{{.State.Running}}' 2>/dev/null || true)"
-  if [ "$running" = true ]; then
-    WEBLATE_STOPPED=1
-    docker compose -f /opt/weblate/compose.yaml stop weblate >/dev/null
-  fi
   docker exec postgres pg_dump -U postgres -d weblate -Fc >"$stage/postgres/weblate.dump"
   test -s "$stage/postgres/weblate.dump"
   docker exec -i postgres pg_restore -l <"$stage/postgres/weblate.dump" >/dev/null
   chmod 0600 "$stage/postgres/weblate.dump"
-  rsync -a /srv/weblate/data/ "$stage/data/"
-  rsync -a /opt/weblate/ "$stage/config/"
+  online_rsync -a /srv/weblate/data/ "$stage/data/"
+  online_rsync -a /opt/weblate/ "$stage/config/"
   cat >"$stage/MANIFEST.txt" <<EOF
-schema=weblate-consistent-backup-v1
+schema=weblate-online-backup-v2
 created_at=$(date --iso-8601=seconds)
 database=weblate
 role=weblate
 data_dir=/srv/weblate/data
 configuration=/opt/weblate
+database_consistency=pg_dump_snapshot
+files_consistency=live_best_effort_not_atomic_with_database
+service_lifecycle=untouched
 cache=valkey_reconstructed_not_historical_queue_state
 EOF
   chmod 0600 "$stage/MANIFEST.txt"
-  if [ "$WEBLATE_STOPPED" -eq 1 ]; then
-    # Observed startup can exceed two minutes; wait for native health before
-    # committing the coordinated database/data/configuration recovery bundle.
-    docker compose -f /opt/weblate/compose.yaml start --wait --wait-timeout 300 weblate >/dev/null
-    WEBLATE_STOPPED=0
-  fi
   printf 'WEBLATE_STAGE_GATE=PASS\n'
 }
 
@@ -119,7 +77,7 @@ printf '\n--- n8n ---\n'
 
 mkdir -p "$NEXT/n8n"
 
-rsync -a \
+online_rsync -a \
   --exclude='database.sqlite' \
   --exclude='database.sqlite-wal' \
   --exclude='database.sqlite-shm' \
@@ -145,7 +103,9 @@ source = sqlite3.connect(
 target = sqlite3.connect(dst)
 
 with target:
-    source.backup(target)
+    source.backup(target, pages=256, sleep=0.05)
+
+target.execute("PRAGMA journal_mode=DELETE")
 
 result = target.execute(
     "PRAGMA integrity_check"
@@ -170,7 +130,7 @@ printf '\n--- Authelia ---\n'
 
 mkdir -p "$NEXT/authelia"
 
-rsync -a \
+online_rsync -a \
   --exclude='data/db.sqlite3' \
   --exclude='data/db.sqlite3-wal' \
   --exclude='data/db.sqlite3-shm' \
@@ -198,7 +158,9 @@ source = sqlite3.connect(
 target = sqlite3.connect(dst)
 
 with target:
-    source.backup(target)
+    source.backup(target, pages=256, sleep=0.05)
+
+target.execute("PRAGMA journal_mode=DELETE")
 
 result = target.execute(
     "PRAGMA integrity_check"
@@ -238,19 +200,7 @@ chmod 0600 "$NEXT/postgres/globals.sql"
 
 printf 'POSTGRES_GLOBALS_STAGE_GATE=PASS\n'
 
-printf '\n--- Mattermost quiesce ---\n'
-
-docker stop \
-  --time 30 \
-  mattermost \
-  >/dev/null
-
-MATTERMOST_STOPPED=1
-
-if [ "$INJECT_FAILURE" = 'after-mattermost-stop' ]; then
-  printf 'INJECTED_FAILURE=after-mattermost-stop\n' >&2
-  exit 97
-fi
+printf '\n--- Mattermost online dump and live files ---\n'
 
 mkdir -p \
   "$NEXT/mattermost/app" \
@@ -273,47 +223,29 @@ docker exec -i postgres \
   <"$NEXT/mattermost/postgres/mattermost.dump" \
   >/dev/null
 
-rsync -a \
+online_rsync -a \
   /srv/mattermost/volumes/app/mattermost/ \
   "$NEXT/mattermost/app/"
 
-docker start mattermost >/dev/null
-MATTERMOST_STOPPED=0
-
 printf 'MATTERMOST_STAGE_GATE=PASS\n'
 
-printf '\n--- Mail quiesce ---\n'
-
-docker stop \
-  --time 30 \
-  bulwark \
-  >/dev/null
-BULWARK_STOPPED=1
-
-docker stop \
-  --time 30 \
-  stalwart \
-  >/dev/null
-STALWART_STOPPED=1
-
-if [ "$INJECT_FAILURE" = 'after-mail-stop' ]; then
-  printf 'INJECTED_FAILURE=after-mail-stop\n' >&2
-  exit 98
-fi
+printf '\n--- Mail configuration and Bulwark files ---\n'
 
 mkdir -p "$NEXT/mail"
-
-rsync -a \
-  /srv/mail/ \
-  "$NEXT/mail/"
-
-docker start stalwart >/dev/null
-STALWART_STOPPED=0
-
-docker start bulwark >/dev/null
-BULWARK_STOPPED=0
-
-printf 'MAIL_STAGE_GATE=PASS\n'
+# Stalwart uses a live RocksDB store. Plain file copies of it are not an
+# online database backup; omit the store instead of stopping mail delivery.
+online_rsync -a --exclude='/stalwart/lib/' /srv/mail/ "$NEXT/mail/"
+cat >"$NEXT/mail/MANIFEST.txt" <<EOF
+schema=mail-online-files-v2
+created_at=$(date --iso-8601=seconds)
+included=stalwart_configuration_tls_and_bulwark_files
+excluded=/srv/mail/stalwart/lib
+reason=live_rocksdb_requires_separately_validated_online_backup
+files_consistency=live_best_effort_not_atomic
+service_lifecycle=untouched
+EOF
+chmod 0600 "$NEXT/mail/MANIFEST.txt"
+printf 'MAIL_CONFIG_STAGE_GATE=PASS|MAIL_STORE=EXCLUDED\n'
 
 printf '\n--- Agent SQLite overlay ---\n'
 
@@ -372,7 +304,9 @@ for src in sorted(candidates):
     target = sqlite3.connect(dst)
 
     with target:
-        source.backup(target)
+        source.backup(target, pages=256, sleep=0.05)
+
+    target.execute("PRAGMA journal_mode=DELETE")
 
     result = target.execute(
         "PRAGMA integrity_check"
@@ -441,12 +375,7 @@ docker exec -i postgres \
 
 printf 'NEXTCLOUD_STAGE_GATE=PASS\n'
 
-printf '\n--- Plane database and uploads quiesce ---\n'
-
-# Keep shared PostgreSQL and unrelated applications outside Plane's quiesce.
-# Mark recovery before stopping, so a partial stop is recovered too.
-PLANE_STOPPED=1
-/usr/local/sbin/plane-compose stop --timeout 30 api worker beat-worker live plane-minio >/dev/null
+printf '\n--- Plane online dump and live uploads ---\n'
 
 mkdir -p "$NEXT/plane/postgres" "$NEXT/plane/uploads" "$NEXT/plane/runtime"
 docker exec postgres pg_dump -U postgres -d plane -Fc >"$NEXT/plane/postgres/plane.dump"
@@ -455,8 +384,8 @@ docker exec -i postgres pg_restore -l <"$NEXT/plane/postgres/plane.dump" >/dev/n
 
 PLANE_UPLOADS="$(docker volume inspect plane_uploads --format '{{.Mountpoint}}')"
 test "$PLANE_UPLOADS" = '/var/lib/docker/volumes/plane_uploads/_data'
-rsync -a "$PLANE_UPLOADS/" "$NEXT/plane/uploads/"
-rsync -a /opt/plane/ "$NEXT/plane/runtime/"
+online_rsync -a "$PLANE_UPLOADS/" "$NEXT/plane/uploads/"
+online_rsync -a /opt/plane/ "$NEXT/plane/runtime/"
 cp /usr/local/sbin/plane-compose "$NEXT/plane/runtime/plane-compose"
 cp /etc/nginx/sites-available/projects-escloud-us.conf "$NEXT/plane/runtime/projects-escloud-us.conf"
 python3 - "$NEXT/plane/runtime/images.json" <<'PY'
@@ -466,7 +395,7 @@ import subprocess
 import sys
 
 ids = subprocess.check_output(
-    ['/usr/local/sbin/plane-compose', 'ps', '-a', '-q'], text=True,
+    ['docker', 'ps', '-a', '-q', '--filter', 'label=com.docker.compose.project=plane'], text=True,
 ).split()
 containers = json.loads(subprocess.check_output(['docker', 'inspect', *ids], text=True))
 expected = {'web', 'api', 'admin', 'space', 'live', 'worker', 'beat-worker', 'plane-redis', 'plane-mq', 'plane-minio'}
@@ -487,8 +416,6 @@ print('PLANE_RECOVERY_IMAGE_IDENTITIES=PASS')
 PY
 chmod 0600 "$NEXT/plane/postgres/plane.dump"
 
-/usr/local/sbin/plane-compose start plane-minio api worker beat-worker live >/dev/null
-PLANE_STOPPED=0
 printf 'PLANE_STAGE_GATE=PASS\n'
 
 if [ -f /opt/weblate/compose.yaml ]; then
@@ -498,20 +425,25 @@ fi
 printf '\n--- Manifest ---\n'
 
 cat >"$NEXT/MANIFEST.txt" <<EOF
-schema=edge-state-staging-v1
+schema=edge-state-online-staging-v2
 created_at=$(date --iso-8601=seconds)
 hostname=$(hostname -s)
 n8n=consistent_sqlite_plus_files
 authelia=consistent_sqlite_plus_files
 postgres_globals=pg_dumpall_globals_only
-mattermost=consolidated_postgres_pg_dump_plus_quiesced_app_files
-mail=quiesced_full_tree
+mattermost=online_pg_dump_plus_live_best_effort_app_files
+mail=configuration_tls_bulwark_files_only
+mail_store=excluded_live_rocksdb
 agent_sqlite=consistent_overlay
 nextcloud=consolidated_postgres_pg_dump_consistent
-plane=quiesced_logical_postgres_dump_plus_uploads_and_runtime
+plane=online_pg_dump_plus_live_best_effort_uploads_and_runtime
 plane_valkey=cache_pubsub_reconstructed_not_historical_state
-weblate=quiesced_postgres_dump_plus_matching_data_and_configuration
+weblate=online_pg_dump_plus_live_best_effort_data_and_configuration
 plane_rabbitmq=task_queue_reconstructed_not_historical_state
+service_lifecycle=untouched_no_stop_start_restart_pause_kill_or_maintenance
+files_consistency=live_best_effort_not_atomic_with_database
+postgres_physical_data=excluded_use_logical_dumps
+inflight_tasks=not_captured
 EOF
 
 chmod 0600 "$NEXT/MANIFEST.txt"

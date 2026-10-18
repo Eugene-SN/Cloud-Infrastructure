@@ -1,0 +1,479 @@
+{
+  "schema": "backrest-online-verification-v1",
+  "verified_utc": "2026-10-18T10:26:16.481480+00:00",
+  "status": "BACKUP_WITHOUT_CONTAINER_LIFECYCLE_CHANGES_VERIFIED",
+  "policy": "Collect online-accessible state only; no service/container/job interruption",
+  "hook_audit": {
+    "edge": {
+      "plans": [
+        {
+          "id": "edge-knowledge-local",
+          "schedule": {
+            "cron": "0 4,10,16,22 * * *",
+            "clock": "CLOCK_LOCAL"
+          },
+          "hooks": [
+            {
+              "command": "/usr/local/sbin/edge-knowledge-retention",
+              "conditions": [
+                "CONDITION_SNAPSHOT_SUCCESS"
+              ],
+              "on_error": "ON_ERROR_FATAL"
+            }
+          ]
+        },
+        {
+          "id": "edge-state",
+          "schedule": {
+            "cron": "0 1,7,13,19 * * *",
+            "clock": "CLOCK_LOCAL"
+          },
+          "hooks": [
+            {
+              "command": "/usr/local/sbin/edge-state-prepare",
+              "conditions": [
+                "CONDITION_SNAPSHOT_START"
+              ],
+              "on_error": "ON_ERROR_FATAL"
+            },
+            {
+              "command": "/usr/local/sbin/edge-state-tier-copy",
+              "conditions": [
+                "CONDITION_SNAPSHOT_SUCCESS"
+              ],
+              "on_error": "ON_ERROR_FATAL"
+            }
+          ]
+        }
+      ],
+      "repository_hooks": 0,
+      "scripts": [
+        {
+          "path": "/usr/local/sbin/edge-knowledge-retention",
+          "sha256": "86907ec12f260e847fb32a45f77150022a51800061d0280ee504d8af20bebc92"
+        },
+        {
+          "path": "/usr/local/sbin/edge-state-prepare",
+          "sha256": "0e7e2b0eb809c6e1ce40457b83f7423bc408f8b62c80f11a2c28a1cc4a4eefa0"
+        },
+        {
+          "path": "/usr/local/sbin/edge-state-tier-copy",
+          "sha256": "574af07ef038504c5025dc60e89ad0fd728c5e34e61c9c5daf8e3756da638272"
+        }
+      ]
+    },
+    "ai-node": {
+      "plans": [
+        {
+          "id": "ai-node-full-system",
+          "schedule": {
+            "cron": "30 6 * * 0",
+            "clock": "CLOCK_LOCAL"
+          },
+          "hooks": [
+            {
+              "command": "/usr/local/sbin/ai-node-full-prepare.py",
+              "conditions": [
+                "CONDITION_SNAPSHOT_START"
+              ],
+              "on_error": "ON_ERROR_FATAL"
+            },
+            {
+              "command": "/usr/local/sbin/ai-node-full-copy",
+              "conditions": [
+                "CONDITION_SNAPSHOT_SUCCESS"
+              ],
+              "on_error": "ON_ERROR_FATAL"
+            }
+          ]
+        },
+        {
+          "id": "ai-node-workstation-state",
+          "schedule": {
+            "cron": "0 6 * * *",
+            "clock": "CLOCK_LOCAL"
+          },
+          "hooks": [
+            {
+              "command": "/usr/local/sbin/ai-node-tier-copy prepare",
+              "conditions": [
+                "CONDITION_SNAPSHOT_START"
+              ],
+              "on_error": "ON_ERROR_FATAL"
+            },
+            {
+              "command": "/usr/local/sbin/ai-node-tier-copy",
+              "conditions": [
+                "CONDITION_SNAPSHOT_SUCCESS"
+              ],
+              "on_error": "ON_ERROR_FATAL"
+            }
+          ]
+        },
+        {
+          "id": "ai-node-ai-state",
+          "schedule": {
+            "cron": "15 6 * * *",
+            "clock": "CLOCK_LOCAL"
+          },
+          "hooks": [
+            {
+              "command": "/usr/local/sbin/ai-node-n8n-prepare",
+              "conditions": [
+                "CONDITION_SNAPSHOT_START"
+              ],
+              "on_error": "ON_ERROR_FATAL"
+            },
+            {
+              "command": "/usr/local/sbin/ai-node-tier-copy",
+              "conditions": [
+                "CONDITION_SNAPSHOT_SUCCESS"
+              ],
+              "on_error": "ON_ERROR_FATAL"
+            }
+          ]
+        },
+        {
+          "id": "ai-node-knowledge-local",
+          "schedule": {
+            "cron": "0 2,8,14,20 * * *",
+            "clock": "CLOCK_LOCAL"
+          },
+          "hooks": [
+            {
+              "command": "/usr/local/sbin/ai-node-knowledge-retention",
+              "conditions": [
+                "CONDITION_SNAPSHOT_SUCCESS"
+              ],
+              "on_error": "ON_ERROR_FATAL"
+            }
+          ]
+        }
+      ],
+      "repository_hooks": 0,
+      "scripts": [
+        {
+          "path": "/usr/local/sbin/ai-node-full-copy",
+          "sha256": "1d0a360db3eb613fced6a2ec0d3534b464eb3ee3a5dc0b2a7ac1796f56ea692b"
+        },
+        {
+          "path": "/usr/local/sbin/ai-node-full-prepare.py",
+          "sha256": "996d75e2a34f694a36cf7acc0a06d9dbd552c14f91eda945419153f2453e10c5"
+        },
+        {
+          "path": "/usr/local/sbin/ai-node-knowledge-retention",
+          "sha256": "32bc693278fcd1bdf1266b86873acc6f09068b43c346604411a3eced27c0f046"
+        },
+        {
+          "path": "/usr/local/sbin/ai-node-n8n-prepare",
+          "sha256": "1ad621382de25e29b6ed82fed0045653342636387e242f2896363f43fc216a71"
+        },
+        {
+          "path": "/usr/local/sbin/ai-node-tier-copy",
+          "sha256": "6ff501b5f8dff016d19310931e2f98fdf45ad821897ea3df9b999119f3941334"
+        },
+        {
+          "path": "/usr/local/sbin/backrest-volume-check",
+          "sha256": "110bf4efcaeae4857fdea474d7b9336bfe042f2169231ab46e1829cf18c7c3af"
+        }
+      ]
+    },
+    "all_transitive_scripts_reviewed": true,
+    "sourced_env_files_no_commands": true
+  },
+  "deployment": {
+    "hook_sha256": "0e7e2b0eb809c6e1ce40457b83f7423bc408f8b62c80f11a2c28a1cc4a4eefa0",
+    "native_config_modno": 5,
+    "config_change": "edge-state excludes /srv/postgres/**",
+    "backrest_pid_before_and_after": 1050,
+    "backrest_restarted": false
+  },
+  "isolated_verification": {
+    "tests_passed": 4,
+    "old_hook_rejected_on_docker_stop": true,
+    "copy_and_dump_failures_preserve_previous_staging": true,
+    "vanished_files_reported_other_copy_errors_fatal": true
+  },
+  "runtime": {
+    "backup_rpc": {
+      "status": 200,
+      "body": "{}",
+      "finished_utc": "2026-10-18T10:24:54.400113+00:00"
+    },
+    "flow_id": 879,
+    "operations": [
+      {
+        "id": "879",
+        "status": "STATUS_SUCCESS",
+        "snapshotId": "e9a223f49cafa17a2af2b122b9a33dd857906b86a5f7e948e0390d072abbabd5",
+        "unixTimeStartMs": "1792318614693",
+        "unixTimeEndMs": "1792319094275"
+      },
+      {
+        "id": "880",
+        "status": "STATUS_SUCCESS",
+        "snapshotId": null,
+        "unixTimeStartMs": "1792318614702",
+        "unixTimeEndMs": "1792318658343"
+      },
+      {
+        "id": "881",
+        "status": "STATUS_SUCCESS",
+        "snapshotId": null,
+        "unixTimeStartMs": "1792319015615",
+        "unixTimeEndMs": "1792319094269"
+      },
+      {
+        "id": "882",
+        "status": "STATUS_SUCCESS",
+        "snapshotId": "e9a223f49cafa17a2af2b122b9a33dd857906b86a5f7e948e0390d072abbabd5",
+        "unixTimeStartMs": "1792318659564",
+        "unixTimeEndMs": "1792319015506"
+      }
+    ],
+    "prepare_duration_seconds": 43.599,
+    "postgres_archives_readable": 4,
+    "sqlite_integrity_and_delete_journal_passed": 63,
+    "observation_first_utc": "2026-10-18T10:16:36.389706+00:00",
+    "observation_last_utc": "2026-10-18T10:25:35.791784+00:00",
+    "container_count": 23,
+    "running_container_count": 22,
+    "container_runtime_unchanged": true,
+    "lifecycle_event_count": 0,
+    "container_evidence": {
+      "mattermost": {
+        "id": "eb07fb08fd19f3ee8afa30b0b1094a597d77a0ac4070a78f33e71ae6671e51fd",
+        "pid": 1167022,
+        "started_at": "2026-10-18T10:00:11.390666057Z",
+        "restarts": 0,
+        "running": true
+      },
+      "n8n": {
+        "id": "60f5c4d8ed5a3f7cd8d4c099e02b044866fca605d1f4f9db0791f93f962cc299",
+        "pid": 58631,
+        "started_at": "2026-10-16T10:51:58.254238916Z",
+        "restarts": 0,
+        "running": true
+      },
+      "weblate": {
+        "id": "669aa3a06da3debda69c4c709245781edc2ad459cac663eadc75c0e08f4d3d95",
+        "pid": 1173492,
+        "started_at": "2026-10-18T10:02:27.917098178Z",
+        "restarts": 0,
+        "running": true
+      },
+      "nextcloud": {
+        "id": "914d397a13cb73c7365fd3ade62d5d51353de8eca3e1206700d89a353fb11bc6",
+        "pid": 3457304,
+        "started_at": "2026-10-16T03:56:14.908397423Z",
+        "restarts": 0,
+        "running": true
+      },
+      "nextcloud-cron": {
+        "id": "6fd9473f4c94ccb7734f4fae4212beaa6e98b5b6c787d538dfc4c49b029e18e9",
+        "pid": 3457176,
+        "started_at": "2026-10-16T03:56:14.858550987Z",
+        "restarts": 0,
+        "running": true
+      },
+      "bulwark": {
+        "id": "5389187408b955f7f0bdf5ecbf88019f28ac60bd109e25314b802946e4b700a6",
+        "pid": 1168033,
+        "started_at": "2026-10-18T10:00:18.976681197Z",
+        "restarts": 0,
+        "running": true
+      },
+      "pdf-cleanup": {
+        "id": "4d300f6e8fda774c107531fa11a124ac7cfca8b73cb8b6fb13cd8aa84db4329e",
+        "pid": 0,
+        "started_at": "2026-10-16T09:23:36.114984573Z",
+        "restarts": 0,
+        "running": false
+      },
+      "weblate-valkey": {
+        "id": "acf717f8dcb3c29b9236da99ca19cc603a6b0e4dd0634d1cfa794680588b53ae",
+        "pid": 3456687,
+        "started_at": "2026-10-16T03:56:14.710406645Z",
+        "restarts": 0,
+        "running": true
+      },
+      "plane-space": {
+        "id": "e3bab21e3db44f431cf80649c558e9422ec6d243139201962595c0386df74cfc",
+        "pid": 3456707,
+        "started_at": "2026-10-16T03:56:14.652006729Z",
+        "restarts": 0,
+        "running": true
+      },
+      "plane-live": {
+        "id": "8aa33bcd19f1869a3a478995edaa3c9dce5a03f4689426f5e974d63d377e201b",
+        "pid": 1172040,
+        "started_at": "2026-10-18T10:01:50.690079921Z",
+        "restarts": 0,
+        "running": true
+      },
+      "plane-admin": {
+        "id": "b0566b038aa91bf5fb8950a611827d44f0be638e95904f7183287e962f687322",
+        "pid": 3457338,
+        "started_at": "2026-10-16T03:56:15.096172885Z",
+        "restarts": 0,
+        "running": true
+      },
+      "plane-web": {
+        "id": "8a016eebe79065cb04a4afbe618b201d0ac0ec4a1fadddca4933a49c828baa7f",
+        "pid": 3457158,
+        "started_at": "2026-10-16T03:56:15.125382591Z",
+        "restarts": 0,
+        "running": true
+      },
+      "plane-scheduler": {
+        "id": "d03bb54307ee0bff4a322babcc58c43924b72a6bcbf0e43ab86bb3032e57710f",
+        "pid": 1172223,
+        "started_at": "2026-10-18T10:01:52.205510971Z",
+        "restarts": 0,
+        "running": true
+      },
+      "plane-worker": {
+        "id": "790818df9d672b1b7449dc222de0b33ee5d544a68cef7d948c731e4fa242c56f",
+        "pid": 1171900,
+        "started_at": "2026-10-18T10:01:48.091720666Z",
+        "restarts": 0,
+        "running": true
+      },
+      "plane-api": {
+        "id": "3f916d3bbe6f64935b0b0d0c4b1118ca6c7f8c66cb3c483f1638d673021595d0",
+        "pid": 1171659,
+        "started_at": "2026-10-18T10:01:45.962486612Z",
+        "restarts": 0,
+        "running": true
+      },
+      "plane-rabbitmq": {
+        "id": "ccd4327a6f78ede863a552d807afd9590f3f26c6cea8cc8af290e64b2f95c3cb",
+        "pid": 3457229,
+        "started_at": "2026-10-16T03:56:14.984110848Z",
+        "restarts": 0,
+        "running": true
+      },
+      "plane-minio": {
+        "id": "54a09822374d56e3d81a04d016340b5eec8ba0703f0a28ea08013e9a7edef5cc",
+        "pid": 1171489,
+        "started_at": "2026-10-18T10:01:45.298174993Z",
+        "restarts": 0,
+        "running": true
+      },
+      "plane-valkey": {
+        "id": "c18d88135bdf9370e50c5842e360016a474d88ede98a80b787b062fedb9402df",
+        "pid": 3456933,
+        "started_at": "2026-10-16T03:56:14.737637811Z",
+        "restarts": 0,
+        "running": true
+      },
+      "nextcloud-redis": {
+        "id": "934c67934ace6b06455fc0bf7fec0328efcbace75e2ce0fe64ddd0bec2ec643a",
+        "pid": 3457126,
+        "started_at": "2026-10-16T03:56:14.790424571Z",
+        "restarts": 0,
+        "running": true
+      },
+      "github-mcp": {
+        "id": "3781d6a9a71e6d77740cbca7b77c75233ffbcb889560bbc3f67a6023ccdf176b",
+        "pid": 3457335,
+        "started_at": "2026-10-16T03:56:15.184492199Z",
+        "restarts": 0,
+        "running": true
+      },
+      "postgres": {
+        "id": "75397517da8a0161224c60ce87cc605448cead33ae2add3bb81246f35cca12ac",
+        "pid": 3456596,
+        "started_at": "2026-10-16T03:56:14.647371817Z",
+        "restarts": 0,
+        "running": true
+      },
+      "stalwart": {
+        "id": "db9b9c29f9f10ab5ee86fe0a3a9fafea8208ef8d3063e6585a8cbd2360baa1fc",
+        "pid": 1167461,
+        "started_at": "2026-10-18T10:00:17.643465905Z",
+        "restarts": 0,
+        "running": true
+      },
+      "authelia": {
+        "id": "2a9ca0efcd0af1004b4661221d5cbf23daf0cc7af7e240217a5ac58c826dcd9c",
+        "pid": 3457339,
+        "started_at": "2026-10-16T03:56:14.911841593Z",
+        "restarts": 0,
+        "running": true
+      }
+    },
+    "http_samples": 87,
+    "http_failures": [
+      {
+        "utc": "2026-10-18T10:18:01.635158+00:00",
+        "changed": [],
+        "weblate_http": "timed out"
+      }
+    ],
+    "native_weblate_healthcheck_timeouts_observed_at_least": 2,
+    "availability_limit": "One 5-second HTTP timeout and two 3-second native health-check timeouts observed during live backup load; no lifecycle changes; subsequent health probes succeeded. This is not a zero-latency-impact claim."
+  },
+  "stored_snapshot": {
+    "snapshot_id": "e9a223f49cafa17a2af2b122b9a33dd857906b86a5f7e948e0390d072abbabd5",
+    "manifest": [
+      "schema=edge-state-online-staging-v2",
+      "created_at=2026-10-18T13:17:38+03:00",
+      "hostname=edge",
+      "n8n=consistent_sqlite_plus_files",
+      "authelia=consistent_sqlite_plus_files",
+      "postgres_globals=pg_dumpall_globals_only",
+      "mattermost=online_pg_dump_plus_live_best_effort_app_files",
+      "mail=configuration_tls_bulwark_files_only",
+      "mail_store=excluded_live_rocksdb",
+      "agent_sqlite=consistent_overlay",
+      "nextcloud=consolidated_postgres_pg_dump_consistent",
+      "plane=online_pg_dump_plus_live_best_effort_uploads_and_runtime",
+      "plane_valkey=cache_pubsub_reconstructed_not_historical_state",
+      "weblate=online_pg_dump_plus_live_best_effort_data_and_configuration",
+      "plane_rabbitmq=task_queue_reconstructed_not_historical_state",
+      "service_lifecycle=untouched_no_stop_start_restart_pause_kill_or_maintenance",
+      "files_consistency=live_best_effort_not_atomic_with_database",
+      "postgres_physical_data=excluded_use_logical_dumps",
+      "inflight_tasks=not_captured"
+    ],
+    "stored_postgres_dumps": {
+      "mattermost": {
+        "sha256": "8ceaafe766ffaf1be1caccccd622a10e09fff2cd22e6aa4d0f3dffbfd5a72787",
+        "bytes": 483656
+      },
+      "nextcloud": {
+        "sha256": "7854d637684586f7889483e6b60fa2c0a784b0c0ba584eede52d893496ed0a18",
+        "bytes": 10392924
+      },
+      "plane": {
+        "sha256": "329f8492c92b42f55a9d0f73e32abd92dddd2d5fbc4e9474770c671df0eb1fe2",
+        "bytes": 2101916
+      },
+      "weblate": {
+        "sha256": "dab45f8fa25fe5243627f812296d015f851f60debf61964c24217a2d9b90adfe",
+        "bytes": 4210263
+      }
+    },
+    "excluded_live_pgdata": true,
+    "excluded_live_stalwart_rocksdb": true,
+    "mail_configuration_present": true
+  },
+  "d5": {
+    "source_snapshot_id": "e9a223f49cafa17a2af2b122b9a33dd857906b86a5f7e948e0390d072abbabd5",
+    "d5_snapshot_id": "cd161545275cf07e1ec39f0ccacf4c6b2954b155395ca5fb950cb5966825ea74",
+    "manifest_sha256": "eb2a5f478330c547d6fdf2a70f45d5a99b4b84a46fe4b24c1afdacbb8fe994a5",
+    "verified": true
+  },
+  "coverage_limits": [
+    "Stalwart live RocksDB/mailbox store excluded from new snapshots",
+    "Live file copies are best effort, not atomic with database dumps",
+    "In-flight jobs are not checkpointed; queues/cache are not a recovery guarantee"
+  ],
+  "full_application_restore_tested": false,
+  "owner_restore_acceptance_claimed": false,
+  "staging_cleanup": {
+    "next_generation_absent": true,
+    "previous_generation_absent": true
+  }
+}

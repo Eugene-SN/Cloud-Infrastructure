@@ -532,3 +532,16 @@ This policy applies project-wide to all future infrastructure, application, upda
 - For read-only audits, require evidence-first reporting and prohibit repository/runtime mutations. For implementation tasks, require the same CHECK/AUDIT -> CHANGE -> VERIFY discipline used by this project.
 - Antigravity output does not supersede operator instructions or accepted project state. Any persistent architectural or policy conclusion is accepted only after review in the main project workflow.
 
+
+
+## Backrest availability policy — accepted 2026-10-18
+
+Backrest backups and their hooks must leave running containers, host services and
+application jobs running. Do not stop/start/restart/pause/kill/recreate workloads,
+enter maintenance mode or block new work to obtain a backup. Collect only state
+available online. Use native online database dumps/SQLite backup where available;
+omit unsupported live database stores instead of stopping their owner. Describe
+partial coverage and non-atomic live file copies honestly in manifests/runbooks.
+Preparation failures must not change workload lifecycle. This supersedes earlier
+cold/quiesced bundle requirements for Backrest. An operator-requested application
+update or restore is a separate operation, not a backup-hook permission.
