@@ -62,6 +62,41 @@ class ContractTests(unittest.TestCase):
                 self.assertEqual(call.kwargs['env']['HOME'], '/home/core')
                 self.assertTrue(r['ok'])
 
+    def test_isolated_validation_preserves_legacy_and_has_native_agent_without_global_home(self):
+        home=pathlib.Path(self.tmp.name)/'home';agent=home/'.gemini/antigravity-cli/agents/documentation-validation.md'
+        agent.parent.mkdir(parents=True);agent.write_text('---\nname: documentation-validation\ntools: [finish]\n---\nValidate only supplied case.\n')
+        with patch.object(self.helper.subprocess,'run',return_value=type('Registry',(),{'returncode':0,'stdout':'documentation-validation\n','stderr':''})()):
+            result,call=self.execute('antigravity',{'status':'SUCCESS','structured_output':{'verdict':'pass'}},
+                permission_mode='read-only',output_mode='json',schema={'type':'object'},
+                context_policy='isolated-home-v1',context_home=str(home),agent='documentation-validation')
+        self.assertEqual(call.kwargs['env']['HOME'],str(home))
+        self.assertEqual(result['context_policy'],'isolated-home-v1')
+        self.assertIn('--disable-slash-commands',call.args[0])
+        self.assertEqual(call.args[0][call.args[0].index('--agent')+1],'documentation-validation')
+        self.assertEqual(call.kwargs['env']['XDG_CONFIG_HOME'],str(home/'.config'))
+
+    def test_isolation_cannot_silently_fall_back_to_shared_home_or_default_agent(self):
+        with self.assertRaisesRegex(ValueError,'context'):
+            self.execute('antigravity',{},permission_mode='read-only',context_policy='unknown')
+        with self.assertRaisesRegex(ValueError,'context'):
+            self.execute('codex',{},context_policy='isolated-home-v1',context_home='/home/core')
+
+    def test_cancel_during_registry_check_never_starts_inference(self):
+        home=pathlib.Path(self.tmp.name)/'home';agent=home/'.gemini/antigravity-cli/agents/documentation-validation.md'
+        agent.parent.mkdir(parents=True);agent.write_text('fixture')
+        handlers={};out=io.StringIO()
+        def registry(*args,**kwargs):
+            handlers[self.helper.signal.SIGTERM](None,None)
+            return type('Registry',(),{'returncode':0,'stdout':'documentation-validation\n'})()
+        with patch.object(self.helper.signal,'signal',side_effect=lambda sig,fn:handlers.update({sig:fn})), \
+             patch.object(self.helper.subprocess,'run',side_effect=registry), \
+             patch.object(self.helper.subprocess,'Popen',side_effect=AssertionError('inference must not start')),contextlib.redirect_stdout(out):
+            self.helper.execute({'backend':'antigravity','task':'fixture','cwd':self.tmp.name,
+                'permission_mode':'read-only','output_mode':'json','schema':{'type':'object'},
+                'context_policy':'isolated-home-v1','context_home':str(home),'agent':'documentation-validation'})
+        self.assertEqual(json.loads(out.getvalue())['status'],'canceled')
+        self.assertFalse(list(self.helper.STATE.glob('*.json')))
+
     def test_legacy_n8n_mode_is_preserved(self):
         for backend in ['codex', 'antigravity']:
             r, _ = self.execute(backend, {'status': 'SUCCESS', 'response': 'done'})

@@ -74,3 +74,22 @@ The exact temporary fixture, verifier scripts/results, repository test bytecode 
 - [AGY headless execution](https://antigravity.google/docs/cli/headless/), [modes](https://antigravity.google/docs/cli/modes/), [sandbox](https://antigravity.google/docs/sandbox/), [CLI reference](https://antigravity.google/docs/cli/reference/), exact installed1.2.14 help and actual authenticated responses
 
 Source/installed help wins where website metadata lags. No product update or new version restriction was introduced.
+
+### Documentation Validation context (opt-in, 2026-10-19)
+
+`edge-ai-exec --capabilities` is metadata-only and advertises `isolated-home-v1`.
+Documentation may request that policy with JSON/read-only Antigravity, an explicit
+model, `agent: documentation-validation`, and `context_home: <cwd>/home`.
+The caller creates a private native HOME containing only the validator definition,
+empty user MCP/skills/plugins/hooks configs and a pointer to the existing native
+OAuth file. The helper clears inherited provider/config overrides, scopes XDG
+paths, validates native agent discovery before inference and disables slash/skill
+expansion. The native auto-updater is suppressed for this temporary HOME only;
+its existing persistent owner is unchanged. Missing capability/agent/isolation
+receipt fails closed. Existing callers omitting the policy keep their launch.
+
+The compact model response contains only verdict/coverage/findings; Documentation
+binds immutable identity from its frozen request and runs the existing full
+feedback validator. Offline acceptance does not establish final native prompt
+size, OAuth refresh behavior or subscription savings; external execution stays
+stopped until separately qualified. Native plan/sandbox is not OS file immutability.

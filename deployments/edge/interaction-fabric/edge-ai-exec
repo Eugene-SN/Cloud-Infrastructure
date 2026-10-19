@@ -37,6 +37,19 @@ def execute(p):
     permission=p.get('permission_mode','full-access')
     if permission not in ('read-only','workspace-write','full-access'):raise ValueError('permission_mode must be read-only, workspace-write, or full-access')
     if backend=='antigravity' and permission=='workspace-write':raise ValueError('Antigravity has no Codex-equivalent workspace-write policy; choose read-only (native plan) or explicitly authorized full-access')
+    context_policy=p.get('context_policy');context_home=None
+    if context_policy is not None:
+        if (context_policy!='isolated-home-v1' or backend!='antigravity' or permission!='read-only'
+                or mode!='json' or schema is None or p.get('agent')!='documentation-validation'):
+            raise ValueError('invalid isolated context policy')
+        value=p.get('context_home')
+        if not isinstance(value,str):raise ValueError('context home is required')
+        context_home=pathlib.Path(value)
+        expected=pathlib.Path(cwd)/'home'
+        if (context_home!=expected or context_home.is_symlink() or not context_home.is_dir()
+                or context_home.resolve()!=expected.absolute()):raise ValueError('invalid context home')
+        agent=context_home/'.gemini/antigravity-cli/agents/documentation-validation.md'
+        if not agent.is_file() or agent.is_symlink():raise ValueError('missing context agent')
     lock=None
     for slot in range(MAX_CONCURRENT):
         candidate=open(STATE/('slot-'+str(slot)+'.lock'),'a+')
@@ -73,6 +86,25 @@ def execute(p):
                 if p.get('effort'):argv+=['--effort',str(p['effort'])]
                 stdin=None
             env=os.environ.copy();env['HOME']='/home/core'
+            if context_home is not None:
+                # Explicit opt-in only. Existing Hermes/n8n callers keep their exact launch.
+                for key in list(env):
+                    if key.startswith(('AGY_','ANTIGRAVITY_','GEMINI_')) or key in (
+                            'GOOGLE_API_KEY','GOOGLE_GENAI_USE_VERTEXAI','GOOGLE_APPLICATION_CREDENTIALS'):
+                        env.pop(key)
+                env.update(HOME=str(context_home),XDG_CONFIG_HOME=str(context_home/'.config'),
+                           XDG_DATA_HOME=str(context_home/'.local/share'),
+                           XDG_CACHE_HOME=str(context_home/'.cache'),
+                           XDG_STATE_HOME=str(context_home/'.local/state'),AGY_CLI_DISABLE_AUTO_UPDATE='true')
+                # This native metadata command never submits a user turn. Fail before inference
+                # if an update changes discovery; AGY otherwise falls back to its default agent.
+                registry=subprocess.run(['/home/core/.local/bin/agy','agents'],cwd=cwd,env=env,
+                    stdin=subprocess.DEVNULL,capture_output=True,text=True,timeout=10)
+                if registry.returncode or set(registry.stdout.splitlines())!={'documentation-validation'}:
+                    raise ValueError('isolated context agent discovery failed; no inference')
+                argv+=['--agent','documentation-validation','--disable-slash-commands']
+            if cancelled:
+                output(ok=False,status='canceled',request_id=rid,backend=backend);return
             proc=subprocess.Popen(argv,cwd=cwd,env=env,stdin=subprocess.PIPE if stdin is not None else subprocess.DEVNULL,stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True,start_new_session=True)
             status='completed'
             try:stdout,stderr=proc.communicate(stdin,timeout=timeout)
@@ -93,13 +125,15 @@ def execute(p):
             if mode=='json' and isinstance(result,str) and status=='completed':
                 try:result=json.loads(result)
                 except json.JSONDecodeError:status='invalid_json'
-            output(ok=status=='completed',status=status,backend=backend,request_id=rid,exit_code=proc.returncode,duration_s=round(time.monotonic()-start,3),result=result,stderr=stderr[-16384:],native=native,pid=proc.pid,cwd=cwd,home=env['HOME'],permission_mode=permission)
+            output(ok=status=='completed',status=status,backend=backend,request_id=rid,exit_code=proc.returncode,duration_s=round(time.monotonic()-start,3),result=result,stderr=stderr[-16384:],native=native,pid=proc.pid,cwd=cwd,home=env['HOME'],permission_mode=permission,**({'context_policy':context_policy} if context_policy else {}))
     finally:
         if proc is not None:stop_group(proc)
         if record_created:record.unlink(missing_ok=True)
         lock.close()
 
 if __name__=='__main__':
+    if sys.argv[1:]==['--capabilities']:
+        output(schema_version=1,context_policies=['isolated-home-v1']);sys.exit(0)
     try:
         payload=json.loads(base64.b64decode(sys.argv[1],validate=True))
         execute(payload)
