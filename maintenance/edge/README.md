@@ -115,6 +115,18 @@ commands as the container's default Weblate user. Do not fix this by silencing
 `weblate.E027` or recursively changing unrelated mounts/secrets.
 Upstream contract: [Weblate filesystem permissions](https://docs.weblate.org/en/weblate-2026.10.1/admin/install.html#file-permissions).
 
+The historical command audit traced these owners to the original Codex profile
+deployment on October 15–16, before the October 22 image update. `html_buffer.py`,
+`td_translate` and its two helpers were installed through `sudo install` without
+`-o 1000 -g 1000`; a later atomic helper replacement preserved that root owner.
+For `hermes-skills`, the installer specified ownership on its child directory
+only: `install -d` created the missing intermediate parent as root. Explicitly
+create each new profile parent with the runtime ownership as well as assigning
+it to the final files/directories; specifying the leaf owner alone is insufficient.
+The modes `0644`/`0755` allowed Weblate to read these paths despite the ownership
+errors, so these native check failures were separate from the APT/Docker startup
+interruption.
+
 Regression check: `python3 maintenance/edge/tests/verify-weblate-readiness.py`.
 It exercises long startup, dependency updates, stopped/unhealthy containers,
 failed preflight and failed post-update checks without real updates/restarts.
