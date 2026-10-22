@@ -122,6 +122,20 @@ For architecture choices involving authentication, reverse proxies, OAuth/OIDC, 
 
 ## Stable project rules
 
+### Weblate profile deployment
+
+- Install selected Weblate provider, `td_translate` helper and Hermes preload
+  files through `/opt/weblate/deploy-profile.py SOURCE DESTINATION` under sudo.
+  Canonical implementation: `deployments/edge/weblate/deploy-profile.py`.
+- This installer assigns UID/GID 1000 to every affected profile parent and
+  file, including atomic replacements, and runs native deployment checks.
+  Do not substitute direct root-owned `install`/copy/write operations or
+  preserve a previous target's wrong UID/GID. Historical experiment installers
+  under another project's `evidence/` are records, not the deployment entry point.
+- Select the reviewed source explicitly; older repository skill snapshots must
+  not overwrite newer runtime profile content. Profile deployment does not
+  authorize image updates, application restarts or database policy changes.
+
 ### Shell-block preflight invariant
 
 - Every shell block sent to the operator for execution must be syntax-checked with `bash -n` against the exact final block text before it is sent.

@@ -127,6 +127,25 @@ The modes `0644`/`0755` allowed Weblate to read these paths despite the ownershi
 errors, so these native check failures were separate from the APT/Docker startup
 interruption.
 
+Profile file deployment now uses the executable
+`/opt/weblate/deploy-profile.py SOURCE DESTINATION` under sudo, from
+[`deployments/edge/weblate/deploy-profile.py`](../../deployments/edge/weblate/deploy-profile.py).
+It accepts a selected file or directory into the existing provider,
+`td_translate` or `hermes-skills` paths, explicitly owns every affected parent
+and file as 1000:1000, and assigns ownership to temporary files before atomic
+replacement. Existing permission modes are preserved; new directories/files
+use 0755/0644. Identical files retain their inode/content/mtime while ownership
+is corrected. Unselected files are retained, and source/destination symlinks
+and destinations outside the three profile areas are rejected.
+The CLI runs native deployment checks and propagates their failure; it does
+not roll back content automatically, update images, restart services or edit
+database settings. Use a reviewed source package and the accepted recovery
+path for intentional content changes. Historical one-off installation scripts
+are not the deployment entry point.
+
+Real filesystem ownership tests:
+`sudo -n python3 -B deployments/edge/weblate/test_deploy_profile.py`.
+
 Regression check: `python3 maintenance/edge/tests/verify-weblate-readiness.py`.
 It exercises long startup, dependency updates, stopped/unhealthy containers,
 failed preflight and failed post-update checks without real updates/restarts.
