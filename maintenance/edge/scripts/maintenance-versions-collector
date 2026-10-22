@@ -1,6 +1,23 @@
 #!/usr/bin/env bash
 set -u
 
+selected_target=""
+if [ "$#" -gt 0 ]; then
+    if [ "$#" -ne 2 ] || [ "$1" != "--target" ]; then
+        echo 'Usage: maintenance-versions-collector [--target TARGET]' >&2
+        exit 2
+    fi
+    selected_target="$2"
+    case "$selected_target" in
+        APT_EDGE|XRAY|HYSTERIA2|BACKREST|RESTIC|RCLONE|SEMAPHORE|N8N|AUTHELIA|MATTERMOST|POSTGRESQL|STALWART|BULWARK|NEXTCLOUD|NEXTCLOUD_REDIS|PLANE|WEBLATE|WEBLATE_VALKEY|GITHUB_MCP) ;;
+        *) echo 'Unknown maintenance target' >&2; exit 2 ;;
+    esac
+fi
+
+wants_target() {
+    test -z "$selected_target" || test "$selected_target" = "$1"
+}
+
 normalize() {
     printf '%s' "$1" | tr '\r\n|' '   '
 }
@@ -69,6 +86,7 @@ github_latest() {
 }
 
 emit_apt_component() {
+    wants_target APT_EDGE || return 0
     component="$1"
     package="$2"
     installed="$(dpkg-query -W -f='${Version}' "$package" 2>/dev/null || true)"
@@ -728,6 +746,7 @@ docker_remote_snapshot() {
 }
 
 emit_docker_component() {
+    wants_target "$1" || return 0
     component="$1"
     container="$2"
     image="$3"
@@ -832,20 +851,25 @@ emit_apt_component SYNCTHING syncthing
 
 echo
 echo "--- NATIVE BINARIES ---"
+if wants_target XRAY; then
 xray_installed="$(
     /usr/local/bin/xray version 2>/dev/null |
     awk 'NR==1 {print $2; exit}' ||
     true
 )"
 emit_github_binary XRAY "$xray_installed" XTLS/Xray-core
+fi
 
+if wants_target HYSTERIA2; then
 hy_installed="$(
     /usr/local/bin/hysteria version 2>/dev/null |
     awk '$1=="Version:" {print $2; exit}' ||
     true
 )"
 emit_github_binary HYSTERIA2 "$hy_installed" apernet/hysteria
+fi
 
+if wants_target BACKREST; then
 backrest_installed="$(
     /usr/local/bin/backrest -version 2>/dev/null |
     sed -n 's/.*version: *\([0-9][0-9.]*\).*/v\1/p' |
@@ -853,20 +877,25 @@ backrest_installed="$(
     true
 )"
 emit_github_binary BACKREST "$backrest_installed" garethgeorge/backrest
+fi
 
+if wants_target RESTIC; then
 restic_installed="$(
     /usr/local/bin/restic version 2>/dev/null |
     awk 'NR==1 {print $2; exit}' ||
     true
 )"
 emit_github_binary RESTIC "$restic_installed" restic/restic
+fi
 
+if wants_target RCLONE; then
 rclone_installed="$(
     /usr/bin/rclone version 2>/dev/null |
     awk 'NR==1 {print $2; exit}' ||
     true
 )"
 emit_github_binary RCLONE "$rclone_installed" rclone/rclone
+fi
 
 echo
 echo "--- DOCKER APPLICATIONS ---"
@@ -884,6 +913,7 @@ emit_docker_component GITHUB_MCP github-mcp ghcr.io/github/github-mcp-server:lat
 
 echo
 echo "--- GIT / USER TOOLS ---"
+if wants_target SEMAPHORE; then
 sem_installed="$(
     /usr/local/bin/semaphore version 2>/dev/null |
     grep -o '[0-9][0-9.]*' |
@@ -894,6 +924,7 @@ sem_stable="$(github_latest semaphoreui/semaphore)"
 sem_status="$(semver_status "$sem_installed" "$sem_stable")"
 printf '%s\n' \
   "VERSION|SCOPE=EDGE|COMPONENT=SEMAPHORE|INSTALLED=${sem_installed:-UNRESOLVED}|STABLE=${sem_stable:-UNRESOLVED}|STATUS=${sem_status}|SOURCE=GITHUB_RELEASES_LATEST"
+fi
 
 echo
 echo "REAL_UPDATE_EXECUTED=NO"
@@ -907,6 +938,7 @@ echo "TARGET_FILES_MODIFIED=0"
 echo "VERSION_MONITOR=PASS"
 
 # Plane is one coherent official-release unit, not independently updated helpers.
+if wants_target PLANE; then
 plane_discovery="$(/opt/edge-maintenance/scripts/update-plane --discovery)"
 plane_rc=$?
 if [ "$plane_rc" -eq 0 ]; then
@@ -916,4 +948,6 @@ x=json.load(sys.stdin)
 print("VERSION|SCOPE=EDGE|COMPONENT=PLANE|INSTALLED="+x["installed"].lstrip("v")+"|STABLE="+x["available"].lstrip("v")+"|APPLICATION_VERSION="+x["installed"].lstrip("v")+"|AVAILABLE_VERSION="+x["available"].lstrip("v")+"|IMAGE_REPOSITORY=makeplane/plane-backend|IMAGE_TAG="+x["available"]+"|RUNNING_DIGEST="+x["running_digest"]+"|REMOTE_DIGEST="+x["remote_digest"]+"|UPDATE_REASON="+x["reason"]+"|STATUS="+x["status"]+"|SOURCE=PLANE_OFFICIAL_STABLE_RELEASE")'
 else
     printf '%s\n' 'VERSION|SCOPE=EDGE|COMPONENT=PLANE|INSTALLED=UNRESOLVED|STABLE=UNRESOLVED|APPLICATION_VERSION=UNRESOLVED|AVAILABLE_VERSION=UNRESOLVED|IMAGE_REPOSITORY=makeplane/plane-backend|IMAGE_TAG=UNRESOLVED|RUNNING_DIGEST=-|REMOTE_DIGEST=-|UPDATE_REASON=CHECK_FAILED|STATUS=STABLE_UNRESOLVED|SOURCE=PLANE_OFFICIAL_STABLE_RELEASE'
+fi
+
 fi

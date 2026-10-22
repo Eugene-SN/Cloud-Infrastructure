@@ -1683,7 +1683,7 @@
       isBusy = busy;
       document.getElementById("masterBtn").disabled = busy || !actionsConfig || actionsConfig.read_only === true || !actionsConfig.master_template_id;
       document.getElementById("refreshBtn").disabled = busy;
-      updateButtons();
+      render();
     }
 
     const MAINTENANCE_STATUS_LABELS = Object.freeze({
@@ -2093,7 +2093,7 @@
         const task = await res.json();
         const taskId = task.id || task.task_id;
         showToast(`<span class="spin-loader"></span> Master Batch Update in progress...`, "info");
-        await pollTask(taskId, "Master Batch Update", 1800);
+        await pollTask(taskId, "Master Batch Update");
       } catch (err) {
         showToast(`Master batch failed: ${err.message}`, "bad");
       } finally {
@@ -2161,33 +2161,53 @@
     }
 
     async function waitControllerUpdate(taskId) {
-      const response = await apiFetch(`/api/project/1/tasks/${taskId}/output`);
-      if (!response.ok) throw new Error(`Cannot read update outcome: HTTP ${response.status}`);
-      const output = (await response.json()).map(line => line.output || "").join("\n");
+      let output;
+      for (;;) {
+        try {
+          const response = await apiFetch(`/api/project/1/tasks/${taskId}/output`, {
+            cache: "no-store", signal: AbortSignal.timeout(10000)
+          });
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          output = (await response.json()).map(line => line.output || "").join("\n");
+          break;
+        } catch (error) {
+          showToast(`Cannot read Task #${taskId} outcome; reconnecting...`, "warn");
+          await new Promise(resolve => setTimeout(resolve, 2000));
+        }
+      }
       const operation = output.match(/SEMAPHORE_UPDATE_ID=([A-Za-z0-9_.-]+)/)?.[1];
       if (!operation) return;
       showToast("Waiting for Semaphore update and health check...", "info");
-      for (let i = 0; i < 330; i++) {
+      for (;;) {
         await new Promise(resolve => setTimeout(resolve, 2000));
         let state;
         try {
           const result = await apiFetch("/status/controller-update.json", {cache: "no-store", signal: AbortSignal.timeout(10000)});
           if (result.ok) state = await result.json();
-        } catch (error) { continue; }
+        } catch (error) {
+          showToast("Semaphore update outcome is unknown; reconnecting...", "warn");
+          continue;
+        }
         if (state?.operation !== operation) continue;
         if (state.status === "error") throw new Error("Semaphore update failed; inspect its external unit journal.");
         if (state.status === "success") return;
       }
-      throw new Error("Semaphore update outcome is still pending; inspect its external unit journal.");
     }
 
-    async function pollTask(taskId, label, maxAttempts = 180) {
-      for (let i = 0; i < maxAttempts; i++) {
+    async function pollTask(taskId, label) {
+      let reconnecting = false;
+      for (;;) {
         await new Promise(r => setTimeout(r, 2000));
         try {
-          const res = await apiFetch(`/api/project/1/tasks/${taskId}`);
-          if (!res.ok) continue;
+          const res = await apiFetch(`/api/project/1/tasks/${taskId}`, {
+            cache: "no-store", signal: AbortSignal.timeout(10000)
+          });
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
           const t = await res.json();
+          if (reconnecting) {
+            showToast(`<span class="spin-loader"></span> Tracking <strong>${escapeHtml(label)}</strong> (Task #${taskId})...`, "info");
+            reconnecting = false;
+          }
           if (t.status === "success") {
             try { await waitControllerUpdate(taskId); }
             catch (error) { showToast(escapeHtml(error.message), "bad"); return false; }
@@ -2197,10 +2217,13 @@
             showToast(`✗ <strong>${label}</strong> failed with error.`, "bad");
             return false;
           }
-        } catch (e) {}
+        } catch (e) {
+          if (!reconnecting) {
+            showToast(`Connection lost. Task #${taskId} outcome is unknown; reconnecting...`, "warn");
+            reconnecting = true;
+          }
+        }
       }
-      showToast(`Task ${taskId} timed out.`, "warn");
-      return false;
     }
 
     function escapeHtml(value) {

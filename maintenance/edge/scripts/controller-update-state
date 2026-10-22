@@ -143,7 +143,7 @@ if __name__ == '__main__':
             write_state('error', version, operation, 'install-or-rollback')
             raise
         try:
-            run([refresh])
+            run([refresh, '--target', 'SEMAPHORE'])
         except Exception:
             # A status refresh failure does not undo a healthy updated service.
             write_state('error', version, operation, 'status-refresh')

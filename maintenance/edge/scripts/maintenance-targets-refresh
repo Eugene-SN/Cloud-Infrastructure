@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import argparse
 import datetime
 import json
 import os
@@ -16,6 +17,17 @@ OUTPUT_FILE = pathlib.Path(os.environ.get(
     "EDGE_MAINTENANCE_OUTPUT_FILE",
     "/var/www/maintenance-status/maintenance.json",
 ))
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--target")
+target = parser.parse_args().target
+previous = None
+if target:
+    previous = json.loads(OUTPUT_FILE.read_text(encoding="utf-8"))
+    if previous.get("schema") != 3 or previous.get("target_model") != "update_units_v5":
+        raise SystemExit("target refresh requires an existing complete maintenance cache")
+    if target not in {row.get("component") for row in previous["rows"]}:
+        raise SystemExit("target is absent from the maintenance cache")
 
 EDGE_IP = "45.92.156.17"
 
@@ -439,86 +451,89 @@ def independent_target(
     return result
 
 
-apt = apt_probe()
-
-if apt["count"] < 0:
-    apt_status = (
-        "CHECK_FAILED"
-    )
-
-elif apt["count"] > 0:
-    apt_status = (
-        "UPDATE_AVAILABLE"
-    )
-
+if target and target != "APT_EDGE":
+    rows = [next(row for row in previous["rows"] if row["component"] == "APT_EDGE")]
 else:
-    apt_status = (
-        "CURRENT"
-    )
+    apt = apt_probe()
+
+    if apt["count"] < 0:
+        apt_status = (
+            "CHECK_FAILED"
+        )
+
+    elif apt["count"] > 0:
+        apt_status = (
+            "UPDATE_AVAILABLE"
+        )
+
+    else:
+        apt_status = (
+            "CURRENT"
+        )
 
 
-apt_children = [
-    monitored_component(
-        component,
-        label,
-    )
-    for component, label
-    in APT_COMPONENTS
-]
+    apt_children = [
+        monitored_component(
+            component,
+            label,
+        )
+        for component, label
+        in APT_COMPONENTS
+    ]
 
 
-rows = [
-    {
-        "scope":
-            "EDGE",
-        "component":
-            "APT_EDGE",
-        "label":
-            "System Packages",
-        "ip_address":
-            EDGE_IP,
-        "type":
-            "APT",
-        "group":
-            "system",
-        "managed_by":
-            "apt",
-        "update_owner":
-            "maintenance_manual",
-        "current":
-            "System / APT",
-        "available":
-            (
-                f'{apt["count"]} packages'
-                if apt["count"] >= 0
-                else "Error"
-            ),
-        "update_count":
-            apt["count"],
-        "remove_count":
-            apt["remove_count"],
-        "reboot_required":
-            apt["reboot_required"],
-        "packages":
-            apt["packages"],
-        "monitored_components":
-            apt_children,
-        "status":
-            apt_status,
-        "source":
-            (
-                "APT fresh metadata"
-                if not apt["error"]
-                else apt["error"]
-            ),
-        "action_key":
-            "APT_EDGE",
-        "update_target":
-            "APT_EDGE",
-        "actionable":
-            True,
-    }
-]
+    rows = [
+        {
+            "scope":
+                "EDGE",
+            "component":
+                "APT_EDGE",
+            "label":
+                "System Packages",
+            "ip_address":
+                EDGE_IP,
+            "type":
+                "APT",
+            "group":
+                "system",
+            "managed_by":
+                "apt",
+            "update_owner":
+                "maintenance_manual",
+            "current":
+                "System / APT",
+            "available":
+                (
+                    f'{apt["count"]} packages'
+                    if apt["count"] >= 0
+                    else "Error"
+                ),
+            "update_count":
+                apt["count"],
+            "remove_count":
+                apt["remove_count"],
+            "reboot_required":
+                apt["reboot_required"],
+            "packages":
+                apt["packages"],
+            "monitored_components":
+                apt_children,
+            "status":
+                apt_status,
+            "source":
+                (
+                    "APT fresh metadata"
+                    if not apt["error"]
+                    else apt["error"]
+                ),
+            "action_key":
+                "APT_EDGE",
+            "update_target":
+                "APT_EDGE",
+            "actionable":
+                True,
+        }
+    ]
 
 
 for component, label in NATIVE_COMPONENTS:
@@ -555,6 +570,16 @@ for component, label in CLI_COMPONENTS:
             "user_or_git",
         )
     )
+
+
+checked_at = datetime.datetime.now(datetime.timezone.utc).isoformat()
+if target:
+    replacement = next(row for row in rows if row["component"] == target)
+    replacement["checked_at"] = checked_at
+    rows = [replacement if row["component"] == target else row for row in previous["rows"]]
+else:
+    for row in rows:
+        row["checked_at"] = checked_at
 
 
 rows.sort(
@@ -651,12 +676,10 @@ payload = {
         3,
     "target_model":
         "update_units_v5",
-    "generated_at":
-        datetime.datetime.now(
-            datetime.timezone.utc
-        ).isoformat(),
-    "apt_probe":
-        "fresh_metadata_isolated_tmp",
+    "generated_at": previous["generated_at"] if previous else checked_at,
+    "updated_at": checked_at,
+    "scan_scope": target or "all",
+    "apt_probe": previous.get("apt_probe", "fresh_metadata_isolated_tmp") if target and target != "APT_EDGE" else "fresh_metadata_isolated_tmp",
     "summary":
         summary,
     "rows":

@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
-/opt/edge-maintenance/scripts/maintenance-versions-collector |
-  /opt/edge-maintenance/scripts/maintenance-status-render
-/opt/edge-maintenance/scripts/maintenance-targets-refresh
-/opt/edge-maintenance/scripts/maintenance-actions-render
+base="${EDGE_MAINTENANCE_BASE:-/opt/edge-maintenance}"
+exec 9>"${EDGE_MAINTENANCE_REFRESH_LOCK:-/run/lock/edge-maintenance-refresh.lock}"
+flock 9
+"$base/scripts/maintenance-versions-collector" "$@" |
+  "$base/scripts/maintenance-status-render" "$@"
+"$base/scripts/maintenance-targets-refresh" "$@"
+"$base/scripts/maintenance-actions-render"
 echo 'READ_ONLY_REFRESH=PASS'

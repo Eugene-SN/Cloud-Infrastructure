@@ -10,6 +10,8 @@
           - sudo
           - -n
           - /opt/edge-maintenance/scripts/maintenance-refresh
+          - --target
+          - "{{ edge_update_target }}"
       changed_when: false
 
     - name: Validate fixed target and local prerequisites
@@ -34,5 +36,7 @@
           - sudo
           - -n
           - /opt/edge-maintenance/scripts/maintenance-refresh
+          - --target
+          - "{{ edge_update_target }}"
       changed_when: false
       when: update_result is succeeded

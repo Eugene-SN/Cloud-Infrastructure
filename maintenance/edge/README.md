@@ -58,6 +58,36 @@ update templates.
 `update.escloud.us` remains the operator launch surface. Semaphore is the
 manual executor/orchestrator and has no autonomous update schedule.
 
+## Refresh scope and task tracking (2026-10-22)
+
+Individual update playbooks pass `--target TARGET` to the read-only refresh
+before and after their driver. Only that target is discovered and replaced in
+the existing caches. Non-APT targets skip the isolated APT index download and
+unrelated release/registry lookups. `APT_EDGE` still refreshes its package
+components and APT probe. Scan Updates and Master Batch retain full discovery.
+The external Semaphore self-update completion refresh also selects `SEMAPHORE`.
+
+Refresh writers share a lock to serialize cache merges. A partial refresh
+requires a complete existing cache, updates the selected row's `checked_at`,
+and preserves every other row and the last full scan's `generated_at`.
+Individual dispatch checks the selected row's timestamp; Master Batch still
+requires a fresh full scan. Partial refreshes therefore cannot make unrelated
+stale results appear fresh.
+
+The dashboard waits for Semaphore's actual terminal task status and, for its
+self-update, the matching external operation result. It has no elapsed-time
+limit that labels a running update as failed. Individual HTTP requests remain
+bounded; unavailable responses show the existing reconnecting notification
+and keep update controls disabled while tracking resumes. Layout and styling
+are unchanged.
+
+Isolated regression checks (no real updates or service restarts):
+
+```bash
+python3 maintenance/edge/tests/verify-target-refresh.py
+node maintenance/edge/tests/verify-semaphore-dashboard.js
+```
+
 ## Stage 12 targets
 
 Rclone uses upstream `rclone selfupdate --stable`, followed by restart of the

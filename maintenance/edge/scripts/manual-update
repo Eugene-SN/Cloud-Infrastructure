@@ -83,14 +83,14 @@ def require_fresh_update(target, max_age_seconds):
         or cache.get("target_model") != "update_units_v5"
     ):
         raise RuntimeError("unsupported maintenance cache contract")
-    stamp = dt.datetime.fromisoformat(
-        cache["generated_at"].replace("Z", "+00:00")
-    )
-    age = (dt.datetime.now(dt.timezone.utc) - stamp).total_seconds()
-    if age < 0 or age > max_age_seconds:
-        raise RuntimeError(f"maintenance cache is stale: {int(age)}s")
     for row in cache.get("rows", []):
         if row.get("component") == target:
+            stamp = dt.datetime.fromisoformat(
+                row.get("checked_at", cache["generated_at"]).replace("Z", "+00:00")
+            )
+            age = (dt.datetime.now(dt.timezone.utc) - stamp).total_seconds()
+            if age < 0 or age > max_age_seconds:
+                raise RuntimeError(f"maintenance target cache is stale: {int(age)}s")
             if row.get("actionable") is not True:
                 raise RuntimeError(
                     f"target is not marked actionable in cache: {target}"

@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 
 import datetime
+import argparse
 import json
 import os
+import pathlib
 import sys
 import tempfile
 
@@ -11,6 +13,9 @@ OUTPUT = os.environ.get(
     "EDGE_MAINTENANCE_STATUS_FILE",
     "/var/www/maintenance-status/status.json",
 )
+parser = argparse.ArgumentParser()
+parser.add_argument("--target")
+target = parser.parse_args().target
 
 
 def parse_row(line):
@@ -77,6 +82,20 @@ rows = sorted(
     ),
 )
 
+checked_at = datetime.datetime.now(datetime.timezone.utc).isoformat()
+for row in rows:
+    row["CHECKED_AT"] = checked_at
+previous = None
+if target:
+    expected = {"NGINX", "CERTBOT", "UFW", "DOCKER_ENGINE", "DOCKER_COMPOSE", "CONTAINERD", "NETBIRD", "SYNCTHING"} if target == "APT_EDGE" else {target}
+    if {row["COMPONENT"] for row in rows} != expected:
+        raise SystemExit("target refresh did not produce the expected version rows")
+    previous = json.loads(pathlib.Path(OUTPUT).read_text(encoding="utf-8"))
+    if previous.get("schema") != 3 or not expected.issubset({row.get("COMPONENT") for row in previous["rows"]}):
+        raise SystemExit("target refresh requires an existing complete status cache")
+    replacements = {row["COMPONENT"]: row for row in rows}
+    rows = [replacements.get(row["COMPONENT"], row) for row in previous["rows"]]
+
 
 summary = {
     "TOTAL": len(rows),
@@ -117,10 +136,9 @@ for row in rows:
 
 document = {
     "schema": 3,
-    "generated_at":
-        datetime.datetime.now(
-            datetime.timezone.utc
-        ).isoformat(),
+    "generated_at": previous["generated_at"] if previous else checked_at,
+    "updated_at": checked_at,
+    "scan_scope": target or "all",
     "summary": summary,
     "rows": rows,
 }
