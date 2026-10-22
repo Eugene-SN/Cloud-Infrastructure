@@ -88,6 +88,37 @@ python3 maintenance/edge/tests/verify-target-refresh.py
 node maintenance/edge/tests/verify-semaphore-dashboard.js
 ```
 
+## Weblate readiness after updates (2026-10-22)
+
+APT can restart Docker during package installation. Finishing APT does not
+mean that Weblate has finished its own startup. The APT driver now waits for
+Weblate's native Docker health status to leave `starting` and become `healthy`,
+then runs `weblate check --deploy --fail-level ERROR` in the existing container.
+The same acceptance runs after Weblate, shared PostgreSQL and Weblate Valkey
+updates; Weblate itself also runs it before pulling/recreating its image.
+Stopped or unhealthy containers and failed native checks fail the update.
+There is no separate elapsed-time cutoff while Docker reports startup in
+progress, and these checks do not restart the application.
+
+Compose image cleanup follows this application acceptance, retaining the
+existing recovery receipt if native checks fail. Checks do not guarantee
+adapter translation quality or eliminate the expected interruption when an
+operator updates Docker or the application itself.
+
+The 2026-10-22 audit found Weblate already serving successfully after the APT
+Docker restart, with separate `weblate.E027` errors on five root-owned custom
+profile paths. Correcting only their ownership to the verified runtime UID/GID
+1000 cleared the native errors without changing file contents or restarting.
+Files deployed below `/app/data`, including the provider bind mount, must keep
+that owner. Install profile files with explicit ownership and run management
+commands as the container's default Weblate user. Do not fix this by silencing
+`weblate.E027` or recursively changing unrelated mounts/secrets.
+Upstream contract: [Weblate filesystem permissions](https://docs.weblate.org/en/weblate-2026.10.1/admin/install.html#file-permissions).
+
+Regression check: `python3 maintenance/edge/tests/verify-weblate-readiness.py`.
+It exercises long startup, dependency updates, stopped/unhealthy containers,
+failed preflight and failed post-update checks without real updates/restarts.
+
 ## Stage 12 targets
 
 Rclone uses upstream `rclone selfupdate --stable`, followed by restart of the

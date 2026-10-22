@@ -10,6 +10,7 @@ import runpy
 import shutil
 import subprocess
 import sys
+import time
 import uuid
 
 BASE = pathlib.Path("/opt/edge-maintenance")
@@ -135,6 +136,33 @@ def normalized_image_reference(reference):
     return reference
 
 
+def verify_weblate_runtime():
+    """Wait for Docker's startup health checks, then run Weblate's own checks."""
+    attempt = 0
+    while True:
+        result = subprocess.run(
+            ["docker", "inspect", "--format", "{{json .State}}", "weblate"],
+            check=True, capture_output=True, text=True,
+        )
+        state = json.loads(result.stdout)
+        health = state.get("Health", {}).get("Status")
+        if state.get("Running") is not True:
+            raise RuntimeError(f"Weblate is not running: {state.get('Status')}")
+        if health == "healthy":
+            break
+        if health != "starting":
+            raise RuntimeError(f"Weblate readiness failed: health={health}")
+        if attempt % 15 == 0:
+            print("WEBLATE_RUNTIME_WAIT|HEALTH=starting", flush=True)
+        attempt += 1
+        time.sleep(2)
+    run([
+        "docker", "exec", "weblate", "/app/venv/bin/weblate",
+        "check", "--deploy", "--fail-level", "ERROR",
+    ])
+    print("WEBLATE_RUNTIME_AND_CONFIG=PASS", flush=True)
+
+
 def preflight(unit):
     driver = unit["driver"]
     if driver == "plane_compose":
@@ -145,6 +173,8 @@ def preflight(unit):
             if not (directory / item).is_file():
                 raise RuntimeError(f"missing compose file: {directory / item}")
         run(["docker", "compose", *sum((["-f", f] for f in unit["files"]), []), "config", "--quiet"], cwd=directory)
+        if unit["id"] == "WEBLATE":
+            verify_weblate_runtime()
         if driver == "nextcloud_compose":
             helper = pathlib.Path("/opt/edge-maintenance/scripts/update-nextcloud")
             if not helper.is_file():
@@ -210,6 +240,7 @@ def execute(unit, status_row):
         )
         run(["apt-get", "autoremove", "-y"], env=env)
         run(["apt-get", "clean"], env=env)
+        verify_weblate_runtime()
     elif driver == "maintctl":
         run(["/usr/local/bin/maintctl", "update", unit["argument"]])
     elif driver == "github_binary" and unit["id"] == "SEMAPHORE":
@@ -291,6 +322,8 @@ def execute(unit, status_row):
             cwd=directory,
         )
 
+        if unit["id"] in {"WEBLATE", "POSTGRESQL", "WEBLATE_VALKEY"}:
+            verify_weblate_runtime()
         image_lifecycle["cleanup"](unit["id"])
     elif driver == "self_update":
         run([unit["binary"], *unit.get("arguments", [])])

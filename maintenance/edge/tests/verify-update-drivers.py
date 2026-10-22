@@ -25,6 +25,8 @@ for unit in manifest['units']:
     lifecycle = {'capture':lambda *a, **k: None, 'cleanup':lambda *a, **k: None}
     def command(argv, **kwargs):
         calls.append(argv)
+        if argv[:2] == ['docker', 'inspect']:
+            return SimpleNamespace(stdout=json.dumps({'Running':True, 'Status':'running', 'Health':{'Status':'healthy'}}), returncode=0)
         return SimpleNamespace(stdout=json.dumps(config) if 'config' in argv else '1.0.0\n', returncode=0)
     fake_path = MagicMock()
     fake_path.is_file.return_value = False
