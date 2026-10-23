@@ -15,6 +15,11 @@ metadata:
 
 ## Scope and native client
 
+Weblate runs on Edge at `https://translate.escloud.us`; use
+`/opt/weblate/OPERATIONS.md` for current access and operations. The ai-node test
+Weblate and its dedicated SSH transport were retired. The existing ai-node vLLM
+endpoint is a separate model backend; it is not a Weblate address.
+
 Read the task manifest: document/model, source hash, selected pages, language,
 output location and mode (fresh translation or audit). A sample does not authorize
 the full document. No new version means no diff task. Audit means read and identify
@@ -121,5 +126,5 @@ Similarity is only a candidate. `scripts/html_workflow.py` and
 fixture; do not apply their fixed IDs/positions to other documents.
 
 Return the actual HTML path, observed checks and material remaining issues in a
-few lines. The Mac chat owns authenticated ai-node/Weblate publication/downloads.
+few lines. Publication/downloads use authenticated Edge Weblate access within the current task scope.
 This skill does not auto-approve drafts or authorize additional documents.

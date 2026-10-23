@@ -1,3 +1,21 @@
+# Historical ai-node pilot — retired
+
+CONFIRMED 2026-10-23: use Weblate on Edge at https://translate.escloud.us
+with the existing Authelia login. Runtime/configuration: /opt/weblate;
+operations: /opt/weblate/OPERATIONS.md; persistent data: /srv/weblate.
+Hermes is reached through the existing Edge-local integration. Documentation
+runtime: /home/core/.hermes/profiles/documentation/pipeline on Edge.
+The ai-node test Weblate, /srv/pdf-poc, port 17880 and the dedicated
+weblate-hermes SSH transport/account were removed. Do not reuse their old
+credentials, component IDs, paths or deployment commands. The ai-node vLLM
+endpoint at 192.168.1.30:8000 remains a separate model backend.
+
+The original pilot record below is preserved verbatim as historical evidence.
+Its fixed IDs, old HTTP URL, draft path and commands are not current instructions.
+Read the current task and Edge operations before accessing any document.
+
+## HISTORICAL — original pilot record, unchanged
+
 # Accepted pilot boundary
 
 - Existing project `tehnicheskaya-dokumentaciya`; component

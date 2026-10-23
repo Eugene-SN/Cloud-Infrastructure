@@ -124,6 +124,13 @@ For architecture choices involving authentication, reverse proxies, OAuth/OIDC, 
 
 ### Weblate profile deployment
 
+- Use the working Weblate on Edge at `https://translate.escloud.us` and
+  `/opt/weblate/OPERATIONS.md`. The retired ai-node test Weblate, `/srv/pdf-poc`,
+  port 17880 and the `weblate-hermes` SSH transport/account must not be used or
+  recreated from old instructions. The ai-node vLLM endpoint remains separate.
+- Preserve historical reports and pilot records; their old URLs, IDs and commands
+  describe past experiments, not current deployment or access instructions.
+
 - Install selected Weblate provider, `td_translate` helper and Hermes preload
   files through `/opt/weblate/deploy-profile.py SOURCE DESTINATION` under sudo.
   Canonical implementation: `deployments/edge/weblate/deploy-profile.py`.
