@@ -13,6 +13,18 @@ def stop_group(proc):
         try:proc.wait(timeout=5)
         except subprocess.TimeoutExpired:os.killpg(proc.pid,signal.SIGKILL);proc.wait()
 
+def stream_result(stdout):
+    events=[json.loads(line) for line in stdout.splitlines() if line.strip()]
+    initial=[e for e in events if e.get('event')=='init']
+    results=[e.get('result') for e in events if e.get('event')=='result']
+    if len(initial)!=1 or len(results)!=1 or not isinstance(results[0],dict):
+        raise ValueError('stream must contain exactly one initialization and one terminal result')
+    native=dict(results[0]); model=initial[0].get('init',{}).get('model')
+    if not isinstance(model,str) or not model or native.get('num_turns')!=1:
+        raise ValueError('stream must prove the selected model and exactly one turn')
+    native['model']=model
+    return native
+
 def execute(p):
     rid=p.get('request_id') or str(uuid.uuid4())
     if not isinstance(rid,str) or not re.fullmatch(r'[A-Za-z0-9_-]{1,80}',rid):raise ValueError('invalid request_id')
@@ -37,6 +49,9 @@ def execute(p):
     permission=p.get('permission_mode','full-access')
     if permission not in ('read-only','workspace-write','full-access'):raise ValueError('permission_mode must be read-only, workspace-write, or full-access')
     if backend=='antigravity' and permission=='workspace-write':raise ValueError('Antigravity has no Codex-equivalent workspace-write policy; choose read-only (native plan) or explicitly authorized full-access')
+    stream=p.get('input_transport')=='stream-json-v1'
+    if p.get('input_transport') not in (None,'stream-json-v1'):raise ValueError('unsupported input transport')
+    if stream and (backend!='antigravity' or p.get('context_policy')!='isolated-home-v1'):raise ValueError('stream transport requires isolated validator')
     context_policy=p.get('context_policy');context_home=None
     if context_policy is not None:
         if (context_policy!='isolated-home-v1' or backend!='antigravity' or permission!='read-only'
@@ -85,6 +100,9 @@ def execute(p):
                 if p.get('model'):argv+=['--model',str(p['model'])]
                 if p.get('effort'):argv+=['--effort',str(p['effort'])]
                 stdin=None
+                if stream:
+                    argv=argv[:1]+['--input-format','stream-json','--output-format','stream-json']+argv[5:]
+                    stdin=json.dumps({'event':'user','message':{'content':task}})+'\n'
             env=os.environ.copy();env['HOME']='/home/core'
             if context_home is not None:
                 # Explicit opt-in only. Existing Hermes/n8n callers keep their exact launch.
@@ -116,16 +134,16 @@ def execute(p):
             native=None
             if backend=='antigravity' and stdout:
                 try:
-                    native=json.loads(stdout);result=(native.get('structured_output') if schema is not None and native.get('structured_output') is not None else native.get('result',native.get('response',native))) if isinstance(native,dict) else native
+                    native=stream_result(stdout) if stream else json.loads(stdout);result=(native.get('structured_output') if schema is not None and native.get('structured_output') is not None else native.get('result',native.get('response',native))) if isinstance(native,dict) else native
                     if status=='completed' and (not isinstance(native,dict) or native.get('status')!='SUCCESS'):status='native_error'
                     if status=='completed' and native.get('denied_actions'):status='permission_denied'
-                except json.JSONDecodeError:
+                except (json.JSONDecodeError,ValueError):
                     if status=='completed':status='invalid_json'
             elif backend=='antigravity' and status=='completed':status='missing_final_output'
             if mode=='json' and isinstance(result,str) and status=='completed':
                 try:result=json.loads(result)
                 except json.JSONDecodeError:status='invalid_json'
-            output(ok=status=='completed',status=status,backend=backend,request_id=rid,exit_code=proc.returncode,duration_s=round(time.monotonic()-start,3),result=result,stderr=stderr[-16384:],native=native,pid=proc.pid,cwd=cwd,home=env['HOME'],permission_mode=permission,**({'context_policy':context_policy} if context_policy else {}))
+            output(ok=status=='completed',status=status,backend=backend,request_id=rid,exit_code=proc.returncode,duration_s=round(time.monotonic()-start,3),result=result,stderr=stderr[-16384:],native=native,pid=proc.pid,cwd=cwd,home=env['HOME'],permission_mode=permission,**({'context_policy':context_policy} if context_policy else {}),**({'native_stream':stdout} if stream else {}))
     finally:
         if proc is not None:stop_group(proc)
         if record_created:record.unlink(missing_ok=True)
@@ -133,8 +151,8 @@ def execute(p):
 
 if __name__=='__main__':
     if sys.argv[1:]==['--capabilities']:
-        output(schema_version=1,context_policies=['isolated-home-v1']);sys.exit(0)
+        output(schema_version=1,context_policies=['isolated-home-v1'],input_transports=['request-json-stdin-v1','stream-json-v1']);sys.exit(0)
     try:
-        payload=json.loads(base64.b64decode(sys.argv[1],validate=True))
+        payload=json.load(sys.stdin) if sys.argv[1:]==['--request-json-stdin'] else json.loads(base64.b64decode(sys.argv[1],validate=True))
         execute(payload)
     except Exception as exc:output(ok=False,status='invalid_request',exit_code=64,error=str(exc))

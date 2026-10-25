@@ -93,3 +93,21 @@ binds immutable identity from its frozen request and runs the existing full
 feedback validator. Offline acceptance does not establish final native prompt
 size, OAuth refresh behavior or subscription savings; external execution stays
 stopped until separately qualified. Native plan/sandbox is not OS file immutability.
+
+### Documentation large-case transport (opt-in, 2026-10-25)
+
+The same helper accepts `--request-json-stdin`, reading the existing request JSON
+from stdin. `input_transport: stream-json-v1` is accepted only for the isolated
+Antigravity validator. It uses native `--input-format stream-json` and
+`--output-format stream-json`; stdin contains one documented `event: user`
+message. This avoids Linux argv size errors without trimming document context.
+A successful stream must contain exactly one init event with the actual model
+and one terminal result proving one turn. The complete native stream is retained.
+Existing base64-argv callers and their permissions remain unchanged.
+
+Documentation switches to this opt-in only for large cases. Its current external
+validator selection and per-document execution remain owned by Documentation;
+the helper adds no routing, automatic fallback or service. Native qualification
+used a real 124,704-input-token case and retained its provider output/counters.
+Transport tests live beside the existing offline helper contract tests.
+Official wire format: https://antigravity.google/docs/cli/headless/ .
