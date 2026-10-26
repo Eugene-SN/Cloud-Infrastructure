@@ -1,28 +1,16 @@
 --- maintctl
 +++ maintctl
-@@ -345,8 +345,10 @@
- 
-   systemctl restart xray
-   systemctl is-active xray
+@@ -348,2 +348,4 @@
 -  ls -1dt /var/backups/vpn-stack/update-xray-* 2>/dev/null | tail -n +3 | xargs -r rm -rf
 -  echo "backup=$backup"
 +  # Current service passed its update checks; remove its old recovery copies.
 +  find /var/backups/vpn-stack -regextype posix-extended -mindepth 1 -maxdepth 1 \
 +    -type d -regex '.*/update-xray-[0-9]{8}-[0-9]{6}' -exec rm -rf -- {} +
 +  echo "UPDATE_RECOVERY_COPIES=REMOVED_AFTER_SUCCESS"
- )
- 
- cmd_update_hy2() (
-@@ -385,8 +387,10 @@
- 
-   systemctl restart hysteria-server
-   systemctl is-active hysteria-server
+@@ -388,2 +390,4 @@
 -  ls -1dt /var/backups/vpn-stack/update-hy2-* 2>/dev/null | tail -n +3 | xargs -r rm -rf
 -  echo "backup=$backup"
 +  # Current service passed its update checks; remove its old recovery copies.
 +  find /var/backups/vpn-stack -regextype posix-extended -mindepth 1 -maxdepth 1 \
 +    -type d -regex '.*/update-hy2-[0-9]{8}-[0-9]{6}' -exec rm -rf -- {} +
 +  echo "UPDATE_RECOVERY_COPIES=REMOVED_AFTER_SUCCESS"
- )
- 
- cmd_update() {
