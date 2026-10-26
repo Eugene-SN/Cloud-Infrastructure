@@ -8,7 +8,33 @@ enter maintenance mode, or block new application work to take a backup.
 `edge-state-prepare` is the canonical `/usr/local/sbin/edge-state-prepare`.
 `edge-state-plan.json` is the non-secret Edge plan, applied through Backrest's
 native GetConfig/SetConfig API with its current modno. No Backrest restart is
-needed. Schedule, repositories, tier-copy and retention are unchanged.
+needed. Schedule and source selection are unchanged.
+
+## Edge as a temporary backup buffer — 2026-10-26
+
+Both existing success hooks now use `edge-tier-evacuate.py`. They copy all local
+snapshots to the existing PVE REST repository, read back the destination, and
+verify original snapshot identity plus tree, time, hostname and paths. Only then
+are those explicit IDs forgotten locally and unused local packs pruned. A failed
+copy or missing/mismatched destination record leaves the local snapshots intact.
+No forget/tag/prune command is sent to append-only PVE. PVE retention is unchanged.
+
+The local plans retain `policyKeepAll` deliberately: the success hook owns
+conditional evacuation, so native retention cannot delete an uncopied snapshot.
+State and Knowledge hooks share the transfer lock. Prepared state is removed
+after verified evacuation when no local snapshots remain; the preparation lock
+and generation timestamp protect a newer/in-progress staging generation.
+
+Install the Python helper as `/usr/local/libexec/edge-tier-evacuate.py` and the
+two existing hook entrypoints in `/usr/local/sbin/`, all root-owned mode 0755.
+They reuse `/etc/backrest/edge-d5.env` and the existing repository passwords;
+no new credentials, scheduler or service is required. Verify failure/deletion
+boundaries with `python3 -B backup/edge/test_tier_evacuate.py`.
+
+An empty local repository cannot reuse yesterday's packs when creating the next
+backup. Each run therefore writes its full current source locally before PVE
+copy deduplication; sufficient temporary free space is still required. A PVE
+outage deliberately leaves pending local backups until transfer succeeds.
 
 | State | Current collection | Recovery boundary |
 |---|---|---|
@@ -33,7 +59,8 @@ hooks (none configured) and indirect dependencies:
 
 - Edge `edge-state`: `edge-state-prepare`, `edge-state-tier-copy`; the latter
   sources an assignments-only environment file and runs Restic copy/forget.
-- Edge `edge-knowledge-local`: `edge-knowledge-retention` (Restic forget only).
+- Edge `edge-knowledge-local`: `edge-knowledge-retention` (copy, verify and reclaim
+  locally, superseding its former local-only retention behavior).
 - AI Node `ai-node-full-system`: `ai-node-full-prepare.py`, `ai-node-full-copy`.
   Preparation reads disk/package/unit metadata; its `systemctl list-unit-files`
   is read-only. It refuses a busy package manager instead of stopping it.
