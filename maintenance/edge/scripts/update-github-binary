@@ -71,7 +71,7 @@ from pathlib import Path
 import re
 root = Path('/var/backups/edge-maintenance')
 items = sorted((p for p in root.iterdir() if re.fullmatch(r'semaphore-[0-9]{8}-[0-9]{6}', p.name)), reverse=True)
-for old in items[2:]:
+for old in items:
     old.unlink()
     Path(str(old) + '.sqlite').unlink(missing_ok=True)
 PY_ROTATE
@@ -94,8 +94,15 @@ else
   install -o root -g root -m 0755 "$candidate" "/usr/local/bin/$binary"
 fi
 
-# Rotate older binary backups, retaining only the latest 2 copies
-ls -1t "/var/backups/edge-maintenance/${binary}-"* 2>/dev/null | tail -n +3 | xargs -r rm -f
+# The replacement passed its lifecycle checks; retain no old application copies.
+python3 - "$binary" <<'PY_CLEAN'
+from pathlib import Path
+import re, sys
+pattern = re.compile(re.escape(sys.argv[1]) + r'-[0-9]{8}-[0-9]{6}')
+for old in Path('/var/backups/edge-maintenance').iterdir():
+    if old.is_file() and pattern.fullmatch(old.name):
+        old.unlink()
+PY_CLEAN
 
 echo "NATIVE_UPDATE_RESULT=${target}:SUCCESS"
-echo "BACKUP=${backup}"
+echo "UPDATE_RECOVERY_COPIES=REMOVED_AFTER_SUCCESS"

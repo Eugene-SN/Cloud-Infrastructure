@@ -121,6 +121,9 @@ def run_update():
         if status['restarted']:
             subprocess.run(['systemctl', '--user', 'restart', DAEMON], check=True, timeout=45)
         status['pid'], status['daemon_log'] = wait_ready(status['after_version'])
+        # Recovery material is temporary: the installed daemon is now verified.
+        for name in ('previous-agy', 'previous.json'):
+            (STATE / name).unlink(missing_ok=True)
         status.update(result='PASS', completed_at=time.time())
         status['last_success_at'] = status['completed_at']
         log(f"DAEMON_APPLIED=YES pid={status['pid']} version={status['after_version']}\n"

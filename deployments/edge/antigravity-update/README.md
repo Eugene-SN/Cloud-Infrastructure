@@ -24,10 +24,13 @@ command does not inherit that override. Commands are noninteractive.
 The helper copies the current running executable before invoking `agy update`.
 If the installed executable differs from `/proc/$MainPID/exe`, it retains
 that complete copy as `previous-agy`, records its version in `previous.json`,
-and restarts the native daemon. No-change checks preserve its PID and the
-previous-version backup. Native updater errors fail the check without
+and restarts the native daemon. After successful installed-binary/Connected
+readiness verification, both `previous-agy` and `previous.json` are removed.
+No-change checks preserve the PID and also remove obsolete recovery copies.
+Native updater errors fail the check without
 restarting the daemon. An interrupted update also retains the running binary
-when disk and running executable diverge. Rollback is manual.
+when disk and running executable diverge. Recovery material exists only while
+an update is unresolved; successful updates retain no previous application.
 
 Success requires an active, stable PID running the installed executable and
 its own CLI log reporting the installed version and latest connection status
@@ -54,7 +57,7 @@ journalctl --user -u antigravity-native-update.service --no-pager -n 60
 cat /home/core/.local/state/antigravity-native-update/status.json
 ```
 
-For an operator-directed binary rollback, stop the update timer and any
+For an operator-directed rollback of an unresolved failed update, stop the timer and any
 running update oneshot, then stop the native daemon. Confirm the recorded
 previous binary version using `AGY_CLI_DISABLE_AUTO_UPDATE=true previous-agy
 --version`. Copy `previous-agy` to a temporary file beside `.local/bin/agy`,
@@ -64,8 +67,9 @@ timer stopped until the failed release or prerequisite is addressed; restarting
 the timer permits the vendor updater to install the current release again.
 The monitor correctly reports the intentionally stopped update schedule.
 
-The sole permanent recovery binary is `previous-agy`; temporary candidate
-copies are removed after each completed check. Superseded first-fix shell
+There is no permanent recovery binary. A failed/incomplete update retains
+`previous-agy` until resolved; a successful readiness check removes it.
+Temporary candidate copies are removed after each completed check. Superseded first-fix shell
 script and ad-hoc recovery directory are removed after verification.
 
 ## Compatibility and evidence

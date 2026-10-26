@@ -73,26 +73,35 @@ class UpdateTest(unittest.TestCase):
              patch.object(self.module, 'log'):
             return self.module.run_update()
 
-    def test_real_change_restarts_and_retains_previous(self):
+    def test_real_change_restarts_and_removes_verified_previous(self):
         self.next_version = '2.0'
         self.assertEqual(self.execute(), 0)
         self.assertEqual(self.restarts, 1)
-        self.assertEqual((self.module.STATE / 'previous-agy').read_text(), '1.0')
+        self.assertFalse((self.module.STATE / 'previous-agy').exists())
+        self.assertFalse((self.module.STATE / 'previous.json').exists())
         self.assertEqual(json.loads(self.status.read_text())['after_version'], '2.0')
         self.assertFalse((self.module.STATE / 'candidate-agy').exists())
 
-    def test_no_change_keeps_pid_and_previous_backup(self):
+    def test_no_change_keeps_pid_and_removes_stale_backup(self):
         self.next_version = '2.0'
         self.execute()
+        (self.module.STATE / 'previous-agy').write_text('obsolete')
+        (self.module.STATE / 'previous.json').write_text('{}')
         self.next_version = None
         self.assertEqual(self.execute(), 0)
         self.assertEqual(self.restarts, 1)
-        self.assertEqual((self.module.STATE / 'previous-agy').read_text(), '1.0')
+        self.assertFalse((self.module.STATE / 'previous-agy').exists())
+        self.assertFalse((self.module.STATE / 'previous.json').exists())
 
     def test_foreground_update_is_applied_even_with_no_new_release(self):
         self.replace_binary('2.0')
         self.assertEqual(self.execute(), 0)
         self.assertEqual(self.restarts, 1)
+        self.assertFalse((self.module.STATE / 'previous-agy').exists())
+
+    def test_failed_readiness_keeps_previous_for_unresolved_update(self):
+        self.next_version = '2.0'
+        self.assertEqual(self.execute(ready=False), 1)
         self.assertEqual((self.module.STATE / 'previous-agy').read_text(), '1.0')
 
     def test_update_failure_does_not_restart_or_erase_last_success(self):
