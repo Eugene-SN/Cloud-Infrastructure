@@ -1,0 +1,328 @@
+{
+  "status": "VERIFIED",
+  "repository_id": "e293ee008a257664a7e568787463a9cbab5d0573daf53c5ebd92477d1960cec7",
+  "instance": "edge",
+  "backups": [
+    {
+      "label": "state-first",
+      "snapshot_id": "a984a4a9c25405cf0263154ff9c482875e4044eedc2f71854d8b0477c14e2e08",
+      "parent": "b7aaeab05f97d5fdfc9178a081835b5d02a3ae699d087ecd01c5e007afeb8ad3",
+      "time": "2026-10-29T05:05:22.339280337+03:00",
+      "summary": {
+        "backup_start": "2026-10-29T05:05:22.339280337+03:00",
+        "backup_end": "2026-10-29T05:10:29.333374617+03:00",
+        "files_new": 1217,
+        "files_changed": 7323,
+        "files_unmodified": 326238,
+        "dirs_new": 228,
+        "dirs_changed": 2013,
+        "dirs_unmodified": 48089,
+        "data_blobs": 3317,
+        "tree_blobs": 2084,
+        "data_added": 3276718534,
+        "data_added_packed": 1885176822,
+        "total_files_processed": 334778,
+        "total_bytes_processed": 35184204778
+      },
+      "wall_seconds": 358.0449478626251,
+      "pve_data_pack_delta_bytes": 1885176930,
+      "flow_status": "STATUS_SUCCESS"
+    },
+    {
+      "label": "knowledge-first",
+      "snapshot_id": "b1e555153cfa89a8a33f6e97d787f99a5f9097c9ef1b7ad5414a7daa386aa706",
+      "parent": "c07dd39d2dfc848b2d55397de7c86e29f8303f8018689685cae5a8f47e0a84be",
+      "time": "2026-10-29T05:13:28.355839359+03:00",
+      "summary": {
+        "backup_start": "2026-10-29T05:13:28.355839359+03:00",
+        "backup_end": "2026-10-29T05:13:32.96100036+03:00",
+        "files_new": 0,
+        "files_changed": 0,
+        "files_unmodified": 15,
+        "dirs_new": 0,
+        "dirs_changed": 0,
+        "dirs_unmodified": 8,
+        "data_blobs": 0,
+        "tree_blobs": 0,
+        "data_added": 0,
+        "data_added_packed": 0,
+        "total_files_processed": 15,
+        "total_bytes_processed": 260378
+      },
+      "wall_seconds": 9.81829047203064,
+      "pve_data_pack_delta_bytes": 0,
+      "flow_status": "STATUS_SUCCESS"
+    },
+    {
+      "label": "knowledge-second",
+      "snapshot_id": "182c65ae589f7d8e0a3ba48e5bb4582d3077bb95608df6713b000d28a8079508",
+      "parent": "b1e555153cfa89a8a33f6e97d787f99a5f9097c9ef1b7ad5414a7daa386aa706",
+      "time": "2026-10-29T05:14:18.645879928+03:00",
+      "summary": {
+        "backup_start": "2026-10-29T05:14:18.645879928+03:00",
+        "backup_end": "2026-10-29T05:14:26.385318711+03:00",
+        "files_new": 0,
+        "files_changed": 0,
+        "files_unmodified": 15,
+        "dirs_new": 0,
+        "dirs_changed": 0,
+        "dirs_unmodified": 8,
+        "data_blobs": 0,
+        "tree_blobs": 0,
+        "data_added": 0,
+        "data_added_packed": 0,
+        "total_files_processed": 15,
+        "total_bytes_processed": 260378
+      },
+      "wall_seconds": 13.731327533721924,
+      "pve_data_pack_delta_bytes": 0,
+      "flow_status": "STATUS_SUCCESS"
+    },
+    {
+      "label": "state-second",
+      "snapshot_id": "585dc7e5f3cb7e1d312e6258eb69ec58c16bc499610f235f2a44a31d1d5df967",
+      "parent": "a984a4a9c25405cf0263154ff9c482875e4044eedc2f71854d8b0477c14e2e08",
+      "time": "2026-10-29T05:15:31.630616844+03:00",
+      "summary": {
+        "backup_start": "2026-10-29T05:15:31.630616844+03:00",
+        "backup_end": "2026-10-29T05:16:18.185270294+03:00",
+        "files_new": 28,
+        "files_changed": 1555,
+        "files_unmodified": 333210,
+        "dirs_new": 18,
+        "dirs_changed": 1348,
+        "dirs_unmodified": 48970,
+        "data_blobs": 396,
+        "tree_blobs": 1247,
+        "data_added": 186019389,
+        "data_added_packed": 28420162,
+        "total_files_processed": 334793,
+        "total_bytes_processed": 35187010631
+      },
+      "wall_seconds": 82.42727661132812,
+      "pve_data_pack_delta_bytes": 28420270,
+      "flow_status": "STATUS_SUCCESS"
+    }
+  ],
+  "history": {
+    "before_count": 224,
+    "after_count": 228,
+    "all_before_ids_and_metadata_preserved": true
+  },
+  "restore": {
+    "state_first": {
+      "snapshot": "a984a4a9c25405cf0263154ff9c482875e4044eedc2f71854d8b0477c14e2e08",
+      "sha256_matches": 10,
+      "bytes": 362228547,
+      "native_verify": true
+    },
+    "postgres_archives": {
+      "/var/lib/backrest-staging/edge-state/current/mattermost/postgres/mattermost.dump": {
+        "pg_restore_list": true,
+        "list_bytes": 36416
+      },
+      "/var/lib/backrest-staging/edge-state/current/nextcloud/postgres/nextcloud.dump": {
+        "pg_restore_list": true,
+        "list_bytes": 78385
+      },
+      "/var/lib/backrest-staging/edge-state/current/plane/postgres/plane.dump": {
+        "pg_restore_list": true,
+        "list_bytes": 123759
+      },
+      "/var/lib/backrest-staging/edge-state/current/weblate/postgres/weblate.dump": {
+        "pg_restore_list": true,
+        "list_bytes": 83663
+      }
+    },
+    "sqlite_integrity": {
+      "/var/lib/backrest-staging/edge-state/current/n8n/database.sqlite": "ok",
+      "/var/lib/backrest-staging/edge-state/current/authelia/data/db.sqlite3": "ok"
+    },
+    "state_previous": {
+      "snapshot": "b7aaeab05f97d5fdfc9178a081835b5d02a3ae699d087ecd01c5e007afeb8ad3",
+      "sha256_matches": 2,
+      "bytes": 11296,
+      "native_verify": true
+    },
+    "knowledge_first": {
+      "snapshot": "b1e555153cfa89a8a33f6e97d787f99a5f9097c9ef1b7ad5414a7daa386aa706",
+      "sha256_matches": 15,
+      "bytes": 260378,
+      "native_verify": true
+    }
+  },
+  "restore_second": {
+    "snapshot": "585dc7e5f3cb7e1d312e6258eb69ec58c16bc499610f235f2a44a31d1d5df967",
+    "sha256_matches": 10,
+    "bytes": 362236858,
+    "native_verify": true,
+    "pg_archives": 4,
+    "sqlite_integrity_ok": 2
+  },
+  "cleanup": {
+    "removed": [
+      "/srv/backup/backrest/repositories/edge-knowledge-local",
+      "/etc/backrest/edge-knowledge-password",
+      "/root/.cache/restic/7196c9fc4de7ff879159542395da44cc7f8c7ee1ef812587e49665c48299dd95",
+      "/srv/backup/backrest/repositories/edge-state-local",
+      "/etc/backrest/edge-state-local-password",
+      "/root/.cache/restic/eaa2f8bacce99dc46f71b24f3e507f2cd8e6f64cf5fc63236a190d6d3cfb35a2",
+      "/usr/local/sbin/edge-state-tier-copy",
+      "/usr/local/sbin/edge-knowledge-retention",
+      "/usr/local/libexec/edge-tier-evacuate.py",
+      "/srv/backup/backrest/repositories",
+      "/srv/backup/backrest",
+      "/srv/backup",
+      "/run/lock/edge-state-tier-copy.lock"
+    ],
+    "retired_env_keys": [
+      "LOCAL_KEEP_WITHIN",
+      "RESTIC_FROM_PASSWORD_FILE",
+      "RESTIC_FROM_REPOSITORY"
+    ],
+    "pve_snapshot_count": 228,
+    "historical_snapshots_preserved": 224,
+    "final_config_modno": 7,
+    "remote_maintenance_changed": false,
+    "native_config_history": {
+      "kept_versions": 4,
+      "native_bounded_limit": 10,
+      "reason": "Backrest JsonFileStore.makeBackup owns bounded native configuration version history; not an active local backup repository."
+    }
+  },
+  "nonregression": {
+    "containers_unchanged": 22,
+    "backrest_main_pid": "1035",
+    "backrest_restarts": "0",
+    "monitor_overall": "OK",
+    "monitor_edge": "OK",
+    "backrest_monitor": {
+      "state": "OK",
+      "plans": {
+        "edge-state": {
+          "state": "OK",
+          "last_success_at": "2026-10-29T02:15:31.630000+00:00",
+          "age_s": 137.3,
+          "snapshot_id": "585dc7e5f3cb7e1d312e6258eb69ec58c16bc499610f235f2a44a31d1d5df967",
+          "error": null
+        },
+        "edge-knowledge-local": {
+          "state": "OK",
+          "last_success_at": "2026-10-29T02:14:18.645000+00:00",
+          "age_s": 210.2,
+          "snapshot_id": "182c65ae589f7d8e0a3ba48e5bb4582d3077bb95608df6713b000d28a8079508",
+          "error": null
+        }
+      }
+    },
+    "prepare_unchanged": true,
+    "finalizer_byte_match": true,
+    "config_modno": 7
+  },
+  "retention": {
+    "owner": "CT208",
+    "repo_id": "edge-d5",
+    "keep_daily": 30,
+    "keep_weekly": 8,
+    "keep_monthly": 6,
+    "group_by": "host,tags",
+    "after_successful_check": "Sunday 05:30 UTC+3",
+    "changed": false
+  },
+  "limits": [
+    "Selected files and database artifacts restored; full application recovery and all historical pack data not requalified.",
+    "Pack deltas are storage observations, not measured network traffic or long-term performance gains."
+  ],
+  "restore_controls": {
+    "state-first": {
+      "/var/lib/backrest-staging/edge-state/current/MANIFEST.txt": {
+        "size": 882,
+        "sha256": "fb4cfeff7f376e3fcdf28e50aed0b35f6ea856fd75380b2679604e6ba4e1a694"
+      },
+      "/var/lib/backrest-staging/edge-state/current/n8n/database.sqlite": {
+        "size": 328110080,
+        "sha256": "6fd7b199fe702b6e0daf1d012512e5ea91fd0d30a5cc968b3257dffaecc1eb8e"
+      },
+      "/var/lib/backrest-staging/edge-state/current/authelia/data/db.sqlite3": {
+        "size": 5275648,
+        "sha256": "aee40b0ff583982902273ac3e9eb6f96c44ad8061a274f318ee31abfd3ee4c2d"
+      },
+      "/var/lib/backrest-staging/edge-state/current/postgres/globals.sql": {
+        "size": 1822,
+        "sha256": "b54865be4c2be52a5c31f661d817517abaaf02de0dac4eab986067074ebe540e"
+      },
+      "/var/lib/backrest-staging/edge-state/current/mattermost/postgres/mattermost.dump": {
+        "size": 597938,
+        "sha256": "02b61cb7877e084d890019a4b96325a2c27605569ab28ee9329faebf565eaac3"
+      },
+      "/var/lib/backrest-staging/edge-state/current/nextcloud/postgres/nextcloud.dump": {
+        "size": 10694504,
+        "sha256": "cc3a9e239553edf2f08bbd3b74fab44eaf4b07776938265a8201c538d3053654"
+      },
+      "/var/lib/backrest-staging/edge-state/current/plane/postgres/plane.dump": {
+        "size": 4470960,
+        "sha256": "c2a241720733fc72bebb2a07d52893b2a0132ec08945e78fdd1bacda9a2a3bcd"
+      },
+      "/var/lib/backrest-staging/edge-state/current/weblate/postgres/weblate.dump": {
+        "size": 13065417,
+        "sha256": "56274004acb67a07e51fa3792ec9dcece90d0a9ba23f313a2cc106539218a0c4"
+      },
+      "/etc/hostname": {
+        "size": 5,
+        "sha256": "a74f6ed27de902c1a137ae9c3c5f000fb50ca681833e29b983188bfce8e2f587"
+      },
+      "/usr/local/sbin/edge-state-prepare": {
+        "size": 11291,
+        "sha256": "0e7e2b0eb809c6e1ce40457b83f7423bc408f8b62c80f11a2c28a1cc4a4eefa0"
+      }
+    },
+    "state-second": {
+      "/var/lib/backrest-staging/edge-state/current/MANIFEST.txt": {
+        "size": 882,
+        "sha256": "ed17e6829a88416a41769a73d863c31500401d5f4096a25fa96fa12c631b99e3"
+      },
+      "/var/lib/backrest-staging/edge-state/current/n8n/database.sqlite": {
+        "size": 328110080,
+        "sha256": "1d5d8cf819835d65f88d6ace9845342cc7ff371ae19aac9602eb0094072fff89"
+      },
+      "/var/lib/backrest-staging/edge-state/current/authelia/data/db.sqlite3": {
+        "size": 5275648,
+        "sha256": "aee40b0ff583982902273ac3e9eb6f96c44ad8061a274f318ee31abfd3ee4c2d"
+      },
+      "/var/lib/backrest-staging/edge-state/current/postgres/globals.sql": {
+        "size": 1822,
+        "sha256": "e9986870c4997db527fe726ff7fdda75ea36808847ab2ed619b8afa652e0eea5"
+      },
+      "/var/lib/backrest-staging/edge-state/current/mattermost/postgres/mattermost.dump": {
+        "size": 598007,
+        "sha256": "df7e1c0a9c8d5ee71f18dd35c56ab68e958accf9e1252d7174ba35cbf4fc0254"
+      },
+      "/var/lib/backrest-staging/edge-state/current/nextcloud/postgres/nextcloud.dump": {
+        "size": 10694650,
+        "sha256": "b2d16372127d8a20396f7fa625eb3ca0b02c5906442dc7e41c8e98b95562f608"
+      },
+      "/var/lib/backrest-staging/edge-state/current/plane/postgres/plane.dump": {
+        "size": 4479049,
+        "sha256": "26bb03417ed711c4f86828752189105304b5df9598edc0f188445a01c57d5404"
+      },
+      "/var/lib/backrest-staging/edge-state/current/weblate/postgres/weblate.dump": {
+        "size": 13065424,
+        "sha256": "28637afb10f2380f0b66690207d8216c4fd50c2e71edc92d41fcd89a5e1a944b"
+      },
+      "/etc/hostname": {
+        "size": 5,
+        "sha256": "a74f6ed27de902c1a137ae9c3c5f000fb50ca681833e29b983188bfce8e2f587"
+      },
+      "/usr/local/sbin/edge-state-prepare": {
+        "size": 11291,
+        "sha256": "0e7e2b0eb809c6e1ce40457b83f7423bc408f8b62c80f11a2c28a1cc4a4eefa0"
+      }
+    },
+    "knowledge": {
+      "files": 15,
+      "expected_manifest_sha256": "14eef62d2dae05619c4c0c5371f9f357eefa9b6f8355934b548f60e1acadfe21",
+      "restored_manifest_sha256": "14eef62d2dae05619c4c0c5371f9f357eefa9b6f8355934b548f60e1acadfe21",
+      "manifest_format": "absolute_path -> {size,sha256}; sorted compact JSON"
+    }
+  }
+}

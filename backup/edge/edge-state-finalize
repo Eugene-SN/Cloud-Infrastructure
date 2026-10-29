@@ -1,0 +1,93 @@
+#!/usr/bin/python3
+"""Verify a direct PVE snapshot before deleting its prepared generation."""
+import datetime
+import fcntl
+import json
+import os
+from pathlib import Path
+import re
+import shlex
+import shutil
+import socket
+import subprocess
+import sys
+
+RESTIC = '/usr/local/bin/restic'
+CONFIG = Path('/var/lib/backrest/config.json')
+REPOSITORY = 'rest:http://192.168.1.14:8000/edge/'
+GUID = 'e293ee008a257664a7e568787463a9cbab5d0573daf53c5ebd92477d1960cec7'
+
+
+def environment():
+    env = dict(os.environ)
+    keys = {'RESTIC_REPOSITORY', 'RESTIC_PASSWORD_FILE',
+            'RESTIC_REST_USERNAME', 'RESTIC_REST_PASSWORD'}
+    for line in Path('/etc/backrest/edge-d5.env').read_text().splitlines():
+        if line.strip() and not line.lstrip().startswith('#'):
+            key, value = line.split('=', 1)
+            if key in keys:
+                env[key] = shlex.split(value)[0]
+    env.pop('RESTIC_PASSWORD', None)
+    env.pop('RESTIC_PASSWORD_COMMAND', None)
+    return env
+
+
+def finalize(snapshot_id, env, current=Path('/var/lib/backrest-staging/edge-state/current'),
+             lock=Path('/run/lock/edge-state-prepare.lock')):
+    if not re.fullmatch('[0-9a-f]{64}', snapshot_id):
+        raise ValueError('A full snapshot ID is required')
+    if env.get('RESTIC_REPOSITORY') != REPOSITORY:
+        raise RuntimeError('Unexpected PVE endpoint')
+    config = json.loads(CONFIG.read_text())
+    plan = next(p for p in config['plans'] if p['id'] == 'edge-state')
+    repo = next(r for r in config['repos'] if r['id'] == plan['repo'])
+    if config['instance'] != 'edge' or repo.get('guid') != GUID:
+        raise RuntimeError('State plan does not target the expected PVE repository')
+
+    def read(*args):
+        result = subprocess.run([RESTIC, '--no-lock', '--no-cache', *args],
+                                env=env, check=True, capture_output=True, text=True,
+                                timeout=120)
+        return json.loads(result.stdout)
+
+    if read('cat', 'config').get('id') != GUID:
+        raise RuntimeError('PVE repository identity mismatch')
+    snapshots = read('snapshots', '--json', snapshot_id)
+    if len(snapshots) != 1:
+        raise RuntimeError('Exact direct snapshot was not read back')
+    snapshot = snapshots[0]
+    if (snapshot.get('id') != snapshot_id
+            or snapshot.get('hostname') != socket.gethostname()
+            or sorted(snapshot.get('paths', [])) != sorted(plan['paths'])
+            or set(snapshot.get('tags', [])) != {'plan:edge-state', 'created-by:edge'}):
+        raise RuntimeError('Direct snapshot metadata mismatch')
+    saved_time = datetime.datetime.fromisoformat(snapshot['time'])
+    if saved_time.tzinfo is None:
+        raise ValueError('Snapshot time must include its timezone')
+
+    with lock.open('a') as lease:
+        try:
+            fcntl.flock(lease, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            print('DIRECT_STAGING_KEPT=prepare_busy', flush=True)
+            return False
+        if current.is_symlink():
+            raise RuntimeError('Unexpected staging symlink')
+        if not current.exists():
+            print('DIRECT_STAGING_ABSENT', flush=True)
+            return False
+        if not current.is_dir():
+            raise RuntimeError('Unexpected staging object')
+        if current.stat().st_ctime > saved_time.timestamp():
+            print('DIRECT_STAGING_KEPT=newer_generation', flush=True)
+            return False
+        shutil.rmtree(current)
+    print('PVE_DIRECT_SNAPSHOT_VERIFIED=' + snapshot_id, flush=True)
+    print('DIRECT_STAGING_REMOVED', flush=True)
+    return True
+
+
+if __name__ == '__main__':
+    if len(sys.argv) != 2:
+        raise SystemExit('usage: edge-state-finalize SNAPSHOT_ID')
+    finalize(sys.argv[1], environment())

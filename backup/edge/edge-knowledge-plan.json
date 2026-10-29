@@ -1,0 +1,12 @@
+{
+  "id": "edge-knowledge-local",
+  "repo": "edge-pve",
+  "paths": ["/srv/knowledge"],
+  "schedule": {
+    "cron": "0 4,10,16,22 * * *",
+    "clock": "CLOCK_LOCAL"
+  },
+  "retention": {"policyKeepAll": true},
+  "hooks": [],
+  "skipIfUnchanged": true
+}

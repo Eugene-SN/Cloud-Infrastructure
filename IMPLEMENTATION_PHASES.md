@@ -416,6 +416,13 @@ Stage 5 completion advanced the workstream to Stage 6, which is now COMPLETE / A
 
 ## Stage 6 — Edge Backrest & Recovery
 
+**2026-10-29 amendment — IMPLEMENTED / VERIFIED:** both Edge plans now back up
+directly to the existing PVE repository; local tiers and copy/evacuation are
+removed. CT208 retention, plan identity, sources and schedules are preserved.
+Four real cycles and selected restore checks passed; see
+`backup/edge/verification-2026-10-29.json`. The Stage 6 chronology below describes
+the original acceptance baseline and is superseded for current Edge storage.
+
 ### Stage label
 
 `06 — Edge Backrest & Recovery`

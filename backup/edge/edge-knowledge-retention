@@ -1,7 +1,0 @@
-#!/bin/bash
-set -Eeuo pipefail
-source /etc/backrest/edge-d5.env
-exec 9>/run/lock/edge-state-tier-copy.lock
-flock -w 600 9
-export RESTIC_REPOSITORY RESTIC_PASSWORD_FILE RESTIC_REST_USERNAME RESTIC_REST_PASSWORD
-exec /usr/local/libexec/edge-tier-evacuate.py knowledge

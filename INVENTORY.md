@@ -1,5 +1,23 @@
 # Cloud Infrastructure — Inventory
 
+## Current Backrest inventory — 2026-10-29
+
+- Edge Backrest repo entry: `edge-pve`; existing PVE Restic ID
+  `e293ee008a257664a7e568787463a9cbab5d0573daf53c5ebd92477d1960cec7`.
+- Endpoint: `rest:http://192.168.1.14:8000/edge/`; CT208 local repo remains
+  `/srv/backrest-storage/repositories/edge` (`edge-d5`).
+- Plans retain IDs `edge-state` and `edge-knowledge-local`, instance `edge`,
+  original source selection and six-hour schedules. Edge retention is keep-all;
+  remote maintenance is CT208-owned daily30/weekly8/monthly6, host,tags.
+- Active hooks: `/usr/local/sbin/edge-state-prepare` and
+  `/usr/local/sbin/edge-state-finalize`. Knowledge has no application hooks.
+- Credentials: existing `/etc/backrest/edge-d5.env`,
+  `/etc/backrest/edge-d5-password` and protected native repo.env. Secrets stay out
+  of Git. Old local repo/password/cache/evacuation runtime objects are removed.
+- Local temporary state: `/root/.cache/restic` and bounded online staging;
+  no local full backup chain. PVE history 224 preserved + 4 direct = 228.
+- Evidence and coverage limits: `backup/edge/verification-2026-10-29.json`.
+
 ## Current Docker naming inventory — 2026-10-16
 
 The authoritative current table is `deployments/edge/docker/container-names.md`:

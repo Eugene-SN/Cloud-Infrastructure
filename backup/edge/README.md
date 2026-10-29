@@ -6,35 +6,52 @@ bundle contract. No hook may stop/start/restart/pause/kill/recreate workloads,
 enter maintenance mode, or block new application work to take a backup.
 
 `edge-state-prepare` is the canonical `/usr/local/sbin/edge-state-prepare`.
-`edge-state-plan.json` is the non-secret Edge plan, applied through Backrest's
-native GetConfig/SetConfig API with its current modno. No Backrest restart is
+`edge-state-plan.json` and `edge-knowledge-plan.json` are the non-secret plans,
+applied through Backrest's native GetConfig/SetConfig API with its current modno. No Backrest restart is
 needed. Schedule and source selection are unchanged.
 
-## Edge as a temporary backup buffer — 2026-10-26
+## Direct backup to the existing PVE repository — 2026-10-29
 
-Both existing success hooks now use `edge-tier-evacuate.py`. They copy all local
-snapshots to the existing PVE REST repository, read back the destination, and
-verify original snapshot identity plus tree, time, hostname and paths. Only then
-are those explicit IDs forgotten locally and unused local packs pruned. A failed
-copy or missing/mismatched destination record leaves the local snapshots intact.
-No forget/tag/prune command is sent to append-only PVE. PVE retention is unchanged.
+Both plans use the Edge Backrest repo entry `edge-pve`, URI
+`rest:http://192.168.1.14:8000/edge/`, Restic ID
+`e293ee008a257664a7e568787463a9cbab5d0573daf53c5ebd92477d1960cec7`.
+On CT208 the same repository remains `edge-d5` at
+`/srv/backrest-storage/repositories/edge`. No repository initialization,
+snapshot migration, historical tagging or chunker change is part of this change.
+Instance `edge`, plan IDs, tags, source paths, exclusions and schedules are preserved.
 
-The local plans retain `policyKeepAll` deliberately: the success hook owns
-conditional evacuation, so native retention cannot delete an uncopied snapshot.
-State and Knowledge hooks share the transfer lock. Prepared state is removed
-after verified evacuation when no local snapshots remain; the preparation lock
-and generation timestamp protect a newer/in-progress staging generation.
+Edge has no local backup repository or copy/evacuation hook. It retains only
+Restic's `/root/.cache/restic` cache (excluded from backup) and online staging.
+`policyKeepAll` stays enabled on both plans; Edge repo check/forget/prune schedules
+are disabled. CT208 owns the unchanged daily30/weekly8/monthly6 retention,
+grouped by `host,tags`, and prune after its Sunday 05:30 structural check succeeds.
+That policy covers all tags in this repository, including Edge Knowledge, with
+separate groups for historical hostname `edge.escloud.us` and current `edge`.
+The transition preserves existing history; future scheduled retention still applies.
 
-Install the Python helper as `/usr/local/libexec/edge-tier-evacuate.py` and the
-two existing hook entrypoints in `/usr/local/sbin/`, all root-owned mode 0755.
-They reuse `/etc/backrest/edge-d5.env` and the existing repository passwords;
-no new credentials, scheduler or service is required. Verify failure/deletion
-boundaries with `python3 -B backup/edge/test_tier_evacuate.py`.
+Backrest uses the latest snapshot matching `plan:<ID>,created-by:edge` as parent.
+Unchanged files reuse their old blocks even when the copied parent was produced
+with different chunker parameters. Changed/recreated files use PVE chunking and
+may add extra blocks during the transition. There is no forced full backup.
+The existing `skipIfUnchanged` field is preserved; this installed Backrest build
+does not pass it through as a Restic flag. Repeated Knowledge snapshots reuse
+the same content/tree blocks; the small snapshot records are retained normally.
 
-An empty local repository cannot reuse yesterday's packs when creating the next
-backup. Each run therefore writes its full current source locally before PVE
-copy deduplication; sufficient temporary free space is still required. A PVE
-outage deliberately leaves pending local backups until transfer succeeds.
+Install `edge-state-finalize` as `/usr/local/sbin/edge-state-finalize`, root:root
+0755. State's success hook passes the native `.SnapshotId` through `.ShellEscape`.
+The helper reads that exact snapshot from the expected repository and verifies
+its ID, tags, host and paths before deleting an older staging generation. It
+holds the existing preparation lock, rejects symlinks and preserves a newer or
+busy generation. It cannot run copy/forget/prune. Failed backup or readback
+keeps staging; PVE unavailability causes a failed direct backup, without a hidden
+local full-backup fallback. The prepare lifecycle bounds staging generations.
+
+Credentials remain in `/etc/backrest/edge-d5.env`, `/etc/backrest/edge-d5-password`
+and native protected Backrest repo.env. Do not print or commit their values.
+No new account, service or scheduler is introduced. Finalizer tests:
+`python3 -B backup/edge/test_direct_finalize.py`.
+Execution plan and recovery boundaries:
+`docs/superpowers/plans/2026-10-29-backrest-direct-pve.md`.
 
 | State | Current collection | Recovery boundary |
 |---|---|---|
@@ -54,13 +71,13 @@ service lifecycle is changed.
 
 ## Hook audit
 
-All six configured plans were inspected on both nodes, including repository
-hooks (none configured) and indirect dependencies:
+The 2026-10-18 audit inspected all six plans on both nodes and their indirect
+dependencies. AI Node entries below retain the names from that historical audit;
+this transition did not re-audit or change AI Node. Current Edge entries are:
 
-- Edge `edge-state`: `edge-state-prepare`, `edge-state-tier-copy`; the latter
-  sources an assignments-only environment file and runs Restic copy/forget.
-- Edge `edge-knowledge-local`: `edge-knowledge-retention` (copy, verify and reclaim
-  locally, superseding its former local-only retention behavior).
+- Edge `edge-state`: `edge-state-prepare`, `edge-state-finalize`; the latter
+  reads the direct PVE snapshot and cleans only its saved staging generation.
+- Edge `edge-knowledge-local`: direct PVE backup without an application hook.
 - AI Node `ai-node-full-system`: `ai-node-full-prepare.py`, `ai-node-full-copy`.
   Preparation reads disk/package/unit metadata; its `systemctl list-unit-files`
   is read-only. It refuses a busy package manager instead of stopping it.
@@ -82,16 +99,27 @@ The isolated tests deny unrecognised Docker/service commands, check successful
 online preparation, vanished files and dump/copy failures. The old hook fails
 this regression test on `docker stop mattermost`.
 
-A real Backrest `edge-state` run is additionally checked with live Docker events,
-container IDs/PIDs/start times/restart counts, Weblate health polling, dump
-archive reads, SQLite integrity, stored snapshot contents and tier-copy outcome.
-Results and runtime hashes are in `verification-2026-10-18.json`. These checks
+The 2026-10-18 online-policy verification used Docker events, container lifecycle
+state, Weblate health polling and stored database artifacts; its historical
+results/hashes are in `verification-2026-10-18.json`. The direct-PVE transition
+checked parent selection, history preservation, both real cycles, finalization,
+selected native restores/SHA-256, database archive/integrity checks, unchanged
+container lifecycle state and monitoring. Evidence is in
+`verification-2026-10-29.json`. These checks
 validate backup collection and absence of observed lifecycle interruption; they
 do not constitute an isolated full application restore or owner restore acceptance.
 
 Recovery uses the selected snapshot's online dumps and available files, respecting
 the limitations above. Never describe the v2 manifest as a jointly atomic cold
 bundle. Do not silently restore the old stopping hook as a backup workaround.
+
+For Edge host loss, existing CT208 administrative access and its protected
+`/etc/backrest/edge-d5-password` can unlock the Edge repository locally. Restore
+Edge's protected credentials/configuration from the selected snapshot and apply
+the current two canonical plans through native Backrest. A snapshot taken during
+the transition can contain disabled old local repo entries; remove those entries
+when reconciling it with this contract. Verify the existing repository GUID;
+never initialize a replacement repository. Git contains no secret credentials.
 
 ## Primary mechanism references
 

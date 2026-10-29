@@ -615,23 +615,35 @@ Additional accepted directions:
 6. `FUNCTIONAL_SCAFFOLD_DRAFT.md` for capability intent;
 7. `migration-reference/` and historical baseline for legacy evidence only.
 
-## Accepted Stage 6 backup topology
+## Accepted Edge backup topology — 2026-10-29
 
-Stage 6 general backup architecture is intentionally simple and is now fully specified by `STAGE_06_6_DEPLOYMENT_CONTRACT_2026-09-21.md`:
+The direct-PVE amendment supersedes the local-tier/copy design in the historical
+Stage 6 deployment contract. `backup/edge/README.md` is the current contract.
 
-- one general plan `edge-state`; no separate broad system/data plans;
-- sources: `/etc`, `/home/core`, `/root`, `/opt`, `/srv`, `/usr/local`, `/var/lib`, `/var/spool`, `/var/www`;
-- schedule: `01:00/07:00/13:00/19:00` local;
-- local edge repo = short rollback tier with all snapshots within `7d`, grouped by `host,tags`;
-- successful snapshots are tier-copied to CT208/D5 through append-only rest-server before local retention is applied;
-- CT208 owns D5 retention/prune: daily30, weekly8, monthly6, yearly0, grouped by `host,tags`;
-- exclude the local backup repo, dedicated Knowledge, Docker/containerd layers and selected rebuildable caches; retain `/srv/backups`;
-- live transactional application state is captured through a self-recovering consistency-staging wrapper; Mattermost uses a staged PostgreSQL dump and quiesced app state, mail uses a brief quiesced staged copy, and SQLite-backed services receive consistent snapshots;
-- no recurring Restic full/bare-metal chain for the VPS;
-- one provider-panel golden backup/snapshot is created manually only after final infrastructure acceptance;
-- Knowledge remains the only independent backup chain: `/srv/knowledge`, schedule `04/10/16/22`, rolling local `14d`, no D5 replication.
+- Backrest on Edge writes both plans directly to the existing append-only REST
+  endpoint `rest:http://192.168.1.14:8000/edge/`; no new repository or history copy.
+- One general plan `edge-state`; sources `/etc`, `/home/core`, `/root`, `/opt`,
+  `/srv`, `/usr/local`, `/var/lib`, `/var/spool`, `/var/www`; schedule 01/07/13/19.
+- Independent plan `edge-knowledge-local` protects `/srv/knowledge` at 04/10/16/22
+  in the same PVE repository. Its historical plan ID/tags are preserved.
+- Instance and source selection/exclusions are preserved. Native parent selection
+  reuses the latest previously copied/direct snapshot for each plan. Changed
+  files transition to PVE chunking; immutable historical blocks stay readable.
+- Edge keeps only the excluded Restic cache and temporary online preparation,
+  with exact-snapshot readback and generation/lock-guarded staging finalization.
+- CT208 retains ownership of retention/prune: daily30/weekly8/monthly6/yearly0,
+  grouped by host,tags, after the Sunday 05:30 structural check succeeds. Edge
+  has keep-all and no scheduled remote maintenance. Historical host groups stay
+  distinct; no automatic tag or hostname rewriting is performed.
+- Online native database dumps/SQLite copies and best-effort live files remain
+  authoritative recovery inputs. Hooks never stop/restart/quiesce workloads;
+  mail store coverage and non-atomic DB/files limitations remain documented.
+- No recurring Restic full/bare-metal VPS chain. PVE unavailability produces a
+  failed direct backup and bounded staging, not a hidden local full-chain fallback.
+- The accepted provider-panel golden snapshot remains a separate manual artifact.
 
-The rejected rolling-180d D5 policy is not part of the architecture. Restore acceptance must exercise isolated application usability, not only repository integrity.
+Selected old/new State and complete Knowledge-file restore checks passed;
+full application recovery and all historical data were not requalified here.
 
 
 ## Accepted Stage 8 monitoring architecture

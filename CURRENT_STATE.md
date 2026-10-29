@@ -1,5 +1,36 @@
 # Cloud Infrastructure — Current State
 
+## Direct PVE Backrest backups — 2026-10-29
+
+`EDGE_BACKREST_DIRECT_PVE=PASS`. Both unchanged plan IDs (`edge-state`,
+`edge-knowledge-local`) now write directly through Edge repo entry `edge-pve`
+to the existing append-only CT208/D5 repository. Instance, tags, source selection
+and schedules remain unchanged. No init, history migration or chunker change.
+All 224 pre-transition snapshots and metadata remain; four direct snapshots were
+added, for 228 total. CT208 retention remains daily30/weekly8/monthly6, grouped
+by host,tags, after the successful weekly structural check.
+
+State first/repeat snapshots: `a984a4a9` / `585dc7e5`; packed additions
+1,7557 GiB / 27,1036 MiB. Knowledge first/repeat: `b1e55515` / `182c65ae`,
+both with zero new data/tree blobs and zero pack growth. Parent selection was
+verified on all four real native backups. These are observed cycles, not a
+long-term traffic or performance guarantee.
+
+Both State snapshots, the previous copied State snapshot and all 15 Knowledge
+files passed selected native restore/verify and SHA-256 checks. Four PostgreSQL
+archives in each new State restore passed pg_restore listing; both SQLite
+copies in each passed integrity_check. This is not full application recovery
+or verification of every historical pack. All 22 running containers retained
+IDs/PIDs/start times/restart counts; Backrest PID 1035, NRestarts=0; Edge Monitor
+Edge/overall and both backup plans OK.
+
+Old local repositories, their passwords/caches and evacuation helpers are
+removed. Online preparation remains byte-identical; `edge-state-finalize`
+verifies the exact PVE snapshot before generation/lock-guarded staging cleanup.
+Canonical contract and sanitized evidence: `backup/edge/README.md` and
+`backup/edge/verification-2026-10-29.json`. This supersedes historical local-tier
+descriptions below; the 2026-10-18 no-service-interruption policy remains active.
+
 ## Weblate routing after ai-node test retirement — 2026-10-23
 
 CONFIRMED 2026-10-23: use Weblate on Edge at https://translate.escloud.us
@@ -623,6 +654,9 @@ Root recovery snapshots remain under `/srv/backups/edge-stage4c`, `/srv/backups/
 - Stage 4 remains COMPLETE / ACCEPTED with `STAGE4_FINAL_ACCEPTANCE=PASS`; Stage 5 entry is eligible after this repository reconciliation.
 
 ## Stage 6 — Edge Backrest & Recovery — COMPLETE / ACCEPTED
+
+Historical Stage 6 local-tier facts below are superseded for Edge by the
+2026-10-29 direct-PVE amendment above; historical acceptance remains valid.
 
 Current accepted/deployed state:
 

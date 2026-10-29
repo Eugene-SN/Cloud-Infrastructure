@@ -3621,3 +3621,38 @@ lifecycle correction. Coverage and validation: `backup/edge/README.md`.
 **Supersedes:** Earlier Backrest-specific requirements to stop/quiesce these
 applications or wait for their restart. Historical acceptance records remain
 historical. This is not permission to change update or restore lifecycles.
+
+## 2026-10-29 — Direct Edge backups to the existing PVE repository
+
+**Status:** ACCEPTED / IMPLEMENTED (explicit operator request to deploy the plan).
+
+**Problem:** The 2026-10-26 evacuation helper emptied and pruned each local
+repository after copy, so every next Edge backup wrote a full local dataset.
+PVE deduplication still worked; local repeated full writes were avoidable.
+
+**Decision:** Both unchanged Edge plans write directly to the existing
+append-only PVE repository through native Backrest. Preserve repository ID,
+keys/chunker config, history, instance/tags, source selection and schedules.
+Do not initialize another repo, copy history or force rereading unchanged files.
+Backrest uses the latest tagged parent. CT208 retains its existing
+daily30/weekly8/monthly6, host,tags retention after a successful weekly check.
+
+**Implementation:** Native SetConfig, no restart. Online preparation is unchanged.
+State finalization reads the exact new remote snapshot and cleans only its saved
+generation under the existing preparation lock. Failure keeps staging. Local
+repos/passwords/caches and old evacuation hooks were removed after real backup
+and restore verification; active PVE credentials remain. No CT208/AI Node/Home
+policy mutation or runtime interruption was performed.
+
+**Evidence:** `backup/edge/verification-2026-10-29.json`: 224 old snapshot records
+preserved, four direct added; State first/repeat packed additions
+1,885,176,822 / 28,420,162 bytes, Knowledge first/repeat zero new content;
+native parent and flow success verified. Restored controls match SHA-256;
+four PostgreSQL archive listings and two SQLite integrity checks per new State
+snapshot pass; all 15 Knowledge files restored. Containers and monitor OK.
+These checks do not certify full application recovery or every historical pack.
+
+**Supersedes:** Historical Edge local-retention/tier-copy/evacuation topology,
+including the 2026-10-26 implementation. The online-only 2026-10-18 collection
+policy and existing recovery coverage limits remain active. Future normal
+retention may remove snapshots; the transition itself removed none from PVE.

@@ -1,6 +1,6 @@
 {
   "id": "edge-state",
-  "repo": "edge-state-local",
+  "repo": "edge-pve",
   "paths": [
     "/etc",
     "/home/core",
@@ -54,7 +54,7 @@
       ],
       "onError": "ON_ERROR_FATAL",
       "actionCommand": {
-        "command": "/usr/local/sbin/edge-state-tier-copy"
+        "command": "/usr/local/sbin/edge-state-finalize {{ .ShellEscape .SnapshotId }}"
       }
     }
   ]

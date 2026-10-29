@@ -1,6 +1,6 @@
 # Прямой бэкап Edge в существующий PVE/D5 — план внедрения
 
-> **For agentic workers:** выполнять последовательно в исходном чате через `executing-plans`. Этот документ задаёт план; runtime ещё не переключён. Делегирование и отдельный новый чат для внедрения не требуются.
+> **For agentic workers:** выполнять последовательно в исходном чате через `executing-plans`. План внедрён и проверен 2026-10-29; результат приведён ниже. Делегирование и отдельный новый чат для внедрения не требуются.
 
 **Goal:** убрать повторное создание полного локального Restic-репозитория на Edge, сохранив существующий репозиторий PVE, историю снимков и действующую серверную retention.
 
@@ -10,7 +10,7 @@
 
 **Spec:** запрос оператора в [исходном чате](codex://threads/01a18528-4577-7731-8813-a1195986700b); результат read-only проверки CT208 в [«Аудировать Backrest на PVE»](codex://threads/01a1851e-9918-7210-8902-f6e16c969a6c), turn `01a1854d-e130-7491-a3e3-25c77889cb77`; `OPERATING_RULES.md`, `AGENTS.md`, `backup/edge/README.md`. Более старые Stage 6 records описывают историческую топологию local → copy и не разрешают возврат к остановке приложений.
 
-**Статус:** план завершён; внедрение, реальные новые backup/restore и удаление объектов по этому плану не выполнялись. Проверка CT208 прочитана из указанного чата; Edge config и runtime helpers дополнительно сверены непосредственно. Все времена ниже — Москва, UTC+3. Документ не меняет системные timezone.
+**Статус:** IMPLEMENTED / VERIFIED 2026-10-29. Выполнены четыре native direct backup, проверочные восстановления и точечная очистка старой локальной схемы; см. execution result ниже. Проверка CT208 прочитана из указанного чата; Edge config и runtime helpers дополнительно сверены непосредственно. Все времена ниже — Москва, UTC+3. Документ не меняет системные timezone.
 
 ## Global Constraints
 
@@ -117,11 +117,11 @@ Credentials взять из `/etc/backrest/edge-d5.env` и `/etc/backrest/edge-d
 
 **Файлы/интерфейсы:** native GetConfig, `/var/lib/backrest/config.json`, оба local repo, `/etc/backrest/edge-d5.env`, `/etc/backrest/edge-d5-password`; мутации пока не требуются.
 
-- [ ] Проверить отсутствие in-progress backup/hook/prune и выбрать время вне подтверждённого maintenance CT208. Не прерывать занятые операции.
-- [ ] Через existing credentials прочитать `cat config` и `snapshots --json` PVE без lock/cache; сверить полный repository ID. Зафиксировать список исторических ID и ключевых полей tree/time/hostname/paths/tags/original, актуальные latest parents обоих планов.
-- [ ] Убедиться, что оба latest parent имеют нужные теги, ожидаемые пути и доступны через endpoint; сверить их с native Backrest выборкой после регистрации repo. Отсутствующий parent — основание исправить обнаружение до backup, а не запускать без него.
-- [ ] Проверить local snapshots. Если после baseline появились непереданные снимки, завершить существующий проверенный transfer до переключения и повторить manifest. Непереданные local snapshots не удалять. Не запускать copy заведомо уже присутствующей истории ради перехода.
-- [ ] Снять свежий GetConfig с modno, hashes и mode/owner затрагиваемых helpers/config. Сохранить маленький закрытый rollback context в `/tmp` с mode 0700, secret files 0600; packs и историю туда не копировать. В Git хранить только nonsecret изменения.
+- [x] Проверить отсутствие in-progress backup/hook/prune и выбрать время вне подтверждённого maintenance CT208. Не прерывать занятые операции.
+- [x] Через existing credentials прочитать `cat config` и `snapshots --json` PVE без lock/cache; сверить полный repository ID. Зафиксировать список исторических ID и ключевых полей tree/time/hostname/paths/tags/original, актуальные latest parents обоих планов.
+- [x] Убедиться, что оба latest parent имеют нужные теги, ожидаемые пути и доступны через endpoint; сверить их с native Backrest выборкой после регистрации repo. Отсутствующий parent — основание исправить обнаружение до backup, а не запускать без него.
+- [x] Проверить local snapshots. Если после baseline появились непереданные снимки, завершить существующий проверенный transfer до переключения и повторить manifest. Непереданные local snapshots не удалять. Не запускать copy заведомо уже присутствующей истории ради перехода.
+- [x] Снять свежий GetConfig с modno, hashes и mode/owner затрагиваемых helpers/config. Сохранить маленький закрытый rollback context в `/tmp` с mode 0700, secret files 0600; packs и историю туда не копировать. В Git хранить только nonsecret изменения.
 
 **Результат:** доказана identity существующего repo и latest parents, нет неучтённой локальной истории, известен точный обратный config diff.
 
@@ -133,11 +133,11 @@ Credentials взять из `/etc/backrest/edge-d5.env` и `/etc/backrest/edge-d
 
 **Интерфейс финализатора:** один positional full snapshot ID; credential source — существующий `/etc/backrest/edge-d5.env`. Он читает именно этот snapshot из проверенного PVE repo, сверяет ID, `plan:edge-state`, `created-by:edge`, hostname и paths; никогда не выполняет backup/copy/forget/prune. Из remote time берёт cutoff и применяет существующий принцип `clean_staging`: lock `/run/lock/edge-state-prepare.lock`, фиксированный `/var/lib/backrest-staging/edge-state/current`, отказ от symlink, удаление только generation с ctime не позднее начала сохранённого snapshot. Новый/занятый current не удаляется; ошибки readback оставляют staging и дают видимую ошибку hook.
 
-- [ ] Написать meaningful isolated regression tests: успешный exact readback удаляет старую generation; missing/mismatched ID/repo/tag/host/path сохраняет её; warning/error не вызывает финализацию; newer generation, busy lock и symlink не удаляются. Подмена Restic в тесте запрещает любые mutating subcommands. Повторный readback/cleanup после уже удалённого current идемпотентен.
-- [ ] Выделить финализацию из прежнего evacuation helper, сохранив generation/lock защиту; существующий online prepare не менять. Hook использует native template `{{ .ShellEscape .SnapshotId }}`, не предполагаемые environment variables.
-- [ ] Прогнать regression tests и существующие online-prepare tests; проверить синтаксис итогового helper и реально отрендеренного command hook. Shell payloads, предназначенные оператору, отдельно проверить `bash -n` по точному финальному тексту.
-- [ ] Установить финализатор, затем применить один согласованный native SetConfig со свежим modno: добавить `edge-pve`, перепривязать два плана, убрать evacuation hooks, поставить State success-finalize с `ON_ERROR_FATAL`, отключить scheduled check/prune/forget старых local repo entries. Backrest не перезапускать. Не переписывать весь config по старому файлу и не менять auth.
-- [ ] Прочитать GetConfig заново. Проверить diff разрешённых полей; сравнить source selection, расписания, instance, retention, flags. Убедиться в отсутствии Edge maintenance tasks для PVE. Native parser/SetConfig validation обязательны; generic JSON syntax check их не заменяет.
+- [x] Написать meaningful isolated regression tests: успешный exact readback удаляет старую generation; missing/mismatched ID/repo/tag/host/path сохраняет её; warning/error не вызывает финализацию; newer generation, busy lock и symlink не удаляются. Подмена Restic в тесте запрещает любые mutating subcommands. Повторный readback/cleanup после уже удалённого current идемпотентен.
+- [x] Выделить финализацию из прежнего evacuation helper, сохранив generation/lock защиту; существующий online prepare не менять. Hook использует native template `{{ .ShellEscape .SnapshotId }}`, не предполагаемые environment variables.
+- [x] Прогнать regression tests и существующие online-prepare tests; проверить синтаксис итогового helper и реально отрендеренного command hook. Shell payloads, предназначенные оператору, отдельно проверить `bash -n` по точному финальному тексту.
+- [x] Установить финализатор, затем применить один согласованный native SetConfig со свежим modno: добавить `edge-pve`, перепривязать два плана, убрать evacuation hooks, поставить State success-finalize с `ON_ERROR_FATAL`, отключить scheduled check/prune/forget старых local repo entries. Backrest не перезапускать. Не переписывать весь config по старому файлу и не менять auth.
+- [x] Прочитать GetConfig заново. Проверить diff разрешённых полей; сравнить source selection, расписания, instance, retention, flags. Убедиться в отсутствии Edge maintenance tasks для PVE. Native parser/SetConfig validation обязательны; generic JSON syntax check их не заменяет.
 
 **Результат:** непосредственная запись обоих планов в существующий PVE repo, без потери online preparation и очистки staging.
 
@@ -145,25 +145,25 @@ Credentials взять из `/etc/backrest/edge-d5.env` и `/etc/backrest/edge-d
 
 **Интерфейсы:** native Backrest Backup/GetOperations/GetLogs, read-only Restic snapshot/list/dump и isolated restore в `/tmp`.
 
-- [ ] Запустить по одному реальному native backup обоих планов. Не обходить hooks прямым backup CLI для приёмки. Сопоставить фактический `--parent` с актуальным preflight manifest. `files_unmodified` и readback должны подтвердить переиспользование подходящих неизменённых файлов; synthetic тест сам по себе этого не доказывает.
-- [ ] Сравнить PVE manifest до/после: все прежние ID и metadata сохранены, добавились только ожидаемые прямые snapshots; у новых снимков прежние plan/instance tags, hostname `edge`, правильные paths/excludes и ожидаемый parent. Не требовать поле `original` у direct snapshot: оно относится к истории copy.
-- [ ] Проверить успех полного flow, включая State finalizer. Успешная backup-запись при упавшем финализаторе недостаточна. Убедиться, что current удалён только для сохранённой generation.
-- [ ] Прочитать выбранные старые и новые файлы из snapshot в isolated `/tmp`: сравнить SHA-256 неизменённого контрольного файла, выбранного по фактическому inventory; проверить наличие staged DB artifacts. Для восстановленных PostgreSQL dumps выполнить `pg_restore -l`, для SQLite — offline `integrity_check` на временной копии. Production DB и файловую систему не перезаписывать. После сохранения sanitized результатов временные восстановленные данные удалить.
-- [ ] Выполнить повторный native State backup, чтобы проверить parent уже прямого снимка. Не изменять production файлы ради теста и не требовать нулевой записи при продолжающейся работе приложений. Knowledge также проверить повторно без изменения источника; учитывать существующее поведение skip поля.
-- [ ] Отдельно записать `total_bytes_processed`, `files_new/changed/unmodified`, `data_added`, `data_added_packed`, длительность и прирост суммарных размеров PVE data packs по REST API v2 до/после окна. Обслуживание/другие writers делают такой delta неатрибутируемым — это обозначить, а не превращать в оценку трафика. Для traffic нужен отдельный достоверный счётчик; без него traffic остаётся UNKNOWN.
-- [ ] Проверить offline/missing-readback/newer-generation сценарии на изолированном тесте; не разрывать рабочий NetBird/PVE канал ради эксперимента. При недоступности PVE backup должен сообщить ошибку, staging остаётся ограниченной текущей generation; prepare уже ограничивает next/current/previous lifecycle. Полноценной локальной очереди исторических снимков в прямой схеме нет.
-- [ ] Проверить Edge Monitor freshness обоих прежних plan IDs и не-регрессию backup service и приложений без рестартов. Проверка выбранных restore artifacts не заменяет полную историческую restore acceptance.
+- [x] Запустить по одному реальному native backup обоих планов. Не обходить hooks прямым backup CLI для приёмки. Сопоставить фактический `--parent` с актуальным preflight manifest. `files_unmodified` и readback должны подтвердить переиспользование подходящих неизменённых файлов; synthetic тест сам по себе этого не доказывает.
+- [x] Сравнить PVE manifest до/после: все прежние ID и metadata сохранены, добавились только ожидаемые прямые snapshots; у новых снимков прежние plan/instance tags, hostname `edge`, правильные paths/excludes и ожидаемый parent. Не требовать поле `original` у direct snapshot: оно относится к истории copy.
+- [x] Проверить успех полного flow, включая State finalizer. Успешная backup-запись при упавшем финализаторе недостаточна. Убедиться, что current удалён только для сохранённой generation.
+- [x] Прочитать выбранные старые и новые файлы из snapshot в isolated `/tmp`: сравнить SHA-256 неизменённого контрольного файла, выбранного по фактическому inventory; проверить наличие staged DB artifacts. Для восстановленных PostgreSQL dumps выполнить `pg_restore -l`, для SQLite — offline `integrity_check` на временной копии. Production DB и файловую систему не перезаписывать. После сохранения sanitized результатов временные восстановленные данные удалить.
+- [x] Выполнить повторный native State backup, чтобы проверить parent уже прямого снимка. Не изменять production файлы ради теста и не требовать нулевой записи при продолжающейся работе приложений. Knowledge также проверить повторно без изменения источника; учитывать существующее поведение skip поля.
+- [x] Отдельно записать `total_bytes_processed`, `files_new/changed/unmodified`, `data_added`, `data_added_packed`, длительность и прирост суммарных размеров PVE data packs по REST API v2 до/после окна. Обслуживание/другие writers делают такой delta неатрибутируемым — это обозначить, а не превращать в оценку трафика. Для traffic нужен отдельный достоверный счётчик; без него traffic остаётся UNKNOWN.
+- [x] Проверить offline/missing-readback/newer-generation сценарии на изолированном тесте; не разрывать рабочий NetBird/PVE канал ради эксперимента. При недоступности PVE backup должен сообщить ошибку, staging остаётся ограниченной текущей generation; prepare уже ограничивает next/current/previous lifecycle. Полноценной локальной очереди исторических снимков в прямой схеме нет.
+- [x] Проверить Edge Monitor freshness обоих прежних plan IDs и не-регрессию backup service и приложений без рестартов. Проверка выбранных restore artifacts не заменяет полную историческую restore acceptance.
 
 **Результат:** история не потеряна, parent фактически используется в production, первые два цикла и bounded restore проверены. Нулевой прирост, процент экономии, полная читаемость истории или ускорение всего сервиса по этим проверкам не заявляются.
 
 ### Task 4 — точечная очистка и persistence
 
-- [ ] До очистки оставить старые repo config entries, маленькие local repos/passwords и helpers как конкретный recovery path текущего перехода. Их schedules отключить, чтобы старый repo check/prune не продолжал выполняться без плана.
-- [ ] После успешного Task 3 подтвердить native `snapshots` обоих local repos: пусто. Если есть записи, сначала проверить identity/content соответствующих PVE copies. Зафиксировать категории KEEP/REMOVE и ссылки; удалить только доказанно неиспользуемые local repo entries/directories, локальные passwords и старые deployed `edge-state-tier-copy`, `edge-knowledge-retention`, `edge-tier-evacuate.py`. Учитывать ссылки monitoring/maintenance/rollback; не удалять действующие PVE password/env.
-- [ ] Удалить obsolete source helpers/tests, заменив их актуальными direct-finalize tests; Git сохранит историческую реализацию. Не удалять исторические acceptance records.
-- [ ] Актуализировать `backup/edge/README.md`, nonsecret plan source и текущие sections `CURRENT_STATE.md`, `IMPLEMENTATION_PHASES.md`, `ARCHITECTURE.md`, `INVENTORY.md`, добавить superseding запись в `DECISIONS.md`. Существующие чужие изменения этих файлов не включать в commit; использовать точечное staging только своих hunks.
-- [ ] Проверить отсутствие scheduled local backup/maintenance, evacuation subprocess и новых local packfiles, отсутствие удалённых task artifacts и сохранение активного финализатора/prepare. В `/tmp` убрать собственные временные backup/restore trees и recovery context после приёмки, когда восстановление обеспечено действующим backup и Git. Не создавать `.bak/.old` рядом с production.
-- [ ] Прогнать proportionate final checks, `git diff --check`, commit только task-owned изменения напрямую в `main`, push и проверить remote commit плюс критические nonsecret файлы. Зафиксировать реально измеренные bytes и границы доказанного.
+- [x] До очистки оставить старые repo config entries, маленькие local repos/passwords и helpers как конкретный recovery path текущего перехода. Их schedules отключить, чтобы старый repo check/prune не продолжал выполняться без плана.
+- [x] После успешного Task 3 подтвердить native `snapshots` обоих local repos: пусто. Если есть записи, сначала проверить identity/content соответствующих PVE copies. Зафиксировать категории KEEP/REMOVE и ссылки; удалить только доказанно неиспользуемые local repo entries/directories, локальные passwords и старые deployed `edge-state-tier-copy`, `edge-knowledge-retention`, `edge-tier-evacuate.py`. Учитывать ссылки monitoring/maintenance/rollback; не удалять действующие PVE password/env.
+- [x] Удалить obsolete source helpers/tests, заменив их актуальными direct-finalize tests; Git сохранит историческую реализацию. Не удалять исторические acceptance records.
+- [x] Актуализировать `backup/edge/README.md`, nonsecret plan source и текущие sections `CURRENT_STATE.md`, `IMPLEMENTATION_PHASES.md`, `ARCHITECTURE.md`, `INVENTORY.md`, добавить superseding запись в `DECISIONS.md`. Существующие чужие изменения этих файлов не включать в commit; использовать точечное staging только своих hunks.
+- [x] Проверить отсутствие scheduled local backup/maintenance, evacuation subprocess и новых local packfiles, отсутствие удалённых task artifacts и сохранение активного финализатора/prepare. В `/tmp` убрать собственные временные backup/restore trees и recovery context после приёмки, когда восстановление обеспечено действующим backup и Git. Не создавать `.bak/.old` рядом с production.
+- [x] Прогнать proportionate final checks, `git diff --check`, commit только task-owned изменения напрямую в `main`, push и проверить remote commit плюс критические nonsecret файлы. Зафиксировать реально измеренные bytes и границы доказанного.
 
 ## 5. Откат и условия остановки
 
@@ -182,3 +182,33 @@ Credentials взять из `/etc/backrest/edge-d5.env` и `/etc/backrest/edge-d
 - [Restic: file change detection](https://restic.readthedocs.io/en/stable/040_backup.html#file-change-detection).
 - [Restic maintainer: copied parent with different chunker parameters](https://forum.restic.net/t/restic-copy-and-deduplication/3277/14).
 - [Restic: retention rules](https://restic.readthedocs.io/en/stable/060_forget.html#removing-snapshots-according-to-a-policy).
+
+## 7. Execution result — 2026-10-29
+
+`EDGE_BACKREST_DIRECT_PVE=PASS`. Native config modno 5 → 6 (switch), 6 → 7
+(cleanup). Backrest PID 1035 and NRestarts=0; no application lifecycle mutation.
+
+| Cycle | Snapshot | Parent | Packed bytes added | Files reused |
+|---|---|---|---:|---:|
+| State first | a984a4a9 | b7aaeab0 | 1,885,176,822 | 326,238 |
+| State repeat | 585dc7e5 | a984a4a9 | 28,420,162 | 333,210 |
+| Knowledge first | b1e55515 | c07dd39d | 0 | 15 |
+| Knowledge repeat | 182c65ae | b1e55515 | 0 | 15 |
+
+All 224 baseline snapshot records/metadata preserved; 228 after the four cycles.
+Native exact-snapshot finalization succeeded on both State runs. Restored 10
+selected files from each State snapshot, 2 from the previous copied State, and
+all 15 Knowledge files, with SHA-256 matching their captured controls and native
+restore --verify. Four pg_restore archive listings and two SQLite integrity
+checks passed per new State restore. All 22 active containers retained IDs,
+PIDs, start times and restart counts; Edge/overall and both backup monitor plans OK.
+
+Old local repos/passwords/caches and deployed/source evacuation helpers removed
+after verification; legacy copy env keys removed, active PVE credentials retained.
+No PVE history deletion, init, chunker mutation or CT208 retention change.
+The eight finalizer and four online-prepare tests pass. Live PVE outage testing
+was intentionally not induced; readback failure, busy/newer generation and
+identity mismatch paths are isolated regression tests. No whole application
+restore or all-history read-data certification is implied.
+
+Sanitized measured evidence: [verification-2026-10-29.json](../../../backup/edge/verification-2026-10-29.json).
