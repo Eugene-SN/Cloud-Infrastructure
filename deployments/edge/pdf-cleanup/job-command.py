@@ -26,12 +26,45 @@ def state():
     return json.loads(response.stdout)
 
 
-def clear_workspace():
+def clear_workspace(execution):
+    marker = WORK/'job.json'
+    if marker.exists():
+        owner = json.loads(marker.read_text())
+        if owner['execution_id'] != execution:
+            raise ValueError('Job execution mismatch; workspace retained')
+        if owner.get('recovery_required'):
+            raise ValueError('Cleanup stop/reap unconfirmed; workspace retained for inspection')
+    elif any(WORK.iterdir()):
+        raise ValueError('Unowned workspace; inspect before release')
+    if state().get('Running') is not False:
+        raise ValueError('Container stop unconfirmed; workspace retained')
     for path in WORK.iterdir():
         if path.is_dir() and not path.is_symlink():
             shutil.rmtree(path)
         else:
             path.unlink()
+
+
+def stop_and_reap(process, execution):
+    marker = WORK/'job.json'
+    owner = json.loads(marker.read_text())
+    if owner['execution_id'] != execution:
+        raise ValueError('Job execution mismatch; workspace retained')
+    # Prepare calls release in finally; keep that path fail-closed on unknown stop.
+    owner['recovery_required'] = True
+    marker.write_text(json.dumps(owner))
+    try:
+        stopped = docker('stop', '--timeout', '5', CONTAINER, timeout=15)
+        if stopped.returncode or state().get('Running') is not False:
+            raise RuntimeError('Container stop was not confirmed')
+        process.communicate(timeout=15)
+        owner = json.loads(marker.read_text())
+        if owner['execution_id'] != execution:
+            raise ValueError('Job execution mismatch; workspace retained')
+        owner.pop('recovery_required', None)
+        marker.write_text(json.dumps(owner))
+    except Exception as error:
+        raise RuntimeError('Cleanup stop/reap unconfirmed; workspace retained') from error
 
 
 def perform(request):
@@ -51,46 +84,39 @@ def perform(request):
         raise ValueError('Workspace ownership/path mismatch')
     marker = WORK/'job.json'
     if action == 'release':
-        if marker.exists() and json.loads(marker.read_text())['execution_id'] != execution:
-            raise ValueError('Job execution mismatch')
-        if state()['Running']:
-            raise ValueError('Container is still processing')
-        clear_workspace()
+        clear_workspace(execution)
         return dict(ok=True, job_removed=True)
     if state()['Running']:
         raise ValueError('PDF Cleanup is already processing')
     with marker.open('x') as stream:
         json.dump(dict(execution_id=execution, path=path), stream)
+    process = subprocess.Popen([*DOCKER, 'start', '--attach', CONTAINER],
+                               stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     try:
-        process = subprocess.Popen([*DOCKER, 'start', '--attach', CONTAINER],
-                                   stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-        try:
-            stdout, stderr = process.communicate(timeout=TIMEOUT)
-        except BaseException:
-            # Stop the container before waiting for its root-owned attached client.
-            docker('stop', '--timeout', '5', CONTAINER, timeout=15)
-            process.communicate(timeout=15)
-            raise
-        current = state()
-        if current['Running']:
-            docker('stop', '--timeout', '5', CONTAINER, timeout=15)
-            raise RuntimeError('Container did not finish')
-        report = json.loads(stdout)
-        response = dict(ok=False, cli_rc=current['ExitCode'], summary=report,
-                        stderr=stderr[-16384:])
-        output = WORK/'cleaned.pdf'
-        if process.returncode or current['ExitCode'] or report.get('status') != 'cleaned':
-            response['error'] = report.get('error') or 'PDF cleanup CLI failed'
-        elif output.is_symlink() or not output.is_file():
-            response['error'] = 'CLI did not publish a regular PDF'
-        else:
-            response.update(ok=True, status='cleaned', cleaned=True)
-        if not response['ok']:
-            clear_workspace()
-        return response
+        stdout, stderr = process.communicate(timeout=TIMEOUT)
     except BaseException:
-        clear_workspace()
+        # Do not erase ownership/evidence when stop or attached-client reaping is unknown.
+        stop_and_reap(process, execution)
+        clear_workspace(execution)
         raise
+    current = state()
+    if current.get('Running') is not False:
+        stop_and_reap(process, execution)
+        clear_workspace(execution)
+        raise RuntimeError('Container did not finish')
+    report = json.loads(stdout)
+    response = dict(ok=False, cli_rc=current['ExitCode'], summary=report,
+                    stderr=stderr[-16384:])
+    output = WORK/'cleaned.pdf'
+    if process.returncode or current['ExitCode'] or report.get('status') != 'cleaned':
+        response['error'] = report.get('error') or 'PDF cleanup CLI failed'
+    elif output.is_symlink() or not output.is_file():
+        response['error'] = 'CLI did not publish a regular PDF'
+    else:
+        response.update(ok=True, status='cleaned', cleaned=True)
+    if not response['ok']:
+        clear_workspace(execution)
+    return response
 
 
 def container_main():

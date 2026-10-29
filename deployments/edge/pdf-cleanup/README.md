@@ -81,7 +81,12 @@ A pending request rejects a second caller until release; the workflow is sequent
 
 The existing processing limit is 900 seconds. On timeout or an interruption caught
 by the adapter, stop the container before waiting for the root-owned Docker client,
-then clear workspace. A controlled timeout verified this path in 6.34 seconds;
+then clear only the same execution’s workspace after a successful stop result,
+confirmed stopped container state and reaped attached client. Failed or unknown
+stop/state/reap retains the marker and workspace and reports a recovery error.
+An unconfirmed stop/reap marks the existing owner record as recovery-required;
+automatic release from Prepare cannot erase it, even if a later inspect says stopped.
+A historical controlled timeout verified the normal path in 6.34 seconds;
 a subsequent native n8n run succeeded using the same container ID. The container
 also exits on a CLI error, and failed processing removes its temporary output.
 
