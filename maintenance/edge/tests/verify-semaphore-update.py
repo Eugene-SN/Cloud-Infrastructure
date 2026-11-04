@@ -52,6 +52,14 @@ with tempfile.TemporaryDirectory(prefix="semaphore-update-test-") as temporary:
     import json
     assert json.loads(state.read_text())['status'] == 'error'
     assert json.loads(state.read_text())['operation'] == 'download-failure'
+    assert json.loads(state.read_text())['phase'] == 'release-metadata'
+    assert '22' in json.loads(state.read_text())['message']
+    # A later generic shell trap must preserve the detailed error for this operation.
+    subprocess.run([str(helper), 'error', '2.19.18', 'download-failure', 'cleanup', 'generic'], check=True)
+    assert json.loads(state.read_text())['phase'] == 'release-metadata'
+    subprocess.run([str(helper), 'pending', '', 'next-operation', 'release-metadata'], check=True)
+    subprocess.run([str(helper), 'error', '2.19.18', 'next-operation', 'resolve-assets', 'Missing release asset'], check=True)
+    assert json.loads(state.read_text())['message'] == 'Missing release asset'
     binary = base / "semaphore"
     candidate = base / "candidate"
     database = base / "tasks.sqlite"

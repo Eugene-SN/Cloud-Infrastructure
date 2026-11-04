@@ -1,0 +1,8 @@
+--- a/maintctl
++++ b/maintctl
+@@ -342 +342 @@
+-  /usr/local/bin/xray version 2>&1 | grep -qE "Xray ${version}"
++  /usr/local/bin/xray version 2>&1 | grep -E "Xray ${version}" >/dev/null
+@@ -386 +386 @@
+-  /usr/local/bin/hysteria version 2>&1 | grep -qE "Version:[[:space:]]+v${version}"
++  /usr/local/bin/hysteria version 2>&1 | grep -E "Version:[[:space:]]+v${version}" >/dev/null

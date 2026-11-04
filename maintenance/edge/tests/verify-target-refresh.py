@@ -17,7 +17,7 @@ with tempfile.TemporaryDirectory(prefix="maintenance-target-test.") as directory
     base = Path(directory)
     scripts = base / "scripts"
     scripts.mkdir()
-    for name in ("maintenance-refresh", "maintenance-status-render", "maintenance-targets-refresh"):
+    for name in ("maintenance-refresh", "maintenance-status-render", "maintenance-targets-refresh", "update-stalwart"):
         shutil.copy2(ROOT / "scripts" / name, scripts / name)
     def executable(name, text):
         path = scripts / name
@@ -83,6 +83,18 @@ with tempfile.TemporaryDirectory(prefix="maintenance-target-test.") as directory
     assert result.returncode == 0, result.stderr
     assert trace.exists() and json.loads(output.read_text())['generated_at'] != old
     trace.unlink()
+    # A migration must remain advertised at the real latest version, with a
+    # separate explanation that the image-only action cannot perform it.
+    stalwart = next(r for r in raw['rows'] if r['COMPONENT'] == 'STALWART').copy()
+    stalwart.update(INSTALLED='0.16.27', STABLE='1.0.2', APPLICATION_VERSION='0.16.27',
+                    AVAILABLE_VERSION='1.0.2', IMAGE_TAG='v1.0', STATUS='UPDATE_AVAILABLE')
+    fixture_raw.write_text(json.dumps({'rows': [stalwart]}))
+    result = subprocess.run([str(scripts / 'maintenance-refresh'), '--target', 'STALWART'], env=env, capture_output=True, text=True)
+    assert result.returncode == 0, result.stderr
+    selected = next(r for r in json.loads(output.read_text())['rows'] if r['component'] == 'STALWART')
+    assert selected['status'] == 'UPDATE_AVAILABLE' and selected['available_application_version'] == '1.0.2'
+    assert selected.get('migration_required') is True and 'stalwart-migrate' in selected['update_notice']
+    assert not trace.exists(), 'migration explanation triggered an unrelated APT scan'
     raw['rows'] = [r for r in raw['rows'] if r['COMPONENT'] in {'NGINX', 'CERTBOT', 'UFW', 'DOCKER_ENGINE', 'DOCKER_COMPOSE', 'CONTAINERD', 'NETBIRD', 'SYNCTHING'}]
     fixture_raw.write_text(json.dumps(raw))
     result = subprocess.run([str(scripts / 'maintenance-refresh'), '--target', 'APT_EDGE'], env=env, capture_output=True, text=True)

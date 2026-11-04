@@ -1634,6 +1634,7 @@
     function actionState(row) {
       const component = actionsConfig?.components?.[row.action_key];
       if (row.status !== "UPDATE_AVAILABLE") return { code: "NO_UPDATE", label: "No update available", executable: false };
+      if (row.migration_required === true) return { code: "MIGRATION_REQUIRED", label: "Migration required", executable: false };
       if (!component || component.driver_state === "not_implemented") return { code: "NO_DRIVER", label: "Driver not implemented", executable: false };
       if (actionsConfig.read_only === true || component.driver_state === "acceptance_pending") return { code: "PENDING", label: "Acceptance pending", executable: false };
       if (!component.template_id) return { code: "NO_TEMPLATE", label: "Template unavailable", executable: false };
@@ -1991,8 +1992,9 @@
           const buildExplanation = sameVersionImageUpdate
             ? "A new Docker image build is available; the application version is unchanged.\n"
             : "";
+          const migrationExplanation = r.update_notice ? `${r.update_notice}\n` : "";
           const dockerTechnical = r.type === "DOCKER"
-            ? `${buildExplanation}${r.image_repository || ""}:${r.image_track || ""}\nrunning: ${r.running_image_digest || "unavailable"}\nremote: ${r.remote_image_digest || "unavailable"}\nreason: ${r.update_reason || "CHECK_FAILED"}`
+            ? `${migrationExplanation}${buildExplanation}${r.image_repository || ""}:${r.image_track || ""}\nrunning: ${r.running_image_digest || "unavailable"}\nremote: ${r.remote_image_digest || "unavailable"}\nreason: ${r.update_reason || "CHECK_FAILED"}`
             : "";
 
           const lifecycle =
@@ -2189,7 +2191,11 @@
           continue;
         }
         if (state?.operation !== operation) continue;
-        if (state.status === "error") throw new Error("Semaphore update failed; inspect its external unit journal.");
+        if (state.status === "error") {
+          const phase = state.phase ? ` (${state.phase})` : "";
+          const reason = state.message || "Inspect the external unit journal.";
+          throw new Error(`Semaphore update failed${phase}: ${reason}`);
+        }
         if (state.status === "success") return;
       }
     }

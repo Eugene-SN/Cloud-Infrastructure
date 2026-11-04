@@ -34,6 +34,9 @@ async function scenario(taskStatus, output, states) {
   assert(r.success && r.stateCalls === 3);
   r = await scenario('success', 'SEMAPHORE_UPDATE_ID=operation-1', [{status: 'error', operation: 'operation-1'}]);
   assert(!r.success && !r.messages.some(([m]) => m.includes('completed successfully')));
+  r = await scenario('success', 'SEMAPHORE_UPDATE_ID=operation-1', [{status: 'error', operation: 'operation-1', phase: 'resolve-assets', message: 'Missing release asset: semaphore_2.19.18_checksums.txt'}]);
+  assert(!r.success && r.messages.some(([m]) => m.includes('resolve-assets') && m.includes('Missing release asset')),
+    'the existing error notification must explain the external failure');
   r = await scenario('stopped', '', []);
   assert(!r.success && r.stateCalls === 0);
   r = await scenario('success', 'normal component update', []);
@@ -51,5 +54,10 @@ async function scenario(taskStatus, output, states) {
     {status: 'success', operation: 'operation-1'},
   ]);
   assert(r.success && r.stateCalls === 336, 'a pending external Semaphore update is not a failed update');
+  const actions = {components: {STALWART: {template_id: 12, driver_state: 'executable'}}};
+  const availability = vm.runInNewContext(html.slice(html.indexOf('    function actionState'), html.indexOf('    function toggleSelectAll')) + '\nactionState', {actionsConfig: actions});
+  assert(availability({action_key: 'STALWART', status: 'UPDATE_AVAILABLE'}).executable);
+  const blocked = availability({action_key: 'STALWART', status: 'UPDATE_AVAILABLE', migration_required: true});
+  assert(!blocked.executable && blocked.label === 'Migration required', 'do not dispatch an image-only action for a required store migration');
   console.log('SEMAPHORE_DASHBOARD_CONTRACT=PASS|REAL_NETWORK_CALLS=NO');
 })().catch(error => {console.error(error); process.exit(1);});

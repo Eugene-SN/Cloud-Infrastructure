@@ -18,11 +18,12 @@ STATE = Path('/var/www/maintenance-status/controller-update.json')
 BINARY = Path('/usr/local/bin/semaphore')
 CONFIG = '/etc/semaphore/config.json'
 
-def write_state(status, version='', operation='', phase=''):
+def write_state(status, version='', operation='', phase='', message=''):
     temporary = STATE.with_suffix('.json.tmp')
     temporary.write_text(json.dumps({
         'status': status, 'version': version, 'operation': operation,
         'phase': phase, 'updated_at': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        'message': message[:1200],
     }) + '\n')
     temporary.chmod(0o644)
     os.replace(temporary, STATE)
@@ -128,7 +129,7 @@ if __name__ == '__main__':
     elif command == 'recover':
         recover()
     elif command in ('pending', 'success', 'error'):
-        arguments = sys.argv[2:5]
+        arguments = sys.argv[2:6]
         preserve_error = False
         if command == 'error' and len(arguments) >= 2 and STATE.exists():
             existing = json.loads(STATE.read_text())
@@ -139,14 +140,14 @@ if __name__ == '__main__':
         candidate, version, operation, backup, backup_db, refresh = sys.argv[2:8]
         try:
             install_semaphore(Path(candidate), version, DATABASE, Path(backup), Path(backup_db))
-        except Exception:
-            write_state('error', version, operation, 'install-or-rollback')
+        except Exception as error:
+            write_state('error', version, operation, 'install-or-rollback', str(error))
             raise
         try:
             run([refresh, '--target', 'SEMAPHORE'])
-        except Exception:
+        except Exception as error:
             # A status refresh failure does not undo a healthy updated service.
-            write_state('error', version, operation, 'status-refresh')
+            write_state('error', version, operation, 'status-refresh', str(error))
             raise
         write_state('success', version, operation, 'verified')
         print('SEMAPHORE_UPDATE=SUCCESS|VERSION=' + version, flush=True)

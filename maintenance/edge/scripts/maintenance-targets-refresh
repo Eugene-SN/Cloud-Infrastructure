@@ -5,6 +5,7 @@ import datetime
 import json
 import os
 import pathlib
+import runpy
 import subprocess
 import tempfile
 
@@ -447,6 +448,13 @@ def independent_target(
             "remote_image_digest": str(source.get("REMOTE_DIGEST", "—")) if source else "—",
             "update_reason": str(source.get("UPDATE_REASON", "CHECK_FAILED")) if source else "CHECK_FAILED",
         })
+        if component == "STALWART":
+            helper = runpy.run_path(str(pathlib.Path(__file__).with_name("update-stalwart")))
+            notice = helper["migration_requirement"](
+                result["application_version"], result["available_application_version"],
+            )
+            result["migration_required"] = bool(notice)
+            result["update_notice"] = notice
 
     return result
 

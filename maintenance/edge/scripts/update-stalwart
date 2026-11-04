@@ -17,6 +17,28 @@ SERVICE = "stalwart"
 REPOSITORY = "stalwartlabs/stalwart"
 
 
+def migration_requirement(installed, target):
+    """The documented 0.16 -> 1.0 transition copies into a new data store."""
+    if re.fullmatch(r"0\.16\.[0-9]+", installed) and re.fullmatch(r"1\.[0-9]+\.[0-9]+", target):
+        return (
+            f"MIGRATION_REQUIRED: Stalwart {installed} -> {target} requires "
+            "stalwart-migrate into a new store; an in-place image update is unsupported. "
+            "https://stalw.art/docs/migration/upgrade-0-16/"
+        )
+    return ""
+
+
+def running_image():
+    result = subprocess.run(
+        ["docker", "inspect", "--format", "{{.Image}}", SERVICE],
+        check=True, capture_output=True, text=True,
+    )
+    image = result.stdout.strip()
+    if not re.fullmatch(r"sha256:[0-9a-f]{64}", image):
+        raise RuntimeError("Stalwart running image identity is unresolved")
+    return image
+
+
 def run(argv, **kwargs):
     print("RUN=" + " ".join(argv), flush=True)
     return subprocess.run(argv, check=True, **kwargs)
@@ -169,21 +191,25 @@ def main():
     old_reference = effective_image()
     installed = running_version()
 
+    target_version = str(args.target_version or "").strip()
+    if not re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+", target_version):
+        raise RuntimeError("a valid Stalwart target version is required, including for preflight")
+    requirement = migration_requirement(installed, target_version)
+    if requirement:
+        raise RuntimeError(requirement)
+
     if args.preflight:
         print(
             "STALWART_UPDATE_PREFLIGHT=PASS"
             f"|INSTALLED={installed}"
+            f"|TARGET={target_version}"
             f"|IMAGE={old_reference}"
         )
         print("REAL_UPDATE_EXECUTED=NO")
         return
 
-    target_version = str(args.target_version or "").strip()
     target_track = str(args.target_track or "").strip()
     target_digest = str(args.target_digest or "").strip()
-
-    if not re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+", target_version):
-        raise RuntimeError("invalid Stalwart target version")
 
     parts = target_version.split(".")
     expected_track = "v" + ".".join(parts[:2])
@@ -194,23 +220,21 @@ def main():
             f"expected={expected_track} actual={target_track}"
         )
 
-    if not target_digest.startswith("sha256:"):
+    if not re.fullmatch(r"sha256:[0-9a-f]{64}", target_digest):
         raise RuntimeError("invalid Stalwart target digest")
 
     new_reference = f"{REPOSITORY}:{target_track}"
     pinned = f"{REPOSITORY}@{target_digest}"
+    old_image = running_image()
 
     image_lifecycle = runpy.run_path("/opt/edge-maintenance/scripts/docker-service-images")
     image_lifecycle["capture"]("STALWART", compose_argv(), [SERVICE], DIRECTORY)
     run(["docker", "pull", pinned])
-    run(["docker", "tag", pinned, new_reference])
-
     original = None
-
-    if normalized_image(old_reference) != normalized_image(new_reference):
-        original = rewrite_image(old_reference, new_reference)
-
     try:
+        run(["docker", "tag", pinned, new_reference])
+        if normalized_image(old_reference) != normalized_image(new_reference):
+            original = rewrite_image(old_reference, new_reference)
         compose_run("config", "--quiet")
         compose_run(
             "up",
@@ -227,18 +251,41 @@ def main():
                 "Stalwart runtime version mismatch: "
                 f"expected={target_version} actual={actual}"
             )
-    except Exception:
-        if original is not None:
-            restore_compose(original)
+        expected_image = subprocess.run(
+            ["docker", "image", "inspect", "--format", "{{.Id}}", pinned],
+            check=True, capture_output=True, text=True,
+        ).stdout.strip()
+        if running_image() != expected_image:
+            raise RuntimeError("Stalwart running image does not match the selected digest")
+    except Exception as failure:
+        # Collect the failed container's output before Compose removes it.
+        print("STALWART_FAILED_CONTAINER_LOGS_BEGIN", flush=True)
+        try:
+            compose_run("logs", "--no-color", "--tail", "100", SERVICE)
+        except Exception as log_error:
+            print(f"STALWART_LOG_CAPTURE_FAILED={log_error}", flush=True)
+        print("STALWART_FAILED_CONTAINER_LOGS_END", flush=True)
+        try:
+            run(["docker", "tag", old_image, old_reference])
+            if original is not None:
+                restore_compose(original)
             compose_run("config", "--quiet")
             compose_run(
                 "up",
                 "-d",
                 "--wait",
                 "--force-recreate",
-            "--no-deps",
-                    SERVICE,
+                "--no-deps",
+                SERVICE,
             )
+            if running_version() != installed or running_image() != old_image:
+                raise RuntimeError("previous Stalwart version/image was not restored")
+            print("STALWART_IMAGE_ROLLBACK=VERIFIED|DATA_RESTORED=NO", flush=True)
+        except Exception as rollback_error:
+            raise RuntimeError(
+                f"Stalwart image rollback failed: {rollback_error}; initial failure: {failure}. "
+                "Retain image-recovery receipt and inspect data before recovery."
+            ) from rollback_error
         raise
 
     image_lifecycle["cleanup"]("STALWART")

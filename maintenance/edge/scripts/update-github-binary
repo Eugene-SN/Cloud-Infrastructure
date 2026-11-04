@@ -5,32 +5,44 @@ set -euo pipefail
 target="${1:-}"
 operation="${2:-}"
 state=/opt/edge-maintenance/scripts/controller-update-state
+phase=release-metadata
+reason=''
 if test "$target" = SEMAPHORE; then
   test -n "$operation"
-  "$state" pending '' "$operation"
+  "$state" pending '' "$operation" "$phase"
 fi
 case "$target" in
   BACKREST) repo=garethgeorge/backrest; binary=backrest; asset_template='backrest_Linux_x86_64.tar.gz'; checksum_template='backrest_VERSION_checksums.txt'; service=backrest ;;
   RESTIC) repo=restic/restic; binary=restic; asset_template='restic_VERSION_linux_amd64.bz2'; checksum_template='SHA256SUMS'; service='' ;;
-  SEMAPHORE) repo=semaphoreui/semaphore; binary=semaphore; asset_template='semaphore_community_VERSION_linux_amd64.tar.gz'; checksum_template='semaphore_community_VERSION_checksums.txt'; service=semaphore ;;
+  SEMAPHORE) repo=semaphoreui/semaphore; binary=semaphore; asset_template='semaphore_VERSION_linux_amd64.tar.gz'; checksum_template='semaphore_VERSION_checksums.txt'; service=semaphore ;;
   *) echo "unsupported native target: $target" >&2; exit 2 ;;
 esac
 
 preparation_failed() {
-  if test "$target" = SEMAPHORE; then "$state" error "${version:-}" "$operation"; fi
+  local rc=$?
+  if test "$target" = SEMAPHORE; then
+    "$state" error "${version:-}" "$operation" "$phase" "${reason:-Preparation failed with exit code $rc}" || true
+  fi
 }
 trap preparation_failed ERR
+fail_preparation() {
+  reason="$*"
+  echo "NATIVE_UPDATE_ERROR=$reason" >&2
+  return 1
+}
 release_json="$(curl -fsSL --retry 3 --connect-timeout 15 --max-time 60 \
   -H 'Accept: application/vnd.github+json' -H 'User-Agent: Edge-Maintenance' \
   "https://api.github.com/repos/${repo}/releases/latest")"
-tag="$(jq -r '.tag_name' <<<"$release_json")"
+tag="$(jq -er '.tag_name | strings | select(length > 0)' <<<"$release_json")"
 version="${tag#v}"
+if ! [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then fail_preparation "Invalid stable release tag: $tag"; fi
+phase=resolve-assets
 asset="${asset_template//VERSION/$version}"
 checksums="${checksum_template//VERSION/$version}"
-asset_url="$(jq -r --arg n "$asset" '.assets[]|select(.name==$n)|.browser_download_url' <<<"$release_json")"
-sum_url="$(jq -r --arg n "$checksums" '.assets[]|select(.name==$n)|.browser_download_url' <<<"$release_json")"
-test -n "$asset_url" && test "$asset_url" != null
-test -n "$sum_url" && test "$sum_url" != null
+asset_url="$(jq -r --arg n "$asset" '[.assets[]? | select(.name==$n) | .browser_download_url] | if length == 1 then .[0] else empty end' <<<"$release_json")"
+sum_url="$(jq -r --arg n "$checksums" '[.assets[]? | select(.name==$n) | .browser_download_url] | if length == 1 then .[0] else empty end' <<<"$release_json")"
+if test -z "$asset_url" || test "$asset_url" = null; then fail_preparation "Missing release asset: $asset"; fi
+if test -z "$sum_url" || test "$sum_url" = null; then fail_preparation "Missing release asset: $checksums"; fi
 
 work_root=/var/tmp
 if test "$target" = SEMAPHORE; then work_root=/tmp; fi
@@ -39,33 +51,43 @@ cleanup() {
   rc=$?
   rm -rf -- "$work"
   if test "$target" = SEMAPHORE && test "$rc" -ne 0; then
-    "$state" error "${version:-}" "$operation"
+    "$state" error "${version:-}" "$operation" "$phase" "${reason:-Preparation failed with exit code $rc}" || true
   fi
 }
 trap cleanup EXIT
+phase=download
 curl -fL --retry 3 --connect-timeout 15 --max-time 300 -o "$work/$asset" "$asset_url"
 curl -fL --retry 3 --connect-timeout 15 --max-time 60 -o "$work/$checksums" "$sum_url"
+phase=checksum
 expected="$(awk -v n="$asset" '$2==n || $2=="*"n {print $1; exit}' "$work/$checksums")"
 actual="$(sha256sum "$work/$asset" | awk '{print $1}')"
-test -n "$expected" && test "$expected" = "$actual"
+if test -z "$expected" || test "$expected" != "$actual"; then fail_preparation "Checksum mismatch or missing checksum for $asset"; fi
 
+phase=candidate
 case "$asset" in
   *.tar.gz) tar -xzf "$work/$asset" -C "$work" ;;
   *.bz2) bzip2 -dk "$work/$asset" ;;
 esac
 candidate="$(find "$work" -type f -name "$binary" -perm -u+x -print -quit)"
 if test -z "$candidate" && test -f "${work}/${asset%.bz2}"; then candidate="${work}/${asset%.bz2}"; fi
-test -n "$candidate" && chmod 0755 "$candidate"
+if test -z "$candidate"; then fail_preparation "Executable $binary is absent from $asset"; fi
+chmod 0755 "$candidate"
 if test "$target" = BACKREST; then
   "$candidate" --version 2>&1 | python3 -c 'import re,sys; value=sys.stdin.read(); match=re.search(r"backrest version: ([0-9]+\.[0-9]+\.[0-9]+)",value); sys.exit(0 if match and match[1]==sys.argv[1] else 1)' "$version"
+elif test "$target" = SEMAPHORE; then
+  candidate_version="$("$candidate" version)"
+  if test "${candidate_version%%-*}" != "$version"; then fail_preparation "Candidate version mismatch: expected=$version actual=$candidate_version"; fi
 else
   "$candidate" version >/dev/null 2>&1 || "$candidate" --version >/dev/null
 fi
 
 if test "$target" = SEMAPHORE; then
+  phase=install
+  install -d -o root -g root -m 0700 /var/backups/edge-maintenance
   backup="/var/backups/edge-maintenance/semaphore-$(date -u +%Y%m%d-%H%M%S)"
-  /opt/edge-maintenance/scripts/controller-update-state install "$candidate" "$version" "$operation" \
+  "$state" install "$candidate" "$version" "$operation" \
     "$backup" "$backup.sqlite" /opt/edge-maintenance/scripts/maintenance-refresh
+  phase=cleanup
   python3 - <<'PY_ROTATE'
 from pathlib import Path
 import re

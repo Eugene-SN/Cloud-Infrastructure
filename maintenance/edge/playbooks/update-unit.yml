@@ -24,11 +24,14 @@
         argv: [sudo, -n, /opt/edge-maintenance/scripts/manual-update, "{{ edge_update_target }}"]
       register: update_result
       changed_when: true
+      failed_when: false
 
-    - name: Show Semaphore self-update handoff
+    - name: Show component driver result and diagnostics
       ansible.builtin.debug:
-        var: update_result.stdout_lines
-      when: edge_update_target == 'SEMAPHORE'
+        msg:
+          - "DRIVER_RC={{ update_result.rc }}"
+          - "{{ update_result.stdout | default('') }}"
+          - "{{ update_result.stderr | default('') }}"
 
     - name: Refresh status after the driver
       ansible.builtin.command:
@@ -39,4 +42,14 @@
           - --target
           - "{{ edge_update_target }}"
       changed_when: false
-      when: update_result is succeeded
+      register: post_refresh
+      failed_when: false
+
+    - name: Report a failed update or status refresh
+      ansible.builtin.fail:
+        msg: >-
+          {{ edge_update_target }} update did not complete successfully.
+          Driver RC={{ update_result.rc }}; refresh RC={{ post_refresh.rc }}.
+          {{ update_result.stderr | default('') }}
+          {{ post_refresh.stderr | default('') }}
+      when: update_result.rc != 0 or post_refresh.rc != 0

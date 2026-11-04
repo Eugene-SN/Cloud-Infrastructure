@@ -58,6 +58,49 @@ update templates.
 `update.escloud.us` remains the operator launch surface. Semaphore is the
 manual executor/orchestrator and has no autonomous update schedule.
 
+## Edge update corrections (2026-11-04)
+
+The Home-derived flow remains Semaphore → fixed Ansible target → component's
+native driver, with sequential, failure-isolated Master execution and final
+refresh/validation. These corrections apply to Edge only.
+
+- Semaphore uses the official `semaphore_VERSION_linux_amd64.tar.gz` archive
+  and `semaphore_VERSION_checksums.txt` manifest. Missing release assets,
+  checksum failures and candidate-version mismatches fail before installation.
+  The existing external-operation result includes the failing phase and reason,
+  which the dashboard shows instead of only referring to the system journal.
+- Stalwart's available stable version remains visible. The documented
+  [0.16 → 1.0 migration](https://stalw.art/docs/migration/upgrade-0-16/)
+  requires `stalwart-migrate` into a new store. The image driver and its
+  preflight reject that transition before pulling or recreating anything.
+  Maintenance explains the requirement in the existing version tooltip and
+  disables ordinary image-update dispatch for that transition.
+- A failed supported Stalwart image update prints the failed container's logs
+  before recreation, restores the exact prior image ID even within the same
+  Compose track, and verifies the recovered version and image. This is image
+  recovery, not restoration of application data; the log states
+  `DATA_RESTORED=NO` and retains the image-recovery receipt after failure.
+- Individual Ansible updates print driver diagnostics and perform their scoped
+  final refresh even when the driver fails, then return failure explicitly.
+- `patches/maintctl-version-pipe.patch` removes early-exit `grep -q` from the
+  existing Xray/Hysteria2 version checks. It preserves `pipefail` while allowing
+  the version command to finish without SIGPIPE (exit 141).
+
+Isolated checks use local release archives, fake Docker/service commands and
+the real Ansible playbook with disposable command fixtures:
+
+```bash
+python3 maintenance/edge/tests/verify-native-release.py
+python3 maintenance/edge/tests/verify-stalwart-update.py
+python3 maintenance/edge/tests/verify-individual-playbook.py
+python3 maintenance/edge/tests/verify-maintctl-update.py --source /path/to/readable/maintctl
+node maintenance/edge/tests/verify-semaphore-dashboard.js
+python3 maintenance/edge/tests/verify-target-refresh.py
+```
+
+Deploying these handlers and the dashboard JavaScript requires no service
+update or restart. It does not perform the Stalwart data migration.
+
 ## Refresh scope and task tracking (2026-10-22)
 
 Individual update playbooks pass `--target TARGET` to the read-only refresh

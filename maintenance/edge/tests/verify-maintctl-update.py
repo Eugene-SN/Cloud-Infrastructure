@@ -16,7 +16,7 @@ for target,version in (('hy2','2.13.0'),('xray','26.10.0')):
             (base/'bin').mkdir();(base/'work').mkdir()
             for name,output in (('hysteria','Version: v2.13.0'),('xray','Xray 26.10.0')):
                 binary=base/'bin'/name
-                binary.write_text('#!/bin/bash\necho '+repr(output)+'\n');binary.chmod(0o755)
+                binary.write_text('#!/bin/bash\necho '+repr(output)+'\nsleep 0.02\nprintf "%s\\n" {1..10000}\n');binary.chmod(0o755)
             body=functions.replace('/usr/local/bin/',str(base/'bin')+'/').replace('/var/backups/vpn-stack',str(base/'backups')).replace('/var/tmp/',str(base/'work')+'/')
             body=body.replace('/etc/hysteria/config.yaml',str(base/'absent-config')).replace('/etc/xray/config.json',str(base/'absent-config'))
             script=base/'test.sh'
