@@ -107,7 +107,8 @@ not classified as release-update leftovers or deleted as part of this audit.
   the native owner locations above. This is not a classification of every file
   on Edge or deletion of unspecified historical application evidence.
 - Concurrent operator tasks 94–106 updated other applications. Task 104 upgraded
-  Docker and restarted it at 04:45:33 UTC, changing unrelated container starts.
+  Docker and restarted it at 07:45:33 Europe/Minsk (04:45:33 UTC), changing
+  unrelated container starts.
   Their identities therefore cannot be claimed unchanged across this operation.
   Task 103 Plane failed; task 106 Master failed its initial precheck on
   `WEBLATE_VALKEY:STABLE_UNRESOLVED`. These were not cleanup regressions or
