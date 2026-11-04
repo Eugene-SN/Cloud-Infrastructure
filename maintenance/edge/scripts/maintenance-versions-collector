@@ -480,6 +480,7 @@ try:
         "N8N",
         "AUTHELIA",
         "MATTERMOST",
+        "WEBLATE_VALKEY",
     ):
         versions = []
 

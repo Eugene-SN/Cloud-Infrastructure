@@ -114,23 +114,34 @@ def rpc(method, payload, timeout=30):
 def backup_operations():
     return rpc('GetOperations', {'selector': {'planId': 'edge-state'}, 'lastN': 12}).get('operations', [])
 
-def recent_backup():
-    snapshots = rpc('ListSnapshots', {'repoId': 'edge-state-local', 'planId': 'edge-state'}).get('snapshots', [])
+def recovery_repository():
+    configuration = rpc('GetConfig', {})
+    plans = [p for p in configuration.get('plans', []) if p['id'] == 'edge-state']
+    if len(plans) != 1:
+        raise RuntimeError('edge-state recovery plan is absent or ambiguous')
+    repo_id = plans[0].get('repo')
+    if not repo_id or sum(r['id'] == repo_id for r in configuration.get('repos', [])) != 1:
+        raise RuntimeError('edge-state recovery repository is absent or ambiguous')
+    return repo_id
+
+def recent_backup(expected_snapshot=None):
+    repo_id = recovery_repository()
+    snapshots = rpc('ListSnapshots', {'repoId': repo_id, 'planId': 'edge-state'}).get('snapshots', [])
+    if expected_snapshot is not None:
+        if not re.fullmatch(r'[0-9a-f]{64}', expected_snapshot):
+            raise RuntimeError('pre-update recovery snapshot ID is unresolved')
+        snapshots = [s for s in snapshots if s['id'] == expected_snapshot]
     snapshots = sorted(snapshots, key=lambda s: int(s['unixTimeMs']), reverse=True)
     freshness = json.loads(pathlib.Path('/etc/edge-monitor/config.json').read_text())['backrest']['degraded_after_s']
     if not snapshots or time.time() * 1000 - int(snapshots[0]['unixTimeMs']) > freshness * 1000:
         raise RuntimeError('no current edge-state recovery snapshot')
-    dump = pathlib.Path('/var/lib/backrest-staging/edge-state/current/plane/postgres/plane.dump')
-    if not dump.is_file() or not dump.stat().st_size:
-        raise RuntimeError('Plane logical dump is absent from recovery staging')
-    with dump.open('rb') as stream:
-        run(['docker', 'exec', '-i', 'postgres', 'pg_restore', '-l'], stdin=stream, stdout=subprocess.DEVNULL)
-    if not pathlib.Path('/var/lib/backrest-staging/edge-state/current/plane/runtime/plane-app/plane.env').is_file():
-        raise RuntimeError('protected Plane runtime recovery is absent')
+    # edge-state-prepare validates the dump with native pg_restore before
+    # backup. Successful edge-state-finalize removes local staging after exact
+    # snapshot readback; recovery checks must inspect the archived files.
     snapshot_id = snapshots[0]['id']
     base = '/var/lib/backrest-staging/edge-state/current/plane'
     for directory, filename in (('postgres', 'plane.dump'), ('runtime/plane-app', 'plane.env'), ('runtime', 'images.json')):
-        entries = rpc('ListSnapshotFiles', {'repoId': 'edge-state-local',
+        entries = rpc('ListSnapshotFiles', {'repoId': repo_id,
             'snapshotId': snapshot_id, 'path': base + '/' + directory}).get('entries', [])
         if not any(e.get('type') == 'file' and e.get('name') == filename and int(e.get('size', 0)) > 0 for e in entries):
             raise RuntimeError('Plane recovery file absent from actual snapshot: ' + filename)
@@ -213,7 +224,7 @@ def backup_now():
         if any(o['status'] in ('STATUS_ERROR', 'STATUS_WARNING', 'STATUS_SYSTEM_CANCELLED', 'STATUS_USER_CANCELLED') for o in flow):
             raise RuntimeError('pre-update Backrest flow failed')
         if backups and backups[0]['status'] == 'STATUS_SUCCESS' and all(o['status'] == 'STATUS_SUCCESS' for o in flow):
-            return recent_backup()
+            return recent_backup(backups[0].get('snapshotId', ''))
         time.sleep(5)
     raise RuntimeError('pre-update Backrest flow did not finish')
 

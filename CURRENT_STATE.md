@@ -1,5 +1,28 @@
 # Cloud Infrastructure — Current State
 
+## Valkey discovery and Plane recovery checks — 2026-11-04
+
+Fixed the two defects identified after Master Batch task 106 and Plane task
+103. Valkey discovery now resolves the stable numeric tag belonging to the
+floating image manifest: live scoped refresh reports installed 9.1.2, available
+9.1.3, UPDATE_AVAILABLE, with no unresolved rows. No image was updated.
+
+Plane's existing native driver resolves the recovery repository through
+Backrest 1.14.1 GetConfig/edge-state instead of the retired local repository.
+Recovery checks inspect archived dump/env/image records and no longer require
+staging files already removed by the accepted successful finalizer. Native
+preparation still validates the dump; a future update still requires its
+completed backup flow and checks that exact snapshot ID before migration.
+
+Five Valkey and eleven Plane RPC-fixture tests passed, along with scoped
+refresh, Master/19-route dispatch and native Plane Compose checks. Deployed
+both handlers without restarts. Plane health passed; all 22 container IDs,
+images, PIDs, start times and restart counts remained unchanged. Backrest and
+Semaphore PIDs/restart counters remained unchanged. Verification used public
+registry reads and Edge-local Backrest configuration/index only; no backup,
+restore, remote repository access, application update or PVE action was run.
+This verifies the handler correction, not a completed Plane/Master update.
+
 ## Stalwart 1.0.2 and update cleanup audit — 2026-11-04
 
 Stalwart on Edge was manually migrated from 0.16.27 using the official

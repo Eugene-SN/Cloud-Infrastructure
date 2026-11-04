@@ -60,6 +60,21 @@ manual executor/orchestrator and has no autonomous update schedule.
 
 ## Edge update corrections (2026-11-04)
 
+Valkey discovery resolves the numeric stable alias of the same Docker Hub
+manifest as `valkey/valkey:latest`. It distinguishes a version update from
+a rebuild with the same version through the existing digest comparison.
+Unresolved aliases still fail visibly rather than using a guessed version.
+
+Plane resolves the recovery repository through Backrest's current `edge-state`
+plan using `GetConfig`; it no longer assumes the retired `edge-state-local`
+repository. It checks nonempty `plane.dump`, `plane.env` and `images.json`
+inside the actual snapshot. Native `edge-state-prepare` validates the dump with
+`pg_restore -l` before backup; the successful finalize hook may remove local
+staging. A completed pre-update flow must supply the exact snapshot ID for
+the final recovery check, so an unrelated newer snapshot cannot replace it.
+The existing backup owner, freshness threshold, update dispatch and migration
+sequence remain. API contract: [Backrest 1.14.1](https://github.com/garethgeorge/backrest/blob/v1.14.1/proto/v1/service.proto).
+
 Shared image cleanup handles tag/digest aliases sequentially, rechecking live
 references after each removal. It preserves used images and declared build
 inputs and still fails on real Docker errors. Successful updates retain no
@@ -98,6 +113,8 @@ Isolated checks use local release archives, fake Docker/service commands and
 the real Ansible playbook with disposable command fixtures:
 
 ```bash
+python3 -B maintenance/edge/tests/verify-valkey-discovery.py
+python3 -B maintenance/edge/tests/verify-plane-backrest.py
 python3 maintenance/edge/tests/verify-native-release.py
 python3 maintenance/edge/tests/verify-stalwart-update.py
 python3 maintenance/edge/tests/verify-individual-playbook.py
