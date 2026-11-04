@@ -60,6 +60,14 @@ manual executor/orchestrator and has no autonomous update schedule.
 
 ## Edge update corrections (2026-11-04)
 
+Shared image cleanup handles tag/digest aliases sequentially, rechecking live
+references after each removal. It preserves used images and declared build
+inputs and still fails on real Docker errors. Successful updates retain no
+previous application images. Coverage, cleanup evidence and remaining native
+owner limitations: [cleanup audit](CLEANUP_AUDIT_2026-11-04.md).
+The completed one-time Stalwart migration and native recovery procedure are in
+[Stalwart operations](../../deployments/edge/stalwart/OPERATIONS.md).
+
 The Home-derived flow remains Semaphore → fixed Ansible target → component's
 native driver, with sequential, failure-isolated Master execution and final
 refresh/validation. These corrections apply to Edge only.
@@ -244,7 +252,8 @@ before installation does not restart the service. A subsequent cache-refresh
 failure is reported separately and does not undo a healthy update.
 
 Matched private recovery files use `/var/backups/edge-maintenance/semaphore-*`
-and `.sqlite` (0600), retaining the existing limit of two previous versions.
+and `.sqlite` (0600). Successful updates remove previous binary/database pairs;
+an unresolved failed update retains its recovery material until resolved.
 The helper has no Edge `ExecStartPre` hook and does not alter task records on
 Edge startup. Orphan task 63 was stopped through Semaphore's native stop API.
 

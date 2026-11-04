@@ -1,5 +1,30 @@
 # Cloud Infrastructure — Current State
 
+## Stalwart 1.0.2 and update cleanup audit — 2026-11-04
+
+Stalwart on Edge was manually migrated from 0.16.27 using the official
+stalwart-migrate 1.0.5 tool into a new RocksDB store. All 3 accounts passed full
+native verification with zero mismatches/errors; isolated native reverse-copy
+verification also passed. Required OAuth/permission changes and recommended
+per-setting defaults were explicitly approved. The final report's 42 warnings
+include 21 unreadable legacy records and 12 unsupported spam tags; complete
+original data/config and native state remain in /srv/mail/stalwart-migration.
+The running 1.0.2 image, health, TLS IMAP/SMTP, WebUI and existing Plane SMTP
+authentication were verified. Old images and image archives are removed.
+
+All 19 manual update paths were audited for cleanup. The shared image cleanup
+helper now removes tag/digest aliases sequentially and preserves real failures;
+six new isolated cases and live scoped cleanup passed. Two old PDF images,
+Codex 0.165.0, a retired Nextcloud config rollback directory and 23 approved
+BuildKit records were removed. Current runtime/build inputs were preserved.
+Native Codex may retain a previous release again, and Restic/Rclone suppress
+an OSError while deleting .old; these remaining mechanism limitations are
+recorded without introducing a replacement updater. PVE was not accessed.
+
+Current operation/recovery: deployments/edge/stalwart/OPERATIONS.md.
+Audit and cleanup evidence: maintenance/edge/CLEANUP_AUDIT_2026-11-04.md.
+This supersedes historical Stalwart version observations below.
+
 ## Direct PVE Backrest backups — 2026-10-29
 
 `EDGE_BACKREST_DIRECT_PVE=PASS`. Both unchanged plan IDs (`edge-state`,

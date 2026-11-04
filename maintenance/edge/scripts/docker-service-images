@@ -52,6 +52,18 @@ def declared_images():
 def docker(*args):
     return subprocess.run(['docker', *args], check=True, capture_output=True, text=True).stdout
 
+def remove_references(image_id, references):
+    # A tag and its digest can both appear in RepoTags. Removing the last tag
+    # can remove the digest too, so do not submit stale aliases in one batch.
+    for reference in references:
+        if image_id not in docker('image', 'ls', '--all', '--quiet', '--no-trunc').split():
+            return
+        image = json.loads(docker('image', 'inspect', image_id))[0]
+        present = set(image.get('RepoTags') or []) | set(image.get('RepoDigests') or [])
+        if reference != image_id and reference not in present:
+            continue
+        subprocess.run(['docker', 'image', 'rm', '--no-prune', reference], check=True)
+
 def state_file(target):
     if not re.fullmatch(r'[A-Z0-9_-]+', target):
         raise ValueError('invalid service target')
@@ -115,15 +127,14 @@ def cleanup(target):
             own_present = {ref for ref in digests if repository(ref) in own_repositories}
         if foreign_tags:
             # Never delete aliases which were not used by this service.
-            for ref in sorted(own_present):
-                subprocess.run(['docker','image','rm','--no-prune',ref],check=True)
+            remove_references(old['id'], sorted(own_present))
             if not own_present:
                 retained.append(old)
             print('SERVICE_IMAGE_KEEP_SHARED='+target+'|ID='+old['id'],flush=True)
             continue
         refs = sorted(own_present) if own_present else [old['id']]
         # Docker itself additionally refuses deletion of a concurrently used image.
-        subprocess.run(['docker','image','rm','--no-prune',*refs],check=True)
+        remove_references(old['id'], refs)
         removed.append(old['id'])
     if retained:
         payload['images']=retained;payload['phase']='complete_in_use'
